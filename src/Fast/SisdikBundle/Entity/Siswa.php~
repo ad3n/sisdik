@@ -1,0 +1,258 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\Siswa
+ *
+ * @ORM\Table(name="siswa")
+ * @ORM\Entity
+ */
+class Siswa
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer $nomorUrutPersekolah
+     *
+     * @ORM\Column(name="nomor_urut_persekolah", type="integer", nullable=true)
+     */
+    private $nomorUrutPersekolah;
+
+    /**
+     * @var string $nomorIndukSistem
+     *
+     * @ORM\Column(name="nomor_induk_sistem", type="string", length=45, nullable=true)
+     */
+    private $nomorIndukSistem;
+
+    /**
+     * @var integer $nomorPendaftaran
+     *
+     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true)
+     */
+    private $nomorPendaftaran;
+
+    /**
+     * @var string $nomorInduk
+     *
+     * @ORM\Column(name="nomor_induk", type="string", length=100, nullable=true)
+     */
+    private $nomorInduk;
+
+    /**
+     * @var string $namaLengkap
+     *
+     * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
+     */
+    private $namaLengkap;
+
+    /**
+     * @var string $jenisKelamin
+     *
+     * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
+     */
+    private $jenisKelamin;
+
+    /**
+     * @var string $foto
+     *
+     * @ORM\Column(name="foto", type="string", length=400, nullable=true)
+     */
+    private $foto;
+
+    /**
+     * @var string $agama
+     *
+     * @ORM\Column(name="agama", type="string", length=100, nullable=true)
+     */
+    private $agama;
+
+    /**
+     * @var string $tempatLahir
+     *
+     * @ORM\Column(name="tempat_lahir", type="string", length=400, nullable=true)
+     */
+    private $tempatLahir;
+
+    /**
+     * @var \DateTime $tanggalLahir
+     *
+     * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
+     */
+    private $tanggalLahir;
+
+    /**
+     * @var string $email
+     *
+     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string $namaPanggilan
+     *
+     * @ORM\Column(name="nama_panggilan", type="string", length=100, nullable=true)
+     */
+    private $namaPanggilan;
+
+    /**
+     * @var string $kewarganegaraan
+     *
+     * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
+     */
+    private $kewarganegaraan;
+
+    /**
+     * @var integer $anakKe
+     *
+     * @ORM\Column(name="anak_ke", type="integer", nullable=true)
+     */
+    private $anakKe;
+
+    /**
+     * @var integer $jumlahSaudarakandung
+     *
+     * @ORM\Column(name="jumlah_saudarakandung", type="integer", nullable=true)
+     */
+    private $jumlahSaudarakandung;
+
+    /**
+     * @var integer $jumlahSaudaratiri
+     *
+     * @ORM\Column(name="jumlah_saudaratiri", type="integer", nullable=true)
+     */
+    private $jumlahSaudaratiri;
+
+    /**
+     * @var string $statusOrphan
+     *
+     * @ORM\Column(name="status_orphan", type="string", length=100, nullable=true)
+     */
+    private $statusOrphan;
+
+    /**
+     * @var string $bahasaSeharihari
+     *
+     * @ORM\Column(name="bahasa_seharihari", type="string", length=200, nullable=true)
+     */
+    private $bahasaSeharihari;
+
+    /**
+     * @var string $alamat
+     *
+     * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     */
+    private $alamat;
+
+    /**
+     * @var string $kodepos
+     *
+     * @ORM\Column(name="kodepos", type="string", length=30, nullable=true)
+     */
+    private $kodepos;
+
+    /**
+     * @var string $telepon
+     *
+     * @ORM\Column(name="telepon", type="string", length=100, nullable=true)
+     */
+    private $telepon;
+
+    /**
+     * @var string $ponselSiswa
+     *
+     * @ORM\Column(name="ponsel_siswa", type="string", length=100, nullable=true)
+     */
+    private $ponselSiswa;
+
+    /**
+     * @var string $ponselOrangtuawali
+     *
+     * @ORM\Column(name="ponsel_orangtuawali", type="string", length=100, nullable=true)
+     */
+    private $ponselOrangtuawali;
+
+    /**
+     * @var string $sekolahTinggaldi
+     *
+     * @ORM\Column(name="sekolah_tinggaldi", type="string", length=400, nullable=true)
+     */
+    private $sekolahTinggaldi;
+
+    /**
+     * @var string $jarakTempat
+     *
+     * @ORM\Column(name="jarak_tempat", type="string", length=300, nullable=true)
+     */
+    private $jarakTempat;
+
+    /**
+     * @var string $caraKesekolah
+     *
+     * @ORM\Column(name="cara_kesekolah", type="string", length=300, nullable=true)
+     */
+    private $caraKesekolah;
+
+    /**
+     * @var integer $beratbadan
+     *
+     * @ORM\Column(name="beratbadan", type="integer", nullable=true)
+     */
+    private $beratbadan;
+
+    /**
+     * @var integer $tinggibadan
+     *
+     * @ORM\Column(name="tinggibadan", type="integer", nullable=true)
+     */
+    private $tinggibadan;
+
+    /**
+     * @var string $golongandarah
+     *
+     * @ORM\Column(name="golongandarah", type="string", length=50, nullable=true)
+     */
+    private $golongandarah;
+
+    /**
+     * @var Gelombang
+     *
+     * @ORM\ManyToOne(targetEntity="Gelombang")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idgelombang", referencedColumnName="id")
+     * })
+     */
+    private $idgelombang;
+
+    /**
+     * @var Tahunmasuk
+     *
+     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idtahunmasuk", referencedColumnName="id")
+     * })
+     */
+    private $idtahunmasuk;
+
+    /**
+     * @var Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

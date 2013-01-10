@@ -1,0 +1,47 @@
+PembayaranRutin:
+    type: entity
+    table: pembayaran_rutin
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nominalPembayaran:
+            type: bigint
+            nullable: true
+            column: nominal_pembayaran
+        keterangan:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+        waktuCatat:
+            type: datetime
+            nullable: true
+            column: waktu_catat
+        waktuUbah:
+            type: datetime
+            nullable: true
+            column: waktu_ubah
+    manyToOne:
+        idbiayaRutin:
+            targetEntity: BiayaRutin
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idbiaya_rutin:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idsiswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsiswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

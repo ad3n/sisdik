@@ -1,0 +1,102 @@
+# Group
+group:
+    edit:
+        submit: Ubah grup
+    show:
+        name: Name grup
+    new:
+        submit: Membuat grup
+    flash:
+        updated: The group has been updated
+        created: The group has been created
+        deleted: The group has been deleted
+
+# Security
+"Bad credentials": Username atau password salah
+"The presented password cannot be empty.":  Password tidak bisa kosong.
+"The presented password is invalid.": Password salah.
+"This user does not have access to this section.": User tidak punya akses ke bagian ini.
+
+security:
+    login:
+        username: "Username"
+        password: "Password"
+        remember_me: ingat saya
+        submit: Login
+
+# Profile
+profile:
+    show:
+        username: Username
+        email: Email
+        role: Peran
+        name: Nama Lengkap
+    edit:
+        submit: Update
+    flash:
+        updated: Profil berhasil diperbarui
+
+# Password change
+change_password:
+    submit: Ubah Password
+    flash:
+        success: Password berhasil diperbarui
+
+# Registration
+registration:
+    check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
+    confirmed: Congrats %username%, your account is now activated.
+    back: Back to the originating page.
+    submit: Register
+    flash:
+        user_created: User berhasil dibuat
+    email:
+        subject: Welcome %username%!
+        message: |
+            Hello %username%!
+
+            To finish activating your account - please visit %confirmationUrl%
+
+            Regards,
+            the Team.
+
+# Password resetting
+resetting:
+    password_already_requested: The password for this user has already been requested within the last 24 hours.
+    check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
+    request:
+        invalid_username: The username or email address "%username%" does not exist.
+        username: "Username or email address:"
+        submit: Reset password
+    reset:
+        submit: Change password
+    flash:
+        success: The password has been reset successfully
+    email:
+        subject: Reset Password
+        message: |
+            Hello %username%!
+
+            To reset your password - please visit %confirmationUrl%
+
+            Regards,
+            the Team.
+
+# Global strings
+layout:
+    logout: Logout
+    login: Login
+    register: Register
+    logged_in_as: Log in sebagai %username%
+
+# Form field labels
+form:
+    group_name: "Name grup:"
+    username: "Username:"
+    email: "Email:"
+    current_password: "Password Aktif:"
+    password: "Password:"
+    password_confirmation: "Verifikasi:"
+    new_password: "Password baru:"
+    new_password_confirmation: "Verifikasi:"
+

@@ -1,0 +1,69 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\BiayaSekali
+ *
+ * @ORM\Table(name="biaya_sekali")
+ * @ORM\Entity
+ */
+class BiayaSekali
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer $nominal
+     *
+     * @ORM\Column(name="nominal", type="bigint", nullable=true)
+     */
+    private $nominal;
+
+    /**
+     * @var integer $urutan
+     *
+     * @ORM\Column(name="urutan", type="smallint", nullable=true)
+     */
+    private $urutan;
+
+    /**
+     * @var Gelombang
+     *
+     * @ORM\ManyToOne(targetEntity="Gelombang")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idgelombang", referencedColumnName="id")
+     * })
+     */
+    private $idgelombang;
+
+    /**
+     * @var Tahunmasuk
+     *
+     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idtahunmasuk", referencedColumnName="id")
+     * })
+     */
+    private $idtahunmasuk;
+
+    /**
+     * @var Jenisbiaya
+     *
+     * @ORM\ManyToOne(targetEntity="Jenisbiaya")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idjenisbiaya", referencedColumnName="id")
+     * })
+     */
+    private $idjenisbiaya;
+
+
+}

@@ -1,0 +1,8 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}error.heading{% endtrans %}{% endblock %}
+
+{% block content %}
+<h3>{{ 'info.errormessage'|trans }}:</h3>
+<p style="font-size: 1.1em; color: #ff0000;">{{ exception.message }}</p>
+{% endblock content %}

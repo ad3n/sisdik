@@ -1,0 +1,54 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}sms.template.detail{% endtrans %}{% endblock %}
+{% block content %}
+<dl>
+    <dt>{{ 'label.school'|trans }}</dt>
+    <dd>{{ entity.idsekolah.nama }}</dd>
+    <dt>{{ 'label.sms.template.name'|trans }}</dt>
+    <dd>{{ entity.nama }}</dd>
+    <dt>{{ 'label.sms.template.entry'|trans }}</dt>
+    <dd>{{ entity.teks }}</dd>
+    <dt>{{ 'label.description'|trans }}</dt>
+    <dd>{{ entity.keterangan }}</dd>
+</dl>
+
+<div class="clearfix"></div>
+
+<form id="delete-form" action="{{ path('sms_template_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('sms_template', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+    <li>
+        <a href="{{ path('sms_template_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<div class="add-link pull-right">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('sms_template_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.sms.template.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.sms.template'|trans({ '%name%': entity.nama }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

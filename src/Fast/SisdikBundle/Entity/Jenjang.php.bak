@@ -1,0 +1,4 @@
+    public function getOptionLabel() {
+        return $this->getKode() . ' (' . $this->getNama() . ')';
+    }
+

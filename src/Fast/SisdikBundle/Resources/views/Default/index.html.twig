@@ -1,0 +1,24 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{{ 'welcome'|trans({}, 'headings') }}{% endblock %}
+
+{% block content %}
+    {% if is_granted('ROLE_USER') %}
+        <h4>you have user role</h4>
+    {% endif %}
+    {% if is_granted('ROLE_SISWA') %}
+        <h4>you have student role</h4>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <h4>you have admin role!</h4>
+    {% endif %}
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <h4>you have super admin role!</h4>
+    {% endif %}
+    
+    <ul>
+    {% for role in app.user.roles %}
+        <li>{{ role }}</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}

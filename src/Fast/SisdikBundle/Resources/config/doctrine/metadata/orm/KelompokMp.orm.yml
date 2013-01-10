@@ -1,0 +1,31 @@
+KelompokMp:
+    type: entity
+    table: kelompok_mp
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+        urutan:
+            type: integer
+            unsigned: false
+            nullable: true
+    manyToOne:
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

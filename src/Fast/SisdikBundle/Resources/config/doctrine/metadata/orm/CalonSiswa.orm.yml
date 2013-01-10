@@ -1,0 +1,72 @@
+CalonSiswa:
+    type: entity
+    table: calon_siswa
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nomorPendaftaran:
+            type: integer
+            unsigned: false
+            nullable: true
+            column: nomor_pendaftaran
+        namaLengkap:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+            column: nama_lengkap
+        jenisKelamin:
+            type: string
+            length: 255
+            fixed: false
+            nullable: true
+            column: jenis_kelamin
+        tempatLahir:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+            column: tempat_lahir
+        tanggalLahir:
+            type: date
+            nullable: true
+            column: tanggal_lahir
+        alamat:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+    manyToOne:
+        idgelombang:
+            targetEntity: Gelombang
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idgelombang:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idtahunmasuk:
+            targetEntity: Tahunmasuk
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahunmasuk:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

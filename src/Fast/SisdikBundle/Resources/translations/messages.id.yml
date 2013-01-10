@@ -1,0 +1,466 @@
+label:
+    output: Output
+    from: Dari
+    to: Ke
+    dayno: Hari Ke
+    generate.username: Buat Username
+    presencestatus: "- status kehadiran -"
+    allpresencestatus: Semua Kehadiran
+    date: Tanggal
+    adduser.withschool: Tambah User di Sekolah
+    adduser.noschool: Tambah User tanpa register Sekolah 
+    actions: Tindakan
+    merge: Gabung
+    commkey: Communication Key
+    ipaddress: Alamat IP
+    level: Jenjang
+    allplacement: Semua Penjurusan Studi
+    allclass: Semua Kelas
+    download: Unduh
+    number: Nomor
+    fielddelimiter: Pemisah kolom
+    import: Impor
+    importclassmap: Impor/Pemetaan Kelas
+    moveup: Naik
+    movedown: Turun
+    movement: Perubahan Posisi
+    parentnode: Node Induk
+    select.parentnode: "- Pilih Node Induk -"
+    duplicate: Salin
+    updatecommand: Update Command
+    attendance: Kehadiran/Kepulangan
+    parameter: Parameter
+    sms.massive: SMS Massal
+    sms.realtime: SMS Realtime
+    sendsms.massive: Kirim SMS Massal
+    sendsms.realtime: Kirim SMS Realtime
+    paramstatusfrom: Parameter Dari Jam
+    paramstatusto: Parameter Hingga Jam
+    command.realtime: Command untuk SMS Realtime
+    massivesms.hour: SMS Massal Jam
+    realtimesms.hourfrom: SMS Realtime Dari Jam
+    realtimesms.hourto: SMS Realtime Hingga Jam
+    command.massive: Command untuk SMS Massal
+    presencefrom: Sistem Kehadiran/Kepulangan Jam
+    presenceto: Sistem Kehadiran Hingga Jam
+    presencecommand: Command Kehadiran/Kepulangan
+    monthday: Tanggal Ke
+    day: Hari
+    selectmonthday: "- Pilih Tanggal Ke -"
+    selectweekday: "- Pilih Hari -"
+    sunday: Minggu
+    monday: Senin
+    tuesday: Selasa
+    wednesday: Rabu
+    thursday: Kamis
+    friday: Jumat
+    saturday: Sabtu
+    selectrepetition: "- Pilih Perulangan -"
+    selectclass: Pilih Kelas
+    save: Simpan
+    checkall: Centang Semua
+    uncheckall: Hapus Centang
+    view: Lihat
+    activeyear: Tahun Aktif
+    activate: Aktifkan
+    text: Teks
+    inactive: Tidak aktif
+    active: Aktif    
+    detailinfo: Info Detail
+    selectacademicyear: Pilih Tahun Ajaran
+    enabled: Aktif
+    gender: Jenis Kelamin
+    photo: Foto
+    religion: Agama
+    birthplace: Tempat Lahir
+    birthday: Tanggal Lahir
+    idnumber: Nomor Induk
+    nickname: Nama Panggilan
+    nationality: Kewarganegaraan
+    childno: Anak Ke
+    brothers.num: Jumlah Saudara Kandung
+    brothersinlaw.num: Jumlah Saudara Tiri
+    orphanstatus: Status Yatim/Piatu
+    dailylanguage: Bahasa Sehari-hari
+    phone: Telepon
+    mobilephone: Ponsel
+    mobilephone.student: Ponsel Siswa
+    mobilephone.parent: Ponsel Orangtua/Wali
+    livein.whilestudy: Sekolah Tinggal di
+    distance.toschool: Jarak ke Sekolah
+    how.toschool: Ke Sekolah Menggunakan
+    bodyweight: Berat Badan
+    bodyheight: Tinggi Badan
+    bloodtype: Golongan Darah
+    daily: Hari
+    weekly: Minggu
+    monthly: Bulan
+    annually: Tahun
+    repetition: Perulangan
+    nominal: Nominal
+    description: Keterangan
+    order: Urutan
+    code: Kode
+    close: Tutup
+    password: Password
+    repassword: Password (lagi)
+    edit: Ubah
+    editaccount: ubah akun
+    editpassword: ubah password
+    username: Username
+    email: Email
+    name: Nama
+    name.full: Nama Lengkap
+    current:
+        password: Password aktif
+    roles: Peran
+    options: Pilihan
+    add:
+        user.withschool: Tambah User di Sekolah
+        user.noschool: Tambah User
+        school: Tambah Sekolah
+        fieldofstudy: Tambah Bidang Studi
+    delete: Hapus
+    address: Alamat
+    schoolname: Nama Sekolah
+    schoolcode: Kode Sekolah
+    postalcode: Kode Pos
+    phone: Telepon
+    fax: Fax
+    account: No. Rek
+    bank: Bank
+    foundation: Yayasan
+    headmaster: Kepala Sekolah
+    submit:
+        add: Tambah
+        update: Ubah
+        proceed: Lanjutkan
+    school: Sekolah
+    choose: Pilih
+    unset: "- Tak terdaftar -"
+    all: Semua
+    search: Cari
+    searchkey: Kata Pencarian
+    typesearchkey: Ketik kata pencarian di sini
+    selectyear: Pilih Tahun
+    selectadmissiongroup: Pilih Gelombang
+    reset: Reset
+    chief: Kepala
+    yearentry:
+        add: Tambah Tahun Masuk
+        entry: Tahun Masuk
+    admissiongroup:
+        add: Tambah Gelombang Masuk
+        name: Nama Gelombang Masuk
+        code: Kode Gelombang Masuk
+        entry: Gelombang
+    fee:
+        type:
+            add: Tambah Jenis Biaya
+            name: Nama Jenis Biaya
+            code: Kode Jenis Biaya
+            entry: Jenis Biaya
+        once:
+            add: Tambah Biaya Sekali
+            name: Nama Biaya Sekali
+            code: Kode Biaya Sekali
+            entry: Biaya Sekali
+        recur:
+            add: Tambah Biaya Berulang
+            name: Nama Biaya Berulang
+            code: Kode Biaya Berulang
+            entry: Biaya Berulang
+    student:
+        add: Tambah Siswa
+        name: Nama Siswa
+        entry: Siswa
+        import: Impor-Baru Data Siswa
+        importclassmap: Impor-Pemetaan Data Kelas Siswa
+        merge: Impor-Gabung Data Siswa
+        generate.username: Buat username siswa
+    class:
+        add: Tambah Kelas
+        name: Nama Kelas
+        entry: Kelas
+    year:
+        add: Tambah Tahun Ajaran
+        name: Nama Tahun Ajaran
+        entry: Tahun Ajaran
+    classguardian:
+        add: Tambah Wali Kelas
+        name: Nama Wali Kelas
+        entry: Wali Kelas
+    studentclass:
+        add: Tambah Riwayat Kelas
+        name: Nama Kelas
+        entry: Kelas
+    sms.template:
+        add: Tambah Template SMS
+        name: Nama Template
+        entry: Template SMS
+    presence.status:
+        add: Tambah Status Kehadiran/Kepulangan
+        name: Nama Status Kehadiran/Kepulangan
+        entry: Status
+    presence.schedule:
+        add: Tambah Jadwal Kehadiran/Kepulangan
+        name: Nama Jadwal Kehadiran/Kepulangan
+        entry: Jadwal Kehadiran/Kepulangan
+    placement:
+        add: Tambah Node Penjurusan
+        name: Nama Penjurusan
+        entry: Node Penjurusan
+        study: Penjurusan Studi
+    studylevel:
+        add: Tambah Jenjang
+        name: Nama Jenjang
+        entry: Jenjang
+    attendancemachine:
+        add: Tambah Mesin Kehadiran
+        name: Nama Mesin Kehadiran
+        entry: Mesin Kehadiran
+
+link:
+    backtolist: « Kembali ke Daftar
+    edit: Ubah
+    classhistory: Riwayat Kelas
+    showstudent: Lihat Info Detail Siswa
+    backtostudentinfo: « Kembali ke Info Data Siswa
+    backtodetail: « Kembali ke Info
+    download.template: Unduh Berkas Template
+
+shortinfo:
+    password.mustequal: password harus sama
+    username: username 
+    checked: yang terpilih
+    inselectedyear: dalam tahun terpilih
+    onlyoneactive: hanya satu tahun ajaran yang bisa aktif dalam satu waktu
+    duplicate.schedule: Salin jadwal ke
+    duplicate.classes: Salin kelas
+    onlyforactiveyear: hanya untuk tahun aktif
+    using.yearentry: menggunakan tahun masuk
+    using.year.and.level: menggunakan tahun ajaran dan jenjang kelas
+    no.student.data: Tidak ada data siswa
+    no.class.data: Tidak ada data kelas
+
+fos_user:
+    username:
+        already_used: username sudah terpakai
+
+flash:
+    profile:
+        updated: Profil berhasil diperbarui
+    settings:
+        user:
+            updated: User '%username%' berhasil diperbarui
+            deleted: User '%username%' berhasil dihapus
+            inserted: User '%username%' berhasil ditambah
+            fail:
+                delete: User '%username%' gagal dihapus
+                deletesome: User yang terpilih gagal dihapus
+                noselected: Tidak ada user yang terpilih
+            some:
+                deleted: User-user terpilih berhasil dihapus
+            message1: Modul khusus untuk Admin. Pengaturan lebih lengkap ada di 'Pengaturan » Semua User'
+        school:
+            inserted: Sekolah '%schoolname%' berhasil ditambah
+            updated: Sekolah '%schoolname%' berhasil diperbarui
+            deleted: Sekolah '%schoolname%' berhasil dihapus
+            fail.delete: Sekolah '%schoolname%' gagal dihapus
+        yearentry:
+            inserted: Tahun Masuk '%yearentry%' berhasil ditambah
+            updated: Tahun Masuk '%yearentry%' berhasil diperbarui
+            deleted: Tahun Masuk '%yearentry%' berhasil dihapus
+            fail.delete: Tahun Masuk gagal dihapus
+        admissiongroup:
+            inserted: Gelombang '%admissiongroup%' berhasil ditambah
+            updated: Gelombang '%admissiongroup%' berhasil diperbarui
+            deleted: Gelombang '%admissiongroup%' berhasil dihapus
+            fail.delete: Gelombang gagal dihapus
+        placement:
+            inserted: Node Penjurusan '%node%' berhasil ditambah
+            updated: Node Penjurusan '%node%' berhasil diperbarui
+            deleted: Node Penjurusan '%node%' berhasil dihapus
+            fail.delete: Node Penjurusan '%node%' gagal dihapus
+    fee:
+        type:
+            inserted: Jenis biaya '%feetype%' berhasil ditambah
+            updated: Jenis biaya '%feetype%' berhasil diperbarui
+            deleted: Jenis biaya '%feetype%' berhasil dihapus
+            fail.delete: Jenis biaya gagal dihapus
+        once:
+            inserted: Data Biaya berhasil ditambah
+            updated: Data Biaya berhasil diperbarui
+            deleted: Data Biaya berhasil dihapus
+            fail.delete: Data Biaya gagal dihapus
+        recur:
+            inserted: Data Biaya berhasil ditambah
+            updated: Data Biaya berhasil diperbarui
+            deleted: Data Biaya berhasil dihapus
+            fail.delete: Data Biaya gagal dihapus
+    data:
+        student:
+            inserted: Siswa '%student%' berhasil ditambah
+            updated: Siswa '%student%' berhasil diperbarui
+            deleted: Siswa '%student%' berhasil dihapus
+            fail.delete: Siswa '%student%' gagal dihapus
+            imported: Berhasil mengimpor %count% data siswa untuk tahun %year% %admission%
+            merged: Berhasil mengimpor-gabungkan %count% data siswa
+        class:
+            inserted: Kelas '%class%' tahun '%year%' berhasil ditambah
+            updated: Kelas '%class%' tahun '%year%' berhasil diperbarui
+            deleted: Kelas '%class%' tahun '%year%' berhasil dihapus
+            fail.delete: Kelas gagal dihapus
+            duplicated: Kelas dari tahun ajaran '%yearfrom%' berhasil disalin ke tahun ajaran '%yearto%'
+            fail.duplicate: Kelas gagal disalin
+        year:
+            inserted: Tahun Ajaran '%year%' berhasil ditambah
+            updated: Tahun Ajaran '%year%' berhasil diperbarui
+            deleted: Tahun Ajaran '%year%' berhasil dihapus
+            fail.delete: Tahun Ajaran '%year%' gagal dihapus
+        classguardian:
+            inserted: Wali Kelas '%classguardian%' berhasil ditambah
+            updated: Wali Kelas '%classguardian%' berhasil diperbarui
+            deleted: Wali Kelas '%classguardian%' berhasil dihapus
+            fail.delete: Wali Kelas '%classguardian%' gagal dihapus
+        studentclass:
+            inserted: Riwayat Kelas Siswa '%student%' berhasil dibuat
+            updated: Riwayat Kelas Siswa '%student%' berhasil diperbarui
+            deleted: Riwayat Kelas Siswa '%student%' di kelas '%class%' tahun '%year%' berhasil dihapus
+            fail.delete: Riwayat Kelas Siswa '%student%' gagal dihapus
+            imported: Berhasil mengimpor/memetakan %count% siswa-kelas untuk tahun ajaran %year% ke kelas %class%
+        academic.calendar:
+            updated: Kalender Pendidikan tahun '%year%' bulan '%month%' berhasil diperbarui
+    sms:
+        template:
+            inserted: Template SMS '%name%' berhasil dibuat
+            updated: Template SMS '%name%' berhasil diperbarui
+            deleted: Template SMS '%name%' berhasil dihapus
+            fail.delete: Template SMS '%name%' gagal dihapus
+    presence:
+        status:
+            inserted: Status Kehadiran '%name%' di sekolah '%school%' berhasil dibuat
+            updated: Status Kehadiran '%name%' di sekolah '%school%' berhasil diperbarui
+            deleted: Status Kehadiran '%name%' di sekolah '%school%' berhasil dihapus
+            fail.delete: Status Kehadiran '%name%' di sekolah '%school%' gagal dihapus
+        schedule:
+            inserted: Jadwal Kehadiran/Kepulangan berhasil dibuat
+            updated: Jadwal Kehadiran/Kepulangan berhasil diperbarui
+            deleted: Jadwal Kehadiran/Kepulangan berhasil dihapus
+            fail.delete: Jadwal Kehadiran/Kepulangan gagal dihapus
+            commandupdate.success: Command Jadwal Kehadiran/Kepulangan berhasil diperbarui
+            commandupdate.fail: Command Jadwal Kehadiran/Kepulangan gagal diperbarui
+            duplicate.success: Jadwal Kehadiran/Kepulangan berhasil disalin
+            duplicate.fail: Jadwal Kehadiran/Kepulangan gagal disalin
+        student:
+            updated: Kehadiran siswa yang terpilih berhasil diperbarui
+    studylevel:
+        inserted: Jenjang '%name%' berhasil dibuat
+        updated: Jenjang '%name%' berhasil diperbarui
+        deleted: Jenjang '%name%' berhasil dihapus
+        fail.delete: Jenjang '%name%' gagal dihapus
+    attendancemachine:
+        inserted: Mesin Kehadiran '%ip%' berhasil dibuat
+        updated: Mesin Kehadiran '%ip%' berhasil diperbarui
+        deleted: Mesin Kehadiran '%ip%' berhasil dihapus
+        fail.delete: Mesin Kehadiran '%ip%' gagal dihapus
+
+tip:
+    edit: Ubah
+    delete: Hapus
+    detail: Detail
+    moveup: Naik
+    movedown: Turun
+
+"Current": Password aktif
+
+confirm.drop:
+    user: Hapus user '%username%'?
+    someusers: Hapus user-user terpilih?\nKlik OK jika benar-benar yakin, karena aksi ini tidak dapat dibatalkan.
+    school: Hapus Sekolah '%schoolname%'?
+    fieldofstudy: Hapus Bidang Studi '%fieldofstudy%'?
+    classguardian: Hapus Wali Kelas '%name%'?
+    studentclass: Hapus Riwayat Kelas '%student%' di kelas '%class%' tahun '%year%'?
+    class: Hapus Kelas '%class%'?
+    year: Hapus Tahun Ajaran '%year%'?
+    fee.recur: Hapus Biaya Berulang '%fee%', nominal '%nominal%'?
+    fee.once: Hapus Biaya Sekali '%fee%', nominal '%nominal%'?
+    fee.type: Hapus Jenis Biaya '%fee%' (%code%)?
+    admissiongroup: Hapus Gelombang Penerimaan '%admission%' (%code%)?
+    yearentry: Hapus Tahun Masuk '%year%'?
+    sms.template: Hapus Template SMS '%name%'?
+    presence.status: Hapus Status Kehadiran '%name%'?
+    presence.schedule: Hapus Jadwal Kehadiran/Kepulangan?
+    placement: Hapus Node Penjurusan '%node%'?
+    student: Hapus siswa '%student%'?
+    studylevel: Hapus jenjang '%code%'?
+    attendancemachine: Hapus Mesin Kehadiran '%ip%'?
+
+alt:
+    add: ikon tambah
+    import: ikon impor
+    logo: logo
+    resetsearch: reset parameter pencarian
+    kb: basis pengetahuan
+    loading: loading...
+    student.generate.username: buat username
+
+exception:
+    useadmin: gunakan user admin sekolah untuk mengakses ini
+    useadmin.or.headmaster: gunakan user admin atau kepala sekolah untuk mengakses ini
+    limitedtoadmin: modul ini terbatas hanya untuk admin sekolah
+    registertoschool: user harus diregistrasikan ke sekolah terlebih dahulu
+    delete.restrict: Tidak bisa menghapus data yang telah dipakai di data lain yang terkait
+    unique.studentclass: Tidak bisa mendaftarkan siswa di kelas yang sama
+    unique.studentclass.active: Siswa hanya bisa aktif di satu kelas pada satu tahun ajaran
+    studentid.unique: Nomor induk harus unik, tidak boleh ada yang sama
+    import.error: Proses impor data gagal. Hubungi kami jika anda pikir ini adalah kesalahan sistem
+    studentclass.unique: Kombinasi siswa, tahun ajaran, dan kelas harus unik. Ada duplikat pada data yang diimpor.
+    unique.yearentry: Tahun masuk yang dipilih telah ada di database
+    update.yearentry.restrict: Tidak bisa mengubah data tahun masuk yang telah dipakai di data lain yang terkait
+    unique.class.year.school: Kode kelas pada suatu sekolah harus unik
+    unique.year.school: Kode tahun ajaran pada suatu sekolah harus unik
+    unique.classguardian: Wali kelas untuk tahun ajaran dan kelas yang dipilih telah ada 
+    
+info:
+    errormessage: Pesan Error
+    
+errorinfo:
+    cannot.open: Tidak bisa membuka file %filename%
+    cannot.write: Tidak bisa menulis ke file %filename%
+    cannot.remove.previousfile: Tidak bisa menghapus file sebelumnya
+    file.notwritable: File %filename% tidak bisa ditulis
+    cannot.createdirectory: Tidak bisa membuat direktori %dirname%
+
+formerror:
+    studentid.already.used: Nomor induk (username) sudah terpakai. Pilih yang lain.
+
+male: Laki-laki
+female: Perempuan
+
+heading:
+    academicinfo: Info Akademik
+    personalinfo: Info Personal
+    download.selection: Pilihan mengunduh berkas data
+    classmapping.initialization: Untuk Inisialisasi
+    classmapping.nextgrade: Untuk Kenaikan Kelas
+    download.studentdata: Unduh data siswa
+    download.data.formerge: Unduh berkas data yang akan diimpor-gabungkan
+
+text:
+    academicinfo: Riwayat kelas, nilai, tugas akhir, pembayaran, dan lain-lain
+    personalinfo: Data orang tua, riwayat penyakit, pendidikan sebelumnya, referensi, dan lain-lain
+
+profile:
+    add:
+        submit: Tambah
+
+hello: Halo
+
+title:
+    login: Login
+    register: Registrasi
+
+app.title: SisDik
+    
+    

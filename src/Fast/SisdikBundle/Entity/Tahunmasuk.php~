@@ -1,0 +1,42 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\Tahunmasuk
+ *
+ * @ORM\Table(name="tahunmasuk")
+ * @ORM\Entity
+ */
+class Tahunmasuk
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime $tahun
+     *
+     * @ORM\Column(name="tahun", type="date", nullable=false)
+     */
+    private $tahun;
+
+    /**
+     * @var Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

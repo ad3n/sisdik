@@ -1,0 +1,70 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\PenyakitSiswa
+ *
+ * @ORM\Table(name="penyakit_siswa")
+ * @ORM\Entity
+ */
+class PenyakitSiswa
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $nama
+     *
+     * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     */
+    private $nama;
+
+    /**
+     * @var string $kelas
+     *
+     * @ORM\Column(name="kelas", type="string", length=200, nullable=true)
+     */
+    private $kelas;
+
+    /**
+     * @var string $tahun
+     *
+     * @ORM\Column(name="tahun", type="string", length=100, nullable=true)
+     */
+    private $tahun;
+
+    /**
+     * @var string $lamasakit
+     *
+     * @ORM\Column(name="lamasakit", type="string", length=200, nullable=true)
+     */
+    private $lamasakit;
+
+    /**
+     * @var string $keterangan
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     * })
+     */
+    private $idsiswa;
+
+
+}

@@ -1,0 +1,43 @@
+Tahun:
+    type: entity
+    table: tahun
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+        kode:
+            type: string
+            length: 45
+            fixed: false
+            nullable: false
+        urutan:
+            type: smallint
+            nullable: true
+        keterangan:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+        aktif:
+            type: boolean
+            nullable: false
+    manyToOne:
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

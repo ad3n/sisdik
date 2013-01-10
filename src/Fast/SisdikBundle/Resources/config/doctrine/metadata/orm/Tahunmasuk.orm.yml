@@ -1,0 +1,25 @@
+Tahunmasuk:
+    type: entity
+    table: tahunmasuk
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        tahun:
+            type: date
+            nullable: false
+    manyToOne:
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<body>
+{{ message }}
+{% if app.session.flash('notice') %}
+    <div class="flash-message">
+        <em>Notice</em>: {{ app.session.flash('notice') }}
+    </div>
+{% endif %}
+</body>
+</html>

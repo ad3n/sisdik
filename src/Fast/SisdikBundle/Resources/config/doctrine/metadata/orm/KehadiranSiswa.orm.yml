@@ -1,0 +1,69 @@
+KehadiranSiswa:
+    type: entity
+    table: kehadiran_siswa
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        prioritasPembaruan:
+            type: smallint
+            nullable: false
+            column: prioritas_pembaruan
+        tanggal:
+            type: date
+            nullable: true
+        jam:
+            type: string
+            length: 10
+            fixed: false
+            nullable: true
+        smsDlr:
+            type: smallint
+            nullable: true
+            column: sms_dlr
+        smsDlrtime:
+            type: datetime
+            nullable: true
+            column: sms_dlrtime
+        smsTerproses:
+            type: boolean
+            nullable: false
+            column: sms_terproses
+        keteranganStatus:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+            column: keterangan_status
+    manyToOne:
+        idsiswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsiswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idkelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkelas:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idstatusKehadiranKepulangan:
+            targetEntity: StatusKehadiranKepulangan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idstatus_kehadiran_kepulangan:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

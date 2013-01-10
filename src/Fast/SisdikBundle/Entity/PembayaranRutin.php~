@@ -1,0 +1,73 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\PembayaranRutin
+ *
+ * @ORM\Table(name="pembayaran_rutin")
+ * @ORM\Entity
+ */
+class PembayaranRutin
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer $nominalPembayaran
+     *
+     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
+     */
+    private $nominalPembayaran;
+
+    /**
+     * @var string $keterangan
+     *
+     * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var \DateTime $waktuCatat
+     *
+     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     */
+    private $waktuCatat;
+
+    /**
+     * @var \DateTime $waktuUbah
+     *
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     */
+    private $waktuUbah;
+
+    /**
+     * @var BiayaRutin
+     *
+     * @ORM\ManyToOne(targetEntity="BiayaRutin")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idbiaya_rutin", referencedColumnName="id")
+     * })
+     */
+    private $idbiayaRutin;
+
+    /**
+     * @var Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     * })
+     */
+    private $idsiswa;
+
+
+}

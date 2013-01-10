@@ -1,0 +1,19 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}academic.calendar{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+<div class="filter-section">
+    <form method="POST" action="{{ path('data_kaldemik_process') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('data_kaldemik') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+{% endblock content %}

@@ -1,0 +1,32 @@
+StatusKehadiranKepulangan:
+    type: entity
+    table: status_kehadiran_kepulangan
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+        keterangan:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+    manyToOne:
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

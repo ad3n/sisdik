@@ -1,0 +1,40 @@
+CukilMp:
+    type: entity
+    table: cukil_mp
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+    manyToOne:
+        idtahun:
+            targetEntity: Tahun
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahun:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idsemester:
+            targetEntity: Semester
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsemester:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idmataPelajaran:
+            targetEntity: MataPelajaran
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idmata_pelajaran:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

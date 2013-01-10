@@ -1,0 +1,68 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}fee.recur.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('fee_recur') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('fee_recur') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('fee_recur_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.fee.recur.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.yearentry.entry'|trans }}</th>
+    		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th>{{ 'label.fee.type.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
+                {{ pagination.sortable('label.nominal'|trans, 't.nominal')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.perulangan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.repetition'|trans, 't.perulangan')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.order'|trans, 't.urutan')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.idtahunmasuk is defined %}{{ data.idtahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.idgelombang is defined %}{{ data.idgelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.idjenisbiaya is defined %}{{ data.idjenisbiaya.nama }} ({{ data.idjenisbiaya.kode }}){% endif %}</td>
+    		<td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
+    		<td data-title="{{ 'label.repetition'|trans }}">{{ data.perulangan }}</td>
+    		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('fee_recur_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('fee_recur_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock content %}

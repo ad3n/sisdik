@@ -1,0 +1,31 @@
+GuruMp:
+    type: entity
+    table: guru_mp
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+    manyToOne:
+        idguru:
+            targetEntity: Guru
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idguru:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idmataPelajaran:
+            targetEntity: MataPelajaran
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idmata_pelajaran:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

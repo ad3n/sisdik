@@ -1,0 +1,27 @@
+TugasAkhir:
+    type: entity
+    table: tugas_akhir
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        judul:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+    manyToOne:
+        idsiswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsiswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

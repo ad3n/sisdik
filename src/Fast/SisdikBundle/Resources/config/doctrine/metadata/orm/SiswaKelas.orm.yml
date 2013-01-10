@@ -1,0 +1,57 @@
+SiswaKelas:
+    type: entity
+    table: siswa_kelas
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        aktif:
+            type: boolean
+            nullable: false
+        keterangan:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+    manyToOne:
+        idsiswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsiswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idtahun:
+            targetEntity: Tahun
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahun:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idpenjurusan:
+            targetEntity: Penjurusan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idpenjurusan:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idkelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkelas:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,79 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\SiswaKelas
+ *
+ * @ORM\Table(name="siswa_kelas")
+ * @ORM\Entity
+ */
+class SiswaKelas
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean $aktif
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     */
+    private $aktif;
+
+    /**
+     * @var string $keterangan
+     *
+     * @ORM\Column(name="keterangan", type="string", length=400, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     * })
+     */
+    private $idsiswa;
+
+    /**
+     * @var Tahun
+     *
+     * @ORM\ManyToOne(targetEntity="Tahun")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     * })
+     */
+    private $idtahun;
+
+    /**
+     * @var Penjurusan
+     *
+     * @ORM\ManyToOne(targetEntity="Penjurusan")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idpenjurusan", referencedColumnName="id")
+     * })
+     */
+    private $idpenjurusan;
+
+    /**
+     * @var Kelas
+     *
+     * @ORM\ManyToOne(targetEntity="Kelas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     * })
+     */
+    private $idkelas;
+
+
+}

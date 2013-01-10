@@ -1,0 +1,17 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.year.creation{% endtrans %}{% endblock %}
+
+{% block content %}
+<form action="{{ path('data_year_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        <a href="{{ path('data_year') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

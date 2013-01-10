@@ -1,0 +1,4 @@
+
+     * @ORM\Column(name="tahun", type="string", nullable=false)
+    private $tahun;
+

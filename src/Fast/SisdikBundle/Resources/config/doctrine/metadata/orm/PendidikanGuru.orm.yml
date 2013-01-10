@@ -1,0 +1,52 @@
+PendidikanGuru:
+    type: entity
+    table: pendidikan_guru
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        jenjang:
+            type: integer
+            unsigned: false
+            nullable: true
+        nama:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+        alamat:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+        ijazah:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+        kelulusan:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+        tahunmasuk:
+            type: date
+            nullable: true
+        tahunkeluar:
+            type: date
+            nullable: true
+    manyToOne:
+        idguru:
+            targetEntity: Guru
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idguru:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

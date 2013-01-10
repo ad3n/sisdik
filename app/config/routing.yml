@@ -1,0 +1,35 @@
+logout:
+    pattern:    /logout
+
+FastSisdikBundle:
+    resource: "@FastSisdikBundle/Resources/config/routing.yml"
+    prefix:   /
+
+#_welcome:
+#    pattern:  /
+#    defaults: { _controller: "FastSisdikBundle:Welcome:index" }
+
+_welcome:
+    pattern:  /
+    defaults: { _controller: "AcmeDemoBundle:Welcome:index" }
+
+#AcmeBlogBundle:
+#    resource: "@AcmeBlogBundle/Controller/"
+#    type:     annotation
+#    prefix:   /{_locale}
+#    defaults: { _locale: id }
+#    requirements:
+#        _locale: id|en|fr
+        
+#_default_blog:
+#    pattern:  /blog/author
+#    defaults: { _controller: "AcmeBlogBundle:Default:index" }
+
+#AcmeTaskBundle:
+#    resource: "@AcmeTaskBundle/Controller/"
+#    type:     annotation
+#    prefix:   /
+
+#AcmeHelloBundle:
+#    resource: "@AcmeHelloBundle/Resources/config/routing.yml"
+#    prefix:   /

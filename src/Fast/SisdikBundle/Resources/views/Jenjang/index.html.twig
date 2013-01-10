@@ -1,0 +1,47 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.studylevel.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('data_level_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.studylevel.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+    		    {{ pagination.sortable('label.studylevel.name'|trans, 't.nama')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+                {{ pagination.sortable('label.code'|trans, 't.kode')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.order'|trans, 't.urutan')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.studylevel.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
+    		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('data_level_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('data_level_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock content %}

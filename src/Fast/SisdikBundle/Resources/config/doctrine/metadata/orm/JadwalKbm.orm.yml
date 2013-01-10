@@ -1,0 +1,30 @@
+JadwalKbm:
+    type: entity
+    table: jadwal_kbm
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        tanggal:
+            type: date
+            nullable: true
+        keterangan:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+    manyToOne:
+        idtahun:
+            targetEntity: Tahun
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahun:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

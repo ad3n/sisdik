@@ -1,0 +1,45 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\GuruMp
+ *
+ * @ORM\Table(name="guru_mp")
+ * @ORM\Entity
+ */
+class GuruMp
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var Guru
+     *
+     * @ORM\ManyToOne(targetEntity="Guru")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idguru", referencedColumnName="id")
+     * })
+     */
+    private $idguru;
+
+    /**
+     * @var MataPelajaran
+     *
+     * @ORM\ManyToOne(targetEntity="MataPelajaran")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idmata_pelajaran", referencedColumnName="id")
+     * })
+     */
+    private $idmataPelajaran;
+
+
+}

@@ -1,0 +1,122 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\PendidikanSiswa
+ *
+ * @ORM\Table(name="pendidikan_siswa")
+ * @ORM\Entity
+ */
+class PendidikanSiswa
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer $jenjang
+     *
+     * @ORM\Column(name="jenjang", type="integer", nullable=true)
+     */
+    private $jenjang;
+
+    /**
+     * @var string $nama
+     *
+     * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     */
+    private $nama;
+
+    /**
+     * @var string $alamat
+     *
+     * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     */
+    private $alamat;
+
+    /**
+     * @var string $ijazah
+     *
+     * @ORM\Column(name="ijazah", type="string", length=400, nullable=true)
+     */
+    private $ijazah;
+
+    /**
+     * @var string $ijazahFile
+     *
+     * @ORM\Column(name="ijazah_file", type="string", length=300, nullable=true)
+     */
+    private $ijazahFile;
+
+    /**
+     * @var \DateTime $tahunmasuk
+     *
+     * @ORM\Column(name="tahunmasuk", type="date", nullable=true)
+     */
+    private $tahunmasuk;
+
+    /**
+     * @var \DateTime $tahunkeluar
+     *
+     * @ORM\Column(name="tahunkeluar", type="date", nullable=true)
+     */
+    private $tahunkeluar;
+
+    /**
+     * @var \DateTime $sttbTanggal
+     *
+     * @ORM\Column(name="sttb_tanggal", type="date", nullable=true)
+     */
+    private $sttbTanggal;
+
+    /**
+     * @var string $sttbNo
+     *
+     * @ORM\Column(name="sttb_no", type="string", length=100, nullable=true)
+     */
+    private $sttbNo;
+
+    /**
+     * @var string $sttbFile
+     *
+     * @ORM\Column(name="sttb_file", type="string", length=300, nullable=true)
+     */
+    private $sttbFile;
+
+    /**
+     * @var string $keterangan
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var Referensi
+     *
+     * @ORM\ManyToOne(targetEntity="Referensi")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idreferensi", referencedColumnName="id")
+     * })
+     */
+    private $idreferensi;
+
+    /**
+     * @var Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     * })
+     */
+    private $idsiswa;
+
+
+}

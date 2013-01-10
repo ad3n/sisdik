@@ -1,0 +1,56 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\MesinKehadiran
+ *
+ * @ORM\Table(name="mesin_kehadiran")
+ * @ORM\Entity
+ */
+class MesinKehadiran
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $alamatIp
+     *
+     * @ORM\Column(name="alamat_ip", type="string", length=45, nullable=false)
+     */
+    private $alamatIp;
+
+    /**
+     * @var string $commkey
+     *
+     * @ORM\Column(name="commkey", type="string", length=45, nullable=false)
+     */
+    private $commkey;
+
+    /**
+     * @var boolean $aktif
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     */
+    private $aktif;
+
+    /**
+     * @var Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

@@ -1,0 +1,70 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Tahun
+ *
+ * @ORM\Table(name="tahun")
+ * @ORM\Entity
+ */
+class Tahun
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nama", type="string", length=50, nullable=true)
+     */
+    private $nama;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="kode", type="string", length=45, nullable=false)
+     */
+    private $kode;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="urutan", type="smallint", nullable=true)
+     */
+    private $urutan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     */
+    private $aktif;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

@@ -1,0 +1,49 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * StatusKehadiranKepulangan
+ *
+ * @ORM\Table(name="status_kehadiran_kepulangan")
+ * @ORM\Entity
+ */
+class StatusKehadiranKepulangan
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nama", type="string", length=50, nullable=false)
+     */
+    private $nama;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

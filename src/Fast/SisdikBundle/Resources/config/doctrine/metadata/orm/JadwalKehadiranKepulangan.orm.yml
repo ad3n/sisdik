@@ -1,0 +1,130 @@
+JadwalKehadiranKepulangan:
+    type: entity
+    table: jadwal_kehadiran_kepulangan
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        perulangan:
+            type: string
+            length: null
+            fixed: false
+            nullable: true
+        mingguanHariKe:
+            type: smallint
+            nullable: true
+            column: mingguan_hari_ke
+        bulananHariKe:
+            type: smallint
+            nullable: true
+            column: bulanan_hari_ke
+        paramstatusDariJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+            column: paramstatus_dari_jam
+        paramstatusHinggaJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+            column: paramstatus_hingga_jam
+        smsRealtimeDariJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+            column: sms_realtime_dari_jam
+        smsRealtimeHinggaJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+            column: sms_realtime_hingga_jam
+        kirimSmsRealtime:
+            type: boolean
+            nullable: false
+            column: kirim_sms_realtime
+        commandRealtime:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: command_realtime
+        smsMassalJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+            column: sms_massal_jam
+        kirimSmsMassal:
+            type: boolean
+            nullable: false
+            column: kirim_sms_massal
+        commandMassal:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: command_massal
+        dariJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+            column: dari_jam
+        hinggaJam:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+            column: hingga_jam
+        commandJadwal:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: command_jadwal
+    manyToOne:
+        idkelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkelas:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idstatusKehadiranKepulangan:
+            targetEntity: StatusKehadiranKepulangan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idstatus_kehadiran_kepulangan:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idtahun:
+            targetEntity: Tahun
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahun:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idtemplatesms:
+            targetEntity: Templatesms
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtemplatesms:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

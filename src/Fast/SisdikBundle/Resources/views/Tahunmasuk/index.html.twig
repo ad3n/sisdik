@@ -1,0 +1,44 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}settings.yearentry.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('settings_yearentry_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.yearentry.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>
+    		    {{ 'label.number'|trans }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.tahun') %}sorted{% endif %}">
+    		    {{ pagination.sortable('label.yearentry.entry'|trans, 't.tahun')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+{% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{{ data.tahun }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('settings_yearentry_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('settings_yearentry_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+{% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock content %}
+

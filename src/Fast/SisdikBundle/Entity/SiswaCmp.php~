@@ -1,0 +1,69 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\SiswaCmp
+ *
+ * @ORM\Table(name="siswa_cmp")
+ * @ORM\Entity
+ */
+class SiswaCmp
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer $nilai
+     *
+     * @ORM\Column(name="nilai", type="integer", nullable=true)
+     */
+    private $nilai;
+
+    /**
+     * @var string $keterangan
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var JenisNilai
+     *
+     * @ORM\ManyToOne(targetEntity="JenisNilai")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idjenis_nilai", referencedColumnName="id")
+     * })
+     */
+    private $idjenisNilai;
+
+    /**
+     * @var CukilMp
+     *
+     * @ORM\ManyToOne(targetEntity="CukilMp")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idcukil_mp", referencedColumnName="id")
+     * })
+     */
+    private $idcukilMp;
+
+    /**
+     * @var Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     * })
+     */
+    private $idsiswa;
+
+
+}

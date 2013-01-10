@@ -1,0 +1,121 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.student.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('data_student') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('data_student') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="row-fluid">
+    <div class="span3">
+    {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+    	<a href="{{ path('data_student_new') }}" class="add-link-a">
+    	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+    	    {{ 'label.student.add'|trans }}
+    	</a>
+    {% endimage %}
+    </div>
+    <div class="span3">
+    {% image '@FastSisdikBundle/Resources/public/images/icon_import.png' %}
+    	<a href="{{ path('data_student_import_student') }}" class="add-link-a">
+    	    <img src="{{ asset_url }}" alt="{{ 'alt.import'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+    	    {{ 'label.student.import'|trans }}
+    	</a>
+    {% endimage %}
+    </div>
+    <div class="span3">
+    {% image '@FastSisdikBundle/Resources/public/images/merge.png' %}
+    	<a href="{{ path('data_student_merge_student') }}" class="add-link-a">
+    	    <img src="{{ asset_url }}" alt="{{ 'alt.merge'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+    	    {{ 'label.student.merge'|trans }}
+    	</a>
+    {% endimage %}
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.number'|trans }}</th>
+    		<th>{{ 'label.yearentry.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+                {{ pagination.sortable('label.name.full'|trans, 't.namaLengkap')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.nomorInduk') %}sorted{% endif %}">
+                {{ pagination.sortable('label.idnumber'|trans, 't.nomorInduk')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.jenisKelamin') %}sorted{% endif %}">
+                {{ pagination.sortable('label.gender'|trans, 't.jenisKelamin')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.ponselOrangtuawali') %}sorted{% endif %}">
+                {{ pagination.sortable('label.mobilephone.parent'|trans, 't.ponselOrangtuawali')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.idtahunmasuk.tahun is defined %}{{ data.idtahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+    		<td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
+    		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
+    		<td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ data.ponselOrangtuawali }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('data_student_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('data_student_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+
+<div class="clearfix"></div>
+
+<div class="row-fluid">
+    <div class="span4">
+    {% image '@FastSisdikBundle/Resources/public/images/chair.png' %}
+    	<a href="{{ path('data_student_import_studentclass') }}" class="add-link-a">
+    	    <img src="{{ asset_url }}" alt="{{ 'alt.importclassmap'|trans }}" border="0" width="25" style="vertical-align: middle;" />
+    	    {{ 'label.student.importclassmap'|trans }}
+    	</a>
+    {% endimage %}
+    </div>
+    <div class="span3">
+    {% image '@FastSisdikBundle/Resources/public/images/user-gear.png' %}
+    	<a href="{{ path('data_student_generate_username') }}" class="add-link-a">
+    	    <img src="{{ asset_url }}" alt="{{ 'alt.student.generate.username'|trans }}" border="0" height="25" style="vertical-align: middle;" />
+    	    {{ 'label.student.generate.username'|trans }}
+    	</a>
+    {% endimage %}
+    </div>
+</div>
+
+<div class="clearfix" style="margin-top: 3em;"></div>
+
+<div class="filter-section">
+    <h4>{{ 'heading.download.studentdata'|trans }}:</h4>
+    <form method="post" action="{{ path('data_student_download_basicdata') }}" class="form-search form-inline">
+        {{ form_widget(dlform) }}
+        <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+    </form>
+</div>
+
+
+{% endblock content %}

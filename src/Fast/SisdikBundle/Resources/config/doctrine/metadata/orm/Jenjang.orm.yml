@@ -1,0 +1,35 @@
+Jenjang:
+    type: entity
+    table: jenjang
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        kode:
+            type: string
+            length: 45
+            fixed: false
+            nullable: false
+        nama:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+        urutan:
+            type: smallint
+            nullable: true
+    manyToOne:
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

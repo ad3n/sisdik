@@ -1,0 +1,31 @@
+{% extends "FastSisdikBundle::layout.html.twig" %}
+
+{% block page_heading %}{% trans from "headings" %}profile.show{% endtrans %}{% endblock %}
+{% block content %}
+<h3>{{ app.user.username }}</h3>
+<dl>
+    <dt>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}</dt>
+    <dd>{{ user.username }}</dd>
+    <dt>{{ 'profile.show.email'|trans({}, 'FOSUserBundle') }}</dt>
+    <dd>{{ user.email }}</dd>
+    <dt>{{ 'profile.show.name'|trans({}, 'FOSUserBundle') }}</dt>
+    <dd>{{ user.name }}</dd>
+    <dt>{{ 'profile.show.role'|trans({}, 'FOSUserBundle') }}</dt>
+    <dd><p>{% for role in roles %}
+            {{ role|e }}{%  if not loop.last %},{% endif %} 
+        {% endfor %}
+        </p>
+    </dd>
+</dl>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a class="" href="{{ path('fos_user_profile_edit') }}">{{ 'label.editaccount'|trans }}</a>
+    </li>
+    <li>
+        <a class="" href="{{ path('fos_user_change_password') }}">{{ 'label.editpassword'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

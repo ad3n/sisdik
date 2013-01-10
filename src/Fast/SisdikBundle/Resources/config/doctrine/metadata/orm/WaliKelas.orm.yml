@@ -1,0 +1,36 @@
+WaliKelas:
+    type: entity
+    table: wali_kelas
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+    manyToOne:
+        idkelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkelas:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idtahun:
+            targetEntity: Tahun
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahun:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,56 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * KalenderPendidikan
+ *
+ * @ORM\Table(name="kalender_pendidikan")
+ * @ORM\Entity
+ */
+class KalenderPendidikan
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="tanggal", type="date", nullable=true)
+     */
+    private $tanggal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="kbm", type="boolean", nullable=false)
+     */
+    private $kbm;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

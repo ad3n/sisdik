@@ -1,0 +1,52 @@
+JadwalCmp:
+    type: entity
+    table: jadwal_cmp
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        tanggal:
+            type: datetime
+            nullable: true
+        jam:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+        keterangan:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+    manyToOne:
+        idguru:
+            targetEntity: Guru
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idguru:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idcukilMp:
+            targetEntity: CukilMp
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idcukil_mp:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idkelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkelas:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

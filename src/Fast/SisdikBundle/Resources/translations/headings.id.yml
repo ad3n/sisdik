@@ -1,0 +1,134 @@
+welcome: Selamat Datang
+
+dashboard: Dasbor
+
+profile:
+    edit: Edit Profil
+    show: Lihat Profil
+    change:
+        password: Ubah Password
+
+error:
+    heading: Error
+
+settings:
+    user:
+        list:
+            main: Daftar User
+            modify: Pengaturan User 
+        edit: Ubah User
+        add: Tambah User
+        add.inschool: Tambah User di Sekolah
+    school:
+        list: Daftar Sekolah
+        edit: Ubah Sekolah
+        add: Tambah Sekolah
+        entry: Data Sekolah
+    placement:
+        list: Info Penjurusan
+        edit: Ubah Node Penjurusan
+        creation: Membuat Node Penjurusan
+        add: Tambah Node Penjurusan
+        detail: Detail Node Penjurusan
+    yearentry:
+        list: Daftar Tahun Masuk
+        edit: Mengubah Tahun Masuk
+        creation: Membuat Tahun Masuk
+        detail: Detail Tahun Masuk
+    admissiongroup:
+        list: Daftar Gelombang Masuk
+        edit: Mengubah Gelombang Masuk
+        creation: Membuat Gelombang Masuk
+        detail: Detail Gelombang Masuk
+
+fee:
+    type:
+        list: Daftar Jenis Biaya
+        edit: Mengubah Jenis Biaya
+        creation: Membuat Jenis Biaya
+        detail: Detail Jenis Biaya
+    once:
+        list: Daftar Biaya Sekali
+        edit: Mengubah Biaya Sekali
+        creation: Membuat Biaya Sekali
+        detail: Detail Biaya Sekali
+    recur:
+        list: Daftar Biaya Berulang
+        edit: Mengubah Biaya Berulang
+        creation: Membuat Biaya Berulang
+        detail: Detail Biaya Berulang
+
+data:
+    studylevel:
+        list: Daftar Jenjang
+        edit: Mengubah Jenjang
+        creation: Membuat Jenjang
+        detail: Detail Jenjang
+    student:
+        list: Daftar Siswa
+        edit: Mengubah Data Siswa
+        creation: Membuat Data Siswa
+        detail: Data Siswa
+        import: Impor Data Siswa
+        removal: Menghapus Data Siswa
+        merge: Mengimpor-gabungkan Data Siswa
+        generate.username: Membuat username siswa
+    class:
+        list: Daftar Kelas
+        edit: Mengubah Kelas
+        creation: Membuat Kelas
+        detail: Detail Kelas
+    year:
+        list: Daftar Tahun Ajaran
+        edit: Mengubah Tahun Ajaran
+        creation: Membuat Tahun Ajaran
+        detail: Detail Tahun Ajaran
+    classguardian:
+        list: Daftar Wali Kelas
+        edit: Mengubah Wali Kelas
+        creation: Menentukan Wali Kelas
+        detail: Detail Wali Kelas
+    studentclass:
+        list: Riwayat Kelas
+        edit: Mengubah Kelas Siswa
+        creation: Menentukan Kelas Untuk Siswa
+        detail: Data Kelas Siswa
+        import: Impor/Pemetaan Kelas Siswa
+
+attendancemachine:
+    list: Daftar Mesin Kehadiran
+    edit: Mengubah Mesin Kehadiran
+    creation: Membuat Mesin Kehadiran
+    detail: Detail Mesin Kehadiran
+    
+academic.calendar: Kalender Akademik
+
+sms:
+    template:
+        list: Daftar Template SMS
+        edit: Mengubah Template SMS
+        creation: Membuat Template SMS
+        detail: Detail Template SMS
+
+presence:
+    status:
+        list: Daftar Status Kehadiran/Kepulangan
+        edit: Mengubah Status Kehadiran/Kepulangan
+        creation: Membuat Status Kehadiran/Kepulangan
+        detail: Detail Status Kehadiran/Kepulangan
+    schedule:
+        list: Daftar Jadwal Kehadiran/Kepulangan
+        edit: Mengubah Jadwal Kehadiran/Kepulangan
+        creation: Membuat Jadwal Kehadiran/Kepulangan
+        detail: Detail Jadwal Kehadiran/Kepulangan
+    student:
+        list: Kehadiran Siswa
+
+warning:
+    removal: Peringatan
+
+
+
+
+
+

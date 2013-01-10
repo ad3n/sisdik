@@ -1,0 +1,27 @@
+Logfp:
+    type: entity
+    table: logfp
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        pin:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+        datetime:
+            type: datetime
+            nullable: true
+        status:
+            type: smallint
+            nullable: true
+        ip:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+    lifecycleCallbacks: {  }

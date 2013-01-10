@@ -1,0 +1,53 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\Logfp
+ *
+ * @ORM\Table(name="logfp")
+ * @ORM\Entity
+ */
+class Logfp
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $pin
+     *
+     * @ORM\Column(name="pin", type="string", length=100, nullable=true)
+     */
+    private $pin;
+
+    /**
+     * @var \DateTime $datetime
+     *
+     * @ORM\Column(name="datetime", type="datetime", nullable=true)
+     */
+    private $datetime;
+
+    /**
+     * @var integer $status
+     *
+     * @ORM\Column(name="status", type="smallint", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @var string $ip
+     *
+     * @ORM\Column(name="ip", type="string", length=50, nullable=true)
+     */
+    private $ip;
+
+
+}

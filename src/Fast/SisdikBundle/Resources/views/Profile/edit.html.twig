@@ -1,0 +1,12 @@
+{% extends "FastSisdikBundle::layout.html.twig" %}
+
+{% block page_heading %}{% trans from "headings" %}profile.edit{% endtrans %}{% endblock %}
+{% block content %}
+<h3>{{ app.user.username }}</h3>
+<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
+	{{ form_widget(form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn primary">{{ 'label.edit'|trans }}</button>
+    </div>
+</form>
+{% endblock content %}

@@ -1,0 +1,76 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * KepulanganSiswa
+ *
+ * @ORM\Table(name="kepulangan_siswa")
+ * @ORM\Entity
+ */
+class KepulanganSiswa
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="tanggal", type="date", nullable=true)
+     */
+    private $tanggal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="jam", type="string", length=10, nullable=true)
+     */
+    private $jam;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="sms_pulang_terproses", type="boolean", nullable=false)
+     */
+    private $smsPulangTerproses;
+
+    /**
+     * @var \Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     * })
+     */
+    private $idsiswa;
+
+    /**
+     * @var \Kelas
+     *
+     * @ORM\ManyToOne(targetEntity="Kelas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     * })
+     */
+    private $idkelas;
+
+    /**
+     * @var \StatusKehadiranKepulangan
+     *
+     * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idstatus_kehadiran_kepulangan", referencedColumnName="id")
+     * })
+     */
+    private $idstatusKehadiranKepulangan;
+
+
+}

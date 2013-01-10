@@ -1,0 +1,70 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}settings.user.list.modify{% endtrans %}{% endblock %}
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+}
+</style>
+
+<div class="filter-section" style="margin-bottom: 10px;">
+    <form method="GET" action="{{ path('settings_user_inschool_list') }}" class="form-search form-inline">
+        {{ form_widget(form) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('settings_user_register_withschool') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.adduser.withschool'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.add.user.withschool'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th class="{% if pagination.isSorted('u.name') %}sorted{% endif %}">
+    		    {{ pagination.sortable('label.name.full'|trans, 'u.name')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('u.username') %}sorted{% endif %}">
+                {{ pagination.sortable('label.username'|trans, 'u.username')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('u.email') %}sorted{% endif %}">
+                {{ pagination.sortable('label.email'|trans, 'u.email')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('u.roles') %}sorted{% endif %}">
+                {{ pagination.sortable('label.roles'|trans, 'u.roles')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for user in pagination %}
+    	<tr>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ user.name }}</td>
+    		<td data-title="{{ 'label.username'|trans }}">{{ user.username }}</td>
+    		<td data-title="{{ 'label.email'|trans }}">{{ user.email }}</td>
+    		<td data-title="{{ 'label.roles'|trans }}">
+    		    {% for role in user.roles %}
+    		        {{ role|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}
+    		    {% endfor %}
+    	    </td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('settings_user_inschool_edit', {'id': user.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="icon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock %}
+
+
+

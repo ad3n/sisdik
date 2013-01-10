@@ -1,0 +1,17 @@
+Guruhadir:
+    type: entity
+    table: guruhadir
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        tanggal:
+            type: date
+            nullable: true
+        hadir:
+            type: boolean
+            nullable: true
+    lifecycleCallbacks: {  }

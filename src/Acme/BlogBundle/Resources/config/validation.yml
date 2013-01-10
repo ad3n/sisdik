@@ -1,0 +1,5 @@
+Acme\BlogBundle\Entity\Author:
+  properties:
+    name:
+      - NotBlank: { message: "author.name.not_blank" }
+      - MinLength:  { limit: 3, message: "nama minimal 3 karakter" }

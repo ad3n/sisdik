@@ -1,0 +1,24 @@
+{% for field in fields %}{{ field }};{% endfor %}
+
+{% for student in students %}
+{% for data in student %}"{{ data }}";{% endfor %}
+
+{% endfor %}
+
+Keterangan:
+
+Kolom aktif; harus diisi 1 untuk aktif atau 0 untuk non-aktif
+Kolom kodeJurusan; diisi dengan salah satu data berikut:
+{% for placement in placements %}
+{{ placement.kode }}; = {{ placement.nama }}
+{% endfor %}
+
+Kolom kodeKelas; diisi dengan salah satu data berikut:
+{% for class in classes %}
+{{ class.kode }}; = {{ class.nama }} ({{ class.keterangan }})
+{% endfor %}
+Kolom kodeKelas; berguna sebagai informasi
+untuk memetakan; siswa ke jenjang lebih tinggi
+Ia tidak akan; dibaca ketika impor
+
+Hapus keterangan; ketika akan mengimpor informasi pemetaan kelas

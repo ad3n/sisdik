@@ -1,0 +1,7 @@
+
+    public function getOptionLabel() {
+        $teks = $this->getTeks();
+        return $this->getNama() . " » "
+                . (strlen($teks) > 80 ? substr($teks, 0, 25) . '...'
+                                . substr($teks, strlen($teks) - 53) : $teks);
+    }

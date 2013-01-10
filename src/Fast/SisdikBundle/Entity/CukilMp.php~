@@ -1,0 +1,55 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\CukilMp
+ *
+ * @ORM\Table(name="cukil_mp")
+ * @ORM\Entity
+ */
+class CukilMp
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var Tahun
+     *
+     * @ORM\ManyToOne(targetEntity="Tahun")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     * })
+     */
+    private $idtahun;
+
+    /**
+     * @var Semester
+     *
+     * @ORM\ManyToOne(targetEntity="Semester")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsemester", referencedColumnName="id")
+     * })
+     */
+    private $idsemester;
+
+    /**
+     * @var MataPelajaran
+     *
+     * @ORM\ManyToOne(targetEntity="MataPelajaran")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idmata_pelajaran", referencedColumnName="id")
+     * })
+     */
+    private $idmataPelajaran;
+
+
+}

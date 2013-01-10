@@ -1,0 +1,62 @@
+Penjurusan:
+    type: entity
+    table: penjurusan
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+        kode:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+        kepala:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+        lft:
+            type: integer
+            unsigned: false
+            nullable: true
+        lvl:
+            type: integer
+            unsigned: false
+            nullable: true
+        rgt:
+            type: integer
+            unsigned: false
+            nullable: true
+        root:
+            type: integer
+            unsigned: false
+            nullable: true
+    manyToOne:
+        parent:
+            targetEntity: Penjurusan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                parent_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idsekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsekolah:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

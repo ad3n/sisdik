@@ -1,0 +1,80 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.class.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.controls {
+    display: inline;
+    margin-left: 0.5em;
+}
+</style>
+
+<form method="GET" action="{{ path('data_class') }}" class="form-search form-inline">
+    {{ form_widget(searchform) }}
+    <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+    <button class="btn" type="reset" onclick="window.location.href='{{ path('data_class') }}'">{{ 'label.reset'|trans }}</button>
+</form>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('data_class_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.class.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+    		<th>{{ 'label.year.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+    		    {{ pagination.sortable('label.class.name'|trans, 't.nama')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+                {{ pagination.sortable('label.code'|trans, 't.kode')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.description'|trans, 't.keterangan')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.order'|trans, 't.urutan')|raw }}
+    	    </th>
+    		<th>{{ 'label.level'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.year'|trans }}">{% if data.idtahun is not null %}{{ data.idtahun.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.class.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
+    		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
+    		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
+    		<td data-title="{{ 'label.level'|trans }}">{% if data.idjenjang is not null %}{{ data.idjenjang.kode }} ({{ data.idjenjang.nama }}){% endif %}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('data_class_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('data_class_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+
+<div class="clearfix"></div>
+
+{{ 'shortinfo.duplicate.classes'|trans }}
+<form method="post" action="{{ path('data_class_duplicate') }}" class="form-search form-inline">
+    {{ form_widget(duplicateform) }}
+    <button type="submit" class="btn success alternative icon share">{{ 'label.duplicate'|trans }}</button>
+</form>
+{% endblock content %}

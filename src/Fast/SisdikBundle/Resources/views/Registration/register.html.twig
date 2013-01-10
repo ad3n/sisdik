@@ -1,0 +1,48 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block title %}{% trans %}title.register{% endtrans %}{% endblock %}
+
+{% block custom_body_tag %}<body id="login-bg">{% endblock %}
+
+{% block body %}
+<!-- Start: register-holder -->
+<div id="register-holder">
+
+	<!-- start logo -->
+	<div id="logo-register">
+		{% image '@FastSisdikBundle/Resources/public/images/logo_white.png' %}
+        	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="logo" border="0" /></a>
+        {% endimage %}
+	</div>
+	<!-- end logo -->
+	
+	<div class="clear"></div>
+	
+	<!--  start registerbox -->
+	<div id="registerbox">
+	
+    	<!--  start register-inner -->
+    	<div id="register-inner">
+        	{% block fos_user_content %}
+    	    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+                {{ form_widget(form) }}
+                <div style="clear: both;">
+                    <label>&nbsp;</label>
+                    <input type="submit" class="submit-register" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" />
+                </div>
+            </form>
+            {% endblock fos_user_content %}
+        </div>
+     	<!--  end register-inner -->
+ 	
+	    <div class="clear"></div>
+	
+    </div>
+    <!--  end loginbox -->
+    	
+</div>
+<!-- End: login-holder -->
+
+{% block content %}{% endblock content %}
+{% endblock body %}
+

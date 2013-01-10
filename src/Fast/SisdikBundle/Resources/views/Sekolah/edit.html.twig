@@ -1,0 +1,18 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}settings.school.edit{% endtrans %}{% endblock %}
+
+{% block content %}
+<form action="{{ path('settings_specsch_update') }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {{ form_widget(edit_form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    </div>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('settings_specsch') }}">{{ 'link.backtodetail'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

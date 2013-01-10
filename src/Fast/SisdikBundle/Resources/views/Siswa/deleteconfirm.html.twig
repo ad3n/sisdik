@@ -1,0 +1,24 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}
+    {{ 'data.student.removal'|trans({}, 'headings') }}
+    <br /><span class="emphasis">{{ entity.namaLengkap }}{% if entity.nomorInduk is not null %}, {{ entity.nomorInduk }}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<br />
+<h3>{{ 'warning.removal'|trans({}, 'headings') }}!</h3>
+<p style="color: #ff0000;">
+Menghapus data siswa akan menghapus data terkait seperti riwayat kelas, nilai, pembayaran, dan akses siswa ke sistem.<br />
+Aksi ini tidak bisa dibatalkan. Yakin ingin menghapus data siswa?</p>
+<form action="{{ path('data_student_delete', {'id': entity.id}) }}" method="post" {{ form_enctype(delete_form) }} class="form-inline">
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn alternative icon danger remove">{{ 'label.submit.proceed'|trans }}</button>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('data_student_show', {'id': entity.id}) }}">{{ 'link.backtostudentinfo'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

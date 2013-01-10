@@ -1,0 +1,27 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.student.creation{% endtrans %}{% endblock %}
+
+{% block content %}
+<form action="{{ path('data_student_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$('.date').datepicker({
+	    dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+        changeYear: true,
+        maxDate: "-8Y"
+    });
+});
+</script>
+{% endblock content %}

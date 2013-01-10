@@ -1,0 +1,53 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\LogsmsKeluar
+ *
+ * @ORM\Table(name="logsms_keluar")
+ * @ORM\Entity
+ */
+class LogsmsKeluar
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $ke
+     *
+     * @ORM\Column(name="ke", type="string", length=50, nullable=true)
+     */
+    private $ke;
+
+    /**
+     * @var string $teks
+     *
+     * @ORM\Column(name="teks", type="string", length=500, nullable=true)
+     */
+    private $teks;
+
+    /**
+     * @var boolean $dlr
+     *
+     * @ORM\Column(name="dlr", type="boolean", nullable=true)
+     */
+    private $dlr;
+
+    /**
+     * @var \DateTime $dlrtime
+     *
+     * @ORM\Column(name="dlrtime", type="datetime", nullable=true)
+     */
+    private $dlrtime;
+
+
+}

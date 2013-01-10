@@ -1,0 +1,20 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}settings.user.add.inschool{% endtrans %}{% endblock %}
+{% block content %}
+<form action="{{ path('settings_user_register_withschool', {'filter': filter}) }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
+    {{ form_widget(form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        {% if page is defined %}
+        <a href="{{ path('settings_user_list', {'filter': filter, 'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
+        {% else %}
+        <a href="{{ path('settings_user_list', {'filter': filter, 'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        {% endif %}
+    </li>
+</ul>
+{% endblock content %}

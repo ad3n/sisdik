@@ -1,0 +1,209 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}presence.schedule.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('presence_schedule_single_list', {'repetition': repetition}) }}" id="{{ searchform.get('id') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_schedule_single_list', {'idsekolah': idsekolah}) }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+{% if displayresult %}
+
+    <h4>{{ 'label.year.entry'|trans }} {{ searchdata.idtahun.nama }}
+    {{ 'label.class.entry'|trans }} {{ searchdata.idkelas.nama }}
+    {{ 'label.repetition'|trans }} {{ searchdata.perulangan }}
+    {% if searchdata.mingguanHariKe is defined %}{{ 'label.day'|trans }} {{ daynames[searchdata.mingguanHariKe] }}{% endif %}
+    {% if searchdata.bulananHariKe is defined %}{{ 'label.dayno'|trans }} {{ searchdata.bulananHariKe }}{% endif %}
+    </h4>
+    
+    {% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
+    <div class="clearfix"></div>
+        
+    <div class="add-link">
+    {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+    	<a href="{{ path('presence_schedule_single_new') }}" class="add-link-a">
+    	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+    	    {{ 'label.presence.schedule.add'|trans }}
+    	</a>
+    {% endimage %}
+    </div>
+        
+    <div class="clearfix"></div>
+    {% else %}
+    <div class="clearfix" style="margin-top: 20px;"></div>
+    {% endif %}
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.school'|trans }}</th>
+    		<th>{{ 'label.presence.status.entry'|trans }}</th>
+    		<th>{{ 'label.parameter'|trans }}</th>
+    		<th>{{ 'label.sms.realtime'|trans }}</th>
+    		<th>{{ 'label.sms.massive'|trans }}</th>
+    		<th>{{ 'label.attendance'|trans }}</th>
+    		<th>{{ 'label.options'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.school'|trans }}">{% if data.idtahun is not null %}{{ data.idtahun.idsekolah.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.presence.status.entry'|trans }}">
+    		    {% if data.idstatusKehadiranKepulangan is not null %}
+    		        {{ data.idstatusKehadiranKepulangan.nama }}
+    		    {% endif %}
+    		    {% if data.idtemplatesms is not null %}
+    		        <br />[{{ data.idtemplatesms.nama }}]
+    		    {% endif %}
+    	    </td>
+    		<td data-title="{{ 'label.parameter'|trans }}">
+    		    {% if data.paramstatusDariJam is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.paramstatusDariJam }}
+                {% endif %}
+                <span class="separator">-</span>
+    		    {% if data.paramStatusHinggaJam is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.paramStatusHinggaJam }}
+                {% endif %}
+            </td>
+    		<td data-title="{{ 'label.sms.realtime'|trans }}">
+    		    {% if data.smsRealtimeDariJam is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.smsRealtimeDariJam }}
+                {% endif %}
+                <span class="separator">|</span>
+    		    {% if data.smsRealtimeHinggaJam is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.smsRealtimeHinggaJam }}
+                {% endif %}
+                <span class="separator">|</span>
+    		    {% if data.kirimSmsRealtime is empty %}
+    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+    		        {% endimage %}
+    	        {% else %}
+    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+    		        {% endimage %}
+                {% endif %}
+                <span class="separator">|</span>
+    		    {% if data.commandRealtime is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.commandRealtime }}
+                {% endif %}
+            </td>
+    		<td data-title="{{ 'label.sms.massive'|trans }}">
+    		    {% if data.smsMassalJam is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.smsMassalJam }}
+                {% endif %}
+                <span class="separator">|</span>
+    		    {% if data.kirimSmsMassal is empty %}
+    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+    		        {% endimage %}
+    	        {% else %}
+    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+    		        {% endimage %}
+                {% endif %}
+                <span class="separator">|</span>
+    		    {% if data.commandMassal is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.commandMassal }}
+                {% endif %}
+            </td>
+    		<td data-title="{{ 'label.attendance'|trans }}">
+    		    {% if data.dariJam is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.dariJam }}
+                {% endif %}
+{#                 <span class="separator">|</span>#}
+{#     		    {% if data.hinggaJam is empty %}#}
+{#     		        &mdash;#}
+{#     	        {% else %}#}
+{#     	            {{ data.hinggaJam }}#}
+{#                 {% endif %}#}
+                <span class="separator">|</span>
+    		    {% if data.commandJadwal is empty %}
+    		        &mdash;
+    	        {% else %}
+    	            {{ data.commandJadwal }}
+                {% endif %}
+            </td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('presence_schedule_single_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		{% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
+        		<a href="{{ path('presence_schedule_single_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
+        		{% endif %}
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+
+    {% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
+        <div>{{ 'shortinfo.duplicate.schedule'|trans }}</div>
+        <div>
+            <form method="post" action="{{ path('presence_schedule_single_duplicate') }}" class="form-search form-inline">
+                {{ form_widget(duplicateform) }}
+                <button type="submit" class="btn success alternative icon share">{{ 'label.duplicate'|trans }}</button>
+            </form>
+        </div>
+        
+        <div class="clearfix"></div>
+    {% endif %}
+{% endif %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	var url = "{{ path('data_class_ajax_updateclass') }}";
+	$.get(url, {idtahun: $(".selectyear").val(){% if searchdata.idkelas is not null %}, idkelas: {{ searchdata.idkelas.id }}{% endif %}}, function(data) {
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".selectclass").html(options);
+    });
+    
+    $(".selectyear").change(function() {
+        // clear class select box content
+        $(".selectclass").empty();
+        $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {idtahun: $(this).val()}, function(data) {
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".selectclass").html(options);
+        });
+    });
+});
+</script>
+{% endblock content %}

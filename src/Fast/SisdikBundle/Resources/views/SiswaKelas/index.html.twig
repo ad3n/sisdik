@@ -1,0 +1,62 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}
+    {{ 'data.studentclass.list'|trans({}, 'headings') }}
+    <br /><span class="emphasis">{{ siswa.namaLengkap }}{% if siswa.nomorInduk is not null %}, {{ siswa.nomorInduk }}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<ul class="pills">
+    <li>
+        <a href="{{ path('data_student_show', {'id': siswa.id}) }}">{{ 'link.backtostudentinfo'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('data_studentclass_new', {'idsiswa': siswa.id}) }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.studentclass.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table">
+{% for data in results %}
+    <tr>
+        <td>
+            <dl>
+        		<dt>{{ 'label.year.entry'|trans }}</dt>
+        		<dd>{% if data.idtahun is not null %}{{ data.idtahun.nama }}{% endif %}</dd>
+        		<dt>{{ 'label.class.entry'|trans }}</dt>
+        		<dd>{% if data.idkelas is not null %}{{ data.idkelas.nama }}{% endif %}</dd>
+        		<dt>{{ 'label.placement.study'|trans }}</dt>
+        		<dd>{% if data.idpenjurusan is not null %}{{ data.idpenjurusan.nama }} ({{ data.idpenjurusan.kode }}){% endif %}</dd>
+        		<dt>{{ 'label.active'|trans }} ({{ 'shortinfo.inselectedyear'|trans }})</dt>
+        		<dd>
+        		    {% if data.aktif != 1 %}
+        		        {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'label.inactive'|trans }}" border="0" height="25" style="vertical-align: middle;" title="{{ 'label.inactive'|trans }}" />
+                        {% endimage %}
+                    {% elseif data.aktif == 1 %}
+                        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'label.active'|trans }}" border="0" width="25" height="25" style="vertical-align: middle;" title="{{ 'label.active'|trans }}" />
+                        {% endimage %}
+        		    {% endif %}
+        		</dd>
+        		<dt>{{ 'label.description'|trans }}</dt>
+        		<dd>{{ data.keterangan }}</dd>
+        		<dt>{{ 'label.actions'|trans }}</dt>
+        		<dd>
+            		<a href="{{ path('data_studentclass_edit', {'idsiswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit info-tooltip"></a>
+            	</dd>
+    		</dl>
+		</td>
+	</tr>
+{% endfor %}
+</table>
+{% endblock content %}

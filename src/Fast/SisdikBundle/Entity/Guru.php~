@@ -1,0 +1,119 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\Guru
+ *
+ * @ORM\Table(name="guru")
+ * @ORM\Entity
+ */
+class Guru
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string $nama
+     *
+     * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     */
+    private $nama;
+
+    /**
+     * @var string $jenisKelamin
+     *
+     * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
+     */
+    private $jenisKelamin;
+
+    /**
+     * @var string $foto
+     *
+     * @ORM\Column(name="foto", type="string", length=400, nullable=true)
+     */
+    private $foto;
+
+    /**
+     * @var integer $agama
+     *
+     * @ORM\Column(name="agama", type="integer", nullable=true)
+     */
+    private $agama;
+
+    /**
+     * @var string $tempatLahir
+     *
+     * @ORM\Column(name="tempat_lahir", type="string", length=400, nullable=true)
+     */
+    private $tempatLahir;
+
+    /**
+     * @var \DateTime $tanggalLahir
+     *
+     * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
+     */
+    private $tanggalLahir;
+
+    /**
+     * @var string $alamat
+     *
+     * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     */
+    private $alamat;
+
+    /**
+     * @var string $telepon
+     *
+     * @ORM\Column(name="telepon", type="string", length=100, nullable=true)
+     */
+    private $telepon;
+
+    /**
+     * @var string $email
+     *
+     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string $nomorInduk
+     *
+     * @ORM\Column(name="nomor_induk", type="string", length=50, nullable=true)
+     */
+    private $nomorInduk;
+
+    /**
+     * @var string $username
+     *
+     * @ORM\Column(name="username", type="string", length=255, nullable=true)
+     */
+    private $username;
+
+    /**
+     * @var boolean $status
+     *
+     * @ORM\Column(name="status", type="boolean", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @var Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     * })
+     */
+    private $idsekolah;
+
+
+}

@@ -1,0 +1,46 @@
+BiayaSekali:
+    type: entity
+    table: biaya_sekali
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nominal:
+            type: bigint
+            nullable: true
+        urutan:
+            type: smallint
+            nullable: true
+    manyToOne:
+        idgelombang:
+            targetEntity: Gelombang
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idgelombang:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idtahunmasuk:
+            targetEntity: Tahunmasuk
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idtahunmasuk:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idjenisbiaya:
+            targetEntity: Jenisbiaya
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idjenisbiaya:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

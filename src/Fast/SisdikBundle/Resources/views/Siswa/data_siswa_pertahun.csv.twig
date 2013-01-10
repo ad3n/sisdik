@@ -1,0 +1,6 @@
+{% for field in fields %}{{ field }};{% endfor %}
+
+{% for studentdata in students %}
+{% for data in studentdata %}"{{ data }}";{% endfor %}
+
+{% endfor %}

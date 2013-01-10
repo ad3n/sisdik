@@ -1,0 +1,51 @@
+KepulanganSiswa:
+    type: entity
+    table: kepulangan_siswa
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        tanggal:
+            type: date
+            nullable: true
+        jam:
+            type: string
+            length: 10
+            fixed: false
+            nullable: true
+        smsPulangTerproses:
+            type: boolean
+            nullable: false
+            column: sms_pulang_terproses
+    manyToOne:
+        idsiswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsiswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idkelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkelas:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idstatusKehadiranKepulangan:
+            targetEntity: StatusKehadiranKepulangan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idstatus_kehadiran_kepulangan:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

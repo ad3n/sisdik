@@ -1,0 +1,29 @@
+SmsKepulanganSiswa:
+    type: entity
+    table: sms_kepulangan_siswa
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        smsDlr:
+            type: smallint
+            nullable: true
+            column: sms_dlr
+        smsDlrtime:
+            type: datetime
+            nullable: true
+            column: sms_dlrtime
+    manyToOne:
+        idkepulanganSiswa:
+            targetEntity: KepulanganSiswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idkepulangan_siswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

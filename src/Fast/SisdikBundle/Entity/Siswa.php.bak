@@ -1,0 +1,147 @@
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+* @ORM\HasLifecycleCallbacks
+
+
+    /**
+     * @Assert\File(maxSize="5000000")
+     */
+    private $file;
+
+    const PHOTO_DIR = 'uploads/students/photos';
+    const THUMBNAIL_PREFIX = 'th1-';
+    const MEMORY_LIMIT = '256M';
+    const PHOTO_THUMB_WIDTH = 80;
+    const PHOTO_THUMB_HEIGHT = 150;
+    
+    public function getFile() {
+        return $this->file;
+    }
+    
+    public function setFile(UploadedFile $file) {
+        $this->file = $file;
+        
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload() {
+        if (null !== $this->file) {
+            $this->foto = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload() {
+        if (null === $this->file) {
+            return;
+        }
+
+        // if there is an error when moving the file, an exception will
+        // be automatically thrown by move(). This will properly prevent
+        // the entity from being persisted to the database on error
+        if ($this->file->move($this->getUploadRootDir(), $this->foto)) {
+
+            $targetfile = $this->getAbsolutePath();
+            $thumbnailfile = $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->foto;
+
+            list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
+            if (is_numeric($type)) {
+
+                $origRatio = $origWidth / $origHeight;
+                $resultWidth = self::PHOTO_THUMB_WIDTH;
+                $resultHeight = self::PHOTO_THUMB_HEIGHT;
+                if ($resultWidth / $resultHeight > $origRatio) {
+                    $resultWidth = $resultHeight * $origRatio;
+                } else {
+                    $resultHeight = $resultWidth / $origRatio;
+                }
+
+                // Set artificially high because GD uses uncompressed images in memory
+                @ini_set('memory_limit', self::MEMORY_LIMIT);
+
+                switch ($type) {
+                    case IMAGETYPE_JPEG:
+                        if (imagetypes() & IMG_JPEG) {
+                            // resample image
+                            $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
+
+                            $srcImage = imagecreatefromjpeg($targetfile);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
+                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagejpeg($resultImage, $thumbnailfile, 90);
+                        }
+                        break;
+                    case IMAGETYPE_PNG:
+                        if (imagetypes() & IMG_PNG) {
+                            // resample image
+                            // for png, we use imagecreate instead
+                            $resultImage = imagecreate($resultWidth, $resultHeight);
+
+                            $srcImage = imagecreatefrompng($targetfile);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
+                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagepng($resultImage, $thumbnailfile, 8);
+                        }
+                        break;
+                    case IMAGETYPE_GIF:
+                        if (imagetypes() & IMG_GIF) {
+                            // resample image
+                            $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
+
+                            $srcImage = imagecreatefromgif($targetfile);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
+                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagegif($resultImage, $thumbnailfile);
+                        }
+                        break;
+                }
+            }
+        }
+
+        unset($this->file);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload() {
+        if ($file = $this->getAbsolutePath()) {
+            unlink($file);
+        }
+    }
+
+    public function getAbsolutePath() {
+        return null === $this->foto ? null : $this->getUploadRootDir() . '/' . $this->foto;
+    }
+
+    public function getWebPath() {
+        return null === $this->foto ? null : $this->getUploadDir() . '/' . $this->foto;
+    }
+
+    public function getWebPathThumbnail() {
+        return null === $this->foto ? null
+                : $this->getUploadDir() . '/' . self::THUMBNAIL_PREFIX . $this->foto;
+    }
+
+    protected function getUploadRootDir() {
+        // the absolute directory path where uploaded documents should be saved
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+    }
+
+    protected function getUploadDir() {
+        // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
+        return self::PHOTO_DIR;
+    }
+

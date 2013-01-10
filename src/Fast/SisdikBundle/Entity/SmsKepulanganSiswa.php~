@@ -1,0 +1,49 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\SmsKepulanganSiswa
+ *
+ * @ORM\Table(name="sms_kepulangan_siswa")
+ * @ORM\Entity
+ */
+class SmsKepulanganSiswa
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer $smsDlr
+     *
+     * @ORM\Column(name="sms_dlr", type="smallint", nullable=true)
+     */
+    private $smsDlr;
+
+    /**
+     * @var \DateTime $smsDlrtime
+     *
+     * @ORM\Column(name="sms_dlrtime", type="datetime", nullable=true)
+     */
+    private $smsDlrtime;
+
+    /**
+     * @var KepulanganSiswa
+     *
+     * @ORM\ManyToOne(targetEntity="KepulanganSiswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idkepulangan_siswa", referencedColumnName="id")
+     * })
+     */
+    private $idkepulanganSiswa;
+
+
+}

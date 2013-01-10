@@ -1,0 +1,95 @@
+
+    /**
+     * Get paramstatusDariJam
+     * 
+     * @param boolean $withsecond 
+     * @return string
+     */
+    public function getParamstatusDariJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->paramstatusDariJam, 0, 5);
+        } else {
+            return $this->paramstatusDariJam;
+        }
+    }
+
+
+    /**
+     * Get paramstatusHinggaJam
+     *
+     * @return string 
+     */
+    public function getParamstatusHinggaJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->paramstatusHinggaJam, 0, 5);
+        } else {
+            return $this->paramstatusHinggaJam;
+        }
+    }
+
+    /**
+     * Get smsRealtimeDariJam
+     *
+     * @return string 
+     */
+    public function getSmsRealtimeDariJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->smsRealtimeDariJam, 0, 5);
+        } else {
+            return $this->smsRealtimeDariJam;
+        }
+    }
+
+    /**
+     * Get smsRealtimeHinggaJam
+     *
+     * @return string 
+     */
+    public function getSmsRealtimeHinggaJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->smsRealtimeHinggaJam, 0, 5);
+        } else {
+            return $this->smsRealtimeHinggaJam;
+        }
+    }
+    
+    /**
+     * Get smsMassalJam
+     *
+     * @return string 
+     */
+    public function getSmsMassalJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->smsMassalJam, 0, 5);
+        } else {
+            return $this->smsMassalJam;
+        }
+    }
+
+    /**
+     * Get dariJam
+     *
+     * @return string 
+     */
+    public function getDariJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->dariJam, 0, 5);
+        } else {
+            return $this->dariJam;
+        }
+    }
+
+    /**
+     * Get hinggaJam
+     *
+     * @return string 
+     */
+    public function getHinggaJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->hinggaJam, 0, 5);
+        } else {
+            return $this->hinggaJam;
+        }
+    }
+    
+

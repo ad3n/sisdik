@@ -1,0 +1,47 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}sms.template.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('sms_template_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.sms.template.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+                {{ pagination.sortable('label.sms.template.name'|trans, 't.nama')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.teks') %}sorted{% endif %}">
+    		    {{ pagination.sortable('label.text'|trans, 't.teks')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.description'|trans, 't.keterangan')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.sms.template.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.text'|trans }}">{{ data.teks }}</td>
+    		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('sms_template_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('sms_template_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock content %}

@@ -1,0 +1,53 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}presence.status.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="filter-section">
+    {%- for key, value in schools -%}
+    <a class="{% if key == filter %}current{% endif %}" href="{{ path('presence_status_list', {'filter': key}) }}">{{ value }}</a>{% if not loop.last %} | {% endif %}
+    {%- endfor -%}
+</div>
+
+<div class="clearfix" style="margin-top: 1em;"></div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('presence_status_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.presence.status.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.school'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+                {{ pagination.sortable('label.presence.status.entry'|trans, 't.nama')|raw }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
+                {{ pagination.sortable('label.description'|trans, 't.keterangan')|raw }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.school'|trans }}">{% if data.idsekolah is not null %}{{ data.idsekolah.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.presence.status.entry'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('presence_status_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('presence_status_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock content %}

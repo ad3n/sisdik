@@ -1,0 +1,68 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}settings.school.list{% endtrans %}{% endblock %}
+{% block content %}
+<div class="filter-section">
+    <div style="padding-top: 10px;">
+        <form method="GET" action="{{ path('settings_school_list') }}" class="form-search form-inline">
+            {{ form_widget(form.searchkey, {'attr': {'class':'input-medium search-query'}}) }}
+            {{ form_rest(form) }}
+            <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        </form>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('settings_school_add') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.add.school'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="zebra-striped bordered-table">
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td style="padding: 15px;">
+        		<dl style="margin-top: 0;">
+                    <dt>{{ 'label.schoolname'|trans }}</dt>
+                    <dd>{{ data.nama }}</dd>
+                    <dt>{{ 'label.schoolcode'|trans }}</dt>
+                    <dd>{{ data.kode }}</dd>
+                    <dt>{{ 'label.address'|trans }}</dt>
+                    <dd>{{ data.alamat }}</dd>
+                    <dt>{{ 'label.postalcode'|trans }}</dt>
+                    <dd>{{ data.kodepos }}</dd>
+                    <dt>{{ 'label.phone'|trans }}</dt>
+                    <dd>{{ data.telepon }}</dd>
+                    <dt>{{ 'label.fax'|trans }}</dt>
+                    <dd>{{ data.fax }}</dd>
+                    <dt>{{ 'label.email'|trans }}</dt>
+                    <dd>{{ data.email }}</dd>
+                    <dt>{{ 'label.bank'|trans }}</dt>
+                    <dd>{{ data.bank }}</dd>
+                    <dt>{{ 'label.account'|trans }}</dt>
+                    <dd>{{ data.norekening }}</dd>
+                    <dt>{{ 'label.headmaster'|trans }}</dt>
+                    <dd>{{ data.kepsek }}</dd>
+                </dl>
+                <dl>
+                    <dt>{{ 'label.actions'|trans }}</dt>
+                    <dd>
+                        <a href="{{ path('settings_school_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a> &nbsp;&nbsp;
+                		<a href="{{ path('settings_school_delete', {'id': data.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="icon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.school'|trans({'%schoolname%': data.nama}) }}");'></a>
+            		</dd>
+                </dl>
+		    </td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ pagination.render()|raw }}
+{% endblock %}

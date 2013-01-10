@@ -1,0 +1,63 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Fast\SisdikBundle\Entity\SiswahadirJcmp
+ *
+ * @ORM\Table(name="siswahadir_jcmp")
+ * @ORM\Entity
+ */
+class SiswahadirJcmp
+{
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="bigint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var boolean $hadir
+     *
+     * @ORM\Column(name="hadir", type="boolean", nullable=true)
+     */
+    private $hadir;
+
+    /**
+     * @var string $jamMasuk
+     *
+     * @ORM\Column(name="jam_masuk", type="string", length=20, nullable=true)
+     */
+    private $jamMasuk;
+
+    /**
+     * @var string $jamKeluar
+     *
+     * @ORM\Column(name="jam_keluar", type="string", length=20, nullable=true)
+     */
+    private $jamKeluar;
+
+    /**
+     * @var string $keterangan
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var JadwalCmp
+     *
+     * @ORM\ManyToOne(targetEntity="JadwalCmp")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="idjadwal_cmp", referencedColumnName="id")
+     * })
+     */
+    private $idjadwalCmp;
+
+
+}

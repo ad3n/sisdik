@@ -1,0 +1,48 @@
+SiswaCmp:
+    type: entity
+    table: siswa_cmp
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nilai:
+            type: integer
+            unsigned: false
+            nullable: true
+        keterangan:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+    manyToOne:
+        idjenisNilai:
+            targetEntity: JenisNilai
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idjenis_nilai:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idcukilMp:
+            targetEntity: CukilMp
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idcukil_mp:
+                    referencedColumnName: id
+            orphanRemoval: false
+        idsiswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idsiswa:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

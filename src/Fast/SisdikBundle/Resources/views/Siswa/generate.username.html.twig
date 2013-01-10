@@ -1,0 +1,88 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.student.generate.username{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.filter-section .control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<form id="generateform" action="{{ path('data_student_generate_username') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.generate.username'|trans }}</button>
+	    <span id="process-output" style="color: #003EB0; "></span>
+    </div>
+</form>
+
+<div class="clearfix"></div>
+
+<div class="knowledgebase">
+{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
+    <a href="{{ path('_index') }}" class="a-kb">
+        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
+        {{ 'link.student.manage.username'|trans({}, 'kb') }}
+    </a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
+    </li>
+</ul>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	var url = "{{ path('data_class_ajax_updateclass') }}";
+    $.get(url, {idtahun: $(".selectyear").val()}, function(data) {
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
+        }
+        $(".selectclass").html(options);
+    });
+    
+    $(".selectyear").change(function() {
+        $(".selectclass").empty();
+        $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {idtahun: $(this).val()}, function(data) {
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
+            }
+            $(".selectclass").html(options);
+        });
+    });
+
+    $("#generateform").submit(function() {
+    	dataurl = "{{ path("data_student_ajax_generated_username") }}";
+        // pingurl = "http://www.google.com/action";
+        
+        $returnvalue = $.get(dataurl, {data: $("#generateform").serialize()});
+        
+    	{% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#process-output').html('<img src="{{ asset_url }}" />');
+        {% endimage %}
+
+        // check if username/password hasn't generated yet
+        setTimeout(function() {
+        	if ($returnvalue.generated == "YES") {
+                return false;
+            } else {
+                return true;
+            }
+        }, 6000);
+        
+        return false;
+    });
+});
+</script>
+{% endblock content %}

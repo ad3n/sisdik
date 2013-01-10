@@ -1,0 +1,35 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}settings.school.entry{% endtrans %}{% endblock %}
+{% block content %}
+<dl>
+    <dt>{{ 'label.schoolname'|trans }}</dt>
+    <dd>{{ entity.nama }}</dd>
+    <dt>{{ 'label.schoolcode'|trans }}</dt>
+    <dd>{{ entity.kode }}</dd>
+    <dt>{{ 'label.address'|trans }}</dt>
+    <dd>{{ entity.alamat }}</dd>
+    <dt>{{ 'label.postalcode'|trans }}</dt>
+    <dd>{{ entity.kodepos }}</dd>
+    <dt>{{ 'label.phone'|trans }}</dt>
+    <dd>{{ entity.telepon }}</dd>
+    <dt>{{ 'label.fax'|trans }}</dt>
+    <dd>{{ entity.fax }}</dd>
+    <dt>{{ 'label.email'|trans }}</dt>
+    <dd>{{ entity.email }}</dd>
+    <dt>{{ 'label.bank'|trans }}</dt>
+    <dd>{{ entity.bank }}</dd>
+    <dt>{{ 'label.account'|trans }}</dt>
+    <dd>{{ entity.norekening }}</dd>
+    <dt>{{ 'label.headmaster'|trans }}</dt>
+    <dd>{{ entity.kepsek }}</dd>
+</dl>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('settings_specsch_edit') }}">{{ 'link.edit'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

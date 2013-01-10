@@ -1,0 +1,148 @@
+_index:
+    pattern:  /
+    defaults: { _controller: "FastSisdikBundle:Default:index" }
+
+_settings:
+    resource: "@FastSisdikBundle/Controller/SettingsController.php"
+    type:     annotation
+    prefix:   /settings
+
+settings_user:
+    resource: "@FastSisdikBundle/Controller/SettingsUserController.php"
+    type:     annotation
+    prefix:   /settings
+
+settings_school:
+    resource: "@FastSisdikBundle/Controller/SettingsSchoolController.php"
+    type:     annotation
+    prefix:   /settings
+    
+settings_specsch:
+    resource: "@FastSisdikBundle/Controller/SekolahController.php"
+    type:     annotation
+    prefix:   /settings
+
+settings_placement:
+    resource: "@FastSisdikBundle/Controller/PenjurusanController.php"
+    type:     annotation
+    prefix:   /settings
+
+settings_yearentry:
+    resource: "@FastSisdikBundle/Controller/TahunmasukController.php"
+    type:     annotation
+    prefix:   /settings
+
+settings_admissiongroup:
+    resource: "@FastSisdikBundle/Controller/GelombangController.php"
+    type:     annotation
+    prefix:   /settings
+
+settings_feetype:
+    resource: "@FastSisdikBundle/Controller/JenisbiayaController.php"
+    type:     annotation
+    prefix:   /
+    
+settings_feeonce:
+    resource: "@FastSisdikBundle/Controller/BiayaSekaliController.php"
+    type:     annotation
+    prefix:   /
+    
+settings_feerecur:
+    resource: "@FastSisdikBundle/Controller/BiayaRutinController.php"
+    type:     annotation
+    prefix:   /
+
+student:
+    resource: "@FastSisdikBundle/Controller/SiswaController.php"
+    type:     annotation
+    prefix:   /
+
+class:
+    resource: "@FastSisdikBundle/Controller/KelasController.php"
+    type:     annotation
+    prefix:   /
+
+year:
+    resource: "@FastSisdikBundle/Controller/TahunController.php"
+    type:     annotation
+    prefix:   /
+
+classguardian:
+    resource: "@FastSisdikBundle/Controller/WaliKelasController.php"
+    type:     annotation
+    prefix:   /
+
+studentclass:
+    resource: "@FastSisdikBundle/Controller/SiswaKelasController.php"
+    type:     annotation
+    prefix:   /
+
+smstemplate:
+    resource: "@FastSisdikBundle/Controller/TemplatesmsController.php"
+    type:     annotation
+    prefix:   /
+
+academiccalendar:
+    resource: "@FastSisdikBundle/Controller/KalenderPendidikanController.php"
+    type:     annotation
+    prefix:   /
+
+presence_status:
+    resource: "@FastSisdikBundle/Controller/StatusKehadiranKepulanganController.php"
+    type:     annotation
+    prefix:   /
+    
+presence_schedule_single:
+    resource: "@FastSisdikBundle/Controller/JadwalKehadiranKepulanganSingleController.php"
+    type:     annotation
+    prefix:   /
+    
+presence_schedule:
+    resource: "@FastSisdikBundle/Controller/JadwalKehadiranKepulanganController.php"
+    type:     annotation
+    prefix:   /
+    
+studylevel:
+    resource: "@FastSisdikBundle/Controller/JenjangController.php"
+    type:     annotation
+    prefix:   /
+    
+attendance_machine:
+    resource: "@FastSisdikBundle/Controller/MesinKehadiranController.php"
+    type:     annotation
+    prefix:   /
+    
+studentspresence:
+    resource: "@FastSisdikBundle/Controller/KehadiranSiswaController.php"
+    type:     annotation
+    prefix:   /
+    
+studentspresence_localapi:
+    resource: "@FastSisdikBundle/Controller/KehadiranSiswaLocalAPIController.php"
+    type:     annotation
+    prefix:   /
+
+
+
+
+
+# ---------------------------------------------------------------------------------------- #
+
+fos_user_security:
+    resource: "@FOSUserBundle/Resources/config/routing/security.xml"
+
+fos_user_profile:
+    resource: "@FOSUserBundle/Resources/config/routing/profile.xml"
+    prefix: /profile
+
+fos_user_register:
+    resource: "@FOSUserBundle/Resources/config/routing/registration.xml"
+    prefix: /register
+
+fos_user_resetting:
+    resource: "@FOSUserBundle/Resources/config/routing/resetting.xml"
+    prefix: /resetting
+
+fos_user_change_password:
+    resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
+    prefix: /profile

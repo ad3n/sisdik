@@ -1,0 +1,49 @@
+headings:
+    setting: Pengaturan
+    student: Siswa
+    presence: Kehadiran
+    fee: Keuangan
+    data:
+        academic: Akademik
+        class: Data Kelas
+
+links:
+    studentspresence: Kehadiran Siswa
+    attendancemachine: Mesin Kehadiran
+    registration: Pendaftaran
+    presencestatus: Status Kehadiran
+    presenceschedule: Jadwal Kehadiran
+    schools: Semua Sekolah
+    school: Sekolah
+    placement: Penjurusan
+    admissiongroup: Gelombang
+    yearentry: Tahun Masuk
+    feevariety: Jenis Biaya
+    feeonce: Biaya Sekali
+    feeiterative: Biaya Berulang
+    class: Kelas
+    smstemplate: Template SMS
+    smsbulk: SMS Bulk 
+    user: User
+    alluser: Semua User
+    register: Register
+    year: Tahun Ajaran
+    fee:
+        type: Jenis Biaya
+        once: Biaya Sekali
+        recur: Biaya Berulang
+    data:
+        level: Jenjang
+        student: Siswa
+        class: Kelas
+        classguardian: Wali Kelas
+        academiccalendar: Kalender Pendidikan
+
+user:
+    details: Info Detail
+    edit:
+        profile: Ubah Akun
+        password: Ubah Password
+    messages: Kotak Pesan
+    myaccount: Akun Saya
+    logout: Logout

@@ -1,0 +1,62 @@
+Sekolah:
+    type: entity
+    table: sekolah
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 300
+            fixed: false
+            nullable: false
+        kode:
+            type: string
+            length: 50
+            fixed: false
+            nullable: false
+        alamat:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+        kodepos:
+            type: string
+            length: 10
+            fixed: false
+            nullable: true
+        telepon:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+        fax:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+        email:
+            type: string
+            length: 100
+            fixed: false
+            nullable: false
+        norekening:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+        bank:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+        kepsek:
+            type: string
+            length: 400
+            fixed: false
+            nullable: false
+    lifecycleCallbacks: {  }

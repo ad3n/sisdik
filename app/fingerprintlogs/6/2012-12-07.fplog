@@ -1,0 +1,10 @@
+HTTP/1.0 200 OK
+Server: ZK Web Server
+Pragma: no-cache
+Cache-control: no-cache
+Content-Type: text/xml
+Connection: close
+
+
+<GetAttLogResponse>
+</GetAttLogResponse>

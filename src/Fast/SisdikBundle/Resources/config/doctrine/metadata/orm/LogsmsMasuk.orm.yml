@@ -1,0 +1,11 @@
+LogsmsMasuk:
+    type: entity
+    table: logsms_masuk
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+    lifecycleCallbacks: {  }
