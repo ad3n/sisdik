@@ -964,7 +964,10 @@ class SiswaController extends Controller
         $idtahun = $this->getRequest()->query->get('idtahun');
         $idkelas = $this->getRequest()->query->get('idkelas');
 
-        $query = $em->createQuery('SELECT COUNT(u.id) FROM FastSisdikBundle:SiswaKelas u');
+        $query = $em->createQuery("SELECT COUNT(t1.id) FROM FastSisdikBundle:SiswaKelas t1 "
+                . " JOIN FastSisdikBundle:FosUser t2 "
+                . " WHERE t2.idsiswa IS NOT NULL AND t1.idtahun = $idtahun "
+                . " AND t1.idkelas = $idkelas ");
         $count = $query->getSingleScalarResult();
         
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
