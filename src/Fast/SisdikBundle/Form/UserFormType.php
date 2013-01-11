@@ -86,7 +86,7 @@ class UserFormType extends AbstractType
         if ($this->formoption > 1) {
             if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
                 $builder
-                        ->add('idsekolah', 'entity',
+                        ->add('sekolah', 'entity',
                                 array(
                                         'class' => 'FastSisdikBundle:Sekolah',
                                         'label' => 'label.school', 'multiple' => false,
@@ -95,15 +95,15 @@ class UserFormType extends AbstractType
                                 ));
             } else {
                 $user = $this->container->get('security.context')->getToken()->getUser();
-                $idsekolah = $user->getIdsekolah();
+                $sekolah = $user->getSekolah();
 
-                if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+                if (is_object($sekolah) && $sekolah instanceof Sekolah) {
                     $em = $this->container->get('doctrine')->getManager();
                     $querybuilder = $em->createQueryBuilder()->select('t')
-                            ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :idsekolah')
-                            ->setParameter('idsekolah', $idsekolah);
+                            ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :sekolah')
+                            ->setParameter('sekolah', $sekolah);
                     $builder
-                            ->add('idsekolah', 'entity',
+                            ->add('sekolah', 'entity',
                                     array(
                                             'class' => 'FastSisdikBundle:Sekolah',
                                             'label' => 'label.school', 'multiple' => false,

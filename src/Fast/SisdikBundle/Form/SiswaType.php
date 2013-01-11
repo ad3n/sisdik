@@ -18,15 +18,15 @@ class SiswaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :id')
-                    ->setParameter('id', $idsekolah);
+                    ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :id')
+                    ->setParameter('id', $sekolah);
             $builder
-                    ->add('idsekolah', 'entity',
+                    ->add('sekolah', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Sekolah',
                                     'label' => 'label.school', 'multiple' => false,
@@ -36,10 +36,10 @@ class SiswaType extends AbstractType
                             ));
 
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahunmasuk', 'entity',
+                    ->add('tahunmasuk', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahunmasuk',
                                     'label' => 'label.yearentry.entry', 'multiple' => false,
@@ -52,10 +52,10 @@ class SiswaType extends AbstractType
                             ));
 
             $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idgelombang', 'entity',
+                    ->add('gelombang', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Gelombang',
                                     'label' => 'label.admissiongroup.entry', 'multiple' => false,
@@ -78,7 +78,7 @@ class SiswaType extends AbstractType
                         ))
                 ->add('nomorInduk', null,
                         array(
-                                'label' => 'label.idnumber',
+                                'label' => 'label.number',
                                 'attr' => array(
                                     'class' => 'medium'
                                 ),

@@ -48,16 +48,16 @@ class KelasType extends AbstractType
                         ));
 
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.idsekolah = :idsekolah')
-                    ->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.sekolah = :sekolah')
+                    ->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idjenjang', 'entity',
+                    ->add('jenjang', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Jenjang',
                                     'label' => 'label.level', 'multiple' => false,
@@ -70,10 +70,10 @@ class KelasType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahun', 'entity',
+                    ->add('tahun', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.year.entry', 'multiple' => false,
@@ -86,10 +86,10 @@ class KelasType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :idsekolah')
-                    ->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :sekolah')
+                    ->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idsekolah', 'entity',
+                    ->add('sekolah', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Sekolah',
                                     'label' => 'label.school', 'multiple' => false,

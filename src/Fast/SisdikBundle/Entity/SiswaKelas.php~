@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\SiswaKelas
+ * SiswaKelas
  *
  * @ORM\Table(name="siswa_kelas")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SiswaKelas
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,58 +22,58 @@ class SiswaKelas
     private $id;
 
     /**
-     * @var boolean $aktif
+     * @var boolean
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false)
      */
     private $aktif;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=400, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var Siswa
-     *
-     * @ORM\ManyToOne(targetEntity="Siswa")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
-     * })
-     */
-    private $idsiswa;
-
-    /**
-     * @var Tahun
-     *
-     * @ORM\ManyToOne(targetEntity="Tahun")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
-     * })
-     */
-    private $idtahun;
-
-    /**
-     * @var Penjurusan
-     *
-     * @ORM\ManyToOne(targetEntity="Penjurusan")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idpenjurusan", referencedColumnName="id")
-     * })
-     */
-    private $idpenjurusan;
-
-    /**
-     * @var Kelas
+     * @var \Kelas
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
      * })
      */
-    private $idkelas;
+    private $kelas;
+
+    /**
+     * @var \Penjurusan
+     *
+     * @ORM\ManyToOne(targetEntity="Penjurusan")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id")
+     * })
+     */
+    private $penjurusan;
+
+    /**
+     * @var \Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     * })
+     */
+    private $siswa;
+
+    /**
+     * @var \Tahun
+     *
+     * @ORM\ManyToOne(targetEntity="Tahun")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
+     * })
+     */
+    private $tahun;
 
 
 }

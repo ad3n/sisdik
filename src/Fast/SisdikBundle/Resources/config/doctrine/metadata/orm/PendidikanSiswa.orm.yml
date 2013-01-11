@@ -62,22 +62,22 @@ PendidikanSiswa:
             fixed: false
             nullable: true
     manyToOne:
-        idreferensi:
+        referensi:
             targetEntity: Referensi
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idreferensi:
+                referensi_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idsiswa:
+        siswa:
             targetEntity: Siswa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsiswa:
+                siswa_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

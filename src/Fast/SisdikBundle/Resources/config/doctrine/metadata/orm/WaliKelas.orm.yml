@@ -15,22 +15,22 @@ WaliKelas:
             fixed: false
             nullable: true
     manyToOne:
-        idkelas:
+        kelas:
             targetEntity: Kelas
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idkelas:
+                kelas_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idtahun:
+        tahun:
             targetEntity: Tahun
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahun:
+                tahun_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

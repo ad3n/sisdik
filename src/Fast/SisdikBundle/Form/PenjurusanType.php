@@ -40,14 +40,14 @@ class PenjurusanType extends AbstractType
                         ));
 
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.idsekolah ASC, t.root, t.lft', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.sekolah ASC, t.root, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('parent', 'entity',
                             array(
@@ -62,10 +62,10 @@ class PenjurusanType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :idsekolah')
-                    ->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :sekolah')
+                    ->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idsekolah', 'entity',
+                    ->add('sekolah', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Sekolah',
                                     'label' => 'label.school', 'multiple' => false,

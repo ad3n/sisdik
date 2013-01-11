@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Referensi
+ * Referensi
  *
  * @ORM\Table(name="referensi")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Referensi
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,28 +22,28 @@ class Referensi
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $ponsel
+     * @var string
      *
      * @ORM\Column(name="ponsel", type="string", length=50, nullable=true)
      */
     private $ponsel;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var string $email
+     * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
      */

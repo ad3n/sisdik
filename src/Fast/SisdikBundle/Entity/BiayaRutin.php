@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\BiayaRutin
+ * BiayaRutin
  *
  * @ORM\Table(name="biaya_rutin")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BiayaRutin
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,55 +22,55 @@ class BiayaRutin
     private $id;
 
     /**
-     * @var integer $nominal
+     * @var integer
      *
      * @ORM\Column(name="nominal", type="bigint", nullable=true)
      */
     private $nominal;
 
     /**
-     * @var string $perulangan
+     * @var string
      *
      * @ORM\Column(name="perulangan", type="string", nullable=true)
      */
     private $perulangan;
 
     /**
-     * @var integer $urutan
+     * @var integer
      *
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
      */
     private $urutan;
 
     /**
-     * @var Gelombang
+     * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idgelombang", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
      * })
      */
-    private $idgelombang;
+    private $gelombang;
 
     /**
-     * @var Tahunmasuk
+     * @var \Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahunmasuk", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
      * })
      */
-    private $idtahunmasuk;
+    private $tahunmasuk;
 
     /**
-     * @var Jenisbiaya
+     * @var \Jenisbiaya
      *
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idjenisbiaya", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id")
      * })
      */
-    private $idjenisbiaya;
+    private $jenisbiaya;
 
 
 
@@ -154,71 +154,71 @@ class BiayaRutin
     }
 
     /**
-     * Set idgelombang
+     * Set gelombang
      *
-     * @param Fast\SisdikBundle\Entity\Gelombang $idgelombang
+     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
      * @return BiayaRutin
      */
-    public function setIdgelombang(\Fast\SisdikBundle\Entity\Gelombang $idgelombang = null)
+    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null)
     {
-        $this->idgelombang = $idgelombang;
+        $this->gelombang = $gelombang;
     
         return $this;
     }
 
     /**
-     * Get idgelombang
+     * Get gelombang
      *
-     * @return Fast\SisdikBundle\Entity\Gelombang 
+     * @return \Fast\SisdikBundle\Entity\Gelombang 
      */
-    public function getIdgelombang()
+    public function getGelombang()
     {
-        return $this->idgelombang;
+        return $this->gelombang;
     }
 
     /**
-     * Set idtahunmasuk
+     * Set tahunmasuk
      *
-     * @param Fast\SisdikBundle\Entity\Tahunmasuk $idtahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
      * @return BiayaRutin
      */
-    public function setIdtahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $idtahunmasuk = null)
+    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null)
     {
-        $this->idtahunmasuk = $idtahunmasuk;
+        $this->tahunmasuk = $tahunmasuk;
     
         return $this;
     }
 
     /**
-     * Get idtahunmasuk
+     * Get tahunmasuk
      *
-     * @return Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
      */
-    public function getIdtahunmasuk()
+    public function getTahunmasuk()
     {
-        return $this->idtahunmasuk;
+        return $this->tahunmasuk;
     }
 
     /**
-     * Set idjenisbiaya
+     * Set jenisbiaya
      *
-     * @param Fast\SisdikBundle\Entity\Jenisbiaya $idjenisbiaya
+     * @param \Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya
      * @return BiayaRutin
      */
-    public function setIdjenisbiaya(\Fast\SisdikBundle\Entity\Jenisbiaya $idjenisbiaya = null)
+    public function setJenisbiaya(\Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya = null)
     {
-        $this->idjenisbiaya = $idjenisbiaya;
+        $this->jenisbiaya = $jenisbiaya;
     
         return $this;
     }
 
     /**
-     * Get idjenisbiaya
+     * Get jenisbiaya
      *
-     * @return Fast\SisdikBundle\Entity\Jenisbiaya 
+     * @return \Fast\SisdikBundle\Entity\Jenisbiaya 
      */
-    public function getIdjenisbiaya()
+    public function getJenisbiaya()
     {
-        return $this->idjenisbiaya;
+        return $this->jenisbiaya;
     }
 }

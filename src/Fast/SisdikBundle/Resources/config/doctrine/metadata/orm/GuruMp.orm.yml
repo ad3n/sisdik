@@ -10,22 +10,22 @@ GuruMp:
             generator:
                 strategy: IDENTITY
     manyToOne:
-        idguru:
+        guru:
             targetEntity: Guru
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idguru:
+                guru_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idmataPelajaran:
+        mataPelajaran:
             targetEntity: MataPelajaran
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idmata_pelajaran:
+                mata_pelajaran_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

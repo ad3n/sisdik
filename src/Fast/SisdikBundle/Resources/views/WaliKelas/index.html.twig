@@ -43,8 +43,8 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}">{{ data.idtahun.nama }}</td>
-    		<td data-title="{{ 'label.class.entry'|trans }}">{{ data.idkelas.nama }}</td>
+    		<td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahun.nama }}</td>
+    		<td data-title="{{ 'label.class.entry'|trans }}">{{ data.kelas.nama }}</td>
     		<td data-title="{{ 'label.classguardian.name'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('data_classguardian_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>

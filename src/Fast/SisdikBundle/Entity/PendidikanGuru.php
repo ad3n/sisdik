@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\PendidikanGuru
+ * PendidikanGuru
  *
  * @ORM\Table(name="pendidikan_guru")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PendidikanGuru
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,63 +22,63 @@ class PendidikanGuru
     private $id;
 
     /**
-     * @var integer $jenjang
+     * @var integer
      *
      * @ORM\Column(name="jenjang", type="integer", nullable=true)
      */
     private $jenjang;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var string $ijazah
+     * @var string
      *
      * @ORM\Column(name="ijazah", type="string", length=400, nullable=true)
      */
     private $ijazah;
 
     /**
-     * @var string $kelulusan
+     * @var string
      *
      * @ORM\Column(name="kelulusan", type="string", length=500, nullable=true)
      */
     private $kelulusan;
 
     /**
-     * @var \DateTime $tahunmasuk
+     * @var \DateTime
      *
      * @ORM\Column(name="tahunmasuk", type="date", nullable=true)
      */
     private $tahunmasuk;
 
     /**
-     * @var \DateTime $tahunkeluar
+     * @var \DateTime
      *
      * @ORM\Column(name="tahunkeluar", type="date", nullable=true)
      */
     private $tahunkeluar;
 
     /**
-     * @var Guru
+     * @var \Guru
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idguru", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
      * })
      */
-    private $idguru;
+    private $guru;
 
 
 
@@ -254,25 +254,25 @@ class PendidikanGuru
     }
 
     /**
-     * Set idguru
+     * Set guru
      *
-     * @param Fast\SisdikBundle\Entity\Guru $idguru
+     * @param \Fast\SisdikBundle\Entity\Guru $guru
      * @return PendidikanGuru
      */
-    public function setIdguru(\Fast\SisdikBundle\Entity\Guru $idguru = null)
+    public function setGuru(\Fast\SisdikBundle\Entity\Guru $guru = null)
     {
-        $this->idguru = $idguru;
+        $this->guru = $guru;
     
         return $this;
     }
 
     /**
-     * Get idguru
+     * Get guru
      *
-     * @return Fast\SisdikBundle\Entity\Guru 
+     * @return \Fast\SisdikBundle\Entity\Guru 
      */
-    public function getIdguru()
+    public function getGuru()
     {
-        return $this->idguru;
+        return $this->guru;
     }
 }

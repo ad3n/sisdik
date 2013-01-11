@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\CukilMp
+ * CukilMp
  *
  * @ORM\Table(name="cukil_mp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CukilMp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,34 +22,34 @@ class CukilMp
     private $id;
 
     /**
-     * @var Tahun
+     * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
     /**
-     * @var Semester
+     * @var \Semester
      *
      * @ORM\ManyToOne(targetEntity="Semester")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsemester", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="semester_id", referencedColumnName="id")
      * })
      */
-    private $idsemester;
+    private $semester;
 
     /**
-     * @var MataPelajaran
+     * @var \MataPelajaran
      *
      * @ORM\ManyToOne(targetEntity="MataPelajaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idmata_pelajaran", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id")
      * })
      */
-    private $idmataPelajaran;
+    private $mataPelajaran;
 
 
 
@@ -64,71 +64,71 @@ class CukilMp
     }
 
     /**
-     * Set idtahun
+     * Set tahun
      *
-     * @param Fast\SisdikBundle\Entity\Tahun $idtahun
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return CukilMp
      */
-    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $idtahun = null)
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
     {
-        $this->idtahun = $idtahun;
+        $this->tahun = $tahun;
     
         return $this;
     }
 
     /**
-     * Get idtahun
+     * Get tahun
      *
-     * @return Fast\SisdikBundle\Entity\Tahun 
+     * @return \Fast\SisdikBundle\Entity\Tahun 
      */
-    public function getIdtahun()
+    public function getTahun()
     {
-        return $this->idtahun;
+        return $this->tahun;
     }
 
     /**
-     * Set idsemester
+     * Set semester
      *
-     * @param Fast\SisdikBundle\Entity\Semester $idsemester
+     * @param \Fast\SisdikBundle\Entity\Semester $semester
      * @return CukilMp
      */
-    public function setIdsemester(\Fast\SisdikBundle\Entity\Semester $idsemester = null)
+    public function setSemester(\Fast\SisdikBundle\Entity\Semester $semester = null)
     {
-        $this->idsemester = $idsemester;
+        $this->semester = $semester;
     
         return $this;
     }
 
     /**
-     * Get idsemester
+     * Get semester
      *
-     * @return Fast\SisdikBundle\Entity\Semester 
+     * @return \Fast\SisdikBundle\Entity\Semester 
      */
-    public function getIdsemester()
+    public function getSemester()
     {
-        return $this->idsemester;
+        return $this->semester;
     }
 
     /**
-     * Set idmataPelajaran
+     * Set mataPelajaran
      *
-     * @param Fast\SisdikBundle\Entity\MataPelajaran $idmataPelajaran
+     * @param \Fast\SisdikBundle\Entity\MataPelajaran $mataPelajaran
      * @return CukilMp
      */
-    public function setIdmataPelajaran(\Fast\SisdikBundle\Entity\MataPelajaran $idmataPelajaran = null)
+    public function setMataPelajaran(\Fast\SisdikBundle\Entity\MataPelajaran $mataPelajaran = null)
     {
-        $this->idmataPelajaran = $idmataPelajaran;
+        $this->mataPelajaran = $mataPelajaran;
     
         return $this;
     }
 
     /**
-     * Get idmataPelajaran
+     * Get mataPelajaran
      *
-     * @return Fast\SisdikBundle\Entity\MataPelajaran 
+     * @return \Fast\SisdikBundle\Entity\MataPelajaran 
      */
-    public function getIdmataPelajaran()
+    public function getMataPelajaran()
     {
-        return $this->idmataPelajaran;
+        return $this->mataPelajaran;
     }
 }

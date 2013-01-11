@@ -28,15 +28,15 @@ class TemplatesmsController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Templatesms', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.nama', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Templatesms', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah);
         }
 
         $paginator = $this->get('knp_paginator');
@@ -55,7 +55,7 @@ class TemplatesmsController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -80,7 +80,7 @@ class TemplatesmsController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Templatesms();
@@ -99,7 +99,7 @@ class TemplatesmsController extends Controller
      * @Template("FastSisdikBundle:Templatesms:new.html.twig")
      */
     public function createAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Templatesms();
@@ -140,7 +140,7 @@ class TemplatesmsController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -168,7 +168,7 @@ class TemplatesmsController extends Controller
      * @Template("FastSisdikBundle:Templatesms:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -276,10 +276,10 @@ class TemplatesmsController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

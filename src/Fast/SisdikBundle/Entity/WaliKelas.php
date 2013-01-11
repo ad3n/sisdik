@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\WaliKelas
+ * WaliKelas
  *
  * @ORM\Table(name="wali_kelas")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class WaliKelas
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,31 +22,31 @@ class WaliKelas
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=45, nullable=true)
      */
     private $nama;
 
     /**
-     * @var Kelas
+     * @var \Kelas
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
      * })
      */
-    private $idkelas;
+    private $kelas;
 
     /**
-     * @var Tahun
+     * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
 
 
@@ -84,48 +84,48 @@ class WaliKelas
     }
 
     /**
-     * Set idkelas
+     * Set kelas
      *
-     * @param Fast\SisdikBundle\Entity\Kelas $idkelas
+     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
      * @return WaliKelas
      */
-    public function setIdkelas(\Fast\SisdikBundle\Entity\Kelas $idkelas = null)
+    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
     {
-        $this->idkelas = $idkelas;
+        $this->kelas = $kelas;
     
         return $this;
     }
 
     /**
-     * Get idkelas
+     * Get kelas
      *
-     * @return Fast\SisdikBundle\Entity\Kelas 
+     * @return \Fast\SisdikBundle\Entity\Kelas 
      */
-    public function getIdkelas()
+    public function getKelas()
     {
-        return $this->idkelas;
+        return $this->kelas;
     }
 
     /**
-     * Set idtahun
+     * Set tahun
      *
-     * @param Fast\SisdikBundle\Entity\Tahun $idtahun
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return WaliKelas
      */
-    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $idtahun = null)
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
     {
-        $this->idtahun = $idtahun;
+        $this->tahun = $tahun;
     
         return $this;
     }
 
     /**
-     * Get idtahun
+     * Get tahun
      *
-     * @return Fast\SisdikBundle\Entity\Tahun 
+     * @return \Fast\SisdikBundle\Entity\Tahun 
      */
-    public function getIdtahun()
+    public function getTahun()
     {
-        return $this->idtahun;
+        return $this->tahun;
     }
 }

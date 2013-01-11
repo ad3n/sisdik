@@ -41,6 +41,15 @@ Penjurusan:
             unsigned: false
             nullable: true
     manyToOne:
+        sekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sekolah_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         parent:
             targetEntity: Penjurusan
             cascade: {  }
@@ -48,15 +57,6 @@ Penjurusan:
             inversedBy: null
             joinColumns:
                 parent_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idsekolah:
-            targetEntity: Sekolah
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idsekolah:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

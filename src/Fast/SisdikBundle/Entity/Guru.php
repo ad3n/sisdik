@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Guru
+ * Guru
  *
  * @ORM\Table(name="guru")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Guru
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,98 +22,98 @@ class Guru
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $jenisKelamin
+     * @var string
      *
      * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
      */
     private $jenisKelamin;
 
     /**
-     * @var string $foto
+     * @var string
      *
      * @ORM\Column(name="foto", type="string", length=400, nullable=true)
      */
     private $foto;
 
     /**
-     * @var integer $agama
+     * @var integer
      *
      * @ORM\Column(name="agama", type="integer", nullable=true)
      */
     private $agama;
 
     /**
-     * @var string $tempatLahir
+     * @var string
      *
      * @ORM\Column(name="tempat_lahir", type="string", length=400, nullable=true)
      */
     private $tempatLahir;
 
     /**
-     * @var \DateTime $tanggalLahir
+     * @var \DateTime
      *
      * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
      */
     private $tanggalLahir;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var string $telepon
+     * @var string
      *
      * @ORM\Column(name="telepon", type="string", length=100, nullable=true)
      */
     private $telepon;
 
     /**
-     * @var string $email
+     * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
      */
     private $email;
 
     /**
-     * @var string $nomorInduk
+     * @var string
      *
      * @ORM\Column(name="nomor_induk", type="string", length=50, nullable=true)
      */
     private $nomorInduk;
 
     /**
-     * @var string $username
+     * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, nullable=true)
      */
     private $username;
 
     /**
-     * @var boolean $status
+     * @var boolean
      *
      * @ORM\Column(name="status", type="boolean", nullable=true)
      */
     private $status;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
 
 
@@ -404,25 +404,25 @@ class Guru
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Guru
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
     
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah()
+    public function getSekolah()
     {
-        return $this->idsekolah;
+        return $this->sekolah;
     }
 }

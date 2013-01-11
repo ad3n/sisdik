@@ -45,14 +45,14 @@ class StatusKehadiranKepulanganController extends Controller
             $query = $em
                     ->createQuery(
                             "SELECT t FROM FastSisdikBundle:StatusKehadiranKepulangan t
-                            JOIN t.idsekolah t1 
+                            JOIN t.sekolah t1 
                             ORDER BY t1.nama ASC, t.nama ASC");
         } else {
             $query = $em
                     ->createQuery(
                             "SELECT t FROM FastSisdikBundle:StatusKehadiranKepulangan t
-                            JOIN t.idsekolah t1
-                            WHERE t.idsekolah = '$filter'
+                            JOIN t.sekolah t1
+                            WHERE t.sekolah = '$filter'
                             ORDER BY t.nama ASC");
         }
 
@@ -134,7 +134,7 @@ class StatusKehadiranKepulanganController extends Controller
                                         ->trans('flash.presence.status.inserted',
                                                 array(
                                                         '%name%' => $entity->getNama(),
-                                                        '%school%' => $entity->getIdsekolah()
+                                                        '%school%' => $entity->getSekolah()
                                                                 ->getNama()
                                                 )));
             } catch (DBALException $e) {
@@ -215,7 +215,7 @@ class StatusKehadiranKepulanganController extends Controller
                                         ->trans('flash.presence.status.updated',
                                                 array(
                                                         '%name%' => $entity->getNama(),
-                                                        '%school%' => $entity->getIdsekolah()
+                                                        '%school%' => $entity->getSekolah()
                                                                 ->getNama()
                                                 )));
             } catch (DBALException $e) {
@@ -267,7 +267,7 @@ class StatusKehadiranKepulanganController extends Controller
                                         ->trans('flash.presence.status.deleted',
                                                 array(
                                                         '%name%' => $entity->getNama(),
-                                                        '%school%' => $entity->getIdsekolah()
+                                                        '%school%' => $entity->getSekolah()
                                                                 ->getNama()
                                                 )));
             } catch (DBALException $e) {
@@ -281,7 +281,7 @@ class StatusKehadiranKepulanganController extends Controller
                                     ->trans('flash.presence.status.fail.delete',
                                             array(
                                                     '%name%' => $entity->getNama(),
-                                                    '%school%' => $entity->getIdsekolah()
+                                                    '%school%' => $entity->getSekolah()
                                                             ->getNama()
                                             )));
         }

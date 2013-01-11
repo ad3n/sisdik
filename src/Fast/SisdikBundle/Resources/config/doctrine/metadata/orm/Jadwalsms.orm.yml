@@ -40,31 +40,31 @@ Jadwalsms:
             nullable: true
             column: urutan_periksa
     manyToOne:
-        idkelas:
+        kelas:
             targetEntity: Kelas
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idkelas:
+                kelas:
                     referencedColumnName: id
             orphanRemoval: false
-        idtemplatesms:
+        templatesms:
             targetEntity: Templatesms
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtemplatesms:
+                templatesms:
                     referencedColumnName: id
             orphanRemoval: false
-        idtahun:
+        tahun:
             targetEntity: Tahun
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahun:
+                tahun:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

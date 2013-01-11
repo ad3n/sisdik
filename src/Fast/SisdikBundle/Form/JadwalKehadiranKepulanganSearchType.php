@@ -11,12 +11,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class JadwalKehadiranKepulanganSearchType extends AbstractType
 {
     private $container;
-    private $idsekolah;
+    private $sekolah;
     private $repetition = 'harian';
 
-    public function __construct(ContainerInterface $container, $idsekolah, $repetition = 'harian') {
+    public function __construct(ContainerInterface $container, $sekolah, $repetition = 'harian') {
         $this->container = $container;
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
         $this->repetition = $repetition;
     }
 
@@ -24,10 +24,10 @@ class JadwalKehadiranKepulanganSearchType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         $querybuilder1 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $this->idsekolah);
+                ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('idtahun', 'entity',
+                ->add('tahun', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
@@ -38,11 +38,11 @@ class JadwalKehadiranKepulanganSearchType extends AbstractType
                         ));
 
         $querybuilder2 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idjenjang', 't2')
-                ->where('t.idsekolah = :idsekolah')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('idsekolah', $this->idsekolah);
+                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
+                ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('idkelas', 'entity',
+                ->add('kelas', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Kelas',
                                 'label' => 'label.class.entry', 'multiple' => false,

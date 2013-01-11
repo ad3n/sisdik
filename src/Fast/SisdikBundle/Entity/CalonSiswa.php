@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\CalonSiswa
+ * CalonSiswa
  *
  * @ORM\Table(name="calon_siswa")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CalonSiswa
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,76 +22,76 @@ class CalonSiswa
     private $id;
 
     /**
-     * @var integer $nomorPendaftaran
+     * @var integer
      *
-     * @ORM\Column(name="nomor_pendaftaran", type="integer", nullable=true)
+     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true)
      */
     private $nomorPendaftaran;
 
     /**
-     * @var string $namaLengkap
+     * @var string
      *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
      */
     private $namaLengkap;
 
     /**
-     * @var string $jenisKelamin
+     * @var string
      *
      * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
      */
     private $jenisKelamin;
 
     /**
-     * @var string $tempatLahir
+     * @var string
      *
      * @ORM\Column(name="tempat_lahir", type="string", length=400, nullable=true)
      */
     private $tempatLahir;
 
     /**
-     * @var \DateTime $tanggalLahir
+     * @var \DateTime
      *
      * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
      */
     private $tanggalLahir;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var Gelombang
+     * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idgelombang", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
      * })
      */
-    private $idgelombang;
+    private $gelombang;
 
     /**
-     * @var Tahunmasuk
+     * @var \Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahunmasuk", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
      * })
      */
-    private $idtahunmasuk;
+    private $tahunmasuk;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
 
 
@@ -244,71 +244,71 @@ class CalonSiswa
     }
 
     /**
-     * Set idgelombang
+     * Set gelombang
      *
-     * @param Fast\SisdikBundle\Entity\Gelombang $idgelombang
+     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
      * @return CalonSiswa
      */
-    public function setIdgelombang(\Fast\SisdikBundle\Entity\Gelombang $idgelombang = null)
+    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null)
     {
-        $this->idgelombang = $idgelombang;
+        $this->gelombang = $gelombang;
     
         return $this;
     }
 
     /**
-     * Get idgelombang
+     * Get gelombang
      *
-     * @return Fast\SisdikBundle\Entity\Gelombang 
+     * @return \Fast\SisdikBundle\Entity\Gelombang 
      */
-    public function getIdgelombang()
+    public function getGelombang()
     {
-        return $this->idgelombang;
+        return $this->gelombang;
     }
 
     /**
-     * Set idtahunmasuk
+     * Set tahunmasuk
      *
-     * @param Fast\SisdikBundle\Entity\Tahunmasuk $idtahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
      * @return CalonSiswa
      */
-    public function setIdtahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $idtahunmasuk = null)
+    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null)
     {
-        $this->idtahunmasuk = $idtahunmasuk;
+        $this->tahunmasuk = $tahunmasuk;
     
         return $this;
     }
 
     /**
-     * Get idtahunmasuk
+     * Get tahunmasuk
      *
-     * @return Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
      */
-    public function getIdtahunmasuk()
+    public function getTahunmasuk()
     {
-        return $this->idtahunmasuk;
+        return $this->tahunmasuk;
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return CalonSiswa
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
     
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah()
+    public function getSekolah()
     {
-        return $this->idsekolah;
+        return $this->sekolah;
     }
 }

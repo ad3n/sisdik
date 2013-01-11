@@ -11,21 +11,21 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class JadwalKehadiranKepulanganDuplicateType extends AbstractType
 {
     private $container;
-    private $idsekolahSrc;
-    private $idtahunSrc = NULL;
-    private $idkelasSrc = NULL;
+    private $sekolahSrc;
+    private $tahunSrc = NULL;
+    private $kelasSrc = NULL;
     private $perulanganSrc = NULL;
     private $requestUri = NULL;
     private $mingguanHariKeSrc = NULL;
     private $bulananHariKeSrc = NULL;
 
-    public function __construct(ContainerInterface $container, $idsekolah, $idtahun = NULL,
-            $idkelas = NULL, $perulangan = NULL, $requestUri = NULL, $mingguanHariKe = NULL,
+    public function __construct(ContainerInterface $container, $sekolah, $tahun = NULL,
+            $kelas = NULL, $perulangan = NULL, $requestUri = NULL, $mingguanHariKe = NULL,
             $bulananHariKe = NULL) {
         $this->container = $container;
-        $this->idsekolahSrc = $idsekolah;
-        $this->idtahunSrc = $idtahun;
-        $this->idkelasSrc = $idkelas;
+        $this->sekolahSrc = $sekolah;
+        $this->tahunSrc = $tahun;
+        $this->kelasSrc = $kelas;
         $this->perulanganSrc = $perulangan;
         $this->requestUri = $requestUri;
         $this->mingguanHariKeSrc = $mingguanHariKe;
@@ -36,17 +36,17 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         $builder
-                ->add('idsekolahSrc', 'hidden',
+                ->add('sekolahSrc', 'hidden',
                         array(
-                            'data' => $this->idsekolahSrc,
+                            'data' => $this->sekolahSrc,
                         ))
-                ->add('idtahunSrc', 'hidden',
+                ->add('tahunSrc', 'hidden',
                         array(
-                            'data' => $this->idtahunSrc,
+                            'data' => $this->tahunSrc,
                         ))
-                ->add('idkelasSrc', 'hidden',
+                ->add('kelasSrc', 'hidden',
                         array(
-                            'data' => $this->idkelasSrc,
+                            'data' => $this->kelasSrc,
                         ))
                 ->add('perulanganSrc', 'hidden',
                         array(
@@ -66,10 +66,10 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                         ));
 
         $querybuilder1 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $this->idsekolahSrc);
+                ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $this->sekolahSrc);
         $builder
-                ->add('idtahun', 'entity',
+                ->add('tahun', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
@@ -80,11 +80,11 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                         ));
 
         $querybuilder2 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idjenjang', 't2')
-                ->where('t.idsekolah = :idsekolah')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('idsekolah', $this->idsekolahSrc);
+                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
+                ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolahSrc);
         $builder
-                ->add('idkelas', 'entity',
+                ->add('kelas', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Kelas',
                                 'label' => 'label.class.entry', 'multiple' => false,

@@ -28,7 +28,7 @@ class KalenderPendidikanController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $searchform = $this
@@ -49,7 +49,7 @@ class KalenderPendidikanController extends Controller
      * @Method("POST")
      */
     public function processAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $searchform = $this->createForm(new KalenderPendidikanSearchType());
 
@@ -78,7 +78,7 @@ class KalenderPendidikanController extends Controller
      * @Template()
      */
     public function displayAction($year, $month) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $searchform = $this
@@ -94,9 +94,9 @@ class KalenderPendidikanController extends Controller
         $query = $em
                 ->createQuery(
                         "SELECT t FROM FastSisdikBundle:KalenderPendidikan t
-                        LEFT JOIN t.idsekolah t1
+                        LEFT JOIN t.sekolah t1
                         WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                        AND t1.id = {$idsekolah->getId()}")
+                        AND t1. = {$sekolah->getId()}")
                 ->setParameter('firstday', "$year-$month-01")
                 ->setParameter('nextmonth', $nextmonth);
         $dates = $query->getResult();
@@ -124,7 +124,7 @@ class KalenderPendidikanController extends Controller
      * @Method("POST")
      */
     public function updateAction(Request $request, $year, $month) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $calendar = $this->createCalendar($year, $month);
@@ -145,7 +145,7 @@ class KalenderPendidikanController extends Controller
                     ->createQuery(
                             "DELETE FastSisdikBundle:KalenderPendidikan t
                             WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                            AND t.idsekolah = {$idsekolah->getId()}")
+                            AND t.sekolah = {$sekolah->getId()}")
                     ->setParameter('firstday', "$year-$month-01")
                     ->setParameter('nextmonth', $nextmonth);
             $query->execute();
@@ -157,7 +157,7 @@ class KalenderPendidikanController extends Controller
                         $date = new \DateTime("$year-$month-$i");
 
                         $entity = new KalenderPendidikan();
-                        $entity->setIdsekolah($idsekolah);
+                        $entity->setSekolah($sekolah);
                         $entity->setKbm(true);
                         $entity->setTanggal($date);
 
@@ -272,10 +272,10 @@ class KalenderPendidikanController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

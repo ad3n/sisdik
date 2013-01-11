@@ -38,7 +38,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.school'|trans }}">{% if data.idsekolah is not null %}{{ data.idsekolah.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.school'|trans }}">{% if data.sekolah is not null %}{{ data.sekolah.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.presence.status.entry'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">

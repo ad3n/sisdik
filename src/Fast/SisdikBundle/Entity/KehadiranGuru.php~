@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\KehadiranGuru
+ * KehadiranGuru
  *
  * @ORM\Table(name="kehadiran_guru")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class KehadiranGuru
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,14 +22,14 @@ class KehadiranGuru
     private $id;
 
     /**
-     * @var \DateTime $tanggal
+     * @var \DateTime
      *
      * @ORM\Column(name="tanggal", type="date", nullable=true)
      */
     private $tanggal;
 
     /**
-     * @var boolean $hadir
+     * @var boolean
      *
      * @ORM\Column(name="hadir", type="boolean", nullable=true)
      */

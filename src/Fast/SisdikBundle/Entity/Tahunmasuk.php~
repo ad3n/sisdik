@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Tahunmasuk
+ * Tahunmasuk
  *
  * @ORM\Table(name="tahunmasuk")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Tahunmasuk
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,21 +22,21 @@ class Tahunmasuk
     private $id;
 
     /**
-     * @var \DateTime $tahun
+     * @var \DateTime
      *
      * @ORM\Column(name="tahun", type="date", nullable=false)
      */
     private $tahun;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
 
 }

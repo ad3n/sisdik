@@ -21,7 +21,7 @@ class KehadiranSiswaSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
         $em = $this->container->get('doctrine')->getManager();
 
         $builder
@@ -42,12 +42,12 @@ class KehadiranSiswaSearchType extends AbstractType
                                 ), 'label_render' => false,
                         ));
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.kode')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.kode')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idjenjang', 'entity',
+                    ->add('jenjang', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Jenjang',
                                     'label' => 'label.class.entry', 'multiple' => false,
@@ -59,13 +59,13 @@ class KehadiranSiswaSearchType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idjenjang', 't2')
-                    ->leftJoin('t.idtahun', 't3')->where('t.idsekolah = :idsekolah')
+                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
+                    ->leftJoin('t.tahun', 't3')->where('t.sekolah = :sekolah')
                     ->andWhere('t3.aktif = :aktif')->orderBy('t2.urutan', 'ASC')
-                    ->addOrderBy('t.urutan')->setParameter('idsekolah', $idsekolah)
+                    ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
                     ->setParameter('aktif', TRUE);
             $builder
-                    ->add('idkelas', 'entity',
+                    ->add('kelas', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Kelas',
                                     'label' => 'label.class.entry', 'multiple' => false,
@@ -83,14 +83,14 @@ class KehadiranSiswaSearchType extends AbstractType
             $status = preg_replace('/,$/', '', $status);
             $querybuilder = $em->createQueryBuilder()->select('t')
                     ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')
-                    ->where('t.idsekolah = :idsekolah')->andWhere("t.nama IN ($status)")
-                    ->orderBy('t.nama', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->where('t.sekolah = :sekolah')->andWhere("t.nama IN ($status)")
+                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah);
             $alpa = $em->getRepository('FastSisdikBundle:StatusKehadiranKepulangan')
                     ->findBy(
                             array(
                                     'nama' => current(
                                             StatusKehadiranKepulanganType::buildNamaStatusKehadiranSaja()),
-                                    'idsekolah' => $idsekolah->getId()
+                                    'sekolah' => $sekolah->getId()
                             ));
             $builder
                     ->add('idstatuskehadirankepulangan', 'entity',

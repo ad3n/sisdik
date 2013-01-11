@@ -26,22 +26,22 @@ CalonPembayaranRutin:
             nullable: true
             column: waktu_ubah
     manyToOne:
-        idbiayaRutin:
+        biayaRutin:
             targetEntity: BiayaRutin
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idbiaya_rutin:
+                biaya_rutin_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idcalonSiswa:
+        calonSiswa:
             targetEntity: CalonSiswa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idcalon_siswa:
+                calon_siswa_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

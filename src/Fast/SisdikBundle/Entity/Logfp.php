@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Logfp
+ * Logfp
  *
  * @ORM\Table(name="logfp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Logfp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,28 +22,28 @@ class Logfp
     private $id;
 
     /**
-     * @var string $pin
+     * @var string
      *
      * @ORM\Column(name="pin", type="string", length=100, nullable=true)
      */
     private $pin;
 
     /**
-     * @var \DateTime $datetime
+     * @var \DateTime
      *
      * @ORM\Column(name="datetime", type="datetime", nullable=true)
      */
     private $datetime;
 
     /**
-     * @var integer $status
+     * @var integer
      *
      * @ORM\Column(name="status", type="smallint", nullable=true)
      */
     private $status;
 
     /**
-     * @var string $ip
+     * @var string
      *
      * @ORM\Column(name="ip", type="string", length=50, nullable=true)
      */

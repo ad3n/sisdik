@@ -126,44 +126,44 @@ class JadwalKehadiranKepulangan
     private $commandJadwal;
 
     /**
-     * @var \Kelas
-     *
-     * @ORM\ManyToOne(targetEntity="Kelas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
-     * })
-     */
-    private $idkelas;
-
-    /**
      * @var \StatusKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idstatus_kehadiran_kepulangan", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id")
      * })
      */
-    private $idstatusKehadiranKepulangan;
+    private $statusKehadiranKepulangan;
+
+    /**
+     * @var \Kelas
+     *
+     * @ORM\ManyToOne(targetEntity="Kelas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     * })
+     */
+    private $kelas;
 
     /**
      * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
     /**
      * @var \Templatesms
      *
      * @ORM\ManyToOne(targetEntity="Templatesms")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtemplatesms", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="templatesms_id", referencedColumnName="id")
      * })
      */
-    private $idtemplatesms;
+    private $templatesms;
 
     /**
      * Get id
@@ -330,8 +330,12 @@ class JadwalKehadiranKepulangan
      *
      * @return string 
      */
-    public function getSmsRealtimeHinggaJam() {
-        return $this->smsRealtimeHinggaJam;
+    public function getSmsRealtimeHinggaJam($withsecond = FALSE) {
+        if (!$withsecond) {
+            return substr($this->smsRealtimeHinggaJam, 0, 5);
+        } else {
+            return $this->smsRealtimeHinggaJam;
+        }
     }
 
     /**
@@ -515,87 +519,87 @@ class JadwalKehadiranKepulangan
     }
 
     /**
-     * Set idkelas
+     * Set statusKehadiranKepulangan
      *
-     * @param \Fast\SisdikBundle\Entity\Kelas $idkelas
+     * @param \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan
      * @return JadwalKehadiranKepulangan
      */
-    public function setIdkelas(\Fast\SisdikBundle\Entity\Kelas $idkelas = null) {
-        $this->idkelas = $idkelas;
+    public function setStatusKehadiranKepulangan(
+            \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan = null) {
+        $this->statusKehadiranKepulangan = $statusKehadiranKepulangan;
 
         return $this;
     }
 
     /**
-     * Get idkelas
-     *
-     * @return \Fast\SisdikBundle\Entity\Kelas 
-     */
-    public function getIdkelas() {
-        return $this->idkelas;
-    }
-
-    /**
-     * Set idstatusKehadiranKepulangan
-     *
-     * @param \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $idstatusKehadiranKepulangan
-     * @return JadwalKehadiranKepulangan
-     */
-    public function setIdstatusKehadiranKepulangan(
-            \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $idstatusKehadiranKepulangan = null) {
-        $this->idstatusKehadiranKepulangan = $idstatusKehadiranKepulangan;
-
-        return $this;
-    }
-
-    /**
-     * Get idstatusKehadiranKepulangan
+     * Get statusKehadiranKepulangan
      *
      * @return \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan 
      */
-    public function getIdstatusKehadiranKepulangan() {
-        return $this->idstatusKehadiranKepulangan;
+    public function getStatusKehadiranKepulangan() {
+        return $this->statusKehadiranKepulangan;
     }
 
     /**
-     * Set idtahun
+     * Set kelas
      *
-     * @param \Fast\SisdikBundle\Entity\Tahun $idtahun
+     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
      * @return JadwalKehadiranKepulangan
      */
-    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $idtahun = null) {
-        $this->idtahun = $idtahun;
+    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
+        $this->kelas = $kelas;
 
         return $this;
     }
 
     /**
-     * Get idtahun
+     * Get kelas
+     *
+     * @return \Fast\SisdikBundle\Entity\Kelas 
+     */
+    public function getKelas() {
+        return $this->kelas;
+    }
+
+    /**
+     * Set tahun
+     *
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
+     * @return JadwalKehadiranKepulangan
+     */
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+        $this->tahun = $tahun;
+
+        return $this;
+    }
+
+    /**
+     * Get tahun
      *
      * @return \Fast\SisdikBundle\Entity\Tahun 
      */
-    public function getIdtahun() {
-        return $this->idtahun;
+    public function getTahun() {
+        return $this->tahun;
     }
 
     /**
-     * Set idtemplatesms
+     * Set templatesms
      *
-     * @param \Fast\SisdikBundle\Entity\Templatesms $idtemplatesms
+     * @param \Fast\SisdikBundle\Entity\Templatesms $templatesms
      * @return JadwalKehadiranKepulangan
      */
-    public function setIdtemplatesms(\Fast\SisdikBundle\Entity\Templatesms $idtemplatesms = null) {
-        $this->idtemplatesms = $idtemplatesms;
+    public function setTemplatesms(\Fast\SisdikBundle\Entity\Templatesms $templatesms = null) {
+        $this->templatesms = $templatesms;
 
         return $this;
     }
 
     /**
-     * Get idtemplatesms
+     * Get templatesms
      *
      * @return \Fast\SisdikBundle\Entity\Templatesms 
      */
-    public function getIdtemplatesms() {
-        return $this->idtemplatesms;
+    public function getTemplatesms() {
+        return $this->templatesms;
     }
 }

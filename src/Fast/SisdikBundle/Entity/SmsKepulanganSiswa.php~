@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\SmsKepulanganSiswa
+ * SmsKepulanganSiswa
  *
  * @ORM\Table(name="sms_kepulangan_siswa")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SmsKepulanganSiswa
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,28 +22,18 @@ class SmsKepulanganSiswa
     private $id;
 
     /**
-     * @var integer $smsDlr
+     * @var integer
      *
      * @ORM\Column(name="sms_dlr", type="smallint", nullable=true)
      */
     private $smsDlr;
 
     /**
-     * @var \DateTime $smsDlrtime
+     * @var \DateTime
      *
      * @ORM\Column(name="sms_dlrtime", type="datetime", nullable=true)
      */
     private $smsDlrtime;
-
-    /**
-     * @var KepulanganSiswa
-     *
-     * @ORM\ManyToOne(targetEntity="KepulanganSiswa")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkepulangan_siswa", referencedColumnName="id")
-     * })
-     */
-    private $idkepulanganSiswa;
 
 
 }

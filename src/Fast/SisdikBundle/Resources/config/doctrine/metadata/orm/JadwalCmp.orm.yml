@@ -22,31 +22,31 @@ JadwalCmp:
             fixed: false
             nullable: true
     manyToOne:
-        idguru:
+        guru:
             targetEntity: Guru
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idguru:
+                guru_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idcukilMp:
+        cukilMp:
             targetEntity: CukilMp
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idcukil_mp:
+                cukil_mp_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idkelas:
+        kelas:
             targetEntity: Kelas
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idkelas:
+                kelas_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

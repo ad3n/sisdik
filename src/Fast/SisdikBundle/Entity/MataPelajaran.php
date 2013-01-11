@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\MataPelajaran
+ * MataPelajaran
  *
  * @ORM\Table(name="mata_pelajaran")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MataPelajaran
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,49 +22,49 @@ class MataPelajaran
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $kode
+     * @var string
      *
      * @ORM\Column(name="kode", type="string", length=50, nullable=true)
      */
     private $kode;
 
     /**
-     * @var string $penanggungJawab
+     * @var string
      *
      * @ORM\Column(name="penanggung_jawab", type="string", length=400, nullable=true)
      */
     private $penanggungJawab;
 
     /**
-     * @var integer $jumlahJam
+     * @var integer
      *
      * @ORM\Column(name="jumlah_jam", type="integer", nullable=true)
      */
     private $jumlahJam;
 
     /**
-     * @var string $standarKompetensi
+     * @var string
      *
      * @ORM\Column(name="standar_kompetensi", type="string", length=200, nullable=true)
      */
     private $standarKompetensi;
 
     /**
-     * @var KelompokMp
+     * @var \KelompokMp
      *
      * @ORM\ManyToOne(targetEntity="KelompokMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelompok_mp", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelompok_mp_id", referencedColumnName="id")
      * })
      */
-    private $idkelompokMp;
+    private $kelompokMp;
 
 
 
@@ -194,25 +194,25 @@ class MataPelajaran
     }
 
     /**
-     * Set idkelompokMp
+     * Set kelompokMp
      *
-     * @param Fast\SisdikBundle\Entity\KelompokMp $idkelompokMp
+     * @param \Fast\SisdikBundle\Entity\KelompokMp $kelompokMp
      * @return MataPelajaran
      */
-    public function setIdkelompokMp(\Fast\SisdikBundle\Entity\KelompokMp $idkelompokMp = null)
+    public function setKelompokMp(\Fast\SisdikBundle\Entity\KelompokMp $kelompokMp = null)
     {
-        $this->idkelompokMp = $idkelompokMp;
+        $this->kelompokMp = $kelompokMp;
     
         return $this;
     }
 
     /**
-     * Get idkelompokMp
+     * Get kelompokMp
      *
-     * @return Fast\SisdikBundle\Entity\KelompokMp 
+     * @return \Fast\SisdikBundle\Entity\KelompokMp 
      */
-    public function getIdkelompokMp()
+    public function getKelompokMp()
     {
-        return $this->idkelompokMp;
+        return $this->kelompokMp;
     }
 }

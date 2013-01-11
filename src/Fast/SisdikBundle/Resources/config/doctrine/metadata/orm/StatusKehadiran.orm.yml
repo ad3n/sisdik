@@ -20,13 +20,13 @@ StatusKehadiran:
             fixed: false
             nullable: true
     manyToOne:
-        idsekolah:
+        sekolah:
             targetEntity: Sekolah
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsekolah:
+                sekolah:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

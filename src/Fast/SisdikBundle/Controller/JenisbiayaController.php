@@ -27,15 +27,15 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenisbiaya', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.nama', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Jenisbiaya', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah);
         } else {
             $querybuilder = $em->createQueryBuilder()->select('t')
                     ->from('FastSisdikBundle:Jenisbiaya', 't')->orderBy('t.nama', 'ASC');
@@ -58,7 +58,7 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -84,7 +84,7 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Jenisbiaya();
@@ -104,7 +104,7 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Jenisbiaya();
@@ -148,7 +148,7 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -177,7 +177,7 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -231,7 +231,7 @@ class JenisbiayaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function deleteAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
@@ -290,10 +290,10 @@ class JenisbiayaController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

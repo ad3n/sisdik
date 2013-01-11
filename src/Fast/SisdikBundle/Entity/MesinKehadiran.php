@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\MesinKehadiran
+ * MesinKehadiran
  *
  * @ORM\Table(name="mesin_kehadiran")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class MesinKehadiran
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,35 +22,35 @@ class MesinKehadiran
     private $id;
 
     /**
-     * @var string $alamatIp
+     * @var string
      *
      * @ORM\Column(name="alamat_ip", type="string", length=45, nullable=false)
      */
     private $alamatIp;
 
     /**
-     * @var string $commkey
+     * @var string
      *
      * @ORM\Column(name="commkey", type="string", length=45, nullable=false)
      */
     private $commkey;
 
     /**
-     * @var boolean $aktif
+     * @var boolean
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false)
      */
     private $aktif;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
 
 
@@ -134,25 +134,25 @@ class MesinKehadiran
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return MesinKehadiran
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
     
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah()
+    public function getSekolah()
     {
-        return $this->idsekolah;
+        return $this->sekolah;
     }
 }

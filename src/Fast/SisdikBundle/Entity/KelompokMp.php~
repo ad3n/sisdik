@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\KelompokMp
+ * KelompokMp
  *
  * @ORM\Table(name="kelompok_mp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class KelompokMp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,28 +22,28 @@ class KelompokMp
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var integer $urutan
+     * @var integer
      *
      * @ORM\Column(name="urutan", type="integer", nullable=true)
      */
     private $urutan;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
 
 }

@@ -21,31 +21,31 @@ KepulanganSiswa:
             nullable: false
             column: sms_pulang_terproses
     manyToOne:
-        idsiswa:
-            targetEntity: Siswa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idsiswa:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idkelas:
+        kelas:
             targetEntity: Kelas
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idkelas:
+                kelas_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idstatusKehadiranKepulangan:
+        siswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        statusKehadiranKepulangan:
             targetEntity: StatusKehadiranKepulangan
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idstatus_kehadiran_kepulangan:
+                status_kehadiran_kepulangan_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="form-container" id="div-siswakelas">
-    <form action="{{ path('data_studentclass_create', {'idsiswa': siswa.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('data_studentclass_create', {'siswa': siswa.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -15,14 +15,14 @@
 </form>
 <ul class="pills">
     <li>
-        <a href="{{ path('data_studentclass', {'idsiswa': siswa.id}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('data_studentclass', {'siswa': siswa.id}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	var url = "{{ path('data_class_ajax_updateclass') }}";
-    $.get(url, {idtahun: $(".selectyear").val()}, function(data) {
+    $.get(url, {tahun: $(".selectyear").val()}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
@@ -35,7 +35,7 @@ $(document).ready(function() {
         $(".selectclass").empty();
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {idtahun: $(this).val()}, function(data) {
+        $.get(url, {tahun: $(this).val()}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';

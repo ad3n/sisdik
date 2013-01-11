@@ -9,11 +9,11 @@
 <div class="span9">
     <dl>
         <dt>{{ 'label.school'|trans }}</dt>
-        <dd>{% if entity.idsekolah is not null %}{{ entity.idsekolah.nama }}{% endif %}</dd>
+        <dd>{% if entity.sekolah is not null %}{{ entity.sekolah.nama }}{% endif %}</dd>
         <dt>{{ 'label.yearentry.entry'|trans }}</dt>
-        <dd>{% if entity.idtahunmasuk is not null %}{{ entity.idtahunmasuk.tahun }}{% endif %}</dd>
+        <dd>{% if entity.tahunmasuk is not null %}{{ entity.tahunmasuk.tahun }}{% endif %}</dd>
         <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
-        <dd>{% if entity.idgelombang is not null %}{{ entity.idgelombang.nama }}{% endif %}</dd>
+        <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
         <dt>{{ 'label.name.full'|trans }}</dt>
         <dd>{{ entity.namaLengkap }}</dd>
         <dt>{{ 'label.idnumber'|trans }}</dt>
@@ -93,7 +93,7 @@
 	<h4 style="margin-top: 1em;">{{ 'heading.academicinfo'|trans }}</h4>
 	{{ 'text.academicinfo'|trans }}<br />
     <ul class="pills">
-        <li><a href="{{ path('data_studentclass', { 'idsiswa': entity.id }) }}">{{ 'link.classhistory'|trans }}</a></li>
+        <li><a href="{{ path('data_studentclass', { 'siswa': entity.id }) }}">{{ 'link.classhistory'|trans }}</a></li>
     </ul>
     
 	<h4>{{ 'heading.personalinfo'|trans }}</h4>

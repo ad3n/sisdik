@@ -58,23 +58,23 @@ class SiswaController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm(new SiswaSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.idtahunmasuk', 't2')->leftJoin('t.idgelombang', 't3')
-                ->where('t2.idsekolah = :idsekolah')->orderBy('t2.tahun DESC, t.namaLengkap');
+                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun DESC, t.namaLengkap');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['idtahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :idtahunmasuk');
-                $querybuilder->setParameter('idtahunmasuk', $searchdata['idtahunmasuk']);
+            if ($searchdata['tahunmasuk'] != '') {
+                $querybuilder->andWhere('t2. = :tahunmasuk');
+                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
@@ -84,7 +84,7 @@ class SiswaController extends Controller
             }
         }
 
-        $querybuilder->setParameter('idsekolah', $idsekolah);
+        $querybuilder->setParameter('sekolah', $sekolah);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator
@@ -105,7 +105,7 @@ class SiswaController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -130,7 +130,7 @@ class SiswaController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Siswa();
@@ -149,7 +149,7 @@ class SiswaController extends Controller
      * @Template("FastSisdikBundle:Siswa:new.html.twig")
      */
     public function createAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -201,7 +201,7 @@ class SiswaController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -229,7 +229,7 @@ class SiswaController extends Controller
      * @Template("FastSisdikBundle:Siswa:edit.html.twig")
      */
     public function updateAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -290,7 +290,7 @@ class SiswaController extends Controller
      * @Template("FastSisdikBundle:Siswa:deleteconfirm.html.twig")
      */
     public function deleteConfirmAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -315,7 +315,7 @@ class SiswaController extends Controller
      * @Method("post")
      */
     public function deleteAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
@@ -363,7 +363,7 @@ class SiswaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function importStudentAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new SiswaImportType($this->container));
@@ -377,15 +377,15 @@ class SiswaController extends Controller
                 $file = $form['file']->getData();
                 $delimiter = $form['delimiter']->getData();
 
-                $idtahunmasuk = $form['idtahunmasuk']->getData();
-                $idgelombang = $form['idgelombang']->getData();
+                $tahunmasuk = $form['tahunmasuk']->getData();
+                $gelombang = $form['gelombang']->getData();
 
                 $reader = new Reader($file->getPathName(), "r+", $delimiter);
 
                 while ($row = $reader->getRow()) {
                     $this
-                            ->importStudent($row, $reader->getHeaders(), $idsekolah, $idtahunmasuk,
-                                    $idgelombang);
+                            ->importStudent($row, $reader->getHeaders(), $sekolah, $tahunmasuk,
+                                    $gelombang);
                 }
 
                 try {
@@ -404,8 +404,8 @@ class SiswaController extends Controller
                                         ->trans('flash.data.student.imported',
                                                 array(
                                                         '%count%' => $this->importStudentCount,
-                                                        '%year%' => $idtahunmasuk->getTahun(),
-                                                        '%admission%' => $idgelombang->getNama()
+                                                        '%year%' => $tahunmasuk->getTahun(),
+                                                        '%admission%' => $gelombang->getNama()
                                                 )));
 
                 return $this->redirect($this->generateUrl('data_student'));
@@ -423,7 +423,7 @@ class SiswaController extends Controller
      * @Route("/download/studenttemplate", name="data_student_student_template")
      */
     public function downloadStudentTemplateAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
@@ -460,7 +460,7 @@ class SiswaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function importStudentClassAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -476,15 +476,15 @@ class SiswaController extends Controller
                 $file = $form['file']->getData();
                 $delimiter = $form['delimiter']->getData();
 
-                $idtahun = $form['idtahun']->getData();
-                $idkelas = $form['idkelas']->getData();
+                $tahun = $form['tahun']->getData();
+                $kelas = $form['kelas']->getData();
 
                 $reader = new Reader($file->getPathName(), "r+", $delimiter);
 
                 while ($row = $reader->getRow()) {
                     $this
-                            ->importStudentClass($row, $reader->getHeaders(), $idsekolah, $idtahun,
-                                    $idkelas);
+                            ->importStudentClass($row, $reader->getHeaders(), $sekolah, $tahun,
+                                    $kelas);
                 }
 
                 try {
@@ -503,8 +503,8 @@ class SiswaController extends Controller
                                         ->trans('flash.data.studentclass.imported',
                                                 array(
                                                         '%count%' => $this->importStudentClassCount,
-                                                        '%year%' => $idtahun->getNama(),
-                                                        '%class%' => $idkelas->getNama()
+                                                        '%year%' => $tahun->getNama(),
+                                                        '%class%' => $kelas->getNama()
                                                 )));
 
                 return $this->redirect($this->generateUrl('data_student'));
@@ -532,7 +532,7 @@ class SiswaController extends Controller
      * @Method("post")
      */
     public function downloadStudentClassTemplateInitAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new SiswaKelasTemplateInitType($this->container));
@@ -545,14 +545,14 @@ class SiswaController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            $idtahunmasuk = $form->get('idtahunmasuk')->getData()->getId();
+            $tahunmasuk = $form->get('tahunmasuk')->getData()->getId();
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Siswa', 't')->where('t.idtahunmasuk = :idtahunmasuk')
-                    ->andWhere('t.idsekolah = :idsekolah');
-            $querybuilder->setParameter('idtahunmasuk', $idtahunmasuk);
-            $querybuilder->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Siswa', 't')->where('t.tahunmasuk = :tahunmasuk')
+                    ->andWhere('t.sekolah = :sekolah');
+            $querybuilder->setParameter('tahunmasuk', $tahunmasuk);
+            $querybuilder->setParameter('sekolah', $sekolah);
 
             $results = $querybuilder->getQuery()->getResult();
 
@@ -571,8 +571,8 @@ class SiswaController extends Controller
 
             // ambil data kode jurusan
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
             $placements = $querybuilder->getQuery()->getResult();
 
             $response = $this
@@ -595,7 +595,7 @@ class SiswaController extends Controller
      * @Route("/download/studentclasstemplatemap", name="data_student_studentclass_templatemap")
      */
     public function downloadStudentClassTemplateMapAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new SiswaKelasTemplateMapType($this->container));
@@ -607,28 +607,28 @@ class SiswaController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $idtahun = $form->get('idtahun')->getData()->getId();
+            $tahun = $form->get('tahun')->getData()->getId();
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.idsiswa', 't2')
-                    ->leftJoin('t.idkelas', 't3')->where('t.idtahun = :idtahun')
-                    ->andWhere('t2.idsekolah = :idsekolah')->orderBy('t3.kode, t2.nomorInduk');
-            $querybuilder->setParameter('idtahun', $idtahun);
-            $querybuilder->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.siswa', 't2')
+                    ->leftJoin('t.kelas', 't3')->where('t.tahun = :tahun')
+                    ->andWhere('t2.sekolah = :sekolah')->orderBy('t3.kode, t2.nomorInduk');
+            $querybuilder->setParameter('tahun', $tahun);
+            $querybuilder->setParameter('sekolah', $sekolah);
 
             $results = $querybuilder->getQuery()->getResult();
 
             $students = array();
             foreach ($results as $result) {
-                $penjurusan = $result->getIdpenjurusan();
+                $penjurusan = $result->getPenjurusan();
                 $kodepenjurusan = (is_object($penjurusan) && $penjurusan instanceof Penjurusan) ? $penjurusan
                                 ->getKode() : '';
                 $students[] = array(
-                        $result->getIdsiswa()->getNomorIndukSistem(),
-                        $result->getIdsiswa()->getNomorInduk(),
-                        $result->getIdsiswa()->getNamaLengkap(),
-                        $result->getIdsiswa()->getJenisKelamin(), $result->getIdkelas()->getKode(),
+                        $result->getSiswa()->getNomorIndukSistem(),
+                        $result->getSiswa()->getNomorInduk(),
+                        $result->getSiswa()->getNamaLengkap(),
+                        $result->getSiswa()->getJenisKelamin(), $result->getKelas()->getKode(),
                         $kodepenjurusan, $result->getAktif(), $result->getKeterangan(),
                 );
             }
@@ -640,14 +640,14 @@ class SiswaController extends Controller
 
             // data kodeKelas
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Kelas', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
             $classes = $querybuilder->getQuery()->getResult();
 
             // data kodeJurusan
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
             $placements = $querybuilder->getQuery()->getResult();
 
             $response = $this
@@ -672,7 +672,7 @@ class SiswaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function mergeStudentAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new SiswaMergeType());
@@ -728,7 +728,7 @@ class SiswaController extends Controller
      * @Method("POST")
      */
     public function downloadBasicStudentDataAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new SiswaExportType($this->container));
@@ -740,14 +740,14 @@ class SiswaController extends Controller
 
             $filename = "data_siswa_pertahun.csv";
 
-            $idtahunmasuk = $form->get('idtahunmasuk')->getData()->getId();
+            $tahunmasuk = $form->get('tahunmasuk')->getData()->getId();
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Siswa', 't')->where('t.idtahunmasuk = :idtahunmasuk')
-                    ->andWhere('t.idsekolah = :idsekolah');
-            $querybuilder->setParameter('idtahunmasuk', $idtahunmasuk);
-            $querybuilder->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Siswa', 't')->where('t.tahunmasuk = :tahunmasuk')
+                    ->andWhere('t.sekolah = :sekolah');
+            $querybuilder->setParameter('tahunmasuk', $tahunmasuk);
+            $querybuilder->setParameter('sekolah', $sekolah);
 
             $results = $querybuilder->getQuery()->getResult();
 
@@ -794,7 +794,7 @@ class SiswaController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function generateUsernameAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new SiswaGenerateUsernameType($this->container));
@@ -816,18 +816,18 @@ class SiswaController extends Controller
 
                 // get siswa for the selected year and class
                 $querybuilder = $em->createQueryBuilder()->select('t')
-                        ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.idtahun', 't2')
-                        ->leftJoin('t.idkelas', 't3')->leftJoin('t.idsiswa', 't4')
-                        ->where('t.idtahun = :idtahun')->andWhere('t.idkelas = :idkelas')
+                        ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.tahun', 't2')
+                        ->leftJoin('t.kelas', 't3')->leftJoin('t.siswa', 't4')
+                        ->where('t.tahun = :tahun')->andWhere('t.kelas = :kelas')
                         ->andWhere('t.aktif = :aktif')->orderBy('t4.nomorIndukSistem', 'ASC')
-                        ->setParameter('idtahun', $data['idtahun']->getId())
-                        ->setParameter('idkelas', $data['idkelas']->getId())
+                        ->setParameter('tahun', $data['tahun']->getId())
+                        ->setParameter('kelas', $data['kelas']->getId())
                         ->setParameter('aktif', TRUE);
                 $results = $querybuilder->getQuery()->getResult();
 
                 $output = array();
                 foreach ($results as $result) {
-                    $siswa = $result->getIdsiswa();
+                    $siswa = $result->getSiswa();
                     if (is_object($siswa) && $siswa instanceof Siswa) {
                         $passwordobject = new PasswordGenerator($passwordargs);
 
@@ -840,13 +840,11 @@ class SiswaController extends Controller
                         $user = $userManager->createUser();
                         $user->setUsername($siswa->getNomorIndukSistem());
                         $user->setPlainPassword($passwordobject->getPassword());
-                        $user
-                                ->setEmail(
-                                        $siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
+                        $user->setEmail($siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
                         $user->setName($siswa->getNamaLengkap());
                         $user->addRole('ROLE_SISWA');
-                        $user->setIdsiswa($siswa);
-                        $user->setIdsekolah($siswa->getIdsekolah());
+                        $user->setSiswa($siswa);
+                        $user->setSekolah($siswa->getSekolah());
                         $user->setConfirmationToken(null);
                         $user->setEnabled(true);
 
@@ -863,8 +861,8 @@ class SiswaController extends Controller
                 $extensiontarget = "." . $data['output'];
 
                 $filenameoutput = self::OUTPUTPREFIX
-                        . preg_replace('/\s+/', '', strtolower($data['idtahun']->getNama())) . '-'
-                        . preg_replace('/\s+/', '', strtolower($data['idkelas']->getNama()));
+                        . preg_replace('/\s+/', '', strtolower($data['tahun']->getNama())) . '-'
+                        . preg_replace('/\s+/', '', strtolower($data['kelas']->getNama()));
 
                 $filesource = $filenameoutput . $extensionsource;
                 $filetarget = $filenameoutput . $extensiontarget;
@@ -949,7 +947,7 @@ class SiswaController extends Controller
             'form' => $form->createView()
         );
     }
-    
+
     /**
      * Check if students username and password has already generated
      *
@@ -957,31 +955,44 @@ class SiswaController extends Controller
      * @Method("GET")
      */
     public function ajaxGeneratedUsername(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
-        $idtahun = $this->getRequest()->query->get('idtahun');
-        $idkelas = $this->getRequest()->query->get('idkelas');
+        $tahun = $this->getRequest()->query->get('tahun');
+        $kelas = $this->getRequest()->query->get('kelas');
 
-        $query = $em->createQuery("SELECT COUNT(t1.id) FROM FastSisdikBundle:SiswaKelas t1 "
-                . " JOIN FastSisdikBundle:FosUser t2 "
-                . " WHERE t2.idsiswa IS NOT NULL AND t1.idtahun = $idtahun "
-                . " AND t1.idkelas = $idkelas ");
-        $count = $query->getSingleScalarResult();
-        
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.idjenjang', 't2')->where('t.idsekolah = :idsekolah')
-                ->andWhere('t.idtahun = :idtahun')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('idsekolah', $idsekolah)
-                ->setParameter('idtahun', $idtahun);
-        $results = $querybuilder->getQuery()->getResult();
+        $entities_siswakelas = $em->getRepository('FastSisdikBundle:SiswaKelas')
+                ->findBy(
+                        array(
+                            'tahun' => $tahun, 'kelas' => $kelas
+                        ));
+        $siswa = '';
+        foreach ($entities_siswakelas as $entity) {
+            $siswa .= $entity->getSiswa()->getId() . ",";
+        }
+        $siswa = preg_replace('/,$/', '', $siswa);
 
-        $retval = "";
-        foreach ($results as $result) {
-            $retval[] = array(
-                    'optionValue' => $result->getId(), 'optionDisplay' => $result->getNama(),
-                    'optionSelected' => $idkelas == $result->getId() ? 'selected' : ''
+        if ($siswa != '') {
+            $query = $em
+                    ->createQuery(
+                            "SELECT COUNT(t.id) FROM FastSisdikBundle:FosUser t "
+                                    . " WHERE t.siswa IN ($siswa) "
+                                    . " AND t.sekolah = {$sekolah->getId()} ");
+            $count = $query->getSingleScalarResult();
+
+            if ($count > 0) {
+                $retval = array(
+                    'generated' => 'YES',
+                );
+            } else {
+                $retval = array(
+                    'generated' => 'NO'
+                );
+            }
+        } else {
+            $retval = array(
+                'generated' => 'NO'
             );
         }
 
@@ -1045,7 +1056,7 @@ class SiswaController extends Controller
 
     }
 
-    private function importStudent($row, $headers, $idsekolah, $idtahunmasuk, $idgelombang,
+    private function importStudent($row, $headers, $sekolah, $tahunmasuk, $gelombang,
             $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
@@ -1077,9 +1088,9 @@ class SiswaController extends Controller
                     } else {
                         $entity->{'set' . ucfirst($fieldName)}(trim($value));
                     }
-                    $entity->setIdsekolah($idsekolah);
-                    $entity->setIdtahunmasuk($idtahunmasuk);
-                    $entity->setIdgelombang($idgelombang);
+                    $entity->setSekolah($sekolah);
+                    $entity->setTahunmasuk($tahunmasuk);
+                    $entity->setGelombang($gelombang);
                     // print '$entity->set' . ucfirst($fieldName) . '(' . trim($value) . ")\n";
                 }
             }
@@ -1095,8 +1106,7 @@ class SiswaController extends Controller
         }
     }
 
-    private function importStudentClass($row, $headers, $idsekolah, $idtahun, $idkelas,
-            $andFlush = false) {
+    private function importStudentClass($row, $headers, $sekolah, $tahun, $kelas, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
         // Create new siswakelas entity
@@ -1107,33 +1117,32 @@ class SiswaController extends Controller
             $student = $em->getRepository('FastSisdikBundle:Siswa')
                     ->findOneBy(
                             array(
-                                    'nomorIndukSistem' => $row[$headers[$key]],
-                                    'idsekolah' => $idsekolah
+                                'nomorIndukSistem' => $row[$headers[$key]], 'sekolah' => $sekolah
                             ));
 
             if (!$student) {
                 throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
             }
 
-            $siswakelas->setIdsiswa($student);
+            $siswakelas->setSiswa($student);
         }
 
-        $siswakelas->setIdtahun($idtahun);
-        $siswakelas->setIdkelas($idkelas);
+        $siswakelas->setTahun($tahun);
+        $siswakelas->setKelas($kelas);
 
         $key = array_search('KodeJurusan', $headers);
         if (is_int($key)) {
             $placement = $em->getRepository('FastSisdikBundle:Penjurusan')
                     ->findOneBy(
                             array(
-                                'kode' => $row[$headers[$key]], 'idsekolah' => $idsekolah
+                                'kode' => $row[$headers[$key]], 'sekolah' => $sekolah
                             ));
 
             if (!$placement) {
                 // allow null
                 // throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
             } else {
-                $siswakelas->setIdpenjurusan($placement);
+                $siswakelas->setPenjurusan($placement);
             }
         }
 
@@ -1148,8 +1157,8 @@ class SiswaController extends Controller
                     $obj = $em->getRepository('FastSisdikBundle:SiswaKelas')
                             ->findOneBy(
                                     array(
-                                            'idsiswa' => $student->getId(),
-                                            'idtahun' => $idtahun->getId(), 'aktif' => $aktif
+                                            'siswa' => $student->getId(),
+                                            'tahun' => $tahun->getId(), 'aktif' => $aktif
                                     ));
                     if ($obj) {
                         $exception = $this->get('translator')
@@ -1195,10 +1204,10 @@ class SiswaController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.useadmin.or.headmaster'));

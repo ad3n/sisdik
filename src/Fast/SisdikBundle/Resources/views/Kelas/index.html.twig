@@ -54,12 +54,12 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year'|trans }}">{% if data.idtahun is not null %}{{ data.idtahun.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.year'|trans }}">{% if data.tahun is not null %}{{ data.tahun.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.class.name'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
     		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
-    		<td data-title="{{ 'label.level'|trans }}">{% if data.idjenjang is not null %}{{ data.idjenjang.kode }} ({{ data.idjenjang.nama }}){% endif %}</td>
+    		<td data-title="{{ 'label.level'|trans }}">{% if data.jenjang is not null %}{{ data.jenjang.kode }} ({{ data.jenjang.nama }}){% endif %}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('data_class_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('data_class_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>

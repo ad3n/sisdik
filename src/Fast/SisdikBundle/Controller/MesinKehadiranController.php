@@ -28,16 +28,16 @@ class MesinKehadiranController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
                     ->from('FastSisdikBundle:MesinKehadiran', 't')
-                    ->where('t.idsekolah = :idsekolah')->orderBy('t.alamatIp', 'ASC')
-                    ->setParameter('idsekolah', $idsekolah);
+                    ->where('t.sekolah = :sekolah')->orderBy('t.alamatIp', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
         }
 
         $paginator = $this->get('knp_paginator');
@@ -56,7 +56,7 @@ class MesinKehadiranController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -81,7 +81,7 @@ class MesinKehadiranController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new MesinKehadiran();
@@ -100,7 +100,7 @@ class MesinKehadiranController extends Controller
      * @Template("FastSisdikBundle:MesinKehadiran:new.html.twig")
      */
     public function createAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new MesinKehadiran();
@@ -141,7 +141,7 @@ class MesinKehadiranController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -247,10 +247,10 @@ class MesinKehadiranController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

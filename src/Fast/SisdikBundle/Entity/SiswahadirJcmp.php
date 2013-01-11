@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\SiswahadirJcmp
+ * SiswahadirJcmp
  *
  * @ORM\Table(name="siswahadir_jcmp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SiswahadirJcmp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,42 +22,42 @@ class SiswahadirJcmp
     private $id;
 
     /**
-     * @var boolean $hadir
+     * @var boolean
      *
      * @ORM\Column(name="hadir", type="boolean", nullable=true)
      */
     private $hadir;
 
     /**
-     * @var string $jamMasuk
+     * @var string
      *
      * @ORM\Column(name="jam_masuk", type="string", length=20, nullable=true)
      */
     private $jamMasuk;
 
     /**
-     * @var string $jamKeluar
+     * @var string
      *
      * @ORM\Column(name="jam_keluar", type="string", length=20, nullable=true)
      */
     private $jamKeluar;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var JadwalCmp
+     * @var \JadwalCmp
      *
      * @ORM\ManyToOne(targetEntity="JadwalCmp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idjadwal_cmp", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jadwal_cmp_id", referencedColumnName="id")
      * })
      */
-    private $idjadwalCmp;
+    private $jadwalCmp;
 
 
 
@@ -164,25 +164,25 @@ class SiswahadirJcmp
     }
 
     /**
-     * Set idjadwalCmp
+     * Set jadwalCmp
      *
-     * @param Fast\SisdikBundle\Entity\JadwalCmp $idjadwalCmp
+     * @param \Fast\SisdikBundle\Entity\JadwalCmp $jadwalCmp
      * @return SiswahadirJcmp
      */
-    public function setIdjadwalCmp(\Fast\SisdikBundle\Entity\JadwalCmp $idjadwalCmp = null)
+    public function setJadwalCmp(\Fast\SisdikBundle\Entity\JadwalCmp $jadwalCmp = null)
     {
-        $this->idjadwalCmp = $idjadwalCmp;
+        $this->jadwalCmp = $jadwalCmp;
     
         return $this;
     }
 
     /**
-     * Get idjadwalCmp
+     * Get jadwalCmp
      *
-     * @return Fast\SisdikBundle\Entity\JadwalCmp 
+     * @return \Fast\SisdikBundle\Entity\JadwalCmp 
      */
-    public function getIdjadwalCmp()
+    public function getJadwalCmp()
     {
-        return $this->idjadwalCmp;
+        return $this->jadwalCmp;
     }
 }

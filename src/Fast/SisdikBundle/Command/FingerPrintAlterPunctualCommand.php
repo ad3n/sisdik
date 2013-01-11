@@ -39,10 +39,10 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
         $jadwalkehadirankepulangan = $em->getRepository('FastSisdikBundle:JadwalKehadiranKepulangan')
                 ->find($idjadwalkehadirankepulangan);
 
-        $idtahun = $jadwalkehadirankepulangan->getIdtahun();
-        $idkelas = $jadwalkehadirankepulangan->getIdkelas();
-        $idstatusKehadiranKepulangan = $jadwalkehadirankepulangan->getIdstatusKehadiranKepulangan();
-        $idsekolah = $jadwalkehadirankepulangan->getIdstatusKehadiranKepulangan()->getIdsekolah();
+        $tahun = $jadwalkehadirankepulangan->getTahun();
+        $kelas = $jadwalkehadirankepulangan->getKelas();
+        $statusKehadiranKepulangan = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan();
+        $sekolah = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan()->getSekolah();
 
         $paramstatusDariJam = intval(
                 preg_replace("/[\.:]/", '', $jadwalkehadirankepulangan->getParamstatusDariJam(TRUE)));
@@ -55,7 +55,7 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
         $devices = $em->getRepository('FastSisdikBundle:MesinKehadiran')
                 ->findBy(
                         array(
-                            'idsekolah' => $idsekolah->getId(), 'aktif' => TRUE
+                            'sekolah' => $sekolah->getId(), 'aktif' => TRUE
                         ));
 
         foreach ($devices as $device) {
@@ -103,16 +103,16 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
                                             ->getRepository('FastSisdikBundle:KehadiranSiswa')
                                             ->findOneBy(
                                                     array(
-                                                            'idsiswa' => $siswa->getId(),
-                                                            'idkelas' => $idkelas->getId(),
+                                                            'siswa' => $siswa->getId(),
+                                                            'kelas' => $kelas->getId(),
                                                             'tanggal' => new \DateTime(
                                                                     $item->DateTime),
                                                     ));
                                     if ($kehadiransiswa) {
 
                                         // update if it's not a subject of update before
-                                        if ($kehadiransiswa->getIdstatusKehadiranKepulangan()->getId()
-                                                !== $idstatusKehadiranKepulangan->getId()) {
+                                        if ($kehadiransiswa->getStatusKehadiranKepulangan()->getId()
+                                                !== $statusKehadiranKepulangan->getId()) {
 
                                             // update if it has lower priority update
                                             if ($kehadiransiswa->getPrioritasPembaruan()
@@ -125,8 +125,8 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
                                                 if ($jamKehadiran >= $paramstatusDariJam
                                                         && $jamKehadiran <= $paramstatusHinggaJam) {
                                                     $kehadiransiswa
-                                                            ->setIdstatusKehadiranKepulangan(
-                                                                    $idstatusKehadiranKepulangan);
+                                                            ->setStatusKehadiranKepulangan(
+                                                                    $statusKehadiranKepulangan);
                                                     $kehadiransiswa
                                                             ->setJam(
                                                                     date('H:i:s',
@@ -181,8 +181,8 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
                     $kehadiransiswa = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
                             ->findOneBy(
                                     array(
-                                            'idsiswa' => $siswa->getId(),
-                                            'idkelas' => $idkelas->getId(),
+                                            'siswa' => $siswa->getId(),
+                                            'kelas' => $kelas->getId(),
                                             'tanggal' => new \DateTime($item->DateTime),
                                     ));
         
@@ -190,19 +190,19 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
         
                         // if ($siswa->getNomorIndukSistem() == '1000356') {
                         //     print
-                        //             $siswa->getNomorIndukSistem() . ':' . $idkelas->getId() . ':'
+                        //             $siswa->getNomorIndukSistem() . ':' . $kelas->getId() . ':'
                         //                     . $item->DateTime . ' -> ' . $kehadiransiswa->getId() . ':'
-                        //                     . $idstatusKehadiranKepulangan->getId() . ' -> '
+                        //                     . $statusKehadiranKepulangan->getId() . ' -> '
                         //                     . $kehadiransiswa->getPrioritasPembaruan() . ':'
                         //                     . $prioritasPembaruan . "\n";
                         // }
         
-                        // $text .= $kehadiransiswa->getIdstatusKehadiranKepulangan()->getId() . '-'
-                        //         . $idstatusKehadiranKepulangan->getId() . ':';
+                        // $text .= $kehadiransiswa->getStatusKehadiranKepulangan()->getId() . '-'
+                        //         . $statusKehadiranKepulangan->getId() . ':';
         
                         // update if it's not a subject of update before
-                        if ($kehadiransiswa->getIdstatusKehadiranKepulangan()->getId()
-                                !== $idstatusKehadiranKepulangan->getId()) {
+                        if ($kehadiransiswa->getStatusKehadiranKepulangan()->getId()
+                                !== $statusKehadiranKepulangan->getId()) {
         
                             // update if it has lower priority update
                             if ($kehadiransiswa->getPrioritasPembaruan() < $prioritasPembaruan) {
@@ -221,7 +221,7 @@ class FingerPrintAlterPunctualCommand extends ContainerAwareCommand
                                 if ($jamKehadiran >= $paramstatusDariJam
                                         && $jamKehadiran <= $paramstatusHinggaJam) {
                                     // $text .= "processupdate";
-                                    $kehadiransiswa->setIdstatusKehadiranKepulangan($idstatusKehadiranKepulangan);
+                                    $kehadiransiswa->setStatusKehadiranKepulangan($statusKehadiranKepulangan);
                                     $kehadiransiswa
                                             ->setJam(date('H:i:s', strtotime($item->DateTime)));
                                     $kehadiransiswa->setPrioritasPembaruan($prioritasPembaruan);

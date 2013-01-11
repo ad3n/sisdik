@@ -29,13 +29,13 @@ JenisNilai:
             fixed: false
             nullable: true
     manyToOne:
-        idtahun:
+        tahun:
             targetEntity: Tahun
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahun:
+                tahun_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

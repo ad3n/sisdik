@@ -46,25 +46,25 @@ class SendMessageMassiveCommand extends ContainerAwareCommand
         $jadwalkehadirankepulangan = $em->getRepository('FastSisdikBundle:JadwalKehadiranKepulangan')
                 ->find($idjadwalkehadirankepulangan);
 
-        $idtahun = $jadwalkehadirankepulangan->getIdtahun();
-        $idkelas = $jadwalkehadirankepulangan->getIdkelas();
-        $idstatusKehadiranKepulangan = $jadwalkehadirankepulangan->getIdstatusKehadiranKepulangan();
-        $templatetext = $jadwalkehadirankepulangan->getIdtemplatesms()->getTeks();
-        $idsekolah = $jadwalkehadirankepulangan->getIdstatusKehadiranKepulangan()->getIdsekolah();
+        $tahun = $jadwalkehadirankepulangan->getTahun();
+        $kelas = $jadwalkehadirankepulangan->getKelas();
+        $statusKehadiranKepulangan = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan();
+        $templatetext = $jadwalkehadirankepulangan->getTemplatesms()->getTeks();
+        $sekolah = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan()->getSekolah();
 
         // find all kehadiransiswa by idstatuskehadirankepulangan and current date
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:KehadiranSiswa', 't')
-                ->where('t.idstatusKehadiranKepulangan = :idstatusKehadiranKepulangan')
-                ->andWhere('t.tanggal = :tanggal')->andWhere('t.idkelas = :idkelas')
-                ->setParameter('idstatusKehadiranKepulangan', $idstatusKehadiranKepulangan->getId())
+                ->where('t.statusKehadiranKepulangan = :statusKehadiranKepulangan')
+                ->andWhere('t.tanggal = :tanggal')->andWhere('t.kelas = :kelas')
+                ->setParameter('statusKehadiranKepulangan', $statusKehadiranKepulangan->getId())
                 ->setParameter('tanggal', new \DateTime($date))
-                ->setParameter('idkelas', $idkelas->getId());
+                ->setParameter('kelas', $kelas->getId());
 
         $entities = $querybuilder->getQuery()->getResult();
 
         foreach ($entities as $entity) {
-            $siswa = $entity->getIdsiswa();
+            $siswa = $entity->getSiswa();
             $timestamp = strtotime("{$entity->getTanggal()->format('Y-m-d')} {$entity->getJam()}");
 
             $text .= "processing-sms-massive";

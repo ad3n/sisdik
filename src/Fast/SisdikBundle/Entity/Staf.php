@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Staf
+ * Staf
  *
  * @ORM\Table(name="staf")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Staf
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,28 +22,28 @@ class Staf
     private $id;
 
     /**
-     * @var string $namaLengkap
+     * @var string
      *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
      */
     private $namaLengkap;
 
     /**
-     * @var string $username
+     * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, nullable=true)
      */
     private $username;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
 
 
@@ -104,25 +104,25 @@ class Staf
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Staf
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
     
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah()
+    public function getSekolah()
     {
-        return $this->idsekolah;
+        return $this->sekolah;
     }
 }

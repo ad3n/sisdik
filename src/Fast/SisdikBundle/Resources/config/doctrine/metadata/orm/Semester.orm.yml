@@ -28,13 +28,13 @@ Semester:
             type: smallint
             nullable: true
     manyToOne:
-        idsekolah:
+        sekolah:
             targetEntity: Sekolah
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsekolah:
+                sekolah_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

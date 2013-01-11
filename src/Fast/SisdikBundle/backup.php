@@ -1,12 +1,12 @@
 // username ok, insert User object
 $user = $userManager->createUser();
-$user->setIdsiswa($entity);
-$user->setIdsekolah($entity->getIdtahunmasuk()->getIdsekolah());
-$user->setUsername("{$entity->getIdsekolah()->getId()}.{$entity->getNomorInduk()}");
+$user->setSiswa($entity);
+$user->setSekolah($entity->getTahunmasuk()->getSekolah());
+$user->setUsername("{$entity->getSekolah()->getId()}.{$entity->getNomorInduk()}");
 $user->setName($entity->getNamaLengkap());
 $user
       ->setEmail(
-              "{$entity->getIdsekolah()->getId()}.{$entity->getNomorInduk()}.{$entity
+              "{$entity->getSekolah()->getId()}.{$entity->getNomorInduk()}.{$entity
                       ->getEmail()}");
 $user->setPlainPassword(rand(1, 100));
 $user

@@ -13,11 +13,11 @@ use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 class JadwalKehadiranKepulanganType extends AbstractType
 {
     private $container;
-    private $idsekolah;
+    private $sekolah;
 
-    public function __construct(ContainerInterface $container, $idsekolah) {
+    public function __construct(ContainerInterface $container, $sekolah) {
         $this->container = $container;
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
@@ -25,10 +25,10 @@ class JadwalKehadiranKepulanganType extends AbstractType
         $securityContext = $this->container->get('security.context');
 
         $querybuilder1 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $this->idsekolah);
+                ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('idtahun', 'entity',
+                ->add('tahun', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
@@ -39,11 +39,11 @@ class JadwalKehadiranKepulanganType extends AbstractType
                         ));
 
         $querybuilder2 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idjenjang', 't2')
-                ->where('t.idsekolah = :idsekolah')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('idsekolah', $this->idsekolah);
+                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
+                ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('idkelas', 'entity',
+                ->add('kelas', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Kelas',
                                 'label' => 'label.class.entry', 'multiple' => false,
@@ -89,10 +89,10 @@ class JadwalKehadiranKepulanganType extends AbstractType
 
         $querybuilder3 = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')
-                ->where('t.idsekolah = :idsekolah')->orderBy('t.nama', 'ASC')
-                ->setParameter('idsekolah', $this->idsekolah);
+                ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
+                ->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('idstatusKehadiranKepulangan', 'entity',
+                ->add('statusKehadiranKepulangan', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:StatusKehadiranKepulangan',
                                 'label' => 'label.presence.status.entry', 'multiple' => false,
@@ -202,11 +202,11 @@ class JadwalKehadiranKepulanganType extends AbstractType
                         ));
 
         $querybuilder4 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Templatesms', 't')->where('t.idsekolah = :idsekolah')
-                ->orderBy('t.nama', 'ASC')->setParameter('idsekolah', $this->idsekolah);
+                ->from('FastSisdikBundle:Templatesms', 't')->where('t.sekolah = :sekolah')
+                ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $this->sekolah);
 
         $builder
-                ->add('idtemplatesms', 'entity',
+                ->add('templatesms', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Templatesms',
                                 'label' => 'label.sms.template.entry', 'multiple' => false,

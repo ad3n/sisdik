@@ -18,40 +18,40 @@ SiswaKelas:
             fixed: false
             nullable: true
     manyToOne:
-        idsiswa:
-            targetEntity: Siswa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idsiswa:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idtahun:
-            targetEntity: Tahun
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idtahun:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idpenjurusan:
-            targetEntity: Penjurusan
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idpenjurusan:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idkelas:
+        kelas:
             targetEntity: Kelas
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idkelas:
+                kelas_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        penjurusan:
+            targetEntity: Penjurusan
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                penjurusan_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        siswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tahun:
+            targetEntity: Tahun
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tahun_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

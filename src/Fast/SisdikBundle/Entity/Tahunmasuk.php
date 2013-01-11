@@ -1,11 +1,10 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Tahunmasuk
+ * Tahunmasuk
  *
  * @ORM\Table(name="tahunmasuk")
  * @ORM\Entity
@@ -13,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Tahunmasuk
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,31 +21,28 @@ class Tahunmasuk
     private $id;
 
     /**
-     * @var \DateTime $tahun
+     * @var \DateTime
      *
      * @ORM\Column(name="tahun", type="string", nullable=false)
      */
     private $tahun;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
-
-
+    private $sekolah;
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -56,10 +52,9 @@ class Tahunmasuk
      * @param \DateTime $tahun
      * @return Tahunmasuk
      */
-    public function setTahun($tahun)
-    {
+    public function setTahun($tahun) {
         $this->tahun = $tahun;
-    
+
         return $this;
     }
 
@@ -68,31 +63,28 @@ class Tahunmasuk
      *
      * @return \DateTime 
      */
-    public function getTahun()
-    {
+    public function getTahun() {
         return $this->tahun;
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Tahunmasuk
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
-    {
-        $this->idsekolah = $idsekolah;
-    
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah()
-    {
-        return $this->idsekolah;
+    public function getSekolah() {
+        return $this->sekolah;
     }
 }

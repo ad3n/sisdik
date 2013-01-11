@@ -40,13 +40,13 @@ PendidikanGuru:
             type: date
             nullable: true
     manyToOne:
-        idguru:
+        guru:
             targetEntity: Guru
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idguru:
+                guru_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

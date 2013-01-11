@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\JadwalCmp
+ * JadwalCmp
  *
  * @ORM\Table(name="jadwal_cmp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class JadwalCmp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,55 +22,55 @@ class JadwalCmp
     private $id;
 
     /**
-     * @var \DateTime $tanggal
+     * @var \DateTime
      *
      * @ORM\Column(name="tanggal", type="datetime", nullable=true)
      */
     private $tanggal;
 
     /**
-     * @var string $jam
+     * @var string
      *
      * @ORM\Column(name="jam", type="string", length=100, nullable=true)
      */
     private $jam;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var Guru
+     * @var \Guru
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idguru", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
      * })
      */
-    private $idguru;
+    private $guru;
 
     /**
-     * @var CukilMp
+     * @var \CukilMp
      *
      * @ORM\ManyToOne(targetEntity="CukilMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idcukil_mp", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id")
      * })
      */
-    private $idcukilMp;
+    private $cukilMp;
 
     /**
-     * @var Kelas
+     * @var \Kelas
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
      * })
      */
-    private $idkelas;
+    private $kelas;
 
 
 }

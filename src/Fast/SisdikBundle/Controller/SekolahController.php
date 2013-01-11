@@ -36,12 +36,12 @@ class SekolahController extends Controller
      * @Template()
      */
     public function showAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($idsekolah->getId());
+        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($sekolah->getId());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Sekolah tak ditemukan.');
@@ -59,7 +59,7 @@ class SekolahController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Sekolah();
@@ -77,12 +77,12 @@ class SekolahController extends Controller
      * @Template()
      */
     public function editAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($idsekolah->getId());
+        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($sekolah->getId());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Sekolah tak ditemukan.');
@@ -103,12 +103,12 @@ class SekolahController extends Controller
      * @Template("FastSisdikBundle:Sekolah:edit.html.twig")
      */
     public function updateAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($idsekolah->getId());
+        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($sekolah->getId());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Sekolah tak ditemukan.');
@@ -144,10 +144,10 @@ class SekolahController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

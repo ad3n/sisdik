@@ -22,15 +22,15 @@ class SiswaKelasImportType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahun', 'entity',
+                    ->add('tahun', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.year.entry', 'multiple' => false,
@@ -42,11 +42,11 @@ class SiswaKelasImportType extends AbstractType
                             ));
 
             $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idjenjang', 't2')
-                    ->where('t.idsekolah = :idsekolah')->orderBy('t2.urutan', 'ASC')
-                    ->addOrderBy('t.urutan')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
+                    ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+                    ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idkelas', 'entity',
+                    ->add('kelas', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Kelas',
                                     'label' => 'label.class.entry', 'multiple' => false,

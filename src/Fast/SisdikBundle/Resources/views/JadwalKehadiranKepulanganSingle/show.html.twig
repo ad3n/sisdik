@@ -4,11 +4,11 @@
 {% block content %}
 <dl>
     <dt>{{ 'label.school'|trans }}</dt>
-    <dd>{{ entity.idtahun.idsekolah.nama }}</dd>
+    <dd>{{ entity.tahun.sekolah.nama }}</dd>
     <dt>{{ 'label.year.entry'|trans }}</dt>
-    <dd>{{ entity.idtahun.nama }}</dd>
+    <dd>{{ entity.tahun.nama }}</dd>
     <dt>{{ 'label.class.entry'|trans }}</dt>
-    <dd>{{ entity.idkelas.nama }}</dd>
+    <dd>{{ entity.kelas.nama }}</dd>
     <dt>{{ 'label.repetition'|trans }}</dt>
     <dd>{{ entity.perulangan }}</dd>
     <dt>{{ 'label.day'|trans }}</dt>
@@ -16,7 +16,7 @@
     <dt>{{ 'label.monthday'|trans }}</dt>
     <dd>{% if entity.bulananHariKe is empty %}&mdash;{% else %}{{ entity.bulananHariKe }}{% endif %}</dd>
     <dt>{{ 'label.presence.status.entry'|trans }}</dt>
-    <dd>{{ entity.idstatusKehadiranKepulangan.nama }}</dd>
+    <dd>{{ entity.statusKehadiranKepulangan.nama }}</dd>
     <dt>{{ 'label.paramstatusfrom'|trans }}</dt>
     <dd>{% if entity.paramstatusDariJam is empty %}&mdash;{% else %}{{ entity.paramstatusDariJam }}{% endif %}</dd>
     <dt>{{ 'label.paramstatusto'|trans }}</dt>
@@ -62,7 +62,7 @@
     <dt>{{ 'label.presencecommand'|trans }}</dt>
     <dd>{% if entity.commandJadwal is empty %}&mdash;{% else %}{{ entity.commandJadwal }}{% endif %}</dd>
     <dt>{{ 'label.sms.template.entry'|trans }}</dt>
-    <dd>{{ entity.idtemplatesms.nama }} » {{ entity.idtemplatesms.teks }}</dd>
+    <dd>{{ entity.templatesms.nama }} » {{ entity.templatesms.teks }}</dd>
 </dl>
 
 <div class="clearfix"></div>

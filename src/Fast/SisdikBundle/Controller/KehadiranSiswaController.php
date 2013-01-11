@@ -29,7 +29,7 @@ class KehadiranSiswaController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
@@ -47,7 +47,7 @@ class KehadiranSiswaController extends Controller
      * @Template()
      */
     public function editAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -55,15 +55,15 @@ class KehadiranSiswaController extends Controller
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t, t3')
-                ->from('FastSisdikBundle:KehadiranSiswa', 't')->leftJoin('t.idkelas', 't2')
-                ->leftJoin('t.idsiswa', 't3')->where('t2.idsekolah = :idsekolah')
+                ->from('FastSisdikBundle:KehadiranSiswa', 't')->leftJoin('t.kelas', 't2')
+                ->leftJoin('t.siswa', 't3')->where('t2.sekolah = :sekolah')
                 ->orderBy('t2.kode')->addOrderBy('t3.namaLengkap')
-                ->setParameter('idsekolah', $idsekolah);
+                ->setParameter('sekolah', $sekolah);
 
         $querybuilder_class = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idtahun', 't2')
-                ->where('t.idsekolah = :idsekolah')->andWhere('t2.aktif = :aktif')
-                ->orderBy('t.kode')->setParameter('idsekolah', $idsekolah)
+                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.tahun', 't2')
+                ->where('t.sekolah = :sekolah')->andWhere('t2.aktif = :aktif')
+                ->orderBy('t.kode')->setParameter('sekolah', $sekolah)
                 ->setParameter('aktif', TRUE);
 
         $searchform->bind($this->getRequest());
@@ -89,31 +89,31 @@ class KehadiranSiswaController extends Controller
             } else {
                 $buildparam['searchkey'] = '';
             }
-            if ($searchdata['idjenjang'] != '') {
-                $querybuilder->andWhere("t2.idjenjang = :idjenjang");
-                $querybuilder->setParameter('idjenjang', $searchdata['idjenjang']->getId());
+            if ($searchdata['jenjang'] != '') {
+                $querybuilder->andWhere("t2.jenjang = :jenjang");
+                $querybuilder->setParameter('jenjang', $searchdata['jenjang']->getId());
 
-                $querybuilder_class->andWhere("t.idjenjang = :idjenjang");
-                $querybuilder_class->setParameter('idjenjang', $searchdata['idjenjang']->getId());
+                $querybuilder_class->andWhere("t.jenjang = :jenjang");
+                $querybuilder_class->setParameter('jenjang', $searchdata['jenjang']->getId());
 
-                $buildparam['idjenjang'] = $searchdata['idjenjang']->getId();
+                $buildparam['jenjang'] = $searchdata['jenjang']->getId();
             } else {
-                $buildparam['idjenjang'] = '';
+                $buildparam['jenjang'] = '';
             }
-            if ($searchdata['idkelas'] != '') {
-                $querybuilder->andWhere("t2.id = :idkelas");
-                $querybuilder->setParameter('idkelas', $searchdata['idkelas']->getId());
+            if ($searchdata['kelas'] != '') {
+                $querybuilder->andWhere("t2. = :kelas");
+                $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
 
-                $querybuilder_class->andWhere("t.id = :idkelas");
-                $querybuilder_class->setParameter('idkelas', $searchdata['idkelas']->getId());
+                $querybuilder_class->andWhere("t. = :kelas");
+                $querybuilder_class->setParameter('kelas', $searchdata['kelas']->getId());
 
-                $buildparam['idkelas'] = $searchdata['idkelas']->getId();
+                $buildparam['kelas'] = $searchdata['kelas']->getId();
             } else {
-                $buildparam['idkelas'] = '';
+                $buildparam['kelas'] = '';
             }
             if ($searchdata['idstatuskehadirankepulangan'] != '') {
                 $querybuilder
-                        ->andWhere("t.idstatusKehadiranKepulangan = :idstatuskehadirankepulangan");
+                        ->andWhere("t.statusKehadiranKepulangan = :idstatuskehadirankepulangan");
                 $querybuilder
                         ->setParameter('idstatuskehadirankepulangan',
                                 $searchdata['idstatuskehadirankepulangan']->getId());
@@ -157,7 +157,7 @@ class KehadiranSiswaController extends Controller
                 $entity = $em->getRepository('FastSisdikBundle:KehadiranSiswa')->find($values[1]);
                 if (is_object($entity) && $entity instanceof KehadiranSiswa) {
                     $entity
-                            ->setIdstatusKehadiranKepulangan(
+                            ->setStatusKehadiranKepulangan(
                                     $em
                                             ->getRepository(
                                                     'FastSisdikBundle:StatusKehadiranKepulangan')
@@ -188,10 +188,10 @@ class KehadiranSiswaController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

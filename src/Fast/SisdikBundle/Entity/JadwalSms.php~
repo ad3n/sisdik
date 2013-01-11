@@ -75,30 +75,30 @@ class JadwalSms
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
     /**
      * @var Kelas
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas", referencedColumnName="id")
      * })
      */
-    private $idkelas;
+    private $kelas;
 
     /**
      * @var Templatesms
      *
      * @ORM\ManyToOne(targetEntity="Templatesms")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtemplatesms", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="templatesms", referencedColumnName="id")
      * })
      */
-    private $idtemplatesms;
+    private $templatesms;
 
 
 
@@ -274,71 +274,71 @@ class JadwalSms
     }
 
     /**
-     * Set idtahun
+     * Set tahun
      *
-     * @param Fast\SisdikBundle\Entity\Tahun $idtahun
+     * @param Fast\SisdikBundle\Entity\Tahun $tahun
      * @return JadwalSms
      */
-    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $idtahun = null)
+    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
     {
-        $this->idtahun = $idtahun;
+        $this->tahun = $tahun;
     
         return $this;
     }
 
     /**
-     * Get idtahun
+     * Get tahun
      *
      * @return Fast\SisdikBundle\Entity\Tahun 
      */
     public function getIdtahun()
     {
-        return $this->idtahun;
+        return $this->tahun;
     }
 
     /**
-     * Set idkelas
+     * Set kelas
      *
-     * @param Fast\SisdikBundle\Entity\Kelas $idkelas
+     * @param Fast\SisdikBundle\Entity\Kelas $kelas
      * @return JadwalSms
      */
-    public function setIdkelas(\Fast\SisdikBundle\Entity\Kelas $idkelas = null)
+    public function setIdkelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
     {
-        $this->idkelas = $idkelas;
+        $this->kelas = $kelas;
     
         return $this;
     }
 
     /**
-     * Get idkelas
+     * Get kelas
      *
      * @return Fast\SisdikBundle\Entity\Kelas 
      */
     public function getIdkelas()
     {
-        return $this->idkelas;
+        return $this->kelas;
     }
 
     /**
-     * Set idtemplatesms
+     * Set templatesms
      *
-     * @param Fast\SisdikBundle\Entity\Templatesms $idtemplatesms
+     * @param Fast\SisdikBundle\Entity\Templatesms $templatesms
      * @return JadwalSms
      */
-    public function setIdtemplatesms(\Fast\SisdikBundle\Entity\Templatesms $idtemplatesms = null)
+    public function setIdtemplatesms(\Fast\SisdikBundle\Entity\Templatesms $templatesms = null)
     {
-        $this->idtemplatesms = $idtemplatesms;
+        $this->templatesms = $templatesms;
     
         return $this;
     }
 
     /**
-     * Get idtemplatesms
+     * Get templatesms
      *
      * @return Fast\SisdikBundle\Entity\Templatesms 
      */
     public function getIdtemplatesms()
     {
-        return $this->idtemplatesms;
+        return $this->templatesms;
     }
 }

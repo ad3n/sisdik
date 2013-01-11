@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\BiayaSekali
+ * BiayaSekali
  *
  * @ORM\Table(name="biaya_sekali")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class BiayaSekali
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,48 +22,48 @@ class BiayaSekali
     private $id;
 
     /**
-     * @var integer $nominal
+     * @var integer
      *
      * @ORM\Column(name="nominal", type="bigint", nullable=true)
      */
     private $nominal;
 
     /**
-     * @var integer $urutan
+     * @var integer
      *
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
      */
     private $urutan;
 
     /**
-     * @var Gelombang
+     * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idgelombang", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
      * })
      */
-    private $idgelombang;
+    private $gelombang;
 
     /**
-     * @var Tahunmasuk
+     * @var \Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahunmasuk", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
      * })
      */
-    private $idtahunmasuk;
+    private $tahunmasuk;
 
     /**
-     * @var Jenisbiaya
+     * @var \Jenisbiaya
      *
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idjenisbiaya", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id")
      * })
      */
-    private $idjenisbiaya;
+    private $jenisbiaya;
 
 
 }

@@ -28,15 +28,15 @@ class PenjurusanController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $results = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
         }
 
         $repo = $em->getRepository("FastSisdikBundle:Penjurusan");
@@ -80,7 +80,7 @@ class PenjurusanController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -105,7 +105,7 @@ class PenjurusanController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Penjurusan();
@@ -124,7 +124,7 @@ class PenjurusanController extends Controller
      * @Template("FastSisdikBundle:Penjurusan:new.html.twig")
      */
     public function createAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -167,7 +167,7 @@ class PenjurusanController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -195,7 +195,7 @@ class PenjurusanController extends Controller
      * @Template("FastSisdikBundle:Penjurusan:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -245,7 +245,7 @@ class PenjurusanController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);
@@ -301,10 +301,10 @@ class PenjurusanController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

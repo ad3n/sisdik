@@ -38,46 +38,46 @@ class FingerPrintInitEndsCommand extends ContainerAwareCommand
         $entity = $em->getRepository('FastSisdikBundle:JadwalKehadiranKepulangan')
                 ->find($idjadwalkehadirankepulangan);
 
-        $idtahun = $entity->getIdtahun();
-        $idkelas = $entity->getIdkelas();
-        $idstatusKehadiranKepulangan = $entity->getIdstatusKehadiranKepulangan();
-        $idsekolah = $entity->getIdtahun()->getIdsekolah();
+        $tahun = $entity->getTahun();
+        $kelas = $entity->getKelas();
+        $statusKehadiranKepulangan = $entity->getStatusKehadiranKepulangan();
+        $sekolah = $entity->getTahun()->getSekolah();
 
         $activeday = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
                 ->findOneBy(
                         array(
                                 'tanggal' => new \DateTime($date), 'kbm' => TRUE,
-                                'idsekolah' => $idsekolah->getId()
+                                'sekolah' => $sekolah->getId()
                         ));
         if (!$activeday) {
             return 0;
         }
 
-        // find all siswa with the selected idtahun and idkelas from kehadiransiswa
+        // find all siswa with the selected tahun and kelas from kehadiransiswa
         // where is present and late (prioritasPembaruan 1 and 2)
         // see the related symfony2 console commands
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:KehadiranSiswa', 't')->where('t.idkelas = :idkelas')
+                ->from('FastSisdikBundle:KehadiranSiswa', 't')->where('t.kelas = :kelas')
                 ->andWhere('t.tanggal = :tanggal')
                 ->andWhere('t.prioritasPembaruan = 1 OR t.prioritasPembaruan = 2')
-                ->setParameter('idkelas', $idkelas->getId())->setParameter('tanggal', $date);
+                ->setParameter('kelas', $kelas->getId())->setParameter('tanggal', $date);
 
         $results = $querybuilder->getQuery()->getResult();
 
         foreach ($results as $result) {
-            $idsiswa = $result->getIdsiswa();
+            $siswa = $result->getSiswa();
 
             $exists = $em->getRepository('FastSisdikBundle:KepulanganSiswa')
                     ->findOneBy(
                             array(
-                                'idsiswa' => $idsiswa->getId(), 'tanggal' => new \DateTime($date)
+                                'siswa' => $siswa->getId(), 'tanggal' => new \DateTime($date)
                             ));
 
             if (!$exists) {
                 $kepulangansiswa = new KepulanganSiswa();
-                $kepulangansiswa->setIdsiswa($idsiswa);
-                $kepulangansiswa->setIdkelas($idkelas);
-                $kepulangansiswa->setIdstatusKehadiranKepulangan($idstatusKehadiranKepulangan);
+                $kepulangansiswa->setSiswa($siswa);
+                $kepulangansiswa->setKelas($kelas);
+                $kepulangansiswa->setStatusKehadiranKepulangan($statusKehadiranKepulangan);
                 $kepulangansiswa->setTanggal(new \DateTime($date));
                 $kepulangansiswa->setSmsPulangTerproses(FALSE);
 

@@ -18,31 +18,31 @@ SiswaCmp:
             fixed: false
             nullable: true
     manyToOne:
-        idjenisNilai:
+        jenisNilai:
             targetEntity: JenisNilai
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idjenis_nilai:
+                jenis_nilai_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idcukilMp:
+        cukilMp:
             targetEntity: CukilMp
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idcukil_mp:
+                cukil_mp_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idsiswa:
+        siswa:
             targetEntity: Siswa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsiswa:
+                siswa_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

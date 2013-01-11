@@ -19,15 +19,15 @@ class KelasDuplicateType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahunSource', 'entity',
+                    ->add('tahunSource', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.from', 'multiple' => false,
@@ -39,7 +39,7 @@ class KelasDuplicateType extends AbstractType
                             ));
 
             $builder
-                    ->add('idtahunTarget', 'entity',
+                    ->add('tahunTarget', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.to', 'multiple' => false,

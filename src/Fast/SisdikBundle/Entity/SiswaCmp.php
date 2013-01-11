@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\SiswaCmp
+ * SiswaCmp
  *
  * @ORM\Table(name="siswa_cmp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SiswaCmp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,48 +22,48 @@ class SiswaCmp
     private $id;
 
     /**
-     * @var integer $nilai
+     * @var integer
      *
      * @ORM\Column(name="nilai", type="integer", nullable=true)
      */
     private $nilai;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var JenisNilai
+     * @var \JenisNilai
      *
      * @ORM\ManyToOne(targetEntity="JenisNilai")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idjenis_nilai", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenis_nilai_id", referencedColumnName="id")
      * })
      */
-    private $idjenisNilai;
+    private $jenisNilai;
 
     /**
-     * @var CukilMp
+     * @var \CukilMp
      *
      * @ORM\ManyToOne(targetEntity="CukilMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idcukil_mp", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id")
      * })
      */
-    private $idcukilMp;
+    private $cukilMp;
 
     /**
-     * @var Siswa
+     * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
      * })
      */
-    private $idsiswa;
+    private $siswa;
 
 
 
@@ -124,71 +124,71 @@ class SiswaCmp
     }
 
     /**
-     * Set idjenisNilai
+     * Set jenisNilai
      *
-     * @param Fast\SisdikBundle\Entity\JenisNilai $idjenisNilai
+     * @param \Fast\SisdikBundle\Entity\JenisNilai $jenisNilai
      * @return SiswaCmp
      */
-    public function setIdjenisNilai(\Fast\SisdikBundle\Entity\JenisNilai $idjenisNilai = null)
+    public function setJenisNilai(\Fast\SisdikBundle\Entity\JenisNilai $jenisNilai = null)
     {
-        $this->idjenisNilai = $idjenisNilai;
+        $this->jenisNilai = $jenisNilai;
     
         return $this;
     }
 
     /**
-     * Get idjenisNilai
+     * Get jenisNilai
      *
-     * @return Fast\SisdikBundle\Entity\JenisNilai 
+     * @return \Fast\SisdikBundle\Entity\JenisNilai 
      */
-    public function getIdjenisNilai()
+    public function getJenisNilai()
     {
-        return $this->idjenisNilai;
+        return $this->jenisNilai;
     }
 
     /**
-     * Set idcukilMp
+     * Set cukilMp
      *
-     * @param Fast\SisdikBundle\Entity\CukilMp $idcukilMp
+     * @param \Fast\SisdikBundle\Entity\CukilMp $cukilMp
      * @return SiswaCmp
      */
-    public function setIdcukilMp(\Fast\SisdikBundle\Entity\CukilMp $idcukilMp = null)
+    public function setCukilMp(\Fast\SisdikBundle\Entity\CukilMp $cukilMp = null)
     {
-        $this->idcukilMp = $idcukilMp;
+        $this->cukilMp = $cukilMp;
     
         return $this;
     }
 
     /**
-     * Get idcukilMp
+     * Get cukilMp
      *
-     * @return Fast\SisdikBundle\Entity\CukilMp 
+     * @return \Fast\SisdikBundle\Entity\CukilMp 
      */
-    public function getIdcukilMp()
+    public function getCukilMp()
     {
-        return $this->idcukilMp;
+        return $this->cukilMp;
     }
 
     /**
-     * Set idsiswa
+     * Set siswa
      *
-     * @param Fast\SisdikBundle\Entity\Siswa $idsiswa
+     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return SiswaCmp
      */
-    public function setIdsiswa(\Fast\SisdikBundle\Entity\Siswa $idsiswa = null)
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
-        $this->idsiswa = $idsiswa;
+        $this->siswa = $siswa;
     
         return $this;
     }
 
     /**
-     * Get idsiswa
+     * Get siswa
      *
-     * @return Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa 
      */
-    public function getIdsiswa()
+    public function getSiswa()
     {
-        return $this->idsiswa;
+        return $this->siswa;
     }
 }

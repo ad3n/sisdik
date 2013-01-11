@@ -26,7 +26,7 @@ class StatusKehadiranKepulanganType extends AbstractType
                         ));
 
         $builder
-                ->add('idsekolah', 'entity',
+                ->add('sekolah', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',

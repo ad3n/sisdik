@@ -16,14 +16,4 @@ SmsKepulanganSiswa:
             type: datetime
             nullable: true
             column: sms_dlrtime
-    manyToOne:
-        idkepulanganSiswa:
-            targetEntity: KepulanganSiswa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idkepulangan_siswa:
-                    referencedColumnName: id
-            orphanRemoval: false
     lifecycleCallbacks: {  }

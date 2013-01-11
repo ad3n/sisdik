@@ -19,16 +19,16 @@ class SiswaExportType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahunmasuk', 'entity',
+                    ->add('tahunmasuk', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahunmasuk',
                                     'label' => 'label.yearentry.entry', 'multiple' => false,

@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\TugasAkhir
+ * TugasAkhir
  *
  * @ORM\Table(name="tugas_akhir")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TugasAkhir
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,21 +22,21 @@ class TugasAkhir
     private $id;
 
     /**
-     * @var string $judul
+     * @var string
      *
      * @ORM\Column(name="judul", type="string", length=300, nullable=true)
      */
     private $judul;
 
     /**
-     * @var Siswa
+     * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
      * })
      */
-    private $idsiswa;
+    private $siswa;
 
 
 
@@ -74,25 +74,25 @@ class TugasAkhir
     }
 
     /**
-     * Set idsiswa
+     * Set siswa
      *
-     * @param Fast\SisdikBundle\Entity\Siswa $idsiswa
+     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return TugasAkhir
      */
-    public function setIdsiswa(\Fast\SisdikBundle\Entity\Siswa $idsiswa = null)
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
-        $this->idsiswa = $idsiswa;
+        $this->siswa = $siswa;
     
         return $this;
     }
 
     /**
-     * Get idsiswa
+     * Get siswa
      *
-     * @return Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa 
      */
-    public function getIdsiswa()
+    public function getSiswa()
     {
-        return $this->idsiswa;
+        return $this->siswa;
     }
 }

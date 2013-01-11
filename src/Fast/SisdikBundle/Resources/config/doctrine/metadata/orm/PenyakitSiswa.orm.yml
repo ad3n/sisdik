@@ -35,13 +35,13 @@ PenyakitSiswa:
             fixed: false
             nullable: true
     manyToOne:
-        idsiswa:
+        siswa:
             targetEntity: Siswa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsiswa:
+                siswa_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\PembayaranSekali
+ * PembayaranSekali
  *
  * @ORM\Table(name="pembayaran_sekali")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PembayaranSekali
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,52 +22,52 @@ class PembayaranSekali
     private $id;
 
     /**
-     * @var integer $nominalPembayaran
+     * @var integer
      *
      * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
      */
     private $nominalPembayaran;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var \DateTime $waktuCatat
+     * @var \DateTime
      *
      * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
      */
     private $waktuCatat;
 
     /**
-     * @var \DateTime $waktuUbah
+     * @var \DateTime
      *
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      */
     private $waktuUbah;
 
     /**
-     * @var BiayaSekali
-     *
-     * @ORM\ManyToOne(targetEntity="BiayaSekali")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idbiaya_sekali", referencedColumnName="id")
-     * })
-     */
-    private $idbiayaSekali;
-
-    /**
-     * @var Siswa
+     * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
      * })
      */
-    private $idsiswa;
+    private $siswa;
+
+    /**
+     * @var \BiayaSekali
+     *
+     * @ORM\ManyToOne(targetEntity="BiayaSekali")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="biaya_sekali_id", referencedColumnName="id")
+     * })
+     */
+    private $biayaSekali;
 
 
 
@@ -174,48 +174,48 @@ class PembayaranSekali
     }
 
     /**
-     * Set idbiayaSekali
+     * Set siswa
      *
-     * @param Fast\SisdikBundle\Entity\BiayaSekali $idbiayaSekali
+     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return PembayaranSekali
      */
-    public function setIdbiayaSekali(\Fast\SisdikBundle\Entity\BiayaSekali $idbiayaSekali = null)
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
-        $this->idbiayaSekali = $idbiayaSekali;
+        $this->siswa = $siswa;
     
         return $this;
     }
 
     /**
-     * Get idbiayaSekali
+     * Get siswa
      *
-     * @return Fast\SisdikBundle\Entity\BiayaSekali 
+     * @return \Fast\SisdikBundle\Entity\Siswa 
      */
-    public function getIdbiayaSekali()
+    public function getSiswa()
     {
-        return $this->idbiayaSekali;
+        return $this->siswa;
     }
 
     /**
-     * Set idsiswa
+     * Set biayaSekali
      *
-     * @param Fast\SisdikBundle\Entity\Siswa $idsiswa
+     * @param \Fast\SisdikBundle\Entity\BiayaSekali $biayaSekali
      * @return PembayaranSekali
      */
-    public function setIdsiswa(\Fast\SisdikBundle\Entity\Siswa $idsiswa = null)
+    public function setBiayaSekali(\Fast\SisdikBundle\Entity\BiayaSekali $biayaSekali = null)
     {
-        $this->idsiswa = $idsiswa;
+        $this->biayaSekali = $biayaSekali;
     
         return $this;
     }
 
     /**
-     * Get idsiswa
+     * Get biayaSekali
      *
-     * @return Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\BiayaSekali 
      */
-    public function getIdsiswa()
+    public function getBiayaSekali()
     {
-        return $this->idsiswa;
+        return $this->biayaSekali;
     }
 }

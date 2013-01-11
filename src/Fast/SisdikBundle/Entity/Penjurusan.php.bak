@@ -76,6 +76,16 @@ class Penjurusan
     private $root;
 
     /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     * })
+     */
+    private $sekolah;
+
+    /**
      * @var Penjurusan
      *
      * @Gedmo\TreeParent
@@ -85,16 +95,6 @@ class Penjurusan
      * })
      */
     private $parent;
-
-    /**
-     * @var Sekolah
-     *
-     * @ORM\ManyToOne(targetEntity="Sekolah")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
-     * })
-     */
-    private $idsekolah;
 
     /**
      * @ORM\OneToMany(targetEntity="Penjurusan", mappedBy="parent")
@@ -259,6 +259,27 @@ class Penjurusan
     }
 
     /**
+     * Set sekolah
+     *
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return Penjurusan
+     */
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     */
+    public function getSekolah() {
+        return $this->sekolah;
+    }
+
+    /**
      * Set parent
      *
      * @param Fast\SisdikBundle\Entity\Penjurusan $parent
@@ -277,27 +298,6 @@ class Penjurusan
      */
     public function getParent() {
         return $this->parent;
-    }
-
-    /**
-     * Set idsekolah
-     *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
-     * @return Penjurusan
-     */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null) {
-        $this->idsekolah = $idsekolah;
-
-        return $this;
-    }
-
-    /**
-     * Get idsekolah
-     *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
-     */
-    public function getIdsekolah() {
-        return $this->idsekolah;
     }
 
     public function getOptionLabel() {

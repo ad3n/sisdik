@@ -85,40 +85,40 @@ FosUser:
             fixed: false
             nullable: false
     manyToOne:
-        idguru:
+        guru:
             targetEntity: Guru
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idguru:
+                guru_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idsekolah:
+        sekolah:
             targetEntity: Sekolah
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsekolah:
+                sekolah_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idsiswa:
+        siswa:
             targetEntity: Siswa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsiswa:
+                siswa_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idstaf:
+        staf:
             targetEntity: Staf
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idstaf:
+                staf_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

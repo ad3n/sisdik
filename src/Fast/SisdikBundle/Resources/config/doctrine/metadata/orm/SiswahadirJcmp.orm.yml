@@ -29,13 +29,13 @@ SiswahadirJcmp:
             fixed: false
             nullable: true
     manyToOne:
-        idjadwalCmp:
+        jadwalCmp:
             targetEntity: JadwalCmp
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idjadwal_cmp:
+                jadwal_cmp_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

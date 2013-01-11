@@ -89,7 +89,7 @@ class FingerPrintClearLogCommand extends ContainerAwareCommand
                     $devices = $em->getRepository('FastSisdikBundle:MesinKehadiran')
                             ->findBy(
                                     array(
-                                        'idsekolah' => $entity->getId(), 'aktif' => TRUE
+                                        'sekolah' => $entity->getId(), 'aktif' => TRUE
                                     ));
 
                     foreach ($devices as $device) {

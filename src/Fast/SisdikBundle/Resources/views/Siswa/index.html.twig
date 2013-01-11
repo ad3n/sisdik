@@ -71,7 +71,7 @@
     {% for data in pagination %}
         <tr>
     		<td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.idtahunmasuk.tahun is defined %}{{ data.idtahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk.tahun is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
     		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>

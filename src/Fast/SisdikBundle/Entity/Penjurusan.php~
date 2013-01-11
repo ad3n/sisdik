@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Penjurusan
+ * Penjurusan
  *
  * @ORM\Table(name="penjurusan")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Penjurusan
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,56 +22,66 @@ class Penjurusan
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=300, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $kode
+     * @var string
      *
      * @ORM\Column(name="kode", type="string", length=50, nullable=false)
      */
     private $kode;
 
     /**
-     * @var string $kepala
+     * @var string
      *
      * @ORM\Column(name="kepala", type="string", length=400, nullable=true)
      */
     private $kepala;
 
     /**
-     * @var integer $lft
+     * @var integer
      *
      * @ORM\Column(name="lft", type="integer", nullable=true)
      */
     private $lft;
 
     /**
-     * @var integer $lvl
+     * @var integer
      *
      * @ORM\Column(name="lvl", type="integer", nullable=true)
      */
     private $lvl;
 
     /**
-     * @var integer $rgt
+     * @var integer
      *
      * @ORM\Column(name="rgt", type="integer", nullable=true)
      */
     private $rgt;
 
     /**
-     * @var integer $root
+     * @var integer
      *
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
     private $root;
 
     /**
-     * @var Penjurusan
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     * })
+     */
+    private $sekolah;
+
+    /**
+     * @var \Penjurusan
      *
      * @ORM\ManyToOne(targetEntity="Penjurusan")
      * @ORM\JoinColumns({
@@ -79,16 +89,6 @@ class Penjurusan
      * })
      */
     private $parent;
-
-    /**
-     * @var Sekolah
-     *
-     * @ORM\ManyToOne(targetEntity="Sekolah")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
-     * })
-     */
-    private $idsekolah;
 
 
 }

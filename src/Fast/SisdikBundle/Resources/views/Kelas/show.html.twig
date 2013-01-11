@@ -4,9 +4,9 @@
 {% block content %}
 <dl>
     <dt>{{ 'label.school'|trans }}</dt>
-    <dd>{{ entity.idsekolah.nama }}</dd>
+    <dd>{{ entity.sekolah.nama }}</dd>
     <dt>{{ 'label.level'|trans }}</dt>
-    <dd>{% if entity.idjenjang is not null %}{{ entity.idjenjang.kode }}{% endif %}</dd>
+    <dd>{% if entity.jenjang is not null %}{{ entity.jenjang.kode }}{% endif %}</dd>
     <dt>{{ 'label.class.entry'|trans }}</dt>
     <dd>{{ entity.nama }}</dd>
     <dt>{{ 'label.code'|trans }}</dt>

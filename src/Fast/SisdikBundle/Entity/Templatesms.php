@@ -4,7 +4,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Templatesms
+ * Templatesms
  *
  * @ORM\Table(name="templatesms")
  * @ORM\Entity
@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Templatesms
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -21,35 +21,35 @@ class Templatesms
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=50, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $teks
+     * @var string
      *
      * @ORM\Column(name="teks", type="string", length=500, nullable=true)
      */
     private $teks;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
     /**
      * Get id
@@ -124,24 +124,24 @@ class Templatesms
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Templatesms
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null) {
-        $this->idsekolah = $idsekolah;
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
 
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah() {
-        return $this->idsekolah;
+    public function getSekolah() {
+        return $this->sekolah;
     }
 
     public function getOptionLabel() {

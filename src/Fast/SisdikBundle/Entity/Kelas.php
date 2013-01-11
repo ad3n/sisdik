@@ -50,34 +50,34 @@ class Kelas
     private $urutan;
 
     /**
-     * @var \Sekolah
-     *
-     * @ORM\ManyToOne(targetEntity="Sekolah")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
-     * })
-     */
-    private $idsekolah;
-
-    /**
      * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     * })
+     */
+    private $sekolah;
 
     /**
      * @var \Jenjang
      *
      * @ORM\ManyToOne(targetEntity="Jenjang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idjenjang", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenjang_id", referencedColumnName="id")
      * })
      */
-    private $idjenjang;
+    private $jenjang;
 
 
 
@@ -184,71 +184,71 @@ class Kelas
     }
 
     /**
-     * Set idsekolah
+     * Set tahun
      *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return Kelas
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
     {
-        $this->idsekolah = $idsekolah;
+        $this->tahun = $tahun;
     
         return $this;
     }
 
     /**
-     * Get idsekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
-     */
-    public function getIdsekolah()
-    {
-        return $this->idsekolah;
-    }
-
-    /**
-     * Set idtahun
-     *
-     * @param \Fast\SisdikBundle\Entity\Tahun $idtahun
-     * @return Kelas
-     */
-    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $idtahun = null)
-    {
-        $this->idtahun = $idtahun;
-    
-        return $this;
-    }
-
-    /**
-     * Get idtahun
+     * Get tahun
      *
      * @return \Fast\SisdikBundle\Entity\Tahun 
      */
-    public function getIdtahun()
+    public function getTahun()
     {
-        return $this->idtahun;
+        return $this->tahun;
     }
 
     /**
-     * Set idjenjang
+     * Set sekolah
      *
-     * @param \Fast\SisdikBundle\Entity\Jenjang $idjenjang
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Kelas
      */
-    public function setIdjenjang(\Fast\SisdikBundle\Entity\Jenjang $idjenjang = null)
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
-        $this->idjenjang = $idjenjang;
+        $this->sekolah = $sekolah;
     
         return $this;
     }
 
     /**
-     * Get idjenjang
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     */
+    public function getSekolah()
+    {
+        return $this->sekolah;
+    }
+
+    /**
+     * Set jenjang
+     *
+     * @param \Fast\SisdikBundle\Entity\Jenjang $jenjang
+     * @return Kelas
+     */
+    public function setJenjang(\Fast\SisdikBundle\Entity\Jenjang $jenjang = null)
+    {
+        $this->jenjang = $jenjang;
+    
+        return $this;
+    }
+
+    /**
+     * Get jenjang
      *
      * @return \Fast\SisdikBundle\Entity\Jenjang 
      */
-    public function getIdjenjang()
+    public function getJenjang()
     {
-        return $this->idjenjang;
+        return $this->jenjang;
     }
 }

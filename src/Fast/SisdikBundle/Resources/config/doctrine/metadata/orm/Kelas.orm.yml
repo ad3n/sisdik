@@ -28,31 +28,31 @@ Kelas:
             type: smallint
             nullable: true
     manyToOne:
-        idsekolah:
-            targetEntity: Sekolah
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idsekolah:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idtahun:
+        tahun:
             targetEntity: Tahun
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahun:
+                tahun_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idjenjang:
+        sekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sekolah_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        jenjang:
             targetEntity: Jenjang
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idjenjang:
+                jenjang_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

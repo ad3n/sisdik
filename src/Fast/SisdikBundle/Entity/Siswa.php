@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Fast\SisdikBundle\Entity\Siswa
+ * Siswa
  *
  * @ORM\Table(name="siswa")
  * @ORM\Entity
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class Siswa
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -24,237 +24,237 @@ class Siswa
     private $id;
 
     /**
-     * @var integer $nomorUrutPersekolah
+     * @var integer
      *
      * @ORM\Column(name="nomor_urut_persekolah", type="integer", nullable=true)
      */
     private $nomorUrutPersekolah;
 
     /**
-     * @var string $nomorIndukSistem
+     * @var string
      *
      * @ORM\Column(name="nomor_induk_sistem", type="string", length=45, nullable=true)
      */
     private $nomorIndukSistem;
 
     /**
-     * @var integer $nomorPendaftaran
+     * @var integer
      *
      * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true)
      */
     private $nomorPendaftaran;
 
     /**
-     * @var string $nomorInduk
+     * @var string
      *
      * @ORM\Column(name="nomor_induk", type="string", length=100, nullable=true)
      */
     private $nomorInduk;
 
     /**
-     * @var string $namaLengkap
+     * @var string
      *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
      */
     private $namaLengkap;
 
     /**
-     * @var string $jenisKelamin
+     * @var string
      *
      * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
      */
     private $jenisKelamin;
 
     /**
-     * @var string $foto
+     * @var string
      *
      * @ORM\Column(name="foto", type="string", length=400, nullable=true)
      */
     private $foto;
 
     /**
-     * @var string $agama
+     * @var string
      *
      * @ORM\Column(name="agama", type="string", length=100, nullable=true)
      */
     private $agama;
 
     /**
-     * @var string $tempatLahir
+     * @var string
      *
      * @ORM\Column(name="tempat_lahir", type="string", length=400, nullable=true)
      */
     private $tempatLahir;
 
     /**
-     * @var \DateTime $tanggalLahir
+     * @var \DateTime
      *
      * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
      */
     private $tanggalLahir;
 
     /**
-     * @var string $email
+     * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
      */
     private $email;
 
     /**
-     * @var string $namaPanggilan
+     * @var string
      *
      * @ORM\Column(name="nama_panggilan", type="string", length=100, nullable=true)
      */
     private $namaPanggilan;
 
     /**
-     * @var string $kewarganegaraan
+     * @var string
      *
      * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
      */
     private $kewarganegaraan;
 
     /**
-     * @var integer $anakKe
+     * @var integer
      *
      * @ORM\Column(name="anak_ke", type="integer", nullable=true)
      */
     private $anakKe;
 
     /**
-     * @var integer $jumlahSaudarakandung
+     * @var integer
      *
      * @ORM\Column(name="jumlah_saudarakandung", type="integer", nullable=true)
      */
     private $jumlahSaudarakandung;
 
     /**
-     * @var integer $jumlahSaudaratiri
+     * @var integer
      *
      * @ORM\Column(name="jumlah_saudaratiri", type="integer", nullable=true)
      */
     private $jumlahSaudaratiri;
 
     /**
-     * @var string $statusOrphan
+     * @var string
      *
      * @ORM\Column(name="status_orphan", type="string", length=100, nullable=true)
      */
     private $statusOrphan;
 
     /**
-     * @var string $bahasaSeharihari
+     * @var string
      *
      * @ORM\Column(name="bahasa_seharihari", type="string", length=200, nullable=true)
      */
     private $bahasaSeharihari;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var string $kodepos
+     * @var string
      *
      * @ORM\Column(name="kodepos", type="string", length=30, nullable=true)
      */
     private $kodepos;
 
     /**
-     * @var string $telepon
+     * @var string
      *
      * @ORM\Column(name="telepon", type="string", length=100, nullable=true)
      */
     private $telepon;
 
     /**
-     * @var string $ponselSiswa
+     * @var string
      *
      * @ORM\Column(name="ponsel_siswa", type="string", length=100, nullable=true)
      */
     private $ponselSiswa;
 
     /**
-     * @var string $ponselOrangtuawali
+     * @var string
      *
      * @ORM\Column(name="ponsel_orangtuawali", type="string", length=100, nullable=true)
      */
     private $ponselOrangtuawali;
 
     /**
-     * @var string $sekolahTinggaldi
+     * @var string
      *
      * @ORM\Column(name="sekolah_tinggaldi", type="string", length=400, nullable=true)
      */
     private $sekolahTinggaldi;
 
     /**
-     * @var string $jarakTempat
+     * @var string
      *
      * @ORM\Column(name="jarak_tempat", type="string", length=300, nullable=true)
      */
     private $jarakTempat;
 
     /**
-     * @var string $caraKesekolah
+     * @var string
      *
      * @ORM\Column(name="cara_kesekolah", type="string", length=300, nullable=true)
      */
     private $caraKesekolah;
 
     /**
-     * @var integer $beratbadan
+     * @var integer
      *
      * @ORM\Column(name="beratbadan", type="integer", nullable=true)
      */
     private $beratbadan;
 
     /**
-     * @var integer $tinggibadan
+     * @var integer
      *
      * @ORM\Column(name="tinggibadan", type="integer", nullable=true)
      */
     private $tinggibadan;
 
     /**
-     * @var string $golongandarah
+     * @var string
      *
      * @ORM\Column(name="golongandarah", type="string", length=50, nullable=true)
      */
     private $golongandarah;
 
     /**
-     * @var Gelombang
+     * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idgelombang", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
      * })
      */
-    private $idgelombang;
+    private $gelombang;
 
     /**
-     * @var Tahunmasuk
+     * @var \Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahunmasuk", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
      * })
      */
-    private $idtahunmasuk;
+    private $tahunmasuk;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
     /**
      * Get id
@@ -875,66 +875,66 @@ class Siswa
     }
 
     /**
-     * Set idgelombang
+     * Set gelombang
      *
-     * @param Fast\SisdikBundle\Entity\Gelombang $idgelombang
+     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
      * @return Siswa
      */
-    public function setIdgelombang(\Fast\SisdikBundle\Entity\Gelombang $idgelombang = null) {
-        $this->idgelombang = $idgelombang;
+    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null) {
+        $this->gelombang = $gelombang;
 
         return $this;
     }
 
     /**
-     * Get idgelombang
+     * Get gelombang
      *
-     * @return Fast\SisdikBundle\Entity\Gelombang 
+     * @return \Fast\SisdikBundle\Entity\Gelombang 
      */
-    public function getIdgelombang() {
-        return $this->idgelombang;
+    public function getGelombang() {
+        return $this->gelombang;
     }
 
     /**
-     * Set idtahunmasuk
+     * Set tahunmasuk
      *
-     * @param Fast\SisdikBundle\Entity\Tahunmasuk $idtahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
      * @return Siswa
      */
-    public function setIdtahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $idtahunmasuk = null) {
-        $this->idtahunmasuk = $idtahunmasuk;
+    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null) {
+        $this->tahunmasuk = $tahunmasuk;
 
         return $this;
     }
 
     /**
-     * Get idtahunmasuk
+     * Get tahunmasuk
      *
-     * @return Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
      */
-    public function getIdtahunmasuk() {
-        return $this->idtahunmasuk;
+    public function getTahunmasuk() {
+        return $this->tahunmasuk;
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Siswa
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null) {
-        $this->idsekolah = $idsekolah;
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
 
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah() {
-        return $this->idsekolah;
+    public function getSekolah() {
+        return $this->sekolah;
     }
 
     /**

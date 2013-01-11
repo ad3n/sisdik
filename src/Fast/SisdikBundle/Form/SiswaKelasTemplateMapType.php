@@ -19,16 +19,16 @@ class SiswaKelasTemplateMapType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahun', 'entity',
+                    ->add('tahun', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.year.entry', 'multiple' => false,
@@ -40,10 +40,10 @@ class SiswaKelasTemplateMapType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.kode')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.kode')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idjenjang', 'entity',
+                    ->add('jenjang', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Jenjang',
                                     'label' => 'label.class.entry', 'multiple' => false,

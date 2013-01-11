@@ -127,44 +127,44 @@ class JadwalKehadiranKepulangan
     private $commandJadwal;
 
     /**
-     * @var \Kelas
-     *
-     * @ORM\ManyToOne(targetEntity="Kelas")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
-     * })
-     */
-    private $idkelas;
-
-    /**
      * @var \StatusKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idstatus_kehadiran_kepulangan", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id")
      * })
      */
-    private $idstatusKehadiranKepulangan;
+    private $statusKehadiranKepulangan;
+
+    /**
+     * @var \Kelas
+     *
+     * @ORM\ManyToOne(targetEntity="Kelas")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     * })
+     */
+    private $kelas;
 
     /**
      * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
     /**
      * @var \Templatesms
      *
      * @ORM\ManyToOne(targetEntity="Templatesms")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtemplatesms", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="templatesms_id", referencedColumnName="id")
      * })
      */
-    private $idtemplatesms;
+    private $templatesms;
 
 
 }

@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\GuruMp
+ * GuruMp
  *
  * @ORM\Table(name="guru_mp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class GuruMp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,24 +22,24 @@ class GuruMp
     private $id;
 
     /**
-     * @var Guru
+     * @var \Guru
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idguru", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
      * })
      */
-    private $idguru;
+    private $guru;
 
     /**
-     * @var MataPelajaran
+     * @var \MataPelajaran
      *
      * @ORM\ManyToOne(targetEntity="MataPelajaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idmata_pelajaran", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id")
      * })
      */
-    private $idmataPelajaran;
+    private $mataPelajaran;
 
 
 
@@ -54,48 +54,48 @@ class GuruMp
     }
 
     /**
-     * Set idguru
+     * Set guru
      *
-     * @param Fast\SisdikBundle\Entity\Guru $idguru
+     * @param \Fast\SisdikBundle\Entity\Guru $guru
      * @return GuruMp
      */
-    public function setIdguru(\Fast\SisdikBundle\Entity\Guru $idguru = null)
+    public function setGuru(\Fast\SisdikBundle\Entity\Guru $guru = null)
     {
-        $this->idguru = $idguru;
+        $this->guru = $guru;
     
         return $this;
     }
 
     /**
-     * Get idguru
+     * Get guru
      *
-     * @return Fast\SisdikBundle\Entity\Guru 
+     * @return \Fast\SisdikBundle\Entity\Guru 
      */
-    public function getIdguru()
+    public function getGuru()
     {
-        return $this->idguru;
+        return $this->guru;
     }
 
     /**
-     * Set idmataPelajaran
+     * Set mataPelajaran
      *
-     * @param Fast\SisdikBundle\Entity\MataPelajaran $idmataPelajaran
+     * @param \Fast\SisdikBundle\Entity\MataPelajaran $mataPelajaran
      * @return GuruMp
      */
-    public function setIdmataPelajaran(\Fast\SisdikBundle\Entity\MataPelajaran $idmataPelajaran = null)
+    public function setMataPelajaran(\Fast\SisdikBundle\Entity\MataPelajaran $mataPelajaran = null)
     {
-        $this->idmataPelajaran = $idmataPelajaran;
+        $this->mataPelajaran = $mataPelajaran;
     
         return $this;
     }
 
     /**
-     * Get idmataPelajaran
+     * Get mataPelajaran
      *
-     * @return Fast\SisdikBundle\Entity\MataPelajaran 
+     * @return \Fast\SisdikBundle\Entity\MataPelajaran 
      */
-    public function getIdmataPelajaran()
+    public function getMataPelajaran()
     {
-        return $this->idmataPelajaran;
+        return $this->mataPelajaran;
     }
 }

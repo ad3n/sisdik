@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\Sekolah
+ * Sekolah
  *
  * @ORM\Table(name="sekolah")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Sekolah
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,70 +22,70 @@ class Sekolah
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=300, nullable=false)
      */
     private $nama;
 
     /**
-     * @var string $kode
+     * @var string
      *
      * @ORM\Column(name="kode", type="string", length=50, nullable=false)
      */
     private $kode;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var string $kodepos
+     * @var string
      *
      * @ORM\Column(name="kodepos", type="string", length=10, nullable=true)
      */
     private $kodepos;
 
     /**
-     * @var string $telepon
+     * @var string
      *
      * @ORM\Column(name="telepon", type="string", length=50, nullable=true)
      */
     private $telepon;
 
     /**
-     * @var string $fax
+     * @var string
      *
      * @ORM\Column(name="fax", type="string", length=50, nullable=true)
      */
     private $fax;
 
     /**
-     * @var string $email
+     * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=false)
      */
     private $email;
 
     /**
-     * @var string $norekening
+     * @var string
      *
      * @ORM\Column(name="norekening", type="string", length=100, nullable=true)
      */
     private $norekening;
 
     /**
-     * @var string $bank
+     * @var string
      *
      * @ORM\Column(name="bank", type="string", length=100, nullable=true)
      */
     private $bank;
 
     /**
-     * @var string $kepsek
+     * @var string
      *
      * @ORM\Column(name="kepsek", type="string", length=400, nullable=false)
      */

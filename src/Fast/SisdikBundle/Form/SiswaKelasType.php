@@ -14,24 +14,24 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class SiswaKelasType extends AbstractType
 {
     private $container;
-    private $idsiswa;
+    private $siswa;
 
-    public function __construct(ContainerInterface $container, $idsiswa) {
+    public function __construct(ContainerInterface $container, $siswa) {
         $this->container = $container;
-        $this->idsiswa = $idsiswa;
+        $this->siswa = $siswa;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idtahun', 'entity',
+                    ->add('tahun', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.year.entry', 'multiple' => false,
@@ -44,11 +44,11 @@ class SiswaKelasType extends AbstractType
                             ));
 
             $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.idjenjang', 't2')
-                    ->where('t.idsekolah = :idsekolah')->orderBy('t2.urutan', 'ASC')
-                    ->addOrderBy('t.urutan')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
+                    ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+                    ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idkelas', 'entity',
+                    ->add('kelas', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Kelas',
                                     'label' => 'label.class.entry', 'multiple' => false,
@@ -61,10 +61,10 @@ class SiswaKelasType extends AbstractType
                             ));
 
             $querybuilder3 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.root, t.lvl', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.root, t.lvl', 'ASC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('idpenjurusan', 'entity',
+                    ->add('penjurusan', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Penjurusan',
                                     'label' => 'label.placement.study', 'multiple' => false,
@@ -77,10 +77,10 @@ class SiswaKelasType extends AbstractType
         }
 
         $querybuilder3 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Siswa', 't')->where('t.id = :idsiswa')
-                ->setParameter('idsiswa', $this->idsiswa);
+                ->from('FastSisdikBundle:Siswa', 't')->where('t. = :siswa')
+                ->setParameter('siswa', $this->siswa);
         $builder
-                ->add('idsiswa', 'entity',
+                ->add('siswa', 'entity',
                         array(
                                 'class' => 'FastSisdikBundle:Siswa',
                                 'label' => 'label.student.entry', 'multiple' => false,

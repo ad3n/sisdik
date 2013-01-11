@@ -32,7 +32,7 @@ class WaliKelasController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -40,18 +40,18 @@ class WaliKelasController extends Controller
         $searchform = $this->createForm(new WaliKelasSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:WaliKelas', 't')->leftJoin('t.idkelas', 't2')
-                ->leftJoin('t.idtahun', 't3')->where('t2.idsekolah = :idsekolah')
+                ->from('FastSisdikBundle:WaliKelas', 't')->leftJoin('t.kelas', 't2')
+                ->leftJoin('t.tahun', 't3')->where('t2.sekolah = :sekolah')
                 ->orderBy('t3.urutan', 'DESC')->addOrderBy('t2.urutan', 'ASC')
-                ->setParameter('idsekolah', $idsekolah);
+                ->setParameter('sekolah', $sekolah);
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['idtahun'] != '') {
-                $querybuilder->andWhere('t.idtahun = :idtahun');
-                $querybuilder->setParameter('idtahun', $searchdata['idtahun']);
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t.tahun = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']);
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder->andWhere("t.nama LIKE :searchkey");
@@ -75,7 +75,7 @@ class WaliKelasController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -100,7 +100,7 @@ class WaliKelasController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new WaliKelas();
@@ -119,7 +119,7 @@ class WaliKelasController extends Controller
      * @Template("FastSisdikBundle:WaliKelas:new.html.twig")
      */
     public function createAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new WaliKelas();
@@ -166,7 +166,7 @@ class WaliKelasController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -194,7 +194,7 @@ class WaliKelasController extends Controller
      * @Template("FastSisdikBundle:WaliKelas:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -249,7 +249,7 @@ class WaliKelasController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);
@@ -294,10 +294,10 @@ class WaliKelasController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

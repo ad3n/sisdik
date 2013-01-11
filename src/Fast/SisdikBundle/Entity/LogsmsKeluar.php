@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\LogsmsKeluar
+ * LogsmsKeluar
  *
  * @ORM\Table(name="logsms_keluar")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class LogsmsKeluar
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,28 +22,28 @@ class LogsmsKeluar
     private $id;
 
     /**
-     * @var string $ke
+     * @var string
      *
      * @ORM\Column(name="ke", type="string", length=50, nullable=true)
      */
     private $ke;
 
     /**
-     * @var string $teks
+     * @var string
      *
      * @ORM\Column(name="teks", type="string", length=500, nullable=true)
      */
     private $teks;
 
     /**
-     * @var boolean $dlr
+     * @var boolean
      *
      * @ORM\Column(name="dlr", type="boolean", nullable=true)
      */
     private $dlr;
 
     /**
-     * @var \DateTime $dlrtime
+     * @var \DateTime
      *
      * @ORM\Column(name="dlrtime", type="datetime", nullable=true)
      */

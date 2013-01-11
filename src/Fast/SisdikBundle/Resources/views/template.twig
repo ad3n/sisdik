@@ -260,7 +260,7 @@ $(function() {
         	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0"></a>
             {% endimage %}
             <div id="school-name">
-                {% if app.user.idsekolah is not null %}{{ app.user.idsekolah.nama }}{% endif %}
+                {% if app.user.sekolah is not null %}{{ app.user.sekolah.nama }}{% endif %}
             </div>
         </div>
         

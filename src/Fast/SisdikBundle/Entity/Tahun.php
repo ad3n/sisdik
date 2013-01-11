@@ -60,10 +60,10 @@ class Tahun
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
     /**
      * Get id
@@ -180,23 +180,23 @@ class Tahun
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Tahun
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null) {
-        $this->idsekolah = $idsekolah;
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
 
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
      * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah() {
-        return $this->idsekolah;
+    public function getSekolah() {
+        return $this->sekolah;
     }
 }

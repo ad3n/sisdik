@@ -27,15 +27,15 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
         }
 
         $paginator = $this->get('knp_paginator');
@@ -55,7 +55,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -81,7 +81,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Gelombang();
@@ -101,7 +101,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Gelombang();
@@ -145,7 +145,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -174,7 +174,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -228,7 +228,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function deleteAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
@@ -287,10 +287,10 @@ class GelombangController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

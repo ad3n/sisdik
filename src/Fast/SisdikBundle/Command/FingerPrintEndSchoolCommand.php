@@ -38,10 +38,10 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
         $jadwalkehadirankepulangan = $em->getRepository('FastSisdikBundle:JadwalKehadiranKepulangan')
                 ->find($idjadwalkehadirankepulangan);
 
-        $idtahun = $jadwalkehadirankepulangan->getIdtahun();
-        $idkelas = $jadwalkehadirankepulangan->getIdkelas();
-        $idstatusKehadiranKepulangan = $jadwalkehadirankepulangan->getIdstatusKehadiranKepulangan();
-        $idsekolah = $jadwalkehadirankepulangan->getIdstatusKehadiranKepulangan()->getIdsekolah();
+        $tahun = $jadwalkehadirankepulangan->getTahun();
+        $kelas = $jadwalkehadirankepulangan->getKelas();
+        $statusKehadiranKepulangan = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan();
+        $sekolah = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan()->getSekolah();
 
         $paramstatusDariJam = intval(
                 preg_replace("/[\.:]/", '', $jadwalkehadirankepulangan->getParamstatusDariJam(TRUE)));
@@ -52,7 +52,7 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
         $devices = $em->getRepository('FastSisdikBundle:MesinKehadiran')
                 ->findBy(
                         array(
-                            'idsekolah' => $idsekolah->getId(), 'aktif' => TRUE
+                            'sekolah' => $sekolah->getId(), 'aktif' => TRUE
                         ));
 
         foreach ($devices as $device) {
@@ -100,8 +100,8 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
                                             ->getRepository('FastSisdikBundle:KepulanganSiswa')
                                             ->findOneBy(
                                                     array(
-                                                            'idsiswa' => $siswa->getId(),
-                                                            'idkelas' => $idkelas->getId(),
+                                                            'siswa' => $siswa->getId(),
+                                                            'kelas' => $kelas->getId(),
                                                             'tanggal' => new \DateTime(
                                                                     $item->DateTime),
                                                             'jam' => NULL,
@@ -110,8 +110,8 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
                                     if ($kepulangansiswa) {
                 
                                         // update if it's not a subject of update before
-                                        if ($kepulangansiswa->getIdstatusKehadiranKepulangan()->getId()
-                                                !== $idstatusKehadiranKepulangan->getId()) {
+                                        if ($kepulangansiswa->getStatusKehadiranKepulangan()->getId()
+                                                !== $statusKehadiranKepulangan->getId()) {
                 
                                             $jamKepulangan = intval(
                                                     date('His', strtotime($item->DateTime)));
@@ -124,7 +124,7 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
                                                                 date('H:i:s',
                                                                         strtotime($item->DateTime)));
                                                 $kepulangansiswa
-                                                        ->setIdstatusKehadiranKepulangan($idstatusKehadiranKepulangan);
+                                                        ->setStatusKehadiranKepulangan($statusKehadiranKepulangan);
                 
                                                 $em->persist($kepulangansiswa);
                                             }
@@ -171,8 +171,8 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
                     $kepulangansiswa = $em->getRepository('FastSisdikBundle:KepulanganSiswa')
                             ->findOneBy(
                                     array(
-                                            'idsiswa' => $siswa->getId(),
-                                            'idkelas' => $idkelas->getId(),
+                                            'siswa' => $siswa->getId(),
+                                            'kelas' => $kelas->getId(),
                                             'tanggal' => new \DateTime($item->DateTime),
                                             'jam' => NULL,
                                     ));
@@ -181,14 +181,14 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
 
                         // if ($siswa->getNomorIndukSistem() == '1000027') {
                         //     print 
-                        //             $siswa->getNomorIndukSistem() . ':' . $idkelas->getId() . ':'
+                        //             $siswa->getNomorIndukSistem() . ':' . $kelas->getId() . ':'
                         //                     . $item->DateTime . ' -> ' . $kepulangansiswa->getId()
-                        //                     . ':' . $idstatusKehadiranKepulangan->getId() . "\n";
+                        //                     . ':' . $statusKehadiranKepulangan->getId() . "\n";
                         // }
 
                         // update if it's not a subject of update before
-                        if ($kepulangansiswa->getIdstatusKehadiranKepulangan()->getId()
-                                !== $idstatusKehadiranKepulangan->getId()) {
+                        if ($kepulangansiswa->getStatusKehadiranKepulangan()->getId()
+                                !== $statusKehadiranKepulangan->getId()) {
 
                             $jamKepulangan = intval(date('His', strtotime($item->DateTime)));
 
@@ -207,7 +207,7 @@ class FingerPrintEndSchoolCommand extends ContainerAwareCommand
                                 $text .= "processupdate";
 
                                 $kepulangansiswa->setJam(date('H:i:s', strtotime($item->DateTime)));
-                                $kepulangansiswa->setIdstatusKehadiranKepulangan($idstatusKehadiranKepulangan);
+                                $kepulangansiswa->setStatusKehadiranKepulangan($statusKehadiranKepulangan);
 
                                 $em->persist($kepulangansiswa);
                             }

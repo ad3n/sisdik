@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\CukilMp
+ * CukilMp
  *
  * @ORM\Table(name="cukil_mp")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CukilMp
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,34 +22,34 @@ class CukilMp
     private $id;
 
     /**
-     * @var Tahun
+     * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
     /**
-     * @var Semester
+     * @var \Semester
      *
      * @ORM\ManyToOne(targetEntity="Semester")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsemester", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="semester_id", referencedColumnName="id")
      * })
      */
-    private $idsemester;
+    private $semester;
 
     /**
-     * @var MataPelajaran
+     * @var \MataPelajaran
      *
      * @ORM\ManyToOne(targetEntity="MataPelajaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idmata_pelajaran", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id")
      * })
      */
-    private $idmataPelajaran;
+    private $mataPelajaran;
 
 
 }

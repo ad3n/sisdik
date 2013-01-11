@@ -28,14 +28,14 @@ class TahunmasukController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.idsekolah = :idsekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('idsekolah', $idsekolah);
+                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
         } else {
             $querybuilder = $em->createQueryBuilder()->select('t')
                     ->from('FastSisdikBundle:Tahunmasuk', 't')->orderBy('t.tahun', 'DESC');
@@ -57,7 +57,7 @@ class TahunmasukController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -82,7 +82,7 @@ class TahunmasukController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Tahunmasuk();
@@ -101,7 +101,7 @@ class TahunmasukController extends Controller
      * @Template("FastSisdikBundle:Tahunmasuk:new.html.twig")
      */
     public function createAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Tahunmasuk();
@@ -149,7 +149,7 @@ class TahunmasukController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -183,7 +183,7 @@ class TahunmasukController extends Controller
      * @Template("FastSisdikBundle:Tahunmasuk:edit.html.twig")
      */
     public function updateAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -247,7 +247,7 @@ class TahunmasukController extends Controller
      * @Method("post")
      */
     public function deleteAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
@@ -306,10 +306,10 @@ class TahunmasukController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
@@ -328,19 +328,19 @@ class TahunmasukController extends Controller
 
         $biayaRutinEntity = $em->getRepository('FastSisdikBundle:BiayaRutin')
                 ->findOneBy(array(
-                    'idtahunmasuk' => $id
+                    'tahunmasuk' => $id
                 ));
         $biayaSekaliEntity = $em->getRepository('FastSisdikBundle:BiayaSekali')
                 ->findOneBy(array(
-                    'idtahunmasuk' => $id
+                    'tahunmasuk' => $id
                 ));
         $siswaEntity = $em->getRepository('FastSisdikBundle:Siswa')
                 ->findOneBy(array(
-                    'idtahunmasuk' => $id
+                    'tahunmasuk' => $id
                 ));
         $calonSiswaEntity = $em->getRepository('FastSisdikBundle:CalonSiswa')
                 ->findOneBy(array(
-                    'idtahunmasuk' => $id
+                    'tahunmasuk' => $id
                 ));
         if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity || $calonSiswaEntity) {
             return true;

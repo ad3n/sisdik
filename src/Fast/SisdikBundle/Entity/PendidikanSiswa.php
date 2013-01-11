@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\PendidikanSiswa
+ * PendidikanSiswa
  *
  * @ORM\Table(name="pendidikan_siswa")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PendidikanSiswa
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,101 +22,101 @@ class PendidikanSiswa
     private $id;
 
     /**
-     * @var integer $jenjang
+     * @var integer
      *
      * @ORM\Column(name="jenjang", type="integer", nullable=true)
      */
     private $jenjang;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $alamat
+     * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
 
     /**
-     * @var string $ijazah
+     * @var string
      *
      * @ORM\Column(name="ijazah", type="string", length=400, nullable=true)
      */
     private $ijazah;
 
     /**
-     * @var string $ijazahFile
+     * @var string
      *
      * @ORM\Column(name="ijazah_file", type="string", length=300, nullable=true)
      */
     private $ijazahFile;
 
     /**
-     * @var \DateTime $tahunmasuk
+     * @var \DateTime
      *
      * @ORM\Column(name="tahunmasuk", type="date", nullable=true)
      */
     private $tahunmasuk;
 
     /**
-     * @var \DateTime $tahunkeluar
+     * @var \DateTime
      *
      * @ORM\Column(name="tahunkeluar", type="date", nullable=true)
      */
     private $tahunkeluar;
 
     /**
-     * @var \DateTime $sttbTanggal
+     * @var \DateTime
      *
      * @ORM\Column(name="sttb_tanggal", type="date", nullable=true)
      */
     private $sttbTanggal;
 
     /**
-     * @var string $sttbNo
+     * @var string
      *
      * @ORM\Column(name="sttb_no", type="string", length=100, nullable=true)
      */
     private $sttbNo;
 
     /**
-     * @var string $sttbFile
+     * @var string
      *
      * @ORM\Column(name="sttb_file", type="string", length=300, nullable=true)
      */
     private $sttbFile;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var Referensi
+     * @var \Referensi
      *
      * @ORM\ManyToOne(targetEntity="Referensi")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idreferensi", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id")
      * })
      */
-    private $idreferensi;
+    private $referensi;
 
     /**
-     * @var Siswa
+     * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
      * })
      */
-    private $idsiswa;
+    private $siswa;
 
 
 
@@ -384,48 +384,48 @@ class PendidikanSiswa
     }
 
     /**
-     * Set idreferensi
+     * Set referensi
      *
-     * @param Fast\SisdikBundle\Entity\Referensi $idreferensi
+     * @param \Fast\SisdikBundle\Entity\Referensi $referensi
      * @return PendidikanSiswa
      */
-    public function setIdreferensi(\Fast\SisdikBundle\Entity\Referensi $idreferensi = null)
+    public function setReferensi(\Fast\SisdikBundle\Entity\Referensi $referensi = null)
     {
-        $this->idreferensi = $idreferensi;
+        $this->referensi = $referensi;
     
         return $this;
     }
 
     /**
-     * Get idreferensi
+     * Get referensi
      *
-     * @return Fast\SisdikBundle\Entity\Referensi 
+     * @return \Fast\SisdikBundle\Entity\Referensi 
      */
-    public function getIdreferensi()
+    public function getReferensi()
     {
-        return $this->idreferensi;
+        return $this->referensi;
     }
 
     /**
-     * Set idsiswa
+     * Set siswa
      *
-     * @param Fast\SisdikBundle\Entity\Siswa $idsiswa
+     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return PendidikanSiswa
      */
-    public function setIdsiswa(\Fast\SisdikBundle\Entity\Siswa $idsiswa = null)
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
-        $this->idsiswa = $idsiswa;
+        $this->siswa = $siswa;
     
         return $this;
     }
 
     /**
-     * Get idsiswa
+     * Get siswa
      *
-     * @return Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa 
      */
-    public function getIdsiswa()
+    public function getSiswa()
     {
-        return $this->idsiswa;
+        return $this->siswa;
     }
 }

@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\PenyakitSiswa
+ * PenyakitSiswa
  *
  * @ORM\Table(name="penyakit_siswa")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PenyakitSiswa
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,49 +22,49 @@ class PenyakitSiswa
     private $id;
 
     /**
-     * @var string $nama
+     * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
      */
     private $nama;
 
     /**
-     * @var string $kelas
+     * @var string
      *
      * @ORM\Column(name="kelas", type="string", length=200, nullable=true)
      */
     private $kelas;
 
     /**
-     * @var string $tahun
+     * @var string
      *
      * @ORM\Column(name="tahun", type="string", length=100, nullable=true)
      */
     private $tahun;
 
     /**
-     * @var string $lamasakit
+     * @var string
      *
      * @ORM\Column(name="lamasakit", type="string", length=200, nullable=true)
      */
     private $lamasakit;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var Siswa
+     * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
      * })
      */
-    private $idsiswa;
+    private $siswa;
 
 
 }

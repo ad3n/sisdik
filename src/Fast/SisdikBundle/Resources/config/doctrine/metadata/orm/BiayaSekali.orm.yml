@@ -16,31 +16,31 @@ BiayaSekali:
             type: smallint
             nullable: true
     manyToOne:
-        idgelombang:
+        gelombang:
             targetEntity: Gelombang
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idgelombang:
+                gelombang_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idtahunmasuk:
+        tahunmasuk:
             targetEntity: Tahunmasuk
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahunmasuk:
+                tahunmasuk_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idjenisbiaya:
+        jenisbiaya:
             targetEntity: Jenisbiaya
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idjenisbiaya:
+                jenisbiaya_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

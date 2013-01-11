@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\FosUser
+ * FosUser
  *
  * @ORM\Table(name="fos_user")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class FosUser
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,163 +22,163 @@ class FosUser
     private $id;
 
     /**
-     * @var string $username
+     * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, nullable=false)
      */
     private $username;
 
     /**
-     * @var string $usernameCanonical
+     * @var string
      *
      * @ORM\Column(name="username_canonical", type="string", length=255, nullable=false)
      */
     private $usernameCanonical;
 
     /**
-     * @var string $email
+     * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
      */
     private $email;
 
     /**
-     * @var string $emailCanonical
+     * @var string
      *
      * @ORM\Column(name="email_canonical", type="string", length=255, nullable=false)
      */
     private $emailCanonical;
 
     /**
-     * @var boolean $enabled
+     * @var boolean
      *
      * @ORM\Column(name="enabled", type="boolean", nullable=false)
      */
     private $enabled;
 
     /**
-     * @var string $salt
+     * @var string
      *
      * @ORM\Column(name="salt", type="string", length=255, nullable=false)
      */
     private $salt;
 
     /**
-     * @var string $password
+     * @var string
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     private $password;
 
     /**
-     * @var \DateTime $lastLogin
+     * @var \DateTime
      *
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
     private $lastLogin;
 
     /**
-     * @var boolean $locked
+     * @var boolean
      *
      * @ORM\Column(name="locked", type="boolean", nullable=false)
      */
     private $locked;
 
     /**
-     * @var boolean $expired
+     * @var boolean
      *
      * @ORM\Column(name="expired", type="boolean", nullable=false)
      */
     private $expired;
 
     /**
-     * @var \DateTime $expiresAt
+     * @var \DateTime
      *
      * @ORM\Column(name="expires_at", type="datetime", nullable=true)
      */
     private $expiresAt;
 
     /**
-     * @var string $confirmationToken
+     * @var string
      *
      * @ORM\Column(name="confirmation_token", type="string", length=255, nullable=true)
      */
     private $confirmationToken;
 
     /**
-     * @var \DateTime $passwordRequestedAt
+     * @var \DateTime
      *
      * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
      */
     private $passwordRequestedAt;
 
     /**
-     * @var array $roles
+     * @var array
      *
      * @ORM\Column(name="roles", type="array", nullable=false)
      */
     private $roles;
 
     /**
-     * @var boolean $credentialsExpired
+     * @var boolean
      *
      * @ORM\Column(name="credentials_expired", type="boolean", nullable=false)
      */
     private $credentialsExpired;
 
     /**
-     * @var \DateTime $credentialsExpireAt
+     * @var \DateTime
      *
      * @ORM\Column(name="credentials_expire_at", type="datetime", nullable=true)
      */
     private $credentialsExpireAt;
 
     /**
-     * @var string $name
+     * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
-     * @var Guru
+     * @var \Guru
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idguru", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
      * })
      */
-    private $idguru;
+    private $guru;
 
     /**
-     * @var Sekolah
+     * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsekolah", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
      * })
      */
-    private $idsekolah;
+    private $sekolah;
 
     /**
-     * @var Siswa
+     * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
      * })
      */
-    private $idsiswa;
+    private $siswa;
 
     /**
-     * @var Staf
+     * @var \Staf
      *
      * @ORM\ManyToOne(targetEntity="Staf")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idstaf", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="staf_id", referencedColumnName="id")
      * })
      */
-    private $idstaf;
+    private $staf;
 
 
 
@@ -584,94 +584,94 @@ class FosUser
     }
 
     /**
-     * Set idguru
+     * Set guru
      *
-     * @param Fast\SisdikBundle\Entity\Guru $idguru
+     * @param \Fast\SisdikBundle\Entity\Guru $guru
      * @return FosUser
      */
-    public function setIdguru(\Fast\SisdikBundle\Entity\Guru $idguru = null)
+    public function setGuru(\Fast\SisdikBundle\Entity\Guru $guru = null)
     {
-        $this->idguru = $idguru;
+        $this->guru = $guru;
     
         return $this;
     }
 
     /**
-     * Get idguru
+     * Get guru
      *
-     * @return Fast\SisdikBundle\Entity\Guru 
+     * @return \Fast\SisdikBundle\Entity\Guru 
      */
-    public function getIdguru()
+    public function getGuru()
     {
-        return $this->idguru;
+        return $this->guru;
     }
 
     /**
-     * Set idsekolah
+     * Set sekolah
      *
-     * @param Fast\SisdikBundle\Entity\Sekolah $idsekolah
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return FosUser
      */
-    public function setIdsekolah(\Fast\SisdikBundle\Entity\Sekolah $idsekolah = null)
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
-        $this->idsekolah = $idsekolah;
+        $this->sekolah = $sekolah;
     
         return $this;
     }
 
     /**
-     * Get idsekolah
+     * Get sekolah
      *
-     * @return Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getIdsekolah()
+    public function getSekolah()
     {
-        return $this->idsekolah;
+        return $this->sekolah;
     }
 
     /**
-     * Set idsiswa
+     * Set siswa
      *
-     * @param Fast\SisdikBundle\Entity\Siswa $idsiswa
+     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return FosUser
      */
-    public function setIdsiswa(\Fast\SisdikBundle\Entity\Siswa $idsiswa = null)
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
-        $this->idsiswa = $idsiswa;
+        $this->siswa = $siswa;
     
         return $this;
     }
 
     /**
-     * Get idsiswa
+     * Get siswa
      *
-     * @return Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa 
      */
-    public function getIdsiswa()
+    public function getSiswa()
     {
-        return $this->idsiswa;
+        return $this->siswa;
     }
 
     /**
-     * Set idstaf
+     * Set staf
      *
-     * @param Fast\SisdikBundle\Entity\Staf $idstaf
+     * @param \Fast\SisdikBundle\Entity\Staf $staf
      * @return FosUser
      */
-    public function setIdstaf(\Fast\SisdikBundle\Entity\Staf $idstaf = null)
+    public function setStaf(\Fast\SisdikBundle\Entity\Staf $staf = null)
     {
-        $this->idstaf = $idstaf;
+        $this->staf = $staf;
     
         return $this;
     }
 
     /**
-     * Get idstaf
+     * Get staf
      *
-     * @return Fast\SisdikBundle\Entity\Staf 
+     * @return \Fast\SisdikBundle\Entity\Staf 
      */
-    public function getIdstaf()
+    public function getStaf()
     {
-        return $this->idstaf;
+        return $this->staf;
     }
 }

@@ -31,7 +31,7 @@ class KelasController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -39,18 +39,18 @@ class KelasController extends Controller
         $searchform = $this->createForm(new KelasSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.idjenjang', 't2')->leftJoin('t.idtahun', 't3')
-                ->where('t.idsekolah = :idsekolah')
+                ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahun', 't3')
+                ->where('t.sekolah = :sekolah')
                 ->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
-                ->setParameter('idsekolah', $idsekolah);
+                ->setParameter('sekolah', $sekolah);
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['idtahun'] != '') {
-                $querybuilder->andWhere('t.idtahun = :idtahun');
-                $querybuilder->setParameter('idtahun', $searchdata['idtahun']);
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t.tahun = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']);
             }
         }
 
@@ -73,7 +73,7 @@ class KelasController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -98,7 +98,7 @@ class KelasController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Kelas();
@@ -117,7 +117,7 @@ class KelasController extends Controller
      * @Template("FastSisdikBundle:Kelas:new.html.twig")
      */
     public function createAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Kelas();
@@ -137,7 +137,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.inserted',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getIdtahun()
+                                                        '%year%' => $entity->getTahun()
                                                                 ->getNama()
                                                 )));
 
@@ -166,7 +166,7 @@ class KelasController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -194,7 +194,7 @@ class KelasController extends Controller
      * @Template("FastSisdikBundle:Kelas:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -221,7 +221,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.updated',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getIdtahun()
+                                                        '%year%' => $entity->getTahun()
                                                                 ->getNama()
                                                 )));
 
@@ -252,7 +252,7 @@ class KelasController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);
@@ -275,7 +275,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.deleted',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getIdtahun()
+                                                        '%year%' => $entity->getTahun()
                                                                 ->getNama()
                                                 )));
             } catch (DBALException $e) {
@@ -304,7 +304,7 @@ class KelasController extends Controller
      * @Method("POST")
      */
     public function duplicateClassAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createForm(new KelasDuplicateType($this->container));
@@ -315,24 +315,24 @@ class KelasController extends Controller
 
             $duplicatedata = $form->getData();
 
-            $idtahunSource = $duplicatedata['idtahunSource'];
-            $idtahunTarget = $duplicatedata['idtahunTarget'];
+            $tahunSource = $duplicatedata['tahunSource'];
+            $tahunTarget = $duplicatedata['tahunTarget'];
 
             // get all classes from the source academic year
             $entities = $em->getRepository('FastSisdikBundle:Kelas')
                     ->findBy(
                             array(
-                                'idtahun' => $idtahunSource->getId()
+                                'tahun' => $tahunSource->getId()
                             ));
 
             foreach ($entities as $entity) {
                 // remove year code identity from class code
-                $kode = substr($entity->getKode(), strlen($entity->getIdtahun()->getKode()));
+                $kode = substr($entity->getKode(), strlen($entity->getTahun()->getKode()));
 
                 $kelas = new Kelas();
-                $kelas->setIdjenjang($entity->getIdjenjang());
-                $kelas->setIdsekolah($entity->getIdsekolah());
-                $kelas->setIdtahun($idtahunTarget);
+                $kelas->setJenjang($entity->getJenjang());
+                $kelas->setSekolah($entity->getSekolah());
+                $kelas->setTahun($tahunTarget);
                 $kelas->setKeterangan($entity->getKeterangan());
                 $kelas->setKode($kode);
                 $kelas->setNama($entity->getNama());
@@ -352,8 +352,8 @@ class KelasController extends Controller
                             $this->get('translator')
                                     ->trans('flash.data.class.duplicated',
                                             array(
-                                                    '%yearfrom%' => $idtahunSource->getNama(),
-                                                    '%yearto%' => $idtahunTarget->getNama()
+                                                    '%yearfrom%' => $tahunSource->getNama(),
+                                                    '%yearto%' => $tahunTarget->getNama()
                                             )));
         } else {
             $this->get('session')
@@ -370,25 +370,25 @@ class KelasController extends Controller
      * @Route("/ajax/updateclass", name="data_class_ajax_updateclass")
      */
     public function ajaxUpdateclassAction(Request $request) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
-        $idtahun = $this->getRequest()->query->get('idtahun');
-        $idkelas = $this->getRequest()->query->get('idkelas');
+        $tahun = $this->getRequest()->query->get('tahun');
+        $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.idjenjang', 't2')->where('t.idsekolah = :idsekolah')
-                ->andWhere('t.idtahun = :idtahun')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('idsekolah', $idsekolah)
-                ->setParameter('idtahun', $idtahun);
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')
+                ->andWhere('t.tahun = :tahun')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
+                ->setParameter('tahun', $tahun);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
         foreach ($results as $result) {
             $retval[] = array(
                     'optionValue' => $result->getId(), 'optionDisplay' => $result->getNama(),
-                    'optionSelected' => $idkelas == $result->getId() ? 'selected' : ''
+                    'optionSelected' => $kelas == $result->getId() ? 'selected' : ''
             );
         }
 
@@ -402,26 +402,26 @@ class KelasController extends Controller
     /**
      * Update class select box for predefined school
      *
-     * @Route("/ajax/updateclass/schooldefined/{idsekolah}", name="data_class_ajax_updateclass_schooldefined")
+     * @Route("/ajax/updateclass/schooldefined/{sekolah}", name="data_class_ajax_updateclass_schooldefined")
      */
-    public function ajaxUpdateclassSchoolDefinedAction(Request $request, $idsekolah) {
+    public function ajaxUpdateclassSchoolDefinedAction(Request $request, $sekolah) {
         $em = $this->getDoctrine()->getManager();
 
-        $idtahun = $this->getRequest()->query->get('idtahun');
-        $idkelas = $this->getRequest()->query->get('idkelas');
+        $tahun = $this->getRequest()->query->get('tahun');
+        $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.idjenjang', 't2')->where('t.idsekolah = :idsekolah')
-                ->andWhere('t.idtahun = :idtahun')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('idsekolah', $idsekolah)
-                ->setParameter('idtahun', $idtahun);
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')
+                ->andWhere('t.tahun = :tahun')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
+                ->setParameter('tahun', $tahun);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
         foreach ($results as $result) {
             $retval[] = array(
                     'optionValue' => $result->getId(), 'optionDisplay' => $result->getNama(),
-                    'optionSelected' => $idkelas == $result->getId() ? 'selected' : ''
+                    'optionSelected' => $kelas == $result->getId() ? 'selected' : ''
             );
         }
 
@@ -445,10 +445,10 @@ class KelasController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

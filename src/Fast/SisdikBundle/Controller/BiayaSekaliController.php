@@ -33,29 +33,29 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function indexAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaSekali', 't')->leftJoin('t.idtahunmasuk', 't2')
-                ->leftJoin('t.idgelombang', 't3')->leftJoin('t.idjenisbiaya', 't4')
-                ->where('t2.idsekolah = :idsekolah')->orderBy('t2.tahun', 'DESC')
+                ->from('FastSisdikBundle:BiayaSekali', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['idtahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :idtahunmasuk');
-                $querybuilder->setParameter('idtahunmasuk', $searchdata['idtahunmasuk']);
+            if ($searchdata['tahunmasuk'] != '') {
+                $querybuilder->andWhere('t2. = :tahunmasuk');
+                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
             }
-            if ($searchdata['idgelombang'] != '') {
-                $querybuilder->andWhere('t3.id = :idgelombang');
-                $querybuilder->setParameter('idgelombang', $searchdata['idgelombang']);
+            if ($searchdata['gelombang'] != '') {
+                $querybuilder->andWhere('t3. = :gelombang');
+                $querybuilder->setParameter('gelombang', $searchdata['gelombang']);
             }
             if ($searchdata['jenisbiaya'] != '') {
                 $querybuilder->andWhere("(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
@@ -63,7 +63,7 @@ class BiayaSekaliController extends Controller
                 $querybuilder->setParameter('kodejenisbiaya', $searchdata['jenisbiaya']);
             }
         }
-        $querybuilder->setParameter('idsekolah', $idsekolah);
+        $querybuilder->setParameter('sekolah', $sekolah);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator
@@ -81,7 +81,7 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -106,7 +106,7 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function newAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new BiayaSekali();
@@ -125,7 +125,7 @@ class BiayaSekaliController extends Controller
      * @Template("FastSisdikBundle:BiayaSekali:new.html.twig")
      */
     public function createAction() {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new BiayaSekali();
@@ -164,7 +164,7 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -192,7 +192,7 @@ class BiayaSekaliController extends Controller
      * @Template("FastSisdikBundle:BiayaSekali:edit.html.twig")
      */
     public function updateAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -240,7 +240,7 @@ class BiayaSekaliController extends Controller
      * @Method("post")
      */
     public function deleteAction($id) {
-        $idsekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
@@ -289,10 +289,10 @@ class BiayaSekaliController extends Controller
 
     private function isRegisteredToSchool() {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $idsekolah = $user->getIdsekolah();
+        $sekolah = $user->getSekolah();
 
-        if (is_object($idsekolah) && $idsekolah instanceof Sekolah) {
-            return $idsekolah;
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {

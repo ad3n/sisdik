@@ -50,9 +50,9 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.idtahunmasuk is defined %}{{ data.idtahunmasuk.tahun }}{% endif %}</td>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.idgelombang is defined %}{{ data.idgelombang.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.idjenisbiaya is defined %}{{ data.idjenisbiaya.nama }} ({{ data.idjenisbiaya.kode }}){% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
     		<td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
     		<td data-title="{{ 'label.repetition'|trans }}">{{ data.perulangan }}</td>
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>

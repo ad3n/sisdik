@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\CalonPembayaranRutin
+ * CalonPembayaranRutin
  *
  * @ORM\Table(name="calon_pembayaran_rutin")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class CalonPembayaranRutin
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
@@ -22,52 +22,52 @@ class CalonPembayaranRutin
     private $id;
 
     /**
-     * @var integer $nominalPembayaran
+     * @var integer
      *
      * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
      */
     private $nominalPembayaran;
 
     /**
-     * @var string $keterangan
+     * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
      */
     private $keterangan;
 
     /**
-     * @var \DateTime $waktuCatat
+     * @var \DateTime
      *
      * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
      */
     private $waktuCatat;
 
     /**
-     * @var \DateTime $waktuUbah
+     * @var \DateTime
      *
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      */
     private $waktuUbah;
 
     /**
-     * @var BiayaRutin
+     * @var \BiayaRutin
      *
      * @ORM\ManyToOne(targetEntity="BiayaRutin")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idbiaya_rutin", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id")
      * })
      */
-    private $idbiayaRutin;
+    private $biayaRutin;
 
     /**
-     * @var CalonSiswa
+     * @var \CalonSiswa
      *
      * @ORM\ManyToOne(targetEntity="CalonSiswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idcalon_siswa", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id")
      * })
      */
-    private $idcalonSiswa;
+    private $calonSiswa;
 
 
 
@@ -174,48 +174,48 @@ class CalonPembayaranRutin
     }
 
     /**
-     * Set idbiayaRutin
+     * Set biayaRutin
      *
-     * @param Fast\SisdikBundle\Entity\BiayaRutin $idbiayaRutin
+     * @param \Fast\SisdikBundle\Entity\BiayaRutin $biayaRutin
      * @return CalonPembayaranRutin
      */
-    public function setIdbiayaRutin(\Fast\SisdikBundle\Entity\BiayaRutin $idbiayaRutin = null)
+    public function setBiayaRutin(\Fast\SisdikBundle\Entity\BiayaRutin $biayaRutin = null)
     {
-        $this->idbiayaRutin = $idbiayaRutin;
+        $this->biayaRutin = $biayaRutin;
     
         return $this;
     }
 
     /**
-     * Get idbiayaRutin
+     * Get biayaRutin
      *
-     * @return Fast\SisdikBundle\Entity\BiayaRutin 
+     * @return \Fast\SisdikBundle\Entity\BiayaRutin 
      */
-    public function getIdbiayaRutin()
+    public function getBiayaRutin()
     {
-        return $this->idbiayaRutin;
+        return $this->biayaRutin;
     }
 
     /**
-     * Set idcalonSiswa
+     * Set calonSiswa
      *
-     * @param Fast\SisdikBundle\Entity\CalonSiswa $idcalonSiswa
+     * @param \Fast\SisdikBundle\Entity\CalonSiswa $calonSiswa
      * @return CalonPembayaranRutin
      */
-    public function setIdcalonSiswa(\Fast\SisdikBundle\Entity\CalonSiswa $idcalonSiswa = null)
+    public function setCalonSiswa(\Fast\SisdikBundle\Entity\CalonSiswa $calonSiswa = null)
     {
-        $this->idcalonSiswa = $idcalonSiswa;
+        $this->calonSiswa = $calonSiswa;
     
         return $this;
     }
 
     /**
-     * Get idcalonSiswa
+     * Get calonSiswa
      *
-     * @return Fast\SisdikBundle\Entity\CalonSiswa 
+     * @return \Fast\SisdikBundle\Entity\CalonSiswa 
      */
-    public function getIdcalonSiswa()
+    public function getCalonSiswa()
     {
-        return $this->idcalonSiswa;
+        return $this->calonSiswa;
     }
 }

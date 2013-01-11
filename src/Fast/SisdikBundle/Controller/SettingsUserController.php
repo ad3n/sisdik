@@ -66,13 +66,13 @@ class SettingsUserController extends Controller
         } else if ($filter == 'unset') {
             $query = $em
                     ->createQuery(
-                            "SELECT u FROM FastSisdikBundle:User u WHERE u.idsekolah IS NULL "
+                            "SELECT u FROM FastSisdikBundle:User u WHERE u.sekolah IS NULL "
                                     . ($searchcondition != '' ? " AND $searchcondition " : '')
                                     . " ORDER BY u.username ASC");
         } else {
             $query = $em
                     ->createQuery(
-                            "SELECT u FROM FastSisdikBundle:User u JOIN u.idsekolah s WHERE u.idsekolah = '$filter' "
+                            "SELECT u FROM FastSisdikBundle:User u JOIN u.sekolah s WHERE u.sekolah = '$filter' "
                                     . ($searchcondition != '' ? " AND $searchcondition " : '')
                                     . " ORDER BY u.username ASC");
         }
@@ -104,7 +104,7 @@ class SettingsUserController extends Controller
 
         $roleproperties = $user->getRoles();
 
-        if ($user->getIdsekolah() !== NULL) {
+        if ($user->getSekolah() !== NULL) {
             if (in_array('ROLE_SISWA', $roleproperties)) {
                 $formoption = 2;
             } else {
@@ -132,18 +132,18 @@ class SettingsUserController extends Controller
                                         'username' => $user->getUsername()
                                     ));
                     if (is_object($guru) && $guru instanceof Guru) {
-                        $user->setIdguru($guru);
+                        $user->setGuru($guru);
                     } else {
                         $guru = new Guru();
                         $guru->setUsername($user->getUsername());
-                        $guru->setIdsekolah($form->getData()->getIdsekolah());
-                        $user->setIdguru($guru);
+                        $guru->setSekolah($form->getData()->getSekolah());
+                        $user->setGuru($guru);
                     }
                 }
                 if (!(in_array('ROLE_GURU', $roleselected)
                         || in_array('ROLE_GURU_PIKET', $roleselected)
                         || in_array('ROLE_WALI_KELAS', $roleselected))) {
-                    $user->setIdguru(null);
+                    $user->setGuru(null);
                 }
 
                 if (in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
@@ -155,18 +155,18 @@ class SettingsUserController extends Controller
                                         'username' => $user->getUsername()
                                     ));
                     if (is_object($staf) && $staf instanceof Staf) {
-                        $user->setIdstaf($staf);
+                        $user->setStaf($staf);
                     } else {
                         $staf = new Staf();
                         $staf->setUsername($user->getUsername());
-                        $staf->setIdsekolah($form->getData()->getIdsekolah());
-                        $user->setIdstaf($staf);
+                        $staf->setSekolah($form->getData()->getSekolah());
+                        $user->setStaf($staf);
                     }
                 }
                 if (!(in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_ADMIN', $roleselected))) {
-                    $user->setIdstaf(null);
+                    $user->setStaf(null);
                 }
 
                 $userManager->updateUser($user);
@@ -282,13 +282,13 @@ class SettingsUserController extends Controller
                                         'username' => $user->getUsername()
                                     ));
                     if (is_object($guru) && $guru instanceof Guru) {
-                        $user->setIdguru($guru);
+                        $user->setGuru($guru);
                     } else {
                         $guru = new Guru();
                         $guru->setUsername($user->getUsername());
-                        $guru->setIdsekolah($form->getData()->getIdsekolah());
+                        $guru->setSekolah($form->getData()->getSekolah());
                         // TODO: $guru->setNama($user->getName());
-                        $user->setIdguru($guru);
+                        $user->setGuru($guru);
                     }
                 }
 
@@ -301,13 +301,13 @@ class SettingsUserController extends Controller
                                         'username' => $user->getUsername()
                                     ));
                     if (is_object($staf) && $staf instanceof Staf) {
-                        $user->setIdstaf($staf);
+                        $user->setStaf($staf);
                     } else {
                         $staf = new Staf();
                         $staf->setUsername($user->getUsername());
-                        $staf->setIdsekolah($form->getData()->getIdsekolah());
+                        $staf->setSekolah($form->getData()->getSekolah());
                         // TODO: $staf->setNama($user->getName());
-                        $user->setIdstaf($staf);
+                        $user->setStaf($staf);
                     }
                 }
 
@@ -404,7 +404,7 @@ class SettingsUserController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
                 $query = $em
-                        ->createQuery("DELETE FastSisdikBundle:User u WHERE u.id IN ($wherein)");
+                        ->createQuery("DELETE FastSisdikBundle:User u WHERE u. IN ($wherein)");
                 $query->execute();
                 $em->flush();
 
@@ -478,11 +478,11 @@ class SettingsUserController extends Controller
             $query = $em
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u
-                            WHERE u.idsekolah != '' AND u.username != '{$user->getUsername()}' "
+                            WHERE u.sekolah != '' AND u.username != '{$user->getUsername()}' "
                                     . ($searchcondition != '' ? " AND $searchcondition " : '')
                                     . " ORDER BY u.username ASC");
         } else {
-            $sekolah = $user->getIdsekolah();
+            $sekolah = $user->getSekolah();
             if (!is_object($sekolah) || !$sekolah instanceof Sekolah) {
                 throw new AccessDeniedException(
                         $this->get('translator')->trans('exception.registertoschool'));
@@ -491,7 +491,7 @@ class SettingsUserController extends Controller
             $query = $em
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u
-                            WHERE (u.idsekolah != '' AND u.idsekolah = '{$sekolah->getId()}') "
+                            WHERE (u.sekolah != '' AND u.sekolah = '{$sekolah->getId()}') "
                                     . ($searchcondition != '' ? " AND $searchcondition " : '')
                                     . " ORDER BY u.username ASC");
         }
@@ -522,7 +522,7 @@ class SettingsUserController extends Controller
 
         $roleproperties = $user->getRoles();
 
-        if ($user->getIdsekolah() !== NULL) {
+        if ($user->getSekolah() !== NULL) {
             if (in_array('ROLE_SISWA', $roleproperties)) {
                 $formoption = 2;
             } else {
@@ -539,7 +539,7 @@ class SettingsUserController extends Controller
                 $roleselected = $form->getData()->getRoles();
 
                 if (!in_array('ROLE_SISWA', $roleselected)) {
-                    $user->setIdsiswa(null);
+                    $user->setSiswa(null);
                 }
 
                 if (in_array('ROLE_GURU', $roleselected)) {
@@ -549,15 +549,15 @@ class SettingsUserController extends Controller
                                         'username' => $user->getUsername()
                                     ));
                     if (is_object($guru) && $guru instanceof Guru) {
-                        $user->setIdguru($guru);
+                        $user->setGuru($guru);
                     } else {
                         $guru = new Guru();
                         $guru->setUsername($user->getUsername());
-                        $user->setIdguru($guru);
+                        $user->setGuru($guru);
                     }
                 }
                 if (!in_array('ROLE_GURU', $roleselected)) {
-                    $user->setIdguru(null);
+                    $user->setGuru(null);
                 }
 
                 if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
@@ -569,17 +569,17 @@ class SettingsUserController extends Controller
                                         'username' => $user->getUsername()
                                     ));
                     if (is_object($staf) && $staf instanceof Staf) {
-                        $user->setIdstaf($staf);
+                        $user->setStaf($staf);
                     } else {
                         $staf = new Staf();
                         $staf->setUsername($user->getUsername());
-                        $user->setIdstaf($staf);
+                        $user->setStaf($staf);
                     }
                 }
                 if (!(in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_WALI_KELAS', $roleselected)
                         || in_array('ROLE_ADMIN', $roleselected))) {
-                    $user->setIdstaf(null);
+                    $user->setStaf(null);
                 }
 
                 $userManager->updateUser($user);

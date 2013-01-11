@@ -71,34 +71,34 @@ class KehadiranSiswa
     private $keteranganStatus;
 
     /**
-     * @var \Siswa
-     *
-     * @ORM\ManyToOne(targetEntity="Siswa")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idsiswa", referencedColumnName="id")
-     * })
-     */
-    private $idsiswa;
-
-    /**
      * @var \Kelas
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idkelas", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
      * })
      */
-    private $idkelas;
+    private $kelas;
+
+    /**
+     * @var \Siswa
+     *
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     * })
+     */
+    private $siswa;
 
     /**
      * @var \StatusKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idstatus_kehadiran_kepulangan", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id")
      * })
      */
-    private $idstatusKehadiranKepulangan;
+    private $statusKehadiranKepulangan;
 
 
 
@@ -274,71 +274,71 @@ class KehadiranSiswa
     }
 
     /**
-     * Set idsiswa
+     * Set kelas
      *
-     * @param \Fast\SisdikBundle\Entity\Siswa $idsiswa
+     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
      * @return KehadiranSiswa
      */
-    public function setIdsiswa(\Fast\SisdikBundle\Entity\Siswa $idsiswa = null)
+    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
     {
-        $this->idsiswa = $idsiswa;
+        $this->kelas = $kelas;
     
         return $this;
     }
 
     /**
-     * Get idsiswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
-     */
-    public function getIdsiswa()
-    {
-        return $this->idsiswa;
-    }
-
-    /**
-     * Set idkelas
-     *
-     * @param \Fast\SisdikBundle\Entity\Kelas $idkelas
-     * @return KehadiranSiswa
-     */
-    public function setIdkelas(\Fast\SisdikBundle\Entity\Kelas $idkelas = null)
-    {
-        $this->idkelas = $idkelas;
-    
-        return $this;
-    }
-
-    /**
-     * Get idkelas
+     * Get kelas
      *
      * @return \Fast\SisdikBundle\Entity\Kelas 
      */
-    public function getIdkelas()
+    public function getKelas()
     {
-        return $this->idkelas;
+        return $this->kelas;
     }
 
     /**
-     * Set idstatusKehadiranKepulangan
+     * Set siswa
      *
-     * @param \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $idstatusKehadiranKepulangan
+     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return KehadiranSiswa
      */
-    public function setIdstatusKehadiranKepulangan(\Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $idstatusKehadiranKepulangan = null)
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
-        $this->idstatusKehadiranKepulangan = $idstatusKehadiranKepulangan;
+        $this->siswa = $siswa;
     
         return $this;
     }
 
     /**
-     * Get idstatusKehadiranKepulangan
+     * Get siswa
+     *
+     * @return \Fast\SisdikBundle\Entity\Siswa 
+     */
+    public function getSiswa()
+    {
+        return $this->siswa;
+    }
+
+    /**
+     * Set statusKehadiranKepulangan
+     *
+     * @param \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan
+     * @return KehadiranSiswa
+     */
+    public function setStatusKehadiranKepulangan(\Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan = null)
+    {
+        $this->statusKehadiranKepulangan = $statusKehadiranKepulangan;
+    
+        return $this;
+    }
+
+    /**
+     * Get statusKehadiranKepulangan
      *
      * @return \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan 
      */
-    public function getIdstatusKehadiranKepulangan()
+    public function getStatusKehadiranKepulangan()
     {
-        return $this->idstatusKehadiranKepulangan;
+        return $this->statusKehadiranKepulangan;
     }
 }

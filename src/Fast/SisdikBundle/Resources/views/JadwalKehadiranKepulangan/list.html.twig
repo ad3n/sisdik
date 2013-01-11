@@ -13,22 +13,22 @@
 <div class="filter-section">
     <div>
         {%- for key, value in schools -%}
-        <a class="{% if key == idsekolah %}current{% endif %}" href="{{ path('presence_schedule_list', {'idsekolah': key}) }}">{{ value }}</a>{% if not loop.last %} | {% endif %}
+        <a class="{% if key == sekolah %}current{% endif %}" href="{{ path('presence_schedule_list', {'sekolah': key}) }}">{{ value }}</a>{% if not loop.last %} | {% endif %}
         {%- endfor -%}
     </div>
     <div style="padding-top: 10px;">
-        <form method="GET" action="{{ path('presence_schedule_list', {'idsekolah': idsekolah, 'repetition': repetition}) }}" id="{{ searchform.get('id') }}" class="form-search form-inline">
+        <form method="GET" action="{{ path('presence_schedule_list', {'sekolah': sekolah, 'repetition': repetition}) }}" id="{{ searchform.get('id') }}" class="form-search form-inline">
             {{ form_widget(searchform) }}
             <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
-            <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_schedule_list', {'idsekolah': idsekolah}) }}'">{{ 'label.reset'|trans }}</button>
+            <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_schedule_list', {'sekolah': sekolah}) }}'">{{ 'label.reset'|trans }}</button>
         </form>
     </div>
 </div>
 
 {% if displayresult %}
 
-    <h4>{{ 'label.year.entry'|trans }} {{ searchdata.idtahun.nama }}
-    {{ 'label.class.entry'|trans }} {{ searchdata.idkelas.nama }}
+    <h4>{{ 'label.year.entry'|trans }} {{ searchdata.tahun.nama }}
+    {{ 'label.class.entry'|trans }} {{ searchdata.kelas.nama }}
     {{ 'label.repetition'|trans }} {{ searchdata.perulangan }}
     {% if searchdata.mingguanHariKe is defined %}{{ 'label.day'|trans }} {{ daynames[searchdata.mingguanHariKe] }}{% endif %}
     {% if searchdata.bulananHariKe is defined %}{{ 'label.dayno'|trans }} {{ searchdata.bulananHariKe }}{% endif %}
@@ -39,7 +39,7 @@
         
     <div class="add-link">
     {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    	<a href="{{ path('presence_schedule_new', {'idsekolah' : idsekolah}) }}" class="add-link-a">
+    	<a href="{{ path('presence_schedule_new', {'sekolah' : sekolah}) }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.presence.schedule.add'|trans }}
     	</a>
@@ -66,13 +66,13 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.school'|trans }}">{% if data.idtahun is not null %}{{ data.idtahun.idsekolah.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.school'|trans }}">{% if data.tahun is not null %}{{ data.tahun.sekolah.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.presence.status.entry'|trans }}">
-    		    {% if data.idstatusKehadiranKepulangan is not null %}
-    		        {{ data.idstatusKehadiranKepulangan.nama }}
+    		    {% if data.statusKehadiranKepulangan is not null %}
+    		        {{ data.statusKehadiranKepulangan.nama }}
     		    {% endif %}
-    		    {% if data.idtemplatesms is not null %}
-    		        <br />[{{ data.idtemplatesms.nama }}]
+    		    {% if data.templatesms is not null %}
+    		        <br />[{{ data.templatesms.nama }}]
     		    {% endif %}
     	    </td>
     		<td data-title="{{ 'label.parameter'|trans }}">
@@ -160,8 +160,8 @@
                 {% endif %}
             </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('presence_schedule_show', {'idsekolah': idsekolah, 'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('presence_schedule_edit', {'idsekolah': idsekolah, 'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('presence_schedule_show', {'sekolah': sekolah, 'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('presence_schedule_edit', {'sekolah': sekolah, 'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
     		</td>
     	</tr>
     {% endfor %}
@@ -172,7 +172,7 @@
     {% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
         <div>{{ 'shortinfo.duplicate.schedule'|trans }}</div>
         <div>
-            <form method="post" action="{{ path('presence_schedule_duplicate', {'idsekolah': idsekolah}) }}" class="form-search form-inline">
+            <form method="post" action="{{ path('presence_schedule_duplicate', {'sekolah': sekolah}) }}" class="form-search form-inline">
                 {{ form_widget(duplicateform) }}
                 <button type="submit" class="btn success alternative icon share">{{ 'label.duplicate'|trans }}</button>
             </form>
@@ -190,8 +190,8 @@
 
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var url = "{{ path('data_class_ajax_updateclass_schooldefined', {'idsekolah': idsekolah}) }}";
-	$.get(url, {idtahun: $(".selectyear").val(){% if searchdata.idkelas is not null %}, idkelas: {{ searchdata.idkelas.id }}{% endif %}}, function(data) {
+	var url = "{{ path('data_class_ajax_updateclass_schooldefined', {'sekolah': sekolah}) }}";
+	$.get(url, {tahun: $(".selectyear").val(){% if searchdata.kelas is not null %}, kelas: {{ searchdata.kelas.id }}{% endif %}}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
@@ -207,7 +207,7 @@ $(document).ready(function() {
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
         
 
-        $.get(url, {idtahun: $(this).val()}, function(data) {
+        $.get(url, {tahun: $(this).val()}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
@@ -218,7 +218,7 @@ $(document).ready(function() {
         });
     });
 
-	$.get(url, {idtahun: $(".selectyearduplicate").val()}, function(data) {
+	$.get(url, {tahun: $(".selectyearduplicate").val()}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
@@ -233,7 +233,7 @@ $(document).ready(function() {
         $(".selectclassduplicate").empty();
         $(".selectclassduplicate").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {idtahun: $(this).val()}, function(data) {
+        $.get(url, {tahun: $(this).val()}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'

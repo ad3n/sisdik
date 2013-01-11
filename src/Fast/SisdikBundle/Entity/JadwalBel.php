@@ -5,7 +5,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Fast\SisdikBundle\Entity\JadwalBel
+ * JadwalBel
  *
  * @ORM\Table(name="jadwal_bel")
  * @ORM\Entity
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class JadwalBel
 {
     /**
-     * @var integer $id
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,56 +22,56 @@ class JadwalBel
     private $id;
 
     /**
-     * @var integer $hari
+     * @var integer
      *
      * @ORM\Column(name="hari", type="integer", nullable=true)
      */
     private $hari;
 
     /**
-     * @var string $dariJam
+     * @var string
      *
      * @ORM\Column(name="dari_jam", type="string", length=50, nullable=true)
      */
     private $dariJam;
 
     /**
-     * @var string $hinggaJam
+     * @var string
      *
      * @ORM\Column(name="hingga_jam", type="string", length=50, nullable=true)
      */
     private $hinggaJam;
 
     /**
-     * @var boolean $berulang
+     * @var boolean
      *
      * @ORM\Column(name="berulang", type="boolean", nullable=true)
      */
     private $berulang;
 
     /**
-     * @var string $file
+     * @var string
      *
      * @ORM\Column(name="file", type="string", length=100, nullable=true)
      */
     private $file;
 
     /**
-     * @var boolean $aktif
+     * @var boolean
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=true)
      */
     private $aktif;
 
     /**
-     * @var Tahun
+     * @var \Tahun
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="idtahun", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
      * })
      */
-    private $idtahun;
+    private $tahun;
 
 
 
@@ -224,25 +224,25 @@ class JadwalBel
     }
 
     /**
-     * Set idtahun
+     * Set tahun
      *
-     * @param Fast\SisdikBundle\Entity\Tahun $idtahun
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return JadwalBel
      */
-    public function setIdtahun(\Fast\SisdikBundle\Entity\Tahun $idtahun = null)
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
     {
-        $this->idtahun = $idtahun;
+        $this->tahun = $tahun;
     
         return $this;
     }
 
     /**
-     * Get idtahun
+     * Get tahun
      *
-     * @return Fast\SisdikBundle\Entity\Tahun 
+     * @return \Fast\SisdikBundle\Entity\Tahun 
      */
-    public function getIdtahun()
+    public function getTahun()
     {
-        return $this->idtahun;
+        return $this->tahun;
     }
 }

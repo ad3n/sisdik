@@ -91,40 +91,40 @@ JadwalKehadiranKepulangan:
             nullable: true
             column: command_jadwal
     manyToOne:
-        idkelas:
-            targetEntity: Kelas
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idkelas:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idstatusKehadiranKepulangan:
+        statusKehadiranKepulangan:
             targetEntity: StatusKehadiranKepulangan
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idstatus_kehadiran_kepulangan:
+                status_kehadiran_kepulangan_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idtahun:
+        kelas:
+            targetEntity: Kelas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                kelas_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        tahun:
             targetEntity: Tahun
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahun:
+                tahun_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idtemplatesms:
+        templatesms:
             targetEntity: Templatesms
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtemplatesms:
+                templatesms_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

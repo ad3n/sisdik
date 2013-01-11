@@ -50,8 +50,8 @@
     {% for class in class_entities %}
     <div id="tab{{ class.id }}" class="tab-pane {% if loop.first %}active{% endif %}">
         <dl>
-        {% for data in entities if data.idkelas.id == class.id %}
-            <dt>{{ data.idsiswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ data.idsiswa.nomorInduk }}</span></dt>
+        {% for data in entities if data.kelas.id == class.id %}
+            <dt>{{ data.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ data.siswa.nomorInduk }}</span></dt>
             <dd>{{ form_widget(form['kehadirankepulangan_' ~ data.id]) }}</dd>
         {% endfor %}
         </dl>

@@ -10,31 +10,31 @@ CukilMp:
             generator:
                 strategy: IDENTITY
     manyToOne:
-        idtahun:
+        tahun:
             targetEntity: Tahun
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idtahun:
+                tahun_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idsemester:
+        semester:
             targetEntity: Semester
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idsemester:
+                semester_id:
                     referencedColumnName: id
             orphanRemoval: false
-        idmataPelajaran:
+        mataPelajaran:
             targetEntity: MataPelajaran
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                idmata_pelajaran:
+                mata_pelajaran_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
