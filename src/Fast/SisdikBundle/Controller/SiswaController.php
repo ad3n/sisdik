@@ -801,7 +801,7 @@ class SiswaController extends Controller
 
         if ($this->getRequest()->isMethod('POST')) {
             $form->bind($this->getRequest());
-
+            
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $userManager = $this->container->get('fos_user.user_manager');
@@ -942,6 +942,12 @@ class SiswaController extends Controller
                     }
                 }
             }
+            
+            $return = json_encode(array('response' => 'invalid response'));
+            return new Response($return, 200,
+                    array(
+                            'Content-Type' => 'application/json'
+                    ));
         }
         return array(
             'form' => $form->createView()

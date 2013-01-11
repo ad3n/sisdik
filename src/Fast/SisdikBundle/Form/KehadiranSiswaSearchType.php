@@ -93,7 +93,7 @@ class KehadiranSiswaSearchType extends AbstractType
                                     'sekolah' => $sekolah->getId()
                             ));
             $builder
-                    ->add('idstatuskehadirankepulangan', 'entity',
+                    ->add('statuskehadirankepulangan', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:StatusKehadiranKepulangan',
                                     'label' => 'label.presence.status.entry', 'multiple' => false,

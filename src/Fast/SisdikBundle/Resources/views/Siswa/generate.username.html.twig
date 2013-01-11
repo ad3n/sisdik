@@ -64,23 +64,24 @@ $(document).ready(function() {
 
     $("#generateform").submit(function() {
     	dataurl = "{{ path("data_student_ajax_generated_username") }}";
-        // pingurl = "http://www.google.com/action";
-        
-        $returnvalue = $.get(dataurl, {data: $("#generateform").serialize()});
+
+        $.get(dataurl, {tahun: $(".selectyear").val(), kelas: $(".selectclass").val()}, function(data) {
+        	if (data.generated == "NO") {
+                // execute post request.
+                generateurl = "{{ path("data_student_generate_username") }}";
+                $.post(generateurl, $("#generateform").serialize(), function(data) {
+                    alert(data.response);
+                });
+            } else {
+                alert("username di tahun ajaran dan kelas terpilih telah dibuat sebelumnya");
+            	$('#process-output').html('');
+            }
+        });
         
     	{% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#process-output').html('<img src="{{ asset_url }}" />');
         {% endimage %}
 
-        // check if username/password hasn't generated yet
-        setTimeout(function() {
-        	if ($returnvalue.generated == "YES") {
-                return false;
-            } else {
-                return true;
-            }
-        }, 6000);
-        
         return false;
     });
 });

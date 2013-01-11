@@ -111,17 +111,17 @@ class KehadiranSiswaController extends Controller
             } else {
                 $buildparam['kelas'] = '';
             }
-            if ($searchdata['idstatuskehadirankepulangan'] != '') {
+            if ($searchdata['statuskehadirankepulangan'] != '') {
                 $querybuilder
-                        ->andWhere("t.statusKehadiranKepulangan = :idstatuskehadirankepulangan");
+                        ->andWhere("t.statusKehadiranKepulangan = :statuskehadirankepulangan");
                 $querybuilder
-                        ->setParameter('idstatuskehadirankepulangan',
-                                $searchdata['idstatuskehadirankepulangan']->getId());
+                        ->setParameter('statuskehadirankepulangan',
+                                $searchdata['statuskehadirankepulangan']->getId());
 
-                $buildparam['idstatuskehadirankepulangan'] = $searchdata['idstatuskehadirankepulangan']
+                $buildparam['statuskehadirankepulangan'] = $searchdata['statuskehadirankepulangan']
                         ->getId();
             } else {
-                $buildparam['idstatuskehadirankepulangan'] = '';
+                $buildparam['statuskehadirankepulangan'] = '';
             }
         }
 

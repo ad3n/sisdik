@@ -52,7 +52,7 @@ class SendMessageMassiveCommand extends ContainerAwareCommand
         $templatetext = $jadwalkehadirankepulangan->getTemplatesms()->getTeks();
         $sekolah = $jadwalkehadirankepulangan->getStatusKehadiranKepulangan()->getSekolah();
 
-        // find all kehadiransiswa by idstatuskehadirankepulangan and current date
+        // find all kehadiransiswa by statuskehadirankepulangan and current date
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:KehadiranSiswa', 't')
                 ->where('t.statusKehadiranKepulangan = :statusKehadiranKepulangan')

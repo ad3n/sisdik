@@ -62,11 +62,11 @@ class KehadiranSiswaType extends AbstractType
             $querybuilder->andWhere("t2. = :kelas");
             $querybuilder->setParameter('kelas', $this->buildparam['kelas']);
         }
-        if ($this->buildparam['idstatuskehadirankepulangan'] != '') {
-            $querybuilder->andWhere("t.statusKehadiranKepulangan = :idstatuskehadirankepulangan");
+        if ($this->buildparam['statuskehadirankepulangan'] != '') {
+            $querybuilder->andWhere("t.statusKehadiranKepulangan = :statuskehadirankepulangan");
             $querybuilder
-                    ->setParameter('idstatuskehadirankepulangan',
-                            $this->buildparam['idstatuskehadirankepulangan']);
+                    ->setParameter('statuskehadirankepulangan',
+                            $this->buildparam['statuskehadirankepulangan']);
         }
         $entities = $querybuilder->getQuery()->getResult();
 
