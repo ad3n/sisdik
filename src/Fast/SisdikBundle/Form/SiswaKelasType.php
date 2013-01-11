@@ -77,7 +77,7 @@ class SiswaKelasType extends AbstractType
         }
 
         $querybuilder3 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Siswa', 't')->where('t. = :siswa')
+                ->from('FastSisdikBundle:Siswa', 't')->where('t.id = :siswa')
                 ->setParameter('siswa', $this->siswa);
         $builder
                 ->add('siswa', 'entity',

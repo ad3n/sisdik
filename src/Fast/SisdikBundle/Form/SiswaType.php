@@ -23,7 +23,7 @@ class SiswaType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :id')
+                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :id')
                     ->setParameter('id', $sekolah);
             $builder
                     ->add('sekolah', 'entity',

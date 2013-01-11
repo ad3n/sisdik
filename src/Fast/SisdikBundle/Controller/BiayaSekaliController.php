@@ -50,11 +50,11 @@ class BiayaSekaliController extends Controller
             $searchdata = $searchform->getData();
 
             if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2. = :tahunmasuk');
+                $querybuilder->andWhere('t2.id = :tahunmasuk');
                 $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
             }
             if ($searchdata['gelombang'] != '') {
-                $querybuilder->andWhere('t3. = :gelombang');
+                $querybuilder->andWhere('t3.id = :gelombang');
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']);
             }
             if ($searchdata['jenisbiaya'] != '') {

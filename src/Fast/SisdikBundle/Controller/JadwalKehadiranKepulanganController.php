@@ -87,11 +87,11 @@ class JadwalKehadiranKepulanganController extends Controller
             $searchdata = $searchform->getData();
 
             if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t1. = :tahun');
+                $querybuilder->andWhere('t1.id = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']);
             }
             if ($searchdata['kelas'] != '') {
-                $querybuilder->andWhere('t2. = :kelas');
+                $querybuilder->andWhere('t2.id = :kelas');
                 $querybuilder->setParameter('kelas', $searchdata['kelas']);
             }
             if ($searchdata['perulangan'] != '') {
@@ -418,11 +418,11 @@ class JadwalKehadiranKepulanganController extends Controller
             $bulananHariKe = $data['bulananHariKe'];
 
             if ($tahunSrc != '') {
-                $querybuilder->andWhere('t1. = :tahun');
+                $querybuilder->andWhere('t1.id = :tahun');
                 $querybuilder->setParameter('tahun', $tahunSrc);
             }
             if ($kelasSrc != '') {
-                $querybuilder->andWhere('t2. = :kelas');
+                $querybuilder->andWhere('t2.id = :kelas');
                 $querybuilder->setParameter('kelas', $kelasSrc);
             }
             if ($perulanganSrc != '') {

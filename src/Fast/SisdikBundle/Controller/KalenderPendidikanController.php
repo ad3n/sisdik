@@ -96,7 +96,7 @@ class KalenderPendidikanController extends Controller
                         "SELECT t FROM FastSisdikBundle:KalenderPendidikan t
                         LEFT JOIN t.sekolah t1
                         WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                        AND t1. = {$sekolah->getId()}")
+                        AND t1.id = {$sekolah->getId()}")
                 ->setParameter('firstday', "$year-$month-01")
                 ->setParameter('nextmonth', $nextmonth);
         $dates = $query->getResult();

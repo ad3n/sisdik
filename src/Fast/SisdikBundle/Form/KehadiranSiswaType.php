@@ -59,7 +59,7 @@ class KehadiranSiswaType extends AbstractType
             $querybuilder->setParameter('jenjang', $this->buildparam['jenjang']);
         }
         if ($this->buildparam['kelas'] != '') {
-            $querybuilder->andWhere("t2. = :kelas");
+            $querybuilder->andWhere("t2.id = :kelas");
             $querybuilder->setParameter('kelas', $this->buildparam['kelas']);
         }
         if ($this->buildparam['statuskehadirankepulangan'] != '') {

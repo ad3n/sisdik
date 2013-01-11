@@ -73,7 +73,7 @@ class SiswaController extends Controller
             $searchdata = $searchform->getData();
 
             if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2. = :tahunmasuk');
+                $querybuilder->andWhere('t2.id = :tahunmasuk');
                 $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
             }
             if ($searchdata['searchkey'] != '') {

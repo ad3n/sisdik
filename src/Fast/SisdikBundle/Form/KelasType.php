@@ -86,7 +86,7 @@ class KelasType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :sekolah')
+                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
                     ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('sekolah', 'entity',

@@ -43,7 +43,7 @@ class MesinKehadiranType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t. = :sekolah')
+                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
                     ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('sekolah', 'entity',

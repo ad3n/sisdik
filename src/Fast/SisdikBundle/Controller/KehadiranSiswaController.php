@@ -101,10 +101,10 @@ class KehadiranSiswaController extends Controller
                 $buildparam['jenjang'] = '';
             }
             if ($searchdata['kelas'] != '') {
-                $querybuilder->andWhere("t2. = :kelas");
+                $querybuilder->andWhere("t2.id = :kelas");
                 $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
 
-                $querybuilder_class->andWhere("t. = :kelas");
+                $querybuilder_class->andWhere("t.id = :kelas");
                 $querybuilder_class->setParameter('kelas', $searchdata['kelas']->getId());
 
                 $buildparam['kelas'] = $searchdata['kelas']->getId();
