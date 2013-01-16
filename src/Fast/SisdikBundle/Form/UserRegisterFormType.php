@@ -118,10 +118,9 @@ class UserRegisterFormType extends BaseType
         }
 
         $builder
-                ->add('enabled', null,
+                ->add('enabled', 'checkbox',
                         array(
-                                'label' => 'label.enabled', 'required' => false,
-                                'label_render' => false,
+                            'label' => 'label.enabled', 'required' => false,
                         ));
     }
 

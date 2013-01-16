@@ -25,43 +25,48 @@ class SiswaGenerateUsernameType extends AbstractType
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:TahunMasuk', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('tahun', 'entity',
+                    ->add('tahunmasuk', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama', 'required' => true,
+                                    'class' => 'FastSisdikBundle:Tahunmasuk',
+                                    'label' => 'label.yearentry.entry', 'multiple' => false,
+                                    'expanded' => false, 'property' => 'tahun', 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
-                                        'class' => 'medium selectyear'
+                                        'class' => 'small selectyear'
                                     ),
                             ));
 
-            $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
-                    ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
-                    ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('kelas', 'entity',
+                    ->add('filter', 'text',
                             array(
-                                    'class' => 'FastSisdikBundle:Kelas',
-                                    'label' => 'label.class.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama', 'required' => true,
-                                    'query_builder' => $querybuilder2,
+                                    'label' => 'label.filter.student', 'required' => false,
                                     'attr' => array(
-                                        'class' => 'medium selectclass'
+                                        'class' => 'medium'
                                     ),
-                            ));
-
-            $builder
+                            ))
                     ->add('output', 'choice',
                             array(
                                     'choices' => array(
-                                        'ods' => 'Open Document Spreadsheet', 'xls' => 'Microsoft Excel 97/2000/XP'
+                                            'ods' => 'Open Document Spreadsheet',
+                                            'xls' => 'Microsoft Excel 97/2000/XP'
                                     ), 'label' => 'label.output', 'multiple' => false,
                                     'expanded' => true, 'required' => true,
+                            ));
+
+            $builder
+                    ->add('regenerate', 'checkbox',
+                            array(
+                                    'label' => 'label.regenerate', 'required' => false,
+                                    'help_block' => 'Membuat ulang username akan menimpa username dan password sebelumnya',
+                            ))
+                    ->add('captcha', 'captcha',
+                            array(
+                                    'attr' => array(
+                                        'class' => 'medium'
+                                    ), 'as_url' => true, 'reload' => true,
                             ));
         }
     }

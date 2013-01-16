@@ -796,159 +796,17 @@ class SiswaController extends Controller
     public function generateUsernameAction() {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
-
+        
         $form = $this->createForm(new SiswaGenerateUsernameType($this->container));
-
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->bind($this->getRequest());
-            
+        
+        $request = $this->getRequest();
+        if ($request->isMethod("POST")) {
+            $form->bind($request);
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $userManager = $this->container->get('fos_user.user_manager');
-
-                $data = $form->getData();
-
-                $passwordargs = array(
-                        'length' => 8, 'alpha_upper_include' => TRUE,
-                        'alpha_lower_include' => TRUE, 'number_include' => TRUE,
-                        'symbol_include' => TRUE,
-                );
-
-                // get siswa for the selected year and class
-                $querybuilder = $em->createQueryBuilder()->select('t')
-                        ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.tahun', 't2')
-                        ->leftJoin('t.kelas', 't3')->leftJoin('t.siswa', 't4')
-                        ->where('t.tahun = :tahun')->andWhere('t.kelas = :kelas')
-                        ->andWhere('t.aktif = :aktif')->orderBy('t4.nomorIndukSistem', 'ASC')
-                        ->setParameter('tahun', $data['tahun']->getId())
-                        ->setParameter('kelas', $data['kelas']->getId())
-                        ->setParameter('aktif', TRUE);
-                $results = $querybuilder->getQuery()->getResult();
-
-                $output = array();
-                foreach ($results as $result) {
-                    $siswa = $result->getSiswa();
-                    if (is_object($siswa) && $siswa instanceof Siswa) {
-                        $passwordobject = new PasswordGenerator($passwordargs);
-
-                        $output[] = array(
-                                'nama' => $siswa->getNamaLengkap(),
-                                'username' => $siswa->getNomorIndukSistem(),
-                                'password' => $passwordobject->getPassword()
-                        );
-
-                        $user = $userManager->createUser();
-                        $user->setUsername($siswa->getNomorIndukSistem());
-                        $user->setPlainPassword($passwordobject->getPassword());
-                        $user->setEmail($siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
-                        $user->setName($siswa->getNamaLengkap());
-                        $user->addRole('ROLE_SISWA');
-                        $user->setSiswa($siswa);
-                        $user->setSekolah($siswa->getSekolah());
-                        $user->setConfirmationToken(null);
-                        $user->setEnabled(true);
-
-                        $userManager->updateUser($user);
-                    }
-                }
-
-                // base
-                $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                        . self::DOCUMENTS_BASEDIR . self::BASEFILE;
-
-                // source and target
-                $extensionsource = ".ods";
-                $extensiontarget = "." . $data['output'];
-
-                $filenameoutput = self::OUTPUTPREFIX
-                        . preg_replace('/\s+/', '', strtolower($data['tahun']->getNama())) . '-'
-                        . preg_replace('/\s+/', '', strtolower($data['kelas']->getNama()));
-
-                $filesource = $filenameoutput . $extensionsource;
-                $filetarget = $filenameoutput . $extensiontarget;
-
-                $documentsource = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                        . self::DOCUMENTS_OUTPUTDIR . $filesource;
-                $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                        . self::DOCUMENTS_OUTPUTDIR . $filetarget;
-
-                if ($data['output'] == 'ods') {
-                    // do not convert
-
-                    if (copy($documentbase, $documenttarget) === TRUE) {
-                        $ziparchive = new \ZipArchive();
-                        $ziparchive->open($documenttarget);
-                        $ziparchive
-                                ->addFromString('content.xml',
-                                        $this
-                                                ->renderView(
-                                                        "FastSisdikBundle:Siswa:username.xml.twig",
-                                                        array(
-                                                            'users' => $output,
-                                                        )));
-                        if ($ziparchive->close() === TRUE) {
-                            $response = new Response(file_get_contents($documenttarget), 200);
-                            $d = $response->headers
-                                    ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                            $filetarget);
-                            $response->headers->set('Content-Disposition', $d);
-                            $response->headers->set('Content-Description', 'File Transfer');
-                            $response->headers
-                                    ->set('Content-Type',
-                                            'application/vnd.oasis.opendocument.spreadsheet');
-                            $response->headers->set('Content-Transfer-Encoding', 'binary');
-                            $response->headers->set('Expires', '0');
-                            $response->headers->set('Cache-Control', 'must-revalidate');
-                            $response->headers->set('Pragma', 'public');
-                            $response->headers->set('Content-Length', filesize($documenttarget));
-
-                            return $response;
-                        }
-                    }
-                } else {
-                    // convert from ods to target
-
-                    if (copy($documentbase, $documentsource) === TRUE) {
-                        $ziparchive = new \ZipArchive();
-                        $ziparchive->open($documentsource);
-                        $ziparchive
-                                ->addFromString('content.xml',
-                                        $this
-                                                ->renderView(
-                                                        "FastSisdikBundle:Siswa:username.xml.twig",
-                                                        array(
-                                                            'users' => $output,
-                                                        )));
-                        if ($ziparchive->close() === TRUE) {
-                            $scriptlocation = $this->get('kernel')->getRootDir()
-                                    . self::DOCUMENTS_DIR . self::PYCONVERTER;
-                            exec("python $scriptlocation $documentsource $documenttarget");
-
-                            $response = new Response(file_get_contents($documenttarget), 200);
-                            $d = $response->headers
-                                    ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                            $filetarget);
-                            $response->headers->set('Content-Disposition', $d);
-                            $response->headers->set('Content-Description', 'File Transfer');
-                            $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-                            $response->headers->set('Content-Transfer-Encoding', 'binary');
-                            $response->headers->set('Expires', '0');
-                            $response->headers->set('Cache-Control', 'must-revalidate');
-                            $response->headers->set('Pragma', 'public');
-                            $response->headers->set('Content-Length', filesize($documenttarget));
-
-                            return $response;
-                        }
-                    }
-                }
+                // do something..
             }
-            
-            $return = json_encode(array('response' => 'invalid response'));
-            return new Response($return, 200,
-                    array(
-                            'Content-Type' => 'application/json'
-                    ));
         }
+
         return array(
             'form' => $form->createView()
         );
@@ -958,43 +816,63 @@ class SiswaController extends Controller
      * Check if students username and password has already generated
      *
      * @Route("/ajax/generatedusername", name="data_student_ajax_generated_username")
-     * @Method("GET")
+     * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function ajaxGeneratedUsername(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
 
+        $form->bind($this->getRequest());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+        }
+
         $em = $this->getDoctrine()->getManager();
 
-        $tahun = $this->getRequest()->query->get('tahun');
-        $kelas = $this->getRequest()->query->get('kelas');
+        $tahunmasuk = $this->getRequest()->query->get('tahunmasuk');
 
-        $entities_siswakelas = $em->getRepository('FastSisdikBundle:SiswaKelas')
+        $entities = $em->getRepository('FastSisdikBundle:Siswa')
                 ->findBy(
                         array(
-                            'tahun' => $tahun, 'kelas' => $kelas
+                            'tahunmasuk' => $tahunmasuk
                         ));
         $siswa = '';
-        foreach ($entities_siswakelas as $entity) {
-            $siswa .= $entity->getSiswa()->getId() . ",";
+        $siswa_num = count($entities);
+        foreach ($entities as $entity) {
+            $siswa .= $entity->getId() . ",";
         }
         $siswa = preg_replace('/,$/', '', $siswa);
 
+        $retval = array();
         if ($siswa != '') {
             $query = $em
                     ->createQuery(
                             "SELECT COUNT(t.id) FROM FastSisdikBundle:FosUser t "
-                                    . " WHERE t.siswa IN ($siswa) "
-                                    . " AND t.sekolah = {$sekolah->getId()} ");
+                                    . " JOIN t.siswa t1 " . " WHERE t.siswa IS NOT NULL "
+                                    . " AND t1.tahunmasuk = :tahunmasuk "
+                                    . " AND t.sekolah = :sekolah ");
+            $query->setParameter("tahunmasuk", $tahunmasuk);
+            $query->setParameter("sekolah", $sekolah->getId());
             $count = $query->getSingleScalarResult();
 
-            if ($count > 0) {
+            if ($siswa_num > $count && $count > 0) {
+                $retval = array(
+                    'generated' => 'PARTIAL',
+                );
+                // TODO
+                // - abaikan siswa yang sebelumnya telah dibuat usernamenya
+                // - generate username dari sini
+            } else if ($siswa_num == $count && $count > 0) {
                 $retval = array(
                     'generated' => 'YES',
                 );
-            } else {
+            } else if ($count < 1) {
                 $retval = array(
                     'generated' => 'NO'
                 );
+                // TODO
+                // - generate username dari sini. generateUsernameAction harus diperbaiki
             }
         } else {
             $retval = array(
@@ -1007,6 +885,146 @@ class SiswaController extends Controller
                 array(
                     'Content-Type' => 'application/json'
                 ));
+    }
+
+    /**
+     * generate username
+     *  
+     * @param 
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    private function generateUsername($tahunmasuk, $penyaring) {
+        $em = $this->getDoctrine()->getManager();
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        $passwordargs = array(
+                'length' => 8, 'alpha_upper_include' => TRUE, 'alpha_lower_include' => TRUE,
+                'number_include' => TRUE, 'symbol_include' => TRUE,
+        );
+
+        // get siswa for the selected year and class
+        $querybuilder = $em->createQueryBuilder()->select('t')
+                ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.tahun', 't2')
+                ->leftJoin('t.kelas', 't3')->leftJoin('t.siswa', 't4')->where('t.tahun = :tahun')
+                ->andWhere('t.kelas = :kelas')->andWhere('t.aktif = :aktif')
+                ->orderBy('t4.nomorIndukSistem', 'ASC')
+                ->setParameter('tahun', $data['tahun']->getId())
+                ->setParameter('kelas', $data['kelas']->getId())->setParameter('aktif', TRUE);
+        $results = $querybuilder->getQuery()->getResult();
+
+        $output = array();
+        foreach ($results as $result) {
+            $siswa = $result->getSiswa();
+            if (is_object($siswa) && $siswa instanceof Siswa) {
+                $passwordobject = new PasswordGenerator($passwordargs);
+
+                $output[] = array(
+                        'nama' => $siswa->getNamaLengkap(),
+                        'username' => $siswa->getNomorIndukSistem(),
+                        'password' => $passwordobject->getPassword()
+                );
+
+                $user = $userManager->createUser();
+                $user->setUsername($siswa->getNomorIndukSistem());
+                $user->setPlainPassword($passwordobject->getPassword());
+                $user->setEmail($siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
+                $user->setName($siswa->getNamaLengkap());
+                $user->addRole('ROLE_SISWA');
+                $user->setSiswa($siswa);
+                $user->setSekolah($siswa->getSekolah());
+                $user->setConfirmationToken(null);
+                $user->setEnabled(true);
+
+                $userManager->updateUser($user);
+            }
+        }
+
+        // base
+        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
+                . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+
+        // source and target
+        $extensionsource = ".ods";
+        $extensiontarget = "." . $data['output'];
+
+        $filenameoutput = self::OUTPUTPREFIX
+                . preg_replace('/\s+/', '', strtolower($data['tahun']->getNama())) . '-'
+                . preg_replace('/\s+/', '', strtolower($data['kelas']->getNama()));
+
+        $filesource = $filenameoutput . $extensionsource;
+        $filetarget = $filenameoutput . $extensiontarget;
+
+        $documentsource = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
+                . self::DOCUMENTS_OUTPUTDIR . $filesource;
+        $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
+                . self::DOCUMENTS_OUTPUTDIR . $filetarget;
+
+        if ($data['output'] == 'ods') {
+            // do not convert
+
+            if (copy($documentbase, $documenttarget) === TRUE) {
+                $ziparchive = new \ZipArchive();
+                $ziparchive->open($documenttarget);
+                $ziparchive
+                        ->addFromString('content.xml',
+                                $this
+                                        ->renderView("FastSisdikBundle:Siswa:username.xml.twig",
+                                                array(
+                                                    'users' => $output,
+                                                )));
+                if ($ziparchive->close() === TRUE) {
+                    $response = new Response(file_get_contents($documenttarget), 200);
+                    $d = $response->headers
+                            ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                                    $filetarget);
+                    $response->headers->set('Content-Disposition', $d);
+                    $response->headers->set('Content-Description', 'File Transfer');
+                    $response->headers
+                            ->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
+                    $response->headers->set('Content-Transfer-Encoding', 'binary');
+                    $response->headers->set('Expires', '0');
+                    $response->headers->set('Cache-Control', 'must-revalidate');
+                    $response->headers->set('Pragma', 'public');
+                    $response->headers->set('Content-Length', filesize($documenttarget));
+
+                    return $response;
+                }
+            }
+        } else {
+            // convert from ods to target
+
+            if (copy($documentbase, $documentsource) === TRUE) {
+                $ziparchive = new \ZipArchive();
+                $ziparchive->open($documentsource);
+                $ziparchive
+                        ->addFromString('content.xml',
+                                $this
+                                        ->renderView("FastSisdikBundle:Siswa:username.xml.twig",
+                                                array(
+                                                    'users' => $output,
+                                                )));
+                if ($ziparchive->close() === TRUE) {
+                    $scriptlocation = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
+                            . self::PYCONVERTER;
+                    exec("python $scriptlocation $documentsource $documenttarget");
+
+                    $response = new Response(file_get_contents($documenttarget), 200);
+                    $d = $response->headers
+                            ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                                    $filetarget);
+                    $response->headers->set('Content-Disposition', $d);
+                    $response->headers->set('Content-Description', 'File Transfer');
+                    $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+                    $response->headers->set('Content-Transfer-Encoding', 'binary');
+                    $response->headers->set('Expires', '0');
+                    $response->headers->set('Cache-Control', 'must-revalidate');
+                    $response->headers->set('Pragma', 'public');
+                    $response->headers->set('Content-Length', filesize($documenttarget));
+
+                    return $response;
+                }
+            }
+        }
     }
 
     private function mergeStudent($row, $headers, $andFlush = false) {

@@ -1,11 +1,16 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
+{% form_theme form 'MopaBootstrapBundle:Form:fields.html.twig' %}
+
 {% block page_heading %}{% trans from "headings" %}data.student.generate.username{% endtrans %}{% endblock %}
 
 {% block content %}
 <style type="text/css">
 .filter-section .control-group {
     display: inline-block;
+    margin-right: 0.4em;
+}
+.captcha_reload {
     margin-right: 0.4em;
 }
 </style>
@@ -15,7 +20,7 @@
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.generate.username'|trans }}</button>
-	    <span id="process-output" style="color: #003EB0; "></span>
+	    <div id="process-output" style="color: #003EB0; "></div>
     </div>
 </form>
 
@@ -37,53 +42,9 @@
         <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
     </li>
 </ul>
-
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var url = "{{ path('data_class_ajax_updateclass') }}";
-    $.get(url, {tahun: $(".selectyear").val()}, function(data) {
-    	var options = '';
-        for (var i = 0; i < data.length; i++) {
-            options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
-        }
-        $(".selectclass").html(options);
-    });
-    
-    $(".selectyear").change(function() {
-        $(".selectclass").empty();
-        $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {tahun: $(this).val()}, function(data) {
-        	var options = '';
-            for (var i = 0; i < data.length; i++) {
-                options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
-            }
-            $(".selectclass").html(options);
-        });
-    });
-
-    $("#generateform").submit(function() {
-    	dataurl = "{{ path("data_student_ajax_generated_username") }}";
-
-        $.get(dataurl, {tahun: $(".selectyear").val(), kelas: $(".selectclass").val()}, function(data) {
-        	if (data.generated == "NO") {
-                // execute post request.
-                generateurl = "{{ path("data_student_generate_username") }}";
-                $.post(generateurl, $("#generateform").serialize(), function(data) {
-                    alert(data.response);
-                });
-            } else {
-                alert("username di tahun ajaran dan kelas terpilih telah dibuat sebelumnya");
-            	$('#process-output').html('');
-            }
-        });
-        
-    	{% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
-        $('#process-output').html('<img src="{{ asset_url }}" />');
-        {% endimage %}
-
-        return false;
-    });
 });
 </script>
 {% endblock content %}

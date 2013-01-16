@@ -1,4 +1,6 @@
 label:
+    filter.student: Saring siswa
+    regenerate: Membuat Ulang
     output: Output
     from: Dari
     to: Ke
@@ -242,6 +244,8 @@ shortinfo:
     using.year.and.level: menggunakan tahun ajaran dan jenjang kelas
     no.student.data: Tidak ada data siswa
     no.class.data: Tidak ada data kelas
+    username.generated: Username siswa untuk tahun ajaran dan kelas terpilih telah dibuat sebelumnya
+    regenerate.fillcaptcha: Isi captcha untuk membuat ulang username
 
 fos_user:
     username:

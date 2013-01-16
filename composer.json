@@ -29,6 +29,7 @@
         "bcc/extra-tools-bundle": "dev-master",
         "mopa/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "master",
+        "gregwar/captcha-bundle": "dev-master",
         "knplabs/knp-snappy-bundle": "dev-master"
     },
     "repositories": [

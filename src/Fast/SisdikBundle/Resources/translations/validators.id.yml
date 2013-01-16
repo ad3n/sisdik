@@ -23,3 +23,5 @@ fos_user:
         blank: harap masukkan nama grup
         short: nama grup terlalu singkat
         long: nama grup terlalu panjang
+
+Bad code value: Kode captcha salah

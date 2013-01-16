@@ -1,5 +1,7 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
+{% form_theme form 'MopaBootstrapBundle:Form:fields.html.twig' %}
+
 {% block page_heading %}{% trans from "headings" %}settings.user.add.inschool{% endtrans %}{% endblock %}
 {% block content %}
 <form action="{{ path('settings_user_register_withschool', {'filter': filter}) }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">

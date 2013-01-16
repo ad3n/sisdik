@@ -180,7 +180,7 @@ class SiswaKelasController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:SiswaKelas')->find($id);
-        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
+        $siswa_entity = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
                 ->find($siswa);
 
         if (!$entity) {
@@ -220,7 +220,7 @@ class SiswaKelasController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.studentclass.updated',
                                                 array(
-                                                    '%student%' => $siswa->getNamaLengkap()
+                                                    '%student%' => $siswa_entity->getNamaLengkap()
                                                 )));
 
                 return $this

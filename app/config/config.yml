@@ -101,8 +101,8 @@ mopa_bootstrap:
         render_optional_text: false
         render_fieldset: false
 
-
-
+gregwar_captcha: ~
+    
 
 
 

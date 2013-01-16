@@ -22,6 +22,7 @@ class AppKernel extends Kernel
                 new BCC\ExtraToolsBundle\BCCExtraToolsBundle(),
                 new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
                 new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
+                new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
                 new Fast\SisdikBundle\FastSisdikBundle(), new Acme\DemoBundle\AcmeDemoBundle(),
         );
 
