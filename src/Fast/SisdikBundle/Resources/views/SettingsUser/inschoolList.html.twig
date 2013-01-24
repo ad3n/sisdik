@@ -30,16 +30,16 @@
     <thead>
     	<tr>
     		<th class="{% if pagination.isSorted('u.name') %}sorted{% endif %}">
-    		    {{ pagination.sortable('label.name.full'|trans, 'u.name')|raw }}
+    		    {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'u.name') }}
     	    </th>
     		<th class="{% if pagination.isSorted('u.username') %}sorted{% endif %}">
-                {{ pagination.sortable('label.username'|trans, 'u.username')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.username'|trans, 'u.username') }}
     	    </th>
     		<th class="{% if pagination.isSorted('u.email') %}sorted{% endif %}">
-                {{ pagination.sortable('label.email'|trans, 'u.email')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.email'|trans, 'u.email') }}
     	    </th>
     		<th class="{% if pagination.isSorted('u.roles') %}sorted{% endif %}">
-                {{ pagination.sortable('label.roles'|trans, 'u.roles')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.roles'|trans, 'u.roles') }}
     	    </th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
@@ -63,7 +63,7 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 {% endblock %}
 
 

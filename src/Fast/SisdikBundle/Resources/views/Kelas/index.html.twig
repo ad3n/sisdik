@@ -36,16 +36,16 @@
         <tr>
     		<th>{{ 'label.year.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-    		    {{ pagination.sortable('label.class.name'|trans, 't.nama')|raw }}
+    		    {{ knp_pagination_sortable(pagination, 'label.class.name'|trans, 't.nama') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
-                {{ pagination.sortable('label.code'|trans, 't.kode')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
-                {{ pagination.sortable('label.description'|trans, 't.keterangan')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ pagination.sortable('label.order'|trans, 't.urutan')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
     	    </th>
     		<th>{{ 'label.level'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
@@ -68,7 +68,7 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 
 <div class="clearfix"></div>
 

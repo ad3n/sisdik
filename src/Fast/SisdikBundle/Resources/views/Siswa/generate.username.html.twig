@@ -13,14 +13,36 @@
 .captcha_reload {
     margin-right: 0.4em;
 }
+#username-info {
+    color: #E43838;
+    line-height: 1.2em;
+    margin-bottom: 1em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
 </style>
 
+<div id="username-info">&nbsp;</div>
 <form id="generateform" action="{{ path('data_student_generate_username') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
 	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.generate.username'|trans }}</button>
-	    <div id="process-output" style="color: #003EB0; "></div>
+	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.generate.username'|trans }}</button>
+	    <div id="process-output" style="color: #003EB0; line-height: 1.2em; margin-top: 1em;"></div>
     </div>
 </form>
 
@@ -44,7 +66,101 @@
 </ul>
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
+    var checkurl = "{{ path("data_student_ajax_generated_username") }}";
+    var posturl = "{{ path('data_student_generate_username') }}";
 
+	if ($(".selectyear").val() != '') {
+		$("#username-info").html("&nbsp;");
+		$('#process-output').html("");
+        $.get(checkurl, {tahunmasuk: $(".selectyear").val(), siswa: $(".studentfilter").val()}, function(data) {
+            $("#username-info").html(data.info);
+            $('#process-output').html("");
+        });
+    }
+    
+    $(".selectyear").change(function() {
+        $("#username-info").html("&nbsp;");
+        $('#process-output').html("");
+        $(".studentfilter").val("");
+        if ($(".selectyear").val() != '') {
+            $.get(checkurl, {tahunmasuk: $(".selectyear").val(), siswa: $(".studentfilter").val()}, function(data) {
+                $("#username-info").html(data.info);
+                $('#process-output').html("");
+            });
+        }
+    });
+
+    $(".studentfilter").autocomplete({
+    	minLength: 3,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("data_student_ajax_filter_student") }}",
+    			data: {tahunmasuk: $(".selectyear").val(), filter: $(".studentfilter").val()},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label, value: item.value
+            			}
+    			    }));
+				}
+			});
+		},
+		search: function(event, ui) {
+			if ($(".selectyear").val() == '') {
+				$("#username-info").html("{{ 'shortinfo.selectyear.filterstudent'|trans }}");
+				return false;
+			}
+		},
+    	select: function(event, ui) {
+    		$.get(checkurl, {tahunmasuk: $(".selectyear").val(), siswa: ui.item.value}, function(data) {
+                $("#username-info").html(data.info);
+                $('#process-output').html("");
+            });
+    	}
+	});
+
+    $(".studentfilter").blur(function() {
+    	$.get(checkurl, {tahunmasuk: $(".selectyear").val(), siswa: $(".studentfilter").val()}, function(data) {
+            $("#username-info").html(data.info);
+            $('#process-output').html("");
+        });
+    });
+
+	$("#generateform").submit(function() {
+		
+        {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#process-output').html('<img src="{{ asset_url }}" />');
+        {% endimage %}
+
+        if($(this).data("valid")) {
+            return true;
+        }
+
+        if ($(".regenerate-username").is(":checked") == true && $(".studentfilter").val() == '') {
+        	$('#process-output').html("{{ 'alert.student.nofilter'|trans }}");
+        } else {
+            // last check to make sure student is available 
+        	$.get(checkurl, {
+            	    tahunmasuk: $(".selectyear").val(),
+            	    siswa: $(".studentfilter").val(),
+            	    regenerate: $(".regenerate-username").is(":checked") == true ? 'YES' : 'NO'
+        	    }, function(data) {
+            	    console.log(data.proceedpost + ":" + posturl);
+                    if (data.proceedpost == 'YES') {
+                    	$("#generateform").data("valid", true).submit();
+                        // $.post(posturl, $("#generateform").serialize(), function(data) {
+                            // console.log(data);
+                        // }); 
+                    } else {
+                    	$("#generateform").data("valid", false);
+                        $("#username-info").html(data.info);
+                        $('#process-output').html(data.info);
+                    }
+            });
+        }
+        
+		return false;
+	});
 });
 </script>
 {% endblock content %}

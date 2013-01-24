@@ -1,15 +1,11 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Util\PasswordGenerator;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -27,9 +23,7 @@ use Fast\SisdikBundle\Form\SiswaKelasTemplateInitType;
 use Fast\SisdikBundle\Form\SiswaKelasTemplateMapType;
 use Fast\SisdikBundle\Form\SiswaMergeType;
 use Fast\SisdikBundle\Form\SiswaExportType;
-use Fast\SisdikBundle\Form\SiswaGenerateUsernameType;
 use Fast\SisdikBundle\Util\EasyCSV\Reader;
-use Fast\SisdikBundle\Util\EasyCSV\Writer;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -44,12 +38,6 @@ class SiswaController extends Controller
     private $importStudentCount = 0;
     private $importStudentClassCount = 0;
     private $mergeStudentCount = 0;
-    const DOCUMENTS_DIR = "/documents/";
-    const BASEFILE = "base.ods";
-    const OUTPUTPREFIX = "username-";
-    const PYCONVERTER = "converter.py";
-    const DOCUMENTS_BASEDIR = "base/";
-    const DOCUMENTS_OUTPUTDIR = "output/";
 
     /**
      * Lists all Siswa entities.
@@ -64,9 +52,11 @@ class SiswaController extends Controller
 
         $searchform = $this->createForm(new SiswaSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')
+                ->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun DESC, t.namaLengkap');
+                ->where('t2.sekolah = :sekolah')
+                ->orderBy('t2.tahun DESC, t.namaLengkap');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -74,13 +64,18 @@ class SiswaController extends Controller
 
             if ($searchdata['tahunmasuk'] != '') {
                 $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
+                $querybuilder
+                        ->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
-                        ->andWhere("t.namaLengkap LIKE :searchkey OR t.nomorInduk = :searchkey2");
-                $querybuilder->setParameter('searchkey', '%' . $searchdata['searchkey'] . '%');
-                $querybuilder->setParameter('searchkey2', $searchdata['searchkey']);
+                        ->andWhere(
+                                "t.namaLengkap LIKE :searchkey OR t.nomorInduk = :searchkey2");
+                $querybuilder
+                        ->setParameter('searchkey',
+                                '%' . $searchdata['searchkey'] . '%');
+                $querybuilder
+                        ->setParameter('searchkey2', $searchdata['searchkey']);
             }
         }
 
@@ -88,12 +83,14 @@ class SiswaController extends Controller
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator
-                ->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+                ->paginate($querybuilder,
+                        $this->getRequest()->query->get('page', 1));
 
         $dlform = $this->createForm(new SiswaExportType($this->container));
 
         return array(
-                'pagination' => $pagination, 'searchform' => $searchform->createView(),
+                'pagination' => $pagination,
+                'searchform' => $searchform->createView(),
                 'dlform' => $dlform->createView(),
         );
     }
@@ -167,7 +164,8 @@ class SiswaController extends Controller
                 $em->persist($entity);
                 $em->flush();
             } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.studentid.unique');
+                $message = $this->get('translator')
+                        ->trans('exception.studentid.unique');
                 throw new DBALException($e);
             }
 
@@ -176,7 +174,8 @@ class SiswaController extends Controller
                             $this->get('translator')
                                     ->trans('flash.data.student.inserted',
                                             array(
-                                                '%student%' => $entity->getNamaLengkap()
+                                                    '%student%' => $entity
+                                                            ->getNamaLengkap()
                                             )));
 
             return $this
@@ -254,7 +253,8 @@ class SiswaController extends Controller
                 $em->persist($entity);
                 $em->flush();
             } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.studentid.unique');
+                $message = $this->get('translator')
+                        ->trans('exception.studentid.unique');
                 throw new DBALException($message);
             }
 
@@ -263,7 +263,8 @@ class SiswaController extends Controller
                             $this->get('translator')
                                     ->trans('flash.data.student.updated',
                                             array(
-                                                '%student%' => $entity->getNamaLengkap()
+                                                    '%student%' => $entity
+                                                            ->getNamaLengkap()
                                             )));
 
             return $this
@@ -328,7 +329,8 @@ class SiswaController extends Controller
             $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+                throw $this
+                        ->createNotFoundException('Entity Siswa tak ditemukan.');
             }
 
             try {
@@ -340,16 +342,19 @@ class SiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.student.deleted',
                                                 array(
-                                                    '%student%' => $entity->getNamaLengkap()
+                                                        '%student%' => $entity
+                                                                ->getNamaLengkap()
                                                 )));
             } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.delete.restrict');
+                $message = $this->get('translator')
+                        ->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')->trans('flash.data.student.fail.delete'));
+                            $this->get('translator')
+                                    ->trans('flash.data.student.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('data_student'));
@@ -384,17 +389,19 @@ class SiswaController extends Controller
 
                 while ($row = $reader->getRow()) {
                     $this
-                            ->importStudent($row, $reader->getHeaders(), $sekolah, $tahunmasuk,
-                                    $gelombang);
+                            ->importStudent($row, $reader->getHeaders(),
+                                    $sekolah, $tahunmasuk, $gelombang);
                 }
 
                 try {
                     $em->flush();
                 } catch (DBALException $e) {
-                    $message = $this->get('translator')->trans('exception.studentid.unique');
+                    $message = $this->get('translator')
+                            ->trans('exception.studentid.unique');
                     throw new DBALException($message);
                 } catch (Exception $e) {
-                    $message = $this->get('translator')->trans('exception.import.error');
+                    $message = $this->get('translator')
+                            ->trans('exception.import.error');
                     throw new \Exception($message);
                 }
 
@@ -403,9 +410,12 @@ class SiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.student.imported',
                                                 array(
-                                                        '%count%' => $this->importStudentCount,
-                                                        '%year%' => $tahunmasuk->getTahun(),
-                                                        '%admission%' => $gelombang->getNama()
+                                                        '%count%' => $this
+                                                                ->importStudentCount,
+                                                        '%year%' => $tahunmasuk
+                                                                ->getTahun(),
+                                                        '%admission%' => $gelombang
+                                                                ->getNama()
                                                 )));
 
                 return $this->redirect($this->generateUrl('data_student'));
@@ -426,15 +436,18 @@ class SiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+        $reflectionClass = new \ReflectionClass(
+                'Fast\SisdikBundle\Entity\Siswa');
         $properties = $reflectionClass->getProperties();
 
         $filename = "template_data_siswa.csv";
 
         foreach ($properties as $property) {
             $fieldName = $property->getName();
-            if (preg_match('/^id/', $fieldName) || $fieldName === 'file' || $fieldName === 'foto'
-                    || $fieldName === 'nomorPendaftaran' || $fieldName === 'nomorIndukSistem'
+            if (preg_match('/^id/', $fieldName) || $fieldName === 'file'
+                    || $fieldName === 'foto'
+                    || $fieldName === 'nomorPendaftaran'
+                    || $fieldName === 'nomorIndukSistem'
                     || $fieldName === 'nomorUrutPersekolah')
                 continue;
             $fields[] = $fieldName;
@@ -447,7 +460,9 @@ class SiswaController extends Controller
                         ));
 
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+        $response->headers
+                ->set('Content-Disposition',
+                        'attachment; filename=' . $filename);
 
         return $response;
     }
@@ -483,28 +498,34 @@ class SiswaController extends Controller
 
                 while ($row = $reader->getRow()) {
                     $this
-                            ->importStudentClass($row, $reader->getHeaders(), $sekolah, $tahun,
-                                    $kelas);
+                            ->importStudentClass($row, $reader->getHeaders(),
+                                    $sekolah, $tahun, $kelas);
                 }
 
                 try {
                     $em->flush();
                 } catch (DBALException $e) {
-                    $message = $this->get('translator')->trans('exception.studentclass.unique');
+                    $message = $this->get('translator')
+                            ->trans('exception.studentclass.unique');
                     throw new DBALException($message);
                 } catch (Exception $e) {
-                    $message = $this->get('translator')->trans('exception.import.error');
+                    $message = $this->get('translator')
+                            ->trans('exception.import.error');
                     throw new \Exception($message);
                 }
 
                 $this->get('session')
                         ->setFlash('success',
                                 $this->get('translator')
-                                        ->trans('flash.data.studentclass.imported',
+                                        ->trans(
+                                                'flash.data.studentclass.imported',
                                                 array(
-                                                        '%count%' => $this->importStudentClassCount,
-                                                        '%year%' => $tahun->getNama(),
-                                                        '%class%' => $kelas->getNama()
+                                                        '%count%' => $this
+                                                                ->importStudentClassCount,
+                                                        '%year%' => $tahun
+                                                                ->getNama(),
+                                                        '%class%' => $kelas
+                                                                ->getNama()
                                                 )));
 
                 return $this->redirect($this->generateUrl('data_student'));
@@ -516,7 +537,8 @@ class SiswaController extends Controller
                 ->createForm(new SiswaKelasTemplateInitType($this->container));
 
         // form to download template adding class-student mapping
-        $dlform_classmap = $this->createForm(new SiswaKelasTemplateMapType($this->container));
+        $dlform_classmap = $this
+                ->createForm(new SiswaKelasTemplateMapType($this->container));
 
         return array(
                 'form' => $form->createView(),
@@ -535,7 +557,8 @@ class SiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaKelasTemplateInitType($this->container));
+        $form = $this
+                ->createForm(new SiswaKelasTemplateInitType($this->container));
 
         $filename = "template_kelas_siswa_init.csv";
 
@@ -549,7 +572,8 @@ class SiswaController extends Controller
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Siswa', 't')->where('t.tahunmasuk = :tahunmasuk')
+                    ->from('FastSisdikBundle:Siswa', 't')
+                    ->where('t.tahunmasuk = :tahunmasuk')
                     ->andWhere('t.sekolah = :sekolah');
             $querybuilder->setParameter('tahunmasuk', $tahunmasuk);
             $querybuilder->setParameter('sekolah', $sekolah);
@@ -559,31 +583,37 @@ class SiswaController extends Controller
             $students = array();
             foreach ($results as $result) {
                 $students[] = array(
-                        $result->getNomorIndukSistem(), $result->getNomorInduk(),
-                        $result->getNamaLengkap(), $result->getJenisKelamin(), '', 1
+                        $result->getNomorIndukSistem(),
+                        $result->getNomorInduk(), $result->getNamaLengkap(),
+                        $result->getJenisKelamin(), '', 1
                 );
             }
 
             $fields = array(
-                    'nomorIndukSistem', 'nomorInduk', 'namaLengkap', 'jenisKelamin', 'kodeJurusan',
-                    'aktif', 'keterangan'
+                    'nomorIndukSistem', 'nomorInduk', 'namaLengkap',
+                    'jenisKelamin', 'kodeJurusan', 'aktif', 'keterangan'
             );
 
             // ambil data kode jurusan
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')
+                    ->where('t.sekolah = :sekolah')
+                    ->orderBy('t.root ASC, t.lft', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
             $placements = $querybuilder->getQuery()->getResult();
 
             $response = $this
                     ->render("FastSisdikBundle:Siswa:$filename.twig",
                             array(
-                                    'fields' => $fields, 'students' => $students,
+                                    'fields' => $fields,
+                                    'students' => $students,
                                     'placements' => $placements
                             ));
 
             $response->headers->set('Content-Type', 'text/csv');
-            $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+            $response->headers
+                    ->set('Content-Disposition',
+                            'attachment; filename=' . $filename);
 
             return $response;
         }
@@ -598,7 +628,8 @@ class SiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaKelasTemplateMapType($this->container));
+        $form = $this
+                ->createForm(new SiswaKelasTemplateMapType($this->container));
 
         $filename = "template_kelas_siswa_perjenjang.csv";
 
@@ -611,9 +642,11 @@ class SiswaController extends Controller
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.siswa', 't2')
-                    ->leftJoin('t.kelas', 't3')->where('t.tahun = :tahun')
-                    ->andWhere('t2.sekolah = :sekolah')->orderBy('t3.kode, t2.nomorInduk');
+                    ->from('FastSisdikBundle:SiswaKelas', 't')
+                    ->leftJoin('t.siswa', 't2')->leftJoin('t.kelas', 't3')
+                    ->where('t.tahun = :tahun')
+                    ->andWhere('t2.sekolah = :sekolah')
+                    ->orderBy('t3.kode, t2.nomorInduk');
             $querybuilder->setParameter('tahun', $tahun);
             $querybuilder->setParameter('sekolah', $sekolah);
 
@@ -622,43 +655,53 @@ class SiswaController extends Controller
             $students = array();
             foreach ($results as $result) {
                 $penjurusan = $result->getPenjurusan();
-                $kodepenjurusan = (is_object($penjurusan) && $penjurusan instanceof Penjurusan) ? $penjurusan
+                $kodepenjurusan = (is_object($penjurusan)
+                        && $penjurusan instanceof Penjurusan) ? $penjurusan
                                 ->getKode() : '';
                 $students[] = array(
                         $result->getSiswa()->getNomorIndukSistem(),
                         $result->getSiswa()->getNomorInduk(),
                         $result->getSiswa()->getNamaLengkap(),
-                        $result->getSiswa()->getJenisKelamin(), $result->getKelas()->getKode(),
-                        $kodepenjurusan, $result->getAktif(), $result->getKeterangan(),
+                        $result->getSiswa()->getJenisKelamin(),
+                        $result->getKelas()->getKode(), $kodepenjurusan,
+                        $result->getAktif(), $result->getKeterangan(),
                 );
             }
 
             $fields = array(
-                    'nomorIndukSistem', 'nomorInduk', 'namaLengkap', 'jenisKelamin', 'kodeKelas',
-                    'kodeJurusan', 'aktif', 'keterangan'
+                    'nomorIndukSistem', 'nomorInduk', 'namaLengkap',
+                    'jenisKelamin', 'kodeKelas', 'kodeJurusan', 'aktif',
+                    'keterangan'
             );
 
             // data kodeKelas
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:Kelas', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
             $classes = $querybuilder->getQuery()->getResult();
 
             // data kodeJurusan
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:Penjurusan', 't')
+                    ->where('t.sekolah = :sekolah')
+                    ->orderBy('t.root ASC, t.lft', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
             $placements = $querybuilder->getQuery()->getResult();
 
             $response = $this
                     ->render("FastSisdikBundle:Siswa:$filename.twig",
                             array(
-                                    'fields' => $fields, 'students' => $students,
-                                    'classes' => $classes, 'placements' => $placements
+                                    'fields' => $fields,
+                                    'students' => $students,
+                                    'classes' => $classes,
+                                    'placements' => $placements
                             ));
 
             $response->headers->set('Content-Type', 'text/csv');
-            $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+            $response->headers
+                    ->set('Content-Disposition',
+                            'attachment; filename=' . $filename);
 
             return $response;
         }
@@ -695,10 +738,12 @@ class SiswaController extends Controller
                 try {
                     $em->flush();
                 } catch (DBALException $e) {
-                    $message = $this->get('translator')->trans('exception.studentid.unique');
+                    $message = $this->get('translator')
+                            ->trans('exception.studentid.unique');
                     throw new DBALException($message);
                 } catch (Exception $e) {
-                    $message = $this->get('translator')->trans('exception.import.error');
+                    $message = $this->get('translator')
+                            ->trans('exception.import.error');
                     throw new \Exception($message);
                 }
 
@@ -707,7 +752,8 @@ class SiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.student.merged',
                                                 array(
-                                                    '%count%' => $this->mergeStudentCount,
+                                                        '%count%' => $this
+                                                                ->mergeStudentCount,
                                                 )));
 
                 return $this->redirect($this->generateUrl('data_student'));
@@ -744,20 +790,23 @@ class SiswaController extends Controller
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Siswa', 't')->where('t.tahunmasuk = :tahunmasuk')
+                    ->from('FastSisdikBundle:Siswa', 't')
+                    ->where('t.tahunmasuk = :tahunmasuk')
                     ->andWhere('t.sekolah = :sekolah');
             $querybuilder->setParameter('tahunmasuk', $tahunmasuk);
             $querybuilder->setParameter('sekolah', $sekolah);
 
             $results = $querybuilder->getQuery()->getResult();
 
-            $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+            $reflectionClass = new \ReflectionClass(
+                    'Fast\SisdikBundle\Entity\Siswa');
             $properties = $reflectionClass->getProperties();
 
             foreach ($properties as $property) {
                 $fieldName = $property->getName();
                 if (preg_match('/^id/', $fieldName) || $fieldName === 'file'
-                        || $fieldName === 'foto' || $fieldName === 'nomorPendaftaran'
+                        || $fieldName === 'foto'
+                        || $fieldName === 'nomorPendaftaran'
                         || $fieldName === 'nomorUrutPersekolah')
                     continue;
                 $fields[] = $fieldName;
@@ -780,250 +829,11 @@ class SiswaController extends Controller
                             ));
 
             $response->headers->set('Content-Type', 'text/csv');
-            $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
+            $response->headers
+                    ->set('Content-Disposition',
+                            'attachment; filename=' . $filename);
 
             return $response;
-        }
-    }
-
-    /**
-     * Generate student usernames
-     *
-     * @Route("/generate/username", name="data_student_generate_username")
-     * @Template("FastSisdikBundle:Siswa:generate.username.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
-     */
-    public function generateUsernameAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-        
-        $form = $this->createForm(new SiswaGenerateUsernameType($this->container));
-        
-        $request = $this->getRequest();
-        if ($request->isMethod("POST")) {
-            $form->bind($request);
-            if ($form->isValid()) {
-                // do something..
-            }
-        }
-
-        return array(
-            'form' => $form->createView()
-        );
-    }
-
-    /**
-     * Check if students username and password has already generated
-     *
-     * @Route("/ajax/generatedusername", name="data_student_ajax_generated_username")
-     * @Method("POST")
-     * @Secure(roles="ROLE_ADMIN")
-     */
-    public function ajaxGeneratedUsername(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
-
-        $form->bind($this->getRequest());
-
-        if ($form->isValid()) {
-            $data = $form->getData();
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $tahunmasuk = $this->getRequest()->query->get('tahunmasuk');
-
-        $entities = $em->getRepository('FastSisdikBundle:Siswa')
-                ->findBy(
-                        array(
-                            'tahunmasuk' => $tahunmasuk
-                        ));
-        $siswa = '';
-        $siswa_num = count($entities);
-        foreach ($entities as $entity) {
-            $siswa .= $entity->getId() . ",";
-        }
-        $siswa = preg_replace('/,$/', '', $siswa);
-
-        $retval = array();
-        if ($siswa != '') {
-            $query = $em
-                    ->createQuery(
-                            "SELECT COUNT(t.id) FROM FastSisdikBundle:FosUser t "
-                                    . " JOIN t.siswa t1 " . " WHERE t.siswa IS NOT NULL "
-                                    . " AND t1.tahunmasuk = :tahunmasuk "
-                                    . " AND t.sekolah = :sekolah ");
-            $query->setParameter("tahunmasuk", $tahunmasuk);
-            $query->setParameter("sekolah", $sekolah->getId());
-            $count = $query->getSingleScalarResult();
-
-            if ($siswa_num > $count && $count > 0) {
-                $retval = array(
-                    'generated' => 'PARTIAL',
-                );
-                // TODO
-                // - abaikan siswa yang sebelumnya telah dibuat usernamenya
-                // - generate username dari sini
-            } else if ($siswa_num == $count && $count > 0) {
-                $retval = array(
-                    'generated' => 'YES',
-                );
-            } else if ($count < 1) {
-                $retval = array(
-                    'generated' => 'NO'
-                );
-                // TODO
-                // - generate username dari sini. generateUsernameAction harus diperbaiki
-            }
-        } else {
-            $retval = array(
-                'generated' => 'NO'
-            );
-        }
-
-        $return = json_encode($retval);
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
-    }
-
-    /**
-     * generate username
-     *  
-     * @param 
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function generateUsername($tahunmasuk, $penyaring) {
-        $em = $this->getDoctrine()->getManager();
-        $userManager = $this->container->get('fos_user.user_manager');
-
-        $passwordargs = array(
-                'length' => 8, 'alpha_upper_include' => TRUE, 'alpha_lower_include' => TRUE,
-                'number_include' => TRUE, 'symbol_include' => TRUE,
-        );
-
-        // get siswa for the selected year and class
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.tahun', 't2')
-                ->leftJoin('t.kelas', 't3')->leftJoin('t.siswa', 't4')->where('t.tahun = :tahun')
-                ->andWhere('t.kelas = :kelas')->andWhere('t.aktif = :aktif')
-                ->orderBy('t4.nomorIndukSistem', 'ASC')
-                ->setParameter('tahun', $data['tahun']->getId())
-                ->setParameter('kelas', $data['kelas']->getId())->setParameter('aktif', TRUE);
-        $results = $querybuilder->getQuery()->getResult();
-
-        $output = array();
-        foreach ($results as $result) {
-            $siswa = $result->getSiswa();
-            if (is_object($siswa) && $siswa instanceof Siswa) {
-                $passwordobject = new PasswordGenerator($passwordargs);
-
-                $output[] = array(
-                        'nama' => $siswa->getNamaLengkap(),
-                        'username' => $siswa->getNomorIndukSistem(),
-                        'password' => $passwordobject->getPassword()
-                );
-
-                $user = $userManager->createUser();
-                $user->setUsername($siswa->getNomorIndukSistem());
-                $user->setPlainPassword($passwordobject->getPassword());
-                $user->setEmail($siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
-                $user->setName($siswa->getNamaLengkap());
-                $user->addRole('ROLE_SISWA');
-                $user->setSiswa($siswa);
-                $user->setSekolah($siswa->getSekolah());
-                $user->setConfirmationToken(null);
-                $user->setEnabled(true);
-
-                $userManager->updateUser($user);
-            }
-        }
-
-        // base
-        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                . self::DOCUMENTS_BASEDIR . self::BASEFILE;
-
-        // source and target
-        $extensionsource = ".ods";
-        $extensiontarget = "." . $data['output'];
-
-        $filenameoutput = self::OUTPUTPREFIX
-                . preg_replace('/\s+/', '', strtolower($data['tahun']->getNama())) . '-'
-                . preg_replace('/\s+/', '', strtolower($data['kelas']->getNama()));
-
-        $filesource = $filenameoutput . $extensionsource;
-        $filetarget = $filenameoutput . $extensiontarget;
-
-        $documentsource = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                . self::DOCUMENTS_OUTPUTDIR . $filesource;
-        $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                . self::DOCUMENTS_OUTPUTDIR . $filetarget;
-
-        if ($data['output'] == 'ods') {
-            // do not convert
-
-            if (copy($documentbase, $documenttarget) === TRUE) {
-                $ziparchive = new \ZipArchive();
-                $ziparchive->open($documenttarget);
-                $ziparchive
-                        ->addFromString('content.xml',
-                                $this
-                                        ->renderView("FastSisdikBundle:Siswa:username.xml.twig",
-                                                array(
-                                                    'users' => $output,
-                                                )));
-                if ($ziparchive->close() === TRUE) {
-                    $response = new Response(file_get_contents($documenttarget), 200);
-                    $d = $response->headers
-                            ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                    $filetarget);
-                    $response->headers->set('Content-Disposition', $d);
-                    $response->headers->set('Content-Description', 'File Transfer');
-                    $response->headers
-                            ->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
-                    $response->headers->set('Content-Transfer-Encoding', 'binary');
-                    $response->headers->set('Expires', '0');
-                    $response->headers->set('Cache-Control', 'must-revalidate');
-                    $response->headers->set('Pragma', 'public');
-                    $response->headers->set('Content-Length', filesize($documenttarget));
-
-                    return $response;
-                }
-            }
-        } else {
-            // convert from ods to target
-
-            if (copy($documentbase, $documentsource) === TRUE) {
-                $ziparchive = new \ZipArchive();
-                $ziparchive->open($documentsource);
-                $ziparchive
-                        ->addFromString('content.xml',
-                                $this
-                                        ->renderView("FastSisdikBundle:Siswa:username.xml.twig",
-                                                array(
-                                                    'users' => $output,
-                                                )));
-                if ($ziparchive->close() === TRUE) {
-                    $scriptlocation = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                            . self::PYCONVERTER;
-                    exec("python $scriptlocation $documentsource $documenttarget");
-
-                    $response = new Response(file_get_contents($documenttarget), 200);
-                    $d = $response->headers
-                            ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                    $filetarget);
-                    $response->headers->set('Content-Disposition', $d);
-                    $response->headers->set('Content-Description', 'File Transfer');
-                    $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-                    $response->headers->set('Content-Transfer-Encoding', 'binary');
-                    $response->headers->set('Expires', '0');
-                    $response->headers->set('Cache-Control', 'must-revalidate');
-                    $response->headers->set('Pragma', 'public');
-                    $response->headers->set('Content-Length', filesize($documenttarget));
-
-                    return $response;
-                }
-            }
         }
     }
 
@@ -1040,7 +850,8 @@ class SiswaController extends Controller
             return true;
         }
 
-        $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+        $reflectionClass = new \ReflectionClass(
+                'Fast\SisdikBundle\Entity\Siswa');
         $properties = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
@@ -1060,7 +871,9 @@ class SiswaController extends Controller
 
                     if ($fieldName == 'tanggalLahir') {
                         if ($value) {
-                            $entity->{'set' . ucfirst($fieldName)}(new \DateTime($value));
+                            $entity
+                                    ->{'set' . ucfirst($fieldName)}(
+                                            new \DateTime($value));
                         }
                     } else {
                         $entity->{'set' . ucfirst($fieldName)}(trim($value));
@@ -1080,14 +893,15 @@ class SiswaController extends Controller
 
     }
 
-    private function importStudent($row, $headers, $sekolah, $tahunmasuk, $gelombang,
-            $andFlush = false) {
+    private function importStudent($row, $headers, $sekolah, $tahunmasuk,
+            $gelombang, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
         // Create new entity
         $entity = new Siswa();
 
-        $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+        $reflectionClass = new \ReflectionClass(
+                'Fast\SisdikBundle\Entity\Siswa');
         $properties = $reflectionClass->getProperties();
 
         foreach ($properties as $property) {
@@ -1107,7 +921,9 @@ class SiswaController extends Controller
 
                     if ($fieldName == 'tanggalLahir') {
                         if ($value) {
-                            $entity->{'set' . ucfirst($fieldName)}(new \DateTime($value));
+                            $entity
+                                    ->{'set' . ucfirst($fieldName)}(
+                                            new \DateTime($value));
                         }
                     } else {
                         $entity->{'set' . ucfirst($fieldName)}(trim($value));
@@ -1130,7 +946,8 @@ class SiswaController extends Controller
         }
     }
 
-    private function importStudentClass($row, $headers, $sekolah, $tahun, $kelas, $andFlush = false) {
+    private function importStudentClass($row, $headers, $sekolah, $tahun,
+            $kelas, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
         // Create new siswakelas entity
@@ -1141,11 +958,13 @@ class SiswaController extends Controller
             $student = $em->getRepository('FastSisdikBundle:Siswa')
                     ->findOneBy(
                             array(
-                                'nomorIndukSistem' => $row[$headers[$key]], 'sekolah' => $sekolah
+                                    'nomorIndukSistem' => $row[$headers[$key]],
+                                    'sekolah' => $sekolah
                             ));
 
             if (!$student) {
-                throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+                throw $this
+                        ->createNotFoundException('Entity Siswa tak ditemukan.');
             }
 
             $siswakelas->setSiswa($student);
@@ -1159,7 +978,8 @@ class SiswaController extends Controller
             $placement = $em->getRepository('FastSisdikBundle:Penjurusan')
                     ->findOneBy(
                             array(
-                                'kode' => $row[$headers[$key]], 'sekolah' => $sekolah
+                                    'kode' => $row[$headers[$key]],
+                                    'sekolah' => $sekolah
                             ));
 
             if (!$placement) {
@@ -1182,7 +1002,8 @@ class SiswaController extends Controller
                             ->findOneBy(
                                     array(
                                             'siswa' => $student->getId(),
-                                            'tahun' => $tahun->getId(), 'aktif' => $aktif
+                                            'tahun' => $tahun->getId(),
+                                            'aktif' => $aktif
                                     ));
                     if ($obj) {
                         $exception = $this->get('translator')
@@ -1192,7 +1013,9 @@ class SiswaController extends Controller
                 }
             }
         } else {
-            throw $this->createNotFoundException('Status aktif/non-aktif harus ditentukan.');
+            throw $this
+                    ->createNotFoundException(
+                            'Status aktif/non-aktif harus ditentukan.');
         }
         $key = array_search('Keterangan', $headers);
         if (is_int($key)) {
@@ -1210,15 +1033,19 @@ class SiswaController extends Controller
     }
 
     private function createProceedDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+        return $this
+                ->createFormBuilder(
+                        array(
+                            'id' => $id
+                        ))->add('id', 'hidden')->getForm();
     }
 
     private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+        return $this
+                ->createFormBuilder(
+                        array(
+                            'id' => $id
+                        ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -1227,17 +1054,21 @@ class SiswaController extends Controller
     }
 
     private function isRegisteredToSchool() {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.context')->getToken()
+                ->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')
+                ->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin.or.headmaster'));
+                    $this->get('translator')
+                            ->trans('exception.useadmin.or.headmaster'));
         } else {
             throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+                    $this->get('translator')
+                            ->trans('exception.registertoschool'));
         }
     }
 }

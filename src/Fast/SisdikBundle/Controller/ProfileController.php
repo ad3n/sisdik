@@ -1,10 +1,16 @@
 <?php
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\Form\FormError;
 use FOS\UserBundle\Controller\ProfileController as FOSProfileController;
+use FOS\UserBundle\FOSUserEvents;
+use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\GetResponseUserEvent;
+use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use FOS\UserBundle\Model\UserInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * 
@@ -20,7 +26,8 @@ class ProfileController extends FOSProfileController
         $user = $this->container->get('security.context')->getToken()->getUser();
 
         if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            throw new AccessDeniedException(
+                    'This user does not have access to this section.');
         }
 
         foreach ($user->getRoles() as $keys => $values) {
@@ -30,35 +37,77 @@ class ProfileController extends FOSProfileController
         return $this->container->get('templating')
                 ->renderResponse('FastSisdikBundle:Profile:show.html.twig',
                         array(
-                            'user' => $user, 'roles' => $roles, 'name' => $user->getName()
+                                'user' => $user, 'roles' => $roles,
+                                'name' => $user->getName()
                         ));
     }
 
     /**
      * Edit the user
      */
-    //     public function editAction() {
-    //         $user = $this->container->get('security.context')->getToken()->getUser();
-    //         if (!is_object($user) || !$user instanceof UserInterface) {
-    //             throw new AccessDeniedException('This user does not have access to this section.');
-    //         }
+    public function editAction(Request $request) {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException(
+                    'This user does not have access to this section.');
+        }
 
-    //         $form = $this->container->get('fos_user.profile.form'); // $this->createForm(new UserFormType($this->container), $user);
-    //         $formHandler = $this->container->get('fos_user.profile.form.handler');
+        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+        $dispatcher = $this->container->get('event_dispatcher');
 
-    //         $process = $formHandler->process($user);
-    //         if ($process) {
-    //             $this->setFlash('success', 'flash.profile.updated');
+        $event = new GetResponseUserEvent($user, $request);
+        $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_INITIALIZE, $event);
 
-    //             return new RedirectResponse($this->getRedirectionUrl($user));
-    //         }
+        if (null !== $event->getResponse()) {
+            return $event->getResponse();
+        }
 
-    //         return $this->container->get('templating')
-    //                 ->renderResponse(
-    //                         'FOSUserBundle:Profile:edit.html.'
-    //                                 . $this->container->getParameter('fos_user.template.engine'),
-    //                         array(
-    //                             'form' => $form->createView()
-    //                         ));
-    //     }
+        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
+        $formFactory = $this->container->get('fos_user.profile.form.factory');
+
+        $form = $formFactory->createForm();
+        $form->setData($user);
+
+        if ('POST' === $request->getMethod()) {
+            $form->bind($request);
+
+            $data = $form->getData();
+            if (is_numeric($data->getUsername())) {
+                $message = $this->container->get('translator')
+                        ->trans('alert.username.numeric.forstudent');
+                $form->get('username')->addError(new FormError($message));
+            }
+
+            if ($form->isValid()) {
+                /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+                $userManager = $this->container->get('fos_user.user_manager');
+
+                $event = new FormEvent($form, $request);
+                $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
+
+                $userManager->updateUser($user);
+
+                if (null === $response = $event->getResponse()) {
+                    $url = $this->container->get('router')
+                            ->generate('fos_user_profile_show');
+                    $response = new RedirectResponse($url);
+                }
+
+                $dispatcher
+                        ->dispatch(FOSUserEvents::PROFILE_EDIT_COMPLETED,
+                                new FilterUserResponseEvent($user, $request, $response));
+
+                return $response;
+            }
+        }
+
+        return $this->container->get('templating')
+                ->renderResponse(
+                        'FOSUserBundle:Profile:edit.html.'
+                                . $this->container
+                                        ->getParameter('fos_user.template.engine'),
+                        array(
+                            'form' => $form->createView()
+                        ));
+    }
 }

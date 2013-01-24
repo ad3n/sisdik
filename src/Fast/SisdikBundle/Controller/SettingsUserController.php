@@ -1,5 +1,9 @@
 <?php
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\Translation\IdentityTranslator;
+
+use Symfony\Component\Form\FormError;
+
 use Fast\SisdikBundle\Controller\SekolahList;
 use Fast\SisdikBundle\Entity\Staf;
 use Fast\SisdikBundle\Entity\Guru;
@@ -61,24 +65,25 @@ class SettingsUserController extends Controller
             $query = $em
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u "
-                                    . ($searchcondition != '' ? " WHERE $searchcondition " : '')
-                                    . " ORDER BY u.username ASC");
+                                    . ($searchcondition != '' ? " WHERE $searchcondition "
+                                            : '') . " ORDER BY u.username ASC");
         } else if ($filter == 'unset') {
             $query = $em
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u WHERE u.sekolah IS NULL "
-                                    . ($searchcondition != '' ? " AND $searchcondition " : '')
-                                    . " ORDER BY u.username ASC");
+                                    . ($searchcondition != '' ? " AND $searchcondition "
+                                            : '') . " ORDER BY u.username ASC");
         } else {
             $query = $em
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u JOIN u.sekolah s WHERE u.sekolah = '$filter' "
-                                    . ($searchcondition != '' ? " AND $searchcondition " : '')
-                                    . " ORDER BY u.username ASC");
+                                    . ($searchcondition != '' ? " AND $searchcondition "
+                                            : '') . " ORDER BY u.username ASC");
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($query, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator
+                ->paginate($query, $this->get('request')->query->get('page', 1));
 
         $sekolahlist = new SekolahList($this->container);
         return array(
@@ -98,9 +103,11 @@ class SettingsUserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserBy(array(
-                    'id' => $id
-                ));
+        $user = $userManager
+                ->findUserBy(
+                        array(
+                            'id' => $id
+                        ));
 
         $roleproperties = $user->getRoles();
 
@@ -178,7 +185,8 @@ class SettingsUserController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.settings.user.updated',
                                                 array(
-                                                    '%username%' => $user->getUsername()
+                                                        '%username%' => $user
+                                                                ->getUsername()
                                                 )));
 
                 return $this
@@ -192,7 +200,8 @@ class SettingsUserController extends Controller
         }
 
         return array(
-            'form' => $form->createView(), 'id' => $id, 'page' => $page, 'filter' => $filter
+                'form' => $form->createView(), 'id' => $id, 'page' => $page,
+                'filter' => $filter
         );
     }
 
@@ -214,6 +223,13 @@ class SettingsUserController extends Controller
         if ($request->getMethod() == 'POST') {
             $form->bind($request);
 
+            $data = $form->getData();
+            if (is_numeric($data->getUsername())) {
+                $message = $this->get('translator')
+                        ->trans('alert.username.numeric.forstudent');
+                $form->get('username')->addError(new FormError($message));
+            }
+
             if ($form->isValid()) {
 
                 $user->setConfirmationToken(null);
@@ -226,7 +242,8 @@ class SettingsUserController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.settings.user.inserted',
                                                 array(
-                                                    '%username%' => $user->getUsername()
+                                                        '%username%' => $user
+                                                                ->getUsername()
                                                 )));
 
                 return $this
@@ -265,6 +282,13 @@ class SettingsUserController extends Controller
 
         if ($request->getMethod() == 'POST') {
             $form->bind($request);
+
+            $data = $form->getData();
+            if (is_numeric($data->getUsername())) {
+                $message = $this->get('translator')
+                        ->trans('alert.username.numeric.forstudent');
+                $form->get('username')->addError(new FormError($message));
+            }
 
             if ($form->isValid()) {
 
@@ -318,7 +342,8 @@ class SettingsUserController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.settings.user.inserted',
                                                 array(
-                                                    '%username%' => $user->getUsername()
+                                                        '%username%' => $user
+                                                                ->getUsername()
                                                 )));
 
                 if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
@@ -330,7 +355,8 @@ class SettingsUserController extends Controller
                                                         'filter' => $filter
                                                     )));
                 } else {
-                    return $this->redirect($this->generateUrl('settings_user_inschool_list'));
+                    return $this
+                            ->redirect($this->generateUrl('settings_user_inschool_list'));
                 }
             }
         }
@@ -404,13 +430,15 @@ class SettingsUserController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
                 $query = $em
-                        ->createQuery("DELETE FastSisdikBundle:User u WHERE u. IN ($wherein)");
+                        ->createQuery(
+                                "DELETE FastSisdikBundle:User u WHERE u. IN ($wherein)");
                 $query->execute();
                 $em->flush();
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')->trans('flash.settings.user.some.deleted'));
+                                $this->get('translator')
+                                        ->trans('flash.settings.user.some.deleted'));
 
                 return $this
                         ->redirect(
@@ -438,7 +466,8 @@ class SettingsUserController extends Controller
             // better be returned to the originated page
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')->trans('flash.settings.user.fail.deletesome'));
+                            $this->get('translator')
+                                    ->trans('flash.settings.user.fail.deletesome'));
 
             return $this
                     ->redirect(
@@ -473,14 +502,16 @@ class SettingsUserController extends Controller
         if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->get('session')
                     ->setFlash('info',
-                            $this->get('translator')->trans('flash.settings.user.message1'));
+                            $this->get('translator')
+                                    ->trans('flash.settings.user.message1'));
 
             $query = $em
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u
-                            WHERE u.sekolah != '' AND u.username != '{$user->getUsername()}' "
-                                    . ($searchcondition != '' ? " AND $searchcondition " : '')
-                                    . " ORDER BY u.username ASC");
+                            WHERE u.sekolah != '' AND u.username != '{$user
+                                    ->getUsername()}' "
+                                    . ($searchcondition != '' ? " AND $searchcondition "
+                                            : '') . " ORDER BY u.username ASC");
         } else {
             $sekolah = $user->getSekolah();
             if (!is_object($sekolah) || !$sekolah instanceof Sekolah) {
@@ -492,12 +523,13 @@ class SettingsUserController extends Controller
                     ->createQuery(
                             "SELECT u FROM FastSisdikBundle:User u
                             WHERE (u.sekolah != '' AND u.sekolah = '{$sekolah->getId()}') "
-                                    . ($searchcondition != '' ? " AND $searchcondition " : '')
-                                    . " ORDER BY u.username ASC");
+                                    . ($searchcondition != '' ? " AND $searchcondition "
+                                            : '') . " ORDER BY u.username ASC");
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($query, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator
+                ->paginate($query, $this->get('request')->query->get('page', 1));
 
         return array(
                 'form' => $searchform->createView(), 'pagination' => $pagination,
@@ -516,9 +548,11 @@ class SettingsUserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserBy(array(
-                    'id' => $id
-                ));
+        $user = $userManager
+                ->findUserBy(
+                        array(
+                            'id' => $id
+                        ));
 
         $roleproperties = $user->getRoles();
 
@@ -589,7 +623,8 @@ class SettingsUserController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.settings.user.updated',
                                                 array(
-                                                    '%username%' => $user->getUsername()
+                                                        '%username%' => $user
+                                                                ->getUsername()
                                                 )));
 
                 return $this

@@ -162,7 +162,7 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 
     {% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
         <div>{{ 'shortinfo.duplicate.schedule'|trans }}</div>

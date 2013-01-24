@@ -25,26 +25,30 @@ class SiswaGenerateUsernameType extends AbstractType
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunMasuk', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:TahunMasuk', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahunmasuk', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahunmasuk',
-                                    'label' => 'label.yearentry.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun', 'required' => true,
+                                    'label' => 'label.yearentry.entry',
+                                    'multiple' => false, 'expanded' => false,
+                                    'property' => 'tahun', 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
-                                        'class' => 'small selectyear'
-                                    ),
+                                        'class' => 'medium selectyear'
+                                    ), 'empty_value' => 'label.selectyear'
                             ));
 
             $builder
                     ->add('filter', 'text',
                             array(
-                                    'label' => 'label.filter.student', 'required' => false,
+                                    'label' => 'label.filter.student',
+                                    'required' => false,
                                     'attr' => array(
-                                        'class' => 'medium'
+                                            'class' => 'large studentfilter',
+                                            'placeholder' => 'help.filterby.name.systemid'
                                     ),
                             ))
                     ->add('output', 'choice',
@@ -54,19 +58,25 @@ class SiswaGenerateUsernameType extends AbstractType
                                             'xls' => 'Microsoft Excel 97/2000/XP'
                                     ), 'label' => 'label.output', 'multiple' => false,
                                     'expanded' => true, 'required' => true,
+                                    'data' => 'ods',
                             ));
 
             $builder
                     ->add('regenerate', 'checkbox',
                             array(
                                     'label' => 'label.regenerate', 'required' => false,
-                                    'help_block' => 'Membuat ulang username akan menimpa username dan password sebelumnya',
+                                    'help_block' => 'help.regenerate.username',
+                                    'attr' => array(
+                                        'class' => 'regenerate-username',
+                                    ),
                             ))
                     ->add('captcha', 'captcha',
                             array(
                                     'attr' => array(
-                                        'class' => 'medium'
+                                            'class' => 'medium',
+                                            'placeholder' => 'help.type.captcha',
                                     ), 'as_url' => true, 'reload' => true,
+                                    'help_block' => 'help.captcha.username.explain',
                             ));
         }
     }

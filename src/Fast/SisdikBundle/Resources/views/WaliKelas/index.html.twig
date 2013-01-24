@@ -35,7 +35,7 @@
     		<th>{{ 'label.year.entry'|trans }}</th>
     		<th>{{ 'label.class.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-                {{ pagination.sortable('label.classguardian.name'|trans, 't.nama')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.classguardian.name'|trans, 't.nama') }}
     	    </th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
@@ -54,5 +54,5 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 {% endblock content %}

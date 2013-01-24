@@ -18,13 +18,13 @@
     <thead>
     	<tr>
     		<th class="{% if pagination.isSorted('t.alamatIp') %}sorted{% endif %}">
-    		    {{ pagination.sortable('label.ipaddress'|trans, 't.alamatIp')|raw }}
+    		    {{ knp_pagination_sortable(pagination, 'label.ipaddress'|trans, 't.alamatIp') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.commkey') %}sorted{% endif %}">
-                {{ pagination.sortable('label.commkey'|trans, 't.commkey')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.commkey'|trans, 't.commkey') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.active') %}sorted{% endif %}">
-                {{ pagination.sortable('label.active'|trans, 't.aktif')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.active'|trans, 't.aktif') }}
     	    </th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
@@ -53,5 +53,5 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 {% endblock content %}

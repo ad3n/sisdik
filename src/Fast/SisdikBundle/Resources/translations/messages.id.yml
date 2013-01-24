@@ -231,22 +231,6 @@ link:
     backtodetail: « Kembali ke Info
     download.template: Unduh Berkas Template
 
-shortinfo:
-    password.mustequal: password harus sama
-    username: username 
-    checked: yang terpilih
-    inselectedyear: dalam tahun terpilih
-    onlyoneactive: hanya satu tahun ajaran yang bisa aktif dalam satu waktu
-    duplicate.schedule: Salin jadwal ke
-    duplicate.classes: Salin kelas
-    onlyforactiveyear: hanya untuk tahun aktif
-    using.yearentry: menggunakan tahun masuk
-    using.year.and.level: menggunakan tahun ajaran dan jenjang kelas
-    no.student.data: Tidak ada data siswa
-    no.class.data: Tidak ada data kelas
-    username.generated: Username siswa untuk tahun ajaran dan kelas terpilih telah dibuat sebelumnya
-    regenerate.fillcaptcha: Isi captcha untuk membuat ulang username
-
 fos_user:
     username:
         already_used: username sudah terpakai
@@ -425,6 +409,42 @@ exception:
     unique.class.year.school: Kode kelas pada suatu sekolah harus unik
     unique.year.school: Kode tahun ajaran pada suatu sekolah harus unik
     unique.classguardian: Wali kelas untuk tahun ajaran dan kelas yang dipilih telah ada 
+
+shortinfo:
+    password.mustequal: password harus sama
+    username: username 
+    checked: yang terpilih
+    inselectedyear: dalam tahun terpilih
+    onlyoneactive: hanya satu tahun ajaran yang bisa aktif dalam satu waktu
+    duplicate.schedule: Salin jadwal ke
+    duplicate.classes: Salin kelas
+    onlyforactiveyear: hanya untuk tahun aktif
+    using.yearentry: menggunakan tahun masuk
+    using.year.and.level: menggunakan tahun ajaran dan jenjang kelas
+    no.student.data: Tidak ada data siswa
+    no.class.data: Tidak ada data kelas
+    username.generated: Username siswa untuk tahun ajaran dan kelas terpilih telah dibuat sebelumnya
+    regenerate.fillcaptcha: Isi captcha untuk membuat ulang username
+    username.not.generated: >
+        Semua siswa (<a href="%linktotal%">%total%</a> orang) di tahun %year% belum dibuat usernamenya.
+    student.has.username: >
+        Identitas username <a href="%linkuser%">%user%</a> telah terpakai. Membuat ulang bisa menimpanya.
+        Pastikan pemiliknya adalah <a href="%linkstudent%">%student%</a>.
+    student.hasno.username: >
+        <a href="%linkstudent%">%student%</a> belum memiliki username.
+    selectyear.filterstudent: Pilih tahun masuk untuk menyaring siswa.
+    
+alert:
+    username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
+    username.partially.generated: >
+        Sebanyak <a href="">%num%</a> dari <a href="">%total%</a> siswa di tahun %year% belum dibuat username nya.<br>
+        Gunakan penyaringan untuk mencari siswa tersebut.
+    username.nostudent: Tidak ada data siswa di tahun %year%.
+    username.generated.bigger: Di tahun masuk %year% ada %num% username, sedangkan jumlah siswa hanya ada %total%.
+    student.noexists: Tidak ada siswa dengan penyaringan '%filter%'
+    student.nofilter: Membuat ulang hanya berguna bersama dengan penyaringan siswa
+    username.numeric.forstudent: Username numerik-saja hanya bisa dipakai untuk siswa
+    filter.noempty.numeric: Membuat ulang hanya bisa digunakan bersama dengan Saring Siswa dan berisi hanya-angka 
     
 info:
     errormessage: Pesan Error
@@ -467,4 +487,10 @@ title:
 
 app.title: SisDik
     
+help:
+    regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.
+    filterby.name.systemid: Nama atau Nomor Induk Sistem
+    type.captcha: ketik kode
+    captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
+
     

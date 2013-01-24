@@ -36,13 +36,13 @@
     		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
     		<th>{{ 'label.fee.type.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
-                {{ pagination.sortable('label.nominal'|trans, 't.nominal')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 't.nominal') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.perulangan') %}sorted{% endif %}">
-                {{ pagination.sortable('label.repetition'|trans, 't.perulangan')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.repetition'|trans, 't.perulangan') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ pagination.sortable('label.order'|trans, 't.urutan')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
     	    </th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
@@ -64,5 +64,5 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 {% endblock content %}

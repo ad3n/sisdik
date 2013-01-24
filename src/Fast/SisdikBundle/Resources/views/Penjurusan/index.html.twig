@@ -18,13 +18,13 @@
     <thead>
     	<tr>
     		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-    		    {{ pagination.sortable('label.placement.name'|trans, 't.nama')|raw }}
+    		    {{ knp_pagination_sortable(pagination, 'label.placement.name'|trans, 't.nama') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
-                {{ pagination.sortable('label.code'|trans, 't.kode')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.kepala') %}sorted{% endif %}">
-                {{ pagination.sortable('label.chief'|trans, 't.kepala')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.chief'|trans, 't.kepala') }}
     	    </th>
     		<th>{{ 'label.movement'|trans }}</th>
     	    <th>{{ 'label.actions'|trans }}</th>
@@ -55,5 +55,5 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 {% endblock content %}

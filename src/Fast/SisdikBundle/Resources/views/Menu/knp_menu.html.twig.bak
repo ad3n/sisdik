@@ -97,7 +97,7 @@
 
 {% block label %}
     {% if options.allow_safe_labels and item.getExtra('safe_label', false) %}
-        {{ item.label|raw }}
+        {{ item.label }}
     {% else %}
         {{ item.label|trans(item.getExtra('translation_params', {}), item.getExtra('translation_domain', 'navigations')) }}
     {% endif %}

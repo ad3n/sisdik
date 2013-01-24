@@ -53,16 +53,16 @@
     		<th>{{ 'label.number'|trans }}</th>
     		<th>{{ 'label.yearentry.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
-                {{ pagination.sortable('label.name.full'|trans, 't.namaLengkap')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.nomorInduk') %}sorted{% endif %}">
-                {{ pagination.sortable('label.idnumber'|trans, 't.nomorInduk')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 't.nomorInduk') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.jenisKelamin') %}sorted{% endif %}">
-                {{ pagination.sortable('label.gender'|trans, 't.jenisKelamin')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 't.jenisKelamin') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.ponselOrangtuawali') %}sorted{% endif %}">
-                {{ pagination.sortable('label.mobilephone.parent'|trans, 't.ponselOrangtuawali')|raw }}
+                {{ knp_pagination_sortable(pagination, 'label.mobilephone.parent'|trans, 't.ponselOrangtuawali') }}
     	    </th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
@@ -84,7 +84,7 @@
     {% endfor %}
     </tbody>
 </table>
-{{ pagination.render()|raw }}
+{{ knp_pagination_render(pagination) }}
 
 <div class="clearfix"></div>
 
