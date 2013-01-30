@@ -73,6 +73,7 @@ data:
         removal: Menghapus Data Siswa
         merge: Mengimpor-gabungkan Data Siswa
         generate.username: Membuat username siswa
+        generate.username.confirm: Konfirmasi Pembuatan Username
     class:
         list: Daftar Kelas
         edit: Mengubah Kelas

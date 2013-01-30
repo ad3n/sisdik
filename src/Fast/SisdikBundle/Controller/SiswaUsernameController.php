@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\SiswaGenerateUsernameConfirmType;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Form\SimpleSearchFormType;
 use Fast\SisdikBundle\Form\SiswaSearchType;
@@ -63,15 +65,102 @@ class SiswaUsernameController extends Controller
             }
 
             if ($form->isValid()) {
-                $this
+                $retval = $this
                         ->generateUsernamePasswordList($data['tahunmasuk'],
                                 $data['filter'], $data['output'], $data['regenerate']);
+                if (is_array($retval) && array_key_exists('sessiondata', $retval)) {
+                    return $this
+                            ->redirect(
+                                    $this
+                                            ->generateUrl(
+                                                    'data_student_generate_username_confirm',
+                                                    array(
+                                                            'file' => $retval['sessiondata'],
+                                                            'type' => $retval['filetype']
+                                                    )));
+                }
             }
         }
 
         return array(
             'form' => $form->createView()
         );
+    }
+
+    /**
+     * confirm student usernames creation
+     *
+     * @Route("/confirm/{file}.{type}", name="data_student_generate_username_confirm")
+     * @Template("FastSisdikBundle:Siswa:generate.username.confirm.html.twig")
+     */
+    public function generateUsernameConfirmAction($file, $type) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $form = $this
+                ->createForm(
+                        new SiswaGenerateUsernameConfirmType($this->container, $file));
+
+        $request = $this->getRequest();
+        if ($request->isMethod("POST")) {
+            $form->bind($request);
+            if ($form->isValid()) {
+
+                $sessiondata = $form['sessiondata']->getData();
+                $credentials = $this->get('session')->get($sessiondata);
+
+                if ($this->generateUsernamePassword($credentials)) {
+                    $this->get('session')
+                            ->setFlash('success',
+                                    $this->get('translator')
+                                            ->trans('flash.student.username.populated'));
+                    return $this
+                            ->redirect(
+                                    $this->generateUrl('data_student_generate_username'));
+                }
+            }
+        }
+
+        return array(
+            'form' => $form->createView(), 'file' => $file, 'type' => $type,
+        );
+
+    }
+
+    /**
+     * download the generated file contains username-password list
+     *
+     * @Route("/download/{file}.{type}", name="data_student_generate_username_download")
+     */
+    public function downloadGeneratedFileAction($file, $type) {
+        $filetarget = $file . '.' . $type;
+
+        $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
+                . self::DOCUMENTS_OUTPUTDIR . $filetarget;
+
+        $response = new Response(file_get_contents($documenttarget), 200);
+        $d = $response->headers
+                ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
+        $response->headers->set('Content-Disposition', $d);
+        $response->headers->set('Content-Description', 'File Transfer');
+
+        if ($type == 'xls') {
+            $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        } else if ($type == 'ods') {
+            $response->headers
+                    ->set('Content-Type',
+                            'application/vnd.oasis.opendocument.spreadsheet');
+        } else {
+            $response->headers->set('Content-Type', 'application');
+        }
+
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Expires', '0');
+        $response->headers->set('Cache-Control', 'must-revalidate');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Content-Length', filesize($documenttarget));
+
+        return $response;
     }
 
     /**
@@ -331,7 +420,6 @@ class SiswaUsernameController extends Controller
     private function generateUsernamePasswordList($tahunmasuk, $penyaring,
             $outputfiletype = "ods", $regenerate = FALSE) {
         $em = $this->getDoctrine()->getManager();
-        $userManager = $this->container->get('fos_user.user_manager');
 
         $passwordargs = array(
                 'length' => 8, 'alpha_upper_include' => TRUE,
@@ -350,7 +438,6 @@ class SiswaUsernameController extends Controller
             $results = $querybuilder->getQuery()->getResult();
         } else {
             // get students in a year
-            // group by class?
             $querybuilder = $em->createQueryBuilder()->select('t')
                     ->from('FastSisdikBundle:Siswa', 't')
                     ->where('t.tahunmasuk = :tahunmasuk')
@@ -369,29 +456,19 @@ class SiswaUsernameController extends Controller
                                 array(
                                     'siswa' => $siswa, 'aktif' => TRUE
                                 ));
-                $kelas = (is_object($siswakelas) && $siswakelas instanceof SiswaKelas) ? $siswakelas
+                $kelas_key = (is_object($siswakelas) && $siswakelas instanceof SiswaKelas) ? $siswakelas
+                                ->getKelas()->getUrutan() : 0;
+                $kelas_val = (is_object($siswakelas) && $siswakelas instanceof SiswaKelas) ? $siswakelas
                                 ->getKelas()->getNama() : '';
 
-                $outputusername[] = array(
-                        'nama' => $siswa->getNamaLengkap(), 'kelas' => $kelas,
+                $outputusername[$kelas_key . $siswa->getNomorIndukSistem()] = array(
+                        'nama' => $siswa->getNamaLengkap(), 'kelas' => $kelas_val,
                         'username' => $siswa->getNomorIndukSistem(),
                         'password' => $passwordobject->getPassword()
                 );
 
-                // $user = $userManager->createUser();
-                // $user->setUsername($siswa->getNomorIndukSistem());
-                // $user->setPlainPassword($passwordobject->getPassword());
-                // $user
-                //         ->setEmail(
-                //                 $siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
-                // $user->setName($siswa->getNamaLengkap());
-                // $user->addRole('ROLE_SISWA');
-                // $user->setSiswa($siswa);
-                // $user->setSekolah($siswa->getSekolah());
-                // $user->setConfirmationToken(null);
-                // $user->setEnabled(true);
-
-                // $userManager->updateUser($user);
+                // sort by class name and eventually nomorIndukSistem
+                ksort($outputusername);
             }
         }
 
@@ -399,26 +476,24 @@ class SiswaUsernameController extends Controller
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
                 . self::DOCUMENTS_BASEDIR . self::BASEFILE;
 
-        // origin, source, and target
-        $extensionorigin = ".csv";
+        // source and target
         $extensionsource = ".ods";
         $extensiontarget = "." . $outputfiletype;
 
+        $time = time();
         $filenameoutput = self::OUTPUTPREFIX
-                . preg_replace('/\s+/', '', strtolower($tahunmasuk->getTahun())) . time();
+                . preg_replace('/\s+/', '', strtolower($tahunmasuk->getTahun())) . $time;
 
-        $fileorigin = $filenameoutput . $extensionorigin;
+        $this->get('session')->set($filenameoutput, $outputusername);
         $filesource = $filenameoutput . $extensionsource;
         $filetarget = $filenameoutput . $extensiontarget;
 
-        $documentorigin = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                . self::DOCUMENTS_OUTPUTDIR . $fileorigin;
         $documentsource = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
                 . self::DOCUMENTS_OUTPUTDIR . $filesource;
         $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
                 . self::DOCUMENTS_OUTPUTDIR . $filetarget;
 
-        if ($data['output'] == 'ods') {
+        if ($outputfiletype == 'ods') {
             // do not convert
 
             if (copy($documentbase, $documenttarget) === TRUE) {
@@ -433,22 +508,9 @@ class SiswaUsernameController extends Controller
                                                     'users' => $outputusername,
                                                 )));
                 if ($ziparchive->close() === TRUE) {
-                    $response = new Response(file_get_contents($documenttarget), 200);
-                    $d = $response->headers
-                            ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                    $filetarget);
-                    $response->headers->set('Content-Disposition', $d);
-                    $response->headers->set('Content-Description', 'File Transfer');
-                    $response->headers
-                            ->set('Content-Type',
-                                    'application/vnd.oasis.opendocument.spreadsheet');
-                    $response->headers->set('Content-Transfer-Encoding', 'binary');
-                    $response->headers->set('Expires', '0');
-                    $response->headers->set('Cache-Control', 'must-revalidate');
-                    $response->headers->set('Pragma', 'public');
-                    $response->headers->set('Content-Length', filesize($documenttarget));
-
-                    return $response;
+                    return array(
+                        'sessiondata' => $filenameoutput, 'filetype' => $outputfiletype
+                    );
                 }
             }
         } else {
@@ -470,23 +532,50 @@ class SiswaUsernameController extends Controller
                             . self::DOCUMENTS_DIR . self::PYCONVERTER;
                     exec("python $scriptlocation $documentsource $documenttarget");
 
-                    $response = new Response(file_get_contents($documenttarget), 200);
-                    $d = $response->headers
-                            ->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                    $filetarget);
-                    $response->headers->set('Content-Disposition', $d);
-                    $response->headers->set('Content-Description', 'File Transfer');
-                    $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-                    $response->headers->set('Content-Transfer-Encoding', 'binary');
-                    $response->headers->set('Expires', '0');
-                    $response->headers->set('Cache-Control', 'must-revalidate');
-                    $response->headers->set('Pragma', 'public');
-                    $response->headers->set('Content-Length', filesize($documenttarget));
-
-                    return $response;
+                    return array(
+                        'sessiondata' => $filenameoutput, 'filetype' => $outputfiletype
+                    );
                 }
             }
         }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @param array $credentials
+     */
+    private function generateUsernamePassword($credentials) {
+        $em = $this->getDoctrine()->getManager();
+        $userManager = $this->container->get('fos_user.user_manager');
+
+        foreach ($credentials as $key => $value) {
+            $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+                    ->findOneBy(
+                            array(
+                                'nomorIndukSistem' => $value['username']
+                            ));
+            if (is_object($siswa) && $siswa instanceof Siswa) {
+                $user = $userManager->createUser();
+                $user->setUsername($siswa->getNomorIndukSistem());
+                $user->setPlainPassword($value['password']);
+
+                $user
+                        ->setEmail(
+                                $siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
+                $user->setName($siswa->getNamaLengkap());
+                $user->addRole('ROLE_SISWA');
+                $user->setSiswa($siswa);
+                $user->setSekolah($siswa->getSekolah());
+                $user->setConfirmationToken(null);
+                $user->setEnabled(true);
+
+                $userManager->updateUser($user);
+            }
+        }
+
+        return true;
     }
 
     private function setCurrentMenu() {

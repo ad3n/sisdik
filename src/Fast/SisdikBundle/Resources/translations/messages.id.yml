@@ -1,4 +1,8 @@
 label:
+    generated.valid: Ya, data valid
+    continue: Lanjutkan
+    class: Kelas
+    cancel: Batal
     filter.student: Saring siswa
     regenerate: Membuat Ulang
     output: Output
@@ -352,6 +356,8 @@ flash:
         updated: Mesin Kehadiran '%ip%' berhasil diperbarui
         deleted: Mesin Kehadiran '%ip%' berhasil dihapus
         fail.delete: Mesin Kehadiran '%ip%' gagal dihapus
+    student:
+        username.populated: Username-password siswa berhasil disimpan ke database
 
 tip:
     edit: Ubah
@@ -433,6 +439,10 @@ shortinfo:
     student.hasno.username: >
         <a href="%linkstudent%">%student%</a> belum memiliki username.
     selectyear.filterstudent: Pilih tahun masuk untuk menyaring siswa.
+    username.generated.file.confirmation: >
+        Hingga tahap ini, username-password belum disimpan ke database.<br />
+        Data yang akan disimpan ada di dalam file berikut <a href="%path%">%filename%</a>.<br />
+        Setelah pasti bahwa isinya valid dan sesuai keinginan, lanjutkan proses penyimpanan ke database.<br />
     
 alert:
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
@@ -492,5 +502,5 @@ help:
     filterby.name.systemid: Nama atau Nomor Induk Sistem
     type.captcha: ketik kode
     captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
-
+    confirm.generated.username: Centang untuk menandai bahwa data valid dan boleh disimpan ke database
     

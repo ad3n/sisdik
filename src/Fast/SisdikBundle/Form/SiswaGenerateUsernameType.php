@@ -75,6 +75,7 @@ class SiswaGenerateUsernameType extends AbstractType
                                     'attr' => array(
                                             'class' => 'medium',
                                             'placeholder' => 'help.type.captcha',
+                                            'autocomplete' => 'off'
                                     ), 'as_url' => true, 'reload' => true,
                                     'help_block' => 'help.captcha.username.explain',
                             ));

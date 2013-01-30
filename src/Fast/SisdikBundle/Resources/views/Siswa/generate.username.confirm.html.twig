@@ -1,0 +1,49 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% form_theme form 'MopaBootstrapBundle:Form:fields.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.student.generate.username.confirm{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.filter-section .control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.captcha_reload {
+    margin-right: 0.4em;
+}
+</style>
+
+<p>
+{{ 'shortinfo.username.generated.file.confirmation'|trans(
+        {'%path%': path('data_student_generate_username_download', {'file': file, 'type': type}),
+        '%filename%': file ~ '.' ~ type})|raw }}
+</p>
+<form id="generateform" action="{{ path('data_student_generate_username_confirm', {'file': file, 'type': type}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
+        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('data_student_generate_username') }}'">{{ 'label.cancel'|trans }}</button>
+    </div>
+</form>
+
+<div class="clearfix"></div>
+
+<div class="knowledgebase">
+{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
+    <a href="{{ path('_index') }}" class="a-kb">
+        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
+        {{ 'link.student.manage.username'|trans({}, 'kb') }}
+    </a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    
+});
+</script>
+{% endblock content %}

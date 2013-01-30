@@ -24,6 +24,9 @@
             <table:table table:name="Sheet1" table:style-name="ta1">
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
+                        <text:p>{{ 'label.class'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.name'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
@@ -35,6 +38,9 @@
                 </table:table-row>
             {% for user in users %}
                 <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ user.kelas }}</text:p>
+                    </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ user.nama }}</text:p>
                     </table:table-cell>
