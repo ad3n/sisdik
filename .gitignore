@@ -6,6 +6,7 @@ web/uploads/
 app/bootstrap.php.cache
 app/cache/*
 app/logs/*
+app/documents/output/*
 build/
 vendor
 composer.phar
