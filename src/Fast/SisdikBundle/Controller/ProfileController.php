@@ -72,10 +72,12 @@ class ProfileController extends FOSProfileController
             $form->bind($request);
 
             $data = $form->getData();
-            if (is_numeric($data->getUsername())) {
-                $message = $this->container->get('translator')
-                        ->trans('alert.username.numeric.forstudent');
-                $form->get('username')->addError(new FormError($message));
+            if (!in_array('ROLE_SISWA', $data->getRoles(), true)) {
+                if (is_numeric($data->getUsername())) {
+                    $message = $this->container->get('translator')
+                            ->trans('alert.username.numeric.forstudent');
+                    $form->get('username')->addError(new FormError($message));
+                }
             }
 
             if ($form->isValid()) {
