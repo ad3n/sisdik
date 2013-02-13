@@ -1,41 +1,52 @@
-<h1>JenisImbalan</h1>
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-<table class="record_properties">
-    <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ entity.id }}</td>
-        </tr>
-        <tr>
-            <th>Nama</th>
-            <td>{{ entity.nama }}</td>
-        </tr>
-        <tr>
-            <th>Kode</th>
-            <td>{{ entity.kode }}</td>
-        </tr>
-        <tr>
-            <th>Keterangan</th>
-            <td>{{ entity.keterangan }}</td>
-        </tr>
-    </tbody>
-</table>
+{% block page_heading %}{% trans from "headings" %}reward.type.detail{% endtrans %}{% endblock %}
+{% block content %}
+<dl>
+    <dt>{{ 'label.school'|trans }}</dt>
+    <dd>{{ entity.sekolah.nama }}</dd>
+    <dt>{{ 'label.reward.type.entry'|trans }}</dt>
+    <dd>{{ entity.nama }}</dd>
+    <dt>{{ 'label.description'|trans }}</dt>
+    <dd>{{ entity.keterangan }}</dd>
+</dl>
 
-<ul class="record_actions">
+<div class="clearfix"></div>
+
+<form id="delete-form" action="{{ path('rewardtype_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+
+<ul class="pills">
     <li>
-        <a href="{{ path('rewardtype') }}">
-            Back to the list
-        </a>
+        <a href="{{ path('rewardtype', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('rewardtype_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('rewardtype_delete', { 'id': entity.id }) }}" method="post">
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
+        <a href="{{ path('rewardtype_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
+
+<div class="clearfix"></div>
+
+<div class="add-link pull-right">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('rewardtype_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.reward.type.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.reward.type'|trans({ '%rewardtype%': entity.nama }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

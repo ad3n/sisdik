@@ -128,7 +128,12 @@ presence:
 warning:
     removal: Peringatan
 
-
+reward:
+    type:
+        list: Daftar Jenis Imbalan
+        edit: Mengubah Jenis Imbalan
+        creation: Membuat Jenis Imbalan
+        detail: Detail Jenis Imbalan
 
 
 

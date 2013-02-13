@@ -123,6 +123,12 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'fee_recur'
                             ));
 
+            $payment
+                    ->addChild('links.reward.type',
+                            array(
+                                'route' => 'rewardtype'
+                            ));
+
         }
 
         $rolecondition = 'hasRole("ROLE_ADMIN") ' . ' or hasRole("ROLE_KEPALA_SEKOLAH") '
@@ -175,7 +181,8 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                            new Expression('hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
+                                new Expression(
+                                        'hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
                         ))) {
             // presence
             $presence = $this->createDropdownMenuItem($menu, 'headings.presence');

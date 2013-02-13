@@ -1,41 +1,45 @@
-<h1>JenisImbalan list</h1>
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-<table class="records_list">
+{% block page_heading %}{% trans from "headings" %}reward.type.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('rewardtype_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.reward.type.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
+    	<tr>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+    		    {{ knp_pagination_sortable(pagination, 'label.reward.type.name'|trans, 't.nama') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
         <tr>
-            <th>Id</th>
-            <th>Nama</th>
-            <th>Kode</th>
-            <th>Keterangan</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for entity in entities %}
-        <tr>
-            <td><a href="{{ path('rewardtype_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.nama }}</td>
-            <td>{{ entity.kode }}</td>
-            <td>{{ entity.keterangan }}</td>
-            <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('rewardtype_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('rewardtype_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+    		<td data-title="{{ 'label.reward.type.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('rewardtype_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('rewardtype_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
     {% endfor %}
     </tbody>
 </table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
 
-<ul>
-    <li>
-        <a href="{{ path('rewardtype_new') }}">
-            Create a new entry
-        </a>
-    </li>
-</ul>
+

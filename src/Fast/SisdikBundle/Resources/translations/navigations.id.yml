@@ -38,6 +38,8 @@ links:
         class: Kelas
         classguardian: Wali Kelas
         academiccalendar: Kalender Pendidikan
+    reward.type: Jenis Imbalan
+    reward.amount: Besar Imbalan
 
 user:
     details: Info Detail

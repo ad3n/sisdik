@@ -225,6 +225,10 @@ label:
         add: Tambah Mesin Kehadiran
         name: Nama Mesin Kehadiran
         entry: Mesin Kehadiran
+    reward.type:
+        add: Tambah Jenis Imbalan
+        name: Nama Jenis Imbalan
+        entry: Jenis Imbalan
 
 link:
     backtolist: « Kembali ke Daftar
@@ -358,6 +362,11 @@ flash:
         fail.delete: Mesin Kehadiran '%ip%' gagal dihapus
     student:
         username.populated: Username-password siswa berhasil disimpan ke database
+    reward.type:
+        inserted: Jenis imbalan '%rewardtype%' berhasil ditambah
+        updated: Jenis imbalan '%rewardtype%' berhasil diperbarui
+        deleted: Jenis imbalan '%rewardtype%' berhasil dihapus
+        fail.delete: Jenis imbalan gagal dihapus
 
 tip:
     edit: Ubah
@@ -389,6 +398,7 @@ confirm.drop:
     student: Hapus siswa '%student%'?
     studylevel: Hapus jenjang '%code%'?
     attendancemachine: Hapus Mesin Kehadiran '%ip%'?
+    reward.type: Hapus Jenis Imbalan '%rewardtype%'?
 
 alt:
     add: ikon tambah
@@ -416,6 +426,7 @@ exception:
     unique.year.school: Kode tahun ajaran pada suatu sekolah harus unik
     unique.classguardian: Wali kelas untuk tahun ajaran dan kelas yang dipilih telah ada 
     unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
+    unique.rewardtype: Jenis imbalan yang dipilih sudah terdaftar di sekolah yang dipilih
 
 shortinfo:
     password.mustequal: password harus sama
