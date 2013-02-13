@@ -14,11 +14,6 @@ JenisImbalan:
       length: 45
       fixed: false
       nullable: false
-    kode:
-      type: string
-      length: 45
-      fixed: false
-      nullable: false
     keterangan:
       type: string
       length: 300

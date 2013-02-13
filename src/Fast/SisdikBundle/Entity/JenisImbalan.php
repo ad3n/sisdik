@@ -31,13 +31,6 @@ class JenisImbalan
     /**
      * @var string
      *
-     * @ORM\Column(name="kode", type="string", length=45, nullable=false)
-     */
-    private $kode;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
      */
     private $keterangan;
@@ -85,29 +78,6 @@ class JenisImbalan
     public function getNama()
     {
         return $this->nama;
-    }
-
-    /**
-     * Set kode
-     *
-     * @param string $kode
-     * @return JenisImbalan
-     */
-    public function setKode($kode)
-    {
-        $this->kode = $kode;
-    
-        return $this;
-    }
-
-    /**
-     * Get kode
-     *
-     * @return string 
-     */
-    public function getKode()
-    {
-        return $this->kode;
     }
 
     /**

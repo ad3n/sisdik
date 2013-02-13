@@ -31,13 +31,6 @@ class JenisImbalan
     /**
      * @var string
      *
-     * @ORM\Column(name="kode", type="string", length=45, nullable=false)
-     */
-    private $kode;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
      */
     private $keterangan;
