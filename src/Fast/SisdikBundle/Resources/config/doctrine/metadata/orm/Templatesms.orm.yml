@@ -1,37 +1,37 @@
 Templatesms:
-    type: entity
-    table: templatesms
-    fields:
-        id:
-            id: true
-            type: integer
-            unsigned: false
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        nama:
-            type: string
-            length: 50
-            fixed: false
-            nullable: true
-        teks:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-        keterangan:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-    manyToOne:
-        sekolah:
-            targetEntity: Sekolah
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                sekolah_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: templatesms
+  fields:
+    id:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    nama:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+    teks:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+    keterangan:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+  manyToOne:
+    sekolah:
+      targetEntity: Sekolah
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        sekolah_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

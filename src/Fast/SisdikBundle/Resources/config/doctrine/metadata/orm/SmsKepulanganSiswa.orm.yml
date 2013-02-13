@@ -1,19 +1,19 @@
 SmsKepulanganSiswa:
-    type: entity
-    table: sms_kepulangan_siswa
-    fields:
-        id:
-            id: true
-            type: bigint
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        smsDlr:
-            type: smallint
-            nullable: true
-            column: sms_dlr
-        smsDlrtime:
-            type: datetime
-            nullable: true
-            column: sms_dlrtime
-    lifecycleCallbacks: {  }
+  type: entity
+  table: sms_kepulangan_siswa
+  fields:
+    id:
+      id: true
+      type: bigint
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    smsDlr:
+      type: smallint
+      nullable: true
+      column: sms_dlr
+    smsDlrtime:
+      type: datetime
+      nullable: true
+      column: sms_dlrtime
+  lifecycleCallbacks: {  }

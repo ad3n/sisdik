@@ -1,48 +1,48 @@
 SiswaCmp:
-    type: entity
-    table: siswa_cmp
-    fields:
-        id:
-            id: true
-            type: bigint
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        nilai:
-            type: integer
-            unsigned: false
-            nullable: true
-        keterangan:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-    manyToOne:
-        jenisNilai:
-            targetEntity: JenisNilai
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                jenis_nilai_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        cukilMp:
-            targetEntity: CukilMp
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                cukil_mp_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        siswa:
-            targetEntity: Siswa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                siswa_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: siswa_cmp
+  fields:
+    id:
+      id: true
+      type: bigint
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    nilai:
+      type: integer
+      unsigned: false
+      nullable: true
+    keterangan:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+  manyToOne:
+    jenisNilai:
+      targetEntity: JenisNilai
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        jenis_nilai_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    cukilMp:
+      targetEntity: CukilMp
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        cukil_mp_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    siswa:
+      targetEntity: Siswa
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        siswa_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

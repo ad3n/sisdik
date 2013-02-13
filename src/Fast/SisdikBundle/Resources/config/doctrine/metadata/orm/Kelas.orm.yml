@@ -1,58 +1,58 @@
 Kelas:
-    type: entity
-    table: kelas
-    fields:
-        id:
-            id: true
-            type: integer
-            unsigned: false
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        nama:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-        kode:
-            type: string
-            length: 50
-            fixed: false
-            nullable: false
-        keterangan:
-            type: string
-            length: 400
-            fixed: false
-            nullable: true
-        urutan:
-            type: smallint
-            nullable: true
-    manyToOne:
-        tahun:
-            targetEntity: Tahun
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                tahun_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        sekolah:
-            targetEntity: Sekolah
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                sekolah_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        jenjang:
-            targetEntity: Jenjang
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                jenjang_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: kelas
+  fields:
+    id:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    nama:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+    kode:
+      type: string
+      length: 50
+      fixed: false
+      nullable: false
+    keterangan:
+      type: string
+      length: 400
+      fixed: false
+      nullable: true
+    urutan:
+      type: smallint
+      nullable: true
+  manyToOne:
+    jenjang:
+      targetEntity: Jenjang
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        jenjang_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    sekolah:
+      targetEntity: Sekolah
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        sekolah_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    tahun:
+      targetEntity: Tahun
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        tahun_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

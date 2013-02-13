@@ -1,51 +1,51 @@
 KepulanganSiswa:
-    type: entity
-    table: kepulangan_siswa
-    fields:
-        id:
-            id: true
-            type: bigint
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        tanggal:
-            type: date
-            nullable: true
-        jam:
-            type: string
-            length: 10
-            fixed: false
-            nullable: true
-        smsPulangTerproses:
-            type: boolean
-            nullable: false
-            column: sms_pulang_terproses
-    manyToOne:
-        kelas:
-            targetEntity: Kelas
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                kelas_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        siswa:
-            targetEntity: Siswa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                siswa_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        statusKehadiranKepulangan:
-            targetEntity: StatusKehadiranKepulangan
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                status_kehadiran_kepulangan_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: kepulangan_siswa
+  fields:
+    id:
+      id: true
+      type: bigint
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    tanggal:
+      type: date
+      nullable: true
+    jam:
+      type: string
+      length: 10
+      fixed: false
+      nullable: true
+    smsPulangTerproses:
+      type: boolean
+      nullable: false
+      column: sms_pulang_terproses
+  manyToOne:
+    kelas:
+      targetEntity: Kelas
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        kelas_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    siswa:
+      targetEntity: Siswa
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        siswa_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    statusKehadiranKepulangan:
+      targetEntity: StatusKehadiranKepulangan
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        status_kehadiran_kepulangan_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

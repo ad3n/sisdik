@@ -1,6 +1,6 @@
-KelompokMp:
+JenisImbalan:
   type: entity
-  table: kelompok_mp
+  table: jenis_imbalan
   fields:
     id:
       id: true
@@ -11,12 +11,18 @@ KelompokMp:
         strategy: IDENTITY
     nama:
       type: string
-      length: 400
+      length: 45
       fixed: false
-      nullable: true
-    urutan:
-      type: integer
-      unsigned: false
+      nullable: false
+    kode:
+      type: string
+      length: 45
+      fixed: false
+      nullable: false
+    keterangan:
+      type: string
+      length: 300
+      fixed: false
       nullable: true
   manyToOne:
     sekolah:

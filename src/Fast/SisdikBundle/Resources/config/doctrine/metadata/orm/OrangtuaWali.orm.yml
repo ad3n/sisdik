@@ -1,77 +1,77 @@
 OrangtuaWali:
-    type: entity
-    table: orangtua_wali
-    fields:
-        id:
-            id: true
-            type: integer
-            unsigned: false
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        nama:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-        tempatLahir:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-            column: tempat_lahir
-        tanggalLahir:
-            type: date
-            nullable: true
-            column: tanggal_lahir
-        kewarganegaraan:
-            type: string
-            length: 200
-            fixed: false
-            nullable: true
-        peran:
-            type: integer
-            unsigned: false
-            nullable: true
-        pendidikanTertinggi:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-            column: pendidikan_tertinggi
-        pekerjaan:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-        penghasilanBulanan:
-            type: integer
-            unsigned: false
-            nullable: true
-            column: penghasilan_bulanan
-        penghasilanTahunan:
-            type: integer
-            unsigned: false
-            nullable: true
-            column: penghasilan_tahunan
-        alamat:
-            type: string
-            length: 400
-            fixed: false
-            nullable: true
-        keterangan:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-    manyToOne:
-        siswa:
-            targetEntity: Siswa
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                siswa_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: orangtua_wali
+  fields:
+    id:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    nama:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+    tempatLahir:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+      column: tempat_lahir
+    tanggalLahir:
+      type: date
+      nullable: true
+      column: tanggal_lahir
+    kewarganegaraan:
+      type: string
+      length: 200
+      fixed: false
+      nullable: true
+    peran:
+      type: integer
+      unsigned: false
+      nullable: true
+    pendidikanTertinggi:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+      column: pendidikan_tertinggi
+    pekerjaan:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+    penghasilanBulanan:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: penghasilan_bulanan
+    penghasilanTahunan:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: penghasilan_tahunan
+    alamat:
+      type: string
+      length: 400
+      fixed: false
+      nullable: true
+    keterangan:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+  manyToOne:
+    siswa:
+      targetEntity: Siswa
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        siswa_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

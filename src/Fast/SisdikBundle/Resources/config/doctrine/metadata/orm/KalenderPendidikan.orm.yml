@@ -1,33 +1,33 @@
 KalenderPendidikan:
-    type: entity
-    table: kalender_pendidikan
-    fields:
-        id:
-            id: true
-            type: integer
-            unsigned: false
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        tanggal:
-            type: date
-            nullable: true
-        keterangan:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-        kbm:
-            type: boolean
-            nullable: false
-    manyToOne:
-        sekolah:
-            targetEntity: Sekolah
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                sekolah_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: kalender_pendidikan
+  fields:
+    id:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    tanggal:
+      type: date
+      nullable: true
+    keterangan:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+    kbm:
+      type: boolean
+      nullable: false
+  manyToOne:
+    sekolah:
+      targetEntity: Sekolah
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        sekolah_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

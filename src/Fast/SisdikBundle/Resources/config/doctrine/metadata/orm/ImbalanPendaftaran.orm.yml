@@ -1,6 +1,6 @@
-BiayaSekali:
+ImbalanPendaftaran:
   type: entity
-  table: biaya_sekali
+  table: imbalan_pendaftaran
   fields:
     id:
       id: true
@@ -10,12 +10,19 @@ BiayaSekali:
       generator:
         strategy: IDENTITY
     nominal:
-      type: bigint
-      nullable: true
-    urutan:
-      type: smallint
-      nullable: true
+      type: integer
+      unsigned: false
+      nullable: false
   manyToOne:
+    jenisImbalan:
+      targetEntity: JenisImbalan
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        jenis_imbalan_id:
+          referencedColumnName: id
+      orphanRemoval: false
     gelombang:
       targetEntity: Gelombang
       cascade: {  }
@@ -32,15 +39,6 @@ BiayaSekali:
       inversedBy: null
       joinColumns:
         tahunmasuk_id:
-          referencedColumnName: id
-      orphanRemoval: false
-    jenisbiaya:
-      targetEntity: Jenisbiaya
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        jenisbiaya_id:
           referencedColumnName: id
       orphanRemoval: false
   lifecycleCallbacks: {  }

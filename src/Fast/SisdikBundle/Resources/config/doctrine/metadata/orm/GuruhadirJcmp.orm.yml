@@ -1,41 +1,41 @@
 GuruhadirJcmp:
-    type: entity
-    table: guruhadir_jcmp
-    fields:
-        id:
-            id: true
-            type: bigint
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        hadir:
-            type: boolean
-            nullable: true
-        jamMasuk:
-            type: string
-            length: 20
-            fixed: false
-            nullable: true
-            column: jam_masuk
-        jamKeluar:
-            type: string
-            length: 20
-            fixed: false
-            nullable: true
-            column: jam_keluar
-        keterangan:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-    manyToOne:
-        jadwalCmp:
-            targetEntity: JadwalCmp
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                jadwal_cmp_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: guruhadir_jcmp
+  fields:
+    id:
+      id: true
+      type: bigint
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    hadir:
+      type: boolean
+      nullable: true
+    jamMasuk:
+      type: string
+      length: 20
+      fixed: false
+      nullable: true
+      column: jam_masuk
+    jamKeluar:
+      type: string
+      length: 20
+      fixed: false
+      nullable: true
+      column: jam_keluar
+    keterangan:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+  manyToOne:
+    jadwalCmp:
+      targetEntity: JadwalCmp
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        jadwal_cmp_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

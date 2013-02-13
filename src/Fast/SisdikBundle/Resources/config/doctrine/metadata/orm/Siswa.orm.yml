@@ -1,194 +1,194 @@
 Siswa:
-    type: entity
-    table: siswa
-    fields:
-        id:
-            id: true
-            type: integer
-            unsigned: false
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        nomorUrutPersekolah:
-            type: integer
-            unsigned: true
-            nullable: true
-            column: nomor_urut_persekolah
-        nomorIndukSistem:
-            type: string
-            length: 45
-            fixed: false
-            nullable: true
-            column: nomor_induk_sistem
-        nomorPendaftaran:
-            type: smallint
-            nullable: true
-            column: nomor_pendaftaran
-        nomorInduk:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-            column: nomor_induk
-        namaLengkap:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-            column: nama_lengkap
-        jenisKelamin:
-            type: string
-            length: 255
-            fixed: false
-            nullable: true
-            column: jenis_kelamin
-        foto:
-            type: string
-            length: 400
-            fixed: false
-            nullable: true
-        agama:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-        tempatLahir:
-            type: string
-            length: 400
-            fixed: false
-            nullable: true
-            column: tempat_lahir
-        tanggalLahir:
-            type: date
-            nullable: true
-            column: tanggal_lahir
-        email:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-        namaPanggilan:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-            column: nama_panggilan
-        kewarganegaraan:
-            type: string
-            length: 200
-            fixed: false
-            nullable: true
-        anakKe:
-            type: integer
-            unsigned: false
-            nullable: true
-            column: anak_ke
-        jumlahSaudarakandung:
-            type: integer
-            unsigned: false
-            nullable: true
-            column: jumlah_saudarakandung
-        jumlahSaudaratiri:
-            type: integer
-            unsigned: false
-            nullable: true
-            column: jumlah_saudaratiri
-        statusOrphan:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-            column: status_orphan
-        bahasaSeharihari:
-            type: string
-            length: 200
-            fixed: false
-            nullable: true
-            column: bahasa_seharihari
-        alamat:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-        kodepos:
-            type: string
-            length: 30
-            fixed: false
-            nullable: true
-        telepon:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-        ponselSiswa:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-            column: ponsel_siswa
-        ponselOrangtuawali:
-            type: string
-            length: 100
-            fixed: false
-            nullable: true
-            column: ponsel_orangtuawali
-        sekolahTinggaldi:
-            type: string
-            length: 400
-            fixed: false
-            nullable: true
-            column: sekolah_tinggaldi
-        jarakTempat:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-            column: jarak_tempat
-        caraKesekolah:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-            column: cara_kesekolah
-        beratbadan:
-            type: integer
-            unsigned: false
-            nullable: true
-        tinggibadan:
-            type: integer
-            unsigned: false
-            nullable: true
-        golongandarah:
-            type: string
-            length: 50
-            fixed: false
-            nullable: true
-    manyToOne:
-        gelombang:
-            targetEntity: Gelombang
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                gelombang_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        tahunmasuk:
-            targetEntity: Tahunmasuk
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                tahunmasuk_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        sekolah:
-            targetEntity: Sekolah
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                sekolah_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: siswa
+  fields:
+    id:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    nomorUrutPersekolah:
+      type: integer
+      unsigned: true
+      nullable: true
+      column: nomor_urut_persekolah
+    nomorIndukSistem:
+      type: string
+      length: 45
+      fixed: false
+      nullable: true
+      column: nomor_induk_sistem
+    nomorPendaftaran:
+      type: smallint
+      nullable: true
+      column: nomor_pendaftaran
+    nomorInduk:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: nomor_induk
+    namaLengkap:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+      column: nama_lengkap
+    jenisKelamin:
+      type: string
+      length: 255
+      fixed: false
+      nullable: true
+      column: jenis_kelamin
+    foto:
+      type: string
+      length: 400
+      fixed: false
+      nullable: true
+    agama:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+    tempatLahir:
+      type: string
+      length: 400
+      fixed: false
+      nullable: true
+      column: tempat_lahir
+    tanggalLahir:
+      type: date
+      nullable: true
+      column: tanggal_lahir
+    email:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+    namaPanggilan:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: nama_panggilan
+    kewarganegaraan:
+      type: string
+      length: 200
+      fixed: false
+      nullable: true
+    anakKe:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: anak_ke
+    jumlahSaudarakandung:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: jumlah_saudarakandung
+    jumlahSaudaratiri:
+      type: integer
+      unsigned: false
+      nullable: true
+      column: jumlah_saudaratiri
+    statusOrphan:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: status_orphan
+    bahasaSeharihari:
+      type: string
+      length: 200
+      fixed: false
+      nullable: true
+      column: bahasa_seharihari
+    alamat:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+    kodepos:
+      type: string
+      length: 30
+      fixed: false
+      nullable: true
+    telepon:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+    ponselSiswa:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: ponsel_siswa
+    ponselOrangtuawali:
+      type: string
+      length: 100
+      fixed: false
+      nullable: true
+      column: ponsel_orangtuawali
+    sekolahTinggaldi:
+      type: string
+      length: 400
+      fixed: false
+      nullable: true
+      column: sekolah_tinggaldi
+    jarakTempat:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+      column: jarak_tempat
+    caraKesekolah:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+      column: cara_kesekolah
+    beratbadan:
+      type: integer
+      unsigned: false
+      nullable: true
+    tinggibadan:
+      type: integer
+      unsigned: false
+      nullable: true
+    golongandarah:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+  manyToOne:
+    gelombang:
+      targetEntity: Gelombang
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        gelombang_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    tahunmasuk:
+      targetEntity: Tahunmasuk
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        tahunmasuk_id:
+          referencedColumnName: id
+      orphanRemoval: false
+    sekolah:
+      targetEntity: Sekolah
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        sekolah_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

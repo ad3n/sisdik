@@ -1,0 +1,62 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ImbalanPendaftaran
+ *
+ * @ORM\Table(name="imbalan_pendaftaran")
+ * @ORM\Entity
+ */
+class ImbalanPendaftaran
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nominal", type="integer", nullable=false)
+     */
+    private $nominal;
+
+    /**
+     * @var \JenisImbalan
+     *
+     * @ORM\ManyToOne(targetEntity="JenisImbalan")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="jenis_imbalan_id", referencedColumnName="id")
+     * })
+     */
+    private $jenisImbalan;
+
+    /**
+     * @var \Gelombang
+     *
+     * @ORM\ManyToOne(targetEntity="Gelombang")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
+     * })
+     */
+    private $gelombang;
+
+    /**
+     * @var \Tahunmasuk
+     *
+     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     * })
+     */
+    private $tahunmasuk;
+
+
+}

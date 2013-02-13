@@ -1,41 +1,41 @@
 JenisNilai:
-    type: entity
-    table: jenis_nilai
-    fields:
-        id:
-            id: true
-            type: integer
-            unsigned: false
-            nullable: false
-            generator:
-                strategy: IDENTITY
-        nama:
-            type: string
-            length: 300
-            fixed: false
-            nullable: true
-        kode:
-            type: string
-            length: 50
-            fixed: false
-            nullable: true
-        bobot:
-            type: integer
-            unsigned: false
-            nullable: true
-        keterangan:
-            type: string
-            length: 500
-            fixed: false
-            nullable: true
-    manyToOne:
-        tahun:
-            targetEntity: Tahun
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                tahun_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-    lifecycleCallbacks: {  }
+  type: entity
+  table: jenis_nilai
+  fields:
+    id:
+      id: true
+      type: integer
+      unsigned: false
+      nullable: false
+      generator:
+        strategy: IDENTITY
+    nama:
+      type: string
+      length: 300
+      fixed: false
+      nullable: true
+    kode:
+      type: string
+      length: 50
+      fixed: false
+      nullable: true
+    bobot:
+      type: integer
+      unsigned: false
+      nullable: true
+    keterangan:
+      type: string
+      length: 500
+      fixed: false
+      nullable: true
+  manyToOne:
+    tahun:
+      targetEntity: Tahun
+      cascade: {  }
+      mappedBy: null
+      inversedBy: null
+      joinColumns:
+        tahun_id:
+          referencedColumnName: id
+      orphanRemoval: false
+  lifecycleCallbacks: {  }

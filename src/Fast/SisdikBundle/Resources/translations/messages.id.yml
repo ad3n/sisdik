@@ -415,6 +415,7 @@ exception:
     unique.class.year.school: Kode kelas pada suatu sekolah harus unik
     unique.year.school: Kode tahun ajaran pada suatu sekolah harus unik
     unique.classguardian: Wali kelas untuk tahun ajaran dan kelas yang dipilih telah ada 
+    unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
 
 shortinfo:
     password.mustequal: password harus sama

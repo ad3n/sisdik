@@ -1,0 +1,41 @@
+<h1>JenisImbalan</h1>
+
+<table class="record_properties">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ entity.id }}</td>
+        </tr>
+        <tr>
+            <th>Nama</th>
+            <td>{{ entity.nama }}</td>
+        </tr>
+        <tr>
+            <th>Kode</th>
+            <td>{{ entity.kode }}</td>
+        </tr>
+        <tr>
+            <th>Keterangan</th>
+            <td>{{ entity.keterangan }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('rewardtype') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('rewardtype_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('rewardtype_delete', { 'id': entity.id }) }}" method="post">
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
