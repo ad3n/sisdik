@@ -10,12 +10,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\Jenisbiaya;
 use Fast\SisdikBundle\Form\JenisbiayaType;
 use Fast\SisdikBundle\Entity\Sekolah;
-use JMS\SecurityExtraBundle\Annotation\Secure;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * Jenisbiaya controller.
  *
  * @Route("/fee/type")
+ * @PreAuthorize("hasRole('ROLE_ADMIN')")
  */
 class JenisbiayaController extends Controller
 {
@@ -24,7 +25,6 @@ class JenisbiayaController extends Controller
      *
      * @Route("/", name="fee_type")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function indexAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -55,7 +55,6 @@ class JenisbiayaController extends Controller
      *
      * @Route("/{id}/show", name="fee_type_show")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function showAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -81,7 +80,6 @@ class JenisbiayaController extends Controller
      *
      * @Route("/new", name="fee_type_new")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -101,7 +99,6 @@ class JenisbiayaController extends Controller
      * @Route("/create", name="fee_type_create")
      * @Method("post")
      * @Template("FastSisdikBundle:Jenisbiaya:new.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -145,7 +142,6 @@ class JenisbiayaController extends Controller
      *
      * @Route("/{id}/edit", name="fee_type_edit")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -174,7 +170,6 @@ class JenisbiayaController extends Controller
      * @Route("/{id}/update", name="fee_type_update")
      * @Method("post")
      * @Template("FastSisdikBundle:Jenisbiaya:edit.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -228,7 +223,6 @@ class JenisbiayaController extends Controller
      *
      * @Route("/{id}/delete", name="fee_type_delete")
      * @Method("post")
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function deleteAction($id) {
         $sekolah = $this->isRegisteredToSchool();
