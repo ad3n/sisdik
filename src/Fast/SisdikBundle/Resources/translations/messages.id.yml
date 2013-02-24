@@ -229,6 +229,10 @@ label:
         add: Tambah Jenis Imbalan
         name: Nama Jenis Imbalan
         entry: Jenis Imbalan
+    reward.amount:
+        add: Tambah Imbalan Pendaftaran
+        name: Nama Imbalan Pendaftaran
+        entry: Imbalan Pendaftaran
 
 link:
     backtolist: « Kembali ke Daftar
@@ -367,6 +371,11 @@ flash:
         updated: Jenis imbalan '%rewardtype%' berhasil diperbarui
         deleted: Jenis imbalan '%rewardtype%' berhasil dihapus
         fail.delete: Jenis imbalan gagal dihapus
+    reward.amount:
+        inserted: Imbalan pendaftaran berhasil ditambah
+        updated: Imbalan pendaftaran berhasil diperbarui
+        deleted: Imbalan pendaftaran berhasil dihapus
+        fail.delete: Imbalan pendaftaran gagal dihapus
 
 tip:
     edit: Ubah
@@ -399,6 +408,7 @@ confirm.drop:
     studylevel: Hapus jenjang '%code%'?
     attendancemachine: Hapus Mesin Kehadiran '%ip%'?
     reward.type: Hapus Jenis Imbalan '%rewardtype%'?
+    reward.amount: Hapus Imbalan Pendaftaran '%yearentry%', '%admissiongroup%', '%rewardtype%', '%nominal%'?
 
 alt:
     add: ikon tambah
@@ -427,6 +437,7 @@ exception:
     unique.classguardian: Wali kelas untuk tahun ajaran dan kelas yang dipilih telah ada 
     unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardtype: Jenis imbalan yang dipilih sudah terdaftar di sekolah yang dipilih
+    unique.rewardamount: Kombinasi tahun masuk, gelombang, dan jenis imbalan harus unik
 
 shortinfo:
     password.mustequal: password harus sama

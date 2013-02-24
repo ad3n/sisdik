@@ -1,7 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-
+use Doctrine\DBAL\DBALException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -9,11 +10,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\ImbalanPendaftaran;
 use Fast\SisdikBundle\Form\ImbalanPendaftaranType;
+use Fast\SisdikBundle\Form\ImbalanPendaftaranSearchType;
+use Fast\SisdikBundle\Entity\JenisImbalan;
+use Fast\SisdikBundle\Entity\Tahunmasuk;
+use Fast\SisdikBundle\Entity\Gelombang;
+use Fast\SisdikBundle\Entity\Sekolah;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * ImbalanPendaftaran controller.
  *
  * @Route("/rewardamount")
+ * @PreAuthorize("hasRole('ROLE_ADMIN')")
  */
 class ImbalanPendaftaranController extends Controller
 {
@@ -23,14 +31,38 @@ class ImbalanPendaftaranController extends Controller
      * @Route("/", name="rewardamount")
      * @Template()
      */
-    public function indexAction()
-    {
+    public function indexAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->findAll();
+        $searchform = $this
+                ->createForm(new ImbalanPendaftaranSearchType($this->container));
+
+        $querybuilder = $em->createQueryBuilder()->select('t')
+                ->from('FastSisdikBundle:ImbalanPendaftaran', 't')
+                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.jenisImbalan', 't4')->where('t2.sekolah = :sekolah')
+                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC');
+
+        $searchform->bind($this->getRequest());
+        if ($searchform->isValid()) {
+            $searchdata = $searchform->getData();
+
+            if ($searchdata['tahunmasuk'] != '') {
+                $querybuilder->andWhere('t2.id = :tahunmasuk');
+                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
+            }
+        }
+        $querybuilder->setParameter('sekolah', $sekolah);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator
+                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
-            'entities' => $entities,
+            'pagination' => $pagination, 'searchform' => $searchform->createView()
         );
     }
 
@@ -40,21 +72,23 @@ class ImbalanPendaftaranController extends Controller
      * @Route("/{id}/show", name="rewardamount_show")
      * @Template()
      */
-    public function showAction($id)
-    {
+    public function showAction($id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find ImbalanPendaftaran entity.');
+            throw $this
+                    ->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -64,14 +98,15 @@ class ImbalanPendaftaranController extends Controller
      * @Route("/new", name="rewardamount_new")
      * @Template()
      */
-    public function newAction()
-    {
+    public function newAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $entity = new ImbalanPendaftaran();
-        $form   = $this->createForm(new ImbalanPendaftaranType(), $entity);
+        $form = $this->createForm(new ImbalanPendaftaranType($this->container), $entity);
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'entity' => $entity, 'form' => $form->createView(),
         );
     }
 
@@ -82,23 +117,43 @@ class ImbalanPendaftaranController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:ImbalanPendaftaran:new.html.twig")
      */
-    public function createAction(Request $request)
-    {
-        $entity  = new ImbalanPendaftaran();
-        $form = $this->createForm(new ImbalanPendaftaranType(), $entity);
+    public function createAction(Request $request) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $entity = new ImbalanPendaftaran();
+        $form = $this->createForm(new ImbalanPendaftaranType($this->container), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('rewardamount_show', array('id' => $entity->getId())));
+            try {
+                $em->persist($entity);
+                $em->flush();
+
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')
+                                        ->trans('flash.reward.amount.inserted'));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')
+                        ->trans('exception.unique.rewardamount');
+                throw new DBALException($message);
+            }
+
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('rewardamount_show',
+                                            array(
+                                                'id' => $entity->getId()
+                                            )));
         }
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'entity' => $entity, 'form' => $form->createView(),
         );
     }
 
@@ -108,23 +163,26 @@ class ImbalanPendaftaranController extends Controller
      * @Route("/{id}/edit", name="rewardamount_edit")
      * @Template()
      */
-    public function editAction($id)
-    {
+    public function editAction($id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find ImbalanPendaftaran entity.');
+            throw $this
+                    ->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new ImbalanPendaftaranType(), $entity);
+        $editForm = $this
+                ->createForm(new ImbalanPendaftaranType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -135,31 +193,55 @@ class ImbalanPendaftaranController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:ImbalanPendaftaran:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
-    {
+    public function updateAction(Request $request, $id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find ImbalanPendaftaran entity.');
+            throw $this
+                    ->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new ImbalanPendaftaranType(), $entity);
+        $editForm = $this
+                ->createForm(new ImbalanPendaftaranType($this->container), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('rewardamount_edit', array('id' => $id)));
+            try {
+                $em->persist($entity);
+                $em->flush();
+
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')
+                                        ->trans('flash.reward.amount.updated'));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')
+                        ->trans('exception.unique.rewardamount');
+                throw new DBALException($message);
+            }
+
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('rewardamount_edit',
+                                            array(
+                                                    'id' => $id,
+                                                    'page' => $this->getRequest()
+                                                            ->get('page')
+                                            )));
         }
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
         );
     }
 
@@ -169,31 +251,71 @@ class ImbalanPendaftaranController extends Controller
      * @Route("/{id}/delete", name="rewardamount_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id)
-    {
+    public function deleteAction(Request $request, $id) {
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
+            $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')
+                    ->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find ImbalanPendaftaran entity.');
+                throw $this
+                        ->createNotFoundException(
+                                'Entity ImbalanPendaftaran tak ditemukan.');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            try {
+                $em->remove($entity);
+                $em->flush();
+
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')
+                                        ->trans('flash.reward.amount.deleted'));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')
+                        ->trans('exception.unique.rewardamount');
+                throw new DBALException($message);
+            }
+        } else {
+            $this->get('session')
+                    ->setFlash('error',
+                            $this->get('translator')
+                                    ->trans('flash.reward.amount.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('rewardamount'));
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
-        ;
+    private function createDeleteForm($id) {
+        return $this
+                ->createFormBuilder(
+                        array(
+                            'id' => $id
+                        ))->add('id', 'hidden')->getForm();
+    }
+
+    private function setCurrentMenu() {
+        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu['headings.fee']['links.reward.amount']->setCurrent(true);
+    }
+
+    private function isRegisteredToSchool() {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
+        } else if ($this->container->get('security.context')
+                ->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.useadmin'));
+        } else {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.registertoschool'));
+        }
     }
 }

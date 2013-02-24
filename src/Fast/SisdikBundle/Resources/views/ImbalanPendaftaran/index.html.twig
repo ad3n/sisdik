@@ -1,37 +1,60 @@
-<h1>ImbalanPendaftaran list</h1>
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-<table class="records_list">
+{% block page_heading %}{% trans from "headings" %}reward.amount.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('rewardamount') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('rewardamount') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('rewardamount_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.reward.amount.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
+    	<tr>
+    		<th>{{ 'label.yearentry.entry'|trans }}</th>
+    		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th>{{ 'label.reward.type.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 't.nominal') }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
         <tr>
-            <th>Id</th>
-            <th>Nominal</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for entity in entities %}
-        <tr>
-            <td><a href="{{ path('rewardamount_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.nominal }}</td>
-            <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('rewardamount_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('rewardamount_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.reward.type.entry'|trans }}">{% if data.jenisImbalan is defined %}{{ data.jenisImbalan.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('rewardamount_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('rewardamount_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
     {% endfor %}
     </tbody>
 </table>
-
-<ul>
-    <li>
-        <a href="{{ path('rewardamount_new') }}">
-            Create a new entry
-        </a>
-    </li>
-</ul>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}

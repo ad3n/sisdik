@@ -134,6 +134,11 @@ reward:
         edit: Mengubah Jenis Imbalan
         creation: Membuat Jenis Imbalan
         detail: Detail Jenis Imbalan
+    amount:
+        list: Daftar Imbalan Pendaftaran
+        edit: Mengubah Imbalan Pendaftaran
+        creation: Membuat Imbalan Pendaftaran
+        detail: Detail Imbalan Pendaftaran
 
 
 

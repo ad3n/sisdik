@@ -129,6 +129,12 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'rewardtype'
                             ));
 
+            $payment
+                    ->addChild('links.reward.amount',
+                            array(
+                                'route' => 'rewardamount'
+                            ));
+
         }
 
         $rolecondition = 'hasRole("ROLE_ADMIN") ' . ' or hasRole("ROLE_KEPALA_SEKOLAH") '

@@ -17,21 +17,6 @@ class JenisImbalanType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
-                ->add('nama', 'choice',
-                        array(
-                                'required' => true,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'choices' => $this->buildNamaJenisImbalan()
-                        ))
-                ->add('keterangan', null,
-                        array(
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                ),
-                        ));
-
         $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
@@ -50,6 +35,22 @@ class JenisImbalanType extends AbstractType
                                     'query_builder' => $querybuilder,
                             ));
         }
+
+        $builder
+                ->add('nama', 'choice',
+                        array(
+                                'required' => true, 'label' => 'label.reward.type.name',
+                                'attr' => array(
+                                    'class' => 'medium'
+                                ), 'choices' => $this->buildNamaJenisImbalan()
+                        ))
+                ->add('keterangan', null,
+                        array(
+                                'attr' => array(
+                                    'class' => 'xlarge'
+                                ),
+                        ));
+
     }
 
     static function buildNamaJenisImbalan() {
