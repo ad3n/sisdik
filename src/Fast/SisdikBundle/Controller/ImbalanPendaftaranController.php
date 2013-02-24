@@ -276,8 +276,7 @@ class ImbalanPendaftaranController extends Controller
                                         ->trans('flash.reward.amount.deleted'));
 
             } catch (DBALException $e) {
-                $message = $this->get('translator')
-                        ->trans('exception.unique.rewardamount');
+                $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {

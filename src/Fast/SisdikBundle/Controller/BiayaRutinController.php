@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Doctrine\DBAL\DBALException;
 use Fast\SisdikBundle\Form\BiayaSearchFormType;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -16,7 +17,6 @@ use Fast\SisdikBundle\Entity\Jenisbiaya;
 use Fast\SisdikBundle\Entity\Tahunmasuk;
 use Fast\SisdikBundle\Entity\Gelombang;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * BiayaRutin controller.
@@ -40,10 +40,11 @@ class BiayaRutinController extends Controller
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaRutin', 't')->leftJoin('t.tahunmasuk', 't2')
-                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
+                ->from('FastSisdikBundle:BiayaRutin', 't')
+                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')
+                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
+                ->addOrderBy('t.urutan', 'ASC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -58,8 +59,12 @@ class BiayaRutinController extends Controller
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']);
             }
             if ($searchdata['jenisbiaya'] != '') {
-                $querybuilder->andWhere("(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
-                $querybuilder->setParameter('jenisbiaya', '%' . $searchdata['jenisbiaya'] . '%');
+                $querybuilder
+                        ->andWhere(
+                                "(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
+                $querybuilder
+                        ->setParameter('jenisbiaya',
+                                '%' . $searchdata['jenisbiaya'] . '%');
                 $querybuilder->setParameter('kodejenisbiaya', $searchdata['jenisbiaya']);
             }
         }
@@ -135,12 +140,20 @@ class BiayaRutinController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.fee.recur.inserted'));
+            try {
+                $em->persist($entity);
+                $em->flush();
+
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')
+                                        ->trans('flash.fee.recur.inserted'));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.unique.fee.recur');
+                throw new DBALException($message);
+            }
 
             return $this
                     ->redirect(
@@ -211,12 +224,20 @@ class BiayaRutinController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.fee.recur.updated'));
+            try {
+                $em->persist($entity);
+                $em->flush();
+
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')
+                                        ->trans('flash.fee.recur.updated'));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.unique.fee.recur');
+                throw new DBALException($message);
+            }
 
             return $this
                     ->redirect(
@@ -224,7 +245,8 @@ class BiayaRutinController extends Controller
                                     ->generateUrl('fee_recur_edit',
                                             array(
                                                     'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                    'page' => $this->getRequest()
+                                                            ->get('page')
                                             )));
         }
 
@@ -254,17 +276,25 @@ class BiayaRutinController extends Controller
                 throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
             }
 
-            // TODO use count on entity pembayaran to catch if this entity is already used there
-            $em->remove($entity);
-            $em->flush();
+            try {
+                $em->remove($entity);
+                $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.fee.recur.deleted'));
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')
+                                        ->trans('flash.fee.recur.deleted'));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.delete.restrict');
+                throw new DBALException($message);
+            }
+            
         } else {
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')->trans('flash.fee.recur.fail.delete'));
+                            $this->get('translator')
+                                    ->trans('flash.fee.recur.fail.delete'));
         }
 
         return $this
@@ -277,9 +307,11 @@ class BiayaRutinController extends Controller
     }
 
     private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+        return $this
+                ->createFormBuilder(
+                        array(
+                            'id' => $id
+                        ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -293,8 +325,10 @@ class BiayaRutinController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
+        } else if ($this->container->get('security.context')
+                ->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.registertoschool'));

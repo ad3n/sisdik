@@ -438,6 +438,8 @@ exception:
     unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardtype: Jenis imbalan yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardamount: Kombinasi tahun masuk, gelombang, dan jenis imbalan harus unik
+    unique.fee.once: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
+    unique.fee.recur: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
 
 shortinfo:
     password.mustequal: password harus sama
