@@ -1,9 +1,7 @@
 <?php
 namespace Fast\SisdikBundle\Controller;
 use Symfony\Component\Translation\IdentityTranslator;
-
 use Symfony\Component\Form\FormError;
-
 use Fast\SisdikBundle\Controller\SekolahList;
 use Fast\SisdikBundle\Entity\Staf;
 use Fast\SisdikBundle\Entity\Guru;
@@ -55,35 +53,31 @@ class SettingsUserController extends Controller
 
         $searchform = $this->createForm(new SimpleSearchFormType());
 
+        $querybuilder = $em->createQueryBuilder()->select('t')
+                ->from('FastSisdikBundle:User', 't')->orderBy('t.username', 'ASC');
+
         $searchform->bind($request);
         $searchdata = $searchform->getData();
         if ($searchdata['searchkey'] != '') {
-            $searchcondition = "( u.username LIKE '%{$searchdata['searchkey']}%' OR u.name LIKE '%{$searchdata['searchkey']}%' OR u.email LIKE '%{$searchdata['searchkey']}%' )";
+            $querybuilder->where('t.name LIKE ?1');
+            $querybuilder->orWhere('t.username LIKE ?2');
+            $querybuilder->orWhere('t.email LIKE ?3');
+            $querybuilder->setParameter(1, "%{$searchdata['searchkey']}%");
+            $querybuilder->setParameter(2, "%{$searchdata['searchkey']}%");
+            $querybuilder->setParameter(3, "%{$searchdata['searchkey']}%");
         }
 
         if ($filter == 'all') {
-            $query = $em
-                    ->createQuery(
-                            "SELECT u FROM FastSisdikBundle:User u "
-                                    . ($searchcondition != '' ? " WHERE $searchcondition "
-                                            : '') . " ORDER BY u.username ASC");
+            // don't do anything
         } else if ($filter == 'unset') {
-            $query = $em
-                    ->createQuery(
-                            "SELECT u FROM FastSisdikBundle:User u WHERE u.sekolah IS NULL "
-                                    . ($searchcondition != '' ? " AND $searchcondition "
-                                            : '') . " ORDER BY u.username ASC");
+            $querybuilder->andWhere("t.sekolah IS NULL");
         } else {
-            $query = $em
-                    ->createQuery(
-                            "SELECT u FROM FastSisdikBundle:User u JOIN u.sekolah s WHERE u.sekolah = '$filter' "
-                                    . ($searchcondition != '' ? " AND $searchcondition "
-                                            : '') . " ORDER BY u.username ASC");
+            $querybuilder->leftJoin("t.sekolah", 't2');
+            $querybuilder->where("t.sekolah = '$filter'");
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($query, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         $sekolahlist = new SekolahList($this->container);
         return array(
@@ -496,7 +490,9 @@ class SettingsUserController extends Controller
         $searchform->bind($request);
         $searchdata = $searchform->getData();
         if ($searchdata['searchkey'] != '') {
-            $searchcondition = "( u.username LIKE '%{$searchdata['searchkey']}%' OR u.name LIKE '%{$searchdata['searchkey']}%' OR u.email LIKE '%{$searchdata['searchkey']}%' )";
+            $searchcondition = "( u.username LIKE '%{$searchdata['searchkey']}%' "
+                    . " OR u.name LIKE '%{$searchdata['searchkey']}%' "
+                    . " OR u.email LIKE '%{$searchdata['searchkey']}%' )";
         }
 
         if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
