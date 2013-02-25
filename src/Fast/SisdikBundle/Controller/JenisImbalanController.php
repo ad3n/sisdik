@@ -35,14 +35,12 @@ class JenisImbalanController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:JenisImbalan', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
-                    ->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:JenisImbalan', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah->getId());
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
@@ -215,8 +213,7 @@ class JenisImbalanController extends Controller
                                     ->generateUrl('rewardtype_edit',
                                             array(
                                                     'id' => $id,
-                                                    'page' => $this->getRequest()
-                                                            ->get('page')
+                                                    'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -241,8 +238,7 @@ class JenisImbalanController extends Controller
             $entity = $em->getRepository('FastSisdikBundle:JenisImbalan')->find($id);
 
             if (!$entity) {
-                throw $this
-                        ->createNotFoundException('Entity JenisImbalan tak ditemukan.');
+                throw $this->createNotFoundException('Entity JenisImbalan tak ditemukan.');
             }
 
             try {
@@ -267,10 +263,9 @@ class JenisImbalanController extends Controller
 
     private function createDeleteForm($id) {
         return $this
-                ->createFormBuilder(
-                        array(
-                            'id' => $id
-                        ))->add('id', 'hidden')->getForm();
+                ->createFormBuilder(array(
+                    'id' => $id
+                ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -284,13 +279,10 @@ class JenisImbalanController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')
-                ->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin'));
+        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

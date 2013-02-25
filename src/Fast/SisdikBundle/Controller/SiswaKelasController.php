@@ -33,17 +33,15 @@ class SiswaKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:SiswaKelas', 't')->leftJoin('t.tahun', 't2')
-                ->leftJoin('t.kelas', 't3')->where('t.siswa = :siswa')
-                ->orderBy('t2.urutan', 'DESC')->addOrderBy('t3.urutan', 'ASC')
-                ->addOrderBy('t.aktif', 'ASC')->setParameter('siswa', $siswa)->getQuery();
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SiswaKelas', 't')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.kelas', 't3')->where('t.siswa = :siswa')
+                ->orderBy('t2.urutan', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.aktif', 'ASC')
+                ->setParameter('siswa', $siswa)->getQuery();
 
         $results = $querybuilder->getResult();
 
         return array(
-                'results' => $results,
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($siswa)
+            'results' => $results, 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($siswa)
         );
     }
 
@@ -62,8 +60,8 @@ class SiswaKelasController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $this->getDoctrine()->getManager()
-                        ->getRepository('FastSisdikBundle:Siswa')->find($siswa)
+                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
+                        ->find($siswa)
         );
     }
 
@@ -82,8 +80,7 @@ class SiswaKelasController extends Controller
         $form = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
         $form->bind($request);
 
-        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                ->find($siswa);
+        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -99,8 +96,7 @@ class SiswaKelasController extends Controller
                                         'aktif' => $aktif
                                 ));
                 if ($obj) {
-                    $exception = $this->get('translator')
-                            ->trans('exception.unique.studentclass.active');
+                    $exception = $this->get('translator')->trans('exception.unique.studentclass.active');
                     throw new \Exception($exception);
                 }
             }
@@ -132,8 +128,8 @@ class SiswaKelasController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $this->getDoctrine()->getManager()
-                        ->getRepository('FastSisdikBundle:Siswa')->find($siswa)
+                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
+                        ->find($siswa)
         );
     }
 
@@ -161,8 +157,8 @@ class SiswaKelasController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
-                'siswa' => $this->getDoctrine()->getManager()
-                        ->getRepository('FastSisdikBundle:Siswa')->find($siswa)
+                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
+                        ->find($siswa)
         );
     }
 
@@ -203,10 +199,8 @@ class SiswaKelasController extends Controller
                                         'tahun' => $editForm->get('tahun')->getData()->getId(),
                                         'aktif' => $aktif
                                 ));
-                if (is_object($obj) && $obj instanceof SiswaKelas
-                        && ($obj->getId() != $entity->getId())) {
-                    $exception = $this->get('translator')
-                            ->trans('exception.unique.studentclass.active');
+                if (is_object($obj) && $obj instanceof SiswaKelas && ($obj->getId() != $entity->getId())) {
+                    $exception = $this->get('translator')->trans('exception.unique.studentclass.active');
                     throw new \Exception($exception);
                 }
             }
@@ -240,8 +234,8 @@ class SiswaKelasController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
-                'siswa' => $this->getDoctrine()->getManager()
-                        ->getRepository('FastSisdikBundle:Siswa')->find($siswa)
+                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
+                        ->find($siswa)
         );
     }
 
@@ -254,8 +248,7 @@ class SiswaKelasController extends Controller
     public function deleteAction(Request $request, $siswa, $id) {
         $sekolah = $this->isRegisteredToSchool();
 
-        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                ->find($siswa);
+        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);
@@ -319,8 +312,7 @@ class SiswaKelasController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

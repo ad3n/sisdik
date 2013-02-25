@@ -33,17 +33,16 @@ class TahunmasukController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah->getId());
         } else {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahunmasuk', 't')->orderBy('t.tahun', 'DESC');
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
+                    ->orderBy('t.tahun', 'DESC');
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
@@ -187,7 +186,7 @@ class TahunmasukController extends Controller
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
-        
+
         // restrict modification if the current Tahunmasuk is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
             $message = $this->get('translator')->trans('exception.update.yearentry.restrict');
@@ -229,8 +228,7 @@ class TahunmasukController extends Controller
                             $this
                                     ->generateUrl('settings_yearentry_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -313,8 +311,7 @@ class TahunmasukController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 

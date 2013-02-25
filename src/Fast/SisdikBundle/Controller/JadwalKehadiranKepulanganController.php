@@ -69,15 +69,13 @@ class JadwalKehadiranKepulanganController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this
-                ->createForm(
-                        new JadwalKehadiranKepulanganSearchType($this->container, $sekolah, $repetition));
+                ->createForm(new JadwalKehadiranKepulanganSearchType($this->container, $sekolah, $repetition));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
                 ->leftJoin('t.kelas', 't2')->leftJoin('t.statusKehadiranKepulangan', 't3')
                 ->leftJoin('t.templatesms', 't4')->where('t1.sekolah = :sekolah')
                 ->addOrderBy('t3.nama', 'ASC');
-
         $querybuilder->setParameter('sekolah', $sekolah);
 
         $searchform->bind($this->getRequest());
@@ -88,11 +86,11 @@ class JadwalKehadiranKepulanganController extends Controller
 
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('t1.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']);
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
             if ($searchdata['kelas'] != '') {
                 $querybuilder->andWhere('t2.id = :kelas');
-                $querybuilder->setParameter('kelas', $searchdata['kelas']);
+                $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
             }
             if ($searchdata['perulangan'] != '') {
                 $querybuilder->andWhere("(t.perulangan = :perulangan)");
@@ -105,14 +103,13 @@ class JadwalKehadiranKepulanganController extends Controller
                 }
             }
 
-            if ($searchdata['tahun'] != '' && $searchdata['kelas'] != ''
-                    && $searchdata['perulangan'] != '') {
+            if ($searchdata['tahun'] != '' && $searchdata['kelas'] != '' && $searchdata['perulangan'] != '') {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah,
                         $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
                         $searchdata['perulangan'], $this->getRequest()->getRequestUri());
             } else {
-                $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah,
-                        null, null, null, $this->getRequest()->getRequestUri());
+                $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah, null,
+                        null, null, $this->getRequest()->getRequestUri());
             }
 
             $data = array(
@@ -120,8 +117,7 @@ class JadwalKehadiranKepulanganController extends Controller
                     'perulangan' => $searchdata['perulangan'],
             );
 
-            if ($searchdata['perulangan'] == 'mingguan'
-                    && array_key_exists('mingguanHariKe', $searchdata)) {
+            if ($searchdata['perulangan'] == 'mingguan' && array_key_exists('mingguanHariKe', $searchdata)) {
                 $querybuilder->andWhere("(t.mingguanHariKe = :mingguanHariKe)");
                 $querybuilder->setParameter('mingguanHariKe', $searchdata['mingguanHariKe']);
                 $data['mingguanHariKe'] = $searchdata['mingguanHariKe'];
@@ -133,8 +129,7 @@ class JadwalKehadiranKepulanganController extends Controller
                         $searchdata['mingguanHariKe']);
             }
 
-            if ($searchdata['perulangan'] == 'bulanan'
-                    && array_key_exists('bulananHariKe', $searchdata)) {
+            if ($searchdata['perulangan'] == 'bulanan' && array_key_exists('bulananHariKe', $searchdata)) {
                 $querybuilder->andWhere("(t.bulananHariKe = :bulananHariKe)");
                 $querybuilder->setParameter('bulananHariKe', $searchdata['bulananHariKe']);
                 $data['bulananHariKe'] = $searchdata['bulananHariKe'];
@@ -158,17 +153,16 @@ class JadwalKehadiranKepulanganController extends Controller
                                 $searchdata['perulangan']), $data);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         $sekolahlist = new SekolahList($this->container);
         $sekolahKehadiranList = $sekolahlist->buildSekolahList();
 
         return array(
-                'pagination' => $pagination, 'schools' => $sekolahKehadiranList,
-                'sekolah' => $sekolah, 'searchform' => $searchform->createView(),
-                'repetition' => $repetition, 'displayresult' => $displayresult,
-                'searchdata' => $data, 'populatecommandform' => $populatecommandform->createView(),
+                'pagination' => $pagination, 'schools' => $sekolahKehadiranList, 'sekolah' => $sekolah,
+                'searchform' => $searchform->createView(), 'repetition' => $repetition,
+                'displayresult' => $displayresult, 'searchdata' => $data,
+                'populatecommandform' => $populatecommandform->createView(),
                 'duplicateform' => $duplicateform->createView(), 'daynames' => $this->buildDayNames()
         );
     }
@@ -242,8 +236,7 @@ class JadwalKehadiranKepulanganController extends Controller
             $em->flush();
 
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.schedule.inserted'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.inserted'));
 
             return $this
                     ->redirect(
@@ -277,8 +270,7 @@ class JadwalKehadiranKepulanganController extends Controller
             throw $this->createNotFoundException('Entity JadwalKehadiranKepulangan tak ditemukan.');
         }
 
-        $editForm = $this
-                ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
+        $editForm = $this->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -307,8 +299,7 @@ class JadwalKehadiranKepulanganController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this
-                ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
+        $editForm = $this->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
@@ -316,8 +307,7 @@ class JadwalKehadiranKepulanganController extends Controller
             $em->flush();
 
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.schedule.updated'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.updated'));
 
             return $this
                     ->redirect(
@@ -358,12 +348,10 @@ class JadwalKehadiranKepulanganController extends Controller
             $em->flush();
 
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.schedule.deleted'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.deleted'));
         } else {
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.fail.delete'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.fail.delete'));
         }
 
         return $this
@@ -371,8 +359,7 @@ class JadwalKehadiranKepulanganController extends Controller
                         $this
                                 ->generateUrl('presence_schedule_list',
                                         array(
-                                                'sekolah' => $sekolah,
-                                                'page' => $this->getRequest()->get('page')
+                                            'sekolah' => $sekolah, 'page' => $this->getRequest()->get('page')
                                         )));
     }
 
@@ -476,15 +463,13 @@ class JadwalKehadiranKepulanganController extends Controller
 
             $this->get('session')
                     ->setFlash('success',
-                            $this->get('translator')
-                                    ->trans('flash.presence.schedule.duplicate.success'));
+                            $this->get('translator')->trans('flash.presence.schedule.duplicate.success'));
 
             $em->flush();
         } else {
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')
-                                    ->trans('flash.presence.schedule.duplicate.fail'));
+                            $this->get('translator')->trans('flash.presence.schedule.duplicate.fail'));
         }
 
         return $this->redirect($requestUri);
@@ -511,12 +496,10 @@ class JadwalKehadiranKepulanganController extends Controller
 
             // remove all previous file
             $files = array(
-                    $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
-                            . self::FP_SCHEDULE_FILE,
+                    $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR . self::FP_SCHEDULE_FILE,
                     $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
                             . self::SMS_SCHEDULE_REALTIME_FILE,
-                    $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
-                            . self::SMS_SCHEDULE_MASSIVE_FILE
+                    $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR . self::SMS_SCHEDULE_MASSIVE_FILE
             );
             $fs = new Filesystem();
             try {
@@ -535,10 +518,9 @@ class JadwalKehadiranKepulanganController extends Controller
             if ($retval) {
                 // update commandtab
 
-                $files = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
-                        . self::SCHEDULE_PREFIX . '-*';
-                $allschedule = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
-                        . self::SCHEDULE_FILE;
+                $files = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR . self::SCHEDULE_PREFIX
+                        . '-*';
+                $allschedule = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR . self::SCHEDULE_FILE;
 
                 exec("cat $files > $allschedule");
 
@@ -551,8 +533,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
         $this->get('session')
                 ->setFlash('error',
-                        $this->get('translator')
-                                ->trans('flash.presence.schedule.commandupdate.fail'));
+                        $this->get('translator')->trans('flash.presence.schedule.commandupdate.fail'));
 
         return $this->redirect($requestUri);
     }
@@ -570,8 +551,7 @@ class JadwalKehadiranKepulanganController extends Controller
                 ->where('t1.aktif = :aktif')->setParameter('aktif', 1);
         $entities = $querybuilder->getQuery()->getResult();
 
-        $filename = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
-                . self::FP_SCHEDULE_FILE;
+        $filename = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR . self::FP_SCHEDULE_FILE;
 
         $entries = '';
         foreach ($entities as $result) {
@@ -597,16 +577,16 @@ class JadwalKehadiranKepulanganController extends Controller
                     $entries .= "*/$interval" . ' ' . (intval($fromHour) + $i)
                             . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                             . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                            . self::COMMAND_PARAMETER . "\n";
+                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                            . " " . self::COMMAND_PARAMETER . "\n";
                 }
                 if ($fromHour && $fromMinute) {
                     $entries .= (intval($fromMinute) < 59 ? intval($fromMinute) . "-59/$interval"
                             : intval($fromMinute)) . ' ' . intval($fromHour)
                             . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                             . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                            . self::COMMAND_PARAMETER . "\n";
+                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                            . " " . self::COMMAND_PARAMETER . "\n";
                     ;
                 }
                 if ($toHour && $toMinute) {
@@ -614,23 +594,23 @@ class JadwalKehadiranKepulanganController extends Controller
                             : intval($toMinute)) . ' ' . intval($toHour)
                             . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                             . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                            . self::COMMAND_PARAMETER . "\n";
+                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                            . " " . self::COMMAND_PARAMETER . "\n";
                 }
             } else {
                 if ($fromHour && $fromMinute) {
                     $entries .= intval($fromMinute) . ' ' . intval($fromHour)
                             . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                             . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                            . self::COMMAND_PARAMETER . "\n";
+                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                            . " " . self::COMMAND_PARAMETER . "\n";
                 }
                 if ($toHour && $toMinute) {
                     $entries .= intval($toMinute) . ' ' . intval($toHour)
                             . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                             . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                            . self::COMMAND_PARAMETER . "\n";
+                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                            . " " . self::COMMAND_PARAMETER . "\n";
                 }
             }
 
@@ -657,8 +637,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
             $this->get('session')
                     ->setFlash('success',
-                            $this->get('translator')
-                                    ->trans('flash.presence.schedule.commandupdate.success'));
+                            $this->get('translator')->trans('flash.presence.schedule.commandupdate.success'));
         }
         return true;
 
@@ -704,40 +683,39 @@ class JadwalKehadiranKepulanganController extends Controller
                         $entries .= "*/$interval" . ' ' . (intval($fromHour) + $i)
                                 . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                                 . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                                . self::COMMAND_PARAMETER . "\n";
+                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                                . " " . self::COMMAND_PARAMETER . "\n";
                     }
                     if ($fromHour && $fromMinute) {
-                        $entries .= (intval($fromMinute) < 59 ? intval($fromMinute)
-                                        . "-59/$interval" : intval($fromMinute)) . ' '
-                                . intval($fromHour)
+                        $entries .= (intval($fromMinute) < 59 ? intval($fromMinute) . "-59/$interval"
+                                : intval($fromMinute)) . ' ' . intval($fromHour)
                                 . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                                 . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                                . self::COMMAND_PARAMETER . "\n";
+                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                                . " " . self::COMMAND_PARAMETER . "\n";
                     }
                     if ($toHour && $toMinute) {
-                        $entries .= (intval($toMinute) > 0 ? '0-' . intval($toMinute)
-                                        . "/$interval" : intval($toMinute)) . ' ' . intval($toHour)
+                        $entries .= (intval($toMinute) > 0 ? '0-' . intval($toMinute) . "/$interval"
+                                : intval($toMinute)) . ' ' . intval($toHour)
                                 . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                                 . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                                . self::COMMAND_PARAMETER . "\n";
+                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                                . " " . self::COMMAND_PARAMETER . "\n";
                     }
                 } else {
                     if ($fromHour && $fromMinute) {
                         $entries .= intval($fromMinute) . ' ' . intval($fromHour)
                                 . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                                 . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                                . self::COMMAND_PARAMETER . "\n";
+                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                                . " " . self::COMMAND_PARAMETER . "\n";
                     }
                     if ($toHour && $toMinute) {
                         $entries .= intval($toMinute) . ' ' . intval($toHour)
                                 . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                                 . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                                . self::COMMAND_PARAMETER . "\n";
+                                . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                                . " " . self::COMMAND_PARAMETER . "\n";
                     }
                 }
 
@@ -785,8 +763,7 @@ class JadwalKehadiranKepulanganController extends Controller
                 ->where('t1.aktif = :aktif')->setParameter('aktif', 1);
         $entities = $querybuilder->getQuery()->getResult();
 
-        $filename = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR
-                . self::SMS_SCHEDULE_MASSIVE_FILE;
+        $filename = $this->get('kernel')->getRootDir() . self::SCHEDULE_DIR . self::SMS_SCHEDULE_MASSIVE_FILE;
 
         $entries = '';
         foreach ($entities as $result) {
@@ -805,8 +782,8 @@ class JadwalKehadiranKepulanganController extends Controller
                     $entries .= intval($fromMinute) . ' ' . intval($fromHour)
                             . ($perulangan == 'bulanan' ? " $bulananHariKe" : ' *') . ' *'
                             . ($perulangan == 'mingguan' ? " $mingguanHariKe" : ' *')
-                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan" . " "
-                            . self::COMMAND_PARAMETER . "\n";
+                            . " sf2 $command --idjadwalkehadirankepulangan=$idjadwalkehadirankepulangan"
+                            . " " . self::COMMAND_PARAMETER . "\n";
                 }
 
                 // save to and overwrite schedule file

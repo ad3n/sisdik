@@ -11,6 +11,7 @@
     margin-right: 0.4em;
 }
 .captcha_reload {
+    margin-left: 0.4em;
     margin-right: 0.4em;
 }
 </style>
@@ -20,7 +21,7 @@
         {'%path%': path('data_student_generate_username_download', {'file': file, 'type': type}),
         '%filename%': file ~ '.' ~ type})|raw }}
 </p>
-<form id="generateform" action="{{ path('data_student_generate_username_confirm', {'file': file, 'type': type}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form id="generateform" action="{{ path('data_student_generate_username_confirm', {'file': file, 'type': type, 'regenerate': regenerate}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
 	<div class="form-actions">

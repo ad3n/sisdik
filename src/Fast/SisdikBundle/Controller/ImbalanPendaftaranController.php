@@ -37,14 +37,14 @@ class ImbalanPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this
-                ->createForm(new ImbalanPendaftaranSearchType($this->container));
+        $searchform = $this->createForm(new ImbalanPendaftaranSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:ImbalanPendaftaran', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->leftJoin('t.jenisImbalan', 't4')->where('t2.sekolah = :sekolah')
-                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC');
+                ->from('FastSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisImbalan', 't4')
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'ASC');
+        $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -52,14 +52,12 @@ class ImbalanPendaftaranController extends Controller
 
             if ($searchdata['tahunmasuk'] != '') {
                 $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
+                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
             }
         }
-        $querybuilder->setParameter('sekolah', $sekolah);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()
@@ -81,8 +79,7 @@ class ImbalanPendaftaranController extends Controller
         $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
-            throw $this
-                    ->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
+            throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -134,12 +131,10 @@ class ImbalanPendaftaranController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.reward.amount.inserted'));
+                                $this->get('translator')->trans('flash.reward.amount.inserted'));
 
             } catch (DBALException $e) {
-                $message = $this->get('translator')
-                        ->trans('exception.unique.rewardamount');
+                $message = $this->get('translator')->trans('exception.unique.rewardamount');
                 throw new DBALException($message);
             }
 
@@ -172,12 +167,10 @@ class ImbalanPendaftaranController extends Controller
         $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
-            throw $this
-                    ->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
+            throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
-        $editForm = $this
-                ->createForm(new ImbalanPendaftaranType($this->container), $entity);
+        $editForm = $this->createForm(new ImbalanPendaftaranType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -202,13 +195,11 @@ class ImbalanPendaftaranController extends Controller
         $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
-            throw $this
-                    ->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
+            throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this
-                ->createForm(new ImbalanPendaftaranType($this->container), $entity);
+        $editForm = $this->createForm(new ImbalanPendaftaranType($this->container), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
@@ -219,12 +210,10 @@ class ImbalanPendaftaranController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.reward.amount.updated'));
+                                $this->get('translator')->trans('flash.reward.amount.updated'));
 
             } catch (DBALException $e) {
-                $message = $this->get('translator')
-                        ->trans('exception.unique.rewardamount');
+                $message = $this->get('translator')->trans('exception.unique.rewardamount');
                 throw new DBALException($message);
             }
 
@@ -234,8 +223,7 @@ class ImbalanPendaftaranController extends Controller
                                     ->generateUrl('rewardamount_edit',
                                             array(
                                                     'id' => $id,
-                                                    'page' => $this->getRequest()
-                                                            ->get('page')
+                                                    'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -257,13 +245,10 @@ class ImbalanPendaftaranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')
-                    ->find($id);
+            $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
 
             if (!$entity) {
-                throw $this
-                        ->createNotFoundException(
-                                'Entity ImbalanPendaftaran tak ditemukan.');
+                throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
             }
 
             try {
@@ -272,8 +257,7 @@ class ImbalanPendaftaranController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.reward.amount.deleted'));
+                                $this->get('translator')->trans('flash.reward.amount.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -282,8 +266,7 @@ class ImbalanPendaftaranController extends Controller
         } else {
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')
-                                    ->trans('flash.reward.amount.fail.delete'));
+                            $this->get('translator')->trans('flash.reward.amount.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('rewardamount'));
@@ -308,10 +291,8 @@ class ImbalanPendaftaranController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')
-                ->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin'));
+        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.registertoschool'));

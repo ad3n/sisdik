@@ -46,18 +46,15 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this
-                ->createForm(
-                        new JadwalKehadiranKepulanganSearchType($this->container, $sekolah,
-                                $repetition));
+                ->createForm(new JadwalKehadiranKepulanganSearchType($this->container, $sekolah->getId(), $repetition));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')
-                ->leftJoin('t.tahun', 't1')->leftJoin('t.kelas', 't2')
-                ->leftJoin('t.statusKehadiranKepulangan', 't3')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->leftJoin('t.kelas', 't2')->leftJoin('t.statusKehadiranKepulangan', 't3')
                 ->leftJoin('t.templatesms', 't4')->where('t1.sekolah = :sekolah')
                 ->addOrderBy('t3.nama', 'ASC');
 
-        $querybuilder->setParameter('sekolah', $sekolah);
+        $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
 
@@ -67,11 +64,11 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('t1.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']);
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
             if ($searchdata['kelas'] != '') {
                 $querybuilder->andWhere('t2.id = :kelas');
-                $querybuilder->setParameter('kelas', $searchdata['kelas']);
+                $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
             }
             if ($searchdata['perulangan'] != '') {
                 $querybuilder->andWhere("(t.perulangan = :perulangan)");
@@ -84,16 +81,13 @@ class JadwalKehadiranKepulanganSingleController extends Controller
                 }
             }
 
-            if ($searchdata['tahun'] != '' && $searchdata['kelas'] != ''
-                    && $searchdata['perulangan'] != '') {
+            if ($searchdata['tahun'] != '' && $searchdata['kelas'] != '' && $searchdata['perulangan'] != '') {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), $searchdata['tahun']->getId(),
-                        $searchdata['kelas']->getId(), $searchdata['perulangan'],
-                        $this->getRequest()->getRequestUri());
+                        $sekolah->getId(), $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
+                        $searchdata['perulangan'], $this->getRequest()->getRequestUri());
             } else {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), null, null, null,
-                        $this->getRequest()->getRequestUri());
+                        $sekolah->getId(), null, null, null, $this->getRequest()->getRequestUri());
             }
 
             $data = array(
@@ -101,30 +95,28 @@ class JadwalKehadiranKepulanganSingleController extends Controller
                     'perulangan' => $searchdata['perulangan'],
             );
 
-            if ($searchdata['perulangan'] == 'mingguan'
-                    && array_key_exists('mingguanHariKe', $searchdata)) {
+            if ($searchdata['perulangan'] == 'mingguan' && array_key_exists('mingguanHariKe', $searchdata)) {
                 $querybuilder->andWhere("(t.mingguanHariKe = :mingguanHariKe)");
                 $querybuilder->setParameter('mingguanHariKe', $searchdata['mingguanHariKe']);
                 $data['mingguanHariKe'] = $searchdata['mingguanHariKe'];
                 $displayresult = true;
 
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), $searchdata['tahun']->getId(),
-                        $searchdata['kelas']->getId(), $searchdata['perulangan'],
-                        $this->getRequest()->getRequestUri(), $searchdata['mingguanHariKe']);
+                        $sekolah->getId(), $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
+                        $searchdata['perulangan'], $this->getRequest()->getRequestUri(),
+                        $searchdata['mingguanHariKe']);
             }
 
-            if ($searchdata['perulangan'] == 'bulanan'
-                    && array_key_exists('bulananHariKe', $searchdata)) {
+            if ($searchdata['perulangan'] == 'bulanan' && array_key_exists('bulananHariKe', $searchdata)) {
                 $querybuilder->andWhere("(t.bulananHariKe = :bulananHariKe)");
                 $querybuilder->setParameter('bulananHariKe', $searchdata['bulananHariKe']);
                 $data['bulananHariKe'] = $searchdata['bulananHariKe'];
                 $displayresult = true;
 
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), $searchdata['tahun']->getId(),
-                        $searchdata['kelas']->getId(), $searchdata['perulangan'],
-                        $this->getRequest()->getRequestUri(), null, $searchdata['bulananHariKe']);
+                        $sekolah->getId(), $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
+                        $searchdata['perulangan'], $this->getRequest()->getRequestUri(), null,
+                        $searchdata['bulananHariKe']);
             }
 
             $duplicateform = $this->createForm($duplicatetype);
@@ -133,22 +125,20 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         // recreate form
         $searchform = $this
                 ->createForm(
-                        new JadwalKehadiranKepulanganSearchType($this->container, $sekolah,
+                        new JadwalKehadiranKepulanganSearchType($this->container, $sekolah->getId(),
                                 $searchdata['perulangan']), $data);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         $sekolahlist = new SekolahList($this->container);
         $sekolahKehadiranList = $sekolahlist->buildSekolahList();
 
         return array(
-                'pagination' => $pagination, 'schools' => $sekolahKehadiranList,
-                'sekolah' => $sekolah, 'searchform' => $searchform->createView(),
-                'repetition' => $repetition, 'displayresult' => $displayresult,
-                'searchdata' => $data, 'duplicateform' => $duplicateform->createView(),
-                'daynames' => $this->buildDayNames()
+                'pagination' => $pagination, 'schools' => $sekolahKehadiranList, 'sekolah' => $sekolah,
+                'searchform' => $searchform->createView(), 'repetition' => $repetition,
+                'displayresult' => $displayresult, 'searchdata' => $data,
+                'duplicateform' => $duplicateform->createView(), 'daynames' => $this->buildDayNames()
         );
     }
 
@@ -193,9 +183,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $entity = new JadwalKehadiranKepulangan();
         $form = $this
-                ->createForm(
-                        new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()),
-                        $entity);
+                ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView(), 'sekolah' => $sekolah
@@ -216,9 +204,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $entity = new JadwalKehadiranKepulangan();
         $form = $this
-                ->createForm(
-                        new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()),
-                        $entity);
+                ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -228,8 +214,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
             $em->flush();
 
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.schedule.inserted'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.inserted'));
 
             return $this
                     ->redirect(
@@ -265,9 +250,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         }
 
         $editForm = $this
-                ->createForm(
-                        new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()),
-                        $entity);
+                ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -297,9 +280,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this
-                ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah),
-                        $entity);
+        $editForm = $this->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
@@ -307,8 +288,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
             $em->flush();
 
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.schedule.updated'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.updated'));
 
             return $this
                     ->redirect(
@@ -344,20 +324,17 @@ class JadwalKehadiranKepulanganSingleController extends Controller
             $entity = $em->getRepository('FastSisdikBundle:JadwalKehadiranKepulangan')->find($id);
 
             if (!$entity) {
-                throw $this
-                        ->createNotFoundException('Entity JadwalKehadiranKepulangan tak ditemukan.');
+                throw $this->createNotFoundException('Entity JadwalKehadiranKepulangan tak ditemukan.');
             }
 
             $em->remove($entity);
             $em->flush();
 
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.schedule.deleted'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.deleted'));
         } else {
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.presence.fail.delete'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.presence.fail.delete'));
         }
 
         return $this
@@ -381,18 +358,15 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $form = $this
-                ->createForm(
-                        new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah));
+        $form = $this->createForm(new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')
-                ->leftJoin('t.tahun', 't1')->leftJoin('t.kelas', 't2')
-                ->leftJoin('t.statusKehadiranKepulangan', 't3')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->leftJoin('t.kelas', 't2')->leftJoin('t.statusKehadiranKepulangan', 't3')
                 ->leftJoin('t.templatesms', 't4')->where('t1.sekolah = :sekolah')
                 ->addOrderBy('t3.nama', 'ASC');
 
-        $querybuilder->setParameter('sekolah', $sekolah);
+        $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $form->bind($request);
 
@@ -468,15 +442,13 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
             $this->get('session')
                     ->setFlash('success',
-                            $this->get('translator')
-                                    ->trans('flash.presence.schedule.duplicate.success'));
+                            $this->get('translator')->trans('flash.presence.schedule.duplicate.success'));
 
             $em->flush();
         } else {
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')
-                                    ->trans('flash.presence.schedule.duplicate.fail'));
+                            $this->get('translator')->trans('flash.presence.schedule.duplicate.fail'));
         }
 
         return $this->redirect($requestUri);
@@ -502,8 +474,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 

@@ -34,14 +34,13 @@ class TahunController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
+                    ->setParameter('sekolah', $sekolah->getId());
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
@@ -65,9 +64,8 @@ class TahunController extends Controller
             throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
         }
 
-        $query = $em->createQueryBuilder()->update('FastSisdikBundle:Tahun', 't')
-                ->set('t.aktif', '0')->where('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah)->getQuery();
+        $query = $em->createQueryBuilder()->update('FastSisdikBundle:Tahun', 't')->set('t.aktif', '0')
+                ->where('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())->getQuery();
         $query->execute();
 
         $entity->setAktif(1);
@@ -243,8 +241,7 @@ class TahunController extends Controller
                                 $this
                                         ->generateUrl('data_year_edit',
                                                 array(
-                                                        'id' => $id,
-                                                        'page' => $this->getRequest()->get('page')
+                                                    'id' => $id, 'page' => $this->getRequest()->get('page')
                                                 )));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.year.school');
@@ -295,8 +292,7 @@ class TahunController extends Controller
             }
         } else {
             $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.data.year.fail.delete'));
+                    ->setFlash('error', $this->get('translator')->trans('flash.data.year.fail.delete'));
         }
 
         return $this
@@ -328,8 +324,7 @@ class TahunController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

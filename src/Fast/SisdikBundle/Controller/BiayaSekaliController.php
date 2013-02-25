@@ -40,11 +40,11 @@ class BiayaSekaliController extends Controller
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaSekali', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')
-                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
-                ->addOrderBy('t.urutan', 'ASC');
+                ->from('FastSisdikBundle:BiayaSekali', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
+        $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -52,27 +52,21 @@ class BiayaSekaliController extends Controller
 
             if ($searchdata['tahunmasuk'] != '') {
                 $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
+                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
             }
             if ($searchdata['gelombang'] != '') {
                 $querybuilder->andWhere('t3.id = :gelombang');
-                $querybuilder->setParameter('gelombang', $searchdata['gelombang']);
+                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
             }
             if ($searchdata['jenisbiaya'] != '') {
-                $querybuilder
-                        ->andWhere(
-                                "(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
-                $querybuilder
-                        ->setParameter('jenisbiaya',
-                                '%' . $searchdata['jenisbiaya'] . '%');
+                $querybuilder->andWhere("(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
+                $querybuilder->setParameter('jenisbiaya', "%{$searchdata['jenisbiaya']}%");
                 $querybuilder->setParameter('kodejenisbiaya', $searchdata['jenisbiaya']);
             }
         }
-        $querybuilder->setParameter('sekolah', $sekolah);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()
@@ -147,8 +141,7 @@ class BiayaSekaliController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.fee.once.inserted'));
+                                $this->get('translator')->trans('flash.fee.once.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.once');
@@ -244,8 +237,7 @@ class BiayaSekaliController extends Controller
                                     ->generateUrl('fee_once_edit',
                                             array(
                                                     'id' => $id,
-                                                    'page' => $this->getRequest()
-                                                            ->get('page')
+                                                    'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -324,10 +316,8 @@ class BiayaSekaliController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')
-                ->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin'));
+        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.registertoschool'));

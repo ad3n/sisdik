@@ -34,9 +34,9 @@ class PenjurusanController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $results = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.root ASC, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
+            $results = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.root ASC, t.lft', 'ASC')
+                    ->setParameter('sekolah', $sekolah->getId());
         }
 
         $repo = $em->getRepository("FastSisdikBundle:Penjurusan");
@@ -57,7 +57,7 @@ class PenjurusanController extends Controller
         $node = $repo->find($id);
 
         $repo->moveUp($node);
-        
+
         return $this->redirect($this->generateUrl('settings_placement'));
     }
 
@@ -69,7 +69,7 @@ class PenjurusanController extends Controller
         $node = $repo->find($id);
 
         $repo->moveDown($node);
-        
+
         return $this->redirect($this->generateUrl('settings_placement'));
     }
 
@@ -227,8 +227,7 @@ class PenjurusanController extends Controller
                             $this
                                     ->generateUrl('settings_placement_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -308,8 +307,7 @@ class PenjurusanController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

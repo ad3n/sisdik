@@ -14,7 +14,7 @@
     <form method="GET" action="{{ path('presence_schedule_single_list', {'repetition': repetition}) }}" id="{{ searchform.get('id') }}" class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_schedule_single_list', {'sekolah': sekolah}) }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_schedule_single_list') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 

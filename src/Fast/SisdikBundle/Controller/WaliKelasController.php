@@ -39,11 +39,10 @@ class WaliKelasController extends Controller
 
         $searchform = $this->createForm(new WaliKelasSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:WaliKelas', 't')->leftJoin('t.kelas', 't2')
-                ->leftJoin('t.tahun', 't3')->where('t2.sekolah = :sekolah')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:WaliKelas', 't')
+                ->leftJoin('t.kelas', 't2')->leftJoin('t.tahun', 't3')->where('t2.sekolah = :sekolah')
                 ->orderBy('t3.urutan', 'DESC')->addOrderBy('t2.urutan', 'ASC')
-                ->setParameter('sekolah', $sekolah);
+                ->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -51,17 +50,16 @@ class WaliKelasController extends Controller
 
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('t.tahun = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']);
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder->andWhere("t.nama LIKE :searchkey");
-                $querybuilder->setParameter('searchkey', '%' . $searchdata['searchkey'] . '%');
+                $querybuilder->setParameter('searchkey', "%{$searchdata['searchkey']}%");
             }
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()
@@ -227,8 +225,7 @@ class WaliKelasController extends Controller
                                 $this
                                         ->generateUrl('data_classguardian_edit',
                                                 array(
-                                                        'id' => $id,
-                                                        'page' => $this->getRequest()->get('page')
+                                                    'id' => $id, 'page' => $this->getRequest()->get('page')
                                                 )));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.classguardian');
@@ -301,8 +298,7 @@ class WaliKelasController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

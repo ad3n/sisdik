@@ -35,14 +35,12 @@ class MesinKehadiranController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:MesinKehadiran', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.alamatIp', 'ASC')
-                    ->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:MesinKehadiran', 't')->where('t.sekolah = :sekolah')
+                    ->orderBy('t.alamatIp', 'ASC')->setParameter('sekolah', $sekolah->getId());
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
@@ -198,8 +196,7 @@ class MesinKehadiranController extends Controller
                             $this
                                     ->generateUrl('attendancemachine_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -254,8 +251,7 @@ class MesinKehadiranController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

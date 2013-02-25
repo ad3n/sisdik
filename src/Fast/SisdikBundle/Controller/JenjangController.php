@@ -34,14 +34,13 @@ class JenjangController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.kode', 'ASC')->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.kode', 'ASC')
+                    ->setParameter('sekolah', $sekolah->getId());
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
@@ -200,8 +199,7 @@ class JenjangController extends Controller
                             $this
                                     ->generateUrl('data_level_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -248,8 +246,7 @@ class JenjangController extends Controller
             }
         } else {
             $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.studylevel.fail.delete'));
+                    ->setFlash('error', $this->get('translator')->trans('flash.studylevel.fail.delete'));
         }
 
         return $this
@@ -281,8 +278,7 @@ class JenjangController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

@@ -511,19 +511,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/CaptchaBundle.git",
-                "reference": "6f546713a9efb828962057aa9794cfe21ae995d5"
+                "reference": "1fef229c8f5f7096b4bd10c777bd9f72f0c0ca99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/CaptchaBundle/zipball/6f546713a9efb828962057aa9794cfe21ae995d5",
-                "reference": "6f546713a9efb828962057aa9794cfe21ae995d5",
+                "url": "https://api.github.com/repos/Gregwar/CaptchaBundle/zipball/1fef229c8f5f7096b4bd10c777bd9f72f0c0ca99",
+                "reference": "1fef229c8f5f7096b4bd10c777bd9f72f0c0ca99",
                 "shasum": ""
             },
             "require": {
                 "gregwar/captcha": "v1.0.1",
                 "php": ">=5.3.0"
             },
-            "time": "2013-02-21 11:58:49",
+            "time": "2013-02-25 10:47:05",
             "type": "captcha-bundle",
             "autoload": {
                 "psr-0": {

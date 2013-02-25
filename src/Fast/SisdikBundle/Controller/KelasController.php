@@ -39,10 +39,9 @@ class KelasController extends Controller
         $searchform = $this->createForm(new KelasSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahun', 't3')
-                ->where('t.sekolah = :sekolah')
+                ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahun', 't3')->where('t.sekolah = :sekolah')
                 ->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
-                ->setParameter('sekolah', $sekolah);
+                ->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -50,15 +49,14 @@ class KelasController extends Controller
 
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('t.tahun = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']);
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
         }
 
         $duplicateform = $this->createForm(new KelasDuplicateType($this->container));
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
@@ -137,8 +135,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.inserted',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahun()
-                                                                ->getNama()
+                                                        '%year%' => $entity->getTahun()->getNama()
                                                 )));
 
                 return $this
@@ -221,8 +218,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.updated',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahun()
-                                                                ->getNama()
+                                                        '%year%' => $entity->getTahun()->getNama()
                                                 )));
 
                 return $this
@@ -230,8 +226,7 @@ class KelasController extends Controller
                                 $this
                                         ->generateUrl('data_class_edit',
                                                 array(
-                                                        'id' => $id,
-                                                        'page' => $this->getRequest()->get('page')
+                                                    'id' => $id, 'page' => $this->getRequest()->get('page')
                                                 )));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.class.year.school');
@@ -275,8 +270,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.deleted',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahun()
-                                                                ->getNama()
+                                                        '%year%' => $entity->getTahun()->getNama()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -284,8 +278,7 @@ class KelasController extends Controller
             }
         } else {
             $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.data.class.fail.delete'));
+                    ->setFlash('error', $this->get('translator')->trans('flash.data.class.fail.delete'));
         }
 
         return $this
@@ -341,8 +334,7 @@ class KelasController extends Controller
                     $em->persist($kelas);
                     $em->flush();
                 } catch (DBALException $e) {
-                    $exception = $this->get('translator')
-                            ->trans('exception.unique.class.year.school');
+                    $exception = $this->get('translator')->trans('exception.unique.class.year.school');
                     throw new DBALException($exception);
                 }
             }
@@ -357,8 +349,7 @@ class KelasController extends Controller
                                             )));
         } else {
             $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.data.class.fail.duplicate'));
+                    ->setFlash('success', $this->get('translator')->trans('flash.data.class.fail.duplicate'));
         }
 
         return $this->redirect($this->generateUrl('data_class'));
@@ -378,10 +369,9 @@ class KelasController extends Controller
         $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')
-                ->andWhere('t.tahun = :tahun')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                ->setParameter('tahun', $tahun);
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahun = :tahun')
+                ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
+                ->setParameter('sekolah', $sekolah->getId())->setParameter('tahun', $tahun);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
@@ -411,10 +401,9 @@ class KelasController extends Controller
         $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')
-                ->andWhere('t.tahun = :tahun')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                ->setParameter('tahun', $tahun);
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahun = :tahun')
+                ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
+                ->setParameter('sekolah', $sekolah->getId())->setParameter('tahun', $tahun);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
@@ -452,8 +441,7 @@ class KelasController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

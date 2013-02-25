@@ -40,11 +40,11 @@ class BiayaRutinController extends Controller
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaRutin', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')
-                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
-                ->addOrderBy('t.urutan', 'ASC');
+                ->from('FastSisdikBundle:BiayaRutin', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
+        $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -52,27 +52,21 @@ class BiayaRutinController extends Controller
 
             if ($searchdata['tahunmasuk'] != '') {
                 $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']);
+                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
             }
             if ($searchdata['gelombang'] != '') {
                 $querybuilder->andWhere('t3.id = :gelombang');
-                $querybuilder->setParameter('gelombang', $searchdata['gelombang']);
+                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
             }
             if ($searchdata['jenisbiaya'] != '') {
-                $querybuilder
-                        ->andWhere(
-                                "(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
-                $querybuilder
-                        ->setParameter('jenisbiaya',
-                                '%' . $searchdata['jenisbiaya'] . '%');
+                $querybuilder->andWhere("(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
+                $querybuilder->setParameter('jenisbiaya', "%{$searchdata['jenisbiaya']}%");
                 $querybuilder->setParameter('kodejenisbiaya', $searchdata['jenisbiaya']);
             }
         }
-        $querybuilder->setParameter('sekolah', $sekolah);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder);
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()
@@ -147,8 +141,7 @@ class BiayaRutinController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.fee.recur.inserted'));
+                                $this->get('translator')->trans('flash.fee.recur.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.recur');
@@ -231,8 +224,7 @@ class BiayaRutinController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.fee.recur.updated'));
+                                $this->get('translator')->trans('flash.fee.recur.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.recur');
@@ -245,8 +237,7 @@ class BiayaRutinController extends Controller
                                     ->generateUrl('fee_recur_edit',
                                             array(
                                                     'id' => $id,
-                                                    'page' => $this->getRequest()
-                                                            ->get('page')
+                                                    'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -282,19 +273,17 @@ class BiayaRutinController extends Controller
 
                 $this->get('session')
                         ->setFlash('success',
-                                $this->get('translator')
-                                        ->trans('flash.fee.recur.deleted'));
+                                $this->get('translator')->trans('flash.fee.recur.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
-            
+
         } else {
             $this->get('session')
                     ->setFlash('error',
-                            $this->get('translator')
-                                    ->trans('flash.fee.recur.fail.delete'));
+                            $this->get('translator')->trans('flash.fee.recur.fail.delete'));
         }
 
         return $this
@@ -325,10 +314,8 @@ class BiayaRutinController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')
-                ->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin'));
+        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.registertoschool'));

@@ -33,18 +33,16 @@ class JenisbiayaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenisbiaya', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
-                    ->setParameter('sekolah', $sekolah);
+                    ->setParameter('sekolah', $sekolah->getId());
         } else {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenisbiaya', 't')->orderBy('t.nama', 'ASC');
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
+                    ->orderBy('t.nama', 'ASC');
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator
-                ->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
@@ -209,8 +207,7 @@ class JenisbiayaController extends Controller
                                     ->generateUrl('fee_type_edit',
                                             array(
                                                     'id' => $id,
-                                                    'page' => $this->getRequest()
-                                                            ->get('page')
+                                                    'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -260,8 +257,7 @@ class JenisbiayaController extends Controller
             }
         } else {
             $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.fee.type.fail.delete'));
+                    ->setFlash('error', $this->get('translator')->trans('flash.fee.type.fail.delete'));
         }
 
         return $this
@@ -275,10 +271,9 @@ class JenisbiayaController extends Controller
 
     private function createDeleteForm($id) {
         return $this
-                ->createFormBuilder(
-                        array(
-                            'id' => $id
-                        ))->add('id', 'hidden')->getForm();
+                ->createFormBuilder(array(
+                    'id' => $id
+                ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -292,13 +287,10 @@ class JenisbiayaController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')
-                ->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin'));
+        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }
