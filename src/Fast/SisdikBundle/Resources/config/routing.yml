@@ -165,4 +165,9 @@ rewardamount:
     resource: "@FastSisdikBundle/Controller/ImbalanPendaftaranController.php"
     type:     annotation
     prefix:   /
+    
+regcommittee:
+    resource: "@FastSisdikBundle/Controller/PanitiaPendaftaranController.php"
+    type:     annotation
+    prefix:   /
 

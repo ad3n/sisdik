@@ -1,0 +1,86 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}registration.committee.creation{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.collection-item {
+/*     display: inline-block; */
+}
+.collection-item .control-group {
+    display: inline-block;
+    margin-bottom: 3px;
+    margin-right: 5px;
+}
+.collection-item .controls {
+    margin-left: 0;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
+</style>
+<form action="{{ path('regcommittee_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        <a href="{{ path('regcommittee') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	var options = {
+    	minLength: 2,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("regcommittee_ajax_get_username") }}",
+    			data: {filter: request.term},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id,
+                			source: item.source,
+                			target: item.target 
+            			}
+    			    }));
+				}
+			});
+		},
+		search: function(event, ui) {
+		},
+    	select: function(event, ui) {
+        	var attrid = $(event.target).attr("id");
+        	
+    		prefix = strstr(attrid, ui.item.source, true);
+      		suffix = ui.item.target;
+
+      		target = "#" + prefix + suffix;
+      		$(target).val(ui.item.id);
+    	}
+	};
+
+	$(".committee-username").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options);
+    });
+});
+</script>
+{% endblock content %}

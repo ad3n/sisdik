@@ -1,0 +1,25 @@
+PanitiaPendaftaran:
+    type: entity
+    table: panitia_pendaftaran
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        panitia:
+            type: text
+            nullable: true
+    manyToOne:
+        tahunmasuk:
+            targetEntity: Tahunmasuk
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tahunmasuk_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

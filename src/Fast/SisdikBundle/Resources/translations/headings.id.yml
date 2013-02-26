@@ -140,6 +140,12 @@ reward:
         creation: Membuat Imbalan Pendaftaran
         detail: Detail Imbalan Pendaftaran
 
+registration.committee:
+    list: Daftar Panitia Pendaftaran
+    edit: Mengubah Panitia Pendaftaran
+    creation: Membuat Panitia Pendaftaran
+    detail: Detail Panitia Pendaftaran
+        
 
 
 

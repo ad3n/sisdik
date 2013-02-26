@@ -137,8 +137,7 @@ class Builder extends AbstractNavbarMenuBuilder
 
         }
 
-        $rolecondition = 'hasRole("ROLE_ADMIN") ' . ' or hasRole("ROLE_KEPALA_SEKOLAH") '
-                . ' or hasRole("ROLE_WAKIL_KEPALA_SEKOLAH") ';
+        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH")';
         if ($securityContext
                 ->isGranted(
                         array(
@@ -150,7 +149,7 @@ class Builder extends AbstractNavbarMenuBuilder
             $academic
                     ->addChild('links.regcommittee',
                             array(
-                                'uri' => '#nogo'
+                                'route' => 'regcommittee'
                             ));
 
             $academic
@@ -193,8 +192,7 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                                new Expression(
-                                        'hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
+                                new Expression('hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
                         ))) {
             // presence
             $presence = $this->createDropdownMenuItem($menu, 'headings.presence');
