@@ -145,7 +145,13 @@ class Builder extends AbstractNavbarMenuBuilder
                             new Expression($rolecondition)
                         ))) {
             // academic
-            $academic = $this->createDropdownMenuItem($menu, 'headings.data.academic');
+            $academic = $this->createDropdownMenuItem($menu, 'headings.academic');
+
+            $academic
+                    ->addChild('links.regcommittee',
+                            array(
+                                'uri' => '#nogo'
+                            ));
 
             $academic
                     ->addChild('links.registration',

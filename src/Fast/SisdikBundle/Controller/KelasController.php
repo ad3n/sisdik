@@ -429,7 +429,7 @@ class KelasController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.data.academic']['links.data.class']->setCurrent(true);
+        $menu['headings.academic']['links.data.class']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

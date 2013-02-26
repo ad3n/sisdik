@@ -300,7 +300,7 @@ class SiswaKelasController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.data.academic']['links.data.student']->setCurrent(true);
+        $menu['headings.academic']['links.data.student']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

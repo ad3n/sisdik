@@ -3,9 +3,7 @@ headings:
     student: Siswa
     presence: Kehadiran
     fee: Keuangan
-    data:
-        academic: Akademik
-        class: Data Kelas
+    academic: Akademik
 
 links:
     studentspresence: Kehadiran Siswa
