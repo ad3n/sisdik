@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Fast\SisdikBundle\Entity\User;
 use Doctrine\DBAL\DBALException;
@@ -126,6 +127,27 @@ class PanitiaPendaftaranController extends Controller
 
             try {
                 $em->persist($entity);
+                
+                // give user the necessary role
+                $daftarPersonil = $entity->getDaftarPersonil();
+                if ($daftarPersonil instanceof ArrayCollection) {
+                    foreach ($daftarPersonil as $personil) {
+                        if ($personil instanceof Personil) {
+                            if ($personil->getId() !== NULL) {
+                                $userManager = $this->container->get('fos_user.user_manager');
+                                $user = $userManager
+                                ->findUserBy(
+                                        array(
+                                                'id' => $personil->getId()
+                                        ));
+                
+                                $user->addRole('ROLE_PANITIA_PSB');
+                                $userManager->updateUser($user);
+                            }
+                        }
+                    }
+                }
+                
                 $em->flush();
 
                 $this->get('session')
@@ -215,6 +237,27 @@ class PanitiaPendaftaranController extends Controller
 
             try {
                 $em->persist($entity);
+
+                // give user the necessary role
+                $daftarPersonil = $entity->getDaftarPersonil();
+                if ($daftarPersonil instanceof ArrayCollection) {
+                    foreach ($daftarPersonil as $personil) {
+                        if ($personil instanceof Personil) {
+                            if ($personil->getId() !== NULL) {
+                                $userManager = $this->container->get('fos_user.user_manager');
+                                $user = $userManager
+                                        ->findUserBy(
+                                                array(
+                                                    'id' => $personil->getId()
+                                                ));
+
+                                $user->addRole('ROLE_PANITIA_PSB');
+                                $userManager->updateUser($user);
+                            }
+                        }
+                    }
+                }
+
                 $em->flush();
 
                 $this->get('session')
