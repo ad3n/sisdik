@@ -10,7 +10,7 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class ImbalanPendaftaranSearchType extends AbstractType
+class SimpleTahunmasukSearchType extends AbstractType
 {
     private $container;
 

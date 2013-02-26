@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\ImbalanPendaftaran;
 use Fast\SisdikBundle\Form\ImbalanPendaftaranType;
-use Fast\SisdikBundle\Form\ImbalanPendaftaranSearchType;
+use Fast\SisdikBundle\Form\SimpleTahunmasukSearchType;
 use Fast\SisdikBundle\Entity\JenisImbalan;
 use Fast\SisdikBundle\Entity\Tahunmasuk;
 use Fast\SisdikBundle\Entity\Gelombang;
@@ -37,7 +37,7 @@ class ImbalanPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new ImbalanPendaftaranSearchType($this->container));
+        $searchform = $this->createForm(new SimpleTahunmasukSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
