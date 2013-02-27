@@ -206,8 +206,7 @@ class JenisbiayaController extends Controller
                             $this
                                     ->generateUrl('fee_type_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -270,8 +269,7 @@ class JenisbiayaController extends Controller
     }
 
     private function createDeleteForm($id) {
-        return $this
-                ->createFormBuilder(array(
+        return $this->createFormBuilder(array(
                     'id' => $id
                 ))->add('id', 'hidden')->getForm();
     }
