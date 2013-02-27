@@ -505,6 +505,7 @@ errorinfo:
     cannot.remove.previousfile: Tidak bisa menghapus file sebelumnya
     file.notwritable: File %filename% tidak bisa ditulis
     cannot.createdirectory: Tidak bisa membuat direktori %dirname%
+    403: Tidak memiliki hak akses yang diperlukan
 
 formerror:
     studentid.already.used: Nomor induk (username) sudah terpakai. Pilih yang lain.
@@ -543,4 +544,4 @@ help:
     type.captcha: ketik kode
     captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
     confirm.generated.username: Centang untuk menandai bahwa data valid dan boleh disimpan ke database
-    
+
