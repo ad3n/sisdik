@@ -35,7 +35,7 @@ class User extends BaseUser
     /**
      * @var \Guru
      *
-     * @ORM\ManyToOne(targetEntity="Guru")
+     * @ORM\ManyToOne(targetEntity="Guru", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
      * })
@@ -65,7 +65,7 @@ class User extends BaseUser
     /**
      * @var \Staf
      *
-     * @ORM\ManyToOne(targetEntity="Staf")
+     * @ORM\ManyToOne(targetEntity="Staf", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="staf_id", referencedColumnName="id")
      * })
