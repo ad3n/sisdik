@@ -64,7 +64,7 @@ class PanitiaPendaftaranType extends AbstractType
                         ));
 
         $panitia = $builder->getData()->getDaftarPersonil();
-        if ($panitia->count() > 0) {
+        if (is_object($panitia) && $panitia->count() > 0) {
             $daftarPersonil = new ArrayCollection();
             foreach ($panitia as $personil) {
                 if ($personil instanceof Personil) {

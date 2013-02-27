@@ -15,7 +15,7 @@ class PersonilType extends AbstractType
                         array(
                                 'label' => 'label.username', 'required' => false,
                                 'attr' => array(
-                                    'class' => 'large committee-username'
+                                    'class' => 'large committee-username', 'placeholder' => 'label.username',
                                 ), 'label_render' => false,
                         ));
     }
