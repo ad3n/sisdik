@@ -24,7 +24,7 @@
         "knplabs/knp-menu": "*",
         "knplabs/knp-menu-bundle": "*",
         "knplabs/knp-components": "*",
-        "knplabs/knp-paginator-bundle": "dev-master",
+        "knplabs/knp-paginator-bundle": "*",
         "gedmo/doctrine-extensions": "master-dev",
         "bcc/extra-tools-bundle": "dev-master",
         "mopa/bootstrap-bundle": "dev-master",

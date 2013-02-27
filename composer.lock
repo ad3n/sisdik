@@ -1,5 +1,5 @@
 {
-    "hash": "eeca03b87d05c5c3a9eec311a4f3b983",
+    "hash": "7e8a1e9fa49f63363a13fc6c029574cd",
     "packages": [
         {
             "name": "bcc/extra-tools-bundle",
@@ -1966,7 +1966,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "friendsofsymfony/user-bundle": 20,
-        "knplabs/knp-paginator-bundle": 20,
         "gedmo/doctrine-extensions": 20,
         "bcc/extra-tools-bundle": 20,
         "mopa/bootstrap-bundle": 20,
