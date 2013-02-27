@@ -27,6 +27,7 @@
     	</a>
     {% endimage %}
     </div>
+    {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/icon_import.png' %}
     	<a href="{{ path('data_student_import_student') }}" class="add-link-a">
@@ -42,6 +43,7 @@
     	    {{ 'label.student.merge'|trans }}
     	</a>
     {% endimage %}
+    {% endif %}
     </div>
 </div>
 
@@ -88,6 +90,7 @@
 
 <div class="clearfix"></div>
 
+{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
 <div class="row-fluid">
     <div class="span4">
     {% image '@FastSisdikBundle/Resources/public/images/chair.png' %}
@@ -106,6 +109,7 @@
     {% endimage %}
     </div>
 </div>
+{% endif %}
 
 <div class="clearfix" style="margin-top: 3em;"></div>
 
