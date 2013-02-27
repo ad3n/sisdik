@@ -63,7 +63,7 @@ class PanitiaPendaftaran
     /**
      * Get panitia
      *
-     * @return string 
+     * @return array
      */
     public function getPanitia() {
         return unserialize($this->panitia);
