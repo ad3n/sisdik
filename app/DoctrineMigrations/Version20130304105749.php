@@ -13,6 +13,7 @@ class Version20130304105749 extends AbstractMigration
         CREATE TRIGGER `befins_calonpr` BEFORE INSERT ON `calon_pembayaran_rutin`
          FOR EACH ROW BEGIN
             SET NEW.waktu_simpan = NOW();
+            SET NEW.waktu_ubah = NOW();
         END
         //
         DELIMITER ;";
@@ -22,6 +23,7 @@ class Version20130304105749 extends AbstractMigration
         CREATE TRIGGER `befins_calonps` BEFORE INSERT ON `calon_pembayaran_sekali`
          FOR EACH ROW BEGIN
             SET NEW.waktu_simpan = NOW();
+            SET NEW.waktu_ubah = NOW();
         END
         //
         DELIMITER ;";
@@ -31,6 +33,7 @@ class Version20130304105749 extends AbstractMigration
         CREATE TRIGGER `befins_calonsiswa` BEFORE INSERT ON `calon_siswa`
          FOR EACH ROW BEGIN
             SET NEW.waktu_simpan = NOW();
+            SET NEW.waktu_ubah = NOW();
         END
         //
         DELIMITER ;";
@@ -130,7 +133,7 @@ class Version20130304105749 extends AbstractMigration
                         "CREATE TABLE kelompok_mp (id INT AUTO_INCREMENT NOT NULL, sekolah_id INT NOT NULL, nama VARCHAR(400) DEFAULT NULL, urutan INT DEFAULT NULL, INDEX IDX_6D901222A48940F5 (sekolah_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this
                 ->addSql(
-                        "CREATE TABLE calon_pembayaran_rutin (id BIGINT AUTO_INCREMENT NOT NULL, biaya_rutin_id INT NOT NULL, calon_siswa_id INT NOT NULL, nominal_pembayaran BIGINT DEFAULT NULL, keterangan VARCHAR(300) DEFAULT NULL, waktu_simpan timestamp DEFAULT NULL, waktu_ubah timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX IDX_CB0100B8675E095 (biaya_rutin_id), INDEX IDX_CB0100B9EFC794C (calon_siswa_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+                        "CREATE TABLE calon_pembayaran_rutin (id BIGINT AUTO_INCREMENT NOT NULL, biaya_rutin_id INT NOT NULL, calon_siswa_id INT NOT NULL, nominal_pembayaran BIGINT DEFAULT NULL, keterangan VARCHAR(300) DEFAULT NULL, waktu_simpan DATETIME DEFAULT NULL, waktu_ubah DATETIME NOT NULL, INDEX IDX_CB0100B8675E095 (biaya_rutin_id), INDEX IDX_CB0100B9EFC794C (calon_siswa_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this
                 ->addSql(
                         "CREATE TABLE sekolah (id INT AUTO_INCREMENT NOT NULL, nama VARCHAR(300) NOT NULL, kode VARCHAR(50) NOT NULL, alamat VARCHAR(500) DEFAULT NULL, kodepos VARCHAR(10) DEFAULT NULL, telepon VARCHAR(50) DEFAULT NULL, fax VARCHAR(50) DEFAULT NULL, email VARCHAR(100) NOT NULL, norekening VARCHAR(100) DEFAULT NULL, bank VARCHAR(100) DEFAULT NULL, kepsek VARCHAR(400) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
@@ -186,10 +189,10 @@ DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
                         "CREATE TABLE guru (id INT AUTO_INCREMENT NOT NULL, sekolah_id INT NOT NULL, nama VARCHAR(400) DEFAULT NULL, jenis_kelamin VARCHAR(255) DEFAULT NULL, foto VARCHAR(400) DEFAULT NULL, agama INT DEFAULT NULL, tempat_lahir VARCHAR(400) DEFAULT NULL, tanggal_lahir DATE DEFAULT NULL, alamat VARCHAR(500) DEFAULT NULL, telepon VARCHAR(100) DEFAULT NULL, email VARCHAR(100) DEFAULT NULL, nomor_induk VARCHAR(50) DEFAULT NULL, username VARCHAR(255) DEFAULT NULL, status TINYINT(1) DEFAULT NULL, INDEX IDX_E8E924DAA48940F5 (sekolah_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this
                 ->addSql(
-                        "CREATE TABLE calon_pembayaran_sekali (id BIGINT AUTO_INCREMENT NOT NULL, biaya_sekali_id INT NOT NULL, calon_siswa_id INT NOT NULL, nominal_pembayaran BIGINT DEFAULT NULL, keterangan VARCHAR(300) DEFAULT NULL, waktu_simpan timestamp DEFAULT NULL, waktu_ubah timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX IDX_EE516F3D34F300B7 (biaya_sekali_id), INDEX IDX_EE516F3D9EFC794C (calon_siswa_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+                        "CREATE TABLE calon_pembayaran_sekali (id BIGINT AUTO_INCREMENT NOT NULL, biaya_sekali_id INT NOT NULL, calon_siswa_id INT NOT NULL, nominal_pembayaran BIGINT DEFAULT NULL, keterangan VARCHAR(300) DEFAULT NULL, waktu_simpan DATETIME DEFAULT NULL, waktu_ubah DATETIME NOT NULL, INDEX IDX_EE516F3D34F300B7 (biaya_sekali_id), INDEX IDX_EE516F3D9EFC794C (calon_siswa_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this
                 ->addSql(
-                        "CREATE TABLE calon_siswa (id INT AUTO_INCREMENT NOT NULL, referensi_id INT DEFAULT NULL, gelombang_id INT NOT NULL, diubah_oleh_id INT DEFAULT NULL, dibuat_oleh_id INT NOT NULL, sekolah_id INT NOT NULL, tahunmasuk_id INT NOT NULL, nomor_pendaftaran SMALLINT UNSIGNED DEFAULT NULL, nama_lengkap VARCHAR(300) DEFAULT NULL, jenis_kelamin VARCHAR(255) DEFAULT NULL, tempat_lahir VARCHAR(400) DEFAULT NULL, tanggal_lahir DATE DEFAULT NULL, alamat VARCHAR(500) DEFAULT NULL, ponsel_orangtuawali VARCHAR(100) DEFAULT NULL, foto VARCHAR(100) DEFAULT NULL, waktu_simpan timestamp DEFAULT NULL, waktu_ubah timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, INDEX IDX_FD7929C63C73F693 (referensi_id), INDEX IDX_FD7929C6C301FDF4 (gelombang_id), INDEX IDX_FD7929C618ED1518 (diubah_oleh_id), INDEX IDX_FD7929C6AD547146 (dibuat_oleh_id), INDEX IDX_FD7929C6A48940F5 (sekolah_id), INDEX IDX_FD7929C67949DAB (tahunmasuk_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+                        "CREATE TABLE calon_siswa (id INT AUTO_INCREMENT NOT NULL, referensi_id INT DEFAULT NULL, gelombang_id INT NOT NULL, diubah_oleh_id INT DEFAULT NULL, dibuat_oleh_id INT NOT NULL, sekolah_id INT NOT NULL, tahunmasuk_id INT NOT NULL, nomor_pendaftaran SMALLINT UNSIGNED DEFAULT NULL, nama_lengkap VARCHAR(300) DEFAULT NULL, jenis_kelamin VARCHAR(255) DEFAULT NULL, tempat_lahir VARCHAR(400) DEFAULT NULL, tanggal_lahir DATE DEFAULT NULL, alamat VARCHAR(500) DEFAULT NULL, ponsel_orangtuawali VARCHAR(100) DEFAULT NULL, foto VARCHAR(100) DEFAULT NULL, waktu_simpan DATETIME DEFAULT NULL, waktu_ubah DATETIME NOT NULL, INDEX IDX_FD7929C63C73F693 (referensi_id), INDEX IDX_FD7929C6C301FDF4 (gelombang_id), INDEX IDX_FD7929C618ED1518 (diubah_oleh_id), INDEX IDX_FD7929C6AD547146 (dibuat_oleh_id), INDEX IDX_FD7929C6A48940F5 (sekolah_id), INDEX IDX_FD7929C67949DAB (tahunmasuk_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
         $this
                 ->addSql(
                         "CREATE TABLE kalender_pendidikan (id INT AUTO_INCREMENT NOT NULL, sekolah_id INT NOT NULL, tanggal DATE DEFAULT NULL, keterangan VARCHAR(500) DEFAULT NULL, kbm TINYINT(1) NOT NULL, INDEX IDX_71F44582A48940F5 (sekolah_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
