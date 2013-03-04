@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BiayaSekali
  *
- * @ORM\Table(name="biaya_sekali")
+ * @ORM\Table(name="biaya_sekali", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="UNQ_biaya_sekali1", columns={"jenisbiaya_id", "tahunmasuk_id", "gelombang_id"})
+ * })
  * @ORM\Entity
  */
 class BiayaSekali
@@ -40,7 +42,7 @@ class BiayaSekali
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $gelombang;
@@ -50,7 +52,7 @@ class BiayaSekali
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahunmasuk;
@@ -60,7 +62,7 @@ class BiayaSekali
      *
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $jenisbiaya;

@@ -38,14 +38,14 @@ class CalonPembayaranSekali
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      */
-    private $waktuCatat;
+    private $waktuSimpan;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
      */
     private $waktuUbah;
 

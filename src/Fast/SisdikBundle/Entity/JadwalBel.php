@@ -45,7 +45,7 @@ class JadwalBel
     /**
      * @var boolean
      *
-     * @ORM\Column(name="berulang", type="boolean", nullable=true)
+     * @ORM\Column(name="berulang", type="boolean", nullable=false, options={"default" = 0})
      */
     private $berulang;
 
@@ -59,7 +59,7 @@ class JadwalBel
     /**
      * @var boolean
      *
-     * @ORM\Column(name="aktif", type="boolean", nullable=true)
+     * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default" = 1})
      */
     private $aktif;
 
@@ -68,7 +68,7 @@ class JadwalBel
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahun;

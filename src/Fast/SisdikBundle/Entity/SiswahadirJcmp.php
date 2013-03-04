@@ -54,7 +54,7 @@ class SiswahadirJcmp
      *
      * @ORM\ManyToOne(targetEntity="JadwalCmp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jadwal_cmp_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jadwal_cmp_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $jadwalCmp;

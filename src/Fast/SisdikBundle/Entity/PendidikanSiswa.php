@@ -99,21 +99,11 @@ class PendidikanSiswa
     private $keterangan;
 
     /**
-     * @var \Referensi
-     *
-     * @ORM\ManyToOne(targetEntity="Referensi")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id")
-     * })
-     */
-    private $referensi;
-
-    /**
      * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;
@@ -381,29 +371,6 @@ class PendidikanSiswa
     public function getKeterangan()
     {
         return $this->keterangan;
-    }
-
-    /**
-     * Set referensi
-     *
-     * @param \Fast\SisdikBundle\Entity\Referensi $referensi
-     * @return PendidikanSiswa
-     */
-    public function setReferensi(\Fast\SisdikBundle\Entity\Referensi $referensi = null)
-    {
-        $this->referensi = $referensi;
-    
-        return $this;
-    }
-
-    /**
-     * Get referensi
-     *
-     * @return \Fast\SisdikBundle\Entity\Referensi 
-     */
-    public function getReferensi()
-    {
-        return $this->referensi;
     }
 
     /**

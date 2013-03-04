@@ -8,7 +8,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Fast\SisdikBundle\Entity\Penjurusan
  *
  * @Gedmo\Tree(type="nested")
- * @ORM\Table(name="penjurusan")
+ * @ORM\Table(name="penjurusan", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="unique_idx",
+ *     columns={"sekolah_id", "kode"})
+ * })
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */
 class Penjurusan
@@ -80,7 +83,7 @@ class Penjurusan
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;
@@ -91,7 +94,7 @@ class Penjurusan
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Penjurusan", inversedBy="children")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $parent;

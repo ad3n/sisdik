@@ -37,7 +37,7 @@ class User extends BaseUser
      *
      * @ORM\ManyToOne(targetEntity="Guru", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $guru;
@@ -47,7 +47,7 @@ class User extends BaseUser
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $sekolah;
@@ -57,7 +57,7 @@ class User extends BaseUser
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $siswa;
@@ -67,7 +67,7 @@ class User extends BaseUser
      *
      * @ORM\ManyToOne(targetEntity="Staf", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="staf_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="staf_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $staf;

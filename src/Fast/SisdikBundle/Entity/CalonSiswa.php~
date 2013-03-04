@@ -64,6 +64,44 @@ class CalonSiswa
     private $alamat;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ponsel_orangtuawali", type="string", length=100, nullable=true)
+     */
+    private $ponselOrangtuawali;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foto", type="string", length=100, nullable=true)
+     */
+    private $foto;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
+     */
+    private $waktuSimpan;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
+     */
+    private $waktuUbah;
+
+    /**
+     * @var \Referensi
+     *
+     * @ORM\ManyToOne(targetEntity="Referensi")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id")
+     * })
+     */
+    private $referensi;
+
+    /**
      * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
@@ -74,14 +112,24 @@ class CalonSiswa
     private $gelombang;
 
     /**
-     * @var \Tahunmasuk
+     * @var \FosUser
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\ManyToOne(targetEntity="FosUser")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id")
      * })
      */
-    private $tahunmasuk;
+    private $diubahOleh;
+
+    /**
+     * @var \FosUser
+     *
+     * @ORM\ManyToOne(targetEntity="FosUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id")
+     * })
+     */
+    private $dibuatOleh;
 
     /**
      * @var \Sekolah
@@ -92,6 +140,16 @@ class CalonSiswa
      * })
      */
     private $sekolah;
+
+    /**
+     * @var \Tahunmasuk
+     *
+     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     * })
+     */
+    private $tahunmasuk;
 
 
 }

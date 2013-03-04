@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -54,20 +53,17 @@ class Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;
-
-
 
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -77,10 +73,9 @@ class Gelombang
      * @param string $nama
      * @return Gelombang
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
@@ -89,8 +84,7 @@ class Gelombang
      *
      * @return string 
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -100,10 +94,9 @@ class Gelombang
      * @param string $kode
      * @return Gelombang
      */
-    public function setKode($kode)
-    {
+    public function setKode($kode) {
         $this->kode = $kode;
-    
+
         return $this;
     }
 
@@ -112,8 +105,7 @@ class Gelombang
      *
      * @return string 
      */
-    public function getKode()
-    {
+    public function getKode() {
         return $this->kode;
     }
 
@@ -123,10 +115,9 @@ class Gelombang
      * @param string $keterangan
      * @return Gelombang
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
@@ -135,8 +126,7 @@ class Gelombang
      *
      * @return string 
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
     }
 
@@ -146,10 +136,9 @@ class Gelombang
      * @param integer $urutan
      * @return Gelombang
      */
-    public function setUrutan($urutan)
-    {
+    public function setUrutan($urutan) {
         $this->urutan = $urutan;
-    
+
         return $this;
     }
 
@@ -158,8 +147,7 @@ class Gelombang
      *
      * @return integer 
      */
-    public function getUrutan()
-    {
+    public function getUrutan() {
         return $this->urutan;
     }
 
@@ -169,10 +157,9 @@ class Gelombang
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Gelombang
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
-    {
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
         $this->sekolah = $sekolah;
-    
+
         return $this;
     }
 
@@ -181,8 +168,7 @@ class Gelombang
      *
      * @return \Fast\SisdikBundle\Entity\Sekolah 
      */
-    public function getSekolah()
-    {
+    public function getSekolah() {
         return $this->sekolah;
     }
 }

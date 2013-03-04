@@ -103,7 +103,7 @@ class OrangtuaWali
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;

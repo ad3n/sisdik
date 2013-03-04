@@ -40,7 +40,7 @@ class SiswaCmp
      *
      * @ORM\ManyToOne(targetEntity="JenisNilai")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenis_nilai_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenis_nilai_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $jenisNilai;
@@ -50,7 +50,7 @@ class SiswaCmp
      *
      * @ORM\ManyToOne(targetEntity="CukilMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $cukilMp;
@@ -60,7 +60,7 @@ class SiswaCmp
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;

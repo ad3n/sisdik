@@ -72,7 +72,7 @@ class JadwalKehadiranKepulangan
     /**
      * @var boolean
      *
-     * @ORM\Column(name="kirim_sms_realtime", type="boolean", nullable=false)
+     * @ORM\Column(name="kirim_sms_realtime", type="boolean", nullable=false, options={"default"=0})
      */
     private $kirimSmsRealtime;
 
@@ -93,7 +93,7 @@ class JadwalKehadiranKepulangan
     /**
      * @var boolean
      *
-     * @ORM\Column(name="kirim_sms_massal", type="boolean", nullable=false)
+     * @ORM\Column(name="kirim_sms_massal", type="boolean", nullable=false, options={"default"=0})
      */
     private $kirimSmsMassal;
 
@@ -130,7 +130,7 @@ class JadwalKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $statusKehadiranKepulangan;
@@ -140,7 +140,7 @@ class JadwalKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $kelas;
@@ -150,7 +150,7 @@ class JadwalKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahun;
@@ -160,7 +160,7 @@ class JadwalKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="Templatesms")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="templatesms_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="templatesms_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $templatesms;

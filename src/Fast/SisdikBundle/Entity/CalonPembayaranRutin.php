@@ -38,14 +38,14 @@ class CalonPembayaranRutin
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      */
-    private $waktuCatat;
+    private $waktuSimpan;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $waktuUbah;
 
@@ -54,7 +54,7 @@ class CalonPembayaranRutin
      *
      * @ORM\ManyToOne(targetEntity="BiayaRutin")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $biayaRutin;
@@ -64,7 +64,7 @@ class CalonPembayaranRutin
      *
      * @ORM\ManyToOne(targetEntity="CalonSiswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $calonSiswa;

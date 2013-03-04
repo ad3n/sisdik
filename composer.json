@@ -30,7 +30,8 @@
         "mopa/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "master",
         "gregwar/captcha-bundle": "dev-master",
-        "knplabs/knp-snappy-bundle": "dev-master"
+        "knplabs/knp-snappy-bundle": "dev-master",
+        "doctrine/doctrine-migrations-bundle": "dev-master"
     },
     "repositories": [
 	    {

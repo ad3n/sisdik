@@ -8,7 +8,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Siswa
  *
- * @ORM\Table(name="siswa")
+ * @ORM\Table(name="siswa", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="UNIQ_siswa1", columns={"sekolah_id", "nomor_urut_persekolah"}),
+ *     @ORM\UniqueConstraint(name="nomor_induk_sistem_UNIQUE", columns={"nomor_induk_sistem"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
@@ -26,7 +29,7 @@ class Siswa
     /**
      * @var integer
      *
-     * @ORM\Column(name="nomor_urut_persekolah", type="integer", nullable=true)
+     * @ORM\Column(name="nomor_urut_persekolah", type="integer", nullable=true, options={"unsigned"=true})
      */
     private $nomorUrutPersekolah;
 
@@ -40,7 +43,7 @@ class Siswa
     /**
      * @var integer
      *
-     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true)
+     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
      */
     private $nomorPendaftaran;
 
@@ -231,7 +234,7 @@ class Siswa
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $gelombang;
@@ -241,7 +244,7 @@ class Siswa
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahunmasuk;
@@ -251,7 +254,7 @@ class Siswa
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;

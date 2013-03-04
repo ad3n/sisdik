@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SiswaKelas
  *
- * @ORM\Table(name="siswa_kelas")
+ * @ORM\Table(name="siswa_kelas", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="siswa_kelas_unq1", columns={"siswa_id", "tahun_id", "kelas_id"})
+ * })
  * @ORM\Entity
  */
 class SiswaKelas
@@ -24,7 +26,7 @@ class SiswaKelas
     /**
      * @var boolean
      *
-     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default" = 0})
      */
     private $aktif;
 
@@ -40,7 +42,7 @@ class SiswaKelas
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $kelas;
@@ -50,7 +52,7 @@ class SiswaKelas
      *
      * @ORM\ManyToOne(targetEntity="Penjurusan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $penjurusan;
@@ -60,7 +62,7 @@ class SiswaKelas
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;
@@ -70,7 +72,7 @@ class SiswaKelas
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahun;

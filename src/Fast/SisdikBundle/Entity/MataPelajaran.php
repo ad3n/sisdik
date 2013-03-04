@@ -61,7 +61,7 @@ class MataPelajaran
      *
      * @ORM\ManyToOne(targetEntity="KelompokMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelompok_mp_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelompok_mp_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $kelompokMp;

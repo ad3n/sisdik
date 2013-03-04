@@ -38,7 +38,7 @@ class MesinKehadiran
     /**
      * @var boolean
      *
-     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
      */
     private $aktif;
 
@@ -47,7 +47,7 @@ class MesinKehadiran
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;

@@ -47,7 +47,7 @@ class JadwalCmp
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $guru;
@@ -57,7 +57,7 @@ class JadwalCmp
      *
      * @ORM\ManyToOne(targetEntity="CukilMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $cukilMp;
@@ -67,7 +67,7 @@ class JadwalCmp
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $kelas;

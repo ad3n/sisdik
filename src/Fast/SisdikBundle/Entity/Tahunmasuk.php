@@ -6,7 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Tahunmasuk
  *
- * @ORM\Table(name="tahunmasuk")
+ * @ORM\Table(name="tahunmasuk", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="UNIQ_tahunmasuk1", columns={"sekolah_id", "tahun"})
+ * })
  * @ORM\Entity
  */
 class Tahunmasuk
@@ -23,7 +25,7 @@ class Tahunmasuk
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="tahun", type="string", nullable=false)
+     * @ORM\Column(name="tahun", type="date", nullable=false)
      */
     private $tahun;
 
@@ -32,7 +34,7 @@ class Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;

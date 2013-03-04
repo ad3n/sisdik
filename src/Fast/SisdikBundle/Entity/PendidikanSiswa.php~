@@ -99,16 +99,6 @@ class PendidikanSiswa
     private $keterangan;
 
     /**
-     * @var \Referensi
-     *
-     * @ORM\ManyToOne(targetEntity="Referensi")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id")
-     * })
-     */
-    private $referensi;
-
-    /**
      * @var \Siswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")

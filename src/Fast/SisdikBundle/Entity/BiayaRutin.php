@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BiayaRutin
  *
- * @ORM\Table(name="biaya_rutin")
+ * @ORM\Table(name="biaya_rutin", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="UNQ_biaya_rutin1", columns={"jenisbiaya_id", "tahunmasuk_id", "gelombang_id"})
+ * })
  * @ORM\Entity
  */
 class BiayaRutin
@@ -31,7 +33,7 @@ class BiayaRutin
     /**
      * @var string
      *
-     * @ORM\Column(name="perulangan", type="string", nullable=true)
+     * @ORM\Column(name="perulangan", type="string", nullable=true, options={"default"="bulan"})
      */
     private $perulangan;
 
@@ -47,7 +49,7 @@ class BiayaRutin
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $gelombang;
@@ -57,7 +59,7 @@ class BiayaRutin
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahunmasuk;
@@ -67,7 +69,7 @@ class BiayaRutin
      *
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $jenisbiaya;

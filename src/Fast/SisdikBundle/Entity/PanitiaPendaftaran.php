@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PanitiaPendaftaran
  *
- * @ORM\Table(name="panitia_pendaftaran")
+ * @ORM\Table(name="panitia_pendaftaran", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="tahunmasuk_id_UNIQUE", columns={"tahunmasuk_id"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
@@ -34,7 +36,7 @@ class PanitiaPendaftaran
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahunmasuk;

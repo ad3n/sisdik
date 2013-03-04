@@ -3,6 +3,7 @@
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CalonSiswa
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CalonSiswa
 {
+    const WEBCAMPHOTO_DIR = 'uploads/applicants/webcam-photos/';
+    
     /**
      * @var integer
      *
@@ -24,7 +27,7 @@ class CalonSiswa
     /**
      * @var integer
      *
-     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true)
+     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
      */
     private $nomorPendaftaran;
 
@@ -32,6 +35,7 @@ class CalonSiswa
      * @var string
      *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
+     * @Assert\NotBlank
      */
     private $namaLengkap;
 
@@ -39,6 +43,7 @@ class CalonSiswa
      * @var string
      *
      * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
+     * @Assert\NotBlank
      */
     private $jenisKelamin;
 
@@ -53,6 +58,7 @@ class CalonSiswa
      * @var \DateTime
      *
      * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
+     * @Assert\NotBlank
      */
     private $tanggalLahir;
 
@@ -64,34 +70,93 @@ class CalonSiswa
     private $alamat;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ponsel_orangtuawali", type="string", length=100, nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $ponselOrangtuawali;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foto", type="string", length=100, nullable=true)
+     */
+    private $foto;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
+     */
+    private $waktuSimpan;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $waktuUbah;
+
+    /**
+     * @var \Referensi
+     *
+     * @ORM\ManyToOne(targetEntity="Referensi")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * })
+     */
+    private $referensi;
+
+    /**
      * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $gelombang;
 
     /**
-     * @var \Tahunmasuk
+     * @var \User
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id", nullable=true)
      * })
      */
-    private $tahunmasuk;
+    private $diubahOleh;
+
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $dibuatOleh;
 
     /**
      * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;
+
+    /**
+     * @var \Tahunmasuk
+     *
+     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $tahunmasuk;
 
 
 
@@ -244,6 +309,121 @@ class CalonSiswa
     }
 
     /**
+     * Set ponselOrangtuawali
+     *
+     * @param string $ponselOrangtuawali
+     * @return CalonSiswa
+     */
+    public function setPonselOrangtuawali($ponselOrangtuawali)
+    {
+        $this->ponselOrangtuawali = $ponselOrangtuawali;
+    
+        return $this;
+    }
+
+    /**
+     * Get ponselOrangtuawali
+     *
+     * @return string 
+     */
+    public function getPonselOrangtuawali()
+    {
+        return $this->ponselOrangtuawali;
+    }
+
+    /**
+     * Set foto
+     *
+     * @param string $foto
+     * @return CalonSiswa
+     */
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
+    
+        return $this;
+    }
+
+    /**
+     * Get foto
+     *
+     * @return string 
+     */
+    public function getFoto()
+    {
+        return $this->foto;
+    }
+
+    /**
+     * Set waktuSimpan
+     *
+     * @param \DateTime $waktuSimpan
+     * @return CalonSiswa
+     */
+    public function setWaktuSimpan($waktuSimpan)
+    {
+        $this->waktuSimpan = $waktuSimpan;
+    
+        return $this;
+    }
+
+    /**
+     * Get waktuSimpan
+     *
+     * @return \DateTime 
+     */
+    public function getWaktuSimpan()
+    {
+        return $this->waktuSimpan;
+    }
+
+    /**
+     * Set waktuUbah
+     *
+     * @param \DateTime $waktuUbah
+     * @return CalonSiswa
+     */
+    public function setWaktuUbah($waktuUbah)
+    {
+        $this->waktuUbah = $waktuUbah;
+    
+        return $this;
+    }
+
+    /**
+     * Get waktuUbah
+     *
+     * @return \DateTime 
+     */
+    public function getWaktuUbah()
+    {
+        return $this->waktuUbah;
+    }
+
+    /**
+     * Set referensi
+     *
+     * @param \Fast\SisdikBundle\Entity\Referensi $referensi
+     * @return CalonSiswa
+     */
+    public function setReferensi(\Fast\SisdikBundle\Entity\Referensi $referensi = null)
+    {
+        $this->referensi = $referensi;
+    
+        return $this;
+    }
+
+    /**
+     * Get referensi
+     *
+     * @return \Fast\SisdikBundle\Entity\Referensi 
+     */
+    public function getReferensi()
+    {
+        return $this->referensi;
+    }
+
+    /**
      * Set gelombang
      *
      * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
@@ -267,26 +447,49 @@ class CalonSiswa
     }
 
     /**
-     * Set tahunmasuk
+     * Set diubahOleh
      *
-     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
+     * @param \Fast\SisdikBundle\Entity\User $diubahOleh
      * @return CalonSiswa
      */
-    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null)
+    public function setDiubahOleh(\Fast\SisdikBundle\Entity\User $diubahOleh = null)
     {
-        $this->tahunmasuk = $tahunmasuk;
+        $this->diubahOleh = $diubahOleh;
     
         return $this;
     }
 
     /**
-     * Get tahunmasuk
+     * Get diubahOleh
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\User 
      */
-    public function getTahunmasuk()
+    public function getDiubahOleh()
     {
-        return $this->tahunmasuk;
+        return $this->diubahOleh;
+    }
+
+    /**
+     * Set dibuatOleh
+     *
+     * @param \Fast\SisdikBundle\Entity\User $dibuatOleh
+     * @return CalonSiswa
+     */
+    public function setDibuatOleh(\Fast\SisdikBundle\Entity\User $dibuatOleh = null)
+    {
+        $this->dibuatOleh = $dibuatOleh;
+    
+        return $this;
+    }
+
+    /**
+     * Get dibuatOleh
+     *
+     * @return \Fast\SisdikBundle\Entity\User 
+     */
+    public function getDibuatOleh()
+    {
+        return $this->dibuatOleh;
     }
 
     /**
@@ -310,5 +513,28 @@ class CalonSiswa
     public function getSekolah()
     {
         return $this->sekolah;
+    }
+
+    /**
+     * Set tahunmasuk
+     *
+     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
+     * @return CalonSiswa
+     */
+    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null)
+    {
+        $this->tahunmasuk = $tahunmasuk;
+    
+        return $this;
+    }
+
+    /**
+     * Get tahunmasuk
+     *
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     */
+    public function getTahunmasuk()
+    {
+        return $this->tahunmasuk;
     }
 }

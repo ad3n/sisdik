@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * KepulanganSiswa
  *
- * @ORM\Table(name="kepulangan_siswa")
+ * @ORM\Table(name="kepulangan_siswa", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="siswa_UNIQUE1", columns={"siswa_id", "tanggal"})
+ * })
  * @ORM\Entity
  */
 class KepulanganSiswa
@@ -38,7 +40,7 @@ class KepulanganSiswa
     /**
      * @var boolean
      *
-     * @ORM\Column(name="sms_pulang_terproses", type="boolean", nullable=false)
+     * @ORM\Column(name="sms_pulang_terproses", type="boolean", nullable=false, options={"default"=0})
      */
     private $smsPulangTerproses;
 
@@ -47,7 +49,7 @@ class KepulanganSiswa
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $kelas;
@@ -57,7 +59,7 @@ class KepulanganSiswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;
@@ -67,7 +69,7 @@ class KepulanganSiswa
      *
      * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $statusKehadiranKepulangan;

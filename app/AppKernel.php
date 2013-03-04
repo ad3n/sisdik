@@ -9,27 +9,26 @@ class AppKernel extends Kernel
         $bundles = array(
                 new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
                 new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-                new Symfony\Bundle\TwigBundle\TwigBundle(),
-                new Symfony\Bundle\MonologBundle\MonologBundle(),
+                new Symfony\Bundle\TwigBundle\TwigBundle(), new Symfony\Bundle\MonologBundle\MonologBundle(),
                 new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
                 new Symfony\Bundle\AsseticBundle\AsseticBundle(),
                 new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
                 new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
                 new JMS\AopBundle\JMSAopBundle(), new JMS\DiExtraBundle\JMSDiExtraBundle($this),
-                new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
-                new FOS\UserBundle\FOSUserBundle(), new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+                new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(), new FOS\UserBundle\FOSUserBundle(),
+                new Knp\Bundle\MenuBundle\KnpMenuBundle(),
                 new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
                 new BCC\ExtraToolsBundle\BCCExtraToolsBundle(),
                 new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
                 new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
                 new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
+                new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
                 new Fast\SisdikBundle\FastSisdikBundle(), new Acme\DemoBundle\AcmeDemoBundle(),
         );
 
-        if (in_array($this->getEnvironment(),
-                array(
-                    'dev', 'test'
-                ))) {
+        if (in_array($this->getEnvironment(), array(
+            'dev', 'test'
+        ))) {
             //             $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();

@@ -75,7 +75,7 @@ class PendidikanGuru
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $guru;

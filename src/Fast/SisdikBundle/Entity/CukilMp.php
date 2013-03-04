@@ -26,7 +26,7 @@ class CukilMp
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahun;
@@ -36,7 +36,7 @@ class CukilMp
      *
      * @ORM\ManyToOne(targetEntity="Semester")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="semester_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="semester_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $semester;
@@ -46,7 +46,7 @@ class CukilMp
      *
      * @ORM\ManyToOne(targetEntity="MataPelajaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $mataPelajaran;

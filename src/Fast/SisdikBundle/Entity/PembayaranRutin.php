@@ -24,7 +24,7 @@ class PembayaranRutin
     /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default"=0})
      */
     private $nominalPembayaran;
 
@@ -54,7 +54,7 @@ class PembayaranRutin
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;
@@ -64,7 +64,7 @@ class PembayaranRutin
      *
      * @ORM\ManyToOne(targetEntity="BiayaRutin")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $biayaRutin;

@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Kelas
  *
- * @ORM\Table(name="kelas")
+ * @ORM\Table(name="kelas", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="kelas_unique1", columns={"sekolah_id", "kode"})
+ * })
  * @ORM\Entity
  */
 class Kelas
@@ -54,7 +56,7 @@ class Kelas
      *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahun;
@@ -64,7 +66,7 @@ class Kelas
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;
@@ -74,7 +76,7 @@ class Kelas
      *
      * @ORM\ManyToOne(targetEntity="Jenjang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenjang_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenjang_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $jenjang;

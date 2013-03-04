@@ -38,14 +38,14 @@ class CalonPembayaranSekali
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      */
-    private $waktuCatat;
+    private $waktuSimpan;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
      */
     private $waktuUbah;
 
@@ -54,7 +54,7 @@ class CalonPembayaranSekali
      *
      * @ORM\ManyToOne(targetEntity="BiayaSekali")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_sekali_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="biaya_sekali_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $biayaSekali;
@@ -64,7 +64,7 @@ class CalonPembayaranSekali
      *
      * @ORM\ManyToOne(targetEntity="CalonSiswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $calonSiswa;
@@ -128,26 +128,26 @@ class CalonPembayaranSekali
     }
 
     /**
-     * Set waktuCatat
+     * Set waktuSimpan
      *
-     * @param \DateTime $waktuCatat
+     * @param \DateTime $waktuSimpan
      * @return CalonPembayaranSekali
      */
-    public function setWaktuCatat($waktuCatat)
+    public function setWaktuSimpan($waktuSimpan)
     {
-        $this->waktuCatat = $waktuCatat;
+        $this->waktuSimpan = $waktuSimpan;
     
         return $this;
     }
 
     /**
-     * Get waktuCatat
+     * Get waktuSimpan
      *
      * @return \DateTime 
      */
-    public function getWaktuCatat()
+    public function getWaktuSimpan()
     {
-        return $this->waktuCatat;
+        return $this->waktuSimpan;
     }
 
     /**

@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * StatusKehadiranKepulangan
  *
- * @ORM\Table(name="status_kehadiran_kepulangan")
+ * @ORM\Table(name="status_kehadiran_kepulangan", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="uniq_idx1", columns={"sekolah_id", "nama"})
+ * })
  * @ORM\Entity
  */
 class StatusKehadiranKepulangan
@@ -40,7 +42,7 @@ class StatusKehadiranKepulangan
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;

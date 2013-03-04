@@ -26,7 +26,7 @@ class GuruMp
      *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $guru;
@@ -36,7 +36,7 @@ class GuruMp
      *
      * @ORM\ManyToOne(targetEntity="MataPelajaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $mataPelajaran;
