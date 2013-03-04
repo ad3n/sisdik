@@ -8,54 +8,42 @@ use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
  */
 class Version20130304105749 extends AbstractMigration
 {
-    private $trigger1 = "DELIMITER $$
-CREATE
+    private $trigger1 = "CREATE
 TRIGGER `befins_calonpr`
 BEFORE INSERT ON `calon_pembayaran_rutin`
 FOR EACH ROW
 BEGIN
     SET NEW.waktu_simpan = NOW();
     SET NEW.waktu_ubah = NOW();
-END
-$$
-DELIMITER ;";
+END";
 
-    private $trigger2 = "DELIMITER $$
-CREATE
+    private $trigger2 = "CREATE
 TRIGGER `befins_calonps`
 BEFORE INSERT ON `calon_pembayaran_sekali`
 FOR EACH ROW
 BEGIN
     SET NEW.waktu_simpan = NOW();
     SET NEW.waktu_ubah = NOW();
-END
-$$
-DELIMITER ;";
+END";
 
-    private $trigger3 = "DELIMITER $$
-CREATE
+    private $trigger3 = "CREATE
 TRIGGER `befins_calonsiswa`
 BEFORE INSERT ON `calon_siswa`
 FOR EACH ROW
 BEGIN
     SET NEW.waktu_simpan = NOW();
     SET NEW.waktu_ubah = NOW();
-END
-$$
-DELIMITER ;";
+END";
 
-    private $trigger4 = "DELIMITER $$
-CREATE
+    private $trigger4 = "CREATE
 TRIGGER `beforeinsertkelas`
 BEFORE INSERT ON `kelas`
 FOR EACH ROW
 BEGIN
     SET NEW.kode = CONCAT((SELECT kode FROM tahun WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_id), NEW.kode);
-END$$
-DELIMITER ;";
+END";
 
-    private $trigger5 = "DELIMITER $$
-CREATE
+    private $trigger5 = "CREATE
 TRIGGER `beforeupdatekelas`
 BEFORE UPDATE ON `kelas`
 FOR EACH ROW
@@ -66,12 +54,9 @@ BEGIN
     SET kodetahun = (SELECT kode FROM tahun WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_id);
     SET kodekelas = NEW.kode;
     SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
-END$$
-DELIMITER ;";
+END";
 
-    private $trigger6 = "DELIMITER $$
-CREATE
-DEFINER=`root`@`localhost`
+    private $trigger6 = "CREATE
 TRIGGER `beforeinsertsiswa`
 BEFORE INSERT ON `siswa`
 FOR EACH ROW
@@ -81,8 +66,7 @@ BEGIN
     SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
     SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
     SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
-END$$
-DELIMITER ;";
+END";
 
     public function up(Schema $schema) {
         // this up() migration is auto-generated, please modify it to your needs
