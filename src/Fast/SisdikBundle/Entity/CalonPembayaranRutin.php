@@ -45,7 +45,7 @@ class CalonPembayaranRutin
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
      */
     private $waktuUbah;
 
