@@ -8,15 +8,16 @@ use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
  */
 class Version20130304105749 extends AbstractMigration
 {
-    private $trigger1 = "DROP TRIGGER IF EXISTS `befins_calonpr`;
-        DELIMITER //
-        CREATE TRIGGER `befins_calonpr` BEFORE INSERT ON `calon_pembayaran_rutin`
-         FOR EACH ROW BEGIN
-            SET NEW.waktu_simpan = NOW();
-            SET NEW.waktu_ubah = NOW();
-        END
-        //
-        DELIMITER ;";
+    private $trigger1 = "DELIMITER $$
+
+CREATE
+TRIGGER `befins_calonpr`
+BEFORE INSERT ON `calon_pembayaran_rutin`
+FOR EACH ROW
+BEGIN
+	SET NEW.waktu_simpan = NOW();
+END
+$$";
 
     private $trigger2 = "DROP TRIGGER IF EXISTS `befins_calonps`;
         DELIMITER //
@@ -1300,7 +1301,8 @@ DEFAULT CHARACTER SET = utf8;");
     REFERENCES `sekolah` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
-ENGINE = InnoDB;");
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;");
 
         $this
                 ->addSql(
@@ -1330,7 +1332,8 @@ ENGINE = InnoDB;");
     REFERENCES `jenis_imbalan` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
-ENGINE = InnoDB;");
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;");
 
         $this
                 ->addSql(
@@ -1346,7 +1349,8 @@ ENGINE = InnoDB;");
     REFERENCES `tahunmasuk` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
-ENGINE = InnoDB;");
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;");
 
         $this->addSql($this->trigger1);
         $this->addSql($this->trigger2);
@@ -1362,152 +1366,60 @@ ENGINE = InnoDB;");
                 ->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql",
                         "Migration can only be executed safely on 'mysql'.");
 
-        $this->addSql("ALTER TABLE jadwal_cmp DROP FOREIGN KEY FK_D5FA612481103811");
-        $this->addSql("ALTER TABLE siswa_cmp DROP FOREIGN KEY FK_D6DFF74781103811");
-        $this->addSql("ALTER TABLE calon_siswa DROP FOREIGN KEY FK_FD7929C63C73F693");
-        $this->addSql("ALTER TABLE imbalan_pendaftaran DROP FOREIGN KEY FK_13653D69800E537F");
-        $this->addSql("ALTER TABLE kelas DROP FOREIGN KEY FK_D01FFE543475F4D");
-        $this->addSql("ALTER TABLE siswahadir_jcmp DROP FOREIGN KEY FK_859D769E788B6A3D");
-        $this->addSql("ALTER TABLE guruhadir_jcmp DROP FOREIGN KEY FK_7926F66F788B6A3D");
-        $this->addSql("ALTER TABLE mata_pelajaran DROP FOREIGN KEY FK_F16769B1D573B444");
-        $this->addSql("ALTER TABLE jenis_imbalan DROP FOREIGN KEY FK_BC5CE818A48940F5");
-        $this->addSql("ALTER TABLE jenjang DROP FOREIGN KEY FK_F9B79FB2A48940F5");
-        $this->addSql("ALTER TABLE kelompok_mp DROP FOREIGN KEY FK_6D901222A48940F5");
-        $this->addSql("ALTER TABLE tahun DROP FOREIGN KEY FK_F76C7A00A48940F5");
-        $this->addSql("ALTER TABLE fos_user DROP FOREIGN KEY FK_957A6479A48940F5");
-        $this->addSql("ALTER TABLE gelombang DROP FOREIGN KEY FK_628452B3A48940F5");
-        $this->addSql("ALTER TABLE templatesms DROP FOREIGN KEY FK_D332F0FFA48940F5");
-        $this->addSql("ALTER TABLE guru DROP FOREIGN KEY FK_E8E924DAA48940F5");
-        $this->addSql("ALTER TABLE calon_siswa DROP FOREIGN KEY FK_FD7929C6A48940F5");
-        $this->addSql("ALTER TABLE kalender_pendidikan DROP FOREIGN KEY FK_71F44582A48940F5");
-        $this->addSql("ALTER TABLE penjurusan DROP FOREIGN KEY FK_EDD737E4A48940F5");
-        $this->addSql("ALTER TABLE jenisbiaya DROP FOREIGN KEY FK_4DC35236A48940F5");
-        $this->addSql("ALTER TABLE staf DROP FOREIGN KEY FK_D3018E69A48940F5");
-        $this->addSql("ALTER TABLE semester DROP FOREIGN KEY FK_F7388EEDA48940F5");
-        $this->addSql("ALTER TABLE kelas DROP FOREIGN KEY FK_D01FFE54A48940F5");
-        $this->addSql("ALTER TABLE siswa DROP FOREIGN KEY FK_3202BD7DA48940F5");
-        $this->addSql("ALTER TABLE tahunmasuk DROP FOREIGN KEY FK_E437322BA48940F5");
-        $this->addSql("ALTER TABLE status_kehadiran_kepulangan DROP FOREIGN KEY FK_2F04B584A48940F5");
-        $this->addSql("ALTER TABLE mesin_kehadiran DROP FOREIGN KEY FK_F2C5F3CA48940F5");
-        $this->addSql("ALTER TABLE cukil_mp DROP FOREIGN KEY FK_E54128F8F79579C8");
-        $this->addSql("ALTER TABLE jadwal_bel DROP FOREIGN KEY FK_8E0DD54F79579C8");
-        $this->addSql("ALTER TABLE siswa_kelas DROP FOREIGN KEY FK_882A3907F79579C8");
-        $this->addSql("ALTER TABLE jadwal_sms DROP FOREIGN KEY FK_50D593EEF76C7A00");
-        $this->addSql("ALTER TABLE jenis_nilai DROP FOREIGN KEY FK_FC06E1ADF79579C8");
-        $this->addSql("ALTER TABLE jadwal_kehadiran_kepulangan DROP FOREIGN KEY FK_C8CEBE28F79579C8");
-        $this->addSql("ALTER TABLE kelas DROP FOREIGN KEY FK_D01FFE54F79579C8");
-        $this->addSql("ALTER TABLE wali_kelas DROP FOREIGN KEY FK_CE886CD9F79579C8");
-        $this->addSql("ALTER TABLE calon_pembayaran_rutin DROP FOREIGN KEY FK_CB0100B8675E095");
-        $this->addSql("ALTER TABLE pembayaran_rutin DROP FOREIGN KEY FK_692AC9CC8675E095");
-        $this->addSql("ALTER TABLE calon_siswa DROP FOREIGN KEY FK_FD7929C618ED1518");
-        $this->addSql("ALTER TABLE calon_siswa DROP FOREIGN KEY FK_FD7929C6AD547146");
-        $this->addSql("ALTER TABLE biaya_rutin DROP FOREIGN KEY FK_F4EDECBCC301FDF4");
-        $this->addSql("ALTER TABLE imbalan_pendaftaran DROP FOREIGN KEY FK_13653D69C301FDF4");
-        $this->addSql("ALTER TABLE biaya_sekali DROP FOREIGN KEY FK_BBAC14EEC301FDF4");
-        $this->addSql("ALTER TABLE calon_siswa DROP FOREIGN KEY FK_FD7929C6C301FDF4");
-        $this->addSql("ALTER TABLE siswa DROP FOREIGN KEY FK_3202BD7DC301FDF4");
-        $this->addSql("ALTER TABLE jadwal_sms DROP FOREIGN KEY FK_50D593EED332F0FF");
-        $this->addSql("ALTER TABLE jadwal_kehadiran_kepulangan DROP FOREIGN KEY FK_C8CEBE284B24133");
-        $this->addSql("ALTER TABLE siswa_cmp DROP FOREIGN KEY FK_D6DFF74719E76C67");
-        $this->addSql("ALTER TABLE pembayaran_sekali DROP FOREIGN KEY FK_EB34A2F734F300B7");
-        $this->addSql("ALTER TABLE calon_pembayaran_sekali DROP FOREIGN KEY FK_EE516F3D34F300B7");
-        $this->addSql("ALTER TABLE cukil_mp DROP FOREIGN KEY FK_E54128F8C53475F3");
-        $this->addSql("ALTER TABLE guru_mp DROP FOREIGN KEY FK_B0D7DF3DC53475F3");
-        $this->addSql("ALTER TABLE jadwal_cmp DROP FOREIGN KEY FK_D5FA6124CE61CE44");
-        $this->addSql("ALTER TABLE fos_user DROP FOREIGN KEY FK_957A6479CE61CE44");
-        $this->addSql("ALTER TABLE pendidikan_guru DROP FOREIGN KEY FK_E4B5B494CE61CE44");
-        $this->addSql("ALTER TABLE guru_mp DROP FOREIGN KEY FK_B0D7DF3DCE61CE44");
-        $this->addSql("ALTER TABLE calon_pembayaran_rutin DROP FOREIGN KEY FK_CB0100B9EFC794C");
-        $this->addSql("ALTER TABLE calon_pembayaran_sekali DROP FOREIGN KEY FK_EE516F3D9EFC794C");
-        $this->addSql("ALTER TABLE siswa_kelas DROP FOREIGN KEY FK_882A3907401A5AE2");
-        $this->addSql("ALTER TABLE penjurusan DROP FOREIGN KEY FK_EDD737E4727ACA70");
-        $this->addSql("ALTER TABLE biaya_rutin DROP FOREIGN KEY FK_F4EDECBCCC47F083");
-        $this->addSql("ALTER TABLE biaya_sekali DROP FOREIGN KEY FK_BBAC14EECC47F083");
-        $this->addSql("ALTER TABLE fos_user DROP FOREIGN KEY FK_957A6479F340B01F");
-        $this->addSql("ALTER TABLE cukil_mp DROP FOREIGN KEY FK_E54128F84A798B6F");
-        $this->addSql("ALTER TABLE kehadiran_siswa DROP FOREIGN KEY FK_79FA6E66AC3824A");
-        $this->addSql("ALTER TABLE siswa_kelas DROP FOREIGN KEY FK_882A3907AC3824A");
-        $this->addSql("ALTER TABLE jadwal_sms DROP FOREIGN KEY FK_50D593EED01FFE54");
-        $this->addSql("ALTER TABLE jadwal_cmp DROP FOREIGN KEY FK_D5FA6124AC3824A");
-        $this->addSql("ALTER TABLE jadwal_kehadiran_kepulangan DROP FOREIGN KEY FK_C8CEBE28AC3824A");
-        $this->addSql("ALTER TABLE kepulangan_siswa DROP FOREIGN KEY FK_3632BDD5AC3824A");
-        $this->addSql("ALTER TABLE wali_kelas DROP FOREIGN KEY FK_CE886CD9AC3824A");
-        $this->addSql("ALTER TABLE kehadiran_siswa DROP FOREIGN KEY FK_79FA6E66850D8FD8");
-        $this->addSql("ALTER TABLE pendidikan_siswa DROP FOREIGN KEY FK_A36A8D7A850D8FD8");
-        $this->addSql("ALTER TABLE penyakit_siswa DROP FOREIGN KEY FK_526CBF72850D8FD8");
-        $this->addSql("ALTER TABLE siswa_kelas DROP FOREIGN KEY FK_882A3907850D8FD8");
-        $this->addSql("ALTER TABLE pembayaran_sekali DROP FOREIGN KEY FK_EB34A2F7850D8FD8");
-        $this->addSql("ALTER TABLE fos_user DROP FOREIGN KEY FK_957A6479850D8FD8");
-        $this->addSql("ALTER TABLE siswa_cmp DROP FOREIGN KEY FK_D6DFF747850D8FD8");
-        $this->addSql("ALTER TABLE tugas_akhir DROP FOREIGN KEY FK_35829604850D8FD8");
-        $this->addSql("ALTER TABLE kepulangan_siswa DROP FOREIGN KEY FK_3632BDD5850D8FD8");
-        $this->addSql("ALTER TABLE orangtua_wali DROP FOREIGN KEY FK_258AE7B2850D8FD8");
-        $this->addSql("ALTER TABLE pembayaran_rutin DROP FOREIGN KEY FK_692AC9CC850D8FD8");
-        $this->addSql("ALTER TABLE panitia_pendaftaran DROP FOREIGN KEY FK_BB548D617949DAB");
-        $this->addSql("ALTER TABLE biaya_rutin DROP FOREIGN KEY FK_F4EDECBC7949DAB");
-        $this->addSql("ALTER TABLE imbalan_pendaftaran DROP FOREIGN KEY FK_13653D697949DAB");
-        $this->addSql("ALTER TABLE biaya_sekali DROP FOREIGN KEY FK_BBAC14EE7949DAB");
-        $this->addSql("ALTER TABLE calon_siswa DROP FOREIGN KEY FK_FD7929C67949DAB");
-        $this->addSql("ALTER TABLE siswa DROP FOREIGN KEY FK_3202BD7D7949DAB");
-        $this->addSql("ALTER TABLE kehadiran_siswa DROP FOREIGN KEY FK_79FA6E661EA2E8A7");
-        $this->addSql("ALTER TABLE jadwal_kehadiran_kepulangan DROP FOREIGN KEY FK_C8CEBE281EA2E8A7");
-        $this->addSql("ALTER TABLE kepulangan_siswa DROP FOREIGN KEY FK_3632BDD51EA2E8A7");
-        $this->addSql("DROP TABLE IF EXISTS cukil_mp");
-        $this->addSql("DROP TABLE IF EXISTS sms_kepulangan_siswa");
-        $this->addSql("DROP TABLE IF EXISTS kehadiran_siswa");
-        $this->addSql("DROP TABLE IF EXISTS pendidikan_siswa");
-        $this->addSql("DROP TABLE IF EXISTS referensi");
-        $this->addSql("DROP TABLE IF EXISTS siswahadir_jcmp");
-        $this->addSql("DROP TABLE IF EXISTS penyakit_siswa");
-        $this->addSql("DROP TABLE IF EXISTS jadwal_bel");
-        $this->addSql("DROP TABLE IF EXISTS panitia_pendaftaran");
-        $this->addSql("DROP TABLE IF EXISTS siswa_kelas");
-        $this->addSql("DROP TABLE IF EXISTS jenis_imbalan");
-        $this->addSql("DROP TABLE IF EXISTS jenjang");
-        $this->addSql("DROP TABLE IF EXISTS jadwal_sms");
-        $this->addSql("DROP TABLE IF EXISTS pembayaran_sekali");
-        $this->addSql("DROP TABLE IF EXISTS logfp");
-        $this->addSql("DROP TABLE IF EXISTS jadwal_cmp");
-        $this->addSql("DROP TABLE IF EXISTS kelompok_mp");
-        $this->addSql("DROP TABLE IF EXISTS calon_pembayaran_rutin");
-        $this->addSql("DROP TABLE IF EXISTS sekolah");
-        $this->addSql("DROP TABLE IF EXISTS tahun");
-        $this->addSql("DROP TABLE IF EXISTS biaya_rutin");
-        $this->addSql("DROP TABLE IF EXISTS imbalan_pendaftaran");
-        $this->addSql("DROP TABLE IF EXISTS fos_user");
-        $this->addSql("DROP TABLE IF EXISTS gelombang");
-        $this->addSql("DROP TABLE IF EXISTS templatesms");
-        $this->addSql("DROP TABLE IF EXISTS jenis_nilai");
-        $this->addSql("DROP TABLE IF EXISTS siswa_cmp");
-        $this->addSql("DROP TABLE IF EXISTS guruhadir");
-        $this->addSql("DROP TABLE IF EXISTS jadwal_kehadiran_kepulangan");
-        $this->addSql("DROP TABLE IF EXISTS tugas_akhir");
-        $this->addSql("DROP TABLE IF EXISTS biaya_sekali");
-        $this->addSql("DROP TABLE IF EXISTS logsms_masuk");
-        $this->addSql("DROP TABLE IF EXISTS kepulangan_siswa");
-        $this->addSql("DROP TABLE IF EXISTS mata_pelajaran");
-        $this->addSql("DROP TABLE IF EXISTS guru");
-        $this->addSql("DROP TABLE IF EXISTS calon_pembayaran_sekali");
-        $this->addSql("DROP TABLE IF EXISTS calon_siswa");
-        $this->addSql("DROP TABLE IF EXISTS kalender_pendidikan");
-        $this->addSql("DROP TABLE IF EXISTS logsms_keluar");
-        $this->addSql("DROP TABLE IF EXISTS kehadiran_guru");
-        $this->addSql("DROP TABLE IF EXISTS orangtua_wali");
-        $this->addSql("DROP TABLE IF EXISTS penjurusan");
-        $this->addSql("DROP TABLE IF EXISTS siswahadir");
-        $this->addSql("DROP TABLE IF EXISTS jenisbiaya");
-        $this->addSql("DROP TABLE IF EXISTS staf");
-        $this->addSql("DROP TABLE IF EXISTS semester");
-        $this->addSql("DROP TABLE IF EXISTS kelas");
-        $this->addSql("DROP TABLE IF EXISTS pendidikan_guru");
-        $this->addSql("DROP TABLE IF EXISTS guru_mp");
-        $this->addSql("DROP TABLE IF EXISTS pembayaran_rutin");
-        $this->addSql("DROP TABLE IF EXISTS siswa");
-        $this->addSql("DROP TABLE IF EXISTS tahunmasuk");
-        $this->addSql("DROP TABLE IF EXISTS guruhadir_jcmp");
-        $this->addSql("DROP TABLE IF EXISTS status_kehadiran_kepulangan");
-        $this->addSql("DROP TABLE IF EXISTS wali_kelas");
-        $this->addSql("DROP TABLE IF EXISTS mesin_kehadiran");
+        $this->addSql("DROP TABLE IF EXISTS `panitia_pendaftaran` ;");
+        $this->addSql("DROP TABLE IF EXISTS `imbalan_pendaftaran` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jenis_imbalan` ;");
+        $this->addSql("DROP TABLE IF EXISTS `wali_kelas` ;");
+        $this->addSql("DROP TABLE IF EXISTS `tugas_akhir` ;");
+        $this->addSql("DROP TABLE IF EXISTS `sms_kepulangan_siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `siswahadir_jcmp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `siswa_kelas` ;");
+        $this->addSql("DROP TABLE IF EXISTS `siswa_cmp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `penyakit_siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `penjurusan` ;");
+        $this->addSql("DROP TABLE IF EXISTS `pendidikan_siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `pendidikan_guru` ;");
+        $this->addSql("DROP TABLE IF EXISTS `pembayaran_sekali` ;");
+        $this->addSql("DROP TABLE IF EXISTS `pembayaran_rutin` ;");
+        $this->addSql("DROP TABLE IF EXISTS `orangtua_wali` ;");
+        $this->addSql("DROP TABLE IF EXISTS `migration_versions` ;");
+        $this->addSql("DROP TABLE IF EXISTS `mesin_kehadiran` ;");
+        $this->addSql("DROP TABLE IF EXISTS `logsms_masuk` ;");
+        $this->addSql("DROP TABLE IF EXISTS `logsms_keluar` ;");
+        $this->addSql("DROP TABLE IF EXISTS `logfp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `kepulangan_siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `kehadiran_siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `kehadiran_guru` ;");
+        $this->addSql("DROP TABLE IF EXISTS `kalender_pendidikan` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jenis_nilai` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jadwal_kehadiran_kepulangan` ;");
+        $this->addSql("DROP TABLE IF EXISTS `templatesms` ;");
+        $this->addSql("DROP TABLE IF EXISTS `status_kehadiran_kepulangan` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jadwal_bel` ;");
+        $this->addSql("DROP TABLE IF EXISTS `guruhadir_jcmp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jadwal_cmp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `kelas` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jenjang` ;");
+        $this->addSql("DROP TABLE IF EXISTS `guru_mp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `cukil_mp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `mata_pelajaran` ;");
+        $this->addSql("DROP TABLE IF EXISTS `kelompok_mp` ;");
+        $this->addSql("DROP TABLE IF EXISTS `semester` ;");
+        $this->addSql("DROP TABLE IF EXISTS `tahun` ;");
+        $this->addSql("DROP TABLE IF EXISTS `calon_pembayaran_sekali` ;");
+        $this->addSql("DROP TABLE IF EXISTS `calon_pembayaran_rutin` ;");
+        $this->addSql("DROP TABLE IF EXISTS `calon_siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `referensi` ;");
+        $this->addSql("DROP TABLE IF EXISTS `fos_user` ;");
+        $this->addSql("DROP TABLE IF EXISTS `staf` ;");
+        $this->addSql("DROP TABLE IF EXISTS `siswa` ;");
+        $this->addSql("DROP TABLE IF EXISTS `guru` ;");
+        $this->addSql("DROP TABLE IF EXISTS `biaya_sekali` ;");
+        $this->addSql("DROP TABLE IF EXISTS `biaya_rutin` ;");
+        $this->addSql("DROP TABLE IF EXISTS `jenisbiaya` ;");
+        $this->addSql("DROP TABLE IF EXISTS `tahunmasuk` ;");
+        $this->addSql("DROP TABLE IF EXISTS `gelombang` ;");
+        $this->addSql("DROP TABLE IF EXISTS `sekolah` ;");
 
         $this->addSql("DROP TRIGGER IF EXISTS `befins_calonpr`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befins_calonps`;");
