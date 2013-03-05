@@ -45,9 +45,9 @@ class Referensi
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     * @ORM\Column(name="nomor_identitas", type="string", length=300, nullable=true)
      */
-    private $email;
+    private $nomorIdentitas;
 
 
 
@@ -131,25 +131,25 @@ class Referensi
     }
 
     /**
-     * Set email
+     * Set nomorIdentitas
      *
-     * @param string $email
+     * @param string $nomorIdentitas
      * @return Referensi
      */
-    public function setEmail($email)
+    public function setNomorIdentitas($nomorIdentitas)
     {
-        $this->email = $email;
+        $this->nomorIdentitas = $nomorIdentitas;
     
         return $this;
     }
 
     /**
-     * Get email
+     * Get nomorIdentitas
      *
      * @return string 
      */
-    public function getEmail()
+    public function getNomorIdentitas()
     {
-        return $this->email;
+        return $this->nomorIdentitas;
     }
 }

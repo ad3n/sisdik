@@ -234,7 +234,7 @@ class PanitiaPendaftaranController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-
+            
             try {
                 $em->persist($entity);
 

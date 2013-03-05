@@ -25,7 +25,7 @@ class Tahunmasuk
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="tahun", type="date", nullable=false)
+     * @ORM\Column(name="tahun", type="string", nullable=false)
      */
     private $tahun;
 

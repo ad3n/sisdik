@@ -45,7 +45,9 @@
     		{% if data.panitia %}
     		    {% for personil in data.panitia %}
     		        {% set user = personil|split(':', 1) %}
-    		        {% render url('regcommittee_getname', {id: user[0]}) %}{% if not loop.last %}, {% endif %}
+    		        {% if user[0] != '' %}
+    		            {% render url('regcommittee_getname', {id: user[0]}) %}{% if not loop.last %}, {% endif %}
+    		        {% endif %}
     		    {% endfor %}
     		{% endif %}
     		</td>

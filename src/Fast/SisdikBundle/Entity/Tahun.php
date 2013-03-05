@@ -55,7 +55,7 @@ class Tahun
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default" = 0})
      */
-    private $aktif;
+    private $aktif = 0;
 
     /**
      * @var \Sekolah

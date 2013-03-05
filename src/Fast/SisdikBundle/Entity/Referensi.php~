@@ -45,9 +45,9 @@ class Referensi
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     * @ORM\Column(name="nomor_identitas", type="string", length=300, nullable=true)
      */
-    private $email;
+    private $nomorIdentitas;
 
 
 }
