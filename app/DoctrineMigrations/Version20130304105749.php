@@ -236,60 +236,63 @@ END";
         $this
                 ->addSql(
                         "CREATE  TABLE IF NOT EXISTS `siswa` (
-                            `id` INT(11) NOT NULL AUTO_INCREMENT ,
-                            `sekolah_id` INT(11) NOT NULL ,
-                            `tahunmasuk_id` INT(11) NOT NULL ,
-                            `gelombang_id` INT(11) NOT NULL ,
-                            `nomor_urut_persekolah` MEDIUMINT(6) UNSIGNED ZEROFILL NULL DEFAULT NULL ,
-                            `nomor_induk_sistem` VARCHAR(45) NULL DEFAULT NULL ,
-                            `nomor_pendaftaran` SMALLINT(4) UNSIGNED ZEROFILL NULL DEFAULT NULL ,
-                            `nomor_induk` VARCHAR(100) NULL DEFAULT NULL ,
-                            `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
-                            `jenis_kelamin` VARCHAR(255) NULL DEFAULT NULL ,
-                            `foto` VARCHAR(400) NULL DEFAULT NULL ,
-                            `agama` VARCHAR(100) NULL DEFAULT NULL ,
-                            `tempat_lahir` VARCHAR(400) NULL DEFAULT NULL ,
-                            `tanggal_lahir` DATE NULL DEFAULT NULL ,
-                            `email` VARCHAR(100) NULL DEFAULT NULL ,
-                            `nama_panggilan` VARCHAR(100) NULL DEFAULT NULL ,
-                            `kewarganegaraan` VARCHAR(200) NULL DEFAULT NULL ,
-                            `anak_ke` INT(11) NULL DEFAULT NULL ,
-                            `jumlah_saudarakandung` INT(11) NULL DEFAULT NULL ,
-                            `jumlah_saudaratiri` INT(11) NULL DEFAULT NULL ,
-                            `status_orphan` VARCHAR(100) NULL DEFAULT NULL ,
-                            `bahasa_seharihari` VARCHAR(200) NULL DEFAULT NULL ,
-                            `alamat` VARCHAR(500) NULL DEFAULT NULL ,
-                            `kodepos` VARCHAR(30) NULL DEFAULT NULL ,
-                            `telepon` VARCHAR(100) NULL DEFAULT NULL ,
-                            `ponsel_siswa` VARCHAR(100) NULL DEFAULT NULL ,
-                            `ponsel_orangtuawali` VARCHAR(100) NULL DEFAULT NULL ,
-                            `sekolah_tinggaldi` VARCHAR(400) NULL DEFAULT NULL ,
-                            `jarak_tempat` VARCHAR(300) NULL DEFAULT NULL ,
-                            `cara_kesekolah` VARCHAR(300) NULL DEFAULT NULL ,
-                            `beratbadan` INT(11) NULL DEFAULT NULL ,
-                            `tinggibadan` INT(11) NULL DEFAULT NULL ,
-                            `golongandarah` VARCHAR(50) NULL DEFAULT NULL ,
-                            PRIMARY KEY (`id`) ,
-                            UNIQUE INDEX `UNIQ_siswa1` (`sekolah_id` ASC, `nomor_urut_persekolah` ASC) ,
-                            UNIQUE INDEX `nomor_induk_sistem_UNIQUE` (`nomor_induk_sistem` ASC) ,
-                            INDEX `IDX_3202BD7D299E2F11` (`tahunmasuk_id` ASC) ,
-                            INDEX `IDX_3202BD7D1C9FFB46` (`gelombang_id` ASC) ,
-                            INDEX `fk_siswa_sekolah1_idx` (`sekolah_id` ASC) ,
-                            CONSTRAINT `FK_3202BD7D1C9FFB46`
-                                FOREIGN KEY (`gelombang_id` )
-                                REFERENCES `gelombang` (`id` )
-                                ON DELETE RESTRICT
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `FK_3202BD7D299E2F11`
-                                FOREIGN KEY (`tahunmasuk_id` )
-                                REFERENCES `tahunmasuk` (`id` )
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `fk_siswa_sekolah1`
-                                FOREIGN KEY (`sekolah_id` )
-                                REFERENCES `sekolah` (`id` )
-                            ON UPDATE RESTRICT)
-                        ENGINE = InnoDB
-                        DEFAULT CHARACTER SET = utf8;");
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `sekolah_id` INT(11) NOT NULL ,
+  `tahunmasuk_id` INT(11) NOT NULL ,
+  `gelombang_id` INT(11) NOT NULL ,
+  `nomor_urut_persekolah` MEDIUMINT(6) UNSIGNED NULL DEFAULT NULL ,
+  `nomor_induk_sistem` VARCHAR(45) NULL DEFAULT NULL ,
+  `nomor_pendaftaran` SMALLINT UNSIGNED NULL DEFAULT NULL ,
+  `nomor_induk` VARCHAR(100) NULL DEFAULT NULL ,
+  `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
+  `jenis_kelamin` VARCHAR(255) NULL DEFAULT NULL ,
+  `foto_pendaftaran` VARCHAR(100) NULL DEFAULT NULL ,
+  `foto` VARCHAR(100) NULL DEFAULT NULL ,
+  `agama` VARCHAR(100) NULL DEFAULT NULL ,
+  `tempat_lahir` VARCHAR(400) NULL DEFAULT NULL ,
+  `tanggal_lahir` DATE NULL DEFAULT NULL ,
+  `email` VARCHAR(100) NULL DEFAULT NULL ,
+  `nama_panggilan` VARCHAR(100) NULL DEFAULT NULL ,
+  `kewarganegaraan` VARCHAR(200) NULL DEFAULT NULL ,
+  `anak_ke` SMALLINT NULL DEFAULT NULL ,
+  `jumlah_saudarakandung` SMALLINT NULL DEFAULT NULL ,
+  `jumlah_saudaratiri` SMALLINT NULL DEFAULT NULL ,
+  `status_orphan` VARCHAR(100) NULL DEFAULT NULL ,
+  `bahasa_seharihari` VARCHAR(200) NULL DEFAULT NULL ,
+  `alamat` VARCHAR(500) NULL DEFAULT NULL ,
+  `kodepos` VARCHAR(30) NULL DEFAULT NULL ,
+  `telepon` VARCHAR(100) NULL DEFAULT NULL ,
+  `ponsel_siswa` VARCHAR(100) NULL DEFAULT NULL ,
+  `ponsel_orangtuawali` VARCHAR(100) NULL DEFAULT NULL ,
+  `sekolah_tinggaldi` VARCHAR(400) NULL DEFAULT NULL ,
+  `jarak_tempat` VARCHAR(300) NULL DEFAULT NULL ,
+  `cara_kesekolah` VARCHAR(300) NULL DEFAULT NULL ,
+  `beratbadan` SMALLINT NULL DEFAULT NULL ,
+  `tinggibadan` SMALLINT NULL DEFAULT NULL ,
+  `golongandarah` VARCHAR(50) NULL DEFAULT NULL ,
+  PRIMARY KEY (`id`) ,
+  UNIQUE INDEX `UNIQ_siswa1` (`sekolah_id` ASC, `nomor_urut_persekolah` ASC) ,
+  UNIQUE INDEX `nomor_induk_sistem_UNIQUE` (`nomor_induk_sistem` ASC) ,
+  INDEX `IDX_3202BD7D299E2F11` (`tahunmasuk_id` ASC) ,
+  INDEX `IDX_3202BD7D1C9FFB46` (`gelombang_id` ASC) ,
+  INDEX `fk_siswa_sekolah1_idx` (`sekolah_id` ASC) ,
+  CONSTRAINT `FK_3202BD7D1C9FFB46`
+    FOREIGN KEY (`gelombang_id` )
+    REFERENCES `sisdik`.`gelombang` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `FK_3202BD7D299E2F11`
+    FOREIGN KEY (`tahunmasuk_id` )
+    REFERENCES `sisdik`.`tahunmasuk` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_siswa_sekolah1`
+    FOREIGN KEY (`sekolah_id` )
+    REFERENCES `sisdik`.`sekolah` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8");
 
         $this
                 ->addSql(
@@ -376,63 +379,82 @@ END";
 
         $this
                 ->addSql(
-                        "CREATE  TABLE IF NOT EXISTS `calon_siswa` (
-                            `id` INT(11) NOT NULL AUTO_INCREMENT ,
-                            `sekolah_id` INT(11) NOT NULL ,
-                            `tahunmasuk_id` INT(11) NOT NULL ,
-                            `gelombang_id` INT(11) NOT NULL ,
-                            `referensi_id` INT(11) NULL ,
-                            `dibuat_oleh_id` INT(11) NOT NULL ,
-                            `diubah_oleh_id` INT(11) NULL ,
-                            `nomor_pendaftaran` SMALLINT(4) UNSIGNED ZEROFILL NULL DEFAULT NULL ,
-                            `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
-                            `jenis_kelamin` VARCHAR(255) NULL DEFAULT NULL ,
-                            `tempat_lahir` VARCHAR(400) NULL DEFAULT NULL ,
-                            `tanggal_lahir` DATE NULL DEFAULT NULL ,
-                            `alamat` VARCHAR(500) NULL DEFAULT NULL ,
-                            `ponsel_orangtuawali` VARCHAR(100) NULL ,
-                            `foto` VARCHAR(100) NULL ,
-                            `waktu_simpan` DATETIME NULL ,
-                            `waktu_ubah` DATETIME NOT NULL ,
-                            PRIMARY KEY (`id`) ,
-                            INDEX `fk_calon_siswa_fos_user1_idx` (`dibuat_oleh_id` ASC) ,
-                            INDEX `fk_calon_siswa_sekolah1_idx` (`sekolah_id` ASC) ,
-                            INDEX `fk_calon_siswa_tahunmasuk1_idx` (`tahunmasuk_id` ASC) ,
-                            INDEX `fk_calon_siswa_gelombang1_idx` (`gelombang_id` ASC) ,
-                            INDEX `fk_calon_siswa_fos_user2_idx` (`diubah_oleh_id` ASC) ,
-                            INDEX `fk_calon_siswa_referensi1_idx` (`referensi_id` ASC) ,
-                            CONSTRAINT `fk_calon_siswa_fos_user1`
-                                FOREIGN KEY (`dibuat_oleh_id` )
-                                REFERENCES `fos_user` (`id` )
-                                ON DELETE RESTRICT
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `fk_calon_siswa_sekolah1`
-                                FOREIGN KEY (`sekolah_id` )
-                                REFERENCES `sekolah` (`id` )
-                                ON DELETE RESTRICT
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `fk_calon_siswa_tahunmasuk1`
-                                FOREIGN KEY (`tahunmasuk_id` )
-                                REFERENCES `tahunmasuk` (`id` )
-                                ON DELETE RESTRICT
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `fk_calon_siswa_gelombang1`
-                                FOREIGN KEY (`gelombang_id` )
-                                REFERENCES `gelombang` (`id` )
-                                ON DELETE RESTRICT
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `fk_calon_siswa_fos_user2`
-                                FOREIGN KEY (`diubah_oleh_id` )
-                                REFERENCES `fos_user` (`id` )
-                                ON DELETE RESTRICT
-                                ON UPDATE RESTRICT,
-                            CONSTRAINT `fk_calon_siswa_referensi1`
-                                FOREIGN KEY (`referensi_id` )
-                                REFERENCES `referensi` (`id` )
-                                ON DELETE SET NULL
-                                ON UPDATE RESTRICT)
-                        ENGINE = InnoDB
-                        DEFAULT CHARACTER SET = utf8;");
+                        "CREATE  TABLE IF NOT EXISTS `sisdik`.`calon_siswa` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `sekolah_id` INT(11) NOT NULL ,
+  `tahunmasuk_id` INT(11) NOT NULL ,
+  `gelombang_id` INT(11) NOT NULL ,
+  `referensi_id` INT(11) NULL ,
+  `dibuat_oleh_id` INT(11) NOT NULL ,
+  `diubah_oleh_id` INT(11) NULL ,
+  `nomor_pendaftaran` SMALLINT UNSIGNED NULL DEFAULT NULL ,
+  `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
+  `jenis_kelamin` VARCHAR(100) NULL DEFAULT NULL ,
+  `foto_pendaftaran` VARCHAR(100) NULL DEFAULT NULL ,
+  `foto` VARCHAR(100) NULL DEFAULT NULL ,
+  `agama` VARCHAR(100) NULL ,
+  `tempat_lahir` VARCHAR(400) NULL DEFAULT NULL ,
+  `tanggal_lahir` DATE NULL DEFAULT NULL ,
+  `email` VARCHAR(100) NULL ,
+  `nama_panggilan` VARCHAR(100) NULL ,
+  `kewarganegaraan` VARCHAR(200) NULL ,
+  `anak_ke` SMALLINT NULL ,
+  `jumlah_saudarakandung` SMALLINT NULL ,
+  `jumlah_saudaratiri` SMALLINT NULL ,
+  `status_orphan` VARCHAR(100) NULL ,
+  `bahasa_seharihari` VARCHAR(200) NULL ,
+  `alamat` VARCHAR(500) NULL DEFAULT NULL ,
+  `kodepos` VARCHAR(30) NULL ,
+  `telepon` VARCHAR(100) NULL ,
+  `ponsel_siswa` VARCHAR(100) NULL ,
+  `ponsel_orangtuawali` VARCHAR(100) NULL ,
+  `sekolah_tinggaldi` VARCHAR(400) NULL ,
+  `jarak_tempat` VARCHAR(300) NULL ,
+  `cara_kesekolah` VARCHAR(300) NULL ,
+  `beratbadan` SMALLINT NULL ,
+  `tinggibadan` SMALLINT NULL ,
+  `golongandarah` VARCHAR(50) NULL ,
+  `waktu_simpan` DATETIME NULL ,
+  `waktu_ubah` DATETIME NOT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `fk_calon_siswa_fos_user1_idx` (`dibuat_oleh_id` ASC) ,
+  INDEX `fk_calon_siswa_sekolah1_idx` (`sekolah_id` ASC) ,
+  INDEX `fk_calon_siswa_tahunmasuk1_idx` (`tahunmasuk_id` ASC) ,
+  INDEX `fk_calon_siswa_gelombang1_idx` (`gelombang_id` ASC) ,
+  INDEX `fk_calon_siswa_fos_user2_idx` (`diubah_oleh_id` ASC) ,
+  INDEX `fk_calon_siswa_referensi1_idx` (`referensi_id` ASC) ,
+  CONSTRAINT `fk_calon_siswa_fos_user1`
+    FOREIGN KEY (`dibuat_oleh_id` )
+    REFERENCES `sisdik`.`fos_user` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_calon_siswa_sekolah1`
+    FOREIGN KEY (`sekolah_id` )
+    REFERENCES `sisdik`.`sekolah` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_calon_siswa_tahunmasuk1`
+    FOREIGN KEY (`tahunmasuk_id` )
+    REFERENCES `sisdik`.`tahunmasuk` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_calon_siswa_gelombang1`
+    FOREIGN KEY (`gelombang_id` )
+    REFERENCES `sisdik`.`gelombang` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_calon_siswa_fos_user2`
+    FOREIGN KEY (`diubah_oleh_id` )
+    REFERENCES `sisdik`.`fos_user` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  CONSTRAINT `fk_calon_siswa_referensi1`
+    FOREIGN KEY (`referensi_id` )
+    REFERENCES `sisdik`.`referensi` (`id` )
+    ON DELETE SET NULL
+    ON UPDATE RESTRICT)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;");
 
         $this
                 ->addSql(

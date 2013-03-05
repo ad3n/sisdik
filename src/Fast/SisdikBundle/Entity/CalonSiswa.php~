@@ -38,9 +38,30 @@ class CalonSiswa
     /**
      * @var string
      *
-     * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
+     * @ORM\Column(name="jenis_kelamin", type="string", length=100, nullable=true)
      */
     private $jenisKelamin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foto_pendaftaran", type="string", length=100, nullable=true)
+     */
+    private $fotoPendaftaran;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foto", type="string", length=100, nullable=true)
+     */
+    private $foto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="agama", type="string", length=100, nullable=true)
+     */
+    private $agama;
 
     /**
      * @var string
@@ -59,9 +80,86 @@ class CalonSiswa
     /**
      * @var string
      *
+     * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nama_panggilan", type="string", length=100, nullable=true)
+     */
+    private $namaPanggilan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
+     */
+    private $kewarganegaraan;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="anak_ke", type="smallint", nullable=true)
+     */
+    private $anakKe;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="jumlah_saudarakandung", type="smallint", nullable=true)
+     */
+    private $jumlahSaudarakandung;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="jumlah_saudaratiri", type="smallint", nullable=true)
+     */
+    private $jumlahSaudaratiri;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status_orphan", type="string", length=100, nullable=true)
+     */
+    private $statusOrphan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="bahasa_seharihari", type="string", length=200, nullable=true)
+     */
+    private $bahasaSeharihari;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
      */
     private $alamat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="kodepos", type="string", length=30, nullable=true)
+     */
+    private $kodepos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telepon", type="string", length=100, nullable=true)
+     */
+    private $telepon;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ponsel_siswa", type="string", length=100, nullable=true)
+     */
+    private $ponselSiswa;
 
     /**
      * @var string
@@ -73,9 +171,44 @@ class CalonSiswa
     /**
      * @var string
      *
-     * @ORM\Column(name="foto", type="string", length=100, nullable=true)
+     * @ORM\Column(name="sekolah_tinggaldi", type="string", length=400, nullable=true)
      */
-    private $foto;
+    private $sekolahTinggaldi;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="jarak_tempat", type="string", length=300, nullable=true)
+     */
+    private $jarakTempat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cara_kesekolah", type="string", length=300, nullable=true)
+     */
+    private $caraKesekolah;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="beratbadan", type="smallint", nullable=true)
+     */
+    private $beratbadan;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tinggibadan", type="smallint", nullable=true)
+     */
+    private $tinggibadan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="golongandarah", type="string", length=50, nullable=true)
+     */
+    private $golongandarah;
 
     /**
      * @var \DateTime
@@ -90,36 +223,6 @@ class CalonSiswa
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
      */
     private $waktuUbah;
-
-    /**
-     * @var \Referensi
-     *
-     * @ORM\ManyToOne(targetEntity="Referensi")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id")
-     * })
-     */
-    private $referensi;
-
-    /**
-     * @var \Gelombang
-     *
-     * @ORM\ManyToOne(targetEntity="Gelombang")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
-     * })
-     */
-    private $gelombang;
-
-    /**
-     * @var \FosUser
-     *
-     * @ORM\ManyToOne(targetEntity="FosUser")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id")
-     * })
-     */
-    private $diubahOleh;
 
     /**
      * @var \FosUser
@@ -150,6 +253,36 @@ class CalonSiswa
      * })
      */
     private $tahunmasuk;
+
+    /**
+     * @var \Gelombang
+     *
+     * @ORM\ManyToOne(targetEntity="Gelombang")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id")
+     * })
+     */
+    private $gelombang;
+
+    /**
+     * @var \FosUser
+     *
+     * @ORM\ManyToOne(targetEntity="FosUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id")
+     * })
+     */
+    private $diubahOleh;
+
+    /**
+     * @var \Referensi
+     *
+     * @ORM\ManyToOne(targetEntity="Referensi")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id")
+     * })
+     */
+    private $referensi;
 
 
 }

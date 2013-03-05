@@ -64,14 +64,21 @@ class Siswa
     /**
      * @var string
      *
-     * @ORM\Column(name="jenis_kelamin", type="string", length=255, nullable=true)
+     * @ORM\Column(name="jenis_kelamin", type="string", length=100, nullable=true)
      */
     private $jenisKelamin;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="foto", type="string", length=400, nullable=true)
+     * @ORM\Column(name="foto_pendaftaran", type="string", length=100, nullable=true)
+     */
+    private $fotoPendaftaran;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foto", type="string", length=100, nullable=true)
      */
     private $foto;
 
@@ -120,21 +127,21 @@ class Siswa
     /**
      * @var integer
      *
-     * @ORM\Column(name="anak_ke", type="integer", nullable=true)
+     * @ORM\Column(name="anak_ke", type="smallint", nullable=true)
      */
     private $anakKe;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="jumlah_saudarakandung", type="integer", nullable=true)
+     * @ORM\Column(name="jumlah_saudarakandung", type="smallint", nullable=true)
      */
     private $jumlahSaudarakandung;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="jumlah_saudaratiri", type="integer", nullable=true)
+     * @ORM\Column(name="jumlah_saudaratiri", type="smallint", nullable=true)
      */
     private $jumlahSaudaratiri;
 
@@ -211,14 +218,14 @@ class Siswa
     /**
      * @var integer
      *
-     * @ORM\Column(name="beratbadan", type="integer", nullable=true)
+     * @ORM\Column(name="beratbadan", type="smallint", nullable=true)
      */
     private $beratbadan;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="tinggibadan", type="integer", nullable=true)
+     * @ORM\Column(name="tinggibadan", type="smallint", nullable=true)
      */
     private $tinggibadan;
 
@@ -392,6 +399,27 @@ class Siswa
      */
     public function getJenisKelamin() {
         return $this->jenisKelamin;
+    }
+
+    /**
+     * Set fotoPendaftaran
+     *
+     * @param string $fotoPendaftaran
+     * @return Siswa
+     */
+    public function setFotoPendaftaran($fotoPendaftaran) {
+        $this->fotoPendaftaran = $fotoPendaftaran;
+
+        return $this;
+    }
+
+    /**
+     * Get fotoPendaftaran
+     *
+     * @return string 
+     */
+    public function getFotoPendaftaran() {
+        return $this->fotoPendaftaran;
     }
 
     /**
