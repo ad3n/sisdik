@@ -58,6 +58,7 @@ class Siswa
      * @var string
      *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
+     * @Assert\NotBlank
      */
     private $namaLengkap;
 
@@ -65,6 +66,7 @@ class Siswa
      * @var string
      *
      * @ORM\Column(name="jenis_kelamin", type="string", length=100, nullable=true)
+     * @Assert\NotBlank
      */
     private $jenisKelamin;
 
@@ -86,6 +88,7 @@ class Siswa
      * @var string
      *
      * @ORM\Column(name="agama", type="string", length=100, nullable=true)
+     * @Assert\NotBlank
      */
     private $agama;
 
