@@ -8,8 +8,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
  */
 class Version20130304105749 extends AbstractMigration
 {
-    private $trigger1 = "CREATE
-TRIGGER `befins_calonpr`
+    private $trigger1 = "CREATE TRIGGER `befins_calonpr`
 BEFORE INSERT ON `calon_pembayaran_rutin`
 FOR EACH ROW
 BEGIN
@@ -17,8 +16,7 @@ BEGIN
     SET NEW.waktu_ubah = NOW();
 END";
 
-    private $trigger2 = "CREATE
-TRIGGER `befins_calonps`
+    private $trigger2 = "CREATE TRIGGER `befins_calonps`
 BEFORE INSERT ON `calon_pembayaran_sekali`
 FOR EACH ROW
 BEGIN
@@ -26,8 +24,7 @@ BEGIN
     SET NEW.waktu_ubah = NOW();
 END";
 
-    private $trigger3 = "CREATE
-TRIGGER `befins_calonsiswa`
+    private $trigger3 = "CREATE TRIGGER `befins_calonsiswa`
 BEFORE INSERT ON `calon_siswa`
 FOR EACH ROW
 BEGIN
@@ -35,16 +32,14 @@ BEGIN
     SET NEW.waktu_ubah = NOW();
 END";
 
-    private $trigger4 = "CREATE
-TRIGGER `beforeinsertkelas`
+    private $trigger4 = "CREATE TRIGGER `beforeinsertkelas`
 BEFORE INSERT ON `kelas`
 FOR EACH ROW
 BEGIN
     SET NEW.kode = CONCAT((SELECT kode FROM tahun WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_id), NEW.kode);
 END";
 
-    private $trigger5 = "CREATE
-TRIGGER `beforeupdatekelas`
+    private $trigger5 = "CREATE TRIGGER `beforeupdatekelas`
 BEFORE UPDATE ON `kelas`
 FOR EACH ROW
 BEGIN
@@ -56,8 +51,7 @@ BEGIN
     SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
 END";
 
-    private $trigger6 = "CREATE
-TRIGGER `beforeinsertsiswa`
+    private $trigger6 = "CREATE TRIGGER `beforeinsertsiswa`
 BEFORE INSERT ON `siswa`
 FOR EACH ROW
 BEGIN
@@ -66,6 +60,20 @@ BEGIN
     SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
     SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
     SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
+END";
+
+    private $trigger7 = "CREATE TRIGGER `befins_calonsiswa`
+BEFORE INSERT ON `calon_siswa`
+FOR EACH ROW
+BEGIN
+	DECLARE nomorurutpendaftaran INT;
+
+	SET NEW.waktu_simpan = NOW();
+	SET NEW.waktu_ubah = NOW();
+
+	SET nomorurutpendaftaran = (SELECT MAX(nomor_urut_pendaftaran) FROM calon_siswa WHERE tahunmasuk_id = NEW.tahunmasuk_id);
+	SET NEW.nomor_urut_pendaftaran = IFNULL(nomorurutpendaftaran, 0) + 1;
+	SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahunmasuk WHERE id = NEW.tahunmasuk_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
 END";
 
     public function up(Schema $schema) {
