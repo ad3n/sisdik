@@ -41,9 +41,9 @@ class Siswa
     private $nomorIndukSistem;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
+     * @ORM\Column(name="nomor_pendaftaran", type="string", length=45, nullable=true)
      */
     private $nomorPendaftaran;
 
@@ -272,7 +272,7 @@ class Siswa
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -293,7 +293,7 @@ class Siswa
     /**
      * Get nomorUrutPersekolah
      *
-     * @return integer 
+     * @return integer
      */
     public function getNomorUrutPersekolah() {
         return $this->nomorUrutPersekolah;
@@ -314,7 +314,7 @@ class Siswa
     /**
      * Get nomorIndukSistem
      *
-     * @return string 
+     * @return string
      */
     public function getNomorIndukSistem() {
         return $this->nomorIndukSistem;
@@ -323,7 +323,7 @@ class Siswa
     /**
      * Set nomorPendaftaran
      *
-     * @param integer $nomorPendaftaran
+     * @param string $nomorPendaftaran
      * @return Siswa
      */
     public function setNomorPendaftaran($nomorPendaftaran) {
@@ -335,7 +335,7 @@ class Siswa
     /**
      * Get nomorPendaftaran
      *
-     * @return integer 
+     * @return string
      */
     public function getNomorPendaftaran() {
         return $this->nomorPendaftaran;
@@ -356,7 +356,7 @@ class Siswa
     /**
      * Get nomorInduk
      *
-     * @return string 
+     * @return string
      */
     public function getNomorInduk() {
         return $this->nomorInduk;
@@ -377,7 +377,7 @@ class Siswa
     /**
      * Get namaLengkap
      *
-     * @return string 
+     * @return string
      */
     public function getNamaLengkap() {
         return $this->namaLengkap;
@@ -398,7 +398,7 @@ class Siswa
     /**
      * Get jenisKelamin
      *
-     * @return string 
+     * @return string
      */
     public function getJenisKelamin() {
         return $this->jenisKelamin;
@@ -419,7 +419,7 @@ class Siswa
     /**
      * Get fotoPendaftaran
      *
-     * @return string 
+     * @return string
      */
     public function getFotoPendaftaran() {
         return $this->fotoPendaftaran;
@@ -440,7 +440,7 @@ class Siswa
     /**
      * Get foto
      *
-     * @return string 
+     * @return string
      */
     public function getFoto() {
         return $this->foto;
@@ -461,7 +461,7 @@ class Siswa
     /**
      * Get agama
      *
-     * @return string 
+     * @return string
      */
     public function getAgama() {
         return $this->agama;
@@ -482,7 +482,7 @@ class Siswa
     /**
      * Get tempatLahir
      *
-     * @return string 
+     * @return string
      */
     public function getTempatLahir() {
         return $this->tempatLahir;
@@ -503,7 +503,7 @@ class Siswa
     /**
      * Get tanggalLahir
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTanggalLahir() {
         return $this->tanggalLahir;
@@ -524,7 +524,7 @@ class Siswa
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail() {
         return $this->email;
@@ -545,7 +545,7 @@ class Siswa
     /**
      * Get namaPanggilan
      *
-     * @return string 
+     * @return string
      */
     public function getNamaPanggilan() {
         return $this->namaPanggilan;
@@ -566,7 +566,7 @@ class Siswa
     /**
      * Get kewarganegaraan
      *
-     * @return string 
+     * @return string
      */
     public function getKewarganegaraan() {
         return $this->kewarganegaraan;
@@ -587,7 +587,7 @@ class Siswa
     /**
      * Get anakKe
      *
-     * @return integer 
+     * @return integer
      */
     public function getAnakKe() {
         return $this->anakKe;
@@ -608,7 +608,7 @@ class Siswa
     /**
      * Get jumlahSaudarakandung
      *
-     * @return integer 
+     * @return integer
      */
     public function getJumlahSaudarakandung() {
         return $this->jumlahSaudarakandung;
@@ -629,7 +629,7 @@ class Siswa
     /**
      * Get jumlahSaudaratiri
      *
-     * @return integer 
+     * @return integer
      */
     public function getJumlahSaudaratiri() {
         return $this->jumlahSaudaratiri;
@@ -650,7 +650,7 @@ class Siswa
     /**
      * Get statusOrphan
      *
-     * @return string 
+     * @return string
      */
     public function getStatusOrphan() {
         return $this->statusOrphan;
@@ -671,7 +671,7 @@ class Siswa
     /**
      * Get bahasaSeharihari
      *
-     * @return string 
+     * @return string
      */
     public function getBahasaSeharihari() {
         return $this->bahasaSeharihari;
@@ -692,7 +692,7 @@ class Siswa
     /**
      * Get alamat
      *
-     * @return string 
+     * @return string
      */
     public function getAlamat() {
         return $this->alamat;
@@ -713,7 +713,7 @@ class Siswa
     /**
      * Get kodepos
      *
-     * @return string 
+     * @return string
      */
     public function getKodepos() {
         return $this->kodepos;
@@ -734,7 +734,7 @@ class Siswa
     /**
      * Get telepon
      *
-     * @return string 
+     * @return string
      */
     public function getTelepon() {
         return $this->telepon;
@@ -755,7 +755,7 @@ class Siswa
     /**
      * Get ponselSiswa
      *
-     * @return string 
+     * @return string
      */
     public function getPonselSiswa() {
         return $this->ponselSiswa;
@@ -776,7 +776,7 @@ class Siswa
     /**
      * Get ponselOrangtuawali
      *
-     * @return string 
+     * @return string
      */
     public function getPonselOrangtuawali() {
         return $this->ponselOrangtuawali;
@@ -797,7 +797,7 @@ class Siswa
     /**
      * Get sekolahTinggaldi
      *
-     * @return string 
+     * @return string
      */
     public function getSekolahTinggaldi() {
         return $this->sekolahTinggaldi;
@@ -818,7 +818,7 @@ class Siswa
     /**
      * Get jarakTempat
      *
-     * @return string 
+     * @return string
      */
     public function getJarakTempat() {
         return $this->jarakTempat;
@@ -839,7 +839,7 @@ class Siswa
     /**
      * Get caraKesekolah
      *
-     * @return string 
+     * @return string
      */
     public function getCaraKesekolah() {
         return $this->caraKesekolah;
@@ -860,7 +860,7 @@ class Siswa
     /**
      * Get beratbadan
      *
-     * @return integer 
+     * @return integer
      */
     public function getBeratbadan() {
         return $this->beratbadan;
@@ -881,7 +881,7 @@ class Siswa
     /**
      * Get tinggibadan
      *
-     * @return integer 
+     * @return integer
      */
     public function getTinggibadan() {
         return $this->tinggibadan;
@@ -902,7 +902,7 @@ class Siswa
     /**
      * Get golongandarah
      *
-     * @return string 
+     * @return string
      */
     public function getGolongandarah() {
         return $this->golongandarah;
@@ -923,7 +923,7 @@ class Siswa
     /**
      * Get gelombang
      *
-     * @return \Fast\SisdikBundle\Entity\Gelombang 
+     * @return \Fast\SisdikBundle\Entity\Gelombang
      */
     public function getGelombang() {
         return $this->gelombang;
@@ -944,7 +944,7 @@ class Siswa
     /**
      * Get tahunmasuk
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
      */
     public function getTahunmasuk() {
         return $this->tahunmasuk;
@@ -965,7 +965,7 @@ class Siswa
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah() {
         return $this->sekolah;

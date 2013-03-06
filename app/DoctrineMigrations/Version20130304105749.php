@@ -233,6 +233,7 @@ END";
                         ENGINE = InnoDB
                         DEFAULT CHARACTER SET = utf8;");
 
+
         $this
                 ->addSql(
                         "CREATE  TABLE IF NOT EXISTS `siswa` (
@@ -242,7 +243,7 @@ END";
   `gelombang_id` INT(11) NOT NULL ,
   `nomor_urut_persekolah` MEDIUMINT(6) UNSIGNED NULL DEFAULT NULL ,
   `nomor_induk_sistem` VARCHAR(45) NULL DEFAULT NULL ,
-  `nomor_pendaftaran` SMALLINT UNSIGNED NULL DEFAULT NULL ,
+  `nomor_pendaftaran` VARCHAR(45) NULL DEFAULT NULL ,
   `nomor_induk` VARCHAR(100) NULL DEFAULT NULL ,
   `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
   `jenis_kelamin` VARCHAR(255) NULL DEFAULT NULL ,
