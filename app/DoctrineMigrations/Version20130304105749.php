@@ -50,7 +50,7 @@ FOR EACH ROW
 BEGIN
     DECLARE kodetahun VARCHAR(45);
     DECLARE kodekelas VARCHAR(50);
-    
+
     SET kodetahun = (SELECT kode FROM tahun WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_id);
     SET kodekelas = NEW.kode;
     SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
@@ -62,7 +62,7 @@ BEFORE INSERT ON `siswa`
 FOR EACH ROW
 BEGIN
     DECLARE nomorurutpersekolah INT;
-    
+
     SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
     SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
     SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
@@ -278,17 +278,17 @@ END";
   INDEX `fk_siswa_sekolah1_idx` (`sekolah_id` ASC) ,
   CONSTRAINT `FK_3202BD7D1C9FFB46`
     FOREIGN KEY (`gelombang_id` )
-    REFERENCES `sisdik`.`gelombang` (`id` )
+    REFERENCES `gelombang` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `FK_3202BD7D299E2F11`
     FOREIGN KEY (`tahunmasuk_id` )
-    REFERENCES `sisdik`.`tahunmasuk` (`id` )
+    REFERENCES `tahunmasuk` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_siswa_sekolah1`
     FOREIGN KEY (`sekolah_id` )
-    REFERENCES `sisdik`.`sekolah` (`id` )
+    REFERENCES `sekolah` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT)
 ENGINE = InnoDB
@@ -379,7 +379,7 @@ DEFAULT CHARACTER SET = utf8");
 
         $this
                 ->addSql(
-                        "CREATE  TABLE IF NOT EXISTS `sisdik`.`calon_siswa` (
+                        "CREATE  TABLE IF NOT EXISTS `calon_siswa` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `sekolah_id` INT(11) NOT NULL ,
   `tahunmasuk_id` INT(11) NOT NULL ,
@@ -387,7 +387,8 @@ DEFAULT CHARACTER SET = utf8");
   `referensi_id` INT(11) NULL ,
   `dibuat_oleh_id` INT(11) NOT NULL ,
   `diubah_oleh_id` INT(11) NULL ,
-  `nomor_pendaftaran` SMALLINT UNSIGNED NULL DEFAULT NULL ,
+  `nomor_urut_pendaftaran` SMALLINT(3) UNSIGNED ZEROFILL NULL DEFAULT NULL ,
+  `nomor_pendaftaran` VARCHAR(45) NULL DEFAULT NULL ,
   `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
   `jenis_kelamin` VARCHAR(100) NULL DEFAULT NULL ,
   `foto_pendaftaran` VARCHAR(100) NULL DEFAULT NULL ,
@@ -423,34 +424,36 @@ DEFAULT CHARACTER SET = utf8");
   INDEX `fk_calon_siswa_gelombang1_idx` (`gelombang_id` ASC) ,
   INDEX `fk_calon_siswa_fos_user2_idx` (`diubah_oleh_id` ASC) ,
   INDEX `fk_calon_siswa_referensi1_idx` (`referensi_id` ASC) ,
+  UNIQUE INDEX `nomor_pendaftaran_UNIQUE` (`nomor_pendaftaran` ASC) ,
+  UNIQUE INDEX `calon_siswa_UNIQUE1` (`tahunmasuk_id` ASC, `nomor_urut_pendaftaran` ASC) ,
   CONSTRAINT `fk_calon_siswa_fos_user1`
     FOREIGN KEY (`dibuat_oleh_id` )
-    REFERENCES `sisdik`.`fos_user` (`id` )
+    REFERENCES `fos_user` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_calon_siswa_sekolah1`
     FOREIGN KEY (`sekolah_id` )
-    REFERENCES `sisdik`.`sekolah` (`id` )
+    REFERENCES `sekolah` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_calon_siswa_tahunmasuk1`
     FOREIGN KEY (`tahunmasuk_id` )
-    REFERENCES `sisdik`.`tahunmasuk` (`id` )
+    REFERENCES `tahunmasuk` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_calon_siswa_gelombang1`
     FOREIGN KEY (`gelombang_id` )
-    REFERENCES `sisdik`.`gelombang` (`id` )
+    REFERENCES `gelombang` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_calon_siswa_fos_user2`
     FOREIGN KEY (`diubah_oleh_id` )
-    REFERENCES `sisdik`.`fos_user` (`id` )
+    REFERENCES `fos_user` (`id` )
     ON DELETE RESTRICT
     ON UPDATE RESTRICT,
   CONSTRAINT `fk_calon_siswa_referensi1`
     FOREIGN KEY (`referensi_id` )
-    REFERENCES `sisdik`.`referensi` (`id` )
+    REFERENCES `referensi` (`id` )
     ON DELETE SET NULL
     ON UPDATE RESTRICT)
 ENGINE = InnoDB
