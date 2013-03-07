@@ -28,6 +28,8 @@ END";
 BEFORE INSERT ON `calon_siswa`
 FOR EACH ROW
 BEGIN
+    DECLARE nomorurutpendaftaran INT;
+
     SET NEW.waktu_simpan = NOW();
     SET NEW.waktu_ubah = NOW();
 
