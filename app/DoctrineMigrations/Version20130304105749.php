@@ -31,9 +31,9 @@ BEGIN
     SET NEW.waktu_simpan = NOW();
     SET NEW.waktu_ubah = NOW();
 
-	SET nomorurutpendaftaran = (SELECT MAX(nomor_urut_pendaftaran) FROM calon_siswa WHERE tahunmasuk_id = NEW.tahunmasuk_id);
-	SET NEW.nomor_urut_pendaftaran = IFNULL(nomorurutpendaftaran, 0) + 1;
-	SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahunmasuk WHERE id = NEW.tahunmasuk_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
+    SET nomorurutpendaftaran = (SELECT MAX(nomor_urut_pendaftaran) FROM calon_siswa WHERE tahunmasuk_id = NEW.tahunmasuk_id);
+    SET NEW.nomor_urut_pendaftaran = IFNULL(nomorurutpendaftaran, 0) + 1;
+    SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahunmasuk WHERE id = NEW.tahunmasuk_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
 END";
 
     private $trigger4 = "CREATE TRIGGER `beforeinsertkelas`
@@ -64,6 +64,13 @@ BEGIN
     SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
     SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
     SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
+END";
+
+    private $trigger7 = "CREATE TRIGGER `befup_calonsiswa`
+BEFORE UPDATE ON `calon_siswa`
+FOR EACH ROW
+BEGIN
+    SET NEW.waktu_ubah = NOW();
 END";
 
     public function up(Schema $schema) {
@@ -1375,6 +1382,7 @@ DEFAULT CHARACTER SET = utf8;");
         $this->addSql($this->trigger4);
         $this->addSql($this->trigger5);
         $this->addSql($this->trigger6);
+        $this->addSql($this->trigger7);
     }
 
     public function down(Schema $schema) {
@@ -1444,5 +1452,6 @@ DEFAULT CHARACTER SET = utf8;");
         $this->addSql("DROP TRIGGER IF EXISTS `beforeinsertkelas`;");
         $this->addSql("DROP TRIGGER IF EXISTS `beforeupdatekelas`;");
         $this->addSql("DROP TRIGGER IF EXISTS `beforeinsertsiswa`;");
+        $this->addSql("DROP TRIGGER IF EXISTS `befup_calonsiswa`;");
     }
 }
