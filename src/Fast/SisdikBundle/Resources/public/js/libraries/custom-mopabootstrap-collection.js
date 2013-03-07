@@ -29,13 +29,18 @@
         this.options = $.extend({}, $.fn.collection.defaults, options);
 
         var embeddedForms = 'div' + this.options.collection_id + ' .collection-item';
-        if (typeof $(element).attr("data-collection-remove-btn") === "undefined") {
-            var lastItem = $(embeddedForms).last();
-            var lastItemId = $($(lastItem).children("div")[0]).attr("id");
-            var number = /_(\d+)_/g;
-            var str = lastItemId.match(number)[0];
-            var id = Number(str.substr(1, str.length - 2));
-            this.options.index = (id > $(embeddedForms).length - 1) ? id : $(embeddedForms).length - 1;
+        if (typeof $(element).attr("data-collection-add-btn") === "string"
+                && typeof $(element).attr("data-collection-remove-btn") === "undefined") {
+            if ($(embeddedForms).length == 0) {
+                this.options.index = 0;
+            } else {
+                var lastItem = $(embeddedForms).last();
+                var lastItemId = $($(lastItem).children("div")[0]).attr("id");
+                var number = /_(\d+)_/g;
+                var str = lastItemId.match(number)[0];
+                var id = Number(str.substr(1, str.length - 2));
+                this.options.index = (id > $(embeddedForms).length - 1) ? id : $(embeddedForms).length - 1;
+            }
         } else {
             this.options.index = $(embeddedForms).length - 1;
         }
