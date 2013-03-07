@@ -189,7 +189,7 @@ class CalonSiswaController extends Controller
 
             $entity->setDibuatOleh($this->get('security.context')->getToken()->getUser());
 
-            try {
+//             try {
                 $em->persist($entity);
                 $em->flush();
 
@@ -201,10 +201,10 @@ class CalonSiswaController extends Controller
                                                         '%name%' => $entity->getNamaLengkap()
                                                 )));
 
-            } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.unique.applicant');
-                throw new DBALException($message);
-            }
+//             } catch (DBALException $e) {
+//                 $message = $this->get('translator')->trans('exception.unique.applicant');
+//                 throw new DBALException($message);
+//             }
 
             return $this
                     ->redirect(
