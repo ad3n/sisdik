@@ -1452,6 +1452,7 @@ DEFAULT CHARACTER SET = utf8;");
         $this->addSql("DROP TABLE IF EXISTS `tahun` ;");
         $this->addSql("DROP TABLE IF EXISTS `calon_pembayaran_sekali` ;");
         $this->addSql("DROP TABLE IF EXISTS `calon_pembayaran_rutin` ;");
+        $this->addSql("DROP TABLE IF EXISTS `calon_dokumen` ;");
         $this->addSql("DROP TABLE IF EXISTS `calon_siswa` ;");
         $this->addSql("DROP TABLE IF EXISTS `referensi` ;");
         $this->addSql("DROP TABLE IF EXISTS `fos_user` ;");
