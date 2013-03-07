@@ -1,0 +1,99 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.edit.regphoto{% endtrans %}{% endblock %}
+
+{% block content %}
+<form id="edit-form" action="{{ path('applicant_updateregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    <div class="row-fluid">
+        <div class="span12">
+            <div id="webcam" style="width: 320px; height: 240px; margin: 0 auto;"></div>
+            <div style="clear: both; padding-top: 10px; width: 320px; height: 30px; margin: 0 auto;">
+                {% image '@FastSisdikBundle/Resources/public/images/capture.jpg' %}
+                    <a href="#" id="webcam-freeze"><img src="{{ asset_url }}" style="float: left;" /></a>
+                {% endimage %}
+                {% image '@FastSisdikBundle/Resources/public/images/reload.gif' %}
+                    <a href="#" id="webcam-reset"><img src="{{ asset_url }}" style="float: right;" /></a>
+                {% endimage %}
+            </div>
+            {{ form_widget(edit_form) }}
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+            	<div class="form-actions">
+            	    <button id="submit-button" type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<ul class="pills">
+    <li>
+        {% if page is defined %}
+        <a href="{{ path('applicant', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
+        {% else %}
+        <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        {% endif %}
+    </li>
+    <li>
+        <a href="{{ path('applicant_show', {'id': entity.id}) }}">{{ 'label.applicant.show'|trans }}</a>
+    </li>
+</ul>
+
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.min.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script language="javascript" type="text/javascript">
+
+webcam.set_api_url("{{ path('applicant_webcam_uploadhandler') }}");
+webcam.set_hook('onComplete', 'webcamUploadCompleteHandler');
+webcam.set_quality(100);
+{% image '@FastSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.mp3' %}
+webcam.set_shutter_sound(true, "{{ asset_url }}");
+{% endimage %}
+{% image '@FastSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.swf' %}
+webcam.set_swf_url("{{ asset_url }}");
+{% endimage %}
+
+var isfreezed = false;
+
+function webcamUploadCompleteHandler(data) {
+	if (data.substr(data.length - 4) == ".jpg") {
+		$(".foto-pendaftaran").val(data);
+		$("#edit-form").submit();
+	} else {
+		alert(data);
+	}
+}
+
+$(document).ready(function() {
+	$("#webcam").html(webcam.get_html(320, 240));
+
+	$("#webcam-freeze").click(function() {
+		if (isfreezed === false) {
+		    webcam.freeze();
+		    isfreezed = true;
+		}
+		return false;
+	});
+
+	$("#webcam-reset").click(function() {
+		if (isfreezed === true) {
+		    webcam.reset();
+		    isfreezed = false;
+		}
+		return false;
+	});
+
+	$("#submit-button").click(function() {
+		if (isfreezed == true) {
+    		webcam.upload();
+		} else {
+			alert("{{ 'shortinfo.capturefirst'|trans }}");
+		}
+		return false;
+	});
+});
+</script>
+{% endblock content %}

@@ -137,7 +137,7 @@ class Builder extends AbstractNavbarMenuBuilder
 
         }
 
-        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH")';
+        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB")';
         if ($securityContext
                 ->isGranted(
                         array(
@@ -146,53 +146,66 @@ class Builder extends AbstractNavbarMenuBuilder
             // academic
             $academic = $this->createDropdownMenuItem($menu, 'headings.academic');
 
-            $academic
-                    ->addChild('links.regcommittee',
+            if ($securityContext
+                    ->isGranted(
                             array(
-                                'route' => 'regcommittee'
-                            ));
+                                new Expression('hasRole("ROLE_PANITIA_PSB")')
+                            ))) {
+                $academic
+                        ->addChild('links.registration',
+                                array(
+                                    'route' => 'applicant'
+                                ));
+            }
 
-            $academic
-                    ->addChild('links.registration',
+            if ($securityContext
+                    ->isGranted(
                             array(
-                                'uri' => '#nogo'
-                            ));
+                                    new Expression(
+                                            "hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
+                            ))) {
+                $academic
+                        ->addChild('links.regcommittee',
+                                array(
+                                    'route' => 'regcommittee'
+                                ));
 
-            $academic
-                    ->addChild('links.data.academiccalendar',
-                            array(
-                                'route' => 'data_kaldemik'
-                            ));
+                $academic
+                        ->addChild('links.data.academiccalendar',
+                                array(
+                                    'route' => 'data_kaldemik'
+                                ));
 
-            $academic
-                    ->addChild('links.data.level',
-                            array(
-                                'route' => 'data_level'
-                            ));
+                $academic
+                        ->addChild('links.data.level',
+                                array(
+                                    'route' => 'data_level'
+                                ));
 
-            $academic
-                    ->addChild('links.data.class',
-                            array(
-                                'route' => 'data_class'
-                            ));
+                $academic
+                        ->addChild('links.data.class',
+                                array(
+                                    'route' => 'data_class'
+                                ));
 
-            $academic
-                    ->addChild('links.data.classguardian',
-                            array(
-                                'route' => 'data_classguardian'
-                            ));
+                $academic
+                        ->addChild('links.data.classguardian',
+                                array(
+                                    'route' => 'data_classguardian'
+                                ));
 
-            $academic
-                    ->addChild('links.data.student',
-                            array(
-                                'route' => 'data_student'
-                            ));
+                $academic
+                        ->addChild('links.data.student',
+                                array(
+                                    'route' => 'data_student'
+                                ));
+            }
         }
 
         if ($securityContext
                 ->isGranted(
                         array(
-                                new Expression('hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
+                            new Expression('hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
                         ))) {
             // presence
             $presence = $this->createDropdownMenuItem($menu, 'headings.presence');

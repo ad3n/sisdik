@@ -1,4 +1,5 @@
 label:
+    application.number: Nomor Pendaftaran
     username.undefined: tak-terdefinisi
     committee: Panitia
     committee.add: Tambah Panitia
@@ -241,6 +242,11 @@ label:
         add: Tambah Panitia Pendaftaran
         name: Nama Panitia Pendaftaran
         entry: Panitia Pendaftaran
+    applicant:
+        add: Tambah Calon Siswa
+        name: Nama Calon Siswa
+        entry: Calon Siswa
+        show: Info Detail Calon Siswa
 
 link:
     backtolist: « Kembali ke Daftar
@@ -250,6 +256,7 @@ link:
     backtostudentinfo: « Kembali ke Info Data Siswa
     backtodetail: « Kembali ke Info
     download.template: Unduh Berkas Template
+    applicant.edit.regphoto: Ubah Foto Registrasi
 
 fos_user:
     username:
@@ -389,6 +396,12 @@ flash:
         updated: Panitia pendaftaran tahun masuk %yearentry% berhasil diperbarui
         deleted: Panitia pendaftaran tahun masuk %yearentry% berhasil dihapus
         fail.delete: Panitia pendaftaran tahun masuk %yearentry% gagal dihapus
+    applicant:
+        inserted: Calon siswa %name% (%regnum%) berhasil ditambah
+        updated: Calon siswa %name% (%regnum%) berhasil diperbarui
+        regphoto.updated: Foto pendaftaran calon siswa %name% (%regnum%) berhasil diperbarui
+        deleted: Calon siswa %name% (%regnum%) berhasil dihapus
+        fail.delete: Calon siswa %name% (%regnum%) gagal dihapus
 
 tip:
     edit: Ubah
@@ -396,6 +409,9 @@ tip:
     detail: Detail
     moveup: Naik
     movedown: Turun
+    edit.regphoto: Ubah Foto Registrasi
+    edit.full.form: Ubah Form Lengkap
+    payment: Pembayaran
 
 "Current": Password aktif
 
@@ -423,6 +439,7 @@ confirm.drop:
     reward.type: Hapus Jenis Imbalan '%rewardtype%'?
     reward.amount: Hapus Imbalan Pendaftaran '%yearentry%', '%admissiongroup%', '%rewardtype%', '%nominal%'?
     registration.committee: Hapus Panitia Pendaftaran tahun masuk %yearentry%?
+    applicant: Hapus calon siswa %name% (%regnum%)?
 
 alt:
     add: ikon tambah
@@ -455,6 +472,8 @@ exception:
     unique.fee.once: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.fee.recur: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.registration.committee: Tahun masuk %yearentry% telah ada dalam basis data
+    register.as.committee: User tidak terdaftar sebagai panitia PSB di tahun masuk manapun
+    unique.applicant: Data calon siswa tahun masuk dan nomor pendaftaran tidak unik. Hubungi developer
 
 shortinfo:
     password.mustequal: password harus sama
@@ -483,6 +502,7 @@ shortinfo:
         Hingga tahap ini, username-password belum disimpan ke database.<br />
         Data yang akan disimpan ada di dalam file berikut <a href="%path%">%filename%</a>.<br />
         Setelah pasti bahwa isinya valid dan sesuai keinginan, lanjutkan proses penyimpanan ke database.<br />
+    capturefirst: Ambil terlebih dahulu gambar, baru klik tombol simpan
     
 alert:
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
@@ -506,6 +526,7 @@ errorinfo:
     file.notwritable: File %filename% tidak bisa ditulis
     cannot.createdirectory: Tidak bisa membuat direktori %dirname%
     403: Tidak memiliki hak akses yang diperlukan
+    cannot.writefile: Tidak bisa menulis file %filename%, periksa hak akses direktori
 
 formerror:
     studentid.already.used: Nomor induk (username) sudah terpakai. Pilih yang lain.

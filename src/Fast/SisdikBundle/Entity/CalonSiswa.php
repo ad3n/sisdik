@@ -2,11 +2,15 @@
 
 namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CalonSiswa
  *
- * @ORM\Table(name="calon_siswa")
+ * @ORM\Table(name="calon_siswa", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="nomor_pendaftaran_UNIQUE", columns={"nomor_pendaftaran"}),
+ *     @ORM\UniqueConstraint(name="calon_siswa_UNIQUE1", columns={"tahunmasuk_id", "nomor_urut_pendaftaran"})
+ * })
  * @ORM\Entity
  */
 class CalonSiswa
@@ -25,7 +29,14 @@ class CalonSiswa
     /**
      * @var integer
      *
-     * @ORM\Column(name="nomor_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
+     * @ORM\Column(name="nomor_urut_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
+     */
+    private $nomorUrutPendaftaran;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nomor_pendaftaran", type="string", length=45, nullable=true)
      */
     private $nomorPendaftaran;
 
@@ -33,6 +44,7 @@ class CalonSiswa
      * @var string
      *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
+     * @Assert\NotBlank
      */
     private $namaLengkap;
 
@@ -166,6 +178,7 @@ class CalonSiswa
      * @var string
      *
      * @ORM\Column(name="ponsel_orangtuawali", type="string", length=100, nullable=true)
+     * @Assert\NotBlank
      */
     private $ponselOrangtuawali;
 
@@ -221,7 +234,7 @@ class CalonSiswa
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      */
     private $waktuUbah;
 
@@ -288,16 +301,37 @@ class CalonSiswa
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
     }
 
     /**
-     * Set nomorPendaftaran
+     * Set nomorUrutPendaftaran
      *
      * @param integer $nomorPendaftaran
+     * @return CalonSiswa
+     */
+    public function setNomorUrutPendaftaran($nomorUrutPendaftaran) {
+        $this->nomorUrutPendaftaran = $nomorUrutPendaftaran;
+
+        return $this;
+    }
+
+    /**
+     * Get nomorUrutPendaftaran
+     *
+     * @return integer
+     */
+    public function getNomorUrutPendaftaran() {
+        return $this->nomorUrutPendaftaran;
+    }
+
+    /**
+     * Set nomorPendaftaran
+     *
+     * @param string $nomorPendaftaran
      * @return CalonSiswa
      */
     public function setNomorPendaftaran($nomorPendaftaran) {
@@ -309,7 +343,7 @@ class CalonSiswa
     /**
      * Get nomorPendaftaran
      *
-     * @return integer 
+     * @return string
      */
     public function getNomorPendaftaran() {
         return $this->nomorPendaftaran;
@@ -330,7 +364,7 @@ class CalonSiswa
     /**
      * Get namaLengkap
      *
-     * @return string 
+     * @return string
      */
     public function getNamaLengkap() {
         return $this->namaLengkap;
@@ -351,7 +385,7 @@ class CalonSiswa
     /**
      * Get jenisKelamin
      *
-     * @return string 
+     * @return string
      */
     public function getJenisKelamin() {
         return $this->jenisKelamin;
@@ -372,7 +406,7 @@ class CalonSiswa
     /**
      * Get fotoPendaftaran
      *
-     * @return string 
+     * @return string
      */
     public function getFotoPendaftaran() {
         return $this->fotoPendaftaran;
@@ -393,7 +427,7 @@ class CalonSiswa
     /**
      * Get foto
      *
-     * @return string 
+     * @return string
      */
     public function getFoto() {
         return $this->foto;
@@ -414,7 +448,7 @@ class CalonSiswa
     /**
      * Get agama
      *
-     * @return string 
+     * @return string
      */
     public function getAgama() {
         return $this->agama;
@@ -435,7 +469,7 @@ class CalonSiswa
     /**
      * Get tempatLahir
      *
-     * @return string 
+     * @return string
      */
     public function getTempatLahir() {
         return $this->tempatLahir;
@@ -456,7 +490,7 @@ class CalonSiswa
     /**
      * Get tanggalLahir
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTanggalLahir() {
         return $this->tanggalLahir;
@@ -477,7 +511,7 @@ class CalonSiswa
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail() {
         return $this->email;
@@ -498,7 +532,7 @@ class CalonSiswa
     /**
      * Get namaPanggilan
      *
-     * @return string 
+     * @return string
      */
     public function getNamaPanggilan() {
         return $this->namaPanggilan;
@@ -519,7 +553,7 @@ class CalonSiswa
     /**
      * Get kewarganegaraan
      *
-     * @return string 
+     * @return string
      */
     public function getKewarganegaraan() {
         return $this->kewarganegaraan;
@@ -540,7 +574,7 @@ class CalonSiswa
     /**
      * Get anakKe
      *
-     * @return integer 
+     * @return integer
      */
     public function getAnakKe() {
         return $this->anakKe;
@@ -561,7 +595,7 @@ class CalonSiswa
     /**
      * Get jumlahSaudarakandung
      *
-     * @return integer 
+     * @return integer
      */
     public function getJumlahSaudarakandung() {
         return $this->jumlahSaudarakandung;
@@ -582,7 +616,7 @@ class CalonSiswa
     /**
      * Get jumlahSaudaratiri
      *
-     * @return integer 
+     * @return integer
      */
     public function getJumlahSaudaratiri() {
         return $this->jumlahSaudaratiri;
@@ -603,7 +637,7 @@ class CalonSiswa
     /**
      * Get statusOrphan
      *
-     * @return string 
+     * @return string
      */
     public function getStatusOrphan() {
         return $this->statusOrphan;
@@ -624,7 +658,7 @@ class CalonSiswa
     /**
      * Get bahasaSeharihari
      *
-     * @return string 
+     * @return string
      */
     public function getBahasaSeharihari() {
         return $this->bahasaSeharihari;
@@ -645,7 +679,7 @@ class CalonSiswa
     /**
      * Get alamat
      *
-     * @return string 
+     * @return string
      */
     public function getAlamat() {
         return $this->alamat;
@@ -666,7 +700,7 @@ class CalonSiswa
     /**
      * Get kodepos
      *
-     * @return string 
+     * @return string
      */
     public function getKodepos() {
         return $this->kodepos;
@@ -687,7 +721,7 @@ class CalonSiswa
     /**
      * Get telepon
      *
-     * @return string 
+     * @return string
      */
     public function getTelepon() {
         return $this->telepon;
@@ -708,7 +742,7 @@ class CalonSiswa
     /**
      * Get ponselSiswa
      *
-     * @return string 
+     * @return string
      */
     public function getPonselSiswa() {
         return $this->ponselSiswa;
@@ -729,7 +763,7 @@ class CalonSiswa
     /**
      * Get ponselOrangtuawali
      *
-     * @return string 
+     * @return string
      */
     public function getPonselOrangtuawali() {
         return $this->ponselOrangtuawali;
@@ -750,7 +784,7 @@ class CalonSiswa
     /**
      * Get sekolahTinggaldi
      *
-     * @return string 
+     * @return string
      */
     public function getSekolahTinggaldi() {
         return $this->sekolahTinggaldi;
@@ -771,7 +805,7 @@ class CalonSiswa
     /**
      * Get jarakTempat
      *
-     * @return string 
+     * @return string
      */
     public function getJarakTempat() {
         return $this->jarakTempat;
@@ -792,7 +826,7 @@ class CalonSiswa
     /**
      * Get caraKesekolah
      *
-     * @return string 
+     * @return string
      */
     public function getCaraKesekolah() {
         return $this->caraKesekolah;
@@ -813,7 +847,7 @@ class CalonSiswa
     /**
      * Get beratbadan
      *
-     * @return integer 
+     * @return integer
      */
     public function getBeratbadan() {
         return $this->beratbadan;
@@ -834,7 +868,7 @@ class CalonSiswa
     /**
      * Get tinggibadan
      *
-     * @return integer 
+     * @return integer
      */
     public function getTinggibadan() {
         return $this->tinggibadan;
@@ -855,7 +889,7 @@ class CalonSiswa
     /**
      * Get golongandarah
      *
-     * @return string 
+     * @return string
      */
     public function getGolongandarah() {
         return $this->golongandarah;
@@ -876,7 +910,7 @@ class CalonSiswa
     /**
      * Get waktuSimpan
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getWaktuSimpan() {
         return $this->waktuSimpan;
@@ -897,7 +931,7 @@ class CalonSiswa
     /**
      * Get waktuUbah
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getWaktuUbah() {
         return $this->waktuUbah;
@@ -918,7 +952,7 @@ class CalonSiswa
     /**
      * Get dibuatOleh
      *
-     * @return \Fast\SisdikBundle\Entity\User 
+     * @return \Fast\SisdikBundle\Entity\User
      */
     public function getDibuatOleh() {
         return $this->dibuatOleh;
@@ -939,7 +973,7 @@ class CalonSiswa
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah() {
         return $this->sekolah;
@@ -960,7 +994,7 @@ class CalonSiswa
     /**
      * Get tahunmasuk
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
      */
     public function getTahunmasuk() {
         return $this->tahunmasuk;
@@ -981,7 +1015,7 @@ class CalonSiswa
     /**
      * Get gelombang
      *
-     * @return \Fast\SisdikBundle\Entity\Gelombang 
+     * @return \Fast\SisdikBundle\Entity\Gelombang
      */
     public function getGelombang() {
         return $this->gelombang;
@@ -1002,7 +1036,7 @@ class CalonSiswa
     /**
      * Get diubahOleh
      *
-     * @return \Fast\SisdikBundle\Entity\User 
+     * @return \Fast\SisdikBundle\Entity\User
      */
     public function getDiubahOleh() {
         return $this->diubahOleh;
@@ -1023,9 +1057,13 @@ class CalonSiswa
     /**
      * Get referensi
      *
-     * @return \Fast\SisdikBundle\Entity\Referensi 
+     * @return \Fast\SisdikBundle\Entity\Referensi
      */
     public function getReferensi() {
         return $this->referensi;
+    }
+
+    public function getWebcamPhotoDir() {
+        return self::WEBCAMPHOTO_DIR;
     }
 }

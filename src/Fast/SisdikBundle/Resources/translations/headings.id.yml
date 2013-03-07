@@ -145,6 +145,13 @@ registration.committee:
     edit: Mengubah Panitia Pendaftaran
     creation: Membuat Panitia Pendaftaran
     detail: Detail Panitia Pendaftaran
+
+applicant:
+    list: Daftar Calon Siswa
+    edit: Mengubah Calon Siswa
+    edit.regphoto: Mengubah Foto Pendaftaran Calon Siswa
+    creation: Membuat Calon Siswa
+    detail: Detail Calon Siswa
         
 
 

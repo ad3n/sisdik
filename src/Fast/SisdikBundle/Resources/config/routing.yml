@@ -170,4 +170,9 @@ regcommittee:
     resource: "@FastSisdikBundle/Controller/PanitiaPendaftaranController.php"
     type:     annotation
     prefix:   /
+    
+applicant:
+    resource: "@FastSisdikBundle/Controller/CalonSiswaController.php"
+    type:     annotation
+    prefix:   /
 
