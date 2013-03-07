@@ -1,0 +1,36 @@
+CalonDokumen:
+    type: entity
+    table: calon_dokumen
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        namaDokumen:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: nama_dokumen
+        ada:
+            type: boolean
+            nullable: true
+        file:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+    manyToOne:
+        calonSiswa:
+            targetEntity: CalonSiswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                calon_siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
