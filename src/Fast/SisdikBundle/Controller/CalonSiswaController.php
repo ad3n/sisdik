@@ -43,17 +43,16 @@ class CalonSiswaController extends Controller
                 ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
         $results = $qb->getQuery()->getResult();
-        $daftarTahunmasuk = '';
+        $daftarTahunmasuk = array();
         foreach ($results as $entity) {
             if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
                 if (is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia())) {
-                    $daftarTahunmasuk .= $entity->getTahunmasuk()->getId() . ',';
+                    $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
                 }
             }
         }
-        $daftarTahunmasuk = preg_replace('/,$/', '', $daftarTahunmasuk);
 
-        if ($daftarTahunmasuk == '') {
+        if (count($daftarTahunmasuk) == 0) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.register.as.committee'));
         }
@@ -62,10 +61,9 @@ class CalonSiswaController extends Controller
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:CalonSiswa', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->where('t2.sekolah = :sekolah')->andWhere('t2.id IN (:daftartahunmasuk)')
-                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
-                ->addOrderBy('t.nomorPendaftaran', 'DESC')->setParameter('sekolah', $sekolah->getId())
-                ->setParameter('daftartahunmasuk', $daftarTahunmasuk);
+                ->where('t2.sekolah = :sekolah')->andWhere('t2.id IN (?1)')->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.nomorPendaftaran', 'DESC')
+                ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahunmasuk);
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -77,8 +75,9 @@ class CalonSiswaController extends Controller
             }
 
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
-                $querybuilder->orWhere('t.nomorPendaftaran = :nomorpendaftaran');
+                $querybuilder
+                        ->andWhere(
+                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran = :nomorpendaftaran');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('nomorpendaftaran', $searchdata['searchkey']);
             }

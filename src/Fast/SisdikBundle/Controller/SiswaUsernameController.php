@@ -175,7 +175,7 @@ class SiswaUsernameController extends Controller
                         ));
 
         $retval = array();
-        $siswa_identities = '';
+        $siswa_identities = array();
         $info = '&nbsp;';
         if ($nomorIndukSistem != '' && is_object($siswa) && $siswa instanceof Siswa) {
             $userManager = $this->container->get('fos_user.user_manager');
@@ -249,15 +249,14 @@ class SiswaUsernameController extends Controller
 
             $siswa_num = count($entities);
             foreach ($entities as $entity) {
-                $siswa_identities .= $entity->getNomorIndukSistem() . ",";
+                $siswa_identities[] = $entity->getNomorIndukSistem();
             }
-            $siswa_identities = preg_replace('/,$/', '', $siswa_identities);
 
-            if ($siswa_identities != '') {
+            if (count($siswa_identities) != 0) {
                 $query = $em
                         ->createQuery(
-                                "SELECT COUNT(t.id) FROM FastSisdikBundle:FosUser t " . " JOIN t.siswa t1 "
-                                        . " WHERE t.siswa IS NOT NULL " . " AND t1.tahunmasuk = :tahunmasuk "
+                                "SELECT COUNT(t.id) FROM FastSisdikBundle:User t JOIN t.siswa t1 "
+                                        . " WHERE t.siswa IS NOT NULL AND t1.tahunmasuk = :tahunmasuk "
                                         . " AND t.sekolah = :sekolah ");
                 $query->setParameter("tahunmasuk", $tahunmasuk);
                 $query->setParameter("sekolah", $sekolah->getId());
@@ -265,8 +264,8 @@ class SiswaUsernameController extends Controller
 
                 $queryduplication = $em
                         ->createQuery(
-                                "SELECT COUNT(t.id) FROM FastSisdikBundle:FosUser t "
-                                        . " WHERE t.username IN ($siswa_identities) ");
+                                "SELECT COUNT(t.id) FROM FastSisdikBundle:User t "
+                                        . " WHERE t.username IN (?1) ")->setParameter(1, $siswa_identities);
                 $duplicatedusername_num = $queryduplication->getSingleScalarResult();
 
                 if ($siswa_num > $username_num && $username_num > 0) {
@@ -381,12 +380,12 @@ class SiswaUsernameController extends Controller
     }
 
     /**
-     * 
+     *
      * @param Tahunmasuk $tahunmasuk
      * @param int $penyaring
      * @param string $outputfiletype
      * @param boolean $regenerate
-     * 
+     *
      * @return string $filename
      */
     private function generateUsernamePasswordList($tahunmasuk, $penyaring, $outputfiletype = "ods",
@@ -508,7 +507,7 @@ class SiswaUsernameController extends Controller
     }
 
     /**
-     * 
+     *
      * @param array $credentials
      */
     private function generateUsernamePassword($credentials, $regenerate) {

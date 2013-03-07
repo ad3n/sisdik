@@ -24,15 +24,14 @@ class KehadiranSiswaType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         // status
-        $status = '';
+        $status = array();
         foreach (StatusKehadiranKepulanganType::buildNamaStatusKehadiranSaja() as $key => $value) {
-            $status .= "'" . $value . "',";
+            $status[] = $value;
         }
-        $status = preg_replace('/,$/', '', $status);
         $querybuilder_status = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')
-                ->where('t.sekolah = :sekolah')->andWhere("t.nama IN ($status)")
-                ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah);
+                ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->where('t.sekolah = :sekolah')
+                ->andWhere("t.nama IN (?1)")->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah)
+                ->setParameter(1, $status);
         $results = $querybuilder_status->getQuery()->getResult();
         foreach ($results as $result) {
             $choices[$result->getId()] = $result->getNama();
@@ -41,17 +40,15 @@ class KehadiranSiswaType extends AbstractType
         // students
         $querybuilder = $em->createQueryBuilder()->select('t, t3')
                 ->from('FastSisdikBundle:KehadiranSiswa', 't')->leftJoin('t.kelas', 't2')
-                ->leftJoin('t.siswa', 't3')->where('t2.sekolah = :sekolah')
-                ->orderBy('t2.kode')->addOrderBy('t3.namaLengkap')
-                ->setParameter('sekolah', $sekolah);
+                ->leftJoin('t.siswa', 't3')->where('t2.sekolah = :sekolah')->orderBy('t2.kode')
+                ->addOrderBy('t3.namaLengkap')->setParameter('sekolah', $sekolah);
 
         if ($this->buildparam['tanggal'] != '') {
             $querybuilder->andWhere('t.tanggal = :tanggal');
             $querybuilder->setParameter('tanggal', $this->buildparam['tanggal']);
         }
         if ($this->buildparam['searchkey'] != '') {
-            $querybuilder
-                    ->andWhere("t3.namaLengkap LIKE :searchkey OR t3.nomorInduk LIKE :searchkey");
+            $querybuilder->andWhere("t3.namaLengkap LIKE :searchkey OR t3.nomorInduk LIKE :searchkey");
             $querybuilder->setParameter('searchkey', '%' . $this->buildparam['searchkey'] . '%');
         }
         if ($this->buildparam['jenjang'] != '') {
@@ -75,13 +72,12 @@ class KehadiranSiswaType extends AbstractType
                 $builder
                         ->add('kehadirankepulangan_' . $student->getId(), 'choice',
                                 array(
-                                        'required' => true, 'expanded' => true,
-                                        'multiple' => false, 'choices' => $choices,
+                                        'required' => true, 'expanded' => true, 'multiple' => false,
+                                        'choices' => $choices,
                                         'attr' => array(
                                             'class' => 'medium'
                                         ),
-                                        'data' => $student->getStatusKehadiranKepulangan()
-                                                ->getId()
+                                        'data' => $student->getStatusKehadiranKepulangan()->getId()
                                 ));
 
             }

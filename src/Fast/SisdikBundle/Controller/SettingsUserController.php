@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * 
+ *
  * @author Ihsan Faisal
  * @Route("/user")
  *
@@ -403,15 +403,16 @@ class SettingsUserController extends Controller
     public function deleteManyAction(Request $request, $filter, $confirmed) {
         if ($request->getMethod() == 'POST') {
             $checks = $request->get('checks');
-            $wherein = '';
+            $wherein = array();
             if (is_array($checks)) {
                 foreach ($checks as $keys => $values) {
-                    $wherein .= $keys . ',';
+                    $wherein[] = $keys;
                 }
-                $wherein = preg_replace('/,$/', '', $wherein);
 
                 $em = $this->getDoctrine()->getManager();
-                $query = $em->createQuery("DELETE FastSisdikBundle:User u WHERE u. IN ($wherein)");
+                $query = $em->createQuery("DELETE FastSisdikBundle:User u WHERE u.id IN (?1)")
+                        ->setParameter(1, $wherein);
+
                 $query->execute();
                 $em->flush();
 

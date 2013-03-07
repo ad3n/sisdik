@@ -27,8 +27,7 @@ class KehadiranSiswaSearchType extends AbstractType
         $builder
                 ->add('tanggal', 'date',
                         array(
-                                'label' => 'label.date', 'widget' => 'single_text',
-                                'format' => 'dd/MM/yyyy',
+                                'label' => 'label.date', 'widget' => 'single_text', 'format' => 'dd/MM/yyyy',
                                 'attr' => array(
                                     'class' => 'date small', 'placeholder' => 'label.date'
                                 ), 'required' => true, 'label_render' => false
@@ -37,54 +36,47 @@ class KehadiranSiswaSearchType extends AbstractType
                         array(
                                 'label' => 'label.searchkey', 'required' => false,
                                 'attr' => array(
-                                        'class' => 'search-query medium',
-                                        'placeholder' => 'label.searchkey'
+                                    'class' => 'search-query medium', 'placeholder' => 'label.searchkey'
                                 ), 'label_render' => false,
                         ));
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.kode')->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.kode')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('jenjang', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Jenjang',
-                                    'label' => 'label.class.entry', 'multiple' => false,
-                                    'expanded' => false, 'required' => true,
+                                    'class' => 'FastSisdikBundle:Jenjang', 'label' => 'label.class.entry',
+                                    'multiple' => false, 'expanded' => false, 'required' => true,
                                     'property' => 'optionLabel', 'query_builder' => $querybuilder,
                                     'attr' => array(
                                         'class' => 'medium'
                                     ), 'label_render' => false
                             ));
 
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
-                    ->leftJoin('t.tahun', 't3')->where('t.sekolah = :sekolah')
-                    ->andWhere('t3.aktif = :aktif')->orderBy('t2.urutan', 'ASC')
-                    ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                    ->setParameter('aktif', TRUE);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+                    ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahun', 't3')->where('t.sekolah = :sekolah')
+                    ->andWhere('t3.aktif = :aktif')->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
+                    ->setParameter('sekolah', $sekolah)->setParameter('aktif', TRUE);
             $builder
                     ->add('kelas', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Kelas',
-                                    'label' => 'label.class.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama', 'required' => false,
-                                    'query_builder' => $querybuilder,
+                                    'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                    'required' => false, 'query_builder' => $querybuilder,
                                     'attr' => array(
                                         'class' => 'medium'
                                     ), 'label_render' => false, 'empty_value' => 'label.allclass'
                             ));
 
-            $status = '';
+            $status = array();
             foreach (StatusKehadiranKepulanganType::buildNamaStatusKehadiranSaja() as $key => $value) {
-                $status .= "'" . $value . "',";
+                $status[] = $value;
             }
-            $status = preg_replace('/,$/', '', $status);
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')
-                    ->where('t.sekolah = :sekolah')->andWhere("t.nama IN ($status)")
-                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah);
+                    ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->where('t.sekolah = :sekolah')
+                    ->andWhere("t.nama IN (?1)")->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah)
+                    ->setParameter(1, $status);
             $alpa = $em->getRepository('FastSisdikBundle:StatusKehadiranKepulangan')
                     ->findBy(
                             array(

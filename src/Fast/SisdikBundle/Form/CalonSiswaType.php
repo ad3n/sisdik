@@ -45,27 +45,25 @@ class CalonSiswaType extends AbstractType
                         ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
                         ->where('t2.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
                 $results = $qb->getQuery()->getResult();
-                $daftarTahunmasuk = '';
+                $daftarTahunmasuk = array();
                 foreach ($results as $entity) {
                     if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
                         if (is_array($entity->getPanitia())
                                 && in_array($user->getId(), $entity->getPanitia())) {
-                            $daftarTahunmasuk .= $entity->getTahunmasuk()->getId() . ',';
+                            $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
                         }
                     }
                 }
-                $daftarTahunmasuk = preg_replace('/,$/', '', $daftarTahunmasuk);
 
-                if ($daftarTahunmasuk == '') {
+                if (count($daftarTahunmasuk) == 0) {
                     throw new AccessDeniedException(
                             $this->container->get('translator')->trans('exception.register.as.committee'));
                 }
 
                 $querybuilder1 = $em->createQueryBuilder()->select('t')
                         ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
-                        ->andWhere('t.id IN (:daftartahunmasuk)')->orderBy('t.tahun', 'DESC')
-                        ->setParameter('sekolah', $sekolah->getId())
-                        ->setParameter('daftartahunmasuk', $daftarTahunmasuk);
+                        ->andWhere('t.id IN (?1)')->orderBy('t.tahun', 'DESC')
+                        ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahunmasuk);
                 $builder
                         ->add('tahunmasuk', 'entity',
                                 array(
