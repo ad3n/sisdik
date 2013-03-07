@@ -198,8 +198,7 @@ class CalonSiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.applicant.inserted',
                                                 array(
-                                                        '%name%' => $entity->getNamaLengkap(),
-                                                        '%regnum%' => '#' . $entity->getNomorPendaftaran()
+                                                        '%name%' => $entity->getNamaLengkap()
                                                 )));
 
             } catch (DBALException $e) {

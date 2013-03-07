@@ -397,7 +397,7 @@ flash:
         deleted: Panitia pendaftaran tahun masuk %yearentry% berhasil dihapus
         fail.delete: Panitia pendaftaran tahun masuk %yearentry% gagal dihapus
     applicant:
-        inserted: Calon siswa %name% (%regnum%) berhasil ditambah
+        inserted: Calon siswa %name% berhasil ditambah
         updated: Calon siswa %name% (%regnum%) berhasil diperbarui
         regphoto.updated: Foto pendaftaran calon siswa %name% (%regnum%) berhasil diperbarui
         deleted: Calon siswa %name% (%regnum%) berhasil dihapus
