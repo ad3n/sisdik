@@ -55,7 +55,9 @@
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.ponselOrangtuawali }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+    		{% if is_expr_granted("hasRole('ROLE_BENDAHARA')") %}
         		<a href="{{ path('applicant', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment{% endtrans %}" class="icon-print"></a>
+    		{% endif %}
         		<a href="{{ path('applicant_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('applicant_editregphoto', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-film"></a>
         		<a href="{{ path('applicant_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>

@@ -238,7 +238,6 @@ END";
                         ENGINE = InnoDB
                         DEFAULT CHARACTER SET = utf8;");
 
-
         $this
                 ->addSql(
                         "CREATE  TABLE IF NOT EXISTS `siswa` (
@@ -1375,6 +1374,24 @@ DEFAULT CHARACTER SET = utf8;");
     ON UPDATE RESTRICT)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;");
+
+        $this
+                ->addSql(
+                        "CREATE  TABLE IF NOT EXISTS `calon_dokumen` (
+                            `id` INT NOT NULL AUTO_INCREMENT ,
+                            `calon_siswa_id` INT(11) NOT NULL ,
+                            `nama_dokumen` VARCHAR(100) NULL ,
+                            `ada` TINYINT(1) NULL ,
+                            `file` VARCHAR(100) NULL ,
+                            PRIMARY KEY (`id`) ,
+                            INDEX `fk_calon_kelengkapan_dokumen_calon_siswa1_idx` (`calon_siswa_id` ASC) ,
+                            CONSTRAINT `fk_calon_kelengkapan_dokumen_calon_siswa1`
+                                FOREIGN KEY (`calon_siswa_id` )
+                                REFERENCES `calon_siswa` (`id` )
+                                ON DELETE RESTRICT
+                                ON UPDATE RESTRICT)
+                            ENGINE = InnoDB
+                            DEFAULT CHARACTER SET = utf8;");
 
         $this->addSql($this->trigger1);
         $this->addSql($this->trigger2);
