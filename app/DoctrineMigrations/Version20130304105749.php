@@ -252,7 +252,7 @@ END";
   `nomor_pendaftaran` VARCHAR(45) NULL DEFAULT NULL ,
   `nomor_induk` VARCHAR(100) NULL DEFAULT NULL ,
   `nama_lengkap` VARCHAR(300) NULL DEFAULT NULL ,
-  `jenis_kelamin` VARCHAR(255) NULL DEFAULT NULL ,
+  `jenis_kelamin` VARCHAR(100) NULL DEFAULT NULL ,
   `foto_pendaftaran` VARCHAR(100) NULL DEFAULT NULL ,
   `foto` VARCHAR(100) NULL DEFAULT NULL ,
   `agama` VARCHAR(100) NULL DEFAULT NULL ,
