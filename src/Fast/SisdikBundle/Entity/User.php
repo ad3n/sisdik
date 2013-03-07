@@ -25,7 +25,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      * @Assert\Length(min=3, max=255, minMessage="The name is too short.", maxMessage="The name is too long.", groups={"Registration", "Profile"})
@@ -75,7 +75,7 @@ class User extends BaseUser
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -91,14 +91,14 @@ class User extends BaseUser
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -114,14 +114,14 @@ class User extends BaseUser
     public function setGuru(\Fast\SisdikBundle\Entity\Guru $guru = null)
     {
         $this->guru = $guru;
-    
+
         return $this;
     }
 
     /**
      * Get guru
      *
-     * @return \Fast\SisdikBundle\Entity\Guru 
+     * @return \Fast\SisdikBundle\Entity\Guru
      */
     public function getGuru()
     {
@@ -137,14 +137,14 @@ class User extends BaseUser
     public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
         $this->sekolah = $sekolah;
-    
+
         return $this;
     }
 
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah()
     {
@@ -160,14 +160,14 @@ class User extends BaseUser
     public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
     {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
     public function getSiswa()
     {
@@ -183,14 +183,14 @@ class User extends BaseUser
     public function setStaf(\Fast\SisdikBundle\Entity\Staf $staf = null)
     {
         $this->staf = $staf;
-    
+
         return $this;
     }
 
     /**
      * Get staf
      *
-     * @return \Fast\SisdikBundle\Entity\Staf 
+     * @return \Fast\SisdikBundle\Entity\Staf
      */
     public function getStaf()
     {

@@ -341,7 +341,7 @@ DEFAULT CHARACTER SET = utf8");
                             `roles` LONGTEXT NOT NULL COMMENT '(DC2Type:array)' ,
                             `credentials_expired` TINYINT(1) NOT NULL ,
                             `credentials_expire_at` DATETIME NULL DEFAULT NULL ,
-                            `name` VARCHAR(255) NOT NULL ,
+                            `name` VARCHAR(255) NULL DEFAULT NULL ,
                             PRIMARY KEY (`id`) ,
                             UNIQUE INDEX `UNIQ_957A647992FC23A8` (`username_canonical` ASC) ,
                             UNIQUE INDEX `UNIQ_957A6479A0D96FBF` (`email_canonical` ASC) ,
