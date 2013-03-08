@@ -299,6 +299,13 @@ class CalonSiswa
     private $referensi;
 
     /**
+     * @var \CalonOrangtuaWali
+     *
+     * @ORM\OneToMany(targetEntity="CalonOrangtuaWali", mappedBy="calonSiswa", cascade={"persist"})
+     */
+    private $calonOrangtuaWali;
+
+    /**
      * Get id
      *
      * @return integer
@@ -1061,6 +1068,28 @@ class CalonSiswa
      */
     public function getReferensi() {
         return $this->referensi;
+    }
+
+    /**
+     * Set calonOrangtuaWali
+     *
+     * @param ArrayCollection $calonOrangtuaWali
+     */
+    public function setCalonOrangtuaWali(ArrayCollection $calonOrangtuaWali) {
+        foreach ($calonOrangtuaWali as $data) {
+            $data->setCalonSiswa($this);
+        }
+
+        $this->calonOrangtuaWali = $calonOrangtuaWali;
+    }
+
+    /**
+     * Get calonOrangtuaWali
+     *
+     * @return \Fast\SisdikBundle\CalonOrangtuaWali
+     */
+    public function getCalonOrangtuaWali() {
+        return $this->calonOrangtuaWali;
     }
 
     public function getWebcamPhotoDir() {

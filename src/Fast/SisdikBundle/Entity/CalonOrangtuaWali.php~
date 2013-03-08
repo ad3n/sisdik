@@ -1,0 +1,126 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CalonOrangtuaWali
+ *
+ * @ORM\Table(name="calon_orangtua_wali")
+ * @ORM\Entity
+ */
+class CalonOrangtuaWali
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nama", type="string", length=300, nullable=true)
+     */
+    private $nama;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tempat_lahir", type="string", length=300, nullable=true)
+     */
+    private $tempatLahir;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
+     */
+    private $tanggalLahir;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ponsel", type="string", length=100, nullable=true)
+     */
+    private $ponsel;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
+     */
+    private $kewarganegaraan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="hubungan_dengan_siswa", type="string", length=100, nullable=true)
+     */
+    private $hubunganDenganSiswa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pendidikan_tertinggi", type="string", length=300, nullable=true)
+     */
+    private $pendidikanTertinggi;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pekerjaan", type="string", length=300, nullable=true)
+     */
+    private $pekerjaan;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="penghasilan_bulanan", type="integer", nullable=true)
+     */
+    private $penghasilanBulanan;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="penghasilan_tahunan", type="integer", nullable=true)
+     */
+    private $penghasilanTahunan;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="alamat", type="string", length=400, nullable=true)
+     */
+    private $alamat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     */
+    private $aktif;
+
+    /**
+     * @var \CalonSiswa
+     *
+     * @ORM\ManyToOne(targetEntity="CalonSiswa")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id")
+     * })
+     */
+    private $calonSiswa;
+
+
+}
