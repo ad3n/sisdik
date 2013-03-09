@@ -1,0 +1,61 @@
+<h1>CalonOrangtuaWali list</h1>
+
+<table class="records_list">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nama</th>
+            <th>Tempatlahir</th>
+            <th>Tanggallahir</th>
+            <th>Ponsel</th>
+            <th>Kewarganegaraan</th>
+            <th>Hubungandengansiswa</th>
+            <th>Pendidikantertinggi</th>
+            <th>Pekerjaan</th>
+            <th>Penghasilanbulanan</th>
+            <th>Penghasilantahunan</th>
+            <th>Alamat</th>
+            <th>Keterangan</th>
+            <th>Aktif</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            <td><a href="{{ path('appguardian_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+            <td>{{ entity.nama }}</td>
+            <td>{{ entity.tempatLahir }}</td>
+            <td>{% if entity.tanggalLahir %}{{ entity.tanggalLahir|date('Y-m-d H:i:s') }}{% endif %}</td>
+            <td>{{ entity.ponsel }}</td>
+            <td>{{ entity.kewarganegaraan }}</td>
+            <td>{{ entity.hubunganDenganSiswa }}</td>
+            <td>{{ entity.pendidikanTertinggi }}</td>
+            <td>{{ entity.pekerjaan }}</td>
+            <td>{{ entity.penghasilanBulanan }}</td>
+            <td>{{ entity.penghasilanTahunan }}</td>
+            <td>{{ entity.alamat }}</td>
+            <td>{{ entity.keterangan }}</td>
+            <td>{{ entity.aktif }}</td>
+            <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('appguardian_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('appguardian_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<ul>
+    <li>
+        <a href="{{ path('appguardian_new') }}">
+            Create a new entry
+        </a>
+    </li>
+</ul>

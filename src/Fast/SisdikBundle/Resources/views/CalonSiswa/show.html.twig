@@ -28,6 +28,18 @@
                 <dd>{{ entity.email }}</dd>
                 <dt>{{ 'label.nickname'|trans }}</dt>
                 <dd>{{ entity.namaPanggilan }}</dd>
+                <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                <dd>
+            		{% if entity.calonOrangtuaWali %}
+            		    {% for orangtua in entity.calonOrangtuaWali %}
+            		        {% if orangtua %}
+            		            {% if orangtua.aktif == 1 %}
+                		            {{ orangtua.nama }}<br />
+                		        {% endif %}
+            		        {% endif %}
+            		    {% endfor %}
+            		{% endif %}
+        		</dd>
                 <dt>{{ 'label.nationality'|trans }}</dt>
                 <dd>{{ entity.kewarganegaraan }}</dd>
                 <dt>{{ 'label.childno'|trans }}</dt>

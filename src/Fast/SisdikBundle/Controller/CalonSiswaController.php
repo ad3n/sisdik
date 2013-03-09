@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\CalonOrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
@@ -84,6 +85,13 @@ class CalonSiswaController extends Controller
 
         }
 
+//         $theresults = $querybuilder->getQuery()->getResult();
+//         foreach ($theresults as $rs) {
+//             foreach ($rs->getCalonOrangtuaWali() as $d) {
+//                 var_dump($d->getNama());
+//             }
+//         }
+
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
@@ -128,45 +136,14 @@ class CalonSiswaController extends Controller
         $this->setCurrentMenu();
 
         $entity = new CalonSiswa();
+        $calonOrangtuaWali = new CalonOrangtuaWali();
+        $entity->getCalonOrangtuaWali()->add($calonOrangtuaWali);
+
         $form = $this->createForm(new CalonSiswaType($this->container, 'new'), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView(),
         );
-    }
-
-    /**
-     * Handling HTTP RAW DATA sent from jpegcam library
-     *
-     * @Route("/webcamupload", name="applicant_webcam_uploadhandler")
-     * @Method("POST")
-     */
-    public function webcamUploadHandlerAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
-
-        $fs = new Filesystem();
-        if (!$fs->exists(CalonSiswa::WEBCAMPHOTO_DIR . $sekolah->getId())) {
-            $fs->mkdir(CalonSiswa::WEBCAMPHOTO_DIR . $sekolah->getId());
-        }
-
-        $filename = date('YmdHis') . '.jpg';
-        $targetfile = CalonSiswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $filename;
-
-        $output = $filename;
-
-        $result = file_put_contents($targetfile, file_get_contents('php://input'));
-        if (!$result) {
-            $output = $this->get('translator')
-                    ->trans('errorinfo.cannot.writefile',
-                            array(
-                                'filename' => $filename
-                            ));
-        }
-
-        return new Response($output, 200,
-                array(
-                    'Content-Type' => 'text/plain'
-                ));
     }
 
     /**
@@ -198,7 +175,7 @@ class CalonSiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.applicant.inserted',
                                                 array(
-                                                        '%name%' => $entity->getNamaLengkap()
+                                                    '%name%' => $entity->getNamaLengkap()
                                                 )));
 
             } catch (DBALException $e) {
@@ -303,6 +280,40 @@ class CalonSiswaController extends Controller
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
         );
+    }
+
+    /**
+     * Handling HTTP RAW DATA sent from jpegcam library
+     *
+     * @Route("/webcamupload", name="applicant_webcam_uploadhandler")
+     * @Method("POST")
+     */
+    public function webcamUploadHandlerAction(Request $request) {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $fs = new Filesystem();
+        if (!$fs->exists(CalonSiswa::WEBCAMPHOTO_DIR . $sekolah->getId())) {
+            $fs->mkdir(CalonSiswa::WEBCAMPHOTO_DIR . $sekolah->getId());
+        }
+
+        $filename = date('YmdHis') . '.jpg';
+        $targetfile = CalonSiswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $filename;
+
+        $output = $filename;
+
+        $result = file_put_contents($targetfile, file_get_contents('php://input'));
+        if (!$result) {
+            $output = $this->get('translator')
+                    ->trans('errorinfo.cannot.writefile',
+                            array(
+                                'filename' => $filename
+                            ));
+        }
+
+        return new Response($output, 200,
+                array(
+                    'Content-Type' => 'text/plain'
+                ));
     }
 
     /**

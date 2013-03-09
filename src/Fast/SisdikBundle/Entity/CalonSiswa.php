@@ -2,6 +2,7 @@
 
 namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -302,8 +303,17 @@ class CalonSiswa
      * @var \CalonOrangtuaWali
      *
      * @ORM\OneToMany(targetEntity="CalonOrangtuaWali", mappedBy="calonSiswa", cascade={"persist"})
+     * @ORM\OrderBy({"aktif" = "DESC"})
      */
     private $calonOrangtuaWali;
+
+    /**
+     * constructor
+     *
+     */
+    public function __construct() {
+        $this->calonOrangtuaWali = new ArrayCollection();
+    }
 
     /**
      * Get id

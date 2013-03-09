@@ -111,14 +111,14 @@ class CalonOrangtuaWali
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
      */
-    private $aktif;
+    private $aktif = 1;
 
     /**
      * @var \CalonSiswa
      *
      * @ORM\ManyToOne(targetEntity="CalonSiswa", inversedBy="calonOrangtuaWali")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * })
      */
     private $calonSiswa;

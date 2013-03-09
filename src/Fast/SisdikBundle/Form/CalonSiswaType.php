@@ -2,9 +2,7 @@
 
 namespace Fast\SisdikBundle\Form;
 use Symfony\Component\Translation\IdentityTranslator;
-
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -101,6 +99,16 @@ class CalonSiswaType extends AbstractType
                                     'attr' => array(
                                         'class' => 'large'
                                     ), 'label' => 'label.name.full'
+                            ))
+                    ->add('calonOrangtuaWali', 'collection',
+                            array(
+                                    'type' => new CalonOrangtuaWaliInitType(), 'by_reference' => false,
+                                    'attr' => array(
+                                        'class' => 'large'
+                                    ), 'label' => 'label.name.parent.or.guardian',
+                                    'options' => array(
+                                        'widget_control_group' => false, 'label_render' => false,
+                                    ), 'label_render' => true, 'allow_add' => true,
                             ))
                     ->add('ponselOrangtuawali', null,
                             array(

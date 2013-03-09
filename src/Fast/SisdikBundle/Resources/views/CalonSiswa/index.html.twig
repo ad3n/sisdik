@@ -40,6 +40,7 @@
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
+    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.ponselOrangtuawali') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.mobilephone.parent'|trans, 't.ponselOrangtuawali') }}
     	    </th>
@@ -53,6 +54,17 @@
     		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.application.number'|trans }}">{{ data.nomorPendaftaran }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+    		<td data-title="{{ 'label.name.parent.or.guardian'|trans }}">
+    		{% if data.calonOrangtuaWali %}
+    		    {% for orangtua in data.calonOrangtuaWali %}
+    		        {% if orangtua %}
+    		            {% if orangtua.aktif == 1 %}
+        		            {{ orangtua.nama }}<br />
+        		        {% endif %}
+    		        {% endif %}
+    		    {% endfor %}
+    		{% endif %}
+		    </td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.ponselOrangtuawali }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
     		{% if is_expr_granted("hasRole('ROLE_BENDAHARA')") %}
