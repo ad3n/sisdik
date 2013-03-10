@@ -1,0 +1,63 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.payment.detail{% endtrans %}{% endblock %}
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="span8">
+            <dl>
+                <dt>{{ 'label.school'|trans }}</dt>
+                <dd>{% if entity.sekolah is not null %}{{ entity.sekolah.nama }}{% endif %}</dd>
+                <dt>{{ 'label.yearentry.entry'|trans }}</dt>
+                <dd>{% if entity.tahunmasuk is not null %}{{ entity.tahunmasuk.tahun }}{% endif %}</dd>
+                <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+                <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
+                <dt>{{ 'label.name.full'|trans }}</dt>
+                <dd>{{ entity.namaLengkap }}</dd>
+                <dt>{{ 'label.application.number'|trans }}</dt>
+                <dd>{{ entity.nomorPendaftaran }}</dd>
+                <dt>{{ 'label.gender'|trans }}</dt>
+                <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+                <dt>{{ 'label.nickname'|trans }}</dt>
+                <dd>{{ entity.namaPanggilan }}</dd>
+                <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                <dd>
+            		{% if entity.calonOrangtuaWali %}
+            		    {% for orangtua in entity.calonOrangtuaWali %}
+            		        {% if orangtua %}
+            		            {% if orangtua.aktif == 1 %}
+                		            {{ orangtua.nama }}<br />
+                		        {% endif %}
+            		        {% endif %}
+            		    {% endfor %}
+            		{% endif %}
+        		</dd>
+                <dt>{{ 'label.address'|trans }}</dt>
+                <dd>{{ entity.alamat }}</dd>
+                <dt>{{ 'label.postalcode'|trans }}</dt>
+                <dd>{{ entity.kodepos }}</dd>
+                <dt>{{ 'label.phone'|trans }}</dt>
+                <dd>{{ entity.telepon }}</dd>
+                <dt>{{ 'label.mobilephone.student'|trans }}</dt>
+                <dd>{{ entity.ponselSiswa }}</dd>
+                <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                <dd>{{ entity.ponselOrangtuawali }}</dd>
+            </dl>
+        </div>
+        <div class="span4">
+            <img src="/{{ entity.webcamPhotoDir ~ entity.sekolah.id ~ '/' ~ entity.fotoPendaftaran }}" />
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+{% endblock content %}

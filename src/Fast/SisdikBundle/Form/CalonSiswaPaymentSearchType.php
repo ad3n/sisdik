@@ -12,7 +12,7 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class CalonSiswaSearchType extends AbstractType
+class CalonSiswaPaymentSearchType extends AbstractType
 {
     private $container;
 
@@ -26,28 +26,9 @@ class CalonSiswaSearchType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-
-            $qb = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                    ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')
-                    ->setParameter('sekolah', $sekolah->getId());
-            $results = $qb->getQuery()->getResult();
-            $daftarTahunmasuk = array();
-            foreach ($results as $entity) {
-                if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                    if (is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia())) {
-                        $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
-                    }
-                }
-            }
-
-            if (count($daftarTahunmasuk) == 0) {
-                throw new AccessDeniedException(
-                        $this->container->get('translator')->trans('exception.register.as.committee'));
-            }
-
             $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
-                    ->where('t.sekolah = :sekolah')->andWhere("t.id IN (?1)")->orderBy('t.tahun', 'DESC')
-                    ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahunmasuk);
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah->getId());
 
             $builder
                     ->add('tahunmasuk', 'entity',
@@ -67,7 +48,7 @@ class CalonSiswaSearchType extends AbstractType
                         array(
                                 'required' => false,
                                 'attr' => array(
-                                    'class' => 'medium search-query', 'placeholder' => 'label.searchkey.name'
+                                    'class' => 'medium search-query', 'placeholder' => 'label.searchkey'
                                 ), 'label_render' => false,
                         ));
     }

@@ -1,4 +1,5 @@
 label:
+    searchkey.name: Nama
     name.parent.or.guardian: Nama Orang Tua/Wali
     application.number: Nomor Pendaftaran
     username.undefined: tak-terdefinisi
@@ -399,10 +400,10 @@ flash:
         fail.delete: Panitia pendaftaran tahun masuk %yearentry% gagal dihapus
     applicant:
         inserted: Calon siswa %name% berhasil ditambah
-        updated: Calon siswa %name% (%regnum%) berhasil diperbarui
-        regphoto.updated: Foto pendaftaran calon siswa %name% (%regnum%) berhasil diperbarui
-        deleted: Calon siswa %name% (%regnum%) berhasil dihapus
-        fail.delete: Calon siswa %name% (%regnum%) gagal dihapus
+        updated: Calon siswa %name% berhasil diperbarui
+        regphoto.updated: Foto pendaftaran calon siswa %name% berhasil diperbarui
+        deleted: Calon siswa %name% berhasil dihapus
+        fail.delete: Calon siswa %name% gagal dihapus
 
 tip:
     edit: Ubah
@@ -412,7 +413,9 @@ tip:
     movedown: Turun
     edit.regphoto: Ubah Foto Registrasi
     edit.full.form: Ubah Form Lengkap
-    payment: Pembayaran
+    payment.once: Pembayaran Biaya Sekali Bayar
+    payment.recur: Pembayaran Biaya Berulang
+    payment.detail: Detail Pembayaran
 
 "Current": Password aktif
 
@@ -440,7 +443,7 @@ confirm.drop:
     reward.type: Hapus Jenis Imbalan '%rewardtype%'?
     reward.amount: Hapus Imbalan Pendaftaran '%yearentry%', '%admissiongroup%', '%rewardtype%', '%nominal%'?
     registration.committee: Hapus Panitia Pendaftaran tahun masuk %yearentry%?
-    applicant: Hapus calon siswa %name% (%regnum%)?
+    applicant: Hapus calon siswa %name%?
 
 alt:
     add: ikon tambah

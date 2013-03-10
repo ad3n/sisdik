@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
 /**
- * 
+ *
  * @author Ihsan Faisal
  * note: navigations is the default translation domain defined in knp_menu.html.twig
  */
@@ -21,7 +21,7 @@ class Builder extends AbstractNavbarMenuBuilder
     private $container;
 
     /**
-     * 
+     *
      * @param FactoryInterface $factory
      */
     public function __construct(FactoryInterface $factory, ContainerInterface $container) {
@@ -137,7 +137,7 @@ class Builder extends AbstractNavbarMenuBuilder
 
         }
 
-        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB")';
+        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_BENDAHARA", "ROLE_PANITIA_PSB")';
         if ($securityContext
                 ->isGranted(
                         array(
@@ -155,6 +155,18 @@ class Builder extends AbstractNavbarMenuBuilder
                         ->addChild('links.registration',
                                 array(
                                     'route' => 'applicant'
+                                ));
+            }
+
+            if ($securityContext
+                    ->isGranted(
+                            array(
+                                new Expression('hasRole("ROLE_BENDAHARA")')
+                            ))) {
+                $academic
+                        ->addChild('links.registration.payment',
+                                array(
+                                    'route' => 'applicant_payment'
                                 ));
             }
 

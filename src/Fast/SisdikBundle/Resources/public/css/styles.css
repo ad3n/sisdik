@@ -295,3 +295,13 @@ div.knowledgebase {
 .shortinfo {
 	color: #ff0000;
 }
+
+.wallet {
+    background: url('../images/glyphicons_325_wallet.png') no-repeat;
+}
+
+.coin {
+    background: url('../images/glyphicons_037_coins.png') no-repeat;
+}
+
+

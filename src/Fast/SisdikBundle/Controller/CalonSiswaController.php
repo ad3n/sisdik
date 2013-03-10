@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\CalonSiswaPaymentSearchType;
 use Fast\SisdikBundle\Entity\CalonOrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,7 +23,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * CalonSiswa controller.
  *
  * @Route("/applicant")
- * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_KETUA_PANITIA_PSB', 'ROLE_PANITIA_PSB', 'ROLE_BENDAHARA')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_PANITIA_PSB')")
  */
 class CalonSiswaController extends Controller
 {
@@ -63,7 +64,7 @@ class CalonSiswaController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:CalonSiswa', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
                 ->where('t2.sekolah = :sekolah')->andWhere('t2.id IN (?1)')->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.nomorPendaftaran', 'DESC')
+                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorPendaftaran', 'DESC')
                 ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahunmasuk);
 
         $searchform->bind($this->getRequest());
@@ -76,11 +77,8 @@ class CalonSiswaController extends Controller
             }
 
             if ($searchdata['searchkey'] != '') {
-                $querybuilder
-                        ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran = :nomorpendaftaran');
+                $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('nomorpendaftaran', $searchdata['searchkey']);
             }
 
         }
@@ -252,7 +250,6 @@ class CalonSiswaController extends Controller
                                         ->trans('flash.applicant.updated',
                                                 array(
                                                         '%name%' => $entity->getNamaLengkap(),
-                                                        '%regnum%' => '#' . $entity->getNomorPendaftaran()
                                                 )));
 
             } catch (DBALException $e) {
@@ -368,7 +365,6 @@ class CalonSiswaController extends Controller
                                         ->trans('flash.applicant.regphoto.updated',
                                                 array(
                                                         '%name%' => $entity->getNamaLengkap(),
-                                                        '%regnum%' => '#' . $entity->getNomorPendaftaran()
                                                 )));
 
             } catch (DBALException $e) {
@@ -418,7 +414,6 @@ class CalonSiswaController extends Controller
                                         ->trans('flash.applicant.deleted',
                                                 array(
                                                         '%name%' => $entity->getNamaLengkap(),
-                                                        '%regnum%' => '#' . $entity->getNomorPendaftaran()
                                                 )));
 
             } catch (DBALException $e) {
@@ -432,7 +427,6 @@ class CalonSiswaController extends Controller
                                     ->trans('flash.applicant.fail.delete',
                                             array(
                                                     '%name%' => $entity->getNamaLengkap(),
-                                                    '%regnum%' => '#' . $entity->getNomorPendaftaran()
                                             )));
         }
 

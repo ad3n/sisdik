@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}applicant.list{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}applicant.payment.list{% endtrans %}{% endblock %}
 
 {% block content %}
 <style type="text/css">
@@ -11,20 +11,11 @@
 </style>
 
 <div class="filter-section">
-    <form method="GET" action="{{ path('applicant') }}" class="form-search form-inline">
+    <form method="GET" action="{{ path('applicant_payment') }}" class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('applicant') }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('applicant_payment') }}'">{{ 'label.reset'|trans }}</button>
     </form>
-</div>
-
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('applicant_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.applicant.add'|trans }}
-	</a>
-{% endimage %}
 </div>
 
 <div class="clearfix"></div>
@@ -34,13 +25,13 @@
     	<tr>
     		<th>{{ 'label.yearentry.entry'|trans }}</th>
     		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.nomorPendaftaran') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorPendaftaran') }}
+    	    </th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
     		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.ponselOrangtuawali') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.mobilephone.parent'|trans, 't.ponselOrangtuawali') }}
-    	    </th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
@@ -49,6 +40,7 @@
         <tr>
     		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.application.number'|trans }}">{{ data.nomorPendaftaran }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.name.parent.or.guardian'|trans }}">
     		{% if data.calonOrangtuaWali %}
@@ -61,11 +53,10 @@
     		    {% endfor %}
     		{% endif %}
 		    </td>
-    		<td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ data.ponselOrangtuawali }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('applicant_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('applicant_editregphoto', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
-        		<a href="{{ path('applicant_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('applicant_payment_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('applicant_payment', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.once{% endtrans %}" class="icon-coin coin"></a>
+        		<a href="{{ path('applicant_payment', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.recur{% endtrans %}" class="icon-repeat"></a>
     		</td>
     	</tr>
     {% endfor %}
