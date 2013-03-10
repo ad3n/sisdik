@@ -22,7 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * CalonSiswa controller.
  *
  * @Route("/applicant")
- * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_PANITIA_PSB')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_KETUA_PANITIA_PSB', 'ROLE_PANITIA_PSB', 'ROLE_BENDAHARA')")
  */
 class CalonSiswaController extends Controller
 {
@@ -84,13 +84,6 @@ class CalonSiswaController extends Controller
             }
 
         }
-
-//         $theresults = $querybuilder->getQuery()->getResult();
-//         foreach ($theresults as $rs) {
-//             foreach ($rs->getCalonOrangtuaWali() as $d) {
-//                 var_dump($d->getNama());
-//             }
-//         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
