@@ -45,7 +45,7 @@ class CalonPembayaranRutin
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      */
     private $waktuUbah;
 
@@ -74,7 +74,7 @@ class CalonPembayaranRutin
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -90,14 +90,14 @@ class CalonPembayaranRutin
     public function setNominalPembayaran($nominalPembayaran)
     {
         $this->nominalPembayaran = $nominalPembayaran;
-    
+
         return $this;
     }
 
     /**
      * Get nominalPembayaran
      *
-     * @return integer 
+     * @return integer
      */
     public function getNominalPembayaran()
     {
@@ -113,14 +113,14 @@ class CalonPembayaranRutin
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -136,14 +136,14 @@ class CalonPembayaranRutin
     public function setWaktuCatat($waktuCatat)
     {
         $this->waktuCatat = $waktuCatat;
-    
+
         return $this;
     }
 
     /**
      * Get waktuCatat
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getWaktuCatat()
     {
@@ -159,14 +159,14 @@ class CalonPembayaranRutin
     public function setWaktuUbah($waktuUbah)
     {
         $this->waktuUbah = $waktuUbah;
-    
+
         return $this;
     }
 
     /**
      * Get waktuUbah
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getWaktuUbah()
     {
@@ -182,14 +182,14 @@ class CalonPembayaranRutin
     public function setBiayaRutin(\Fast\SisdikBundle\Entity\BiayaRutin $biayaRutin = null)
     {
         $this->biayaRutin = $biayaRutin;
-    
+
         return $this;
     }
 
     /**
      * Get biayaRutin
      *
-     * @return \Fast\SisdikBundle\Entity\BiayaRutin 
+     * @return \Fast\SisdikBundle\Entity\BiayaRutin
      */
     public function getBiayaRutin()
     {
@@ -205,14 +205,14 @@ class CalonPembayaranRutin
     public function setCalonSiswa(\Fast\SisdikBundle\Entity\CalonSiswa $calonSiswa = null)
     {
         $this->calonSiswa = $calonSiswa;
-    
+
         return $this;
     }
 
     /**
      * Get calonSiswa
      *
-     * @return \Fast\SisdikBundle\Entity\CalonSiswa 
+     * @return \Fast\SisdikBundle\Entity\CalonSiswa
      */
     public function getCalonSiswa()
     {

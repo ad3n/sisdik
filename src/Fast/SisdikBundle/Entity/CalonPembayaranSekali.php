@@ -45,7 +45,7 @@ class CalonPembayaranSekali
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=false)
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      */
     private $waktuUbah;
 
@@ -62,7 +62,7 @@ class CalonPembayaranSekali
     /**
      * @var \CalonSiswa
      *
-     * @ORM\ManyToOne(targetEntity="CalonSiswa")
+     * @ORM\ManyToOne(targetEntity="CalonSiswa", inversedBy="calonPembayaranSekali")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id", nullable=false)
      * })
@@ -74,7 +74,7 @@ class CalonPembayaranSekali
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -90,14 +90,14 @@ class CalonPembayaranSekali
     public function setNominalPembayaran($nominalPembayaran)
     {
         $this->nominalPembayaran = $nominalPembayaran;
-    
+
         return $this;
     }
 
     /**
      * Get nominalPembayaran
      *
-     * @return integer 
+     * @return integer
      */
     public function getNominalPembayaran()
     {
@@ -113,14 +113,14 @@ class CalonPembayaranSekali
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -136,14 +136,14 @@ class CalonPembayaranSekali
     public function setWaktuSimpan($waktuSimpan)
     {
         $this->waktuSimpan = $waktuSimpan;
-    
+
         return $this;
     }
 
     /**
      * Get waktuSimpan
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getWaktuSimpan()
     {
@@ -159,14 +159,14 @@ class CalonPembayaranSekali
     public function setWaktuUbah($waktuUbah)
     {
         $this->waktuUbah = $waktuUbah;
-    
+
         return $this;
     }
 
     /**
      * Get waktuUbah
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getWaktuUbah()
     {
@@ -182,14 +182,14 @@ class CalonPembayaranSekali
     public function setBiayaSekali(\Fast\SisdikBundle\Entity\BiayaSekali $biayaSekali = null)
     {
         $this->biayaSekali = $biayaSekali;
-    
+
         return $this;
     }
 
     /**
      * Get biayaSekali
      *
-     * @return \Fast\SisdikBundle\Entity\BiayaSekali 
+     * @return \Fast\SisdikBundle\Entity\BiayaSekali
      */
     public function getBiayaSekali()
     {
@@ -205,14 +205,14 @@ class CalonPembayaranSekali
     public function setCalonSiswa(\Fast\SisdikBundle\Entity\CalonSiswa $calonSiswa = null)
     {
         $this->calonSiswa = $calonSiswa;
-    
+
         return $this;
     }
 
     /**
      * Get calonSiswa
      *
-     * @return \Fast\SisdikBundle\Entity\CalonSiswa 
+     * @return \Fast\SisdikBundle\Entity\CalonSiswa
      */
     public function getCalonSiswa()
     {
