@@ -50,6 +50,16 @@ class CalonSiswaPaymentSearchType extends AbstractType
                                 'attr' => array(
                                     'class' => 'medium search-query', 'placeholder' => 'label.searchkey'
                                 ), 'label_render' => false,
+                        ))
+                ->add('nopayment', 'checkbox',
+                        array(
+                                'required' => false, 'attr' => array(), 'label_render' => true,
+                                'label' => 'label.search.notpaid'
+                        ))
+                ->add('todayinput', 'checkbox',
+                        array(
+                                'required' => false, 'attr' => array(), 'label_render' => true,
+                                'label' => 'label.search.today.input'
                         ));
     }
 
@@ -62,8 +72,6 @@ class CalonSiswaPaymentSearchType extends AbstractType
     }
 
     public function getName() {
-        // return '';
-        // return 'fast_sisdikbundle_siswasearchtype';
         return 'searchform';
     }
 }

@@ -80,34 +80,40 @@
         </div>
         <div class="span4">
             <img src="/{{ entity.webcamPhotoDir ~ entity.sekolah.id ~ '/' ~ entity.fotoPendaftaran }}" />
+        {% if tahunaktif == entity.tahunmasuk.tahun %}
             <ul class="pills">
                 <li>
                     <a href="{{ path('applicant_editregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
                 </li>
             </ul>
+        {% endif %}
         </div>
     </div>
 </div>
 
 <div class="clearfix"></div>
 
+{% if tahunaktif == entity.tahunmasuk.tahun %}
 <form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
     </div>
 </form>
+{% endif %}
 
 <ul class="pills">
     <li>
         <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
+{% if tahunaktif == entity.tahunmasuk.tahun %}
     <li>
         <a href="{{ path('applicant_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
     </li>
     <li>
         <a href="{{ path('applicant_editregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
     </li>
+{% endif %}
 </ul>
 
 <div class="clearfix"></div>

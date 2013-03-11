@@ -308,11 +308,27 @@ class CalonSiswa
     private $calonOrangtuaWali;
 
     /**
+     * @var \CalonPembayaranSekali
+     *
+     * @ORM\OneToMany(targetEntity="CalonPembayaranSekali", mappedBy="calonSiswa")
+     */
+    private $calonPembayaranSekali;
+
+    /**
+     * @var \CalonPembayaranRutin
+     *
+     * @ORM\OneToMany(targetEntity="CalonPembayaranRutin", mappedBy="calonSiswa")
+     */
+    private $calonPembayaranRutin;
+
+    /**
      * constructor
      *
      */
     public function __construct() {
         $this->calonOrangtuaWali = new ArrayCollection();
+        $this->calonPembayaranSekali = new ArrayCollection();
+        $this->calonPembayaranRutin = new ArrayCollection();
     }
 
     /**
@@ -1100,6 +1116,55 @@ class CalonSiswa
      */
     public function getCalonOrangtuaWali() {
         return $this->calonOrangtuaWali;
+    }
+
+    /**
+     * Get calonPembayaranSekali
+     *
+     * @return \Fast\SisdikBundle\CalonPembayaranSekali
+     */
+    public function getCalonPembayaranSekali() {
+        return $this->calonPembayaranSekali;
+
+    }
+
+    /**
+     * Get calonPembayaranSekali
+     *
+     * @return \Fast\SisdikBundle\CalonPembayaranSekali
+     */
+    public function getTotalNominalCalonPembayaranSekali() {
+        $jumlah = 0;
+
+        foreach ($this->getCalonPembayaranSekali() as $data) {
+            $jumlah += $data->getNominalPembayaran();
+        }
+
+        return $jumlah;
+    }
+
+    /**
+     * Get calonPembayaranRutin
+     *
+     * @return \Fast\SisdikBundle\CalonPembayaranRutin
+     */
+    public function getCalonPembayaranRutin() {
+        return $this->calonPembayaranRutin;
+    }
+
+    /**
+     * Get calonPembayaranRutin
+     *
+     * @return \Fast\SisdikBundle\CalonPembayaranRutin
+     */
+    public function getTotalNominalCalonPembayaranRutin() {
+        $jumlah = 0;
+
+        foreach ($this->getCalonPembayaranRutin() as $data) {
+            $jumlah += $data->getNominalPembayaran();
+        }
+
+        return $jumlah;
     }
 
     public function getWebcamPhotoDir() {

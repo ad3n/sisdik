@@ -64,6 +64,20 @@ class CalonSiswaPaymentController extends Controller
                 $querybuilder->setParameter('nomorpendaftaran', $searchdata['searchkey']);
             }
 
+            if ($searchdata['nopayment'] == true) {
+                $querybuilder->leftJoin('t.calonPembayaranSekali', 'cps');
+                $querybuilder->andWhere("cps.nominalPembayaran IS NULL");
+                $querybuilder->leftJoin('t.calonPembayaranRutin', 'cpr');
+                $querybuilder->andWhere("cpr.nominalPembayaran IS NULL");
+            }
+
+            if ($searchdata['todayinput'] == true) {
+                $querybuilder->andWhere("t.waktuSimpan BETWEEN :datefrom AND :dateto");
+                $currentdate = new \DateTime();
+                $querybuilder->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00');
+                $querybuilder->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59');
+            }
+
         }
 
         $paginator = $this->get('knp_paginator');

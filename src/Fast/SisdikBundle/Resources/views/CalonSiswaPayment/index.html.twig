@@ -20,6 +20,12 @@
 
 <div class="clearfix"></div>
 
+<div class="pull-right">
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
@@ -31,7 +37,7 @@
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
-    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
+    		<th>{{ 'label.paid.amount'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
@@ -42,16 +48,10 @@
     		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.application.number'|trans }}">{{ data.nomorPendaftaran }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
-    		<td data-title="{{ 'label.name.parent.or.guardian'|trans }}">
-    		{% if data.calonOrangtuaWali %}
-    		    {% for orangtua in data.calonOrangtuaWali %}
-    		        {% if orangtua %}
-    		            {% if orangtua.aktif == 1 %}
-        		            {{ orangtua.nama }}<br />
-        		        {% endif %}
-    		        {% endif %}
-    		    {% endfor %}
-    		{% endif %}
+    		<td data-title="{{ 'label.paid.amount'|trans }}">
+    		    {% set totalBayar = 0 %}
+    		    {% set totalBayar = data.totalNominalCalonPembayaranSekali + data.totalNominalCalonPembayaranRutin %}
+    		    {{ totalBayar|number_format(0, ',', '.') }}
 		    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_payment_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.detail'|trans }}" class="icon-arrow-right"></a>

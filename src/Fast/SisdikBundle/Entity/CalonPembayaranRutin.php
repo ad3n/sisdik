@@ -62,7 +62,7 @@ class CalonPembayaranRutin
     /**
      * @var \CalonSiswa
      *
-     * @ORM\ManyToOne(targetEntity="CalonSiswa")
+     * @ORM\ManyToOne(targetEntity="CalonSiswa", inversedBy="calonPembayaranRutin")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="calon_siswa_id", referencedColumnName="id", nullable=false)
      * })

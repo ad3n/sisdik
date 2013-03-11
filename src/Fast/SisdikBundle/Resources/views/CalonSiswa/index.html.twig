@@ -64,8 +64,10 @@
     		<td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ data.ponselOrangtuawali }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+    		{% if tahunaktif == data.tahunmasuk.tahun %}
         		<a href="{{ path('applicant_editregphoto', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
         		<a href="{{ path('applicant_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>
+    		{% endif %}
     		</td>
     	</tr>
     {% endfor %}

@@ -81,8 +81,6 @@ class CalonSiswaSearchType extends AbstractType
     }
 
     public function getName() {
-        // return '';
-        // return 'fast_sisdikbundle_siswasearchtype';
         return 'searchform';
     }
 }

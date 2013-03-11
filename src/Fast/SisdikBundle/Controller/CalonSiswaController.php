@@ -41,10 +41,10 @@ class CalonSiswaController extends Controller
 
         $user = $this->get('security.context')->getToken()->getUser();
 
-        $qb = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
+        $qb1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
-        $results = $qb->getQuery()->getResult();
+        $results = $qb1->getQuery()->getResult();
         $daftarTahunmasuk = array();
         foreach ($results as $entity) {
             if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
@@ -87,7 +87,8 @@ class CalonSiswaController extends Controller
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
-            'pagination' => $pagination, 'searchform' => $searchform->createView()
+                'pagination' => $pagination, 'searchform' => $searchform->createView(),
+                'tahunaktif' => $this->getTahunmasukPanitiaAktif(),
         );
     }
 
@@ -112,7 +113,8 @@ class CalonSiswaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'tahunaktif' => $this->getTahunmasukPanitiaAktif(),
         );
     }
 
@@ -202,6 +204,8 @@ class CalonSiswaController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
 
+        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+
         if (!$entity) {
             throw $this->createNotFoundException('Entity CalonSiswa tak ditemukan.');
         }
@@ -230,6 +234,8 @@ class CalonSiswaController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
 
+        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+
         if (!$entity) {
             throw $this->createNotFoundException('Entity CalonSiswa tak ditemukan.');
         }
@@ -249,7 +255,7 @@ class CalonSiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.applicant.updated',
                                                 array(
-                                                        '%name%' => $entity->getNamaLengkap(),
+                                                    '%name%' => $entity->getNamaLengkap(),
                                                 )));
 
             } catch (DBALException $e) {
@@ -320,6 +326,8 @@ class CalonSiswaController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
 
+        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+
         if (!$entity) {
             throw $this->createNotFoundException('Entity CalonSiswa tak ditemukan.');
         }
@@ -338,13 +346,15 @@ class CalonSiswaController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:CalonSiswa:editregphoto.html.twig")
      */
-    public function updateRegistrationAction(Request $request, $id) {
+    public function updateRegistrationPhotoAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
+
+        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity CalonSiswa tak ditemukan.');
@@ -364,7 +374,7 @@ class CalonSiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.applicant.regphoto.updated',
                                                 array(
-                                                        '%name%' => $entity->getNamaLengkap(),
+                                                    '%name%' => $entity->getNamaLengkap(),
                                                 )));
 
             } catch (DBALException $e) {
@@ -400,6 +410,8 @@ class CalonSiswaController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
 
+            $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+
             if (!$entity) {
                 throw $this->createNotFoundException('Entity CalonSiswa tak ditemukan.');
             }
@@ -413,7 +425,7 @@ class CalonSiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.applicant.deleted',
                                                 array(
-                                                        '%name%' => $entity->getNamaLengkap(),
+                                                    '%name%' => $entity->getNamaLengkap(),
                                                 )));
 
             } catch (DBALException $e) {
@@ -426,7 +438,7 @@ class CalonSiswaController extends Controller
                             $this->get('translator')
                                     ->trans('flash.applicant.fail.delete',
                                             array(
-                                                    '%name%' => $entity->getNamaLengkap(),
+                                                '%name%' => $entity->getNamaLengkap(),
                                             )));
         }
 
@@ -437,6 +449,31 @@ class CalonSiswaController extends Controller
         return $this->createFormBuilder(array(
                     'id' => $id
                 ))->add('id', 'hidden')->getForm();
+    }
+
+    private function getTahunmasukPanitiaAktif() {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $qb0 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
+                ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')->andWhere('t.aktif = 1')
+                ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
+        $results = $qb0->getQuery()->getResult();
+        foreach ($results as $entity) {
+            if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
+                $tahunaktif = $entity->getTahunmasuk()->getTahun();
+            }
+        }
+
+        return $tahunaktif;
+    }
+
+    private function verifyTahunmasuk($tahun) {
+        if ($this->getTahunmasukPanitiaAktif() != $tahun) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('cannot.alter.applicant.inactive.yearentry'));
+        }
     }
 
     private function setCurrentMenu() {
