@@ -9,9 +9,9 @@ FastSisdikBundle:
 #    pattern:  /
 #    defaults: { _controller: "FastSisdikBundle:Welcome:index" }
 
-_welcome:
-    pattern:  /
-    defaults: { _controller: "AcmeDemoBundle:Welcome:index" }
+#_welcome:
+#    pattern:  /
+#    defaults: { _controller: "AcmeDemoBundle:Welcome:index" }
 
 #AcmeBlogBundle:
 #    resource: "@AcmeBlogBundle/Controller/"
