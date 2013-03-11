@@ -1,4 +1,5 @@
 label:
+    active.committee: Panitia Aktif
     search.today.input: data input hari ini
     refresh.searchresult: segarkan hasil pencarian
     refresh: segarkan
@@ -484,13 +485,15 @@ exception:
     register.as.committee: User tidak terdaftar sebagai panitia PSB di tahun masuk manapun
     register.as.active.committee: User tidak terdaftar sebagai panitia PSB yang sedang aktif
     unique.applicant: Data calon siswa tahun masuk dan nomor pendaftaran tidak unik. Hubungi developer
+    cannot.alter.applicant.inactive.yearentry: Tidak bisa mengubah data calon siswa di tahun yang panitia PSB-nya tidak aktif
 
 shortinfo:
     password.mustequal: password harus sama
     username: username 
     checked: yang terpilih
     inselectedyear: dalam tahun terpilih
-    onlyoneactive: hanya satu tahun ajaran yang bisa aktif dalam satu waktu
+    onlyoneactive.year: hanya satu tahun ajaran yang bisa aktif dalam satu waktu
+    onlyoneactive.regcommittee: hanya satu panitia pendaftaran yang bisa aktif dalam satu waktu
     duplicate.schedule: Salin jadwal ke
     duplicate.classes: Salin kelas
     onlyforactiveyear: hanya untuk tahun aktif

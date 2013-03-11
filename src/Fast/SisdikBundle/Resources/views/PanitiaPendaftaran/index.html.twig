@@ -34,6 +34,7 @@
     	<tr>
     		<th>{{ 'label.yearentry.entry'|trans }}</th>
     		<th>{{ 'label.registration.committee.entry'|trans }}</th>
+    		<th>{{ 'label.active.committee'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
@@ -51,6 +52,18 @@
     		    {% endfor %}
     		{% endif %}
     		</td>
+    		<td data-title="{{ 'label.active.committee'|trans }}">
+    		    {% if data.aktif == 1 %}
+    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
+    		        {% endimage %}
+    	        {% else %}
+    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
+    		        {% endimage %}
+    		        <a href="{{ path('regcommittee_activate', {'id': data.id, 'page': pagination.paginationData.current}) }}">{{ 'label.activate'|trans }}</a>
+    		    {% endif %}
+    	    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('regcommittee_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('regcommittee_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
@@ -59,5 +72,8 @@
     {% endfor %}
     </tbody>
 </table>
+
+<p style="font-style: italic;">* {{ 'shortinfo.onlyoneactive.regcommittee'|trans }}</p>
+
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}

@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\Tahunmasuk;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Fast\SisdikBundle\Entity\User;
@@ -89,6 +90,53 @@ class PanitiaPendaftaranController extends Controller
     }
 
     /**
+     * Activate a panitia entity, and deactivate the rests.
+     *
+     * @Route("/{id}/activate", name="regcommittee_activate")
+     */
+    public function activateAction($id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
+        }
+
+        $results = $em->getRepository('FastSisdikBundle:Tahunmasuk')
+                ->findBy(array(
+                    'sekolah' => $sekolah->getId()
+                ));
+        $daftarTahunmasuk = array();
+        foreach ($results as $tahunmasuk) {
+            if (is_object($tahunmasuk) && $tahunmasuk instanceof Tahunmasuk) {
+                $daftarTahunmasuk[] = $tahunmasuk->getId();
+            }
+        }
+
+        $query = $em->createQueryBuilder()->update('FastSisdikBundle:PanitiaPendaftaran', 't')
+                ->set('t.aktif', '0')->where('t.tahunmasuk IN (?1)')->setParameter(1, $daftarTahunmasuk)
+                ->getQuery();
+        $query->execute();
+
+        $entity->setAktif(1);
+        $entity->setDaftarPersonil($entity->getDaftarPersonil());
+        $em->persist($entity);
+        $em->flush();
+
+        return $this
+                ->redirect(
+                        $this
+                                ->generateUrl('regcommittee',
+                                        array(
+                                            'page' => $this->getRequest()->get('page')
+                                        )));
+    }
+
+    /**
      * Displays a form to create a new PanitiaPendaftaran entity.
      *
      * @Route("/new", name="regcommittee_new")
@@ -127,7 +175,7 @@ class PanitiaPendaftaranController extends Controller
 
             try {
                 $em->persist($entity);
-                
+
                 // give user the necessary role
                 $daftarPersonil = $entity->getDaftarPersonil();
                 if ($daftarPersonil instanceof ArrayCollection) {
@@ -136,18 +184,18 @@ class PanitiaPendaftaranController extends Controller
                             if ($personil->getId() !== NULL) {
                                 $userManager = $this->container->get('fos_user.user_manager');
                                 $user = $userManager
-                                ->findUserBy(
-                                        array(
-                                                'id' => $personil->getId()
-                                        ));
-                
+                                        ->findUserBy(
+                                                array(
+                                                    'id' => $personil->getId()
+                                                ));
+
                                 $user->addRole('ROLE_PANITIA_PSB');
                                 $userManager->updateUser($user);
                             }
                         }
                     }
                 }
-                
+
                 $em->flush();
 
                 $this->get('session')
@@ -234,7 +282,7 @@ class PanitiaPendaftaranController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-            
+
             try {
                 $em->persist($entity);
 
@@ -355,7 +403,7 @@ class PanitiaPendaftaranController extends Controller
 
     /**
      * Get username through autocomplete box
-     * 
+     *
      * @param Request $request
      * @Route("/ajax/filterstudent", name="regcommittee_ajax_get_username")
      */
