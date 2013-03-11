@@ -481,7 +481,8 @@ exception:
     unique.fee.once: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.fee.recur: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.registration.committee: Tahun masuk %yearentry% telah ada dalam basis data
-    register.as.committee: User tidak terdaftar sebagai panitia PSB yang sedang aktif
+    register.as.committee: User tidak terdaftar sebagai panitia PSB di tahun masuk manapun
+    register.as.active.committee: User tidak terdaftar sebagai panitia PSB yang sedang aktif
     unique.applicant: Data calon siswa tahun masuk dan nomor pendaftaran tidak unik. Hubungi developer
 
 shortinfo:

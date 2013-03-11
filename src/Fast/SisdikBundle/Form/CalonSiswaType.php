@@ -56,7 +56,7 @@ class CalonSiswaType extends AbstractType
 
                 if (count($daftarTahunmasuk) == 0) {
                     throw new AccessDeniedException(
-                            $this->container->get('translator')->trans('exception.register.as.committee'));
+                            $this->container->get('translator')->trans('exception.register.as.active.committee'));
                 }
 
                 $querybuilder1 = $em->createQueryBuilder()->select('t')
