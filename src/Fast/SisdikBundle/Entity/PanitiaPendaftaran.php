@@ -32,6 +32,13 @@ class PanitiaPendaftaran
     private $panitia;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=0})
+     */
+    private $aktif = 0;
+
+    /**
      * @var \Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
@@ -44,7 +51,7 @@ class PanitiaPendaftaran
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -72,6 +79,27 @@ class PanitiaPendaftaran
     }
 
     /**
+     * Set aktif
+     *
+     * @param boolean $aktif
+     * @return PanitiaPendaftaran
+     */
+    public function setAktif($aktif) {
+        $this->aktif = $aktif;
+
+        return $this;
+    }
+
+    /**
+     * Get aktif
+     *
+     * @return boolean
+     */
+    public function getAktif() {
+        return $this->aktif;
+    }
+
+    /**
      * Set tahunmasuk
      *
      * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
@@ -86,7 +114,7 @@ class PanitiaPendaftaran
     /**
      * Get tahunmasuk
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
      */
     public function getTahunmasuk() {
         return $this->tahunmasuk;
@@ -104,7 +132,7 @@ class PanitiaPendaftaran
 
     /**
      * Get daftarPersonil
-     * 
+     *
      * @return \Doctrine\Common\Collections\ArrayCollection $daftarPersonil
      */
     public function getDaftarPersonil() {
@@ -127,7 +155,7 @@ class PanitiaPendaftaran
 
     /**
      * Set daftarPersonil
-     * 
+     *
      * @param ArrayCollection $daftarPersonil
      */
     public function setDaftarPersonil(ArrayCollection $daftarPersonil) {

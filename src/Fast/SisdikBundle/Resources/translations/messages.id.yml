@@ -1,4 +1,9 @@
 label:
+    search.today.input: data input hari ini
+    refresh.searchresult: segarkan hasil pencarian
+    refresh: segarkan
+    paid.amount: Jumlah Bayar
+    search.notpaid: belum bayar
     searchkey.name: Nama
     name.parent.or.guardian: Nama Orang Tua/Wali
     application.number: Nomor Pendaftaran
@@ -476,7 +481,7 @@ exception:
     unique.fee.once: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.fee.recur: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.registration.committee: Tahun masuk %yearentry% telah ada dalam basis data
-    register.as.committee: User tidak terdaftar sebagai panitia PSB di tahun masuk manapun
+    register.as.committee: User tidak terdaftar sebagai panitia PSB yang sedang aktif
     unique.applicant: Data calon siswa tahun masuk dan nomor pendaftaran tidak unik. Hubungi developer
 
 shortinfo:
