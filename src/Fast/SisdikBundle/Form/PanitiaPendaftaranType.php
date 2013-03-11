@@ -41,6 +41,22 @@ class PanitiaPendaftaranType extends AbstractType
                             ));
         }
 
+        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:User', 't')
+                ->where('t.sekolah = :sekolah')->andWhere('t.siswa IS NULL')
+                ->andWhere('t.sekolah IS NOT NULL')->orderBy('t.name')
+                ->setParameter('sekolah', $sekolah->getId());
+
+        $builder
+                ->add('ketuaPanitia', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:User', 'label' => 'label.committee.leader',
+                                'multiple' => false, 'expanded' => false, 'property' => 'name',
+                                'empty_value' => false, 'required' => true,
+                                'query_builder' => $querybuilder2,
+                                'attr' => array(
+                                    'class' => 'large'
+                                )
+                        ));
         $builder
                 ->add('daftarPersonil', 'collection',
                         array(

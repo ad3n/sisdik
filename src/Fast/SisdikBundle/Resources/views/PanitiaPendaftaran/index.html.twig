@@ -34,6 +34,7 @@
     	<tr>
     		<th>{{ 'label.yearentry.entry'|trans }}</th>
     		<th>{{ 'label.registration.committee.entry'|trans }}</th>
+    		<th>{{ 'label.committee.leader'|trans }}</th>
     		<th>{{ 'label.active.committee'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
@@ -41,7 +42,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.registration.committee.entry'|trans }}">
     		{% if data.panitia %}
     		    {% for personil in data.panitia %}
@@ -52,6 +53,7 @@
     		    {% endfor %}
     		{% endif %}
     		</td>
+    		<td data-title="{{ 'label.committee.leader'|trans }}">{% if data.ketuaPanitia %}{{ data.ketuaPanitia.name }}{% endif %}</td>
     		<td data-title="{{ 'label.active.committee'|trans }}">
     		    {% if data.aktif == 1 %}
     		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}

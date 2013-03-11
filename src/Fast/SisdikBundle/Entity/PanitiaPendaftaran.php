@@ -39,6 +39,16 @@ class PanitiaPendaftaran
     private $aktif = 0;
 
     /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="ketua_panitia_id", referencedColumnName="id", nullable=true)
+     * })
+     */
+    private $ketuaPanitia;
+
+    /**
      * @var \Tahunmasuk
      *
      * @ORM\ManyToOne(targetEntity="Tahunmasuk")
@@ -118,6 +128,27 @@ class PanitiaPendaftaran
      */
     public function getTahunmasuk() {
         return $this->tahunmasuk;
+    }
+
+    /**
+     * Set ketuaPanitia
+     *
+     * @param \Fast\SisdikBundle\Entity\User $ketuaPanitia
+     * @return PanitiaPendaftaran
+     */
+    public function setKetuaPanitia(\Fast\SisdikBundle\Entity\User $ketuaPanitia = null) {
+        $this->ketuaPanitia = $ketuaPanitia;
+
+        return $this;
+    }
+
+    /**
+     * Get ketuaPanitia
+     *
+     * @return \Fast\SisdikBundle\Entity\User
+     */
+    public function getKetuaPanitia() {
+        return $this->ketuaPanitia;
     }
 
     /**
