@@ -1,0 +1,92 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.payment.detail{% endtrans %}{% endblock %}
+{% block content %}
+
+<style type="text/css">
+.content .ui-multiselect {
+    line-height: 1em;
+}
+.ui-multiselect .actions {
+    padding: 0;
+    margin-top: 0;
+    border-radius: 0;
+}
+.multiselect {
+	width: 750px;
+	height: 250px;
+}
+</style>
+
+{% stylesheets '@FastSisdikBundle/Resources/public/css/ui.multiselect.css' %}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/multiselect/ui.multiselect.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<div class="row-fluid">
+    <div class="span12">
+        <dl>
+            <dt>{{ 'label.yearentry.entry'|trans }}</dt>
+            <dd>{% if entity.tahunmasuk is not null %}{{ entity.tahunmasuk.tahun }}{% endif %}</dd>
+            <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+            <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
+            <dt>{{ 'label.name.full'|trans }}</dt>
+            <dd>{{ entity.namaLengkap }}</dd>
+            <dt>{{ 'label.application.number'|trans }}</dt>
+            <dd>{{ entity.nomorPendaftaran }}</dd>
+            <dt>{{ 'label.gender'|trans }}</dt>
+            <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+            <dd>
+        		{% if entity.calonOrangtuaWali %}
+        		    {% for orangtua in entity.calonOrangtuaWali %}
+        		        {% if orangtua %}
+        		            {% if orangtua.aktif == 1 %}
+            		            {{ orangtua.nama }}<br />
+            		        {% endif %}
+        		        {% endif %}
+        		    {% endfor %}
+        		{% endif %}
+        	</dd>
+            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+            <dd>{{ entity.ponselOrangtuawali }}</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<div class="row-fluid">
+    <div class="span12">
+    <h3>Biaya Sekali Bayar</h3>
+    <form>
+        <select id="fees" class="multiselect" multiple="multiple" name="fees[]">
+        {% for fee in fees %}
+            <option id="fees-{{ fee.id }}" value="{{ fee.id }}">
+                {{ fee.jenisbiaya.nama }} ({{ fee.nominal|number_format(0, ',', '.') }})
+            </option>
+        {% endfor %}
+        </select>
+    </form>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	 $("#fees").multiselect();
+});
+</script>
+
+{% endblock content %}

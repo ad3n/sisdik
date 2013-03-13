@@ -44,8 +44,9 @@ class CalonSiswaPaymentController extends Controller
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:CalonSiswa', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'DESC')
-                ->addOrderBy('t.nomorPendaftaran', 'DESC')->setParameter('sekolah', $sekolah->getId());
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorPendaftaran', 'DESC')
+                ->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -112,6 +113,40 @@ class CalonSiswaPaymentController extends Controller
         return array(
             'entity' => $entity,
         );
+    }
+
+    /**
+     * Displays and adds/edits a once payment list.
+     *
+     * @Route("/{id}/once", name="applicant_payment_once")
+     * @Template("FastSisdikBundle:CalonSiswaPayment:payment.once.html.twig")
+     */
+    public function editOncePaymentAction($id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
+
+        $payments = $em->getRepository('FastSisdikBundle:CalonPembayaranSekali')
+                ->findBy(array(
+                    'calonSiswa' => $id
+                ));
+
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
+                ->where('t.tahunmasuk = :tahunmasuk')->andWhere('t.gelombang = :gelombang')
+                ->setParameter('tahunmasuk', $entity->getTahunmasuk()->getId())
+                ->setParameter('gelombang', $entity->getGelombang()->getId())->orderBy('t.urutan', 'ASC');
+        $fees = $querybuilder->getQuery()->getResult();
+
+        return array(
+            'entity' => $entity, 'payments' => $payments, 'fees' => $fees,
+        );
+    }
+
+    public function updateOncePaymentAction() {
+
     }
 
     private function setCurrentMenu() {
