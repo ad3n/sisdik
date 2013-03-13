@@ -16,7 +16,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * Jenisbiaya controller.
  *
  * @Route("/fee/type")
- * @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class JenisbiayaController extends Controller
 {

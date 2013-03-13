@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * JenisImbalan controller.
  *
  * @Route("/rewardtype")
- * @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class JenisImbalanController extends Controller
 {

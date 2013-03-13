@@ -104,6 +104,13 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'sms_template'
                             ));
 
+        }
+
+        if ($securityContext
+                ->isGranted(
+                        array(
+                                new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_BENDAHARA")')
+                        ))) {
             // fee
             $payment = $this->createDropdownMenuItem($menu, 'headings.fee');
 

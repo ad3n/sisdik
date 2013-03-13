@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * ImbalanPendaftaran controller.
  *
  * @Route("/rewardamount")
- * @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class ImbalanPendaftaranController extends Controller
 {

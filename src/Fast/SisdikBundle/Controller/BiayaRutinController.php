@@ -22,7 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * BiayaRutin controller.
  *
  * @Route("/fee/recur")
- * @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class BiayaRutinController extends Controller
 {

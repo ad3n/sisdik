@@ -22,7 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * BiayaSekali controller.
  *
  * @Route("/fee/once")
- * @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class BiayaSekaliController extends Controller
 {
