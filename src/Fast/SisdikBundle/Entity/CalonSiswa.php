@@ -1136,8 +1136,10 @@ class CalonSiswa
     public function getTotalNominalCalonPembayaranSekali() {
         $jumlah = 0;
 
-        foreach ($this->getCalonPembayaranSekali() as $data) {
-            $jumlah += $data->getNominalPembayaran();
+        foreach ($this->getCalonPembayaranSekali() as $pembayaran) {
+            foreach ($pembayaran->getCalonTransaksiPembayaranSekali() as $transaksi) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
         }
 
         return $jumlah;

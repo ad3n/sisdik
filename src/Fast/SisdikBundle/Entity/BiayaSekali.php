@@ -67,12 +67,19 @@ class BiayaSekali
      */
     private $jenisbiaya;
 
+    /**
+     * @var \CalonPembayaranSekali
+     *
+     * @ORM\OneToMany(targetEntity="CalonPembayaranSekali", mappedBy="biayaSekali")
+     */
+    private $calonPembayaranSekali;
+
 
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -88,14 +95,14 @@ class BiayaSekali
     public function setNominal($nominal)
     {
         $this->nominal = $nominal;
-    
+
         return $this;
     }
 
     /**
      * Get nominal
      *
-     * @return integer 
+     * @return integer
      */
     public function getNominal()
     {
@@ -111,14 +118,14 @@ class BiayaSekali
     public function setUrutan($urutan)
     {
         $this->urutan = $urutan;
-    
+
         return $this;
     }
 
     /**
      * Get urutan
      *
-     * @return integer 
+     * @return integer
      */
     public function getUrutan()
     {
@@ -134,14 +141,14 @@ class BiayaSekali
     public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null)
     {
         $this->gelombang = $gelombang;
-    
+
         return $this;
     }
 
     /**
      * Get gelombang
      *
-     * @return \Fast\SisdikBundle\Entity\Gelombang 
+     * @return \Fast\SisdikBundle\Entity\Gelombang
      */
     public function getGelombang()
     {
@@ -157,14 +164,14 @@ class BiayaSekali
     public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null)
     {
         $this->tahunmasuk = $tahunmasuk;
-    
+
         return $this;
     }
 
     /**
      * Get tahunmasuk
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
      */
     public function getTahunmasuk()
     {
@@ -180,14 +187,14 @@ class BiayaSekali
     public function setJenisbiaya(\Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya = null)
     {
         $this->jenisbiaya = $jenisbiaya;
-    
+
         return $this;
     }
 
     /**
      * Get jenisbiaya
      *
-     * @return \Fast\SisdikBundle\Entity\Jenisbiaya 
+     * @return \Fast\SisdikBundle\Entity\Jenisbiaya
      */
     public function getJenisbiaya()
     {

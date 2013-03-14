@@ -1,10 +1,12 @@
 label:
+    payment.description: Keterangan Bayar
     committee.leader: Ketua Panitia
     active.committee: Panitia Aktif
     search.today.input: data input hari ini
     refresh.searchresult: segarkan hasil pencarian
     refresh: segarkan
-    paid.amount: Jumlah Bayar
+    pay.amount: Jumlah Bayar
+    paid.amount: Jumlah Dibayar
     search.notpaid: belum bayar
     searchkey.name: Nama
     name.parent.or.guardian: Nama Orang Tua/Wali
@@ -411,6 +413,9 @@ flash:
         regphoto.updated: Foto pendaftaran calon siswa %name% berhasil diperbarui
         deleted: Calon siswa %name% berhasil dihapus
         fail.delete: Calon siswa %name% gagal dihapus
+    applicant.oncefee:
+        inserted: Pembayaran sekali bayar untuk %name% berhasil disimpan
+        updated: Pembayaran sekali bayar untuk %name% berhasil disimpan
 
 tip:
     edit: Ubah
@@ -487,6 +492,7 @@ exception:
     register.as.active.committee: User tidak terdaftar sebagai panitia PSB yang sedang aktif
     unique.applicant: Data calon siswa tahun masuk dan nomor pendaftaran tidak unik. Hubungi developer
     cannot.alter.applicant.inactive.yearentry: Tidak bisa mengubah data calon siswa di tahun yang panitia PSB-nya tidak aktif
+    unique.applicant.oncefee: Ada data calon siswa yang sama di pembayaran calon siswa. Hubungi developer
 
 shortinfo:
     password.mustequal: password harus sama

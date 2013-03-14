@@ -180,4 +180,9 @@ applicant_payment:
     resource: "@FastSisdikBundle/Controller/CalonSiswaPaymentController.php"
     type:     annotation
     prefix:   /
+    
+applicant_payment_oncefee:
+    resource: "@FastSisdikBundle/Controller/CalonPembayaranSekaliController.php"
+    type:     annotation
+    prefix:   /
 

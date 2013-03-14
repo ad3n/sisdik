@@ -154,6 +154,8 @@ applicant:
     detail: Detail Calon Siswa
     payment.list: Pembayaran Calon Siswa (Daftar Baru)
     payment.detail: Detail Pembayaran Calon Siswa
+    payment.oncefee: Pembayaran Biaya Sekali Calon Siswa
+    fee.once: Biaya Sekali Bayar
         
 
 

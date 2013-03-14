@@ -35,7 +35,7 @@ $.widget("ui.multiselect", {
 		animated: 'fast',
 		show: 'slideDown',
 		hide: 'slideUp',
-		dividerLocation: 0.5,
+		dividerLocation: 0.55,
 		availableFirst: false,
 		nodeComparator: function(node1,node2) {
 			var text1 = node1.text(),

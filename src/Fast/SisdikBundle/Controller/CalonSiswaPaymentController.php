@@ -104,7 +104,7 @@ class CalonSiswaPaymentController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
 
-        // TODO: ambil detail informasi pembayaran calon siswa
+        // TODO: tampilkan detail informasi pembayaran calon siswa
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity CalonSiswa tak ditemukan.');
@@ -113,40 +113,6 @@ class CalonSiswaPaymentController extends Controller
         return array(
             'entity' => $entity,
         );
-    }
-
-    /**
-     * Displays and adds/edits a once payment list.
-     *
-     * @Route("/{id}/once", name="applicant_payment_once")
-     * @Template("FastSisdikBundle:CalonSiswaPayment:payment.once.html.twig")
-     */
-    public function editOncePaymentAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('FastSisdikBundle:CalonSiswa')->find($id);
-
-        $payments = $em->getRepository('FastSisdikBundle:CalonPembayaranSekali')
-                ->findBy(array(
-                    'calonSiswa' => $id
-                ));
-
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
-                ->where('t.tahunmasuk = :tahunmasuk')->andWhere('t.gelombang = :gelombang')
-                ->setParameter('tahunmasuk', $entity->getTahunmasuk()->getId())
-                ->setParameter('gelombang', $entity->getGelombang()->getId())->orderBy('t.urutan', 'ASC');
-        $fees = $querybuilder->getQuery()->getResult();
-
-        return array(
-            'entity' => $entity, 'payments' => $payments, 'fees' => $fees,
-        );
-    }
-
-    public function updateOncePaymentAction() {
-
     }
 
     private function setCurrentMenu() {

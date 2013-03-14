@@ -1,0 +1,30 @@
+CalonTransaksiPembayaranSekali:
+    type: entity
+    table: calon_transaksi_pembayaran_sekali
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nominalPembayaran:
+            type: bigint
+            nullable: true
+            column: nominal_pembayaran
+        waktuSimpan:
+            type: datetime
+            nullable: true
+            column: waktu_simpan
+    manyToOne:
+        calonPembayaranSekali:
+            targetEntity: CalonPembayaranSekali
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                calon_pembayaran_sekali_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
