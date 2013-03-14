@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 use Fast\SisdikBundle\Entity\CalonTransaksiPembayaranSekali;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -87,9 +89,13 @@ class CalonPembayaranSekaliController extends Controller
 
         $form = $this->createForm(new CalonPembayaranSekaliType($this->container, $cid), $entity);
 
+        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
+        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
                 'calonSiswa' => $em->getRepository('FastSisdikBundle:CalonSiswa')->find($cid),
+                'currencySymbol' => $currencySymbol,
         );
     }
 
@@ -142,8 +148,12 @@ class CalonPembayaranSekaliController extends Controller
                                             )));
         }
 
+        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
+        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+
         return array(
-            'entity' => $entity, 'form' => $form->createView(), 'calonSiswa' => $calonSiswa,
+                'entity' => $entity, 'form' => $form->createView(), 'calonSiswa' => $calonSiswa,
+                'currencySymbol' => $currencySymbol,
         );
     }
 
@@ -169,9 +179,13 @@ class CalonPembayaranSekaliController extends Controller
 
         $editForm = $this->createForm(new CalonPembayaranSekaliType($this->container, $cid), $entity);
 
+        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
+        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'calonSiswa' => $em->getRepository('FastSisdikBundle:CalonSiswa')->find($cid),
+                'currencySymbol' => $currencySymbol,
         );
     }
 
@@ -228,8 +242,12 @@ class CalonPembayaranSekaliController extends Controller
                                             )));
         }
 
+        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
+        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+
         return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(), 'calonSiswa' => $calonSiswa,
+                'entity' => $entity, 'edit_form' => $editForm->createView(), 'calonSiswa' => $calonSiswa,
+                'currencySymbol' => $currencySymbol,
         );
     }
 

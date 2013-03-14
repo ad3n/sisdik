@@ -61,6 +61,9 @@
     <h4>{{ 'applicant.fee.once'|trans({}, 'headings') }}</h4>
     <form action="{{ path('applicant_payment_oncefee_update', { 'cid': calonSiswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
         {{ form_widget(edit_form.daftarBiayaSekali, { 'attr': {'style': 'width: 750px; height: 230px;'} }) }}
+        <div id="payment-info" style="margin-bottom: 18px;">
+            {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol }}. <span id="fee-amount"></span></b>
+        </div>
         {% for transaksi in edit_form.calonTransaksiPembayaranSekali %}
             {% if loop.length > 1 %}
                 {% if not loop.last %}
@@ -117,8 +120,36 @@
 
 <div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
+var total = 0;
+var amount;
+
 $(document).ready(function() {
-	 $(".multiselect").multiselect();
+    $(".multiselect option:selected").text(function(n, currenttext) {
+        var num = 0;
+
+        str = currenttext.split('.').join('');
+        num = str.match(/\d+/);
+        total += parseInt(num);
+    });
+    amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    $("#fee-amount").text(amount);
+
+    $(".multiselect").multiselect();
+    $(".multiselect").change(function() {
+        total = 0;
+
+        $(".multiselect option:selected").text(function(n, currenttext) {
+            var num = 0;
+
+            str = currenttext.split('.').join('');
+            num = str.match(/\d+/);
+            total += parseInt(num);
+        });
+
+        amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+
+        $("#fee-amount").text(amount);
+    });
 });
 </script>
 

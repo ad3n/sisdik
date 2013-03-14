@@ -523,6 +523,7 @@ shortinfo:
         Data yang akan disimpan ada di dalam file berikut <a href="%path%">%filename%</a>.<br />
         Setelah pasti bahwa isinya valid dan sesuai keinginan, lanjutkan proses penyimpanan ke database.<br />
     capturefirst: Ambil terlebih dahulu gambar, baru klik tombol simpan
+    total.payables: Total biaya yg harus dibayar 
     
 alert:
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
