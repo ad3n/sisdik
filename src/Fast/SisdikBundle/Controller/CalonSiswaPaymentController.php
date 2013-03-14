@@ -69,8 +69,10 @@ class CalonSiswaPaymentController extends Controller
                 $querybuilder->leftJoin('t.calonPembayaranSekali', 'cps');
                 $querybuilder->leftJoin('cps.calonTransaksiPembayaranSekali', 'ctps');
                 $querybuilder->andWhere("ctps.nominalPembayaran IS NULL");
-                // $querybuilder->leftJoin('t.calonPembayaranRutin', 'cpr');
-                // $querybuilder->andWhere("cpr.nominalPembayaran IS NULL");
+
+                $querybuilder->leftJoin('t.calonPembayaranRutin', 'cpr');
+                $querybuilder->leftJoin('cpr.calonTransaksiPembayaranRutin', 'ctpr');
+                $querybuilder->andWhere("ctpr.nominalPembayaran IS NULL");
             }
 
             if ($searchdata['todayinput'] == true) {

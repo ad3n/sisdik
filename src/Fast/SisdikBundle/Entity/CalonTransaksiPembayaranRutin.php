@@ -5,12 +5,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * CalonTransaksiPembayaranSekali
+ * CalonTransaksiPembayaranRutin
  *
- * @ORM\Table(name="calon_transaksi_pembayaran_sekali")
+ * @ORM\Table(name="calon_transaksi_pembayaran_rutin")
  * @ORM\Entity
  */
-class CalonTransaksiPembayaranSekali
+class CalonTransaksiPembayaranRutin
 {
     /**
      * @var integer
@@ -52,14 +52,14 @@ class CalonTransaksiPembayaranSekali
     private $waktuSimpan;
 
     /**
-     * @var \CalonPembayaranSekali
+     * @var \CalonPembayaranRutin
      *
-     * @ORM\ManyToOne(targetEntity="CalonPembayaranSekali", inversedBy="calonTransaksiPembayaranSekali")
+     * @ORM\ManyToOne(targetEntity="CalonPembayaranRutin", inversedBy="calonTransaksiPembayaranRutin")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="calon_pembayaran_sekali_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="calon_pembayaran_rutin_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $calonPembayaranSekali;
+    private $calonPembayaranRutin;
 
     /**
      * Get id
@@ -74,7 +74,7 @@ class CalonTransaksiPembayaranSekali
      * Set nominalPembayaran
      *
      * @param integer $nominalPembayaran
-     * @return CalonTransaksiPembayaranSekali
+     * @return CalonTransaksiPembayaranRutin
      */
     public function setNominalPembayaran($nominalPembayaran) {
         $this->nominalPembayaran = $nominalPembayaran;
@@ -95,7 +95,7 @@ class CalonTransaksiPembayaranSekali
      * Set keterangan
      *
      * @param string $keterangan
-     * @return CalonPembayaranSekali
+     * @return CalonTransaksiPembayaranRutin
      */
     public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
@@ -116,7 +116,7 @@ class CalonTransaksiPembayaranSekali
      * Set nomorTransaksi
      *
      * @param string $nomorTransaksi
-     * @return CalonPembayaranSekali
+     * @return CalonTransaksiPembayaranRutin
      */
     public function setNomorTransaksi($nomorTransaksi) {
         $this->nomorTransaksi = $nomorTransaksi;
@@ -137,7 +137,7 @@ class CalonTransaksiPembayaranSekali
      * Set waktuSimpan
      *
      * @param \DateTime $waktuSimpan
-     * @return CalonTransaksiPembayaranSekali
+     * @return CalonTransaksiPembayaranRutin
      */
     public function setWaktuSimpan($waktuSimpan) {
         $this->waktuSimpan = $waktuSimpan;
@@ -155,24 +155,24 @@ class CalonTransaksiPembayaranSekali
     }
 
     /**
-     * Set calonPembayaranSekali
+     * Set calonPembayaranRutin
      *
-     * @param \Fast\SisdikBundle\Entity\CalonPembayaranSekali $calonPembayaranSekali
-     * @return CalonTransaksiPembayaranSekali
+     * @param \Fast\SisdikBundle\Entity\CalonPembayaranRutin $calonPembayaranRutin
+     * @return CalonTransaksiPembayaranRutin
      */
-    public function setCalonPembayaranSekali(
-            \Fast\SisdikBundle\Entity\CalonPembayaranSekali $calonPembayaranSekali = null) {
-        $this->calonPembayaranSekali = $calonPembayaranSekali;
+    public function setCalonPembayaranRutin(
+            \Fast\SisdikBundle\Entity\CalonPembayaranRutin $calonPembayaranRutin = null) {
+        $this->calonPembayaranRutin = $calonPembayaranRutin;
 
         return $this;
     }
 
     /**
-     * Get calonPembayaranSekali
+     * Get calonPembayaranRutin
      *
-     * @return \Fast\SisdikBundle\Entity\CalonPembayaranSekali
+     * @return \Fast\SisdikBundle\Entity\CalonPembayaranRutin
      */
-    public function getCalonPembayaranSekali() {
-        return $this->calonPembayaranSekali;
+    public function getCalonPembayaranRutin() {
+        return $this->calonPembayaranRutin;
     }
 }

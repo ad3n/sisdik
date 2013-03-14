@@ -84,6 +84,21 @@ BEGIN
 	SET NEW.keterangan = OLD.keterangan;
 END";
 
+    private $trigger10 = "CREATE TRIGGER `befins_calontpr`
+BEFORE INSERT ON `calon_transaksi_pembayaran_rutin`
+FOR EACH ROW
+BEGIN
+	SET NEW.waktu_simpan = NOW();
+END";
+
+    private $trigger11 = "CREATE TRIGGER `befup_calontpr`
+BEFORE UPDATE ON `calon_transaksi_pembayaran_rutin`
+FOR EACH ROW
+BEGIN
+	SET NEW.nominal_pembayaran = OLD.nominal_pembayaran;
+	SET NEW.keterangan = OLD.keterangan;
+END";
+
     public function addtrigger() {
         $this->addSql($this->trigger1);
         $this->addSql($this->trigger2);
@@ -94,6 +109,8 @@ END";
         $this->addSql($this->trigger7);
         $this->addSql($this->trigger8);
         $this->addSql($this->trigger9);
+        $this->addSql($this->trigger10);
+        $this->addSql($this->trigger11);
     }
 
     private function removeTrigger() {
@@ -106,5 +123,7 @@ END";
         $this->addSql("DROP TRIGGER IF EXISTS `befup_calonsiswa`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befins_calontps`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befup_calontps`;");
+        $this->addSql("DROP TRIGGER IF EXISTS `befins_calontpr`;");
+        $this->addSql("DROP TRIGGER IF EXISTS `befup_calontpr`;");
     }
 }

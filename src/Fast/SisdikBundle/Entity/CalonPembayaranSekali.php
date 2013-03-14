@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     @ORM\UniqueConstraint(name="calon_siswa_id_UNIQUE", columns={"calon_siswa_id"})
  * })
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class CalonPembayaranSekali
 {
@@ -246,13 +245,5 @@ class CalonPembayaranSekali
      */
     public function getCalonTransaksiPembayaranSekali() {
         return $this->calonTransaksiPembayaranSekali;
-    }
-
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preSave() {
-        // ??
     }
 }
