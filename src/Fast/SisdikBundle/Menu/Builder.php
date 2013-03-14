@@ -109,34 +109,34 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                                new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_BENDAHARA")')
+                            new Expression('hasAnyRole("ROLE_BENDAHARA")')
                         ))) {
-            // fee
-            $payment = $this->createDropdownMenuItem($menu, 'headings.fee');
+            // fees
+            $fees = $this->createDropdownMenuItem($menu, 'headings.fee');
 
-            $payment
+            $fees
                     ->addChild('links.fee.type',
                             array(
                                 'route' => 'fee_type'
                             ));
-            $payment
+            $fees
                     ->addChild('links.fee.once',
                             array(
                                 'route' => 'fee_once'
                             ));
-            $payment
+            $fees
                     ->addChild('links.fee.recur',
                             array(
                                 'route' => 'fee_recur'
                             ));
 
-            $payment
+            $fees
                     ->addChild('links.reward.type',
                             array(
                                 'route' => 'rewardtype'
                             ));
 
-            $payment
+            $fees
                     ->addChild('links.reward.amount',
                             array(
                                 'route' => 'rewardamount'
@@ -144,7 +144,7 @@ class Builder extends AbstractNavbarMenuBuilder
 
         }
 
-        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_BENDAHARA", "ROLE_PANITIA_PSB")';
+        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB")';
         if ($securityContext
                 ->isGranted(
                         array(
@@ -162,18 +162,6 @@ class Builder extends AbstractNavbarMenuBuilder
                         ->addChild('links.registration',
                                 array(
                                     'route' => 'applicant'
-                                ));
-            }
-
-            if ($securityContext
-                    ->isGranted(
-                            array(
-                                new Expression('hasRole("ROLE_BENDAHARA")')
-                            ))) {
-                $academic
-                        ->addChild('links.registration.payment',
-                                array(
-                                    'route' => 'applicant_payment'
                                 ));
             }
 
@@ -219,6 +207,22 @@ class Builder extends AbstractNavbarMenuBuilder
                                     'route' => 'data_student'
                                 ));
             }
+        }
+
+        if ($securityContext
+                ->isGranted(
+                        array(
+                            new Expression('hasAnyRole("ROLE_KETUA_PANITIA_PSB", "ROLE_BENDAHARA")')
+                        ))) {
+            // payments
+            $payments = $this->createDropdownMenuItem($menu, 'headings.payments');
+
+            $payments
+                    ->addChild('links.applicant.payment',
+                            array(
+                                'route' => 'applicant_payment'
+                            ));
+
         }
 
         if ($securityContext

@@ -2,11 +2,12 @@ headings:
     setting: Pengaturan
     student: Siswa
     presence: Kehadiran
-    fee: Keuangan
+    fee: Biaya
     academic: Akademik
+    payments: Pembayaran
 
 links:
-    registration.payment: Pembayaran Calon Siswa
+    applicant.payment: Calon Siswa
     studentspresence: Kehadiran Siswa
     attendancemachine: Mesin Kehadiran
     registration: Pendaftaran

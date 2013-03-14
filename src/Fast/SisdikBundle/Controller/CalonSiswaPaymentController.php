@@ -67,9 +67,10 @@ class CalonSiswaPaymentController extends Controller
 
             if ($searchdata['nopayment'] == true) {
                 $querybuilder->leftJoin('t.calonPembayaranSekali', 'cps');
-                $querybuilder->andWhere("cps.nominalPembayaran IS NULL");
-                $querybuilder->leftJoin('t.calonPembayaranRutin', 'cpr');
-                $querybuilder->andWhere("cpr.nominalPembayaran IS NULL");
+                $querybuilder->leftJoin('cps.calonTransaksiPembayaranSekali', 'ctps');
+                $querybuilder->andWhere("ctps.nominalPembayaran IS NULL");
+                // $querybuilder->leftJoin('t.calonPembayaranRutin', 'cpr');
+                // $querybuilder->andWhere("cpr.nominalPembayaran IS NULL");
             }
 
             if ($searchdata['todayinput'] == true) {
@@ -117,7 +118,7 @@ class CalonSiswaPaymentController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.registration.payment']->setCurrent(true);
+        $menu['headings.payments']['links.applicant.payment']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

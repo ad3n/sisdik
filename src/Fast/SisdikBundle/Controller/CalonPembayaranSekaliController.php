@@ -235,7 +235,7 @@ class CalonPembayaranSekaliController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.registration.payment']->setCurrent(true);
+        $menu['headings.payments']['links.applicant.payment']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {
