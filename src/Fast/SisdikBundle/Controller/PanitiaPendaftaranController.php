@@ -177,12 +177,12 @@ class PanitiaPendaftaranController extends Controller
                 $em->persist($entity);
 
                 // give user the necessary role
+                $userManager = $this->container->get('fos_user.user_manager');
                 $daftarPersonil = $entity->getDaftarPersonil();
                 if ($daftarPersonil instanceof ArrayCollection) {
                     foreach ($daftarPersonil as $personil) {
                         if ($personil instanceof Personil) {
                             if ($personil->getId() !== NULL) {
-                                $userManager = $this->container->get('fos_user.user_manager');
                                 $user = $userManager
                                         ->findUserBy(
                                                 array(
@@ -195,6 +195,14 @@ class PanitiaPendaftaranController extends Controller
                         }
                     }
                 }
+
+                $user = $userManager
+                        ->findUserBy(
+                                array(
+                                    'id' => $entity->getKetuaPanitia()->getId()
+                                ));
+                $user->addRole('ROLE_KETUA_PANITIA_PSB');
+                $userManager->updateUser($user);
 
                 $em->flush();
 
@@ -287,12 +295,12 @@ class PanitiaPendaftaranController extends Controller
                 $em->persist($entity);
 
                 // give user the necessary role
+                $userManager = $this->container->get('fos_user.user_manager');
                 $daftarPersonil = $entity->getDaftarPersonil();
                 if ($daftarPersonil instanceof ArrayCollection) {
                     foreach ($daftarPersonil as $personil) {
                         if ($personil instanceof Personil) {
                             if ($personil->getId() !== NULL) {
-                                $userManager = $this->container->get('fos_user.user_manager');
                                 $user = $userManager
                                         ->findUserBy(
                                                 array(
@@ -305,6 +313,14 @@ class PanitiaPendaftaranController extends Controller
                         }
                     }
                 }
+
+                $user = $userManager
+                        ->findUserBy(
+                                array(
+                                    'id' => $entity->getKetuaPanitia()->getId()
+                                ));
+                $user->addRole('ROLE_KETUA_PANITIA_PSB');
+                $userManager->updateUser($user);
 
                 $em->flush();
 
