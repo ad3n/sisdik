@@ -73,7 +73,8 @@ class SettingsUserController extends Controller
             $querybuilder->andWhere("u.sekolah IS NULL");
         } else {
             $querybuilder->leftJoin("u.sekolah", 't2');
-            $querybuilder->where("u.sekolah = '$filter'");
+            $querybuilder->andWhere("u.sekolah = :sekolah");
+            $querybuilder->setParameter(':sekolah', $filter);
         }
 
         $paginator = $this->get('knp_paginator');
