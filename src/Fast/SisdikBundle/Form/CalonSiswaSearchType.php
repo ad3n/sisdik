@@ -34,7 +34,8 @@ class CalonSiswaSearchType extends AbstractType
             $daftarTahunmasuk = array();
             foreach ($results as $entity) {
                 if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                    if (is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia())) {
+                    if ((is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia()))
+                            || $entity->getKetuaPanitia()->getId() == $user->getId()) {
                         $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
                     }
                 }

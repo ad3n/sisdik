@@ -47,8 +47,9 @@ class CalonSiswaType extends AbstractType
                 $daftarTahunmasuk = array();
                 foreach ($results as $entity) {
                     if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                        if (is_array($entity->getPanitia())
-                                && in_array($user->getId(), $entity->getPanitia())) {
+                        if ((is_array($entity->getPanitia())
+                                && in_array($user->getId(), $entity->getPanitia()))
+                                || $entity->getKetuaPanitia()->getId() == $user->getId()) {
                             $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
                         }
                     }
@@ -56,7 +57,8 @@ class CalonSiswaType extends AbstractType
 
                 if (count($daftarTahunmasuk) == 0) {
                     throw new AccessDeniedException(
-                            $this->container->get('translator')->trans('exception.register.as.active.committee'));
+                            $this->container->get('translator')
+                                    ->trans('exception.register.as.active.committee'));
                 }
 
                 $querybuilder1 = $em->createQueryBuilder()->select('t')
