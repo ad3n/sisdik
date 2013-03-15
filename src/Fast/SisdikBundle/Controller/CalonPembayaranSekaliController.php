@@ -89,13 +89,9 @@ class CalonPembayaranSekaliController extends Controller
 
         $form = $this->createForm(new CalonPembayaranSekaliType($this->container, $cid), $entity);
 
-        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
-        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
-
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
                 'calonSiswa' => $em->getRepository('FastSisdikBundle:CalonSiswa')->find($cid),
-                'currencySymbol' => $currencySymbol,
         );
     }
 
@@ -148,12 +144,8 @@ class CalonPembayaranSekaliController extends Controller
                                             )));
         }
 
-        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
-        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
-
         return array(
-                'entity' => $entity, 'form' => $form->createView(), 'calonSiswa' => $calonSiswa,
-                'currencySymbol' => $currencySymbol,
+            'entity' => $entity, 'form' => $form->createView(), 'calonSiswa' => $calonSiswa,
         );
     }
 
@@ -179,13 +171,9 @@ class CalonPembayaranSekaliController extends Controller
 
         $editForm = $this->createForm(new CalonPembayaranSekaliType($this->container, $cid), $entity);
 
-        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
-        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
-
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'calonSiswa' => $em->getRepository('FastSisdikBundle:CalonSiswa')->find($cid),
-                'currencySymbol' => $currencySymbol,
         );
     }
 
@@ -242,12 +230,8 @@ class CalonPembayaranSekaliController extends Controller
                                             )));
         }
 
-        $formatter = new \NumberFormatter($this->getRequest()->getLocale(), \NumberFormatter::CURRENCY);
-        $currencySymbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
-
         return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(), 'calonSiswa' => $calonSiswa,
-                'currencySymbol' => $currencySymbol,
+            'entity' => $entity, 'edit_form' => $editForm->createView(), 'calonSiswa' => $calonSiswa,
         );
     }
 

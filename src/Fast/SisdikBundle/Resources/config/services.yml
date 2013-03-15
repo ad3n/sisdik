@@ -64,3 +64,8 @@ services:
         tags:
             -  { name: twig.extension }
 
+    fast.twig.fast_extension:
+        class: Fast\SisdikBundle\Twig\FastExtension
+        tags:
+            - { name: twig.extension }
+
