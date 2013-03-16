@@ -3,7 +3,10 @@
 namespace Application\Migrations;
 use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
 
-class triggers extends AbstractMigration
+/**
+ * Auto-generated Migration: Please modify to your need!
+ */
+class Version20130316142801 extends AbstractMigration
 {
     private $trigger1 = "CREATE TRIGGER `befins_calonpr`
 BEFORE INSERT ON `calon_pembayaran_rutin`
@@ -130,3 +133,4 @@ END";
         $this->addSql("DROP TRIGGER IF EXISTS `befup_calontpr`;");
     }
 }
+
