@@ -1,6 +1,9 @@
 <?php
 
-class trigger
+namespace Application\Migrations;
+use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
+
+class triggers extends AbstractMigration
 {
     private $trigger1 = "CREATE TRIGGER `befins_calonpr`
 BEFORE INSERT ON `calon_pembayaran_rutin`
@@ -99,7 +102,7 @@ BEGIN
 	SET NEW.keterangan = OLD.keterangan;
 END";
 
-    public function addtrigger() {
+    public function up(Schema $schema) {
         $this->addSql($this->trigger1);
         $this->addSql($this->trigger2);
         $this->addSql($this->trigger3);
@@ -113,7 +116,7 @@ END";
         $this->addSql($this->trigger11);
     }
 
-    private function removeTrigger() {
+    public function down(Schema $schema) {
         $this->addSql("DROP TRIGGER IF EXISTS `befins_calonpr`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befins_calonps`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befins_calonsiswa`;");
