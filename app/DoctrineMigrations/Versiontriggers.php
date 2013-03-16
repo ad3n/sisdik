@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your need!
  */
-class Version20130316142801 extends AbstractMigration
+class Versiontriggers extends AbstractMigration
 {
     private $trigger1 = "CREATE TRIGGER `befins_calonpr`
 BEFORE INSERT ON `calon_pembayaran_rutin`
