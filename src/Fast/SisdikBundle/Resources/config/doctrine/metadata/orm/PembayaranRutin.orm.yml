@@ -1,47 +1,42 @@
 PembayaranRutin:
-  type: entity
-  table: pembayaran_rutin
-  fields:
-    id:
-      id: true
-      type: bigint
-      nullable: false
-      generator:
-        strategy: IDENTITY
-    nominalPembayaran:
-      type: bigint
-      nullable: true
-      column: nominal_pembayaran
-    keterangan:
-      type: string
-      length: 300
-      fixed: false
-      nullable: true
-    waktuCatat:
-      type: datetime
-      nullable: true
-      column: waktu_catat
-    waktuUbah:
-      type: datetime
-      nullable: true
-      column: waktu_ubah
-  manyToOne:
-    siswa:
-      targetEntity: Siswa
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        siswa_id:
-          referencedColumnName: id
-      orphanRemoval: false
-    biayaRutin:
-      targetEntity: BiayaRutin
-      cascade: {  }
-      mappedBy: null
-      inversedBy: null
-      joinColumns:
-        biaya_rutin_id:
-          referencedColumnName: id
-      orphanRemoval: false
-  lifecycleCallbacks: {  }
+    type: entity
+    table: pembayaran_rutin
+    fields:
+        id:
+            id: true
+            type: bigint
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        daftarBiayaRutin:
+            type: text
+            nullable: true
+            column: daftar_biaya_rutin
+        nominalTotal:
+            type: bigint
+            nullable: true
+            column: nominal_total
+        keterangan:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+        waktuSimpan:
+            type: datetime
+            nullable: true
+            column: waktu_simpan
+        waktuUbah:
+            type: datetime
+            nullable: true
+            column: waktu_ubah
+    manyToOne:
+        siswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

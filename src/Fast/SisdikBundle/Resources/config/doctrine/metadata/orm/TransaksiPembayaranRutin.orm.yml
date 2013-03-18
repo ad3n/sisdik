@@ -1,42 +1,41 @@
-PembayaranSekali:
+TransaksiPembayaranRutin:
     type: entity
-    table: pembayaran_sekali
+    table: transaksi_pembayaran_rutin
     fields:
         id:
             id: true
-            type: bigint
+            type: integer
+            unsigned: false
             nullable: false
             generator:
                 strategy: IDENTITY
-        daftarBiayaSekali:
-            type: text
-            nullable: true
-            column: daftar_biaya_sekali
-        nominalTotal:
+        nominalPembayaran:
             type: bigint
             nullable: true
-            column: nominal_total
+            column: nominal_pembayaran
         keterangan:
             type: string
             length: 300
             fixed: false
             nullable: true
+        nomorTransaksi:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: nomor_transaksi
         waktuSimpan:
             type: datetime
             nullable: true
             column: waktu_simpan
-        waktuUbah:
-            type: datetime
-            nullable: true
-            column: waktu_ubah
     manyToOne:
-        siswa:
-            targetEntity: Siswa
+        pembayaranRutin:
+            targetEntity: PembayaranRutin
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                siswa_id:
+                pembayaran_rutin_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

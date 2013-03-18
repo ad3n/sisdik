@@ -1,8 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints;
 
 /**
  * OrangtuaWali
@@ -45,16 +45,23 @@ class OrangtuaWali
     /**
      * @var string
      *
+     * @ORM\Column(name="ponsel", type="string", length=100, nullable=true)
+     */
+    private $ponsel;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
      */
     private $kewarganegaraan;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="peran", type="integer", nullable=true)
+     * @ORM\Column(name="hubungan_dengan_siswa", type="string", length=100, nullable=true)
      */
-    private $peran;
+    private $hubunganDenganSiswa;
 
     /**
      * @var string
@@ -99,24 +106,28 @@ class OrangtuaWali
     private $keterangan;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
+     */
+    private $aktif = 1;
+
+    /**
      * @var \Siswa
      *
-     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="orangtuaWali")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -126,20 +137,18 @@ class OrangtuaWali
      * @param string $nama
      * @return OrangtuaWali
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -149,20 +158,18 @@ class OrangtuaWali
      * @param string $tempatLahir
      * @return OrangtuaWali
      */
-    public function setTempatLahir($tempatLahir)
-    {
+    public function setTempatLahir($tempatLahir) {
         $this->tempatLahir = $tempatLahir;
-    
+
         return $this;
     }
 
     /**
      * Get tempatLahir
      *
-     * @return string 
+     * @return string
      */
-    public function getTempatLahir()
-    {
+    public function getTempatLahir() {
         return $this->tempatLahir;
     }
 
@@ -172,21 +179,40 @@ class OrangtuaWali
      * @param \DateTime $tanggalLahir
      * @return OrangtuaWali
      */
-    public function setTanggalLahir($tanggalLahir)
-    {
+    public function setTanggalLahir($tanggalLahir) {
         $this->tanggalLahir = $tanggalLahir;
-    
+
         return $this;
     }
 
     /**
      * Get tanggalLahir
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getTanggalLahir()
-    {
+    public function getTanggalLahir() {
         return $this->tanggalLahir;
+    }
+
+    /**
+     * Set ponsel
+     *
+     * @param string $ponsel
+     * @return OrangtuaWali
+     */
+    public function setPonsel($ponsel) {
+        $this->ponsel = $ponsel;
+
+        return $this;
+    }
+
+    /**
+     * Get ponsel
+     *
+     * @return string
+     */
+    public function getPonsel() {
+        return $this->ponsel;
     }
 
     /**
@@ -195,44 +221,40 @@ class OrangtuaWali
      * @param string $kewarganegaraan
      * @return OrangtuaWali
      */
-    public function setKewarganegaraan($kewarganegaraan)
-    {
+    public function setKewarganegaraan($kewarganegaraan) {
         $this->kewarganegaraan = $kewarganegaraan;
-    
+
         return $this;
     }
 
     /**
      * Get kewarganegaraan
      *
-     * @return string 
+     * @return string
      */
-    public function getKewarganegaraan()
-    {
+    public function getKewarganegaraan() {
         return $this->kewarganegaraan;
     }
 
     /**
-     * Set peran
+     * Set hubunganDenganSiswa
      *
-     * @param integer $peran
+     * @param string $hubunganDenganSiswa
      * @return OrangtuaWali
      */
-    public function setPeran($peran)
-    {
-        $this->peran = $peran;
-    
+    public function setHubunganDenganSiswa($hubunganDenganSiswa) {
+        $this->hubunganDenganSiswa = $hubunganDenganSiswa;
+
         return $this;
     }
 
     /**
-     * Get peran
+     * Get hubunganDenganSiswa
      *
-     * @return integer 
+     * @return string
      */
-    public function getPeran()
-    {
-        return $this->peran;
+    public function getHubunganDenganSiswa() {
+        return $this->hubunganDenganSiswa;
     }
 
     /**
@@ -241,20 +263,18 @@ class OrangtuaWali
      * @param string $pendidikanTertinggi
      * @return OrangtuaWali
      */
-    public function setPendidikanTertinggi($pendidikanTertinggi)
-    {
+    public function setPendidikanTertinggi($pendidikanTertinggi) {
         $this->pendidikanTertinggi = $pendidikanTertinggi;
-    
+
         return $this;
     }
 
     /**
      * Get pendidikanTertinggi
      *
-     * @return string 
+     * @return string
      */
-    public function getPendidikanTertinggi()
-    {
+    public function getPendidikanTertinggi() {
         return $this->pendidikanTertinggi;
     }
 
@@ -264,20 +284,18 @@ class OrangtuaWali
      * @param string $pekerjaan
      * @return OrangtuaWali
      */
-    public function setPekerjaan($pekerjaan)
-    {
+    public function setPekerjaan($pekerjaan) {
         $this->pekerjaan = $pekerjaan;
-    
+
         return $this;
     }
 
     /**
      * Get pekerjaan
      *
-     * @return string 
+     * @return string
      */
-    public function getPekerjaan()
-    {
+    public function getPekerjaan() {
         return $this->pekerjaan;
     }
 
@@ -287,20 +305,18 @@ class OrangtuaWali
      * @param integer $penghasilanBulanan
      * @return OrangtuaWali
      */
-    public function setPenghasilanBulanan($penghasilanBulanan)
-    {
+    public function setPenghasilanBulanan($penghasilanBulanan) {
         $this->penghasilanBulanan = $penghasilanBulanan;
-    
+
         return $this;
     }
 
     /**
      * Get penghasilanBulanan
      *
-     * @return integer 
+     * @return integer
      */
-    public function getPenghasilanBulanan()
-    {
+    public function getPenghasilanBulanan() {
         return $this->penghasilanBulanan;
     }
 
@@ -310,20 +326,18 @@ class OrangtuaWali
      * @param integer $penghasilanTahunan
      * @return OrangtuaWali
      */
-    public function setPenghasilanTahunan($penghasilanTahunan)
-    {
+    public function setPenghasilanTahunan($penghasilanTahunan) {
         $this->penghasilanTahunan = $penghasilanTahunan;
-    
+
         return $this;
     }
 
     /**
      * Get penghasilanTahunan
      *
-     * @return integer 
+     * @return integer
      */
-    public function getPenghasilanTahunan()
-    {
+    public function getPenghasilanTahunan() {
         return $this->penghasilanTahunan;
     }
 
@@ -333,20 +347,18 @@ class OrangtuaWali
      * @param string $alamat
      * @return OrangtuaWali
      */
-    public function setAlamat($alamat)
-    {
+    public function setAlamat($alamat) {
         $this->alamat = $alamat;
-    
+
         return $this;
     }
 
     /**
      * Get alamat
      *
-     * @return string 
+     * @return string
      */
-    public function getAlamat()
-    {
+    public function getAlamat() {
         return $this->alamat;
     }
 
@@ -356,21 +368,40 @@ class OrangtuaWali
      * @param string $keterangan
      * @return OrangtuaWali
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
+    }
+
+    /**
+     * Set aktif
+     *
+     * @param boolean $aktif
+     * @return OrangtuaWali
+     */
+    public function setAktif($aktif) {
+        $this->aktif = $aktif;
+
+        return $this;
+    }
+
+    /**
+     * Get aktif
+     *
+     * @return boolean
+     */
+    public function getAktif() {
+        return $this->aktif;
     }
 
     /**
@@ -379,20 +410,18 @@ class OrangtuaWali
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return OrangtuaWali
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
     }
 }

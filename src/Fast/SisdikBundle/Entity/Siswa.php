@@ -4,12 +4,15 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Siswa
  *
  * @ORM\Table(name="siswa", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="UNIQ_siswa1", columns={"sekolah_id", "nomor_urut_persekolah"}),
+ *     @ORM\UniqueConstraint(name="nomor_pendaftaran_UNIQUE", columns={"tahunmasuk_id", "nomor_pendaftaran"}),
+ *     @ORM\UniqueConstraint(name="nomor_urut_pendaftaran_UNIQUE", columns={"tahunmasuk_id", "nomor_urut_pendaftaran"}),
+ *     @ORM\UniqueConstraint(name="nomor_urut_persekolah_UNIQUE", columns={"sekolah_id", "nomor_urut_persekolah"}),
  *     @ORM\UniqueConstraint(name="nomor_induk_sistem_UNIQUE", columns={"nomor_induk_sistem"})
  * })
  * @ORM\Entity
@@ -17,6 +20,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class Siswa
 {
+    const WEBCAMPHOTO_DIR = 'uploads/students/webcam-photos/';
+    const PHOTO_DIR = 'uploads/students/photos';
+    const THUMBNAIL_PREFIX = 'th1-';
+    const MEMORY_LIMIT = '256M';
+    const PHOTO_THUMB_WIDTH = 80;
+    const PHOTO_THUMB_HEIGHT = 150;
+
     /**
      * @var integer
      *
@@ -25,6 +35,27 @@ class Siswa
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nomor_urut_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
+     */
+    private $nomorUrutPendaftaran;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nomor_pendaftaran", type="string", length=45, nullable=true)
+     */
+    private $nomorPendaftaran;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="calon_siswa", type="boolean", nullable=false, options={"default"=0})
+     */
+    private $calonSiswa = 0;
 
     /**
      * @var integer
@@ -39,13 +70,6 @@ class Siswa
      * @ORM\Column(name="nomor_induk_sistem", type="string", length=45, nullable=true)
      */
     private $nomorIndukSistem;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="nomor_pendaftaran", type="string", length=45, nullable=true)
-     */
-    private $nomorPendaftaran;
 
     /**
      * @var string
@@ -66,7 +90,6 @@ class Siswa
      * @var string
      *
      * @ORM\Column(name="jenis_kelamin", type="string", length=100, nullable=true)
-     * @Assert\NotBlank
      */
     private $jenisKelamin;
 
@@ -76,6 +99,11 @@ class Siswa
      * @ORM\Column(name="foto_pendaftaran", type="string", length=100, nullable=true)
      */
     private $fotoPendaftaran;
+
+    /**
+     * @Assert\File(maxSize="5000000")
+     */
+    private $file;
 
     /**
      * @var string
@@ -88,7 +116,6 @@ class Siswa
      * @var string
      *
      * @ORM\Column(name="agama", type="string", length=100, nullable=true)
-     * @Assert\NotBlank
      */
     private $agama;
 
@@ -193,13 +220,6 @@ class Siswa
     /**
      * @var string
      *
-     * @ORM\Column(name="ponsel_orangtuawali", type="string", length=100, nullable=true)
-     */
-    private $ponselOrangtuawali;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="sekolah_tinggaldi", type="string", length=400, nullable=true)
      */
     private $sekolahTinggaldi;
@@ -240,6 +260,20 @@ class Siswa
     private $golongandarah;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
+     */
+    private $waktuSimpan;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     */
+    private $waktuUbah;
+
+    /**
      * @var \Gelombang
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
@@ -270,12 +304,137 @@ class Siswa
     private $sekolah;
 
     /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $dibuatOleh;
+
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id", nullable=true)
+     * })
+     */
+    private $diubahOleh;
+
+    /**
+     * @var \Referensi
+     *
+     * @ORM\ManyToOne(targetEntity="Referensi")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * })
+     */
+    private $referensi;
+
+    /**
+     * @var \OrangtuaWali
+     *
+     * @ORM\OneToMany(targetEntity="OrangtuaWali", mappedBy="siswa", cascade={"persist"})
+     * @ORM\OrderBy({"aktif" = "DESC"})
+     */
+    private $orangtuaWali;
+
+    /**
+     * @var \PembayaranSekali
+     *
+     * @ORM\OneToMany(targetEntity="PembayaranSekali", mappedBy="siswa")
+     */
+    private $pembayaranSekali;
+
+    /**
+     * @var \PembayaranRutin
+     *
+     * @ORM\OneToMany(targetEntity="PembayaranRutin", mappedBy="siswa")
+     */
+    private $pembayaranRutin;
+
+    /**
+     * constructor
+     *
+     */
+    public function __construct() {
+        $this->orangtuaWali = new ArrayCollection();
+        $this->pembayaranSekali = new ArrayCollection();
+        $this->pembayaranRutin = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer
      */
     public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Set nomorUrutPendaftaran
+     *
+     * @param integer $nomorPendaftaran
+     * @return Siswa
+     */
+    public function setNomorUrutPendaftaran($nomorUrutPendaftaran) {
+        $this->nomorUrutPendaftaran = $nomorUrutPendaftaran;
+
+        return $this;
+    }
+
+    /**
+     * Get nomorUrutPendaftaran
+     *
+     * @return integer
+     */
+    public function getNomorUrutPendaftaran() {
+        return sprintf('%03d', $this->nomorUrutPendaftaran);
+    }
+
+    /**
+     * Set nomorPendaftaran
+     *
+     * @param string $nomorPendaftaran
+     * @return Siswa
+     */
+    public function setNomorPendaftaran($nomorPendaftaran) {
+        $this->nomorPendaftaran = $nomorPendaftaran;
+
+        return $this;
+    }
+
+    /**
+     * Get nomorPendaftaran
+     *
+     * @return string
+     */
+    public function getNomorPendaftaran() {
+        return $this->nomorPendaftaran;
+    }
+
+    /**
+     * Set calonSiswa
+     *
+     * @param boolean $calonSiswa
+     * @return Siswa
+     */
+    public function setCalonSiswa($calonSiswa) {
+        $this->calonSiswa = $calonSiswa;
+
+        return $this;
+    }
+
+    /**
+     * Get calonSiswa
+     *
+     * @return boolean
+     */
+    public function getCalonSiswa() {
+        return $this->calonSiswa;
     }
 
     /**
@@ -318,27 +477,6 @@ class Siswa
      */
     public function getNomorIndukSistem() {
         return $this->nomorIndukSistem;
-    }
-
-    /**
-     * Set nomorPendaftaran
-     *
-     * @param string $nomorPendaftaran
-     * @return Siswa
-     */
-    public function setNomorPendaftaran($nomorPendaftaran) {
-        $this->nomorPendaftaran = $nomorPendaftaran;
-
-        return $this;
-    }
-
-    /**
-     * Get nomorPendaftaran
-     *
-     * @return string
-     */
-    public function getNomorPendaftaran() {
-        return $this->nomorPendaftaran;
     }
 
     /**
@@ -762,27 +900,6 @@ class Siswa
     }
 
     /**
-     * Set ponselOrangtuawali
-     *
-     * @param string $ponselOrangtuawali
-     * @return Siswa
-     */
-    public function setPonselOrangtuawali($ponselOrangtuawali) {
-        $this->ponselOrangtuawali = $ponselOrangtuawali;
-
-        return $this;
-    }
-
-    /**
-     * Get ponselOrangtuawali
-     *
-     * @return string
-     */
-    public function getPonselOrangtuawali() {
-        return $this->ponselOrangtuawali;
-    }
-
-    /**
      * Set sekolahTinggaldi
      *
      * @param string $sekolahTinggaldi
@@ -909,6 +1026,48 @@ class Siswa
     }
 
     /**
+     * Set waktuSimpan
+     *
+     * @param \DateTime $waktuSimpan
+     * @return Siswa
+     */
+    public function setWaktuSimpan($waktuSimpan) {
+        $this->waktuSimpan = $waktuSimpan;
+
+        return $this;
+    }
+
+    /**
+     * Get waktuSimpan
+     *
+     * @return \DateTime
+     */
+    public function getWaktuSimpan() {
+        return $this->waktuSimpan;
+    }
+
+    /**
+     * Set waktuUbah
+     *
+     * @param \DateTime $waktuUbah
+     * @return Siswa
+     */
+    public function setWaktuUbah($waktuUbah) {
+        $this->waktuUbah = $waktuUbah;
+
+        return $this;
+    }
+
+    /**
+     * Get waktuUbah
+     *
+     * @return \DateTime
+     */
+    public function getWaktuUbah() {
+        return $this->waktuUbah;
+    }
+
+    /**
      * Set gelombang
      *
      * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
@@ -972,15 +1131,146 @@ class Siswa
     }
 
     /**
-     * @Assert\File(maxSize="5000000")
+     * Set dibuatOleh
+     *
+     * @param \Fast\SisdikBundle\Entity\User $dibuatOleh
+     * @return Siswa
      */
-    private $file;
+    public function setDibuatOleh(\Fast\SisdikBundle\Entity\User $dibuatOleh = null) {
+        $this->dibuatOleh = $dibuatOleh;
 
-    const PHOTO_DIR = 'uploads/students/photos';
-    const THUMBNAIL_PREFIX = 'th1-';
-    const MEMORY_LIMIT = '256M';
-    const PHOTO_THUMB_WIDTH = 80;
-    const PHOTO_THUMB_HEIGHT = 150;
+        return $this;
+    }
+
+    /**
+     * Get dibuatOleh
+     *
+     * @return \Fast\SisdikBundle\Entity\User
+     */
+    public function getDibuatOleh() {
+        return $this->dibuatOleh;
+    }
+
+    /**
+     * Set diubahOleh
+     *
+     * @param \Fast\SisdikBundle\Entity\User $diubahOleh
+     * @return Siswa
+     */
+    public function setDiubahOleh(\Fast\SisdikBundle\Entity\User $diubahOleh = null) {
+        $this->diubahOleh = $diubahOleh;
+
+        return $this;
+    }
+
+    /**
+     * Get diubahOleh
+     *
+     * @return \Fast\SisdikBundle\Entity\User
+     */
+    public function getDiubahOleh() {
+        return $this->diubahOleh;
+    }
+
+    /**
+     * Set referensi
+     *
+     * @param \Fast\SisdikBundle\Entity\Referensi $referensi
+     * @return Siswa
+     */
+    public function setReferensi(\Fast\SisdikBundle\Entity\Referensi $referensi = null) {
+        $this->referensi = $referensi;
+
+        return $this;
+    }
+
+    /**
+     * Get referensi
+     *
+     * @return \Fast\SisdikBundle\Entity\Referensi
+     */
+    public function getReferensi() {
+        return $this->referensi;
+    }
+
+    /**
+     * Set orangtuaWali
+     *
+     * @param ArrayCollection $orangtuaWali
+     */
+    public function setOrangtuaWali(ArrayCollection $orangtuaWali) {
+        foreach ($orangtuaWali as $data) {
+            $data->setSiswa($this);
+        }
+
+        $this->orangtuaWali = $orangtuaWali;
+    }
+
+    /**
+     * Get orangtuaWali
+     *
+     * @return \Fast\SisdikBundle\OrangtuaWali
+     */
+    public function getOrangtuaWali() {
+        return $this->orangtuaWali;
+    }
+
+    /**
+     * Get pembayaranSekali
+     *
+     * @return \Fast\SisdikBundle\PembayaranSekali
+     */
+    public function getPembayaranSekali() {
+        return $this->pembayaranSekali;
+
+    }
+
+    /**
+     * Get pembayaranSekali
+     *
+     * @return \Fast\SisdikBundle\PembayaranSekali
+     */
+    public function getTotalNominalPembayaranSekali() {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranSekali() as $pembayaran) {
+            foreach ($pembayaran->getTransaksiPembayaranSekali() as $transaksi) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
+        }
+
+        return $jumlah;
+    }
+
+    /**
+     * Get pembayaranRutin
+     *
+     * @return \Fast\SisdikBundle\PembayaranRutin
+     */
+    public function getPembayaranRutin() {
+        return $this->pembayaranRutin;
+    }
+
+    /**
+     * Get pembayaranRutin
+     *
+     * @return \Fast\SisdikBundle\PembayaranRutin
+     */
+    public function getTotalNominalPembayaranRutin() {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranRutin() as $pembayaran) {
+            foreach ($pembayaran->getTransaksiPembayaranRutin() as $transaksi) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
+        }
+
+        return $jumlah;
+    }
+
+    public function getWebcamPhotoDir() {
+        return self::WEBCAMPHOTO_DIR;
+    }
 
     public function getFile() {
         return $this->file;

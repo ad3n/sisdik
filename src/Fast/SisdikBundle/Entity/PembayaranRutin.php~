@@ -22,11 +22,18 @@ class PembayaranRutin
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="daftar_biaya_rutin", type="text", nullable=true)
+     */
+    private $daftarBiayaRutin;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
      */
-    private $nominalPembayaran;
+    private $nominalTotal;
 
     /**
      * @var string
@@ -38,9 +45,9 @@ class PembayaranRutin
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      */
-    private $waktuCatat;
+    private $waktuSimpan;
 
     /**
      * @var \DateTime
@@ -58,16 +65,6 @@ class PembayaranRutin
      * })
      */
     private $siswa;
-
-    /**
-     * @var \BiayaRutin
-     *
-     * @ORM\ManyToOne(targetEntity="BiayaRutin")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id")
-     * })
-     */
-    private $biayaRutin;
 
 
 }

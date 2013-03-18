@@ -172,17 +172,17 @@ regcommittee:
     prefix:   /
     
 applicant:
-    resource: "@FastSisdikBundle/Controller/CalonSiswaController.php"
+    resource: "@FastSisdikBundle/Controller/SiswaApplicantController.php"
     type:     annotation
     prefix:   /
     
-applicant_payment:
-    resource: "@FastSisdikBundle/Controller/CalonSiswaPaymentController.php"
+payment:
+    resource: "@FastSisdikBundle/Controller/SiswaApplicantPaymentController.php"
     type:     annotation
     prefix:   /
     
-applicant_payment_oncefee:
-    resource: "@FastSisdikBundle/Controller/CalonPembayaranSekaliController.php"
+payment_oncefee:
+    resource: "@FastSisdikBundle/Controller/PembayaranSekaliController.php"
     type:     annotation
     prefix:   /
 

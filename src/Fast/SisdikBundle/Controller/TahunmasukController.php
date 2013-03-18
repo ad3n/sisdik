@@ -317,7 +317,7 @@ class TahunmasukController extends Controller
 
     /**
      * Check if current entity is already used elsewhere
-     * 
+     *
      * @param $id
      */
     private function isEntityUsedElsewhere($id) {
@@ -335,11 +335,7 @@ class TahunmasukController extends Controller
                 ->findOneBy(array(
                     'tahunmasuk' => $id
                 ));
-        $calonSiswaEntity = $em->getRepository('FastSisdikBundle:CalonSiswa')
-                ->findOneBy(array(
-                    'tahunmasuk' => $id
-                ));
-        if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity || $calonSiswaEntity) {
+        if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity) {
             return true;
         }
         return false;

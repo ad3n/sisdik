@@ -68,11 +68,11 @@ class BiayaSekali
     private $jenisbiaya;
 
     /**
-     * @var \CalonPembayaranSekali
+     * @var \PembayaranSekali
      *
-     * @ORM\OneToMany(targetEntity="CalonPembayaranSekali", mappedBy="biayaSekali")
+     * @ORM\OneToMany(targetEntity="PembayaranSekali", mappedBy="biayaSekali")
      */
-    private $calonPembayaranSekali;
+    private $pembayaranSekali;
 
 
 

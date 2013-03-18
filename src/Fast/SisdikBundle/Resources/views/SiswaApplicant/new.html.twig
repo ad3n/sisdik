@@ -1,0 +1,51 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.creation{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.collection-item .controls {
+/*     margin-left: 0; */
+}
+.collection-item .control-group {
+/*     margin-bottom: 0; */
+}
+</style>
+<form action="{{ path('applicant_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <div class="control-group">
+        {{ form_label(form.sekolah) }}
+        <div class="controls">
+            {{ form_widget(form.sekolah) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label(form.tahunmasuk) }}
+        <div class="controls">
+            {{ form_widget(form.tahunmasuk) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label(form.gelombang) }}
+        <div class="controls">
+            {{ form_widget(form.gelombang) }}
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_label(form.namaLengkap) }}
+        <div class="controls">
+            {{ form_widget(form.namaLengkap) }}
+        </div>
+    </div>
+    {{ form_widget(form.orangtuaWali) }}
+    {{ form_rest(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

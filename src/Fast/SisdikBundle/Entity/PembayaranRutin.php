@@ -1,8 +1,9 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * PembayaranRutin
@@ -22,11 +23,18 @@ class PembayaranRutin
     private $id;
 
     /**
+     * @var array
+     *
+     * @ORM\Column(name="daftar_biaya_rutin", type="array", nullable=true)
+     */
+    private $daftarBiayaRutin;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default"=0})
+     * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
      */
-    private $nominalPembayaran;
+    private $nominalTotal;
 
     /**
      * @var string
@@ -38,9 +46,9 @@ class PembayaranRutin
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      */
-    private $waktuCatat;
+    private $waktuSimpan;
 
     /**
      * @var \DateTime
@@ -52,7 +60,7 @@ class PembayaranRutin
     /**
      * @var \Siswa
      *
-     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="pembayaranRutin")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
@@ -60,48 +68,71 @@ class PembayaranRutin
     private $siswa;
 
     /**
-     * @var \BiayaRutin
+     * @var \TransaksiPembayaranRutin
      *
-     * @ORM\ManyToOne(targetEntity="BiayaRutin")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\OneToMany(targetEntity="TransaksiPembayaranRutin", mappedBy="pembayaranRutin", cascade={"persist"})
+     * @ORM\OrderBy({"waktuSimpan" = "ASC"})
+     * @Assert\Valid
      */
-    private $biayaRutin;
+    private $transaksiPembayaranRutin;
 
-
+    /**
+     * constructor
+     *
+     */
+    public function __construct() {
+        $this->transaksiPembayaranRutin = new ArrayCollection();
+    }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
     /**
-     * Set nominalPembayaran
+     * Set daftarBiayaRutin
      *
-     * @param integer $nominalPembayaran
+     * @param array $daftarBiayaRutin
      * @return PembayaranRutin
      */
-    public function setNominalPembayaran($nominalPembayaran)
-    {
-        $this->nominalPembayaran = $nominalPembayaran;
-    
+    public function setDaftarBiayaRutin($daftarBiayaRutin) {
+        $this->daftarBiayaRutin = $daftarBiayaRutin;
+
         return $this;
     }
 
     /**
-     * Get nominalPembayaran
+     * Get daftarBiayaRutin
      *
-     * @return integer 
+     * @return array
      */
-    public function getNominalPembayaran()
-    {
-        return $this->nominalPembayaran;
+    public function getDaftarBiayaRutin() {
+        return $this->daftarBiayaRutin;
+    }
+
+    /**
+     * Set nominalTotal
+     *
+     * @param integer $nominalTotal
+     * @return PembayaranRutin
+     */
+    public function setNominalTotal($nominalTotal) {
+        $this->nominalTotal = $nominalTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get nominalTotal
+     *
+     * @return integer
+     */
+    public function getNominalTotal() {
+        return $this->nominalTotal;
     }
 
     /**
@@ -110,44 +141,40 @@ class PembayaranRutin
      * @param string $keterangan
      * @return PembayaranRutin
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
     }
 
     /**
-     * Set waktuCatat
+     * Set waktuSimpan
      *
-     * @param \DateTime $waktuCatat
+     * @param \DateTime $waktuSimpan
      * @return PembayaranRutin
      */
-    public function setWaktuCatat($waktuCatat)
-    {
-        $this->waktuCatat = $waktuCatat;
-    
+    public function setWaktuSimpan($waktuSimpan) {
+        $this->waktuSimpan = $waktuSimpan;
+
         return $this;
     }
 
     /**
-     * Get waktuCatat
+     * Get waktuSimpan
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getWaktuCatat()
-    {
-        return $this->waktuCatat;
+    public function getWaktuSimpan() {
+        return $this->waktuSimpan;
     }
 
     /**
@@ -156,20 +183,18 @@ class PembayaranRutin
      * @param \DateTime $waktuUbah
      * @return PembayaranRutin
      */
-    public function setWaktuUbah($waktuUbah)
-    {
+    public function setWaktuUbah($waktuUbah) {
         $this->waktuUbah = $waktuUbah;
-    
+
         return $this;
     }
 
     /**
      * Get waktuUbah
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getWaktuUbah()
-    {
+    public function getWaktuUbah() {
         return $this->waktuUbah;
     }
 
@@ -179,43 +204,40 @@ class PembayaranRutin
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return PembayaranRutin
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
     }
 
     /**
-     * Set biayaRutin
+     * Set transaksiPembayaranRutin
      *
-     * @param \Fast\SisdikBundle\Entity\BiayaRutin $biayaRutin
-     * @return PembayaranRutin
+     * @param ArrayCollection $transaksiPembayaranRutin
      */
-    public function setBiayaRutin(\Fast\SisdikBundle\Entity\BiayaRutin $biayaRutin = null)
-    {
-        $this->biayaRutin = $biayaRutin;
-    
-        return $this;
+    public function setTransaksiPembayaranRutin($transaksiPembayaranRutin) {
+        foreach ($transaksiPembayaranRutin as $transaksi) {
+            $transaksi->setPembayaranSekali($this);
+        }
+
+        $this->transaksiPembayaranRutin = $transaksiPembayaranRutin;
     }
 
     /**
-     * Get biayaRutin
+     * Get transaksiPembayaranRutin
      *
-     * @return \Fast\SisdikBundle\Entity\BiayaRutin 
+     * @return \Fast\SisdikBundle\TransaksiPembayaranRutin
      */
-    public function getBiayaRutin()
-    {
-        return $this->biayaRutin;
+    public function getTransaksiPembayaranRutin() {
+        return $this->transaksiPembayaranRutin;
     }
 }

@@ -45,16 +45,23 @@ class OrangtuaWali
     /**
      * @var string
      *
+     * @ORM\Column(name="ponsel", type="string", length=100, nullable=true)
+     */
+    private $ponsel;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
      */
     private $kewarganegaraan;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="peran", type="integer", nullable=true)
+     * @ORM\Column(name="hubungan_dengan_siswa", type="string", length=100, nullable=true)
      */
-    private $peran;
+    private $hubunganDenganSiswa;
 
     /**
      * @var string
@@ -97,6 +104,13 @@ class OrangtuaWali
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
      */
     private $keterangan;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="aktif", type="boolean", nullable=false)
+     */
+    private $aktif;
 
     /**
      * @var \Siswa

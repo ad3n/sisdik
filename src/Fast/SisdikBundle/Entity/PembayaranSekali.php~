@@ -22,11 +22,18 @@ class PembayaranSekali
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="daftar_biaya_sekali", type="text", nullable=true)
+     */
+    private $daftarBiayaSekali;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
      */
-    private $nominalPembayaran;
+    private $nominalTotal;
 
     /**
      * @var string
@@ -38,9 +45,9 @@ class PembayaranSekali
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="waktu_catat", type="datetime", nullable=true)
+     * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      */
-    private $waktuCatat;
+    private $waktuSimpan;
 
     /**
      * @var \DateTime
@@ -58,16 +65,6 @@ class PembayaranSekali
      * })
      */
     private $siswa;
-
-    /**
-     * @var \BiayaSekali
-     *
-     * @ORM\ManyToOne(targetEntity="BiayaSekali")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_sekali_id", referencedColumnName="id")
-     * })
-     */
-    private $biayaSekali;
 
 
 }

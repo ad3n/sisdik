@@ -1,0 +1,155 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.payment.oncefee{% endtrans %}{% endblock %}
+{% block content %}
+<style type="text/css">
+.content .ui-multiselect {
+    line-height: 1em;
+}
+.ui-multiselect .actions {
+    padding: 0;
+    margin-top: 0;
+    border-radius: 0;
+}
+.ui-helper-clearfix {
+    margin-bottom: 18px;
+}
+.controls {
+    margin-left: 0;
+}
+</style>
+
+{% stylesheets '@FastSisdikBundle/Resources/public/css/ui.multiselect.css' %}
+<link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
+
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/multiselect/ui.multiselect.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<div class="row-fluid">
+    <div class="span12">
+        <dl>
+            <dt>{{ 'label.yearentry.entry'|trans }}</dt>
+            <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
+            <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+            <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+            <dt>{{ 'label.name.full'|trans }}</dt>
+            <dd>{{ siswa.namaLengkap }}</dd>
+            <dt>{{ 'label.application.number'|trans }}</dt>
+            <dd>{{ siswa.nomorPendaftaran }}</dd>
+            <dt>{{ 'label.gender'|trans }}</dt>
+            <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+    		{% if siswa.orangtuaWali %}
+    		    {% for orangtua in siswa.orangtuaWali %}
+    		        {% if orangtua %}
+    		            {% if orangtua.aktif == 1 %}
+            	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+            	            <dd>{{ orangtua.nama }}</dd>
+            	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+            	            <dd>{{ orangtua.ponsel }}</dd>
+        		        {% endif %}
+    		        {% endif %}
+    		    {% endfor %}
+    		{% endif %}
+        	</dd>
+        </dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+    <h4>{{ 'applicant.fee.once'|trans({}, 'headings') }}</h4>
+    <form action="{{ path('applicant_payment_oncefee_update', { 'cid': siswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+        {{ form_widget(edit_form.daftarBiayaSekali, { 'attr': {'style': 'width: 750px; height: 230px;'} }) }}
+        <div id="payment-info" style="margin-bottom: 18px;">
+            {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
+        </div>
+        {% for transaksi in edit_form.transaksiPembayaranSekali %}
+            {% if loop.length > 1 %}
+                {% if not loop.last %}
+                    <div class="control-group">
+                        {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                        {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
+                        {{ form_errors(transaksi.nominalPembayaran) }}
+                    </div>
+                    <div class="control-group">
+                        {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                        {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
+                        {{ form_errors(transaksi.keterangan) }}
+                    </div>
+                {% else %}
+                    <div class="control-group">
+                        {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                        {{ form_widget(transaksi.nominalPembayaran) }}
+                        {{ form_errors(transaksi.nominalPembayaran) }}
+                    </div>
+                    <div class="control-group">
+                        {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                        {{ form_widget(transaksi.keterangan) }}
+                        {{ form_errors(transaksi.keterangan) }}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="control-group">
+                    {{ form_label(transaksi.nominalPembayaran) }}&nbsp;
+                    {{ form_widget(transaksi.nominalPembayaran) }}
+                    {{ form_errors(transaksi.nominalPembayaran) }}
+                </div>
+                <div class="control-group">
+                    {{ form_label(transaksi.keterangan) }}&nbsp;
+                    {{ form_widget(transaksi.keterangan) }}
+                    {{ form_errors(transaksi.keterangan) }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {{ form_rest(edit_form) }}
+    	<div class="form-actions">
+    	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
+    </form>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+<script language="javascript" type="text/javascript">
+var total = 0;
+var amount;
+
+$(document).ready(function() {
+    $(".multiselect option:selected").text(function(n, currenttext) {
+        var num = 0;
+
+        str = currenttext.split('.').join('');
+        num = str.match(/\d+/);
+        total += parseInt(num);
+    });
+    amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    $("#fee-amount").text(amount);
+
+    $(".multiselect").multiselect();
+    $(".multiselect").change(function() {
+        total = 0;
+
+        $(".multiselect option:selected").text(function(n, currenttext) {
+            var num = 0;
+
+            str = currenttext.split('.').join('');
+            num = str.match(/\d+/);
+            total += parseInt(num);
+        });
+
+        amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+
+        $("#fee-amount").text(amount);
+    });
+});
+</script>
+
+{% endblock content %}

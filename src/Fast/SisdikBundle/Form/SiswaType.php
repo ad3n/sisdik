@@ -206,13 +206,6 @@ class SiswaType extends AbstractType
                                     'class' => 'medium'
                                 ),
                         ))
-                ->add('ponselOrangtuawali', null,
-                        array(
-                                'label' => 'label.mobilephone.parent',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
-                        ))
                 ->add('sekolahTinggaldi', null,
                         array(
                                 'label' => 'label.livein.whilestudy',

@@ -54,8 +54,9 @@ class SiswaController extends Controller
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun DESC, t.namaLengkap');
-        $querybuilder->setParameter('sekolah', $sekolah->getId());
+                ->where('t.calonSiswa = :calon')->setParameter('calon', false)
+                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t.namaLengkap', 'ASC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {

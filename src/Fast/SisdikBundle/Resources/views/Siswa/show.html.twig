@@ -52,8 +52,6 @@
         <dd>{{ entity.telepon }}</dd>
         <dt>{{ 'label.mobilephone.student'|trans }}</dt>
         <dd>{{ entity.ponselSiswa }}</dd>
-        <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-        <dd>{{ entity.ponselOrangtuawali }}</dd>
         <dt>{{ 'label.livein.whilestudy'|trans }}</dt>
         <dd>{{ entity.sekolahTinggaldi }}</dd>
         <dt>{{ 'label.distance.toschool'|trans }}</dt>
@@ -67,9 +65,9 @@
         <dt>{{ 'label.bloodtype'|trans }}</dt>
         <dd>{{ entity.golongandarah }}</dd>
     </dl>
-    
+
     <div class="clearfix"></div>
-    
+
     <form id="delete-form" action="{{ path('data_student_deleteconfirm', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
         {{ form_widget(delete_form) }}
         <div class="form-actions">
@@ -87,19 +85,19 @@
     	</a>
     {% endimage %}
     </div>
-    
+
     <div class="clearfix"></div>
-    
+
 	<h4 style="margin-top: 1em;">{{ 'heading.academicinfo'|trans }}</h4>
 	{{ 'text.academicinfo'|trans }}<br />
     <ul class="pills">
         <li><a href="{{ path('data_studentclass', { 'siswa': entity.id }) }}">{{ 'link.classhistory'|trans }}</a></li>
     </ul>
-    
+
 	<h4>{{ 'heading.personalinfo'|trans }}</h4>
 	{{ 'text.personalinfo'|trans }}<br />
 	<ul class="pills">
-    	<li><a href="#">info personal #1</a></li> 
+    	<li><a href="#">info personal #1</a></li>
     	<li><a href="#">info personal #2</a></li>
     </ul>
 </div>
