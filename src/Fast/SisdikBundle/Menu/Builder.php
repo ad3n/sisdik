@@ -120,6 +120,11 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'fee_type'
                             ));
             $fees
+                    ->addChild('links.fee.registration',
+                            array(
+                                'route' => 'fee_registration'
+                            ));
+            $fees
                     ->addChild('links.fee.once',
                             array(
                                 'route' => 'fee_once'

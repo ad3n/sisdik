@@ -8,6 +8,7 @@ label:
     pay.amount: Jumlah Bayar
     paid.amount: Jumlah Dibayar
     search.notpaid: belum bayar
+    search.paymentnotcomplete: belum lunas
     searchkey.name: Nama
     name.parent.or.guardian: Nama Orang Tua/Wali
     application.number: Nomor Pendaftaran
@@ -182,11 +183,16 @@ label:
             name: Nama Jenis Biaya
             code: Kode Jenis Biaya
             entry: Jenis Biaya
+        registration:
+            add: Tambah Biaya Pendaftaran
+            name: Nama Biaya Pendaftaran
+            code: Kode Biaya Pendaftaran
+            entry: Biaya Pendaftaran
         once:
-            add: Tambah Biaya Sekali
-            name: Nama Biaya Sekali
-            code: Kode Biaya Sekali
-            entry: Biaya Sekali
+            add: Tambah Biaya Sekali Bayar
+            name: Nama Biaya Sekali Bayar
+            code: Kode Biaya Sekali Bayar
+            entry: Biaya Sekali Bayar
         recur:
             add: Tambah Biaya Berulang
             name: Nama Biaya Berulang
@@ -314,16 +320,21 @@ flash:
             updated: Jenis biaya '%feetype%' berhasil diperbarui
             deleted: Jenis biaya '%feetype%' berhasil dihapus
             fail.delete: Jenis biaya gagal dihapus
+        registration:
+            inserted: Data Biaya Pendaftaran berhasil ditambah
+            updated: Data Biaya Pendaftaran berhasil diperbarui
+            deleted: Data Biaya Pendaftaran berhasil dihapus
+            fail.delete: Data Biaya Pendaftaran gagal dihapus
         once:
-            inserted: Data Biaya berhasil ditambah
-            updated: Data Biaya berhasil diperbarui
-            deleted: Data Biaya berhasil dihapus
-            fail.delete: Data Biaya gagal dihapus
+            inserted: Data Biaya Sekali Bayar berhasil ditambah
+            updated: Data Biaya Sekali Bayar berhasil diperbarui
+            deleted: Data Biaya Sekali Bayar berhasil dihapus
+            fail.delete: Data Biaya Sekali Bayar gagal dihapus
         recur:
-            inserted: Data Biaya berhasil ditambah
-            updated: Data Biaya berhasil diperbarui
-            deleted: Data Biaya berhasil dihapus
-            fail.delete: Data Biaya gagal dihapus
+            inserted: Data Biaya Berulang berhasil ditambah
+            updated: Data Biaya Berulang berhasil diperbarui
+            deleted: Data Biaya Berulang berhasil dihapus
+            fail.delete: Data Biaya Berulang gagal dihapus
     data:
         student:
             inserted: Siswa '%student%' berhasil ditambah
@@ -425,7 +436,8 @@ tip:
     movedown: Turun
     edit.regphoto: Ubah Foto Registrasi
     edit.full.form: Ubah Form Lengkap
-    payment.once: Pembayaran Biaya Sekali Bayar
+    payment.registrationfee: Pembayaran Biaya Pendaftaran
+    payment.oncefee: Pembayaran Biaya Sekali Bayar
     payment.recur: Pembayaran Biaya Berulang
     payment.detail: Detail Pembayaran
 
@@ -441,7 +453,8 @@ confirm.drop:
     class: Hapus Kelas '%class%'?
     year: Hapus Tahun Ajaran '%year%'?
     fee.recur: Hapus Biaya Berulang '%fee%', nominal '%nominal%'?
-    fee.once: Hapus Biaya Sekali '%fee%', nominal '%nominal%'?
+    fee.once: Hapus Biaya Sekali Bayar '%fee%', nominal '%nominal%'?
+    fee.registration: Hapus Biaya Pendaftaran '%fee%', nominal '%nominal%'?
     fee.type: Hapus Jenis Biaya '%fee%' (%code%)?
     admissiongroup: Hapus Gelombang Penerimaan '%admission%' (%code%)?
     yearentry: Hapus Tahun Masuk '%year%'?
@@ -485,6 +498,7 @@ exception:
     unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardtype: Jenis imbalan yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardamount: Kombinasi unik tahun masuk, gelombang, dan jenis imbalan sudah digunakan
+    unique.fee.registration: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.fee.once: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.fee.recur: Kombinasi jenis biaya, tahun masuk, dan gelombang sudah digunakan
     unique.registration.committee: Tahun masuk %yearentry% telah ada dalam basis data

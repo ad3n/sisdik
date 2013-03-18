@@ -80,6 +80,11 @@ settings_feerecur:
     resource: "@FastSisdikBundle/Controller/BiayaRutinController.php"
     type:     annotation
     prefix:   /
+    
+fee_registration:
+    resource: "@FastSisdikBundle/Controller/BiayaPendaftaranController.php"
+    type:     annotation
+    prefix:   /
 
 student:
     resource: "@FastSisdikBundle/Controller/SiswaController.php"

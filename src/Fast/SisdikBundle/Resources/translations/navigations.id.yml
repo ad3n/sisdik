@@ -7,7 +7,7 @@ headings:
     payments: Pembayaran
 
 links:
-    applicant.payment: Calon Siswa
+    applicant.payment: Pendaftaran
     studentspresence: Kehadiran Siswa
     attendancemachine: Mesin Kehadiran
     registration: Pendaftaran
@@ -19,7 +19,7 @@ links:
     admissiongroup: Gelombang
     yearentry: Tahun Masuk
     feevariety: Jenis Biaya
-    feeonce: Biaya Sekali
+    feeonce: Biaya Sekali Bayar
     feeiterative: Biaya Berulang
     class: Kelas
     smstemplate: Template SMS
@@ -30,7 +30,8 @@ links:
     year: Tahun Ajaran
     fee:
         type: Jenis Biaya
-        once: Biaya Sekali
+        registration: Biaya Pendaftaran
+        once: Biaya Sekali Bayar
         recur: Biaya Berulang
     data:
         level: Jenjang

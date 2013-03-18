@@ -47,11 +47,16 @@ fee:
         edit: Mengubah Jenis Biaya
         creation: Membuat Jenis Biaya
         detail: Detail Jenis Biaya
+    registration:
+        list: Daftar Biaya Pendaftaran
+        edit: Mengubah Biaya Pendaftaran
+        creation: Membuat Biaya Pendaftaran
+        detail: Detail Biaya Pendaftaran
     once:
-        list: Daftar Biaya Sekali
-        edit: Mengubah Biaya Sekali
-        creation: Membuat Biaya Sekali
-        detail: Detail Biaya Sekali
+        list: Daftar Biaya Sekali Bayar
+        edit: Mengubah Biaya Sekali Bayar
+        creation: Membuat Biaya Sekali Bayar
+        detail: Detail Biaya Sekali Bayar
     recur:
         list: Daftar Biaya Berulang
         edit: Mengubah Biaya Berulang
@@ -152,9 +157,10 @@ applicant:
     edit.regphoto: Mengubah Foto Pendaftaran Calon Siswa
     creation: Membuat Calon Siswa
     detail: Detail Calon Siswa
-    payment.list: Pembayaran Calon Siswa (Daftar Baru)
+    payment.list: Daftar Pembayaran Biaya
     payment.detail: Detail Pembayaran Calon Siswa
-    payment.oncefee: Pembayaran Biaya Sekali Calon Siswa
+    payment.registrationfee: Pembayaran Biaya Pendaftaran
+    payment.oncefee: Pembayaran Biaya Sekali Bayar
     fee.once: Biaya Sekali Bayar
         
 
