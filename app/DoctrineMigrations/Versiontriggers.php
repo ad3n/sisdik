@@ -20,9 +20,11 @@ BEGIN
     SET NEW.nomor_urut_pendaftaran = IFNULL(nomorurutpendaftaran, 0) + 1;
     SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahunmasuk WHERE id = NEW.tahunmasuk_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
 
-    SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
-    SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
-    SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
+    IF (NEW.calon_siswa = 0) THEN
+        SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
+        SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
+        SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
+    END IF;
 
     SET NEW.waktu_simpan = NOW();
     SET NEW.waktu_ubah = NOW();
