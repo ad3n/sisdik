@@ -392,7 +392,7 @@ class Siswa
      * @return integer
      */
     public function getNomorUrutPendaftaran() {
-        return sprintf('%03d', $this->nomorUrutPendaftaran);
+        return $this->nomorUrutPendaftaran;
     }
 
     /**
