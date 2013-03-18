@@ -38,9 +38,16 @@ class TransaksiPembayaranSekali
     private $keterangan;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="nomor_urut_transaksi_perbulan", type="smallint", nullable=true)
+     */
+    private $nomorUrutTransaksiPerbulan;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="nomor_transaksi", type="string", length=100, nullable=true)
+     * @ORM\Column(name="nomor_transaksi", type="string", length=45, nullable=true)
      */
     private $nomorTransaksi;
 
@@ -92,24 +99,24 @@ class TransaksiPembayaranSekali
     }
 
     /**
-     * Set keterangan
+     * Set nomorUrutTransaksiPerbulan
      *
-     * @param string $keterangan
+     * @param integer $nomorUrutTransaksiPerbulan
      * @return TransaksiPembayaranSekali
      */
-    public function setKeterangan($keterangan) {
-        $this->keterangan = $keterangan;
+    public function setNomorUrutTransaksiPerbulan($nomorUrutTransaksiPerbulan) {
+        $this->nomorUrutTransaksiPerbulan = $nomorUrutTransaksiPerbulan;
 
         return $this;
     }
 
     /**
-     * Get keterangan
+     * Get nomorUrutTransaksiPerbulan
      *
-     * @return string
+     * @return integer
      */
-    public function getKeterangan() {
-        return $this->keterangan;
+    public function getNomorUrutTransaksiPerbulan() {
+        return $this->nomorUrutTransaksiPerbulan;
     }
 
     /**
@@ -131,6 +138,27 @@ class TransaksiPembayaranSekali
      */
     public function getNomorTransaksi() {
         return $this->nomorTransaksi;
+    }
+
+    /**
+     * Set keterangan
+     *
+     * @param string $keterangan
+     * @return TransaksiPembayaranSekali
+     */
+    public function setKeterangan($keterangan) {
+        $this->keterangan = $keterangan;
+
+        return $this;
+    }
+
+    /**
+     * Get keterangan
+     *
+     * @return string
+     */
+    public function getKeterangan() {
+        return $this->keterangan;
     }
 
     /**

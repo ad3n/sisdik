@@ -57,7 +57,20 @@ END";
 BEFORE INSERT ON `transaksi_pembayaran_sekali`
 FOR EACH ROW
 BEGIN
+	DECLARE nomorurutperbulan INT;
+
 	SET NEW.waktu_simpan = NOW();
+
+    SET nomorurutperbulan = (
+		SELECT MAX(nomor_urut_transaksi_perbulan)
+			FROM transaksi_pembayaran_sekali
+			WHERE DATE_FORMAT(waktu_simpan, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+	);
+    SET NEW.nomor_urut_transaksi_perbulan = IFNULL(nomorurutperbulan, 0) + 1;
+    SET NEW.nomor_transaksi = CONCAT(
+        'L', CAST((DATE_FORMAT(NEW.waktu_simpan, '%Y%m')) AS CHAR(6)),
+		NEW.nomor_urut_transaksi_perbulan
+	);
 END";
 
     private $beforeUpdateTransaksiPembayaranSekali = "CREATE TRIGGER `befup_tps`

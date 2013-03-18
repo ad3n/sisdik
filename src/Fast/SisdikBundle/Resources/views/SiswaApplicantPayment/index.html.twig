@@ -56,7 +56,7 @@
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_payment_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('applicant_payment_oncefee', {'cid': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.once{% endtrans %}" class="icon-coin coin"></a>
-        		<a href="{{ path('applicant_payment', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.recur{% endtrans %}" class="icon-repeat"></a>
+        		<a href="{{ path('applicant_payment', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.recur{% endtrans %}" class="icon-book"></a>
     		</td>
     	</tr>
     {% endfor %}
