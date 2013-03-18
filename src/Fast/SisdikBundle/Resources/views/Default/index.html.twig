@@ -15,7 +15,11 @@
     {% if is_granted('ROLE_SUPER_ADMIN') %}
         <h4>you have super admin role!</h4>
     {% endif %}
-    
+
+    {% if tahunaktif != '' %}
+    <p>{{ 'label.activeyear'| trans }}: {{ tahunaktif }}</p>
+    {% endif %}
+
     <ul>
     {% for role in app.user.roles %}
         <li>{{ role }}</li>
