@@ -58,7 +58,7 @@
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
     <h4>{{ 'applicant.fee.once'|trans({}, 'headings') }}</h4>
-    <form action="{{ path('applicant_payment_oncefee_update', { 'cid': siswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    <form action="{{ path('payment_oncefee_update', { 'cid': siswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
         {{ form_widget(edit_form.daftarBiayaSekali, { 'attr': {'style': 'width: 750px; height: 230px;'} }) }}
         <div id="payment-info" style="margin-bottom: 18px;">
             {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>

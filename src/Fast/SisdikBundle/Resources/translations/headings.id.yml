@@ -157,7 +157,7 @@ applicant:
     edit.regphoto: Mengubah Foto Pendaftaran Calon Siswa
     creation: Membuat Calon Siswa
     detail: Detail Calon Siswa
-    payment.list: Daftar Pembayaran Biaya
+    payment.list.regfee: Daftar Pembayaran Biaya Pendaftaran
     payment.detail: Detail Pembayaran Calon Siswa
     payment.registrationfee: Pembayaran Biaya Pendaftaran
     payment.oncefee: Pembayaran Biaya Sekali Bayar

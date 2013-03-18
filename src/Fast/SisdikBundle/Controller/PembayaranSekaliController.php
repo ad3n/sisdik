@@ -20,7 +20,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * PembayaranSekali controller.
  *
- * @Route("/applicant-payment/oncefee/{cid}")
+ * @Route("/payment/oncefee/{cid}")
  * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KETUA_PANITIA_PSB')")
  */
 class PembayaranSekaliController extends Controller
@@ -28,7 +28,7 @@ class PembayaranSekaliController extends Controller
     /**
      * Menentukan mode input atau edit untuk pembayaran sekali seorang siswa
      *
-     * @Route("/", name="applicant_payment_oncefee")
+     * @Route("/", name="payment_oncefee")
      * @Template()
      */
     public function indexAction($cid) {
@@ -54,7 +54,7 @@ class PembayaranSekaliController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('applicant_payment_oncefee_new',
+                                    ->generateUrl('payment_oncefee_new',
                                             array(
                                                 'cid' => $cid, 'page' => $this->getRequest()->get('page')
                                             )));
@@ -62,7 +62,7 @@ class PembayaranSekaliController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('applicant_payment_oncefee_edit',
+                                    ->generateUrl('payment_oncefee_edit',
                                             array(
                                                     'cid' => $cid, 'id' => $entity->getId(),
                                                     'page' => $this->getRequest()->get('page')
@@ -73,7 +73,7 @@ class PembayaranSekaliController extends Controller
     /**
      * Displays a form to create a new PembayaranSekali entity.
      *
-     * @Route("/new", name="applicant_payment_oncefee_new")
+     * @Route("/new", name="payment_oncefee_new")
      * @Template()
      */
     public function newAction($cid) {
@@ -97,7 +97,7 @@ class PembayaranSekaliController extends Controller
     /**
      * Creates a new PembayaranSekali entity.
      *
-     * @Route("/create", name="applicant_payment_oncefee_create")
+     * @Route("/create", name="payment_oncefee_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranSekali:new.html.twig")
      */
@@ -136,7 +136,7 @@ class PembayaranSekaliController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('applicant_payment_oncefee_edit',
+                                    ->generateUrl('payment_oncefee_edit',
                                             array(
                                                     'cid' => $cid, 'id' => $entity->getId(),
                                                     'page' => $this->getRequest()->get('page')
@@ -151,7 +151,7 @@ class PembayaranSekaliController extends Controller
     /**
      * Displays a form to edit existing PembayaranSekali entities attached to an applicant.
      *
-     * @Route("/{id}/edit", name="applicant_payment_oncefee_edit")
+     * @Route("/{id}/edit", name="payment_oncefee_edit")
      * @Template()
      */
     public function editAction($cid, $id) {
@@ -179,7 +179,7 @@ class PembayaranSekaliController extends Controller
     /**
      * Edits an existing PembayaranSekali entity.
      *
-     * @Route("/{id}/update", name="applicant_payment_oncefee_update")
+     * @Route("/{id}/update", name="payment_oncefee_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranSekali:edit.html.twig")
      */
@@ -222,7 +222,7 @@ class PembayaranSekaliController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('applicant_payment_oncefee_edit',
+                                    ->generateUrl('payment_oncefee_edit',
                                             array(
                                                     'cid' => $cid, 'id' => $id,
                                                     'page' => $this->getRequest()->get('page')

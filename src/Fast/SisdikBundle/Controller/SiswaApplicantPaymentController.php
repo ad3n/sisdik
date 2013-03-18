@@ -66,13 +66,9 @@ class SiswaApplicantPaymentController extends Controller
             }
 
             if ($searchdata['nopayment'] == true) {
-                $querybuilder->leftJoin('t.pembayaranSekali', 'cps');
-                $querybuilder->leftJoin('cps.transaksiPembayaranSekali', 'ctps');
-                $querybuilder->andWhere("ctps.nominalPembayaran IS NULL");
-
-                $querybuilder->leftJoin('t.pembayaranRutin', 'cpr');
-                $querybuilder->leftJoin('cpr.transaksiPembayaranRutin', 'ctpr');
-                $querybuilder->andWhere("ctpr.nominalPembayaran IS NULL");
+                $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pp');
+                $querybuilder->leftJoin('pp.transaksiPembayaranPendaftaran', 'tpp');
+                $querybuilder->andWhere("tpp.nominalPembayaran IS NULL");
             }
 
             if ($searchdata['todayinput'] == true) {
@@ -81,6 +77,11 @@ class SiswaApplicantPaymentController extends Controller
                 $querybuilder->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00');
                 $querybuilder->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59');
             }
+
+            if ($searchdata['notsettled'] == true) {
+                // TODO find not settled payment
+            }
+
 
         }
 

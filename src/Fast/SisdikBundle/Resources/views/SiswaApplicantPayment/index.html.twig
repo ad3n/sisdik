@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}applicant.payment.list{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}applicant.payment.list.regfee{% endtrans %}{% endblock %}
 
 {% block content %}
 <style type="text/css">
@@ -50,13 +50,12 @@
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.paid.amount'|trans }}">
     		    {% set totalBayar = 0 %}
-    		    {% set totalBayar = data.totalNominalPembayaranSekali + data.totalNominalPembayaranRutin %}
+    		    {% set totalBayar = data.totalNominalPembayaranPendaftaran %}
     		    {{ totalBayar|number_format(0, ',', '.') }}
 		    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_payment_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('applicant_payment_oncefee', {'cid': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.once{% endtrans %}" class="icon-coin coin"></a>
-        		<a href="{{ path('applicant_payment', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.payment.recur{% endtrans %}" class="icon-book"></a>
+        		<a href="{{ path('payment_oncefee', {'cid': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
     		</td>
     	</tr>
     {% endfor %}
