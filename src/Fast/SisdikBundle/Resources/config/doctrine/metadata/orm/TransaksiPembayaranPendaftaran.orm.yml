@@ -1,0 +1,45 @@
+TransaksiPembayaranPendaftaran:
+    type: entity
+    table: transaksi_pembayaran_pendaftaran
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nominalPembayaran:
+            type: bigint
+            nullable: true
+            column: nominal_pembayaran
+        nomorUrutTransaksiPerbulan:
+            type: smallint
+            nullable: true
+            column: nomor_urut_transaksi_perbulan
+        nomorTransaksi:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+            column: nomor_transaksi
+        keterangan:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+        waktuSimpan:
+            type: datetime
+            nullable: true
+            column: waktu_simpan
+    manyToOne:
+        pembayaranPendaftaran:
+            targetEntity: PembayaranPendaftaran
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pembayaran_pendaftaran_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

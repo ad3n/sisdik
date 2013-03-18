@@ -5,12 +5,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * TransaksiPembayaranSekali
+ * TransaksiPembayaranPendaftaran
  *
- * @ORM\Table(name="transaksi_pembayaran_sekali")
+ * @ORM\Table(name="transaksi_pembayaran_pendaftaran")
  * @ORM\Entity
  */
-class TransaksiPembayaranSekali
+class TransaksiPembayaranPendaftaran
 {
     /**
      * @var integer
@@ -31,13 +31,6 @@ class TransaksiPembayaranSekali
     private $nominalPembayaran;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
-     */
-    private $keterangan;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="nomor_urut_transaksi_perbulan", type="smallint", nullable=true, options={"unsigned"=true})
@@ -52,6 +45,13 @@ class TransaksiPembayaranSekali
     private $nomorTransaksi;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
+     */
+    private $keterangan;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
@@ -59,14 +59,14 @@ class TransaksiPembayaranSekali
     private $waktuSimpan;
 
     /**
-     * @var \PembayaranSekali
+     * @var \PembayaranPendaftaran
      *
-     * @ORM\ManyToOne(targetEntity="PembayaranSekali", inversedBy="transaksiPembayaranSekali")
+     * @ORM\ManyToOne(targetEntity="PembayaranPendaftaran", inversedBy="transaksiPembayaranPendaftaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pembayaran_sekali_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="pembayaran_pendaftaran_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $pembayaranSekali;
+    private $pembayaranPendaftaran;
 
     /**
      * Get id
@@ -81,7 +81,7 @@ class TransaksiPembayaranSekali
      * Set nominalPembayaran
      *
      * @param integer $nominalPembayaran
-     * @return TransaksiPembayaranSekali
+     * @return TransaksiPembayaranPendaftaran
      */
     public function setNominalPembayaran($nominalPembayaran) {
         $this->nominalPembayaran = $nominalPembayaran;
@@ -102,7 +102,7 @@ class TransaksiPembayaranSekali
      * Set nomorUrutTransaksiPerbulan
      *
      * @param integer $nomorUrutTransaksiPerbulan
-     * @return TransaksiPembayaranSekali
+     * @return TransaksiPembayaranPendaftaran
      */
     public function setNomorUrutTransaksiPerbulan($nomorUrutTransaksiPerbulan) {
         $this->nomorUrutTransaksiPerbulan = $nomorUrutTransaksiPerbulan;
@@ -123,7 +123,7 @@ class TransaksiPembayaranSekali
      * Set nomorTransaksi
      *
      * @param string $nomorTransaksi
-     * @return TransaksiPembayaranSekali
+     * @return TransaksiPembayaranPendaftaran
      */
     public function setNomorTransaksi($nomorTransaksi) {
         $this->nomorTransaksi = $nomorTransaksi;
@@ -144,7 +144,7 @@ class TransaksiPembayaranSekali
      * Set keterangan
      *
      * @param string $keterangan
-     * @return TransaksiPembayaranSekali
+     * @return TransaksiPembayaranPendaftaran
      */
     public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
@@ -165,7 +165,7 @@ class TransaksiPembayaranSekali
      * Set waktuSimpan
      *
      * @param \DateTime $waktuSimpan
-     * @return TransaksiPembayaranSekali
+     * @return TransaksiPembayaranPendaftaran
      */
     public function setWaktuSimpan($waktuSimpan) {
         $this->waktuSimpan = $waktuSimpan;
@@ -183,23 +183,24 @@ class TransaksiPembayaranSekali
     }
 
     /**
-     * Set pembayaranSekali
+     * Set pembayaranPendaftaran
      *
-     * @param \Fast\SisdikBundle\Entity\PembayaranSekali $pembayaranSekali
-     * @return TransaksiPembayaranSekali
+     * @param \Fast\SisdikBundle\Entity\PembayaranPendaftaran $pembayaranPendaftaran
+     * @return TransaksiPembayaranPendaftaran
      */
-    public function setPembayaranSekali(\Fast\SisdikBundle\Entity\PembayaranSekali $pembayaranSekali = null) {
-        $this->pembayaranSekali = $pembayaranSekali;
+    public function setPembayaranPendaftaran(
+            \Fast\SisdikBundle\Entity\PembayaranPendaftaran $pembayaranPendaftaran = null) {
+        $this->pembayaranPendaftaran = $pembayaranPendaftaran;
 
         return $this;
     }
 
     /**
-     * Get pembayaranSekali
+     * Get pembayaranPendaftaran
      *
-     * @return \Fast\SisdikBundle\Entity\PembayaranSekali
+     * @return \Fast\SisdikBundle\Entity\PembayaranPendaftaran
      */
-    public function getPembayaranSekali() {
-        return $this->pembayaranSekali;
+    public function getPembayaranPendaftaran() {
+        return $this->pembayaranPendaftaran;
     }
 }

@@ -40,7 +40,7 @@ class MesinKehadiran
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
      */
-    private $aktif;
+    private $aktif = 1;
 
     /**
      * @var \Sekolah
@@ -57,7 +57,7 @@ class MesinKehadiran
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -73,14 +73,14 @@ class MesinKehadiran
     public function setAlamatIp($alamatIp)
     {
         $this->alamatIp = $alamatIp;
-    
+
         return $this;
     }
 
     /**
      * Get alamatIp
      *
-     * @return string 
+     * @return string
      */
     public function getAlamatIp()
     {
@@ -96,14 +96,14 @@ class MesinKehadiran
     public function setCommkey($commkey)
     {
         $this->commkey = $commkey;
-    
+
         return $this;
     }
 
     /**
      * Get commkey
      *
-     * @return string 
+     * @return string
      */
     public function getCommkey()
     {
@@ -119,14 +119,14 @@ class MesinKehadiran
     public function setAktif($aktif)
     {
         $this->aktif = $aktif;
-    
+
         return $this;
     }
 
     /**
      * Get aktif
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getAktif()
     {
@@ -142,14 +142,14 @@ class MesinKehadiran
     public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
         $this->sekolah = $sekolah;
-    
+
         return $this;
     }
 
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah()
     {

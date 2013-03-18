@@ -342,6 +342,13 @@ class Siswa
     private $orangtuaWali;
 
     /**
+     * @var \PembayaranPendaftaran
+     *
+     * @ORM\OneToMany(targetEntity="PembayaranPendaftaran", mappedBy="siswa")
+     */
+    private $pembayaranPendaftaran;
+
+    /**
      * @var \PembayaranSekali
      *
      * @ORM\OneToMany(targetEntity="PembayaranSekali", mappedBy="siswa")
@@ -1216,6 +1223,33 @@ class Siswa
     }
 
     /**
+     * Get pembayaranPendaftaran
+     *
+     * @return \Fast\SisdikBundle\PembayaranPendaftaran
+     */
+    public function getPembayaranPendaftaran() {
+        return $this->pembayaranPendaftaran;
+
+    }
+
+    /**
+     * Get total nominal pembayaran pendaftaran
+     *
+     * @return \Fast\SisdikBundle\PembayaranPendaftaran
+     */
+    public function getTotalNominalPembayaranPendaftaran() {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
+            foreach ($pembayaran->getTransaksiPembayaranPendaftaran() as $transaksi) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
+        }
+
+        return $jumlah;
+    }
+
+    /**
      * Get pembayaranSekali
      *
      * @return \Fast\SisdikBundle\PembayaranSekali
@@ -1226,7 +1260,7 @@ class Siswa
     }
 
     /**
-     * Get pembayaranSekali
+     * Get total nominal pembayaran sekali bayar
      *
      * @return \Fast\SisdikBundle\PembayaranSekali
      */
@@ -1252,7 +1286,7 @@ class Siswa
     }
 
     /**
-     * Get pembayaranRutin
+     * Get total nominal pembayaran rutin
      *
      * @return \Fast\SisdikBundle\PembayaranRutin
      */

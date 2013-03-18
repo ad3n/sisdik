@@ -2,16 +2,17 @@
 
 namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * BiayaSekali
+ * BiayaPendaftaran
  *
- * @ORM\Table(name="biaya_sekali", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="UNQ_biaya_sekali1", columns={"jenisbiaya_id", "tahunmasuk_id", "gelombang_id"})
+ * @ORM\Table(name="biaya_pendaftaran", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="biaya_pendaftaran_UNIQUE", columns={"jenisbiaya_id", "tahunmasuk_id", "gelombang_id"})
  * })
  * @ORM\Entity
  */
-class BiayaSekali
+class BiayaPendaftaran
 {
     /**
      * @var integer
@@ -26,6 +27,8 @@ class BiayaSekali
      * @var integer
      *
      * @ORM\Column(name="nominal", type="bigint", nullable=true)
+     * @Assert\NotBlank
+     * @Assert\Length(min=5)
      */
     private $nominal;
 
@@ -37,14 +40,14 @@ class BiayaSekali
     private $urutan;
 
     /**
-     * @var \Gelombang
+     * @var \Jenisbiaya
      *
-     * @ORM\ManyToOne(targetEntity="Gelombang")
+     * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $gelombang;
+    private $jenisbiaya;
 
     /**
      * @var \Tahunmasuk
@@ -57,14 +60,14 @@ class BiayaSekali
     private $tahunmasuk;
 
     /**
-     * @var \Jenisbiaya
+     * @var \Gelombang
      *
-     * @ORM\ManyToOne(targetEntity="Jenisbiaya")
+     * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $jenisbiaya;
+    private $gelombang;
 
     /**
      * Get id
@@ -79,7 +82,7 @@ class BiayaSekali
      * Set nominal
      *
      * @param integer $nominal
-     * @return BiayaSekali
+     * @return BiayaPendaftaran
      */
     public function setNominal($nominal) {
         $this->nominal = $nominal;
@@ -100,7 +103,7 @@ class BiayaSekali
      * Set urutan
      *
      * @param integer $urutan
-     * @return BiayaSekali
+     * @return BiayaPendaftaran
      */
     public function setUrutan($urutan) {
         $this->urutan = $urutan;
@@ -118,31 +121,31 @@ class BiayaSekali
     }
 
     /**
-     * Set gelombang
+     * Set jenisbiaya
      *
-     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
-     * @return BiayaSekali
+     * @param \Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya
+     * @return BiayaPendaftaran
      */
-    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null) {
-        $this->gelombang = $gelombang;
+    public function setJenisbiaya(\Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya = null) {
+        $this->jenisbiaya = $jenisbiaya;
 
         return $this;
     }
 
     /**
-     * Get gelombang
+     * Get jenisbiaya
      *
-     * @return \Fast\SisdikBundle\Entity\Gelombang
+     * @return \Fast\SisdikBundle\Entity\Jenisbiaya
      */
-    public function getGelombang() {
-        return $this->gelombang;
+    public function getJenisbiaya() {
+        return $this->jenisbiaya;
     }
 
     /**
      * Set tahunmasuk
      *
      * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
-     * @return BiayaSekali
+     * @return BiayaPendaftaran
      */
     public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null) {
         $this->tahunmasuk = $tahunmasuk;
@@ -160,23 +163,23 @@ class BiayaSekali
     }
 
     /**
-     * Set jenisbiaya
+     * Set gelombang
      *
-     * @param \Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya
-     * @return BiayaSekali
+     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
+     * @return BiayaPendaftaran
      */
-    public function setJenisbiaya(\Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya = null) {
-        $this->jenisbiaya = $jenisbiaya;
+    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null) {
+        $this->gelombang = $gelombang;
 
         return $this;
     }
 
     /**
-     * Get jenisbiaya
+     * Get gelombang
      *
-     * @return \Fast\SisdikBundle\Entity\Jenisbiaya
+     * @return \Fast\SisdikBundle\Entity\Gelombang
      */
-    public function getJenisbiaya() {
-        return $this->jenisbiaya;
+    public function getGelombang() {
+        return $this->gelombang;
     }
 }
