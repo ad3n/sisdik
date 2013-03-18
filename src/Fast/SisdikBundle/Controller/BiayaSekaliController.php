@@ -5,31 +5,28 @@ use Doctrine\DBAL\DBALException;
 use Fast\SisdikBundle\Form\BiayaSearchFormType;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\BrowserKit\Request;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\BiayaSekali;
 use Fast\SisdikBundle\Form\BiayaSekaliType;
-use Fast\SisdikBundle\Entity\Jenisbiaya;
-use Fast\SisdikBundle\Entity\Tahunmasuk;
-use Fast\SisdikBundle\Entity\Gelombang;
+use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * BiayaSekali controller.
  *
  * @Route("/fee/once")
- * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA')")
  */
 class BiayaSekaliController extends Controller
 {
     /**
      * Lists all BiayaSekali entities.
      *
-     * @Route("/", name="fee_once", defaults={"filter"="1"})
+     * @Route("/", name="fee_once")
      * @Template()
      */
     public function indexAction() {
@@ -39,10 +36,9 @@ class BiayaSekaliController extends Controller
 
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaSekali', 't')->leftJoin('t.tahunmasuk', 't2')
-                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
+                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
@@ -123,12 +119,11 @@ class BiayaSekaliController extends Controller
      * @Method("post")
      * @Template("FastSisdikBundle:BiayaSekali:new.html.twig")
      */
-    public function createAction() {
+    public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new BiayaSekali();
-        $request = $this->getRequest();
         $form = $this->createForm(new BiayaSekaliType($this->container), $entity);
         $form->bind($request);
 
@@ -140,8 +135,7 @@ class BiayaSekaliController extends Controller
                 $em->flush();
 
                 $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.once.inserted'));
+                        ->setFlash('success', $this->get('translator')->trans('flash.fee.once.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.once');
@@ -197,7 +191,7 @@ class BiayaSekaliController extends Controller
      * @Method("post")
      * @Template("FastSisdikBundle:BiayaSekali:edit.html.twig")
      */
-    public function updateAction($id) {
+    public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -212,8 +206,6 @@ class BiayaSekaliController extends Controller
         $editForm = $this->createForm(new BiayaSekaliType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        $request = $this->getRequest();
-
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
@@ -223,8 +215,7 @@ class BiayaSekaliController extends Controller
                 $em->flush();
 
                 $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.once.updated'));
+                        ->setFlash('success', $this->get('translator')->trans('flash.fee.once.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.once');
@@ -236,8 +227,7 @@ class BiayaSekaliController extends Controller
                             $this
                                     ->generateUrl('fee_once_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -253,12 +243,10 @@ class BiayaSekaliController extends Controller
      * @Route("/{id}/delete", name="fee_once_delete")
      * @Method("post")
      */
-    public function deleteAction($id) {
+    public function deleteAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -274,8 +262,7 @@ class BiayaSekaliController extends Controller
                 $em->flush();
 
                 $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.once.deleted'));
+                        ->setFlash('success', $this->get('translator')->trans('flash.fee.once.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -284,8 +271,7 @@ class BiayaSekaliController extends Controller
 
         } else {
             $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.fee.once.fail.delete'));
+                    ->setFlash('error', $this->get('translator')->trans('flash.fee.once.fail.delete'));
         }
 
         return $this
@@ -298,11 +284,9 @@ class BiayaSekaliController extends Controller
     }
 
     private function createDeleteForm($id) {
-        return $this
-                ->createFormBuilder(
-                        array(
-                            'id' => $id
-                        ))->add('id', 'hidden')->getForm();
+        return $this->createFormBuilder(array(
+                    'id' => $id
+                ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -319,8 +303,7 @@ class BiayaSekaliController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

@@ -7,6 +7,7 @@ use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BiayaSekaliType extends AbstractType
 {
@@ -92,6 +93,14 @@ class BiayaSekaliType extends AbstractType
 
     public function buildOrderChoices() {
         return array_combine(range(1, 100), range(1, 100));
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+        $resolver
+                ->setDefaults(
+                        array(
+                            'data_class' => 'Fast\SisdikBundle\Entity\BiayaSekali'
+                        ));
     }
 
     public function getName() {
