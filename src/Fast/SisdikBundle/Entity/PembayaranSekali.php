@@ -223,7 +223,7 @@ class PembayaranSekali
      * Set TransaksiPembayaranSekali
      * parameter type array collection is removed to allow editing
      *
-     * @param ArrayCollection $orangtuaWali
+     * @param ArrayCollection $transaksiPembayaranSekali
      */
     public function setTransaksiPembayaranSekali($transaksiPembayaranSekali) {
         foreach ($transaksiPembayaranSekali as $transaksi) {

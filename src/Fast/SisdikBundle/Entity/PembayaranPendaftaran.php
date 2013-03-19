@@ -218,4 +218,27 @@ class PembayaranPendaftaran
     public function getSiswa() {
         return $this->siswa;
     }
+
+    /**
+     * Set TransaksiPembayaranPendaftaran
+     * parameter type array collection is removed to allow editing
+     *
+     * @param ArrayCollection $transaksiPembayaranPendaftaran
+     */
+    public function setTransaksiPembayaranSekali($transaksiPembayaranPendaftaran) {
+        foreach ($transaksiPembayaranPendaftaran as $transaksi) {
+            $transaksi->setPembayaranPendaftaran($this);
+        }
+
+        $this->transaksiPembayaranPendaftaran = $transaksiPembayaranPendaftaran;
+    }
+
+    /**
+     * Get transaksiPembayaranPendaftaran
+     *
+     * @return \Fast\SisdikBundle\TransaksiPembayaranPendaftaran
+     */
+    public function getTransaksiPembayaranPendaftaran() {
+        return $this->transaksiPembayaranPendaftaran;
+    }
 }
