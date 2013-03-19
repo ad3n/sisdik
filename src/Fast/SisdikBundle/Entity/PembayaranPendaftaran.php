@@ -220,12 +220,12 @@ class PembayaranPendaftaran
     }
 
     /**
-     * Set TransaksiPembayaranPendaftaran
+     * Set transaksiPembayaranPendaftaran
      * parameter type array collection is removed to allow editing
      *
      * @param ArrayCollection $transaksiPembayaranPendaftaran
      */
-    public function setTransaksiPembayaranSekali($transaksiPembayaranPendaftaran) {
+    public function setTransaksiPembayaranPendaftaran($transaksiPembayaranPendaftaran) {
         foreach ($transaksiPembayaranPendaftaran as $transaksi) {
             $transaksi->setPembayaranPendaftaran($this);
         }
@@ -240,5 +240,20 @@ class PembayaranPendaftaran
      */
     public function getTransaksiPembayaranPendaftaran() {
         return $this->transaksiPembayaranPendaftaran;
+    }
+
+    /**
+     * Get total nominal transaksi pembayaran pendaftaran
+     *
+     * @return \Fast\SisdikBundle\TransaksiPembayaranPendaftaran
+     */
+    public function getTotalNominalTransaksiPembayaranPendaftaran() {
+        $jumlah = 0;
+
+        foreach ($this->getTransaksiPembayaranPendaftaran() as $transaksi) {
+            $jumlah += $transaksi->getNominalPembayaran();
+        }
+
+        return $jumlah;
     }
 }

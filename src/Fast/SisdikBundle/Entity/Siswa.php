@@ -368,6 +368,7 @@ class Siswa
      */
     public function __construct() {
         $this->orangtuaWali = new ArrayCollection();
+        $this->pembayaranPendaftaran = new ArrayCollection();
         $this->pembayaranSekali = new ArrayCollection();
         $this->pembayaranRutin = new ArrayCollection();
     }
