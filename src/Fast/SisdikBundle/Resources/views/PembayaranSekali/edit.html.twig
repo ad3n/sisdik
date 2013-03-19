@@ -55,57 +55,57 @@
         	</dd>
         </dl>
 
-<div class="clearfix" style="margin-bottom: 2em;"></div>
+        <div class="clearfix" style="margin-bottom: 2em;"></div>
 
-    <h4>{{ 'applicant.fee.once'|trans({}, 'headings') }}</h4>
-    <form action="{{ path('payment_oncefee_update', { 'cid': siswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-        {{ form_widget(edit_form.daftarBiayaSekali, { 'attr': {'style': 'width: 750px; height: 230px;'} }) }}
-        <div id="payment-info" style="margin-bottom: 18px;">
-            {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
-        </div>
-        {% for transaksi in edit_form.transaksiPembayaranSekali %}
-            {% if loop.length > 1 %}
-                {% if not loop.last %}
-                    <div class="control-group">
-                        {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
-                        {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
-                        {{ form_errors(transaksi.nominalPembayaran) }}
-                    </div>
-                    <div class="control-group">
-                        {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
-                        {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
-                        {{ form_errors(transaksi.keterangan) }}
-                    </div>
+        <h4>{{ 'applicant.fee.once'|trans({}, 'headings') }}</h4>
+        <form action="{{ path('payment_oncefee_update', { 'cid': siswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+            {{ form_widget(edit_form.daftarBiayaSekali, { 'attr': {'style': 'width: 750px; height: 230px;'} }) }}
+            <div id="payment-info" style="margin-bottom: 18px;">
+                {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
+            </div>
+            {% for transaksi in edit_form.transaksiPembayaranSekali %}
+                {% if loop.length > 1 %}
+                    {% if not loop.last %}
+                        <div class="control-group">
+                            {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                            {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
+                            {{ form_errors(transaksi.nominalPembayaran) }}
+                        </div>
+                        <div class="control-group">
+                            {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                            {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
+                            {{ form_errors(transaksi.keterangan) }}
+                        </div>
+                    {% else %}
+                        <div class="control-group">
+                            {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                            {{ form_widget(transaksi.nominalPembayaran) }}
+                            {{ form_errors(transaksi.nominalPembayaran) }}
+                        </div>
+                        <div class="control-group">
+                            {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                            {{ form_widget(transaksi.keterangan) }}
+                            {{ form_errors(transaksi.keterangan) }}
+                        </div>
+                    {% endif %}
                 {% else %}
                     <div class="control-group">
-                        {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                        {{ form_label(transaksi.nominalPembayaran) }}&nbsp;
                         {{ form_widget(transaksi.nominalPembayaran) }}
                         {{ form_errors(transaksi.nominalPembayaran) }}
                     </div>
                     <div class="control-group">
-                        {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                        {{ form_label(transaksi.keterangan) }}&nbsp;
                         {{ form_widget(transaksi.keterangan) }}
                         {{ form_errors(transaksi.keterangan) }}
                     </div>
                 {% endif %}
-            {% else %}
-                <div class="control-group">
-                    {{ form_label(transaksi.nominalPembayaran) }}&nbsp;
-                    {{ form_widget(transaksi.nominalPembayaran) }}
-                    {{ form_errors(transaksi.nominalPembayaran) }}
-                </div>
-                <div class="control-group">
-                    {{ form_label(transaksi.keterangan) }}&nbsp;
-                    {{ form_widget(transaksi.keterangan) }}
-                    {{ form_errors(transaksi.keterangan) }}
-                </div>
-            {% endif %}
-        {% endfor %}
-        {{ form_rest(edit_form) }}
-    	<div class="form-actions">
-    	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
-        </div>
-    </form>
+            {% endfor %}
+            {{ form_rest(edit_form) }}
+        	<div class="form-actions">
+        	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+            </div>
+        </form>
     </div>
 </div>
 
