@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\Sekolah;
+use Fast\SisdikBundle\Entity\PembayaranPendaftaran;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -79,10 +80,38 @@ class SiswaApplicantPaymentController extends Controller
             }
 
             if ($searchdata['notsettled'] == true) {
-                // TODO find not settled payment
+                $results = $querybuilder->getQuery()->getResult();
+
+                $daftarSiswaBelumLunas = array();
+                $totalBiaya = 0;
+                $nominalBiaya = 0;
+                foreach ($results as $entity) {
+                    $totalBiaya = 0;
+                    if (is_object($entity) && $entity instanceof Siswa) {
+                        $totalPembayaranPendaftaran = $entity->getTotalNominalPembayaranPendaftaran();
+                        foreach ($entity->getPembayaranPendaftaran() as $pembayaran) {
+                            $nominalBiaya = 0;
+                            if ($pembayaran instanceof PembayaranPendaftaran) {
+                                foreach ($pembayaran->getDaftarBiayaPendaftaran() as $biaya) {
+                                    $biayaPendaftaran = $em
+                                            ->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                                            ->find($biaya);
+                                    $nominalBiaya += $biayaPendaftaran->getNominal();
+                                }
+                                $totalBiaya += $nominalBiaya;
+                            }
+                        }
+                        if ($totalPembayaranPendaftaran < $totalBiaya || $totalPembayaranPendaftaran == 0) {
+                            $daftarSiswaBelumLunas[] = $entity->getId();
+                        }
+                    }
+                }
+
+                if (count($daftarSiswaBelumLunas) > 0) {
+                    $querybuilder->andWhere("t.id IN (?1)")->setParameter(1, $daftarSiswaBelumLunas);
+                }
+
             }
-
-
         }
 
         $paginator = $this->get('knp_paginator');
@@ -90,32 +119,6 @@ class SiswaApplicantPaymentController extends Controller
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()
-        );
-    }
-
-    /**
-     * Finds and displays a Siswa entity.
-     * Including its payment
-     *
-     * @Route("/{id}/show", name="applicant_payment_show")
-     * @Template()
-     */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
-
-        // TODO: tampilkan detail informasi pembayaran siswa (pendaftar)
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
-        }
-
-        return array(
-            'entity' => $entity,
         );
     }
 
