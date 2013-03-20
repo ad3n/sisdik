@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Fast\SisdikBundle\Entity\Sekolah;
@@ -32,14 +33,9 @@ class TahunmasukController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
-                    ->setParameter('sekolah', $sekolah->getId());
-        } else {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
-                    ->orderBy('t.tahun', 'DESC');
-        }
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
+                ->leftJoin('t.panitiaPendaftaran', 't2')->where('t.sekolah = :sekolah')
+                ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
@@ -99,12 +95,11 @@ class TahunmasukController extends Controller
      * @Method("post")
      * @Template("FastSisdikBundle:Tahunmasuk:new.html.twig")
      */
-    public function createAction() {
+    public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Tahunmasuk();
-        $request = $this->getRequest();
         $form = $this->createForm(new TahunmasukType($this->container), $entity);
         $form->bind($request);
 
@@ -181,7 +176,7 @@ class TahunmasukController extends Controller
      * @Method("post")
      * @Template("FastSisdikBundle:Tahunmasuk:edit.html.twig")
      */
-    public function updateAction($id) {
+    public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -201,8 +196,6 @@ class TahunmasukController extends Controller
 
         $editForm = $this->createForm(new TahunmasukType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
-
-        $request = $this->getRequest();
 
         $editForm->bind($request);
 
@@ -244,12 +237,11 @@ class TahunmasukController extends Controller
      * @Route("/{id}/delete", name="settings_yearentry_delete")
      * @Method("post")
      */
-    public function deleteAction($id) {
+    public function deleteAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
 
         $form->bind($request);
 

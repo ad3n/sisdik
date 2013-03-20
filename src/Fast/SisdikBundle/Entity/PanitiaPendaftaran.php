@@ -51,7 +51,7 @@ class PanitiaPendaftaran
     /**
      * @var \Tahunmasuk
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\ManyToOne(targetEntity="Tahunmasuk", inversedBy="panitiaPendaftaran")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
      * })

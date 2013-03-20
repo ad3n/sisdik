@@ -40,9 +40,24 @@ class Tahunmasuk
     private $sekolah;
 
     /**
+     * @var \PanitiaPendaftaran
+     *
+     * @ORM\OneToMany(targetEntity="PanitiaPendaftaran", mappedBy="tahunmasuk")
+     */
+    private $panitiaPendaftaran;
+
+    /**
+     * constructor
+     *
+     */
+    public function __construct() {
+        $this->panitiaPendaftaran = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -63,7 +78,7 @@ class Tahunmasuk
     /**
      * Get tahun
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTahun() {
         return $this->tahun;
@@ -84,9 +99,18 @@ class Tahunmasuk
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah() {
         return $this->sekolah;
+    }
+
+    /**
+     * Get panitiaPendaftaran
+     *
+     * @return \Fast\SisdikBundle\PanitiaPendaftaran
+     */
+    public function getPanitiaPendaftaran() {
+        return $this->panitiaPendaftaran;
     }
 }

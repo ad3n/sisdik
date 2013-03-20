@@ -33,6 +33,9 @@
     		<td data-title="{{ 'label.yearentry.entry'|trans }}">{{ data.tahun }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('settings_yearentry_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+    		{% for panitia in data.panitiaPendaftaran %}
+    		    <a href="{{ path('regcommittee_show', {'id': panitia.id}) }}" title="{{ 'tip.registration.committee'|trans }}" class="icon-tags"></a>
+    		{% endfor %}
         		<a href="{{ path('settings_yearentry_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
     		</td>
     	</tr>
