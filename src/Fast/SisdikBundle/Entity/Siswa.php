@@ -1230,7 +1230,6 @@ class Siswa
      */
     public function getPembayaranPendaftaran() {
         return $this->pembayaranPendaftaran;
-
     }
 
     /**
