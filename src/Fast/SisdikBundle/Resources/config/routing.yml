@@ -191,3 +191,10 @@ payment_oncefee:
     type:     annotation
     prefix:   /
 
+payment_registrationfee:
+    resource: "@FastSisdikBundle/Controller/PembayaranPendaftaranController.php"
+    type:     annotation
+    prefix:   /
+
+
+

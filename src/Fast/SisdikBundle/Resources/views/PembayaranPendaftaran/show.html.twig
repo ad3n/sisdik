@@ -1,0 +1,76 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}payment.registrationfee.transaction{% endtrans %}{% endblock %}
+{% block content %}
+<style type="text/css">
+.extra-margin-bottom {
+    margin-bottom: 1em;
+}
+</style>
+
+<dl>
+    <dt>{{ 'label.yearentry.entry'|trans }}</dt>
+    <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+    <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
+    <dt>{{ 'label.application.number'|trans }}</dt>
+    <dd>{{ siswa.nomorPendaftaran }}</dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<h4>{{ 'label.fee.registration.transaction'|trans }}</h4>
+
+<dl>
+    <dt>{{ 'label.fee.registration.entry'|trans }}</dt>
+    <dd class="extra-margin-bottom">
+        <ul>
+        {% for biaya in entity.daftarBiayaPendaftaran %}
+        	<li>
+                {% if biaya != '' %}
+                    {% render url('payment_registrationfee_getfeeinfo', {'sid': siswa.id, 'id': biaya}) %}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </dd>
+{% for transaksi in transaksiPembayaran %}
+    {% if loop.length > 1 %}
+        <dt>{{ 'label.payment.number'|trans }} #{{ loop.index }}</dt>
+        <dd>
+            {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
+            <a href="{{ path('payment_registrationfee_print_receipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+        </dd>
+        <dt>{{ 'label.payment.date'|trans }} #{{ loop.index }}</dt>
+        <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
+        <dt>{{ 'label.pay.amount'|trans }} #{{ loop.index }}</dt>
+        <dd>{{ currencySymbol(locale) }}. {{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</dd>
+        <dt>{{ 'label.payment.description'|trans }} #{{ loop.index }}</dt>
+        <dd class="extra-margin-bottom">{{ transaksi.keterangan }}</dd>
+    {% else %}
+        <dt>{{ 'label.payment.number'|trans }}</dt>
+        <dd>
+            {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
+            <a href="{{ path('payment_registrationfee_print_receipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+        </dd>
+        <dt>{{ 'label.payment.date'|trans }}</dt>
+        <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
+        <dt>{{ 'label.pay.amount'|trans }}</dt>
+        <dd>{{ currencySymbol(locale) }}. {{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</dd>
+        <dt>{{ 'label.payment.description'|trans }}</dt>
+        <dd>{{ transaksi.keterangan }}</dd>
+    {% endif %}
+{% endfor %}
+</dl>
+
+<div class="clearfix extra-margin-bottom"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+{% endblock content %}

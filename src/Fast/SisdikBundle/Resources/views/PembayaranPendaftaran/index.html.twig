@@ -1,0 +1,159 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}payment.registrationfee.entry{% endtrans %}{% endblock %}
+
+{% block content %}
+<dl>
+    <dt>{{ 'label.yearentry.entry'|trans }}</dt>
+    <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+    <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
+    <dt>{{ 'label.application.number'|trans }}</dt>
+    <dd>{{ siswa.nomorPendaftaran }}</dd>
+    <dt>{{ 'label.gender'|trans }}</dt>
+    <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+	{% if siswa.orangtuaWali %}
+	    {% for orangtua in siswa.orangtuaWali %}
+	        {% if orangtua %}
+	            {% if orangtua.aktif == 1 %}
+    	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+    	            <dd>{{ orangtua.nama }}</dd>
+    	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+    	            <dd>{{ orangtua.ponsel }}</dd>
+		        {% endif %}
+	        {% endif %}
+	    {% endfor %}
+	{% endif %}
+	</dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<h4>{{ 'label.previous.payment'|trans }}</h4>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.fee.registration.entry'|trans }}</th>
+    		<th style="white-space: nowrap">{{ 'label.payables.amount'|trans }}</th>
+    		<th style="white-space: nowrap">{{ 'label.paid.amount'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in entities %}
+        <tr>
+    		<td data-title="{{ 'label.fee.registration.entry'|trans }}">
+		    {% if data.daftarBiayaPendaftaran %}
+    		    {% for biaya in data.daftarBiayaPendaftaran %}
+    		        {% if biaya != '' %}
+    		            {% render url('payment_registrationfee_getfeeinfo', {'sid': siswa.id, 'id': biaya}) %}{% if not loop.last %}, {% endif %}
+    		        {% endif %}
+    		    {% endfor %}
+		    {% endif %}
+		    </td>
+    		<td data-title="{{ 'label.payables.amount'|trans }}">{{ totalBiaya[loop.index0]|number_format(0, ',', '.') }}</td>
+    		<td data-title="{{ 'label.paid.amount'|trans }}">{{ data.totalNominalTransaksiPembayaranPendaftaran|number_format(0, ',', '.') }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+    		    <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': data.id, 'page': app.request.get('page') }) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+    		    <a href="{{ path('payment_registrationfee_print_receipt', { 'sid': siswa.id, 'pid': data.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+		    {% if editLink[loop.index0] %}
+        		<a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': data.id, 'page': app.request.get('page') }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}" class="icon-shopping-cart"></a>
+		    {% endif %}
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="clearfix"></div>
+
+{% if jumlahItemBiaya > jumlahItemBiayaTerbayar %}
+<form id="pay-form" action="{{ path('payment_registrationfee_create', { 'sid': siswa.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_row(form.daftarBiayaPendaftaran) }}
+    <div class="control-group">
+        <div class="controls">
+            {{ 'label.payables.amount'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
+        </div>
+    </div>
+    <div class="control-group">
+        {{ form_widget(form.transaksiPembayaranPendaftaran) }}
+    </div>
+    {{ form_rest(form) }}
+    <div class="control-group">
+        <p style="font-style: italic; font-size: 0.9em;">
+            {{ 'shortinfo.pay.notbiggerthan.fee'|trans }}<br />
+            {{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}
+        </p>
+    </div>
+    <div class="form-actions">
+    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    </div>
+</form>
+{% endif %}
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+<script language="javascript" type="text/javascript">
+var total = 0;
+var amount;
+
+$(document).ready(function() {
+	$(".checkbox").each(function() {
+		var checkbox = $(this).find('input:checked');
+		if (typeof checkbox.val() !== 'undefined') {
+			var num = 0;
+
+			str = $(this).text().split('.').join('');
+	        num = str.match(/\d+/);
+	        total += parseInt(num);
+		}
+    });
+	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    $("#fee-amount").text(amount);
+
+    $("form input:checkbox").change(function() {
+    	total = 0;
+    	$(".checkbox").each(function() {
+    		var checkbox = $(this).find('input:checked');
+    		if (typeof checkbox.val() !== 'undefined') {
+    			var num = 0;
+
+    			str = $(this).text().split('.').join('');
+    	        num = str.match(/\d+/);
+    	        total += parseInt(num);
+    		}
+        });
+    	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount").text(amount);
+    });
+
+    $("#pay-form").submit(function() {
+        var payamount = parseInt($(".pay-amount").val().split('.').join(''));
+        var feeamount = parseInt($("#fee-amount").text().split('.').join(''));
+
+        if (payamount > feeamount) {
+            alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
+            return false;
+        } else if (payamount < feeamount && $("form input:checked").length > 1) {
+            alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
+            return false;
+        } else if (payamount == 0 || $("form input:checked").length < 1) {
+        	alert("{{ 'shortinfo.pay.nozero'|trans }}");
+        	return false;
+        }
+
+        return true;
+    });
+});
+</script>
+
+{% endblock content %}

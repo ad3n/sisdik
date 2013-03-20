@@ -1,12 +1,17 @@
 label:
+    payables.amount: Jumlah Biaya
+    fee.undefined: Biaya tak terdefinisi
+    previous.payment: Pembayaran Sebelumnya
     payment.description: Keterangan Bayar
+    payment.date: Tanggal Bayar
+    payment.number: Nomor Transaksi/Kwitansi
     committee.leader: Ketua Panitia
     active.committee: Panitia Aktif
     search.today.input: data input hari ini
     refresh.searchresult: segarkan hasil pencarian
     refresh: segarkan
     pay.amount: Jumlah Bayar
-    paid.amount: Jumlah Dibayar
+    paid.amount: Jumlah bayar
     search.notpaid: belum bayar
     search.paymentnotcomplete: belum lunas
     searchkey.name: Nama
@@ -188,6 +193,7 @@ label:
             name: Nama Biaya Pendaftaran
             code: Kode Biaya Pendaftaran
             entry: Biaya Pendaftaran
+            transaction: Detail Transaksi Biaya Pendaftaran
         once:
             add: Tambah Biaya Sekali Bayar
             name: Nama Biaya Sekali Bayar
@@ -323,6 +329,7 @@ flash:
         registration:
             inserted: Data Biaya Pendaftaran berhasil ditambah
             updated: Data Biaya Pendaftaran berhasil diperbarui
+            mortgage.updated: Data cicilan Biaya Pendaftaran berhasil diperbarui
             deleted: Data Biaya Pendaftaran berhasil dihapus
             fail.delete: Data Biaya Pendaftaran gagal dihapus
         once:
@@ -437,9 +444,11 @@ tip:
     edit.regphoto: Ubah Foto Registrasi
     edit.full.form: Ubah Form Lengkap
     payment.registrationfee: Pembayaran Biaya Pendaftaran
+    payment.registrationfee.mortgage: Cicilan Pembayaran Pendaftaran
     payment.oncefee: Pembayaran Biaya Sekali Bayar
     payment.recur: Pembayaran Biaya Berulang
     payment.detail: Detail Pembayaran
+    print.receipt: Cetak Kwitansi
 
 "Current": Password aktif
 
@@ -507,6 +516,7 @@ exception:
     unique.applicant: Data calon siswa tahun masuk dan nomor pendaftaran tidak unik. Hubungi developer
     cannot.alter.applicant.inactive.yearentry: Tidak bisa mengubah data calon siswa di tahun yang panitia PSB-nya tidak aktif
     unique.applicant.oncefee: Ada data calon siswa yang sama di pembayaran calon siswa. Hubungi developer
+    registrationfee.gt.one: Item biaya pendaftaran lebih dari satu tidak bisa dicicil
 
 shortinfo:
     password.mustequal: password harus sama
@@ -537,7 +547,11 @@ shortinfo:
         Data yang akan disimpan ada di dalam file berikut <a href="%path%">%filename%</a>.<br />
         Setelah pasti bahwa isinya valid dan sesuai keinginan, lanjutkan proses penyimpanan ke database.<br />
     capturefirst: Ambil terlebih dahulu gambar, baru klik tombol simpan
-    total.payables: Total biaya yg harus dibayar 
+    total.payables: Total biaya yg harus dibayar
+    total.paid: Total biaya yg sudah dibayar
+    pay.notbiggerthan.fee: Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih
+    pay.lessthan.fee.oneitem: Mencicil (jumlah bayar lebih kecil dari jumlah biaya) hanya bisa untuk satu item biaya
+    pay.nozero: Tidak bisa membayar 0 rupiah
     
 alert:
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
