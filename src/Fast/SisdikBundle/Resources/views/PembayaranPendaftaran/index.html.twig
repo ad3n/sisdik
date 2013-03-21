@@ -27,6 +27,12 @@
 	    {% endfor %}
 	{% endif %}
 	</dd>
+	<dt>{{ 'label.payables.amount'|trans }}</dt>
+	<dd>{% render url('fee_registration_totalinfo', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id}) %}</dd>
+	<dt>{{ 'label.paid.amount.total'|trans }}</dt>
+	<dd>{{ siswa.totalNominalPembayaranPendaftaran|number_format(0, ',', '.') }}</dd>
+	<dt>{{ 'label.payment.remains'|trans }}</dt>
+	<dd>{% render url('fee_registration_remains', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran}) %}</dd>
 </dl>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
@@ -49,7 +55,7 @@
 		    {% if data.daftarBiayaPendaftaran %}
     		    {% for biaya in data.daftarBiayaPendaftaran %}
     		        {% if biaya != '' %}
-    		            {% render url('payment_registrationfee_getfeeinfo', {'sid': siswa.id, 'id': biaya}) %}{% if not loop.last %}, {% endif %}
+    		            {% render url('fee_registration_info', {'id': biaya}) %}{% if not loop.last %}, {% endif %}
     		        {% endif %}
     		    {% endfor %}
 		    {% endif %}
@@ -101,7 +107,6 @@
         <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
-
 <script language="javascript" type="text/javascript">
 var total = 0;
 var amount;

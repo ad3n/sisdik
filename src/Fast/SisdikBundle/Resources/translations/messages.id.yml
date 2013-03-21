@@ -1,4 +1,5 @@
 label:
+    payment.remains: Kurang Bayar
     payables.amount: Jumlah Biaya
     fee.undefined: Biaya tak terdefinisi
     previous.payment: Pembayaran Sebelumnya
@@ -11,7 +12,8 @@ label:
     refresh.searchresult: segarkan hasil pencarian
     refresh: segarkan
     pay.amount: Jumlah Bayar
-    paid.amount: Jumlah bayar
+    paid.amount: Jumlah Bayar
+    paid.amount.total: Jumlah Total Pembayaran
     search.notpaid: belum bayar
     search.paymentnotcomplete: belum lunas
     searchkey.name: Nama

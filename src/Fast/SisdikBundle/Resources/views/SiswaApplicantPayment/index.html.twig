@@ -29,8 +29,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.yearentry.entry'|trans }}</th>
-    		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th>{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.nomorPendaftaran') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorPendaftaran') }}
     	    </th>
@@ -38,21 +37,23 @@
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
     		<th>{{ 'label.paid.amount'|trans }}</th>
+    		<th>{{ 'label.payment.remains'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.application.number'|trans }}">{{ data.nomorPendaftaran }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.paid.amount'|trans }}">
     		    {% set totalBayar = 0 %}
     		    {% set totalBayar = data.totalNominalPembayaranPendaftaran %}
-    		    {{ totalBayar|number_format(0, ',', '.') }}
+    		    {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {% render url('fee_registration_totalinfo', {'tahunmasuk': data.tahunmasuk.id, 'gelombang': data.gelombang.id}) %}
 		    </td>
+    		<td data-title="{{ 'label.payment.remains'|trans }}">{% render url('fee_registration_remains', {'tahunmasuk': data.tahunmasuk.id, 'gelombang': data.gelombang.id, 'paid': totalBayar}) %}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('payment_registrationfee', {'sid': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
     		</td>

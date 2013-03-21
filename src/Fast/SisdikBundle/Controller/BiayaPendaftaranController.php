@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -14,12 +15,13 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Form\BiayaPendaftaranType;
 use Fast\SisdikBundle\Form\BiayaSearchFormType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * BiayaPendaftaran controller.
  *
  * @Route("/fee/registration")
- * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA')")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_USER')")
  */
 class BiayaPendaftaranController extends Controller
 {
@@ -28,6 +30,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/", name="fee_registration")
      * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function indexAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -74,6 +77,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/{id}/show", name="fee_registration_show")
      * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function showAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -99,6 +103,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/new", name="fee_registration_new")
      * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function newAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -118,6 +123,7 @@ class BiayaPendaftaranController extends Controller
      * @Route("/create", name="fee_registration_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:BiayaPendaftaran:new.html.twig")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -162,6 +168,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/{id}/edit", name="fee_registration_edit")
      * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function editAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -190,6 +197,7 @@ class BiayaPendaftaranController extends Controller
      * @Route("/{id}/update", name="fee_registration_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:BiayaPendaftaran:edit.html.twig")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -214,7 +222,8 @@ class BiayaPendaftaranController extends Controller
                 $em->flush();
 
                 $this->get('session')
-                        ->setFlash('success', $this->get('translator')->trans('flash.fee.registration.updated'));
+                        ->setFlash('success',
+                                $this->get('translator')->trans('flash.fee.registration.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.registration');
@@ -241,6 +250,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/{id}/delete", name="fee_registration_delete")
      * @Method("POST")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
     public function deleteAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -261,7 +271,8 @@ class BiayaPendaftaranController extends Controller
                 $em->flush();
 
                 $this->get('session')
-                        ->setFlash('success', $this->get('translator')->trans('flash.fee.registration.deleted'));
+                        ->setFlash('success',
+                                $this->get('translator')->trans('flash.fee.registration.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -274,6 +285,77 @@ class BiayaPendaftaranController extends Controller
         }
 
         return $this->redirect($this->generateUrl('fee_registration'));
+    }
+
+    /**
+     * Finds total payables registration fee info
+     *
+     * @Route("/totalinfo/{tahunmasuk}/{gelombang}", name="fee_registration_totalinfo")
+     */
+    public function getTotalFeeInfoAction($tahunmasuk, $gelombang) {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                ->findBy(
+                        array(
+                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
+                        ));
+
+        $total = 0;
+        foreach ($entities as $entity) {
+            if ($entity instanceof BiayaPendaftaran) {
+                $total += $entity->getNominal();
+            }
+        }
+
+        return new Response(number_format($total, 0, ',', '.'));
+    }
+
+    /**
+     * Finds total payment remains registration fee info
+     *
+     * @Route("/remains/{tahunmasuk}/{gelombang}/{paid}", name="fee_registration_remains")
+     */
+    public function getRemainsPaymentInfoAction($tahunmasuk, $gelombang, $paid) {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                ->findBy(
+                        array(
+                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
+                        ));
+
+        $total = 0;
+        foreach ($entities as $entity) {
+            if ($entity instanceof BiayaPendaftaran) {
+                $total += $entity->getNominal();
+            }
+        }
+
+        return new Response(number_format(($total - $paid), 0, ',', '.'));
+    }
+
+    /**
+     * Finds info of a fee
+     *
+     * @Route("/info/{id}", name="fee_registration_info")
+     */
+    public function getFeeInfoAction($id) {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+
+        if ($entity instanceof BiayaPendaftaran) {
+            $info = $entity->getJenisbiaya()->getNama() . " ("
+                    . number_format($entity->getNominal(), 0, ',', '.') . ")";
+        } else {
+            $info = $this->get('translator')->trans('label.fee.undefined');
+        }
+
+        return new Response($info);
     }
 
     private function createDeleteForm($id) {

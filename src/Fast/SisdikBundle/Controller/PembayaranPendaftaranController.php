@@ -107,27 +107,6 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * Finds info of a fee
-     *
-     * @Route("/{id}/info", name="payment_registrationfee_getfeeinfo")
-     */
-    public function getFeeInfoAction($sid, $id) {
-        $sekolah = $this->isRegisteredToSchool();
-
-        $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
-
-        if ($entity instanceof BiayaPendaftaran) {
-            $info = $entity->getJenisbiaya()->getNama() . " ("
-                    . number_format($entity->getNominal(), 0, ',', '.') . ")";
-        } else {
-            $info = $this->get('translator')->trans('label.fee.undefined');
-        }
-
-        return new Response($info);
-    }
-
-    /**
      * Creates a new PembayaranPendaftaran entity.
      *
      * @Route("/create", name="payment_registrationfee_create")
