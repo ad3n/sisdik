@@ -107,7 +107,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * Finds a name of a fee
+     * Finds info of a fee
      *
      * @Route("/{id}/info", name="payment_registrationfee_getfeeinfo")
      */
@@ -142,18 +142,38 @@ class PembayaranPendaftaranController extends Controller
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
 
+        $jumlahItemBiaya = count(
+                $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                        ->findBy(
+                                array(
+                                        'tahunmasuk' => $siswa->getTahunmasuk(),
+                                        'gelombang' => $siswa->getGelombang(),
+                                )));
+
         $entities = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')
                 ->findBy(array(
                     'siswa' => $siswa
                 ));
 
+        $totalBiaya = array();
+        $editLink = array();
         $biayaTerbayar = array();
+        $jumlahItemBiayaTerbayar = 0;
         foreach ($entities as $pembayaran) {
             if (is_object($pembayaran) && $pembayaran instanceof PembayaranPendaftaran) {
                 $nominalBiaya = 0;
+                $jumlahItemBiayaTerbayar += count($pembayaran->getDaftarBiayaPendaftaran());
                 foreach ($pembayaran->getDaftarBiayaPendaftaran() as $biaya) {
                     $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
                     $nominalBiaya += $biayaPendaftaran->getNominal();
+                }
+                $totalBiaya[] = $nominalBiaya;
+
+                if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() == $nominalBiaya
+                        && $nominalBiaya != 0) {
+                    $editLink[] = false;
+                } else {
+                    $editLink[] = true;
                 }
 
                 unset($tmp);
@@ -186,7 +206,9 @@ class PembayaranPendaftaranController extends Controller
         }
 
         return array(
-            'entity' => $entity, 'form' => $form->createView(),
+                'entities' => $entities, 'siswa' => $siswa, 'jumlahItemBiaya' => $jumlahItemBiaya,
+                'jumlahItemBiayaTerbayar' => $jumlahItemBiayaTerbayar, 'form' => $form->createView(),
+                'totalBiaya' => $totalBiaya, 'editLink' => $editLink,
         );
     }
 
