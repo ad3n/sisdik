@@ -30,7 +30,7 @@
         {% for biaya in entity.daftarBiayaPendaftaran %}
         	<li>
                 {% if biaya != '' %}
-                    {% render url('payment_registrationfee_getfeeinfo', {'sid': siswa.id, 'id': biaya}) %}
+                    {% render url('fee_registration_info', {'id': biaya}) %}
                 {% endif %}
             </li>
         {% endfor %}
