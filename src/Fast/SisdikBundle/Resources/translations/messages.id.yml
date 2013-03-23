@@ -2,7 +2,6 @@ label:
     payment.remains: Kurang Bayar
     payables.amount: Jumlah Biaya
     fee.undefined: Biaya tak terdefinisi
-    previous.payment: Pembayaran Sebelumnya
     payment.description: Keterangan Bayar
     payment.date: Tanggal Bayar
     payment.number: Nomor Transaksi/Kwitansi
@@ -196,6 +195,7 @@ label:
             code: Kode Biaya Pendaftaran
             entry: Biaya Pendaftaran
             transaction: Detail Transaksi Biaya Pendaftaran
+            paid: Daftar Biaya Yang Sudah Dibayar
         once:
             add: Tambah Biaya Sekali Bayar
             name: Nama Biaya Sekali Bayar
