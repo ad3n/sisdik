@@ -1,11 +1,12 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Symfony\Component\Form\FormBuilderInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TahunmasukType extends AbstractType
 {
@@ -27,15 +28,13 @@ class TahunmasukType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
+                    ->where('t.id = :sekolah')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('sekolah', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
+                                    'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                             ));
@@ -47,6 +46,14 @@ class TahunmasukType extends AbstractType
         $yearsBefore = date('Y', mktime(0, 0, 0, date("m"), date("d"), date("Y") - $distance));
         $yearsAfter = date('Y', mktime(0, 0, 0, date("m"), date("d"), date("Y") + $distance));
         return array_combine(range($yearsBefore, $yearsAfter), range($yearsBefore, $yearsAfter));
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+        $resolver
+                ->setDefaults(
+                        array(
+                            'data_class' => 'Fast\SisdikBundle\Entity\Tahunmasuk'
+                        ));
     }
 
     public function getName() {
