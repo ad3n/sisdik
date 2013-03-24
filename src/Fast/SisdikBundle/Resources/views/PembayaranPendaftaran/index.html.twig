@@ -175,6 +175,10 @@ $(document).ready(function() {
 	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     $("#fee-amount").text(amount);
 
+    $("#fee-amount").click(function() {
+        $(".pay-amount").val($(this).text());
+    });
+
     $("form input:checkbox").change(function() {
     	total = 0;
     	$(".checkbox").each(function() {
