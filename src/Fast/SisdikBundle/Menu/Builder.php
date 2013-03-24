@@ -228,6 +228,12 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'applicant_payment'
                             ));
 
+            $payments
+                    ->addChild('links.printreceiptsoption',
+                            array(
+                                'route' => 'printreceiptsoption'
+                            ));
+
         }
 
         if ($securityContext

@@ -1,0 +1,12 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}printreceiptsoption{% endtrans %}{% endblock %}
+
+{% block content %}
+<form action="{{ path('printreceiptsoption_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    </div>
+</form>
+{% endblock content %}

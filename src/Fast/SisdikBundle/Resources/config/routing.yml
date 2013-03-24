@@ -196,5 +196,10 @@ payment_registrationfee:
     type:     annotation
     prefix:   /
 
+printreceiptsoption:
+    resource: "@FastSisdikBundle/Controller/PilihanCetakKwitansiController.php"
+    type:     annotation
+    prefix:   /
+
 
 

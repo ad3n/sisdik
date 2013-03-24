@@ -1,4 +1,6 @@
 label:
+    defaultpdf: Default (PDF)
+    directprint: Direct Print (Dot Matrix)
     payment.remains: Kurang Bayar
     payables.amount: Jumlah Biaya
     fee.undefined: Biaya tak terdefinisi
@@ -436,6 +438,8 @@ flash:
     applicant.oncefee:
         inserted: Pembayaran sekali bayar untuk %name% berhasil disimpan
         updated: Pembayaran sekali bayar untuk %name% berhasil disimpan
+    printreceiptsoption:
+        saved: Pilihan cetak kwitansi pembayaran berhasil disimpan
 
 tip:
     edit: Ubah
@@ -520,6 +524,7 @@ exception:
     cannot.alter.applicant.inactive.yearentry: Tidak bisa mengubah data calon siswa di tahun yang panitia PSB-nya tidak aktif
     unique.applicant.oncefee: Ada data calon siswa yang sama di pembayaran calon siswa. Hubungi developer
     registrationfee.gt.one: Item biaya pendaftaran lebih dari satu tidak bisa dicicil
+    unique.printreceiptsoption: Tidak bisa menyimpan pilihan cetak. Sudah ada data pilihan di dalam sistem.
 
 shortinfo:
     password.mustequal: password harus sama
