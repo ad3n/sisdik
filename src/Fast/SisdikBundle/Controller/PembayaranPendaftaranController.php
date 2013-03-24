@@ -725,9 +725,15 @@ class PembayaranPendaftaranController extends Controller
             $barisTandatangan2 .= $kolomPenerima2 . str_repeat(" ", $spasiKolomPenerima2);
 
             if ($twoPages === true) {
-                $commands->addContent($barisTandatangan2 . "(hal 2/2)\r\n");
+                $commands
+                        ->addContent(
+                                $barisTandatangan2 . "(" . $translator->trans('page', array(), 'printing')
+                                        . " 2/2)\r\n");
             } else {
-                $commands->addContent($barisTandatangan2 . "(hal 1/1)\r\n");
+                $commands
+                        ->addContent(
+                                $barisTandatangan2 . "(" . $translator->trans('page', array(), 'printing')
+                                        . " 1/1)\r\n");
             }
 
             $commands->addFormFeed();
