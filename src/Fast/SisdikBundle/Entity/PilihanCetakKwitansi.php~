@@ -1,0 +1,42 @@
+<?php
+
+namespace Fast\SisdikBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PilihanCetakKwitansi
+ *
+ * @ORM\Table(name="pilihan_cetak_kwitansi")
+ * @ORM\Entity
+ */
+class PilihanCetakKwitansi
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="output", type="string", length=45, nullable=false)
+     */
+    private $output;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     * })
+     */
+    private $sekolah;
+
+
+}
