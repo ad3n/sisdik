@@ -1,4 +1,5 @@
 label:
+    payment: pembayaran
     defaultpdf: Default (PDF)
     directprint: Direct Print (Dot Matrix)
     payment.remains: Kurang Bayar
@@ -525,6 +526,7 @@ exception:
     unique.applicant.oncefee: Ada data calon siswa yang sama di pembayaran calon siswa. Hubungi developer
     registrationfee.gt.one: Item biaya pendaftaran lebih dari satu tidak bisa dicicil
     unique.printreceiptsoption: Tidak bisa menyimpan pilihan cetak. Sudah ada data pilihan di dalam sistem.
+    directprint.file: Error ketika membuat file untuk cetak langsung
 
 shortinfo:
     password.mustequal: password harus sama

@@ -3,6 +3,31 @@
 {% block page_heading %}{% trans from "headings" %}payment.registrationfee.entry{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.gray-out {
+    opacity: 0.2;
+    filter: alpha(opacity=20); /* msie */
+}
+.content .popover-content p {
+    margin-bottom: 0;
+}
+.popover-title {
+    padding: 6px 15px;
+}
+.popover-content {
+    padding: 10px 15px;
+}
+.popover h3 {
+    text-shadow: none;
+    font-size: 1.1em;
+}
+.popover-inner {
+    padding: 1px;
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);
+    max-width: 160px;
+}
+</style>
+
 <dl>
     <dt>{{ 'label.yearentry.entry'|trans }}</dt>
     <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
@@ -64,7 +89,32 @@
     		<td data-title="{{ 'label.paid.amount'|trans }}">{{ data.totalNominalTransaksiPembayaranPendaftaran|number_format(0, ',', '.') }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
     		    <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': data.id, 'page': app.request.get('page') }) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-    		    <a href="{{ path('payment_registrationfee_print_receipt', { 'sid': siswa.id, 'pid': data.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+		    {% if data.transaksiPembayaranPendaftaran|length > 1 %}
+		        <a href="#" onclick="return false"
+		            title="{{ 'tip.print.receipt'|trans }}"
+		            class="icon-print gray-out"
+		            id="popover-{{ data.id }}"></a>
+	            <script language="javascript" type="text/javascript">
+	                var popContent =
+	                {% for transaksi in data.transaksiPembayaranPendaftaran %}
+                        {% if not loop.last %}
+                            "{{ 'label.payment'|trans }} #{{ loop.index }}<a href='{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': data.id, 'id': transaksi.id }) }}' class='icon-print'></a><br />" +
+                        {% else %}
+                            "{{ 'label.payment'|trans }} #{{ loop.index }}<a href='{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': data.id, 'id': transaksi.id }) }}' class='icon-print'></a>"
+                        {% endif %}
+                    {% endfor %}
+	                $("#popover-" + {{ data.id }}).popover({
+	                    "placement": "right",
+	                    "html": true,
+	                    "content": popContent
+		            });
+	            </script>
+	        {% else %}
+	            {% for transaksi in data.transaksiPembayaranPendaftaran %}
+    		    <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': data.id, 'id': transaksi.id }) }}"
+    		        title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+		        {% endfor %}
+		    {% endif %}
 		    {% if editLink[loop.index0] %}
         		<a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': data.id, 'page': app.request.get('page') }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}" class="icon-shopping-cart"></a>
 		    {% endif %}
@@ -158,6 +208,7 @@ $(document).ready(function() {
 
         return true;
     });
+
 });
 </script>
 
