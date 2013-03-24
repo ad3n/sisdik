@@ -68,6 +68,16 @@ class TransaksiPembayaranPendaftaran
     private $pembayaranPendaftaran;
 
     /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $dibuatOleh;
+
+    /**
      * Get id
      *
      * @return integer
@@ -201,5 +211,26 @@ class TransaksiPembayaranPendaftaran
      */
     public function getPembayaranPendaftaran() {
         return $this->pembayaranPendaftaran;
+    }
+
+    /**
+     * Set dibuatOleh
+     *
+     * @param \Fast\SisdikBundle\Entity\User $dibuatOleh
+     * @return Siswa
+     */
+    public function setDibuatOleh(\Fast\SisdikBundle\Entity\User $dibuatOleh = null) {
+        $this->dibuatOleh = $dibuatOleh;
+
+        return $this;
+    }
+
+    /**
+     * Get dibuatOleh
+     *
+     * @return \Fast\SisdikBundle\Entity\User
+     */
+    public function getDibuatOleh() {
+        return $this->dibuatOleh;
     }
 }
