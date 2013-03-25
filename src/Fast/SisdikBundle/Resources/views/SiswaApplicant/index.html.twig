@@ -32,8 +32,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.yearentry.entry'|trans }}</th>
-    		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th>{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
@@ -45,8 +44,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		{% if data.orangtuaWali %}
     		    {% for orangtua in data.orangtuaWali %}
