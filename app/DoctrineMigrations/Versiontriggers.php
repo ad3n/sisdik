@@ -151,6 +151,17 @@ BEGIN
     SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
 END";
 
+    private $beforeUpdateBiayaPendaftaran = "CREATE TRIGGER `befup_bp`
+BEFORE UPDATE ON biaya_pendaftaran
+FOR EACH ROW
+BEGIN
+    SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
+    SET NEW.tahunmasuk_id = OLD.tahunmasuk_id;
+    SET NEW.gelombang_id = OLD.gelombang_id;
+    SET NEW.nominal = OLD.nominal;
+    SET NEW.terpakai = OLD.terpakai;
+END";
+
     public function up(Schema $schema) {
         $this->addSql($this->beforeInsertSiswa);
         $this->addSql($this->beforeUpdateSiswa);
@@ -169,6 +180,8 @@ END";
 
         $this->addSql($this->beforeInsertKelas);
         $this->addSql($this->beforeUpdateKelas);
+
+        $this->addSql($this->beforeUpdateBiayaPendaftaran);
     }
 
     public function down(Schema $schema) {
@@ -189,6 +202,8 @@ END";
 
         $this->addSql("DROP TRIGGER IF EXISTS `befin_kelas`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befup_kelas`;");
+
+        $this->addSql("DROP TRIGGER IF EXISTS `befup_bp`;");
     }
 }
 

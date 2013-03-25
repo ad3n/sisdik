@@ -337,6 +337,7 @@ flash:
             mortgage.updated: Data cicilan Biaya Pendaftaran berhasil diperbarui
             deleted: Data Biaya Pendaftaran berhasil dihapus
             fail.delete: Data Biaya Pendaftaran gagal dihapus
+            update.restriction: Data Biaya Pendaftaran telah digunakan. Hanya urutan yang bisa diubah.
         once:
             inserted: Data Biaya Sekali Bayar berhasil ditambah
             updated: Data Biaya Sekali Bayar berhasil diperbarui
@@ -502,6 +503,8 @@ exception:
     limitedtoadmin: modul ini terbatas hanya untuk admin sekolah
     registertoschool: user harus diregistrasikan ke sekolah terlebih dahulu
     delete.restrict: Tidak bisa menghapus data yang telah dipakai di data lain yang terkait
+    delete.restrict.registrationfee: Data pembayaran telah dipakai; tidak bisa dihapus.
+    update.restrict.registrationfee: Data pembayaran telah dipakai; tidak bisa diubah.
     unique.studentclass: Tidak bisa mendaftarkan siswa di kelas yang sama
     unique.studentclass.active: Siswa hanya bisa aktif di satu kelas pada satu tahun ajaran
     studentid.unique: Nomor induk harus unik, tidak boleh ada yang sama
