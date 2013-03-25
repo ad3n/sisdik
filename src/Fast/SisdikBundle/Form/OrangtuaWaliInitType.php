@@ -32,6 +32,6 @@ class OrangtuaWaliInitType extends AbstractType
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_orangtuawalitype';
+        return 'fast_sisdikbundle_orangtuawaliinittype';
     }
 }
