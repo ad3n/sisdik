@@ -140,6 +140,13 @@ class SiswaApplicantType extends AbstractType
                                         'class' => 'medium'
                                     ), 'label' => 'label.gender'
                             ))
+                    ->add('file', 'file',
+                            array(
+                                    'required' => false, 'label' => 'label.photo',
+                                    'attr' => array(
+                                        'class' => 'small'
+                                    ),
+                            ))
                     ->add('agama', null,
                             array(
                                     'required' => true, 'label' => 'label.religion',

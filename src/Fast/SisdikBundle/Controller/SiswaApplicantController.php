@@ -250,6 +250,9 @@ class SiswaApplicantController extends Controller
         if ($editForm->isValid()) {
 
             try {
+
+                $entity->setDiubahOleh($this->container->get('security.context')->getToken()->getUser());
+
                 $em->persist($entity);
                 $em->flush();
 

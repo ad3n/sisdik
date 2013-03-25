@@ -23,6 +23,9 @@
         <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
         {% endif %}
     </li>
+    <li>
+        <a href="{{ path('applicant_show', {'id': entity.id}) }}">{{ 'link.studentinfo'|trans }}</a>
+    </li>
 </ul>
 
 <script language="javascript" type="text/javascript">

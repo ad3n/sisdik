@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
+use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Siswa
 {
     const WEBCAMPHOTO_DIR = 'uploads/students/webcam-photos/';
-    const PHOTO_DIR = 'uploads/students/photos';
+    const PHOTO_DIR = 'uploads/students/photos/';
     const THUMBNAIL_PREFIX = 'th1-';
     const MEMORY_LIMIT = '256M';
     const PHOTO_THUMB_WIDTH = 80;
@@ -1306,6 +1307,11 @@ class Siswa
         return self::WEBCAMPHOTO_DIR;
     }
 
+    public function getWebcamPhotoPath() {
+        return null === $this->fotoPendaftaran ? null
+                : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->fotoPendaftaran;
+    }
+
     public function getFile() {
         return $this->file;
     }
@@ -1432,6 +1438,10 @@ class Siswa
 
     protected function getUploadDir() {
         // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
-        return self::PHOTO_DIR;
+        $fs = new Filesystem();
+        if (!$fs->exists(self::PHOTO_DIR . $this->getSekolah()->getId())) {
+            $fs->mkdir(self::PHOTO_DIR . $this->getSekolah()->getId());
+        }
+        return self::PHOTO_DIR . $this->getSekolah()->getId();
     }
 }

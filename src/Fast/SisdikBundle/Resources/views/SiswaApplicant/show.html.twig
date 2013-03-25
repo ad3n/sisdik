@@ -16,6 +16,8 @@
                 <dd>{{ entity.namaLengkap }}</dd>
                 <dt>{{ 'label.gender'|trans }}</dt>
                 <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+                <dt>{{ 'label.photo'|trans }}</dt>
+                <dd><img src="/{{ entity.getWebPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
                 <dt>{{ 'label.religion'|trans }}</dt>
                 <dd>{{ entity.agama|title }}</dd>
                 <dt>{{ 'label.birthplace'|trans }}</dt>
@@ -70,21 +72,25 @@
                 <dd>{{ entity.tinggibadan }}</dd>
                 <dt>{{ 'label.bloodtype'|trans }}</dt>
                 <dd>{{ entity.golongandarah }}</dd>
-{#                 <dt>{{ 'label.'|trans }}</dt>#}
-{#                 <dd>{{ entity.waktuSimpan|localeDate('long') }}</dd>#}
-{#                 <dt>{{ 'label.'|trans }}</dt>#}
-{#                 <dd>{{ entity.waktuUbah|localeDate('long') }}</dd>#}
             </dl>
         </div>
         <div class="span4">
-            <img src="/{{ entity.webcamPhotoDir ~ entity.sekolah.id ~ '/' ~ entity.fotoPendaftaran }}" />
-        {% if tahunaktif == entity.tahunmasuk.tahun %}
+            <img src="/{{ entity.webcamPhotoPath }}" />
             <ul class="pills">
+        {% if tahunaktif == entity.tahunmasuk.tahun %}
                 <li>
                     <a href="{{ path('applicant_editregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
                 </li>
-            </ul>
         {% endif %}
+            </ul>
+
+            <h4 style="margin-top: 1em;">{{ 'heading.personalinfo'|trans }}</h4>
+        	{{ 'text.personalinfo'|trans }}<br />
+            <ul class="pills">
+                <li>
+                    <a href="{{ path('parentsguards', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit.parent.or.guardian'|trans }}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

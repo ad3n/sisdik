@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -91,15 +90,12 @@ class Sekolah
      */
     private $kepsek;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -109,20 +105,18 @@ class Sekolah
      * @param string $nama
      * @return Sekolah
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -132,20 +126,18 @@ class Sekolah
      * @param string $kode
      * @return Sekolah
      */
-    public function setKode($kode)
-    {
+    public function setKode($kode) {
         $this->kode = $kode;
-    
+
         return $this;
     }
 
     /**
      * Get kode
      *
-     * @return string 
+     * @return string
      */
-    public function getKode()
-    {
+    public function getKode() {
         return $this->kode;
     }
 
@@ -155,20 +147,18 @@ class Sekolah
      * @param string $alamat
      * @return Sekolah
      */
-    public function setAlamat($alamat)
-    {
+    public function setAlamat($alamat) {
         $this->alamat = $alamat;
-    
+
         return $this;
     }
 
     /**
      * Get alamat
      *
-     * @return string 
+     * @return string
      */
-    public function getAlamat()
-    {
+    public function getAlamat() {
         return $this->alamat;
     }
 
@@ -178,20 +168,18 @@ class Sekolah
      * @param string $kodepos
      * @return Sekolah
      */
-    public function setKodepos($kodepos)
-    {
+    public function setKodepos($kodepos) {
         $this->kodepos = $kodepos;
-    
+
         return $this;
     }
 
     /**
      * Get kodepos
      *
-     * @return string 
+     * @return string
      */
-    public function getKodepos()
-    {
+    public function getKodepos() {
         return $this->kodepos;
     }
 
@@ -201,20 +189,18 @@ class Sekolah
      * @param string $telepon
      * @return Sekolah
      */
-    public function setTelepon($telepon)
-    {
+    public function setTelepon($telepon) {
         $this->telepon = $telepon;
-    
+
         return $this;
     }
 
     /**
      * Get telepon
      *
-     * @return string 
+     * @return string
      */
-    public function getTelepon()
-    {
+    public function getTelepon() {
         return $this->telepon;
     }
 
@@ -224,20 +210,18 @@ class Sekolah
      * @param string $fax
      * @return Sekolah
      */
-    public function setFax($fax)
-    {
+    public function setFax($fax) {
         $this->fax = $fax;
-    
+
         return $this;
     }
 
     /**
      * Get fax
      *
-     * @return string 
+     * @return string
      */
-    public function getFax()
-    {
+    public function getFax() {
         return $this->fax;
     }
 
@@ -247,20 +231,18 @@ class Sekolah
      * @param string $email
      * @return Sekolah
      */
-    public function setEmail($email)
-    {
+    public function setEmail($email) {
         $this->email = $email;
-    
+
         return $this;
     }
 
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
-    public function getEmail()
-    {
+    public function getEmail() {
         return $this->email;
     }
 
@@ -270,20 +252,18 @@ class Sekolah
      * @param string $norekening
      * @return Sekolah
      */
-    public function setNorekening($norekening)
-    {
+    public function setNorekening($norekening) {
         $this->norekening = $norekening;
-    
+
         return $this;
     }
 
     /**
      * Get norekening
      *
-     * @return string 
+     * @return string
      */
-    public function getNorekening()
-    {
+    public function getNorekening() {
         return $this->norekening;
     }
 
@@ -293,20 +273,18 @@ class Sekolah
      * @param string $bank
      * @return Sekolah
      */
-    public function setBank($bank)
-    {
+    public function setBank($bank) {
         $this->bank = $bank;
-    
+
         return $this;
     }
 
     /**
      * Get bank
      *
-     * @return string 
+     * @return string
      */
-    public function getBank()
-    {
+    public function getBank() {
         return $this->bank;
     }
 
@@ -316,20 +294,18 @@ class Sekolah
      * @param string $kepsek
      * @return Sekolah
      */
-    public function setKepsek($kepsek)
-    {
+    public function setKepsek($kepsek) {
         $this->kepsek = $kepsek;
-    
+
         return $this;
     }
 
     /**
      * Get kepsek
      *
-     * @return string 
+     * @return string
      */
-    public function getKepsek()
-    {
+    public function getKepsek() {
         return $this->kepsek;
     }
 }

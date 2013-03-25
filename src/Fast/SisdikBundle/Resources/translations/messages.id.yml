@@ -102,7 +102,7 @@ label:
     selectacademicyear: Pilih Tahun Ajaran
     enabled: Aktif
     gender: Jenis Kelamin
-    photo: Foto
+    photo: Pas Foto
     religion: Agama
     birthplace: Tempat Lahir
     birthday: Tanggal Lahir
@@ -285,6 +285,8 @@ link:
     backtodetail: « Kembali ke Info
     download.template: Unduh Berkas Template
     applicant.edit.regphoto: Ubah Foto Registrasi
+    edit.parent.or.guardian: Ubah/Tambah Orangtua/Wali
+    studentinfo: Info Data Siswa
 
 fos_user:
     username:

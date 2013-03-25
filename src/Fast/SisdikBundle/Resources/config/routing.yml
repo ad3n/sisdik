@@ -201,5 +201,10 @@ printreceiptsoption:
     type:     annotation
     prefix:   /
 
+parentsguards:
+    resource: "@FastSisdikBundle/Controller/OrangtuaWaliController.php"
+    type:     annotation
+    prefix:   /
+
 
 

@@ -13,14 +13,14 @@ use Fast\SisdikBundle\Form\OrangtuaWaliType;
 /**
  * OrangtuaWali controller.
  *
- * @Route("/appguardian")
+ * @Route("/parentsguards")
  */
 class OrangtuaWaliController extends Controller
 {
     /**
      * Lists all OrangtuaWali entities.
      *
-     * @Route("/", name="appguardian")
+     * @Route("/", name="parentsguards")
      * @Template()
      */
     public function indexAction()
@@ -37,7 +37,7 @@ class OrangtuaWaliController extends Controller
     /**
      * Finds and displays a OrangtuaWali entity.
      *
-     * @Route("/{id}/show", name="appguardian_show")
+     * @Route("/{id}/show", name="parentsguards_show")
      * @Template()
      */
     public function showAction($id)
@@ -61,7 +61,7 @@ class OrangtuaWaliController extends Controller
     /**
      * Displays a form to create a new OrangtuaWali entity.
      *
-     * @Route("/new", name="appguardian_new")
+     * @Route("/new", name="parentsguards_new")
      * @Template()
      */
     public function newAction()
@@ -78,7 +78,7 @@ class OrangtuaWaliController extends Controller
     /**
      * Creates a new OrangtuaWali entity.
      *
-     * @Route("/create", name="appguardian_create")
+     * @Route("/create", name="parentsguards_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:OrangtuaWali:new.html.twig")
      */
@@ -93,7 +93,7 @@ class OrangtuaWaliController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('appguardian_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('parentsguards_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -105,7 +105,7 @@ class OrangtuaWaliController extends Controller
     /**
      * Displays a form to edit an existing OrangtuaWali entity.
      *
-     * @Route("/{id}/edit", name="appguardian_edit")
+     * @Route("/{id}/edit", name="parentsguards_edit")
      * @Template()
      */
     public function editAction($id)
@@ -131,7 +131,7 @@ class OrangtuaWaliController extends Controller
     /**
      * Edits an existing OrangtuaWali entity.
      *
-     * @Route("/{id}/update", name="appguardian_update")
+     * @Route("/{id}/update", name="parentsguards_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:OrangtuaWali:edit.html.twig")
      */
@@ -153,7 +153,7 @@ class OrangtuaWaliController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('appguardian_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('parentsguards_edit', array('id' => $id)));
         }
 
         return array(
@@ -166,7 +166,7 @@ class OrangtuaWaliController extends Controller
     /**
      * Deletes a OrangtuaWali entity.
      *
-     * @Route("/{id}/delete", name="appguardian_delete")
+     * @Route("/{id}/delete", name="parentsguards_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id)
@@ -186,7 +186,7 @@ class OrangtuaWaliController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('appguardian'));
+        return $this->redirect($this->generateUrl('parentsguards'));
     }
 
     private function createDeleteForm($id)
