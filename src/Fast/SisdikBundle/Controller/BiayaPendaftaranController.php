@@ -185,7 +185,7 @@ class BiayaPendaftaranController extends Controller
 
         if ($entity->getTerpakai() === true) {
             $this->get('session')
-                    ->setFlash('success',
+                    ->setFlash('info',
                             $this->get('translator')->trans('flash.fee.registration.update.restriction'));
         }
 
@@ -225,13 +225,6 @@ class BiayaPendaftaranController extends Controller
         if ($editForm->isValid()) {
 
             try {
-
-                if ($entity->getTerpakai() === true) {
-                    $this->get('session')
-                            ->setFlash('success',
-                                    $this->get('translator')
-                                            ->trans('flash.fee.registration.update.restriction'));
-                }
 
                 $em->persist($entity);
                 $em->flush();
@@ -281,16 +274,28 @@ class BiayaPendaftaranController extends Controller
                 throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
             }
 
-            if ($entity->getTerpakai() === true) {
-                $message = $this->get('translator')->trans('exception.delete.restrict.registrationfee');
-                throw new \Exception($message);
+            try {
+                if ($entity->getTerpakai() === true) {
+                    $message = $this->get('translator')->trans('exception.delete.restrict.registrationfee');
+                    throw new \Exception($message);
+                }
+
+                $em->remove($entity);
+                $em->flush();
+
+                $this->get('session')
+                        ->setFlash('success',
+                                $this->get('translator')->trans('flash.fee.registration.deleted'));
+
+            } catch (\Exception $e) {
+                $this->get('session')
+                        ->setFlash('info',
+                                $this->get('translator')->trans('exception.delete.restrict.registrationfee'));
+
+                return $this->redirect($this->generateUrl('fee_registration_show', array(
+                                    'id' => $id
+                                )));
             }
-
-            $em->remove($entity);
-            $em->flush();
-
-            $this->get('session')
-                    ->setFlash('success', $this->get('translator')->trans('flash.fee.registration.deleted'));
 
         } else {
             $this->get('session')
