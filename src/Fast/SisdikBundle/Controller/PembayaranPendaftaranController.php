@@ -791,14 +791,12 @@ class PembayaranPendaftaranController extends Controller
             }
             if (count($daftarBiayaPendaftaran) > 9 && count($daftarBiayaPendaftaran) < 15) {
                 $maxJarakVertikal = 12;
-                $jarakVertikal = str_repeat("\r\n",
-                        $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 10));
+                $jarakVertikal = str_repeat("\r\n", $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 10));
                 $commands->addContent($jarakVertikal);
             }
             if (count($daftarBiayaPendaftaran) >= 15) {
                 $maxJarakVertikal = 12;
-                $jarakVertikal = str_repeat("\r\n",
-                        $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 15));
+                $jarakVertikal = str_repeat("\r\n", $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 15));
                 $commands->addContent($jarakVertikal);
             }
 
