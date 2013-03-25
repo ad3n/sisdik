@@ -43,7 +43,8 @@ class BiayaPendaftaranController extends Controller
                 ->from('FastSisdikBundle:BiayaPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
                 ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
                 ->where('t2.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
+                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC')
+                ->addOrderBy('t4.nama', 'ASC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
@@ -65,7 +66,7 @@ class BiayaPendaftaranController extends Controller
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1), 20);
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()
