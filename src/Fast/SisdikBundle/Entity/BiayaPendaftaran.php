@@ -40,6 +40,13 @@ class BiayaPendaftaran
     private $urutan;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="terpakai", type="boolean", nullable=false, options={"default" = 0})
+     */
+    private $terpakai = 0;
+
+    /**
      * @var \Jenisbiaya
      *
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
@@ -118,6 +125,27 @@ class BiayaPendaftaran
      */
     public function getUrutan() {
         return $this->urutan;
+    }
+
+    /**
+     * Set terpakai
+     *
+     * @param boolean $terpakai
+     * @return Tahun
+     */
+    public function setTerpakai($terpakai) {
+        $this->terpakai = $terpakai;
+
+        return $this;
+    }
+
+    /**
+     * Get terpakai
+     *
+     * @return boolean
+     */
+    public function getTerpakai() {
+        return $this->terpakai;
     }
 
     /**

@@ -183,6 +183,13 @@ class PembayaranPendaftaranController extends Controller
             }
 
             $em->persist($entity);
+
+            foreach ($entity->getDaftarBiayaPendaftaran() as $biaya) {
+                $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
+                $biayaPendaftaran->setTerpakai(true);
+
+                $em->persist($biayaPendaftaran);
+            }
             $em->flush();
 
             return $this
