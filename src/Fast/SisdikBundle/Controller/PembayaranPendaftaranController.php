@@ -335,6 +335,10 @@ class PembayaranPendaftaranController extends Controller
                                 $entity->getDaftarBiayaPendaftaran()
                             ));
 
+            foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
+                $transaksi->setDibuatOleh($this->container->get('security.context')->getToken()->getUser());
+            }
+
             $em->persist($entity);
             $em->flush();
             $this->get('session')
