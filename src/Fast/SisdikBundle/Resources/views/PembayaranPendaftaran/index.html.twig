@@ -54,7 +54,6 @@
 	        {% endif %}
 	    {% endfor %}
 	{% endif %}
-	</dd>
 	<dt>{{ 'label.payables.amount'|trans }}</dt>
 	<dd>{% render url('fee_registration_totalinfo', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id}) %}</dd>
 	<dt>{{ 'label.paid.amount.total'|trans }}</dt>

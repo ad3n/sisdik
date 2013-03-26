@@ -1,4 +1,9 @@
 label:
+    salary.monthly: Penghasilan Per Bulan
+    salary.annually: Penghasilan Per Tahun
+    job: Pekerjaan
+    highest.education: Pendidikan Tertinggi
+    relation.tostudent: Hubungan Terhadap Siswa
     payment: pembayaran
     defaultpdf: Default (PDF)
     directprint: Direct Print (Dot Matrix)
@@ -275,9 +280,14 @@ label:
         name: Nama Calon Siswa
         entry: Calon Siswa
         show: Info Detail Calon Siswa
+    parentguard:
+        add: Tambah Data Orang Tua/Wali
+        name: Nama Orang Tua/Wali
+        entry: Orang Tua/Wali
 
 link:
     backtolist: « Kembali ke Daftar
+    backto: « Kembali ke
     edit: Ubah
     classhistory: Riwayat Kelas
     showstudent: Lihat Info Detail Siswa
@@ -489,6 +499,7 @@ confirm.drop:
     reward.amount: Hapus Imbalan Pendaftaran '%yearentry%', '%admissiongroup%', '%rewardtype%', '%nominal%'?
     registration.committee: Hapus Panitia Pendaftaran tahun masuk %yearentry%?
     applicant: Hapus calon siswa %name%?
+    parentguard: Hapus Orang Tua/Wali %name%, dari siswa %studentname%?
 
 alt:
     add: ikon tambah

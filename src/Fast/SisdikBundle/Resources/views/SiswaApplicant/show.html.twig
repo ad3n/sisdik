@@ -88,7 +88,7 @@
         	{{ 'text.personalinfo'|trans }}<br />
             <ul class="pills">
                 <li>
-                    <a href="{{ path('parentsguards', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit.parent.or.guardian'|trans }}</a>
+                    <a href="{{ path('parentguard', { 'sid': entity.id }) }}">{{ 'link.edit.parent.or.guardian'|trans }}</a>
                 </li>
             </ul>
         </div>

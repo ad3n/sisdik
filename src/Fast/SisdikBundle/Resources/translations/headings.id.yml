@@ -169,4 +169,14 @@ payment:
 
 printreceiptsoption: Mengatur Pilihan Cetak Kwitansi
 
+parentguard:
+    list: Orang Tua/Wali
+    edit: Mengubah Data Orang Tua/Wali
+    creation: Menambah Data Orang Tua/Wali
+    detail: Detail Data Orang Tua/Wali
+
+
+
+
+
 

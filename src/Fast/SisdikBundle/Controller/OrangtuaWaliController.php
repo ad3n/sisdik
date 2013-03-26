@@ -1,7 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -9,39 +9,50 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Fast\SisdikBundle\Form\OrangtuaWaliType;
+use Fast\SisdikBundle\Entity\Sekolah;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * OrangtuaWali controller.
  *
- * @Route("/parentsguards")
+ * @Route("/{sid}/parentguard", requirements={"siswa"="\d+"})
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_WALI_KELAS', 'ROLE_PANITIA_PSB')")
  */
 class OrangtuaWaliController extends Controller
 {
     /**
      * Lists all OrangtuaWali entities.
      *
-     * @Route("/", name="parentsguards")
+     * @Route("/", name="parentguard")
      * @Template()
      */
-    public function indexAction()
-    {
+    public function indexAction($sid) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('FastSisdikBundle:OrangtuaWali')->findAll();
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:OrangtuaWali', 't')
+                ->where('t.siswa = :siswa')->orderBy('t.aktif', 'ASC')->setParameter('siswa', $sid);
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
-            'entities' => $entities,
+            'pagination' => $pagination, 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
         );
     }
 
     /**
      * Finds and displays a OrangtuaWali entity.
      *
-     * @Route("/{id}/show", name="parentsguards_show")
+     * @Route("/{id}/show", name="parentguard_show")
      * @Template()
      */
-    public function showAction($id)
-    {
+    public function showAction($sid, $id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
@@ -53,38 +64,40 @@ class OrangtuaWaliController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
         );
     }
 
     /**
      * Displays a form to create a new OrangtuaWali entity.
      *
-     * @Route("/new", name="parentsguards_new")
+     * @Route("/new", name="parentguard_new")
      * @Template()
      */
-    public function newAction()
-    {
+    public function newAction($sid) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $entity = new OrangtuaWali();
-        $form   = $this->createForm(new OrangtuaWaliType(), $entity);
+        $form = $this->createForm(new OrangtuaWaliType(), $entity);
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'entity' => $entity, 'form' => $form->createView(),
         );
     }
 
     /**
      * Creates a new OrangtuaWali entity.
      *
-     * @Route("/create", name="parentsguards_create")
+     * @Route("/create", name="parentguard_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:OrangtuaWali:new.html.twig")
      */
-    public function createAction(Request $request)
-    {
-        $entity  = new OrangtuaWali();
+    public function createAction(Request $request, $sid) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $entity = new OrangtuaWali();
         $form = $this->createForm(new OrangtuaWaliType(), $entity);
         $form->bind($request);
 
@@ -93,23 +106,30 @@ class OrangtuaWaliController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('parentsguards_show', array('id' => $entity->getId())));
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('parentguard_show',
+                                            array(
+                                                'id' => $entity->getId()
+                                            )));
         }
 
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'entity' => $entity, 'form' => $form->createView(),
         );
     }
 
     /**
      * Displays a form to edit an existing OrangtuaWali entity.
      *
-     * @Route("/{id}/edit", name="parentsguards_edit")
+     * @Route("/{id}/edit", name="parentguard_edit")
      * @Template()
      */
-    public function editAction($id)
-    {
+    public function editAction($sid, $id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
@@ -122,21 +142,20 @@ class OrangtuaWaliController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
         );
     }
 
     /**
      * Edits an existing OrangtuaWali entity.
      *
-     * @Route("/{id}/update", name="parentsguards_update")
+     * @Route("/{id}/update", name="parentguard_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:OrangtuaWali:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
-    {
+    public function updateAction(Request $request, $sid, $id) {
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
@@ -153,24 +172,28 @@ class OrangtuaWaliController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('parentsguards_edit', array('id' => $id)));
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('parentguard_edit',
+                                            array(
+                                                'id' => $id
+                                            )));
         }
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'edit_form' => $editForm->createView(),
+                'delete_form' => $deleteForm->createView(),
         );
     }
 
     /**
      * Deletes a OrangtuaWali entity.
      *
-     * @Route("/{id}/delete", name="parentsguards_delete")
+     * @Route("/{id}/delete", name="parentguard_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id)
-    {
+    public function deleteAction(Request $request, $sid, $id) {
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 
@@ -186,14 +209,30 @@ class OrangtuaWaliController extends Controller
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('parentsguards'));
+        return $this->redirect($this->generateUrl('parentguard'));
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm()
-        ;
+    private function createDeleteForm($id) {
+        return $this->createFormBuilder(array(
+                    'id' => $id
+                ))->add('id', 'hidden')->getForm();
+    }
+
+    private function setCurrentMenu() {
+        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu['headings.academic']['links.registration']->setCurrent(true);
+    }
+
+    private function isRegisteredToSchool() {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+
+        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
+            return $sekolah;
+        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
+        } else {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
+        }
     }
 }

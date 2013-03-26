@@ -1,61 +1,76 @@
-<h1>CalonOrangtuaWali list</h1>
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-<table class="records_list">
+{% block page_heading %}{% trans from "headings" %}parentguard.list{% endtrans %} {{ 'label.from'|trans }} {{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+
+<dl>
+    <dt>{{ 'label.yearentry.entry'|trans }}</dt>
+    <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+    <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
+    <dt>{{ 'label.gender'|trans }}</dt>
+    <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('parentguard_new', {'sid': siswa.id}) }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.parentguard.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
+    	<tr>
+    		<th>{{ 'label.parentguard.name'|trans }}</th>
+    		<th>{{ 'label.relation.tostudent'|trans }}</th>
+    		<th>{{ 'label.mobilephone'|trans }}</th>
+    		<th>{{ 'label.active'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
         <tr>
-            <th>Id</th>
-            <th>Nama</th>
-            <th>Tempatlahir</th>
-            <th>Tanggallahir</th>
-            <th>Ponsel</th>
-            <th>Kewarganegaraan</th>
-            <th>Hubungandengansiswa</th>
-            <th>Pendidikantertinggi</th>
-            <th>Pekerjaan</th>
-            <th>Penghasilanbulanan</th>
-            <th>Penghasilantahunan</th>
-            <th>Alamat</th>
-            <th>Keterangan</th>
-            <th>Aktif</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for entity in entities %}
-        <tr>
-            <td><a href="{{ path('appguardian_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-            <td>{{ entity.nama }}</td>
-            <td>{{ entity.tempatLahir }}</td>
-            <td>{% if entity.tanggalLahir %}{{ entity.tanggalLahir|date('Y-m-d H:i:s') }}{% endif %}</td>
-            <td>{{ entity.ponsel }}</td>
-            <td>{{ entity.kewarganegaraan }}</td>
-            <td>{{ entity.hubunganDenganSiswa }}</td>
-            <td>{{ entity.pendidikanTertinggi }}</td>
-            <td>{{ entity.pekerjaan }}</td>
-            <td>{{ entity.penghasilanBulanan }}</td>
-            <td>{{ entity.penghasilanTahunan }}</td>
-            <td>{{ entity.alamat }}</td>
-            <td>{{ entity.keterangan }}</td>
-            <td>{{ entity.aktif }}</td>
-            <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('appguardian_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('appguardian_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-            </td>
-        </tr>
+    		<td data-title="{{ 'label.parentguard.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.relation.tostudent'|trans }}">{{ data.hubunganDenganSiswa }}</td>
+    		<td data-title="{{ 'label.mobilephone'|trans }}">{{ data.ponsel }}</td>
+    		<td data-title="{{ 'label.active'|trans }}">
+    		    {% if data.aktif == 1 %}
+    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
+    		        {% endimage %}
+    	        {% else %}
+    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
+    		        {% endimage %}
+{#     		        <a href="{{ path('data_year_activate', {'id': data.id}) }}">{{ 'label.activate'|trans }}</a>#}
+    		    {% endif %}
+    		</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('parentguard_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('parentguard_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+    		</td>
+    	</tr>
     {% endfor %}
     </tbody>
 </table>
 
-<ul>
+<div class="clearfix"></div>
+
+<ul class="pills">
     <li>
-        <a href="{{ path('appguardian_new') }}">
-            Create a new entry
-        </a>
+        <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.studentinfo'|trans }}</a>
     </li>
 </ul>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
