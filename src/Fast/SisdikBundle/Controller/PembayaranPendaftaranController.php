@@ -348,9 +348,9 @@ class PembayaranPendaftaranController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('payment_registrationfee',
+                                    ->generateUrl('payment_registrationfee_show',
                                             array(
-                                                'sid' => $sid,
+                                                'sid' => $sid, 'id' => $id
                                             )));
         }
 
