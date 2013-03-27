@@ -37,6 +37,20 @@ class PembayaranPendaftaran
     private $nominalTotal;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="persen_potongan", type="smallint", nullable=true)
+     */
+    private $persenPotongan;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=true)
+     */
+    private $nominalPotongan;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
@@ -133,6 +147,48 @@ class PembayaranPendaftaran
      */
     public function getNominalTotal() {
         return $this->nominalTotal;
+    }
+
+    /**
+     * Set persenPotongan
+     *
+     * @param integer $persenPotongan
+     * @return PembayaranPendaftaran
+     */
+    public function setPersenPotongan($persenPotongan) {
+        $this->persenPotongan = $persenPotongan;
+
+        return $this;
+    }
+
+    /**
+     * Get persenPotongan
+     *
+     * @return integer
+     */
+    public function getPersenPotongan() {
+        return $this->persenPotongan;
+    }
+
+    /**
+     * Set nominalPotongan
+     *
+     * @param integer $nominalPotongan
+     * @return PembayaranPendaftaran
+     */
+    public function setNominalPotongan($nominalPotongan) {
+        $this->nominalPotongan = $nominalPotongan;
+
+        return $this;
+    }
+
+    /**
+     * Get nominalPotongan
+     *
+     * @return integer
+     */
+    public function getNominalPotongan() {
+        return $this->nominalPotongan;
     }
 
     /**
