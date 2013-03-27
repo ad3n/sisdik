@@ -21,6 +21,8 @@ twig:
     strict_variables: %kernel.debug%
     globals:
         locale: %locale%
+        proxypass: %proxypass%
+        proxypassname: %proxypassname%
 
 # Assetic Configuration
 assetic:
