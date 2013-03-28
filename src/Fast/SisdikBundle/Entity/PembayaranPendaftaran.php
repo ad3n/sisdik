@@ -37,6 +37,20 @@ class PembayaranPendaftaran
     private $nominalTotal;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="ada_potongan", type="boolean", nullable=true, options={"default" = 0})
+     */
+    private $adaPotongan = 0;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="jenis_potongan", type="string", length=45, nullable=true)
+     */
+    private $jenisPotongan;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="persen_potongan", type="smallint", nullable=true)
@@ -147,6 +161,48 @@ class PembayaranPendaftaran
      */
     public function getNominalTotal() {
         return $this->nominalTotal;
+    }
+
+    /**
+     * Set adaPotongan
+     *
+     * @param boolean $adaPotongan
+     * @return PembayaranPendaftaran
+     */
+    public function setAdaPotongan($adaPotongan) {
+        $this->adaPotongan = $adaPotongan;
+
+        return $this;
+    }
+
+    /**
+     * Get adaPotongan
+     *
+     * @return boolean
+     */
+    public function getAdaPotongan() {
+        return $this->adaPotongan;
+    }
+
+    /**
+     * Set jenisPotongan
+     *
+     * @param string $jenisPotongan
+     * @return PembayaranPendaftaran
+     */
+    public function setJenisPotongan($jenisPotongan) {
+        $this->jenisPotongan = $jenisPotongan;
+
+        return $this;
+    }
+
+    /**
+     * Get jenisPotongan
+     *
+     * @return string
+     */
+    public function getJenisPotongan() {
+        return $this->jenisPotongan;
     }
 
     /**
