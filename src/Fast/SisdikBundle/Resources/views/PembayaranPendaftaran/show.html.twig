@@ -3,6 +3,9 @@
 {% block page_heading %}{% trans from "headings" %}payment.registrationfee.transaction{% endtrans %}{% endblock %}
 {% block content %}
 <style type="text/css">
+.extra-margin-top {
+    margin-top: 1.5em;
+}
 .extra-margin-bottom {
     margin-bottom: 1em;
 }
@@ -25,7 +28,7 @@
 
 <dl>
     <dt>{{ 'label.fee.registration.entry'|trans }}</dt>
-    <dd class="extra-margin-bottom">
+    <dd>
         <ul>
         {% for biaya in entity.daftarBiayaPendaftaran %}
         	<li>
@@ -36,10 +39,25 @@
         {% endfor %}
         </ul>
     </dd>
+{% if adaPotongan == 1 %}
+    {% if jenisPotongan == 'nominal' %}
+        <dt>{{ 'label.discount.amount'|trans }}</dt>
+        <dd><span class="icon-gift" style="margin: 0;" title="{{ 'label.discount.fee'|trans }}"></span> {{ nominalPotongan|number_format(0, ',', '.') }}</dd>
+    {% elseif jenisPotongan == 'persentase' %}
+        <dt>{{ 'label.discount.percentage'|trans }}</dt>
+        <dd><span class="icon-gift" style="margin: 0;" title="{{ 'label.discount.fee'|trans }}"></span> {{ persenPotongan }}% ({{ nominalPotongan|number_format(0, ',', '.') }})</dd>
+    {% endif %}
+{% endif %}
+    <dt>{{ 'shortinfo.total.paid'|trans }}</dt>
+    <dd>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</dd>
+
+    <dt>{{ 'label.payment.remains.total'|trans }}</dt>
+    <dd>{{ currencySymbol(locale) }}. {{ (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya)|number_format(0, ',', '.') }}</dd>
+
 {% for transaksi in transaksiPembayaran %}
     {% if loop.length > 1 %}
-        <dt>{{ 'label.payment.number'|trans }} #{{ loop.index }}</dt>
-        <dd>
+        <dt class="extra-margin-top">{{ 'label.payment.number'|trans }} #{{ loop.index }}</dt>
+        <dd class="extra-margin-top">
             {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
             <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
         </dd>
@@ -50,8 +68,8 @@
         <dt>{{ 'label.payment.description'|trans }} #{{ loop.index }}</dt>
         <dd class="extra-margin-bottom">{{ transaksi.keterangan }}</dd>
     {% else %}
-        <dt>{{ 'label.payment.number'|trans }}</dt>
-        <dd>
+        <dt class="extra-margin-top">{{ 'label.payment.number'|trans }}</dt>
+        <dd class="extra-margin-top">
             {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
             <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
         </dd>
@@ -67,9 +85,18 @@
 
 <div class="clearfix extra-margin-bottom"></div>
 
+{% if (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya) > 0 %}
+    <a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': entity.id }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}">
+        <span class="icon-shopping-cart"></span>
+        {{ 'label.payment.addmortgage'|trans }}
+    </a>
+
+    <div class="clearfix extra-margin-bottom"></div>
+{% endif %}
+
 <ul class="pills">
     <li>
-        <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backto.registration.payment'|trans }}</a>
     </li>
 </ul>
 

@@ -41,7 +41,7 @@ class PembayaranPendaftaran
      *
      * @ORM\Column(name="ada_potongan", type="boolean", nullable=true, options={"default" = 0})
      */
-    private $adaPotongan = 0;
+    private $adaPotongan = false;
 
     /**
      * @var string

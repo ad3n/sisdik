@@ -26,7 +26,10 @@
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0.2);
     max-width: 160px;
 }
-#fee-amount {
+#discount-container {
+    background-color: #F2F3C9;
+}
+#fee-amount, #fee-amount-discounted {
     cursor: pointer;
 }
 </style>
@@ -54,12 +57,12 @@
 	        {% endif %}
 	    {% endfor %}
 	{% endif %}
-	<dt>{{ 'label.payables.amount'|trans }}</dt>
-	<dd>{% render url('fee_registration_totalinfo', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id}) %}</dd>
+	<dt>{{ 'label.payables.amount.total'|trans }}</dt>
+	<dd>{% if totalAdaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}{% render url('fee_registration_totalinfo', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id, 'potongan': totalPotongan}) %}</dd>
 	<dt>{{ 'label.paid.amount.total'|trans }}</dt>
 	<dd>{{ siswa.totalNominalPembayaranPendaftaran|number_format(0, ',', '.') }}</dd>
-	<dt>{{ 'label.payment.remains'|trans }}</dt>
-	<dd>{% render url('fee_registration_remains', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran}) %}</dd>
+	<dt>{{ 'label.payment.remains.total'|trans }}</dt>
+	<dd>{% render url('fee_registration_remains', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran, 'potongan': totalPotongan}) %}</dd>
 </dl>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
@@ -87,10 +90,13 @@
     		    {% endfor %}
 		    {% endif %}
 		    </td>
-    		<td data-title="{{ 'label.payables.amount'|trans }}">{{ totalBiaya[loop.index0]|number_format(0, ',', '.') }}</td>
+    		<td data-title="{{ 'label.payables.amount'|trans }}">
+        		{% if adaPotongan[loop.index0] == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}
+        		{{ totalBiaya[loop.index0]|number_format(0, ',', '.') }}
+    		</td>
     		<td data-title="{{ 'label.paid.amount'|trans }}">{{ data.totalNominalTransaksiPembayaranPendaftaran|number_format(0, ',', '.') }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-    		    <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': data.id, 'page': app.request.get('page') }) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+    		    <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': data.id }) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
 		    {% if data.transaksiPembayaranPendaftaran|length > 1 %}
 		        <a href="#" onclick="return false"
 		            title="{{ 'tip.print.receipt'|trans }}"
@@ -118,7 +124,7 @@
 		        {% endfor %}
 		    {% endif %}
 		    {% if editLink[loop.index0] %}
-        		<a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': data.id, 'page': app.request.get('page') }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}" class="icon-shopping-cart"></a>
+        		<a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': data.id }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}" class="icon-shopping-cart"></a>
 		    {% endif %}
     		</td>
     	</tr>
@@ -129,11 +135,22 @@
 <div class="clearfix"></div>
 
 {% if jumlahItemBiaya > jumlahItemBiayaTerbayar %}
-<form id="pay-form" action="{{ path('payment_registrationfee_create', { 'sid': siswa.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form id="pay-form" action="{{ path('payment_registrationfee_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_row(form.daftarBiayaPendaftaran) }}
     <div class="control-group">
         <div class="controls">
             {{ 'label.payables.amount'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
+        </div>
+    </div>
+    {{ form_row(form.adaPotongan) }}
+    <div id="discount-container">
+        <div id="discount-type">{{ form_row(form.jenisPotongan) }}</div>
+        <div id="discount-percentage">{{ form_row(form.persenPotongan) }}</div>
+        <div id="discount-amount">{{ form_row(form.nominalPotongan) }}</div>
+        <div class="control-group">
+            <div class="controls">
+                {{ 'label.payables.amount.discounted'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount-discounted"></span></b>
+            </div>
         </div>
     </div>
     <div class="control-group">
@@ -156,60 +173,191 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('applicant_payment') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">
+var duration = 400;
 var total = 0;
 var amount;
+var totaldiscounted = 0;
+var amountdiscounted;
+var withdiscount = false;
+var type;
+var discountpercent = 0;
+var discountnominal = 0;
+
+function getTotalFee(index, element) {
+	var checkbox = $(this).find('input:checked');
+	if (typeof checkbox.val() !== 'undefined') {
+		var num = 0;
+
+		str = $(this).text().split('.').join('');
+        num = str.match(/\d+/);
+        total += parseInt(num);
+	}
+}
+
+function getTotalFeeDiscounted() {
+	if ($(".discount-check").is(":checked")) {
+        type = $("#discount-type input[type='radio']:checked").val();
+        if (type == 'nominal') {
+            totaldiscounted = total - $(".nominal-discount").val().split('.').join('').match(/\d+/);
+            totaldiscounted = totaldiscounted <= 0 ? 0 : totaldiscounted;
+        } else if (type == 'persentase') {
+            discountpercent = $(".percentage-discount").val().split('.').join('').match(/\d+/);
+            totaldiscounted = total - (total * (discountpercent / 100));
+        }
+	} else {
+		totaldiscounted = 0;
+	}
+}
 
 $(document).ready(function() {
-	$(".checkbox").each(function() {
-		var checkbox = $(this).find('input:checked');
-		if (typeof checkbox.val() !== 'undefined') {
-			var num = 0;
-
-			str = $(this).text().split('.').join('');
-	        num = str.match(/\d+/);
-	        total += parseInt(num);
+	$(".discount-check").change(function(){
+		if ($(this).is(":checked")) {
+			$('#discount-container').show(duration);
+		} else {
+			$('#discount-container').hide(duration);
+			$(".percentage-discount").val("");
+			$(".nominal-discount").val("");
+			$("#fee-amount-discounted").text("");
 		}
-    });
+	});
+	if ($(".discount-check").is(":checked")) {
+	    $('#discount-container').show(duration);
+	} else {
+		$('#discount-container').hide(duration);
+		$(".percentage-discount").val("");
+		$(".nominal-discount").val("");
+		$("#fee-amount-discounted").text("");
+	}
+
+	$("#discount-type input[type='radio']").change(function(){
+		$("#fee-amount-discounted").text("");
+		type = $("#discount-type input[type='radio']:checked").val();
+		if (type == 'nominal') {
+			$("#discount-percentage").hide(duration);
+			$("#discount-amount").show(duration);
+			$(".percentage-discount").val("");
+		} else if (type == 'persentase') {
+			$("#discount-percentage").show(duration);
+			$("#discount-amount").hide(duration);
+			$(".nominal-discount").val("");
+		}
+	});
+	$("#fee-amount-discounted").text("");
+	type = $("#discount-type input[type='radio']:checked").val();
+	if (type == 'nominal') {
+		$("#discount-percentage").hide(duration);
+		$("#discount-amount").show(duration);
+		$(".percentage-discount").val("");
+
+		discountnominal = $("#discount-amount").val();
+	} else if (type == 'persentase') {
+		$("#discount-percentage").show(duration);
+		$("#discount-amount").hide(duration);
+		$(".nominal-discount").val("");
+
+		discountpercent = $("#discount-percentage").val();
+	} else {
+		$("#discount-percentage").hide();
+		$("#discount-amount").hide();
+		$(".percentage-discount").val("");
+		$(".nominal-discount").val("");
+	}
+
+	// display total fee
+	$(".fee-item .checkbox").each(getTotalFee);
 	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     $("#fee-amount").text(amount);
+
+    $("form .fee-item input:checkbox").change(function() {
+    	total = 0;
+    	$(".fee-item .checkbox").each(getTotalFee);
+
+    	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount").text(amount);
+
+    	getTotalFeeDiscounted();
+        totaldiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount-discounted").text(totaldiscounted);
+    });
 
     $("#fee-amount").click(function() {
         $(".pay-amount").val($(this).text());
     });
+    // end of display total fee
 
-    $("form input:checkbox").change(function() {
-    	total = 0;
-    	$(".checkbox").each(function() {
-    		var checkbox = $(this).find('input:checked');
-    		if (typeof checkbox.val() !== 'undefined') {
-    			var num = 0;
+    // find and display discounted fee
+    getTotalFeeDiscounted();
+    amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    $("#fee-amount-discounted").text(amountdiscounted == "0" ? "" : amountdiscounted);
 
-    			str = $(this).text().split('.').join('');
-    	        num = str.match(/\d+/);
-    	        total += parseInt(num);
-    		}
-        });
-    	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-        $("#fee-amount").text(amount);
+    $(".nominal-discount").keyup(function() {
+        discountnominal = $(this).val().split('.').join('').match(/\d+/);
+        totaldiscounted = total - discountnominal;
+
+        amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount-discounted").text(amountdiscounted);
     });
+    $(".percentage-discount").keyup(function() {
+        discountpercent = $(this).val().split('.').join('').match(/\d+/);
+        totaldiscounted = total - (total * (discountpercent / 100));
+
+        amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount-discounted").text(amountdiscounted);
+    });
+
+    $("#fee-amount-discounted").click(function() {
+        $(".pay-amount").val($(this).text());
+    });
+    // end of find and display discounted fee
 
     $("#pay-form").submit(function() {
         var payamount = parseInt($(".pay-amount").val().split('.').join(''));
-        var feeamount = parseInt($("#fee-amount").text().split('.').join(''));
 
-        if (payamount > feeamount) {
-            alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
-            return false;
-        } else if (payamount < feeamount && $("form input:checked").length > 1) {
-            alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
-            return false;
-        } else if (payamount == 0 || $("form input:checked").length < 1) {
-        	alert("{{ 'shortinfo.pay.nozero'|trans }}");
-        	return false;
+        total = 0;
+        $(".fee-item .checkbox").each(getTotalFee);
+        amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount").text(amount);
+        var feeamount = total;
+
+        totaldiscounted = 0;
+        getTotalFeeDiscounted();
+        amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        $("#fee-amount-discounted").text(amountdiscounted == "0" ? "" : amountdiscounted);
+        var feeamountdiscounted = totaldiscounted;
+
+        var withdiscount = ($(".discount-check").is(":checked"));
+
+        if (withdiscount) {
+            console.log("with discount" + payamount);
+            console.log("discounted" + feeamountdiscounted);
+            if (payamount > feeamountdiscounted) {
+                alert("{{ 'shortinfo.pay.notbiggerthan.fee.discounted'|trans }}");
+                return false;
+            } else if ((feeamount - feeamountdiscounted) <= 0) {
+                alert("{{ 'shortinfo.discountamount.nozero'|trans }}");
+                return false;
+            } else if (payamount < feeamountdiscounted && $("form .fee-item input:checked").length > 1) {
+                alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
+                return false;
+            } else if (payamount == 0 || $("form .fee-item input:checked").length < 1) {
+            	alert("{{ 'shortinfo.pay.nozero'|trans }}");
+            	return false;
+            }
+        } else {
+            if (payamount > feeamount) {
+                alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
+                return false;
+            } else if (payamount < feeamount && $("form .fee-item input:checked").length > 1) {
+                alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
+                return false;
+            } else if (payamount == 0 || $("form .fee-item input:checked").length < 1) {
+            	alert("{{ 'shortinfo.pay.nozero'|trans }}");
+            	return false;
+            }
         }
 
         return true;

@@ -1,18 +1,28 @@
 label:
+    discount: Potongan Harga
+    discount.fee: Jumlah Diskon
+    discounted: Harga Terdiskon
+    discounted.fee: Biaya Terdiskon
+    discount.amount: Jumlah Potongan
+    discount.percentage: Persentase Potongan
     salary.monthly: Penghasilan Per Bulan
     salary.annually: Penghasilan Per Tahun
     job: Pekerjaan
     highest.education: Pendidikan Tertinggi
     relation.tostudent: Hubungan Terhadap Siswa
-    payment: pembayaran
     defaultpdf: Default (PDF)
     directprint: Direct Print (Dot Matrix)
+    payment: pembayaran
     payment.remains: Kurang Bayar
-    payables.amount: Jumlah Biaya
-    fee.undefined: Biaya tak terdefinisi
+    payment.remains.total: Total Kurang Bayar
     payment.description: Keterangan Bayar
     payment.date: Tanggal Bayar
     payment.number: Nomor Transaksi/Kwitansi
+    payment.addmortgage: Tambah Cicilan
+    payables.amount: Jumlah Biaya
+    payables.amount.total: Jumlah Total Biaya
+    payables.amount.discounted: Jumlah Biaya setelah Diskon
+    fee.undefined: Biaya tak terdefinisi
     committee.leader: Ketua Panitia
     active.committee: Panitia Aktif
     search.today.input: data input hari ini
@@ -297,6 +307,7 @@ link:
     applicant.edit.regphoto: Ubah Foto Registrasi
     edit.parent.or.guardian: Ubah/Tambah Orangtua/Wali
     studentinfo: Info Data Siswa
+    backto.registration.payment: « Kembali ke Info Pembayaran Biaya Pendaftaran
 
 fos_user:
     username:
@@ -346,7 +357,6 @@ flash:
         registration:
             inserted: Data Biaya Pendaftaran berhasil ditambah
             updated: Data Biaya Pendaftaran berhasil diperbarui
-            mortgage.updated: Data cicilan Biaya Pendaftaran berhasil diperbarui
             deleted: Data Biaya Pendaftaran berhasil dihapus
             fail.delete: Data Biaya Pendaftaran gagal dihapus
             update.restriction: Data Biaya Pendaftaran telah digunakan. Hanya urutan yang bisa diubah.
@@ -454,6 +464,12 @@ flash:
         updated: Pembayaran sekali bayar untuk %name% berhasil disimpan
     printreceiptsoption:
         saved: Pilihan cetak kwitansi pembayaran berhasil disimpan
+    payment:
+        registration:
+            inserted: Data Pembayaran Pendaftaran berhasil ditambah
+            fail.insert: Data Pembayaran Pendaftaran gagal ditambah. Perbaiki input form pembayaran.
+            mortgage.updated: Data cicilan Pembayaran Pendaftaran berhasil diperbarui
+            mortgage.fail.insert: Data cicilan Pembayaran Pendaftaran gagal ditambah. Perbaiki input form.
 
 tip:
     edit: Ubah
@@ -541,6 +557,7 @@ exception:
     cannot.alter.applicant.inactive.yearentry: Tidak bisa mengubah data calon siswa di tahun yang panitia PSB-nya tidak aktif
     unique.applicant.oncefee: Ada data calon siswa yang sama di pembayaran calon siswa. Hubungi developer
     registrationfee.gt.one: Item biaya pendaftaran lebih dari satu tidak bisa dicicil
+    registrationfee.paidoff: Item pendaftaran sudah lunas
     unique.printreceiptsoption: Tidak bisa menyimpan pilihan cetak. Sudah ada data pilihan di dalam sistem.
     directprint.file: Error ketika membuat file untuk cetak langsung
 
@@ -576,8 +593,10 @@ shortinfo:
     total.payables: Total biaya yg harus dibayar
     total.paid: Total biaya yg sudah dibayar
     pay.notbiggerthan.fee: Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih
+    pay.notbiggerthan.fee.discounted: Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih dan terdiskon
     pay.lessthan.fee.oneitem: Mencicil (jumlah bayar lebih kecil dari jumlah biaya) hanya bisa untuk satu item biaya
     pay.nozero: Tidak bisa membayar 0 rupiah
+    discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
     
 alert:
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.

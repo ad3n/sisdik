@@ -6,6 +6,12 @@
 .controls {
     margin-left: 0;
 }
+#payable-amount-remains {
+    cursor: pointer;
+}
+.error-info .help-inline {
+    color: #B94A48;
+}
 </style>
 
 <div class="row-fluid">
@@ -39,11 +45,19 @@
         <div class="clearfix" style="margin-bottom: 2em;"></div>
 
         <h4>{{ 'payment.registrationfee.entry'|trans({}, 'headings') }}</h4>
-        <form id="pay-form" action="{{ path('payment_registrationfee_update', { 'sid': siswa.id, 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+        <form id="pay-form" action="{{ path('payment_registrationfee_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
             {{ form_widget(edit_form.daftarBiayaPendaftaran) }}
             <div id="payment-info" style="margin-bottom: 18px; margin-top: 0.5em;">
-                {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ nominalBiaya|number_format(0, ',', '.') }}</span></b><br />
-                {{ 'shortinfo.total.paid'|trans }} <b>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</b>
+            {% if adaPotongan == 1 %}
+                {% if jenisPotongan == 'nominal' %}
+                    {{ 'label.discount.amount'|trans }} {{ currencySymbol(locale) }}. {{ nominalPotongan|number_format(0, ',', '.') }}<br />
+                {% elseif jenisPotongan == 'persentase' %}
+                    {{ 'label.discount.percentage'|trans }} {{ persenPotongan }}% ({{ nominalPotongan|number_format(0, ',', '.') }})<br />
+                {% endif %}
+            {% endif %}
+                {{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (nominalBiaya - nominalPotongan)|number_format(0, ',', '.') }}</span></b><br />
+                {{ 'shortinfo.total.paid'|trans }} <b>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</b><br />
+                {{ 'label.payment.remains.total'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya)|number_format(0, ',', '.') }}</span></b>
             </div>
             {% for transaksi in edit_form.transaksiPembayaranPendaftaran %}
                 {% if loop.length > 1 %}
@@ -51,36 +65,37 @@
                         <div class="control-group">
                             {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
                             {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
-                            {{ form_errors(transaksi.nominalPembayaran) }}
+                            <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
                         </div>
                         <div class="control-group">
                             {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
                             {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
-                            {{ form_errors(transaksi.keterangan) }}
+                            <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
                         </div>
                     {% else %}
                         <div class="control-group">
                             {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
                             {{ form_widget(transaksi.nominalPembayaran) }}
-                            {{ form_errors(transaksi.nominalPembayaran) }}
+                            <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
                         </div>
                         <div class="control-group">
                             {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
                             {{ form_widget(transaksi.keterangan) }}
-                            {{ form_errors(transaksi.keterangan) }}
+                            <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
                         </div>
                     {% endif %}
                 {% else %}
-                    <div class="control-group">
-                        {{ form_label(transaksi.nominalPembayaran) }}&nbsp;
-                        {{ form_widget(transaksi.nominalPembayaran) }}
-                        {{ form_errors(transaksi.nominalPembayaran) }}
-                    </div>
-                    <div class="control-group">
-                        {{ form_label(transaksi.keterangan) }}&nbsp;
-                        {{ form_widget(transaksi.keterangan) }}
-                        {{ form_errors(transaksi.keterangan) }}
-                    </div>
+                    {{ form_row(transaksi) }}
+{#                     <div class="control-group">#}
+{#                         {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#}
+{#                         {{ form_widget(transaksi.nominalPembayaran) }}#}
+{#                         <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>#}
+{#                     </div>#}
+{#                     <div class="control-group">#}
+{#                         {{ form_label(transaksi.keterangan) }}&nbsp;#}
+{#                         {{ form_widget(transaksi.keterangan) }}#}
+{#                         <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>#}
+{#                     </div>#}
                 {% endif %}
             {% endfor %}
             {{ form_rest(edit_form) }}
@@ -95,7 +110,7 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backto.registration.payment'|trans }}</a>
     </li>
 </ul>
 
@@ -105,6 +120,10 @@ var total = 0;
 var paidamount = {{ totalNominalTransaksiSebelumnya }};
 
 $(document).ready(function() {
+    $("#payable-amount-remains").click(function() {
+    	$(".pay-amount:last").val($(this).text());
+    });
+
 	$("#pay-form").submit(function() {
         var payamount = 0;
         var feeamount = parseInt($("#payable-amount").text().split('.').join(''));

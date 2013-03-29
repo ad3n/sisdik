@@ -56,8 +56,39 @@ class PembayaranPendaftaranType extends AbstractType
                 ->add('daftarBiayaPendaftaran', 'choice',
                         array(
                                 'choices' => $availableFees, 'expanded' => true, 'multiple' => true,
-                                'attr' => array(), 'label_render' => true,
-                                'label' => 'label.fee.registration.entry'
+                                'attr' => array(
+                                    'class' => 'fee-item'
+                                ), 'label_render' => true, 'label' => 'label.fee.registration.entry'
+                        ))
+                ->add('adaPotongan', 'checkbox',
+                        array(
+                                'label' => 'label.discount', 'required' => false,
+                                'attr' => array(
+                                    'class' => 'discount-check'
+                                )
+                        ))
+                ->add('jenisPotongan', 'choice',
+                        array(
+                                'label' => 'label.discount', 'required' => false,
+                                'choices' => $this->buildJenisPotongan(), 'expanded' => true,
+                                'multiple' => false, 'label_render' => false,
+                                'attr' => array(
+                                    'class' => 'discount-type'
+                                )
+                        ))
+                ->add('persenPotongan', 'percent',
+                        array(
+                                'type' => 'integer', 'required' => false,
+                                'attr' => array(
+                                    'class' => 'small percentage-discount', 'autocomplete' => 'off'
+                                ), 'label' => 'label.discount.percentage',
+                        ))
+                ->add('nominalPotongan', 'money',
+                        array(
+                                'currency' => 'IDR', 'required' => false, 'precision' => 0, 'grouping' => 3,
+                                'attr' => array(
+                                    'class' => 'medium nominal-discount', 'autocomplete' => 'off'
+                                ), 'label' => 'label.discount.amount',
                         ))
                 ->add('transaksiPembayaranPendaftaran', 'collection',
                         array(
@@ -69,6 +100,12 @@ class PembayaranPendaftaranType extends AbstractType
                                     'widget_control_group' => false, 'label_render' => false,
                                 ), 'label_render' => false, 'allow_add' => true, 'allow_delete' => true,
                         ));
+    }
+
+    public function buildJenisPotongan() {
+        return array(
+            'nominal' => 'nominal', 'persentase' => 'persentase'
+        );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

@@ -62,6 +62,9 @@ class PembayaranPendaftaranController extends Controller
                 ));
 
         $totalBiaya = array();
+        $totalPotongan = 0;
+        $adaPotongan = array();
+        $totalAdaPotongan = false;
         $editLink = array();
         $biayaTerbayar = array();
         $jumlahItemBiayaTerbayar = 0;
@@ -73,13 +76,35 @@ class PembayaranPendaftaranController extends Controller
                     $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
                     $nominalBiaya += $biayaPendaftaran->getNominal();
                 }
-                $totalBiaya[] = $nominalBiaya;
 
-                if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() == $nominalBiaya
-                        && $nominalBiaya != 0) {
-                    $editLink[] = false;
+                $adaPotongan[] = $pembayaran->getAdaPotongan();
+                if ($pembayaran->getAdaPotongan()) {
+                    $totalAdaPotongan = true;
+                    $jenisPotongan = $pembayaran->getJenisPotongan();
+                    if ($jenisPotongan == 'nominal') {
+                        $nominalBiayaTerpotong = $nominalBiaya - $pembayaran->getNominalPotongan();
+                        $totalPotongan += $pembayaran->getNominalPotongan();
+                    } else if ($jenisPotongan == 'persentase') {
+                        $nominalBiayaTerpotong = $nominalBiaya
+                                - ($nominalBiaya * ($pembayaran->getPersenPotongan() / 100));
+                        $totalPotongan += $nominalBiaya * ($pembayaran->getPersenPotongan() / 100);
+                    }
+                    $totalBiaya[] = $nominalBiayaTerpotong;
+
+                    if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
+                            == $nominalBiayaTerpotong && $nominalBiayaTerpotong != 0) {
+                        $editLink[] = false;
+                    } else {
+                        $editLink[] = true;
+                    }
                 } else {
-                    $editLink[] = true;
+                    $totalBiaya[] = $nominalBiaya;
+                    if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() == $nominalBiaya
+                            && $nominalBiaya != 0) {
+                        $editLink[] = false;
+                    } else {
+                        $editLink[] = true;
+                    }
                 }
 
                 unset($tmp);
@@ -94,7 +119,8 @@ class PembayaranPendaftaranController extends Controller
             return array(
                     'entities' => $entities, 'siswa' => $siswa, 'jumlahItemBiaya' => $jumlahItemBiaya,
                     'jumlahItemBiayaTerbayar' => $jumlahItemBiayaTerbayar, 'totalBiaya' => $totalBiaya,
-                    'editLink' => $editLink,
+                    'editLink' => $editLink, 'adaPotongan' => $adaPotongan,
+                    'totalPotongan' => $totalPotongan, 'totalAdaPotongan' => $totalAdaPotongan,
             );
         } else {
             $entity = new PembayaranPendaftaran();
@@ -108,7 +134,8 @@ class PembayaranPendaftaranController extends Controller
             return array(
                     'entities' => $entities, 'siswa' => $siswa, 'jumlahItemBiaya' => $jumlahItemBiaya,
                     'jumlahItemBiayaTerbayar' => $jumlahItemBiayaTerbayar, 'form' => $form->createView(),
-                    'totalBiaya' => $totalBiaya, 'editLink' => $editLink,
+                    'totalBiaya' => $totalBiaya, 'editLink' => $editLink, 'adaPotongan' => $adaPotongan,
+                    'totalPotongan' => $totalPotongan, 'totalAdaPotongan' => $totalAdaPotongan,
             );
         }
     }
@@ -142,6 +169,9 @@ class PembayaranPendaftaranController extends Controller
                 ));
 
         $totalBiaya = array();
+        $totalPotongan = 0;
+        $adaPotongan = array();
+        $totalAdaPotongan = false;
         $editLink = array();
         $biayaTerbayar = array();
         $jumlahItemBiayaTerbayar = 0;
@@ -153,13 +183,35 @@ class PembayaranPendaftaranController extends Controller
                     $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
                     $nominalBiaya += $biayaPendaftaran->getNominal();
                 }
-                $totalBiaya[] = $nominalBiaya;
 
-                if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() == $nominalBiaya
-                        && $nominalBiaya != 0) {
-                    $editLink[] = false;
+                $adaPotongan[] = $pembayaran->getAdaPotongan();
+                if ($pembayaran->getAdaPotongan()) {
+                    $totalAdaPotongan = true;
+                    $jenisPotongan = $pembayaran->getJenisPotongan();
+                    if ($jenisPotongan == 'nominal') {
+                        $nominalBiayaTerpotong = $nominalBiaya - $pembayaran->getNominalPotongan();
+                        $totalPotongan += $pembayaran->getNominalPotongan();
+                    } else if ($jenisPotongan == 'persentase') {
+                        $nominalBiayaTerpotong = $nominalBiaya
+                                - ($nominalBiaya * ($pembayaran->getPersenPotongan() / 100));
+                        $totalPotongan += $nominalBiaya * ($pembayaran->getPersenPotongan() / 100);
+                    }
+                    $totalBiaya[] = $nominalBiayaTerpotong;
+
+                    if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
+                            == $nominalBiayaTerpotong && $nominalBiayaTerpotong != 0) {
+                        $editLink[] = false;
+                    } else {
+                        $editLink[] = true;
+                    }
                 } else {
-                    $editLink[] = true;
+                    $totalBiaya[] = $nominalBiaya;
+                    if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() == $nominalBiaya
+                            && $nominalBiaya != 0) {
+                        $editLink[] = false;
+                    } else {
+                        $editLink[] = true;
+                    }
                 }
 
                 unset($tmp);
@@ -192,6 +244,10 @@ class PembayaranPendaftaranController extends Controller
             }
             $em->flush();
 
+            $this->get('session')
+                    ->setFlash('success',
+                            $this->get('translator')->trans('flash.payment.registration.inserted'));
+
             return $this
                     ->redirect(
                             $this
@@ -201,10 +257,14 @@ class PembayaranPendaftaranController extends Controller
                                             )));
         }
 
+        $this->get('session')
+                ->setFlash('error', $this->get('translator')->trans('flash.payment.registration.fail.insert'));
+
         return array(
                 'entities' => $entities, 'siswa' => $siswa, 'jumlahItemBiaya' => $jumlahItemBiaya,
                 'jumlahItemBiayaTerbayar' => $jumlahItemBiayaTerbayar, 'form' => $form->createView(),
-                'totalBiaya' => $totalBiaya, 'editLink' => $editLink,
+                'totalBiaya' => $totalBiaya, 'editLink' => $editLink, 'adaPotongan' => $adaPotongan,
+                'totalPotongan' => $totalPotongan, 'totalAdaPotongan' => $totalAdaPotongan,
         );
     }
 
@@ -223,21 +283,43 @@ class PembayaranPendaftaranController extends Controller
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
+        if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
+            throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
+        }
+
         $daftarBiayaPendaftaran = $entity->getDaftarBiayaPendaftaran();
-        $totalNominalTransaksi = $entity->getTotalNominalTransaksiPembayaranPendaftaran();
+        $totalNominalTransaksiSebelumnya = $entity->getTotalNominalTransaksiPembayaranPendaftaran();
+
+        $nominalBiaya = 0;
+        foreach ($entity->getDaftarBiayaPendaftaran() as $biaya) {
+            $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
+            $nominalBiaya += $biayaPendaftaran->getNominal();
+        }
+        $adaPotongan = $entity->getAdaPotongan();
+        $jenisPotongan = "";
+        $nominalPotongan = 0;
+        $persenPotongan = 0;
+        if ($adaPotongan) {
+            $jenisPotongan = $entity->getJenisPotongan();
+            if ($jenisPotongan == 'nominal') {
+                $nominalPotongan = $entity->getNominalPotongan();
+            } else if ($jenisPotongan == 'persentase') {
+                $nominalPotongan = $nominalBiaya * ($entity->getPersenPotongan() / 100);
+                $persenPotongan = $entity->getPersenPotongan();
+            }
+        }
 
         $transaksiPembayaran = $em->getRepository('FastSisdikBundle:TransaksiPembayaranPendaftaran')
                 ->findBy(array(
                     'pembayaranPendaftaran' => $id
                 ));
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
-        }
-
         return array(
-                'siswa' => $siswa, 'entity' => $entity, 'totalNominalTransaksi' => $totalNominalTransaksi,
-                'transaksiPembayaran' => $transaksiPembayaran,
+                'siswa' => $siswa, 'entity' => $entity,
+                'totalNominalTransaksiSebelumnya' => $totalNominalTransaksiSebelumnya,
+                'transaksiPembayaran' => $transaksiPembayaran, 'nominalBiaya' => $nominalBiaya,
+                'adaPotongan' => $adaPotongan, 'jenisPotongan' => $jenisPotongan,
+                'nominalPotongan' => $nominalPotongan, 'persenPotongan' => $persenPotongan,
         );
     }
 
@@ -256,6 +338,10 @@ class PembayaranPendaftaranController extends Controller
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
+        if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
+            throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
+        }
+
         $daftarBiayaPendaftaran = $entity->getDaftarBiayaPendaftaran();
         $totalNominalTransaksiSebelumnya = $entity->getTotalNominalTransaksiPembayaranPendaftaran();
 
@@ -265,14 +351,26 @@ class PembayaranPendaftaranController extends Controller
         }
 
         $biaya = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($daftarBiayaPendaftaran[0]);
-        $nominalBiaya = $biaya->getNominal();
 
-        if ($totalNominalTransaksiSebelumnya == $nominalBiaya && $totalNominalTransaksiSebelumnya > 0) {
-            return array(
-                    'siswa' => $siswa, 'entity' => $entity,
-                    'totalNominalTransaksiSebelumnya' => $totalNominalTransaksiSebelumnya,
-                    'nominalBiaya' => $nominalBiaya,
-            );
+        $nominalBiaya = $biaya->getNominal();
+        $adaPotongan = $entity->getAdaPotongan();
+        $jenisPotongan = "";
+        $nominalPotongan = 0;
+        $persenPotongan = 0;
+        if ($adaPotongan) {
+            $jenisPotongan = $entity->getJenisPotongan();
+            if ($jenisPotongan == 'nominal') {
+                $nominalPotongan = $entity->getNominalPotongan();
+            } else if ($jenisPotongan == 'persentase') {
+                $nominalPotongan = $nominalBiaya * ($entity->getPersenPotongan() / 100);
+                $persenPotongan = $entity->getPersenPotongan();
+            }
+        }
+
+        if ($totalNominalTransaksiSebelumnya == ($nominalBiaya - $nominalPotongan)
+                && $totalNominalTransaksiSebelumnya > 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.registrationfee.paidoff'));
         } else {
             $transaksiPembayaranPendaftaran = new TransaksiPembayaranPendaftaran();
             $entity->getTransaksiPembayaranPendaftaran()->add($transaksiPembayaranPendaftaran);
@@ -285,7 +383,9 @@ class PembayaranPendaftaranController extends Controller
             return array(
                     'siswa' => $siswa, 'entity' => $entity,
                     'totalNominalTransaksiSebelumnya' => $totalNominalTransaksiSebelumnya,
-                    'nominalBiaya' => $nominalBiaya, 'edit_form' => $editForm->createView(),
+                    'nominalBiaya' => $nominalBiaya, 'adaPotongan' => $adaPotongan,
+                    'jenisPotongan' => $jenisPotongan, 'nominalPotongan' => $nominalPotongan,
+                    'persenPotongan' => $persenPotongan, 'edit_form' => $editForm->createView(),
             );
         }
     }
@@ -306,6 +406,10 @@ class PembayaranPendaftaranController extends Controller
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
+        if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
+            throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
+        }
+
         $daftarBiayaPendaftaran = $entity->getDaftarBiayaPendaftaran();
         $totalNominalTransaksiSebelumnya = $entity->getTotalNominalTransaksiPembayaranPendaftaran();
 
@@ -315,10 +419,26 @@ class PembayaranPendaftaranController extends Controller
         }
 
         $biaya = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($daftarBiayaPendaftaran[0]);
-        $nominalBiaya = $biaya->getNominal();
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
+        $nominalBiaya = $biaya->getNominal();
+        $adaPotongan = $entity->getAdaPotongan();
+        $jenisPotongan = "";
+        $nominalPotongan = 0;
+        $persenPotongan = 0;
+        if ($adaPotongan) {
+            $jenisPotongan = $entity->getJenisPotongan();
+            if ($jenisPotongan == 'nominal') {
+                $nominalPotongan = $entity->getNominalPotongan();
+            } else if ($jenisPotongan == 'persentase') {
+                $nominalPotongan = $nominalBiaya * ($entity->getPersenPotongan() / 100);
+                $persenPotongan = $entity->getPersenPotongan();
+            }
+        }
+
+        if ($totalNominalTransaksiSebelumnya == ($nominalBiaya - $nominalPotongan)
+                && $totalNominalTransaksiSebelumnya > 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.registrationfee.paidoff'));
         }
 
         $editForm = $this
@@ -343,7 +463,7 @@ class PembayaranPendaftaranController extends Controller
             $em->flush();
             $this->get('session')
                     ->setFlash('success',
-                            $this->get('translator')->trans('flash.fee.registration.mortgage.updated'));
+                            $this->get('translator')->trans('flash.payment.registration.mortgage.updated'));
 
             return $this
                     ->redirect(
@@ -354,10 +474,16 @@ class PembayaranPendaftaranController extends Controller
                                             )));
         }
 
+        $this->get('session')
+                ->setFlash('error',
+                        $this->get('translator')->trans('flash.payment.registration.mortgage.fail.insert'));
+
         return array(
                 'siswa' => $siswa, 'entity' => $entity,
                 'totalNominalTransaksiSebelumnya' => $totalNominalTransaksiSebelumnya,
-                'nominalBiaya' => $nominalBiaya, 'edit_form' => $editForm->createView(),
+                'nominalBiaya' => $nominalBiaya, 'adaPotongan' => $adaPotongan,
+                'jenisPotongan' => $jenisPotongan, 'nominalPotongan' => $nominalPotongan,
+                'persenPotongan' => $persenPotongan, 'edit_form' => $editForm->createView(),
         );
     }
 

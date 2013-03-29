@@ -292,9 +292,13 @@ class BiayaPendaftaranController extends Controller
                         ->setFlash('info',
                                 $this->get('translator')->trans('exception.delete.restrict.registrationfee'));
 
-                return $this->redirect($this->generateUrl('fee_registration_show', array(
-                                    'id' => $id
-                                )));
+                return $this
+                        ->redirect(
+                                $this
+                                        ->generateUrl('fee_registration_show',
+                                                array(
+                                                    'id' => $id
+                                                )));
             }
 
         } else {
@@ -308,9 +312,9 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds total payables registration fee info
      *
-     * @Route("/totalinfo/{tahunmasuk}/{gelombang}", name="fee_registration_totalinfo")
+     * @Route("/totalinfo/{tahunmasuk}/{gelombang}/{potongan}", name="fee_registration_totalinfo", defaults={"potongan"=0})
      */
-    public function getTotalFeeInfoAction($tahunmasuk, $gelombang) {
+    public function getTotalFeeInfoAction($tahunmasuk, $gelombang, $potongan) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -327,15 +331,15 @@ class BiayaPendaftaranController extends Controller
             }
         }
 
-        return new Response(number_format($total, 0, ',', '.'));
+        return new Response(number_format($total - $potongan, 0, ',', '.'));
     }
 
     /**
      * Finds total payment remains registration fee info
      *
-     * @Route("/remains/{tahunmasuk}/{gelombang}/{paid}", name="fee_registration_remains")
+     * @Route("/remains/{tahunmasuk}/{gelombang}/{paid}/{potongan}", name="fee_registration_remains", defaults={"potongan"=0})
      */
-    public function getRemainsPaymentInfoAction($tahunmasuk, $gelombang, $paid) {
+    public function getRemainsPaymentInfoAction($tahunmasuk, $gelombang, $paid, $potongan) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -352,7 +356,7 @@ class BiayaPendaftaranController extends Controller
             }
         }
 
-        return new Response(number_format(($total - $paid), 0, ',', '.'));
+        return new Response(number_format(($total - $paid - $potongan), 0, ',', '.'));
     }
 
     /**
