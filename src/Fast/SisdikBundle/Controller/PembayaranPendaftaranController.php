@@ -234,6 +234,16 @@ class PembayaranPendaftaranController extends Controller
                 $transaksi->setDibuatOleh($this->container->get('security.context')->getToken()->getUser());
             }
 
+            if ($entity->getAdaPotongan() && $entity->getPersenPotongan() != 0) {
+                $nominal = 0;
+                foreach ($entity->getDaftarBiayaPendaftaran() as $biaya) {
+                    $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
+                    $nominal += $biayaPendaftaran->getNominal();
+                }
+                $persenPotonganDinominalkan = $nominal * ($entity->getPersenPotongan() / 100);
+                $entity->setPersenPotonganDinominalkan($persenPotonganDinominalkan);
+            }
+
             $em->persist($entity);
 
             foreach ($entity->getDaftarBiayaPendaftaran() as $biaya) {

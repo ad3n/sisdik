@@ -51,9 +51,16 @@
     		    {% set totalBayar = 0 %}
     		    {% set totalBayar = data.totalNominalPembayaranPendaftaran %}
     		    {{ totalBayar|number_format(0, ',', '.') }} &rarr;
-                {% render url('fee_registration_totalinfo', {'tahunmasuk': data.tahunmasuk.id, 'gelombang': data.gelombang.id}) %}
+    		    {% set totalInfo %}
+                    {% render url('fee_registration_totalinfo', {'tahunmasuk': data.tahunmasuk.id, 'gelombang': data.gelombang.id, 'json': 1, 'potongan': data.totalPotonganPembayaranPendaftaran}) %}
+                {% endset %}
+                {% set totalInfo = totalInfo|json_decode %}
+                {% set totalBiaya = totalInfo.biaya %}
+                {{ totalBiaya|number_format(0, ',', '.') }}
 		    </td>
-    		<td data-title="{{ 'label.payment.remains'|trans }}">{% render url('fee_registration_remains', {'tahunmasuk': data.tahunmasuk.id, 'gelombang': data.gelombang.id, 'paid': totalBayar}) %}</td>
+    		<td data-title="{{ 'label.payment.remains'|trans }}">
+    		    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+		    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('payment_registrationfee', {'sid': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
     		</td>

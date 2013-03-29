@@ -1236,7 +1236,7 @@ class Siswa
     /**
      * Get total nominal pembayaran pendaftaran
      *
-     * @return \Fast\SisdikBundle\PembayaranPendaftaran
+     * @return integer
      */
     public function getTotalNominalPembayaranPendaftaran() {
         $jumlah = 0;
@@ -1245,6 +1245,21 @@ class Siswa
             foreach ($pembayaran->getTransaksiPembayaranPendaftaran() as $transaksi) {
                 $jumlah += $transaksi->getNominalPembayaran();
             }
+        }
+
+        return $jumlah;
+    }
+
+    /**
+     * Get total potongan pembayaran pendaftaran
+     *
+     * @return integer
+     */
+    public function getTotalPotonganPembayaranPendaftaran() {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
+            $jumlah += $pembayaran->getNominalPotongan() + $pembayaran->getPersenPotonganDinominalkan();
         }
 
         return $jumlah;

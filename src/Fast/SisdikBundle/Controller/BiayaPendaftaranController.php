@@ -312,9 +312,9 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds total payables registration fee info
      *
-     * @Route("/totalinfo/{tahunmasuk}/{gelombang}/{potongan}", name="fee_registration_totalinfo", defaults={"potongan"=0})
+     * @Route("/totalinfo/{tahunmasuk}/{gelombang}/{potongan}/{json}", name="fee_registration_totalinfo", defaults={"potongan"=0, "json"=0})
      */
-    public function getTotalFeeInfoAction($tahunmasuk, $gelombang, $potongan) {
+    public function getTotalFeeInfoAction($tahunmasuk, $gelombang, $potongan, $json) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -331,7 +331,17 @@ class BiayaPendaftaranController extends Controller
             }
         }
 
-        return new Response(number_format($total - $potongan, 0, ',', '.'));
+        if ($json == 1) {
+            $string = json_encode(array(
+                "biaya" => $total - $potongan
+            ));
+            return new Response($string, 200,
+                    array(
+                        'Content-Type' => 'application/json'
+                    ));
+        } else {
+            return new Response(number_format($total - $potongan, 0, ',', '.'));
+        }
     }
 
     /**

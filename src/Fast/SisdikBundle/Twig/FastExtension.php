@@ -9,6 +9,16 @@ class FastExtension extends \Twig_Extension
         );
     }
 
+    public function getFilters() {
+        return array(
+            'json_decode' => new \Twig_Filter_Method($this, 'jsonDecode'),
+        );
+    }
+
+    public function jsonDecode($str) {
+        return json_decode($str);
+    }
+
     public function currencySymbolFunction($locale) {
         $locale = $locale == null ? \Locale::getDefault() : $locale;
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
@@ -21,6 +31,4 @@ class FastExtension extends \Twig_Extension
         return 'fast_extension';
     }
 }
-
-
 

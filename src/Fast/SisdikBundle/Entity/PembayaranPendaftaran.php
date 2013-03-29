@@ -60,6 +60,13 @@ class PembayaranPendaftaran
     /**
      * @var integer
      *
+     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=true)
+     */
+    private $persenPotonganDinominalkan;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="nominal_potongan", type="bigint", nullable=true)
      */
     private $nominalPotongan;
@@ -224,6 +231,27 @@ class PembayaranPendaftaran
      */
     public function getPersenPotongan() {
         return $this->persenPotongan;
+    }
+
+    /**
+     * Set persenPotonganDinominalkan
+     *
+     * @param integer $persenPotonganDinominalkan
+     * @return PembayaranPendaftaran
+     */
+    public function setPersenPotonganDinominalkan($persenPotonganDinominalkan) {
+        $this->persenPotonganDinominalkan = $persenPotonganDinominalkan;
+
+        return $this;
+    }
+
+    /**
+     * Get persenPotonganDinominalkan
+     *
+     * @return integer
+     */
+    public function getPersenPotonganDinominalkan() {
+        return $this->persenPotonganDinominalkan;
     }
 
     /**
