@@ -154,6 +154,9 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
 
         $jumlahItemBiaya = count(
                 $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
@@ -232,6 +235,7 @@ class PembayaranPendaftaranController extends Controller
             $entity->setSiswa($siswa);
             foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
                 $transaksi->setDibuatOleh($this->container->get('security.context')->getToken()->getUser());
+                $currentPaymentAmount = $transaksi->getNominalPembayaran();
             }
 
             if ($entity->getAdaPotongan() && $entity->getPersenPotongan() != 0) {
@@ -243,8 +247,27 @@ class PembayaranPendaftaranController extends Controller
                 $persenPotonganDinominalkan = $nominal * ($entity->getPersenPotongan() / 100);
                 $entity->setPersenPotonganDinominalkan($persenPotonganDinominalkan);
             }
+            $currentDiscount = $entity->getNominalPotongan() + $entity->getPersenPotonganDinominalkan();
+
+            $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran() + $currentPaymentAmount;
+            $payableAmount = $this
+                    ->getPayableRegistrationFees($siswa->getTahunmasuk()->getId(),
+                            $siswa->getGelombang()->getId());
+            $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran() + $currentDiscount;
+            $payableAmountDiscounted = $payableAmount - $totalDiscount;
+
+            if ($totalPayment == $payableAmountDiscounted) {
+                $siswa->setLunasBiayaPendaftaran(true);
+            }
+
+            // print("\$totalPayment: $totalPayment<br />");
+            // print("\$payableAmount: $payableAmount<br />");
+            // print("\$totalDiscount: $totalDiscount<br />");
+            // print("\$payableAmountDiscounted: $payableAmountDiscounted<br />");
+            // exit;
 
             $em->persist($entity);
+            $em->persist($siswa);
 
             foreach ($entity->getDaftarBiayaPendaftaran() as $biaya) {
                 $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
@@ -276,6 +299,28 @@ class PembayaranPendaftaranController extends Controller
                 'totalBiaya' => $totalBiaya, 'editLink' => $editLink, 'adaPotongan' => $adaPotongan,
                 'totalPotongan' => $totalPotongan, 'totalAdaPotongan' => $totalAdaPotongan,
         );
+    }
+
+    /**
+     * Get payable registration fee amount
+     *
+     */
+    private function getPayableRegistrationFees($tahunmasuk, $gelombang) {
+        $em = $this->getDoctrine()->getManager();
+        $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                ->findBy(
+                        array(
+                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
+                        ));
+
+        $feeamount = 0;
+        foreach ($entities as $entity) {
+            if ($entity instanceof BiayaPendaftaran) {
+                $feeamount += $entity->getNominal();
+            }
+        }
+
+        return $feeamount;
     }
 
     /**
@@ -414,6 +459,11 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+        // total payment start here because of the unknown behavior during binding request
+        $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran();
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
         if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
@@ -465,11 +515,32 @@ class PembayaranPendaftaranController extends Controller
                                 $entity->getDaftarBiayaPendaftaran()
                             ));
 
+            $currentPaymentAmount = 0;
             foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
                 $transaksi->setDibuatOleh($this->container->get('security.context')->getToken()->getUser());
+                $currentPaymentAmount += $transaksi->getNominalPembayaran();
             }
 
+            $totalPayment = $totalPayment + $currentPaymentAmount;
+            $payableAmount = $this
+                    ->getPayableRegistrationFees($siswa->getTahunmasuk()->getId(),
+                            $siswa->getGelombang()->getId());
+            $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran();
+            $payableAmountDiscounted = $payableAmount - $totalDiscount;
+
+            if ($totalPayment == $payableAmountDiscounted) {
+                $siswa->setLunasBiayaPendaftaran(true);
+            }
+
+            // print("\$totalPayment: $totalPayment<br />");
+            // print("\$payableAmount: $payableAmount<br />");
+            // print("\$totalDiscount: $totalDiscount<br />");
+            // print("\$payableAmountDiscounted: $payableAmountDiscounted<br />");
+            // exit;
+
             $em->persist($entity);
+            $em->persist($siswa);
+
             $em->flush();
             $this->get('session')
                     ->setFlash('success',

@@ -261,6 +261,13 @@ class Siswa
     private $golongandarah;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="lunas_biaya_pendaftaran", type="boolean", nullable=true, options={"default" = 0})
+     */
+    private $lunasBiayaPendaftaran = 0;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
@@ -1032,6 +1039,27 @@ class Siswa
      */
     public function getGolongandarah() {
         return $this->golongandarah;
+    }
+
+    /**
+     * Set lunasBiayaPendaftaran
+     *
+     * @param boolean $lunasBiayaPendaftaran
+     * @return Siswa
+     */
+    public function setLunasBiayaPendaftaran($lunasBiayaPendaftaran) {
+        $this->lunasBiayaPendaftaran = $lunasBiayaPendaftaran;
+
+        return $this;
+    }
+
+    /**
+     * Get lunasBiayaPendaftaran
+     *
+     * @return boolean
+     */
+    public function getLunasBiayaPendaftaran() {
+        return $this->lunasBiayaPendaftaran;
     }
 
     /**

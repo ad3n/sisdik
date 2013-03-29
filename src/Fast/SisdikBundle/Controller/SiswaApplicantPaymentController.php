@@ -80,122 +80,18 @@ class SiswaApplicantPaymentController extends Controller
                 $querybuilder->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59');
             }
 
-            $menampilkanDaftarBelumLunas = false;
             if ($searchdata['notsettled'] == true) {
-                $menampilkanDaftarBelumLunas = true;
-                $results = $querybuilder->getQuery()->getResult();
-
-                $daftarSiswaBelumLunas = array();
-                foreach ($results as $entity) {
-                    if (is_object($entity) && $entity instanceof Siswa) {
-                        $totalBiayaDibayar = $entity->getTotalNominalPembayaranPendaftaran();
-                        $daftarTotalBiayaDibayar[$entity->getId()] = $totalBiayaDibayar;
-
-                        $daftarBiayaDibayar = array();
-                        foreach ($entity->getPembayaranPendaftaran() as $pembayaran) {
-                            $daftarBiayaDibayar = array_merge($daftarBiayaDibayar,
-                                    $pembayaran->getDaftarBiayaPendaftaran());
-                        }
-
-                        $totalPotongan = 0;
-                        $daftarBiayaHarusDibayar = $this
-                                ->getPayableRegistrationFees($entity->getTahunmasuk()->getId(),
-                                        $entity->getGelombang()->getId());
-                        if (count($daftarBiayaDibayar) < count($daftarBiayaHarusDibayar)) {
-
-                            $daftarSiswaBelumLunas[] = $entity->getId();
-                            $daftarTotalPotongan[$entity->getId()] = $totalPotongan;
-
-                        } else if (count($daftarBiayaDibayar) == count($daftarBiayaHarusDibayar)) {
-                            $totalBiayaHarusDibayar = 0;
-                            foreach ($entity->getPembayaranPendaftaran() as $pembayaran) {
-                                if ($pembayaran instanceof PembayaranPendaftaran) {
-
-                                    $nominalBiaya = 0;
-                                    foreach ($pembayaran->getDaftarBiayaPendaftaran() as $biaya) {
-                                        $biayaPendaftaran = $em
-                                                ->getRepository('FastSisdikBundle:BiayaPendaftaran')
-                                                ->find($biaya);
-                                        $nominalBiaya += $biayaPendaftaran->getNominal();
-                                    }
-
-                                    if ($pembayaran->getAdaPotongan()) {
-                                        $jenisPotongan = $pembayaran->getJenisPotongan();
-                                        if ($jenisPotongan == 'nominal') {
-                                            $nominalBiayaTerpotong = $nominalBiaya
-                                                    - $pembayaran->getNominalPotongan();
-                                            $totalPotongan += $pembayaran->getNominalPotongan();
-                                        } else if ($jenisPotongan == 'persentase') {
-                                            $nominalBiayaTerpotong = $nominalBiaya
-                                                    - ($nominalBiaya
-                                                            * ($pembayaran->getPersenPotongan() / 100));
-                                            $totalPotongan += $nominalBiaya
-                                                    * ($pembayaran->getPersenPotongan() / 100);
-                                        }
-                                        $totalBiayaHarusDibayar += $nominalBiayaTerpotong;
-                                    } else {
-                                        $totalBiayaHarusDibayar += $nominalBiaya;
-                                    }
-
-                                }
-                            }
-
-                            $daftarTotalPotongan[$entity->getId()] = $totalPotongan;
-                            $daftarTotalBiayaHarusDibayar[$entity->getId()] = $totalBiayaHarusDibayar;
-
-                            if ($totalBiayaDibayar < $totalBiayaHarusDibayar) {
-                                $daftarSiswaBelumLunas[] = $entity->getId();
-                            }
-                        }
-                    }
-                }
-
-                if (count($daftarSiswaBelumLunas) > 0) {
-                    $querybuilder->andWhere("t.id IN (?1)")->setParameter(1, $daftarSiswaBelumLunas);
-                }
-
+                $querybuilder->andWhere("t.lunasBiayaPendaftaran = :lunas");
+                $querybuilder->setParameter('lunas', false);
             }
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
-        if ($menampilkanDaftarBelumLunas) {
-            return array(
-                    'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                    'daftarTotalBiayaDibayar' => $daftarTotalBiayaDibayar,
-                    'daftarTotalBiayaHarusDibayar' => $daftarTotalBiayaHarusDibayar,
-                    'daftarTotalPotongan' => $daftarTotalPotongan,
-                    'menampilkanDaftarBelumLunas' => $menampilkanDaftarBelumLunas,
-            );
-        } else {
-            return array(
-                    'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                    'menampilkanDaftarBelumLunas' => $menampilkanDaftarBelumLunas,
-            );
-        }
-    }
-
-    /**
-     * Finds list of payable registration fees
-     *
-     */
-    private function getPayableRegistrationFees($tahunmasuk, $gelombang) {
-        $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
-                ->findBy(
-                        array(
-                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
-                        ));
-
-        $list = array();
-        foreach ($entities as $entity) {
-            if ($entity instanceof BiayaPendaftaran) {
-                $list[] = $entity->getId();
-            }
-        }
-
-        return $list;
+        return array(
+            'pagination' => $pagination, 'searchform' => $searchform->createView(),
+        );
     }
 
     private function setCurrentMenu() {
