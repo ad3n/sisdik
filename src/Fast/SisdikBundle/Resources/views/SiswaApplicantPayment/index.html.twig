@@ -30,8 +30,8 @@
     <thead>
     	<tr>
     		<th>{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.nomorPendaftaran') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorPendaftaran') }}
+    		<th class="{% if pagination.isSorted('t.nomorUrutPendaftaran') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorUrutPendaftaran') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
