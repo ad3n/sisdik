@@ -35,8 +35,7 @@ class UserRegisterFormType extends BaseType
                         ))
                 ->add('plainPassword', 'repeated',
                         array(
-                                'type' => 'password',
-                                'invalid_message' => 'fos_user.password.notequal',
+                                'type' => 'password', 'invalid_message' => 'fos_user.password.notequal',
                                 'first_options' => array(
                                         'label' => 'label.password',
                                         'attr' => array(
@@ -87,9 +86,8 @@ class UserRegisterFormType extends BaseType
                 $builder
                         ->add('sekolah', 'entity',
                                 array(
-                                        'class' => 'FastSisdikBundle:Sekolah',
-                                        'label' => 'label.school', 'multiple' => false,
-                                        'expanded' => false, 'property' => 'nama',
+                                        'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                        'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                         'required' => true,
                                 ));
             } else {
@@ -104,9 +102,8 @@ class UserRegisterFormType extends BaseType
                     $builder
                             ->add('sekolah', 'entity',
                                     array(
-                                            'class' => 'FastSisdikBundle:Sekolah',
-                                            'label' => 'label.school', 'multiple' => false,
-                                            'expanded' => false, 'property' => 'nama',
+                                            'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                            'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                             'empty_value' => false, 'required' => true,
                                             'query_builder' => $querybuilder,
                                             'attr' => array(
@@ -120,7 +117,8 @@ class UserRegisterFormType extends BaseType
         $builder
                 ->add('enabled', 'checkbox',
                         array(
-                            'label' => 'label.enabled', 'required' => false,
+                                'label' => 'label.enabled', 'required' => false,
+                                'widget_checkbox_label' => 'widget',
                         ));
     }
 
@@ -136,7 +134,7 @@ class UserRegisterFormType extends BaseType
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_register';
+        return 'fast_sisdikbundle_userregister';
     }
 
 }

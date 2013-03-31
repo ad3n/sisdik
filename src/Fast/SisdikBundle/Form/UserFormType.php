@@ -7,10 +7,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * 
+ *
  * UserFormType will be used both for ADMIN and SUPER ADMIN role,
- * so we need to put certain condition depend on the logged in user session 
- * 
+ * so we need to put certain condition depend on the logged in user session
+ *
  * @author Ihsan Faisal
  *
  */
@@ -42,8 +42,7 @@ class UserFormType extends AbstractType
                         ))
                 ->add('name', null,
                         array(
-                                'required' => true, 'label' => 'label.name.full',
-                                'read_only' => true,
+                                'required' => true, 'label' => 'label.name.full', 'read_only' => true,
                                 'attr' => array(
                                     'class' => 'disabled xlarge'
                                 )
@@ -61,8 +60,8 @@ class UserFormType extends AbstractType
             $builder
                     ->add('roles', 'choice',
                             array(
-                                    'choices' => $roles, 'label' => 'label.roles',
-                                    'multiple' => true, 'expanded' => true,
+                                    'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
+                                    'expanded' => true,
                             ));
         } else if ($this->formoption == 2) {
             // role siswa, nothing
@@ -78,8 +77,8 @@ class UserFormType extends AbstractType
             $builder
                     ->add('roles', 'choice',
                             array(
-                                    'choices' => $roles, 'label' => 'label.roles',
-                                    'multiple' => true, 'expanded' => true,
+                                    'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
+                                    'expanded' => true,
                             ));
         }
 
@@ -88,9 +87,8 @@ class UserFormType extends AbstractType
                 $builder
                         ->add('sekolah', 'entity',
                                 array(
-                                        'class' => 'FastSisdikBundle:Sekolah',
-                                        'label' => 'label.school', 'multiple' => false,
-                                        'expanded' => false, 'property' => 'nama',
+                                        'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                        'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                         'required' => true,
                                 ));
             } else {
@@ -105,9 +103,8 @@ class UserFormType extends AbstractType
                     $builder
                             ->add('sekolah', 'entity',
                                     array(
-                                            'class' => 'FastSisdikBundle:Sekolah',
-                                            'label' => 'label.school', 'multiple' => false,
-                                            'expanded' => false, 'property' => 'nama',
+                                            'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                            'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                             'empty_value' => false, 'required' => true,
                                             'query_builder' => $querybuilder,
                                             'attr' => array(
@@ -121,7 +118,8 @@ class UserFormType extends AbstractType
         $builder
                 ->add('enabled', 'checkbox',
                         array(
-                            'label' => 'label.enabled', 'required' => false,
+                                'label' => 'label.enabled', 'required' => false,
+                                'widget_checkbox_label' => 'widget',
                         ));
     }
 
