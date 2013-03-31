@@ -24,17 +24,15 @@ class SiswaGenerateUsernameType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunMasuk', 't')
+            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunMasuk', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
                     ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahunmasuk', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahunmasuk',
-                                    'label' => 'label.yearentry.entry',
-                                    'multiple' => false, 'expanded' => false,
-                                    'property' => 'tahun', 'required' => true,
+                                    'label' => 'label.yearentry.entry', 'multiple' => false,
+                                    'expanded' => false, 'property' => 'tahun', 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
                                         'class' => 'medium selectyear'
@@ -44,8 +42,7 @@ class SiswaGenerateUsernameType extends AbstractType
             $builder
                     ->add('filter', 'text',
                             array(
-                                    'label' => 'label.filter.student',
-                                    'required' => false,
+                                    'label' => 'label.filter.student', 'required' => false,
                                     'attr' => array(
                                             'class' => 'large studentfilter',
                                             'placeholder' => 'help.filterby.name.systemid'
@@ -56,9 +53,8 @@ class SiswaGenerateUsernameType extends AbstractType
                                     'choices' => array(
                                             'ods' => 'Open Document Spreadsheet',
                                             'xls' => 'Microsoft Excel 97/2000/XP'
-                                    ), 'label' => 'label.output', 'multiple' => false,
-                                    'expanded' => true, 'required' => true,
-                                    'data' => 'ods',
+                                    ), 'label' => 'label.output', 'multiple' => false, 'expanded' => true,
+                                    'required' => true, 'data' => 'ods',
                             ));
 
             $builder
@@ -68,13 +64,12 @@ class SiswaGenerateUsernameType extends AbstractType
                                     'help_block' => 'help.regenerate.username',
                                     'attr' => array(
                                         'class' => 'regenerate-username',
-                                    ),
+                                    ), 'widget_checkbox_label' => 'widget',
                             ))
                     ->add('captcha', 'captcha',
                             array(
                                     'attr' => array(
-                                            'class' => 'medium',
-                                            'placeholder' => 'help.type.captcha',
+                                            'class' => 'medium', 'placeholder' => 'help.type.captcha',
                                             'autocomplete' => 'off'
                                     ), 'as_url' => true, 'reload' => true,
                                     'help_block' => 'help.captcha.username.explain',

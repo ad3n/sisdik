@@ -54,17 +54,18 @@ class SiswaApplicantPaymentSearchType extends AbstractType
                 ->add('nopayment', 'checkbox',
                         array(
                                 'required' => false, 'attr' => array(), 'label_render' => true,
-                                'label' => 'label.search.notpaid'
+                                'label' => 'label.search.notpaid', 'widget_checkbox_label' => 'widget',
                         ))
                 ->add('todayinput', 'checkbox',
                         array(
                                 'required' => false, 'attr' => array(), 'label_render' => true,
-                                'label' => 'label.search.today.input'
+                                'label' => 'label.search.today.input', 'widget_checkbox_label' => 'widget',
                         ))
                 ->add('notsettled', 'checkbox',
                         array(
                                 'required' => false, 'attr' => array(), 'label_render' => true,
-                                'label' => 'label.search.paymentnotcomplete'
+                                'label' => 'label.search.paymentnotcomplete',
+                                'widget_checkbox_label' => 'widget',
                         ));
     }
 

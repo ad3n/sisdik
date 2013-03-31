@@ -65,7 +65,7 @@ class PembayaranPendaftaranType extends AbstractType
                                 'label' => 'label.discount', 'required' => false,
                                 'attr' => array(
                                     'class' => 'discount-check'
-                                )
+                                ), 'widget_checkbox_label' => 'widget',
                         ))
                 ->add('jenisPotongan', 'choice',
                         array(

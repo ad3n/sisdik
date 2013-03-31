@@ -28,12 +28,12 @@ class SiswaGenerateUsernameConfirmType extends AbstractType
                         array(
                                 'label' => 'label.generated.valid', 'required' => true,
                                 'help_block' => 'help.confirm.generated.username',
+                                'widget_checkbox_label' => 'widget',
                         ))
                 ->add('captcha', 'captcha',
                         array(
                                 'attr' => array(
-                                        'class' => 'medium',
-                                        'placeholder' => 'help.type.captcha',
+                                        'class' => 'medium', 'placeholder' => 'help.type.captcha',
                                         'autocomplete' => 'off'
                                 ), 'as_url' => true, 'reload' => true,
                                 'help_block' => 'help.captcha.username.explain',
