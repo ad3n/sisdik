@@ -292,7 +292,7 @@ class KelasController extends Controller
 
     /**
      * Duplicates classes from one academic year to another
-     * 
+     *
      * @Route("/duplicate", name="data_class_duplicate")
      * @Method("POST")
      */
@@ -403,7 +403,7 @@ class KelasController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
                 ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahun = :tahun')
                 ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
-                ->setParameter('sekolah', $sekolah->getId())->setParameter('tahun', $tahun);
+                ->setParameter('sekolah', $sekolah)->setParameter('tahun', $tahun);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();

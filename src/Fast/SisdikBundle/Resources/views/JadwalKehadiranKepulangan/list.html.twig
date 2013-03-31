@@ -33,10 +33,10 @@
     {% if searchdata.mingguanHariKe is defined %}{{ 'label.day'|trans }} {{ daynames[searchdata.mingguanHariKe] }}{% endif %}
     {% if searchdata.bulananHariKe is defined %}{{ 'label.dayno'|trans }} {{ searchdata.bulananHariKe }}{% endif %}
     </h4>
-    
+
     {% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
     <div class="clearfix"></div>
-        
+
     <div class="add-link">
     {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
     	<a href="{{ path('presence_schedule_new', {'sekolah' : sekolah}) }}" class="add-link-a">
@@ -45,7 +45,7 @@
     	</a>
     {% endimage %}
     </div>
-        
+
     <div class="clearfix"></div>
     {% else %}
     <div class="clearfix" style="margin-top: 20px;"></div>
@@ -179,7 +179,7 @@
         </div>
 
         <div class="clearfix"></div>
-        
+
         <form method="post" action="{{ path('presence_schedule_populatecommand') }}" class="form-inline">
             {{ form_widget(populatecommandform) }}
             <button type="submit" class="btn success alternative icon link">{{ 'label.updatecommand'|trans }}</button>&nbsp; ({{ 'shortinfo.onlyforactiveyear'|trans }})
@@ -200,12 +200,12 @@ $(document).ready(function() {
         }
         $(".selectclass").html(options);
     });
-    
+
     $(".selectyear").change(function() {
         // clear class select box content
         $(".selectclass").empty();
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
-        
+
 
         $.get(url, {tahun: $(this).val()}, function(data) {
         	var options = '';
@@ -227,7 +227,7 @@ $(document).ready(function() {
         }
         $(".selectclassduplicate").html(options);
     });
-    
+
     $(".selectyearduplicate").change(function() {
         // clear class select box content
         $(".selectclassduplicate").empty();
