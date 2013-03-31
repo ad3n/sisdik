@@ -67,7 +67,7 @@ class SiswaApplicantController extends Controller
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('t2.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('t2.id IN (?1)')->setParameter(1, $daftarTahunmasuk)->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorPendaftaran', 'DESC');
+                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
