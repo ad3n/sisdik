@@ -92,7 +92,7 @@ class PembayaranPendaftaranController extends Controller
                     $totalBiaya[] = $nominalBiayaTerpotong;
 
                     if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
-                            == $nominalBiayaTerpotong && $nominalBiayaTerpotong != 0) {
+                            == $nominalBiayaTerpotong) {
                         $editLink[] = false;
                     } else {
                         $editLink[] = true;

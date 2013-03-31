@@ -332,8 +332,6 @@ $(document).ready(function() {
         var withdiscount = ($(".discount-check").is(":checked"));
 
         if (withdiscount) {
-            console.log("with discount" + payamount);
-            console.log("discounted" + feeamountdiscounted);
             if (payamount > feeamountdiscounted) {
                 alert("{{ 'shortinfo.pay.notbiggerthan.fee.discounted'|trans }}");
                 return false;
@@ -343,9 +341,6 @@ $(document).ready(function() {
             } else if (payamount < feeamountdiscounted && $("form .fee-item input:checked").length > 1) {
                 alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
                 return false;
-            } else if (payamount == 0 || $("form .fee-item input:checked").length < 1) {
-            	alert("{{ 'shortinfo.pay.nozero'|trans }}");
-            	return false;
             }
         } else {
             if (payamount > feeamount) {

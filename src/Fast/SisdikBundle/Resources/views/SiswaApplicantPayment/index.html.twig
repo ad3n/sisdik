@@ -56,6 +56,9 @@
                 {% endset %}
                 {% set totalInfo = totalInfo|json_decode %}
                 {% set totalBiaya = totalInfo.biaya %}
+                {% if data.totalPotonganPembayaranPendaftaran > 0 %}
+                <span class="icon-gift" style="margin: 0;"></span>
+                {% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
 		    </td>
     		<td data-title="{{ 'label.payment.remains'|trans }}">
