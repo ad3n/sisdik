@@ -70,7 +70,7 @@ class LogsmsKeluar
     public function setKe($ke)
     {
         $this->ke = $ke;
-    
+
         return $this;
     }
 
@@ -93,7 +93,7 @@ class LogsmsKeluar
     public function setTeks($teks)
     {
         $this->teks = $teks;
-    
+
         return $this;
     }
 
@@ -116,7 +116,7 @@ class LogsmsKeluar
     public function setDlr($dlr)
     {
         $this->dlr = $dlr;
-    
+
         return $this;
     }
 
@@ -139,7 +139,7 @@ class LogsmsKeluar
     public function setDlrtime($dlrtime)
     {
         $this->dlrtime = $dlrtime;
-    
+
         return $this;
     }
 
