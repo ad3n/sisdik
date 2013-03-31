@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContext;

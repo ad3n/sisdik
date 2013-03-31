@@ -28,7 +28,7 @@ class SiswaApplicantSearchType extends AbstractType
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
 
             $qb = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                    ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')
+                    ->leftJoin('t.tahunmasuk', 't2')->where('t.sekolah = :sekolah')
                     ->setParameter('sekolah', $sekolah->getId());
             $results = $qb->getQuery()->getResult();
             $daftarTahunmasuk = array();

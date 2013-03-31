@@ -59,6 +59,16 @@ class PanitiaPendaftaran
     private $tahunmasuk;
 
     /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $sekolah;
+
+    /**
      * Get id
      *
      * @return integer
@@ -149,6 +159,27 @@ class PanitiaPendaftaran
      */
     public function getKetuaPanitia() {
         return $this->ketuaPanitia;
+    }
+
+    /**
+     * Set sekolah
+     *
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return PanitiaPendaftaran
+     */
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah
+     */
+    public function getSekolah() {
+        return $this->sekolah;
     }
 
     /**

@@ -43,7 +43,7 @@ class PanitiaPendaftaranController extends Controller
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC');
+                ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());

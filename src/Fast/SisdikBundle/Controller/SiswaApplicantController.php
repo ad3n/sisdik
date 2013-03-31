@@ -42,7 +42,7 @@ class SiswaApplicantController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $qb1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')
+                ->leftJoin('t.tahunmasuk', 't2')->where('t.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
         $results = $qb1->getQuery()->getResult();
         $daftarTahunmasuk = array();
@@ -65,7 +65,7 @@ class SiswaApplicantController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t2.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('t2.id IN (?1)')->setParameter(1, $daftarTahunmasuk)->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
@@ -463,7 +463,7 @@ class SiswaApplicantController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $qb0 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->where('t2.sekolah = :sekolah')->andWhere('t.aktif = 1')
+                ->leftJoin('t.tahunmasuk', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
                 ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
         $results = $qb0->getQuery()->getResult();
         foreach ($results as $entity) {

@@ -6,7 +6,6 @@ use Fast\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
