@@ -1,6 +1,9 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\User;
+use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
+use Fast\SisdikBundle\Entity\Tahun;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -17,18 +20,44 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
-                    ->where('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah);
-            $results = $querybuilder->getQuery()->getResult();
-            foreach ($results as $entity) {
-                $tahunaktif = $entity->getNama();
+            $tahun = $em->getRepository('FastSisdikBundle:Tahun')
+                    ->findOneBy(
+                            array(
+                                'sekolah' => $sekolah->getId(), 'aktif' => true
+                            ));
+            $tahunaktif = (is_object($tahun) && $tahun instanceof Tahun) ? $tahun->getNama() : null;
+
+            $panitiaPendaftaran = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
+                    ->findOneBy(
+                            array(
+                                'sekolah' => $sekolah->getId(), 'aktif' => true
+                            ));
+            if (is_object($panitiaPendaftaran) && $panitiaPendaftaran instanceof PanitiaPendaftaran) {
+                $ketuaPanitiaPendaftaranAktif = $panitiaPendaftaran->getKetuaPanitia()->getName();
+
+                $tempArray = array();
+                foreach ($panitiaPendaftaran->getPanitia() as $personil) {
+                    $entity = $em->getRepository('FastSisdikBundle:User')->find($personil);
+
+                    if ($entity instanceof User) {
+                        $tempArray[] = $entity->getName();
+                    } else {
+                        $tempArray[] = $this->get('translator')->trans('label.username.undefined');
+                    }
+                }
+                $panitiaPendaftaranAktif = implode(", ", $tempArray);
+
+            } else {
+                $ketuaPanitiaPendaftaranAktif = null;
+                $panitiaPendaftaranAktif = null;
             }
         } else {
             $tahunaktif = null;
         }
 
         return array(
-            'tahunaktif' => $tahunaktif
+                'tahunaktif' => $tahunaktif, 'ketuaPanitiaPendaftaranAktif' => $ketuaPanitiaPendaftaranAktif,
+                'panitiaPendaftaranAktif' => $panitiaPendaftaranAktif,
         );
     }
 

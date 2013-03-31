@@ -3,21 +3,16 @@
 {% block page_heading %}{{ 'welcome'|trans({}, 'headings') }}{% endblock %}
 
 {% block content %}
-    {% if is_granted('ROLE_USER') %}
-        <h4>you have user role</h4>
-    {% endif %}
-    {% if is_granted('ROLE_SISWA') %}
-        <h4>you have student role</h4>
-    {% endif %}
-    {% if is_granted('ROLE_ADMIN') %}
-        <h4>you have admin role!</h4>
-    {% endif %}
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <h4>you have super admin role!</h4>
-    {% endif %}
 
     {% if tahunaktif != '' %}
-    <p>{{ 'label.activeyear'| trans }}: {{ tahunaktif }}</p>
+        <p><b>{{ 'label.activeyear'|trans }}</b><br />
+        {{ tahunaktif }}</p>
+    {% endif %}
+
+    {% if panitiaPendaftaranAktif != '' %}
+        <p><b>{{ 'label.active.regcommittee'|trans }}</b><br />
+        {{ 'leader'|trans }}: {{ ketuaPanitiaPendaftaranAktif }}<br />
+        {{ 'member'|trans }}: {{ panitiaPendaftaranAktif }}</p>
     {% endif %}
 
     <ul>

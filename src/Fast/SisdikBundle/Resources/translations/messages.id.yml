@@ -1,3 +1,6 @@
+member: Anggota
+leader: Ketua
+
 label:
     discount: Potongan Harga
     discount.fee: Jumlah Diskon
@@ -25,6 +28,8 @@ label:
     fee.undefined: Biaya tak terdefinisi
     committee.leader: Ketua Panitia
     active.committee: Panitia Aktif
+    active.regcommittee.leader: Ketua Panitia Pendaftaran Aktif
+    active.regcommittee: Panitia Pendaftaran Aktif
     search.today.input: data input hari ini
     refresh.searchresult: segarkan hasil pencarian
     refresh: segarkan
