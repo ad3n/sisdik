@@ -53,6 +53,8 @@ class DefaultController extends Controller
             }
         } else {
             $tahunaktif = null;
+            $ketuaPanitiaPendaftaranAktif = null;
+            $panitiaPendaftaranAktif = null;
         }
 
         return array(
