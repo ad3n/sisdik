@@ -62,7 +62,11 @@
                 {{ totalBiaya|number_format(0, ',', '.') }}
 		    </td>
     		<td data-title="{{ 'label.payment.remains'|trans }}">
-    		    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+                {% if (totalBiaya - totalBayar) == 0 %}
+                    ({{ 'paidoff'|trans }})
+                {% else %}
+                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+    		    {% endif %}
 		    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('payment_registrationfee', {'sid': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>

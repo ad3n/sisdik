@@ -1,5 +1,6 @@
 member: Anggota
 leader: Ketua
+paidoff: lunas
 
 label:
     discount: Potongan Harga
@@ -30,7 +31,7 @@ label:
     active.committee: Panitia Aktif
     active.regcommittee.leader: Ketua Panitia Pendaftaran Aktif
     active.regcommittee: Panitia Pendaftaran Aktif
-    search.today.input: data input hari ini
+    search.today.applicant: pendaftar hari ini
     refresh.searchresult: segarkan hasil pencarian
     refresh: segarkan
     pay.amount: Jumlah Bayar

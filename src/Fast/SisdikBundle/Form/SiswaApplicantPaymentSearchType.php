@@ -58,7 +58,8 @@ class SiswaApplicantPaymentSearchType extends AbstractType
                 ->add('todayinput', 'checkbox',
                         array(
                                 'required' => false, 'attr' => array(), 'label_render' => true,
-                                'label' => 'label.search.today.input', 'widget_checkbox_label' => 'widget',
+                                'label' => 'label.search.today.applicant',
+                                'widget_checkbox_label' => 'widget',
                         ))
                 ->add('notsettled', 'checkbox',
                         array(
