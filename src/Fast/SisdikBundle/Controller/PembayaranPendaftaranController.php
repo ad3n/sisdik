@@ -637,6 +637,8 @@ class PembayaranPendaftaranController extends Controller
             $maxwidth = 137;
             $labelwidth1 = 20;
             $labelwidth2 = 15;
+            $marginBadan = 7;
+            $maxwidth2 = $maxwidth - $marginBadan;
             $spasi = "";
 
             $commands->addContent($sekolah->getNama() . "\r\n");
@@ -678,12 +680,13 @@ class PembayaranPendaftaranController extends Controller
             $pengisiBaris2 = strlen($barisTanggal);
             $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1 : $pengisiBaris2;
 
-            $sisaBaris1 = $maxwidth - strlen($barisNamasiswa) - $pengisiBarisTerbesar;
-            $sisaBaris2 = $maxwidth - strlen($barisNomorPendaftaran) - $pengisiBarisTerbesar;
+            $sisaBaris1 = $maxwidth2 - strlen($barisNamasiswa) - $pengisiBarisTerbesar;
+            $sisaBaris2 = $maxwidth2 - strlen($barisNomorPendaftaran) - $pengisiBarisTerbesar;
 
             $commands
                     ->addContent(
-                            $barisNamasiswa . str_repeat(" ", $sisaBaris1) . $barisNomorkwitansi . "\r\n");
+                            str_repeat(" ", $marginBadan) . $barisNamasiswa . str_repeat(" ", $sisaBaris1)
+                                    . $barisNomorkwitansi . "\r\n");
             $commands
                     ->addContent(
                             $barisNomorPendaftaran . str_repeat(" ", $sisaBaris2) . $barisTanggal . "\r\n");
@@ -756,7 +759,7 @@ class PembayaranPendaftaranController extends Controller
                             $labelwidthHal2 = 18;
 
                             $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing') . " 1/2)";
-                            $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth - strlen($barisHalaman1)));
+                            $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
                             $commands->addContent($spasiBarisHalaman1 . $barisHalaman1 . "\r\n");
 
                             $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
@@ -775,7 +778,7 @@ class PembayaranPendaftaranController extends Controller
                             $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1
                                     : $pengisiBaris2;
 
-                            $sisaBaris = $maxwidth - $pengisiBarisTerbesar;
+                            $sisaBaris = $maxwidth2 - $pengisiBarisTerbesar;
 
                             $commands
                                     ->addContent(
@@ -845,7 +848,7 @@ class PembayaranPendaftaranController extends Controller
                             $labelwidthHal2 = 18;
 
                             $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing') . " 1/2)";
-                            $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth - strlen($barisHalaman1)));
+                            $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
                             $commands->addContent($spasiBarisHalaman1 . $barisHalaman1 . "\r\n");
 
                             $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
@@ -864,7 +867,7 @@ class PembayaranPendaftaranController extends Controller
                             $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1
                                     : $pengisiBaris2;
 
-                            $sisaBaris = $maxwidth - $pengisiBarisTerbesar;
+                            $sisaBaris = $maxwidth2 - $pengisiBarisTerbesar;
 
                             $commands
                                     ->addContent(
