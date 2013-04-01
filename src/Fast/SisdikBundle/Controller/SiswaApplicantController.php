@@ -166,8 +166,8 @@ class SiswaApplicantController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.applicant.inserted',
                                                 array(
@@ -256,8 +256,8 @@ class SiswaApplicantController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.applicant.updated',
                                                 array(
@@ -375,8 +375,8 @@ class SiswaApplicantController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.applicant.regphoto.updated',
                                                 array(
@@ -426,8 +426,8 @@ class SiswaApplicantController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.applicant.deleted',
                                                 array(
@@ -439,8 +439,8 @@ class SiswaApplicantController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error',
+            $this->get('session')->getFlashBag()
+                    ->add('error',
                             $this->get('translator')
                                     ->trans('flash.applicant.fail.delete',
                                             array(

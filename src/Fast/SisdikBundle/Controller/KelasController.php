@@ -129,8 +129,8 @@ class KelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.class.inserted',
                                                 array(
@@ -212,8 +212,8 @@ class KelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.class.updated',
                                                 array(
@@ -264,8 +264,8 @@ class KelasController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.class.deleted',
                                                 array(
@@ -277,8 +277,8 @@ class KelasController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error', $this->get('translator')->trans('flash.data.class.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.data.class.fail.delete'));
         }
 
         return $this
@@ -339,8 +339,8 @@ class KelasController extends Controller
                 }
             }
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.data.class.duplicated',
                                             array(
@@ -348,8 +348,8 @@ class KelasController extends Controller
                                                     '%yearto%' => $tahunTarget->getNama()
                                             )));
         } else {
-            $this->get('session')
-                    ->setFlash('success', $this->get('translator')->trans('flash.data.class.fail.duplicate'));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.class.fail.duplicate'));
         }
 
         return $this->redirect($this->generateUrl('data_class'));
@@ -402,8 +402,8 @@ class KelasController extends Controller
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
                 ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahun = :tahun')
-                ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
-                ->setParameter('sekolah', $sekolah)->setParameter('tahun', $tahun);
+                ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
+                ->setParameter('tahun', $tahun);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();

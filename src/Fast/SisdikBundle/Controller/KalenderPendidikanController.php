@@ -96,8 +96,7 @@ class KalenderPendidikanController extends Controller
                         "SELECT t FROM FastSisdikBundle:KalenderPendidikan t
                         LEFT JOIN t.sekolah t1
                         WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                        AND t1.id = {$sekolah->getId()}")
-                ->setParameter('firstday', "$year-$month-01")
+                        AND t1.id = {$sekolah->getId()}")->setParameter('firstday', "$year-$month-01")
                 ->setParameter('nextmonth', $nextmonth);
         $dates = $query->getResult();
         $activedates = array();
@@ -146,8 +145,7 @@ class KalenderPendidikanController extends Controller
                             "DELETE FastSisdikBundle:KalenderPendidikan t
                             WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
                             AND t.sekolah = {$sekolah->getId()}")
-                    ->setParameter('firstday', "$year-$month-01")
-                    ->setParameter('nextmonth', $nextmonth);
+                    ->setParameter('firstday', "$year-$month-01")->setParameter('nextmonth', $nextmonth);
             $query->execute();
 
             // insert the new data for the selected year-month
@@ -167,13 +165,12 @@ class KalenderPendidikanController extends Controller
             }
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.data.academic.calendar.updated',
                                             array(
-                                                    '%year%' => $year,
-                                                    '%month%' => $calendar['months'][$month]
+                                                '%year%' => $year, '%month%' => $calendar['months'][$month]
                                             )));
         }
 
@@ -188,7 +185,7 @@ class KalenderPendidikanController extends Controller
 
     /**
      * create monthly calendar
-     * 
+     *
      * @param integer $theyear
      * @param integer $themonth
      */
@@ -215,8 +212,8 @@ class KalenderPendidikanController extends Controller
             'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu', 'Minggu'
         );
         $months = array(
-                1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus',
-                'September', 'Oktober', 'November', 'Desember'
+                1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
+                'Oktober', 'November', 'Desember'
         );
 
         // day offset, 1 is monday, 0 is sunday
@@ -260,8 +257,7 @@ class KalenderPendidikanController extends Controller
         }
 
         return array(
-                'months' => $months, 'days' => $days, 'cal' => $cal, 'month' => abs($month),
-                'year' => $year,
+            'months' => $months, 'days' => $days, 'cal' => $cal, 'month' => abs($month), 'year' => $year,
         );
     }
 
@@ -279,8 +275,7 @@ class KalenderPendidikanController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

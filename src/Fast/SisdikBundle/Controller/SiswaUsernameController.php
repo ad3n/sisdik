@@ -107,8 +107,8 @@ class SiswaUsernameController extends Controller
                 $credentials = $this->get('session')->get($sessiondata);
 
                 if ($this->generateUsernamePassword($credentials, $regenerate)) {
-                    $this->get('session')
-                            ->setFlash('success',
+                    $this->get('session')->getFlashBag()
+                            ->add('success',
                                     $this->get('translator')->trans('flash.student.username.populated'));
                     return $this->redirect($this->generateUrl('data_student_generate_username'));
                 }

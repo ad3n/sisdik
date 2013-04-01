@@ -141,9 +141,8 @@ class BiayaPendaftaranController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.registration.inserted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.registration.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.registration');
@@ -184,8 +183,8 @@ class BiayaPendaftaranController extends Controller
         }
 
         if ($entity->getTerpakai() === true) {
-            $this->get('session')
-                    ->setFlash('info',
+            $this->get('session')->getFlashBag()
+                    ->add('info',
                             $this->get('translator')->trans('flash.fee.registration.update.restriction'));
         }
 
@@ -229,9 +228,8 @@ class BiayaPendaftaranController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.registration.updated'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.registration.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.registration');
@@ -283,13 +281,12 @@ class BiayaPendaftaranController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.registration.deleted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.registration.deleted'));
 
             } catch (\Exception $e) {
-                $this->get('session')
-                        ->setFlash('info',
+                $this->get('session')->getFlashBag()
+                        ->add('info',
                                 $this->get('translator')->trans('exception.delete.restrict.registrationfee'));
 
                 return $this
@@ -302,8 +299,8 @@ class BiayaPendaftaranController extends Controller
             }
 
         } else {
-            $this->get('session')
-                    ->setFlash('error', $this->get('translator')->trans('flash.fee.registration.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.fee.registration.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('fee_registration'));

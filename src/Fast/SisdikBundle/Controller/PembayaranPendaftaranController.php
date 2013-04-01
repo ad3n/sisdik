@@ -549,8 +549,8 @@ class PembayaranPendaftaranController extends Controller
             $em->persist($siswa);
 
             $em->flush();
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')->trans('flash.payment.registration.mortgage.updated'));
 
             return $this
@@ -562,8 +562,8 @@ class PembayaranPendaftaranController extends Controller
                                             )));
         }
 
-        $this->get('session')
-                ->setFlash('error',
+        $this->get('session')->getFlashBag()
+                ->add('error',
                         $this->get('translator')->trans('flash.payment.registration.mortgage.fail.insert'));
 
         return array(

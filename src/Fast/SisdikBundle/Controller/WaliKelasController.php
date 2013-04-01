@@ -131,8 +131,8 @@ class WaliKelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.classguardian.inserted',
                                                 array(
@@ -212,8 +212,8 @@ class WaliKelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.classguardian.updated',
                                                 array(
@@ -262,17 +262,16 @@ class WaliKelasController extends Controller
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.data.classguardian.deleted',
                                             array(
                                                 '%classguardian%' => $entity->getNama()
                                             )));
         } else {
-            $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.data.classguardian.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.data.classguardian.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('data_classguardian'));

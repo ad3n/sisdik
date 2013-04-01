@@ -112,8 +112,8 @@ class JenisImbalanController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.reward.type.inserted',
                                                 array(
@@ -195,8 +195,8 @@ class JenisImbalanController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.reward.type.updated',
                                                 array(
@@ -212,8 +212,7 @@ class JenisImbalanController extends Controller
                             $this
                                     ->generateUrl('rewardtype_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -245,8 +244,8 @@ class JenisImbalanController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.reward.type.deleted',
                                                 array(
@@ -262,8 +261,7 @@ class JenisImbalanController extends Controller
     }
 
     private function createDeleteForm($id) {
-        return $this
-                ->createFormBuilder(array(
+        return $this->createFormBuilder(array(
                     'id' => $id
                 ))->add('id', 'hidden')->getForm();
     }

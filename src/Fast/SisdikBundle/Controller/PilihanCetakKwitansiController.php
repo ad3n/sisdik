@@ -99,9 +99,8 @@ class PilihanCetakKwitansiController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.printreceiptsoption.saved'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.printreceiptsoption.saved'));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.printreceiptsoption');
                 throw new DBALException($message);
@@ -168,9 +167,8 @@ class PilihanCetakKwitansiController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.printreceiptsoption.saved'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.printreceiptsoption.saved'));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.printreceiptsoption');
                 throw new DBALException($message);

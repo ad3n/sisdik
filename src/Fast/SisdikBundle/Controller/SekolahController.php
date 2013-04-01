@@ -121,8 +121,8 @@ class SekolahController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.settings.school.updated',
                                             array(
@@ -151,8 +151,7 @@ class SekolahController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

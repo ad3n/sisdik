@@ -110,8 +110,8 @@ class MesinKehadiranController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.attendancemachine.inserted',
                                             array(
@@ -183,8 +183,8 @@ class MesinKehadiranController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.attendancemachine.updated',
                                             array(

@@ -110,8 +110,8 @@ class JenjangController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.studylevel.inserted',
                                             array(
@@ -186,8 +186,8 @@ class JenjangController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.studylevel.updated',
                                             array(
@@ -233,8 +233,8 @@ class JenjangController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.studylevel.deleted',
                                                 array(
@@ -245,8 +245,8 @@ class JenjangController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error', $this->get('translator')->trans('flash.studylevel.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.studylevel.fail.delete'));
         }
 
         return $this

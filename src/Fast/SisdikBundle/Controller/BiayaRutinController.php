@@ -39,10 +39,9 @@ class BiayaRutinController extends Controller
 
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaRutin', 't')->leftJoin('t.tahunmasuk', 't2')
-                ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaRutin', 't')
+                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
@@ -139,9 +138,8 @@ class BiayaRutinController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.recur.inserted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.recur.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.recur');
@@ -222,9 +220,8 @@ class BiayaRutinController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.recur.updated'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.recur.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.recur');
@@ -236,8 +233,7 @@ class BiayaRutinController extends Controller
                             $this
                                     ->generateUrl('fee_recur_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -271,9 +267,8 @@ class BiayaRutinController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.fee.recur.deleted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.recur.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -281,9 +276,8 @@ class BiayaRutinController extends Controller
             }
 
         } else {
-            $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.fee.recur.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.fee.recur.fail.delete'));
         }
 
         return $this
@@ -297,10 +291,9 @@ class BiayaRutinController extends Controller
 
     private function createDeleteForm($id) {
         return $this
-                ->createFormBuilder(
-                        array(
-                            'id' => $id
-                        ))->add('id', 'hidden')->getForm();
+                ->createFormBuilder(array(
+                    'id' => $id
+                ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -317,8 +310,7 @@ class BiayaRutinController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

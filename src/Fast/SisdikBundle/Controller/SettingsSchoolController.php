@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * 
+ *
  * @author Ihsan Faisal ihsan
  * @Route("/school")
  */
@@ -76,8 +76,8 @@ class SettingsSchoolController extends Controller
                 $em->persist($school);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.school.inserted',
                                                 array(
@@ -115,8 +115,8 @@ class SettingsSchoolController extends Controller
                 $school = $form->getData();
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.school.updated',
                                                 array(
@@ -153,8 +153,8 @@ class SettingsSchoolController extends Controller
                 $em->remove($school);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.school.deleted',
                                                 array(
@@ -168,8 +168,8 @@ class SettingsSchoolController extends Controller
             }
         }
 
-        $this->get('session')
-                ->setFlash('error',
+        $this->get('session')->getFlashBag()
+                ->add('error',
                         $this->get('translator')
                                 ->trans('flash.settings.school.fail.delete',
                                         array(

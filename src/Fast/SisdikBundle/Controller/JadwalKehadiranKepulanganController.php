@@ -235,8 +235,8 @@ class JadwalKehadiranKepulanganController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.inserted'));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.presence.schedule.inserted'));
 
             return $this
                     ->redirect(
@@ -306,8 +306,8 @@ class JadwalKehadiranKepulanganController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.updated'));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.presence.schedule.updated'));
 
             return $this
                     ->redirect(
@@ -347,11 +347,11 @@ class JadwalKehadiranKepulanganController extends Controller
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success', $this->get('translator')->trans('flash.presence.schedule.deleted'));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.presence.schedule.deleted'));
         } else {
-            $this->get('session')
-                    ->setFlash('success', $this->get('translator')->trans('flash.presence.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.presence.fail.delete'));
         }
 
         return $this
@@ -365,7 +365,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
     /**
      * Duplicate schedule
-     * 
+     *
      * @Route("/{sekolah}/duplicateschedule", name="presence_schedule_duplicate", requirements={"sekolah"="\d+"})
      * @Method("POST")
      * @Secure(roles="ROLE_SUPER_ADMIN")
@@ -461,15 +461,14 @@ class JadwalKehadiranKepulanganController extends Controller
 
             }
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')->trans('flash.presence.schedule.duplicate.success'));
 
             $em->flush();
         } else {
-            $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.presence.schedule.duplicate.fail'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.presence.schedule.duplicate.fail'));
         }
 
         return $this->redirect($requestUri);
@@ -478,7 +477,7 @@ class JadwalKehadiranKepulanganController extends Controller
     /**
      * Update commandtab
      * All entities in JadwalKehadiranKepulangan are inserted
-     * 
+     *
      * @Route("/populatecommand", name="presence_schedule_populatecommand")
      * @Method("POST")
      * @Secure(roles="ROLE_SUPER_ADMIN")
@@ -531,16 +530,15 @@ class JadwalKehadiranKepulanganController extends Controller
             }
         }
 
-        $this->get('session')
-                ->setFlash('error',
-                        $this->get('translator')->trans('flash.presence.schedule.commandupdate.fail'));
+        $this->get('session')->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.presence.schedule.commandupdate.fail'));
 
         return $this->redirect($requestUri);
     }
 
     /**
      * Update fingerprint related schedule
-     * 
+     *
      */
     private function updateFpCommand() {
 
@@ -635,8 +633,8 @@ class JadwalKehadiranKepulanganController extends Controller
 
             fclose($handle);
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')->trans('flash.presence.schedule.commandupdate.success'));
         }
         return true;
@@ -645,7 +643,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
     /**
      * Update sms realtime schedule
-     * 
+     *
      */
     private function updateSmsRealtimeCommand() {
 
@@ -740,8 +738,8 @@ class JadwalKehadiranKepulanganController extends Controller
 
                 fclose($handle);
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.presence.schedule.commandupdate.success'));
             }
@@ -752,7 +750,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
     /**
      * Update sms massive schedule
-     * 
+     *
      */
     private function updateSmsMassiveCommand() {
 
@@ -807,8 +805,8 @@ class JadwalKehadiranKepulanganController extends Controller
 
                 fclose($handle);
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.presence.schedule.commandupdate.success'));
             }

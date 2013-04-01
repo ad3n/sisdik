@@ -138,8 +138,8 @@ class PenjurusanController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.settings.placement.inserted',
                                             array(
@@ -214,8 +214,8 @@ class PenjurusanController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.settings.placement.updated',
                                             array(
@@ -261,8 +261,8 @@ class PenjurusanController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.placement.deleted',
                                                 array(
@@ -273,9 +273,8 @@ class PenjurusanController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.settings.placement.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.settings.placement.fail.delete'));
         }
 
         return $this

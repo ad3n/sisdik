@@ -146,8 +146,8 @@ class TahunController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.year.inserted',
                                                 array(
@@ -228,8 +228,8 @@ class TahunController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.year.updated',
                                                 array(
@@ -279,8 +279,8 @@ class TahunController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.year.deleted',
                                                 array(
@@ -291,8 +291,8 @@ class TahunController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error', $this->get('translator')->trans('flash.data.year.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.data.year.fail.delete'));
         }
 
         return $this

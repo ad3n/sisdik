@@ -157,8 +157,8 @@ class SiswaController extends Controller
                 throw new DBALException($e);
             }
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.data.student.inserted',
                                             array(
@@ -244,8 +244,8 @@ class SiswaController extends Controller
                 throw new DBALException($message);
             }
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.data.student.updated',
                                             array(
@@ -321,8 +321,8 @@ class SiswaController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.student.deleted',
                                                 array(
@@ -333,8 +333,8 @@ class SiswaController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error', $this->get('translator')->trans('flash.data.student.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.data.student.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('data_student'));
@@ -381,8 +381,8 @@ class SiswaController extends Controller
                     throw new \Exception($message);
                 }
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.student.imported',
                                                 array(
@@ -478,8 +478,8 @@ class SiswaController extends Controller
                     throw new \Exception($message);
                 }
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.studentclass.imported',
                                                 array(
@@ -678,8 +678,8 @@ class SiswaController extends Controller
                     throw new \Exception($message);
                 }
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.data.student.merged',
                                                 array(

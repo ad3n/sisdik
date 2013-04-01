@@ -42,8 +42,7 @@ class ImbalanPendaftaranController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
                 ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisImbalan', 't4')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'ASC');
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
@@ -129,9 +128,8 @@ class ImbalanPendaftaranController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.reward.amount.inserted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.reward.amount.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.rewardamount');
@@ -208,9 +206,8 @@ class ImbalanPendaftaranController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.reward.amount.updated'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.reward.amount.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.rewardamount');
@@ -222,8 +219,7 @@ class ImbalanPendaftaranController extends Controller
                             $this
                                     ->generateUrl('rewardamount_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -255,29 +251,25 @@ class ImbalanPendaftaranController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.reward.amount.deleted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.reward.amount.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.reward.amount.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.reward.amount.fail.delete'));
         }
 
         return $this->redirect($this->generateUrl('rewardamount'));
     }
 
     private function createDeleteForm($id) {
-        return $this
-                ->createFormBuilder(
-                        array(
-                            'id' => $id
-                        ))->add('id', 'hidden')->getForm();
+        return $this->createFormBuilder(array(
+                    'id' => $id
+                ))->add('id', 'hidden')->getForm();
     }
 
     private function setCurrentMenu() {
@@ -294,8 +286,7 @@ class ImbalanPendaftaranController extends Controller
         } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.registertoschool'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

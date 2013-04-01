@@ -171,8 +171,8 @@ class SettingsUserController extends Controller
 
                 $user = $form->getData();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.user.updated',
                                                 array(
@@ -225,8 +225,8 @@ class SettingsUserController extends Controller
 
                 $userManager->updateUser($user);
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.user.inserted',
                                                 array(
@@ -322,8 +322,8 @@ class SettingsUserController extends Controller
 
                 $userManager->updateUser($user);
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.user.inserted',
                                                 array(
@@ -362,8 +362,8 @@ class SettingsUserController extends Controller
         if ($confirmed == 1) {
             $this->container->get('fos_user.user_manager')->deleteUser($user);
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.settings.user.deleted',
                                             array(
@@ -380,8 +380,8 @@ class SettingsUserController extends Controller
         }
 
         // should be returned to the originated page
-        $this->get('session')
-                ->setFlash('error',
+        $this->get('session')->getFlashBag()
+                ->add('error',
                         $this->get('translator')
                                 ->trans('flash.settings.user.fail.delete',
                                         array(
@@ -417,9 +417,8 @@ class SettingsUserController extends Controller
                 $query->execute();
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
-                                $this->get('translator')->trans('flash.settings.user.some.deleted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.settings.user.some.deleted'));
 
                 return $this
                         ->redirect(
@@ -430,9 +429,8 @@ class SettingsUserController extends Controller
                                                 )));
             } else {
                 // better be returned to the originated page
-                $this->get('session')
-                        ->setFlash('error',
-                                $this->get('translator')->trans('flash.settings.user.fail.noselected'));
+                $this->get('session')->getFlashBag()
+                        ->add('error', $this->get('translator')->trans('flash.settings.user.fail.noselected'));
 
                 return $this
                         ->redirect(
@@ -444,9 +442,8 @@ class SettingsUserController extends Controller
             }
         } else {
             // better be returned to the originated page
-            $this->get('session')
-                    ->setFlash('error',
-                            $this->get('translator')->trans('flash.settings.user.fail.deletesome'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.settings.user.fail.deletesome'));
 
             return $this
                     ->redirect(
@@ -487,8 +484,8 @@ class SettingsUserController extends Controller
         }
 
         if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->get('session')
-                    ->setFlash('info', $this->get('translator')->trans('flash.settings.user.message1'));
+            $this->get('session')->getFlashBag()
+                    ->add('info', $this->get('translator')->trans('flash.settings.user.message1'));
 
             $querybuilder->andWhere("u.username != :username")
                     ->setParameter("username", $user->getUsername());
@@ -589,8 +586,8 @@ class SettingsUserController extends Controller
 
                 $userManager->updateUser($user);
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.settings.user.updated',
                                                 array(
@@ -625,8 +622,8 @@ class SettingsUserController extends Controller
         if ($confirmed == 1) {
             $this->container->get('fos_user.user_manager')->deleteUser($user);
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.settings.user.deleted',
                                             array(
@@ -637,8 +634,8 @@ class SettingsUserController extends Controller
         }
 
         // should be returned to the originated page
-        $this->get('session')
-                ->setFlash('error',
+        $this->get('session')->getFlashBag()
+                ->add('error',
                         $this->get('translator')
                                 ->trans('flash.settings.user.fail.delete',
                                         array(

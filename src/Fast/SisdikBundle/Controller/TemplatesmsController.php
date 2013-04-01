@@ -110,8 +110,8 @@ class TemplatesmsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.sms.template.inserted',
                                             array(
@@ -186,8 +186,8 @@ class TemplatesmsController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.sms.template.updated',
                                             array(
@@ -231,8 +231,8 @@ class TemplatesmsController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.sms.template.deleted',
                                                 array(
@@ -243,8 +243,8 @@ class TemplatesmsController extends Controller
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error',
+            $this->get('session')->getFlashBag()
+                    ->add('error',
                             $this->get('translator')
                                     ->trans('flash.sms.template.fail.delete',
                                             array(

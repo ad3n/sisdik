@@ -134,8 +134,8 @@ class BiayaSekaliController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success', $this->get('translator')->trans('flash.fee.once.inserted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.once.inserted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.once');
@@ -214,8 +214,8 @@ class BiayaSekaliController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success', $this->get('translator')->trans('flash.fee.once.updated'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.once.updated'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.once');
@@ -261,8 +261,8 @@ class BiayaSekaliController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success', $this->get('translator')->trans('flash.fee.once.deleted'));
+                $this->get('session')->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.fee.once.deleted'));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -270,8 +270,8 @@ class BiayaSekaliController extends Controller
             }
 
         } else {
-            $this->get('session')
-                    ->setFlash('error', $this->get('translator')->trans('flash.fee.once.fail.delete'));
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.fee.once.fail.delete'));
         }
 
         return $this

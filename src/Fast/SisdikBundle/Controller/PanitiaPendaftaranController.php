@@ -206,8 +206,8 @@ class PanitiaPendaftaranController extends Controller
 
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.registration.committee.inserted',
                                                 array(
@@ -324,8 +324,8 @@ class PanitiaPendaftaranController extends Controller
 
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.registration.committee.updated',
                                                 array(
@@ -377,16 +377,16 @@ class PanitiaPendaftaranController extends Controller
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
+            $this->get('session')->getFlashBag()
+                    ->add('success',
                             $this->get('translator')
                                     ->trans('flash.registration.committee.deleted',
                                             array(
                                                 '%yearentry%' => $entity->getTahunmasuk()->getTahun()
                                             )));
         } else {
-            $this->get('session')
-                    ->setFlash('error',
+            $this->get('session')->getFlashBag()
+                    ->add('error',
                             $this->get('translator')
                                     ->trans('flash.registration.committee.fail.delete',
                                             array(

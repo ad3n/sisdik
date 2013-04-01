@@ -32,7 +32,7 @@ class StatusKehadiranKepulanganController extends Controller
 
     /**
      * Lists all StatusKehadiranKepulangan entities, filtered by school
-     * 
+     *
      * @Route("/list/{filter}", name="presence_status_list", defaults={"filter"="all"})
      * @Template()
      */
@@ -45,7 +45,7 @@ class StatusKehadiranKepulanganController extends Controller
             $query = $em
                     ->createQuery(
                             "SELECT t FROM FastSisdikBundle:StatusKehadiranKepulangan t
-                            JOIN t.sekolah t1 
+                            JOIN t.sekolah t1
                             ORDER BY t1.nama ASC, t.nama ASC");
         } else {
             $query = $em
@@ -128,14 +128,13 @@ class StatusKehadiranKepulanganController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.presence.status.inserted',
                                                 array(
                                                         '%name%' => $entity->getNama(),
-                                                        '%school%' => $entity->getSekolah()
-                                                                ->getNama()
+                                                        '%school%' => $entity->getSekolah()->getNama()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.presencestatus');
@@ -209,14 +208,13 @@ class StatusKehadiranKepulanganController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.presence.status.updated',
                                                 array(
                                                         '%name%' => $entity->getNama(),
-                                                        '%school%' => $entity->getSekolah()
-                                                                ->getNama()
+                                                        '%school%' => $entity->getSekolah()->getNama()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.presencestatus');
@@ -228,8 +226,7 @@ class StatusKehadiranKepulanganController extends Controller
                             $this
                                     ->generateUrl('presence_status_edit',
                                             array(
-                                                    'id' => $id,
-                                                    'page' => $this->getRequest()->get('page')
+                                                'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
         }
 
@@ -261,28 +258,26 @@ class StatusKehadiranKepulanganController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')
-                        ->setFlash('success',
+                $this->get('session')->getFlashBag()
+                        ->add('success',
                                 $this->get('translator')
                                         ->trans('flash.presence.status.deleted',
                                                 array(
                                                         '%name%' => $entity->getNama(),
-                                                        '%school%' => $entity->getSekolah()
-                                                                ->getNama()
+                                                        '%school%' => $entity->getSekolah()->getNama()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')
-                    ->setFlash('error',
+            $this->get('session')->getFlashBag()
+                    ->add('error',
                             $this->get('translator')
                                     ->trans('flash.presence.status.fail.delete',
                                             array(
                                                     '%name%' => $entity->getNama(),
-                                                    '%school%' => $entity->getSekolah()
-                                                            ->getNama()
+                                                    '%school%' => $entity->getSekolah()->getNama()
                                             )));
         }
 
