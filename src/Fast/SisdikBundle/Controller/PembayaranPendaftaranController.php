@@ -602,24 +602,24 @@ class PembayaranPendaftaranController extends Controller
             $fs = new Filesystem();
             if (!$fs->exists($this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId())) {
                 $fs->mkdir($this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId());
-                if (!$fs
-                        ->exists(
+            }
+            if (!$fs
+                    ->exists(
+                            $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId() . '/'
+                                    . $tahun)) {
+                $fs
+                        ->mkdir(
                                 $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId()
-                                        . '/' . $tahun)) {
-                    $fs
-                            ->mkdir(
-                                    $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR
-                                            . $sekolah->getId() . '/' . $tahun);
-                    if (!$fs
-                            ->exists(
-                                    $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR
-                                            . $sekolah->getId() . '/' . $tahun . '/' . $bulan)) {
-                        $fs
-                                ->mkdir(
-                                        $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR
-                                                . $sekolah->getId() . '/' . $tahun . '/' . $bulan);
-                    }
-                }
+                                        . '/' . $tahun);
+            }
+            if (!$fs
+                    ->exists(
+                            $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId() . '/'
+                                    . $tahun . '/' . $bulan)) {
+                $fs
+                        ->mkdir(
+                                $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId()
+                                        . '/' . $tahun . '/' . $bulan);
             }
 
             $documenttarget = $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId()
