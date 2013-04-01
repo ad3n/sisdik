@@ -689,7 +689,8 @@ class PembayaranPendaftaranController extends Controller
                                     . $barisNomorkwitansi . "\r\n");
             $commands
                     ->addContent(
-                            $barisNomorPendaftaran . str_repeat(" ", $sisaBaris2) . $barisTanggal . "\r\n");
+                            str_repeat(" ", $marginBadan) . $barisNomorPendaftaran
+                                    . str_repeat(" ", $sisaBaris2) . $barisTanggal . "\r\n");
 
             $commands->addContent("\r\n");
 
@@ -702,7 +703,7 @@ class PembayaranPendaftaranController extends Controller
             $barisGarisTabel = "+" . str_repeat("-", $lebarKolom1) . "+" . str_repeat("-", $lebarKolom2)
                     . "+" . str_repeat("-", $lebarKolom3) . "+";
 
-            $commands->addContent($barisGarisTabel . "\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
             $kolomNomor = $translator->trans('num', array(), 'printing');
             $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
@@ -722,8 +723,8 @@ class PembayaranPendaftaranController extends Controller
             $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
                     . str_repeat(" ", $spasiKolomHarga) . "|";
 
-            $commands->addContent($barisNamaKolom . "\r\n");
-            $commands->addContent($barisGarisTabel . "\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
             $daftarBiayaPendaftaran = $transaksi->getPembayaranPendaftaran()->getDaftarBiayaPendaftaran();
 
@@ -743,11 +744,14 @@ class PembayaranPendaftaranController extends Controller
                     if ($biayaPendaftaran instanceof BiayaPendaftaran) {
 
                         if ($twoPages === true && $num == 9 && count($daftarBiayaPendaftaran) < 15) {
-                            $commands->addContent($barisGarisTabel . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                             $barisKeteranganBerlanjut = $translator
                                     ->trans('continue.to.pagetwo', array(), 'printing');
-                            $commands->addContent($barisKeteranganBerlanjut . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
+                                                    . "\r\n");
 
                             $commands->addContent("\r\n");
                             $commands->addContent("\r\n");
@@ -760,7 +764,10 @@ class PembayaranPendaftaranController extends Controller
 
                             $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing') . " 1/2)";
                             $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
-                            $commands->addContent($spasiBarisHalaman1 . $barisHalaman1 . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $spasiBarisHalaman1
+                                                    . $barisHalaman1 . "\r\n");
 
                             $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
                             $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorkwitansiHal2)));
@@ -782,16 +789,20 @@ class PembayaranPendaftaranController extends Controller
 
                             $commands
                                     ->addContent(
-                                            str_repeat(" ", $sisaBaris) . $barisNomorkwitansiHal2 . "\r\n");
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorkwitansiHal2 . "\r\n");
                             $commands
                                     ->addContent(
-                                            str_repeat(" ", $sisaBaris) . $barisNomorpendaftaranHal2 . "\r\n");
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorpendaftaranHal2 . "\r\n");
 
                             $barisKeteranganLanjutan = $translator
                                     ->trans('continued.from.pageone', array(), 'printing');
-                            $commands->addContent($barisKeteranganLanjutan . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganLanjutan . "\r\n");
 
-                            $commands->addContent($barisGarisTabel . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                             $kolomNomor = $translator->trans('num', array(), 'printing');
                             $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
@@ -811,8 +822,8 @@ class PembayaranPendaftaranController extends Controller
                             $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
                                     . str_repeat(" ", $spasiKolomHarga) . "|";
 
-                            $commands->addContent($barisNamaKolom . "\r\n");
-                            $commands->addContent($barisGarisTabel . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                             $kolomNomorPembayaran = strval($num);
                             $spasiKolomNomorPembayaran = $lebarKolom1
@@ -833,15 +844,18 @@ class PembayaranPendaftaranController extends Controller
                             $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
                                     . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
 
-                            $commands->addContent($barisPembayaran . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
 
                         } else if ($twoPages === true && $num == 14 && count($daftarBiayaPendaftaran) >= 15) {
 
-                            $commands->addContent($barisGarisTabel . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                             $barisKeteranganBerlanjut = $translator
                                     ->trans('continue.to.pagetwo', array(), 'printing');
-                            $commands->addContent($barisKeteranganBerlanjut . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
+                                                    . "\r\n");
 
                             $commands->addContent("\r\n");
 
@@ -849,7 +863,10 @@ class PembayaranPendaftaranController extends Controller
 
                             $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing') . " 1/2)";
                             $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
-                            $commands->addContent($spasiBarisHalaman1 . $barisHalaman1 . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $spasiBarisHalaman1
+                                                    . $barisHalaman1 . "\r\n");
 
                             $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
                             $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorkwitansiHal2)));
@@ -871,16 +888,20 @@ class PembayaranPendaftaranController extends Controller
 
                             $commands
                                     ->addContent(
-                                            str_repeat(" ", $sisaBaris) . $barisNomorkwitansiHal2 . "\r\n");
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorkwitansiHal2 . "\r\n");
                             $commands
                                     ->addContent(
-                                            str_repeat(" ", $sisaBaris) . $barisNomorpendaftaranHal2 . "\r\n");
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorpendaftaranHal2 . "\r\n");
 
                             $barisKeteranganLanjutan = $translator
                                     ->trans('continued.from.pageone', array(), 'printing');
-                            $commands->addContent($barisKeteranganLanjutan . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganLanjutan . "\r\n");
 
-                            $commands->addContent($barisGarisTabel . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                             $kolomNomor = $translator->trans('num', array(), 'printing');
                             $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
@@ -900,8 +921,8 @@ class PembayaranPendaftaranController extends Controller
                             $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
                                     . str_repeat(" ", $spasiKolomHarga) . "|";
 
-                            $commands->addContent($barisNamaKolom . "\r\n");
-                            $commands->addContent($barisGarisTabel . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                             $kolomNomorPembayaran = strval($num);
                             $spasiKolomNomorPembayaran = $lebarKolom1
@@ -922,7 +943,7 @@ class PembayaranPendaftaranController extends Controller
                             $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
                                     . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
 
-                            $commands->addContent($barisPembayaran . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
 
                         } else {
                             $kolomNomorPembayaran = strval($num);
@@ -944,7 +965,7 @@ class PembayaranPendaftaranController extends Controller
                             $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
                                     . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
 
-                            $commands->addContent($barisPembayaran . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
                         }
                     }
 
@@ -974,14 +995,14 @@ class PembayaranPendaftaranController extends Controller
                         $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
                                 . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
 
-                        $commands->addContent($barisPembayaran . "\r\n");
+                        $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
                     }
 
                     $num++;
                 }
             }
 
-            $commands->addContent($barisGarisTabel . "\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
             $lebarKolom4 = 53;
             $lebarKolom5 = 24;
@@ -1004,7 +1025,7 @@ class PembayaranPendaftaranController extends Controller
             $barisKolomTotal .= str_repeat(" ", $spasiKolomTotalHarga) . $kolomTotalHarga
                     . str_repeat(" ", $marginKananKolom) . " ";
 
-            $commands->addContent($barisKolomTotal . "\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomTotal . "\r\n");
 
             $commands->addContent("\r\n");
 
@@ -1037,7 +1058,7 @@ class PembayaranPendaftaranController extends Controller
             $spasiKolomPenerima1 = $lebarKolom8 - strlen($kolomPenerima1);
             $barisTandatangan1 .= $kolomPenerima1 . str_repeat(" ", $spasiKolomPenerima1);
 
-            $commands->addContent($barisTandatangan1 . "\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan) . $barisTandatangan1 . "\r\n");
 
             $commands->addContent("\r\n");
             $commands->addContent("\r\n");
@@ -1055,13 +1076,13 @@ class PembayaranPendaftaranController extends Controller
             if ($twoPages === true) {
                 $commands
                         ->addContent(
-                                $barisTandatangan2 . "(" . $translator->trans('page', array(), 'printing')
-                                        . " 2/2)");
+                                str_repeat(" ", $marginBadan) . $barisTandatangan2 . "("
+                                        . $translator->trans('page', array(), 'printing') . " 2/2)");
             } else {
                 $commands
                         ->addContent(
-                                $barisTandatangan2 . "(" . $translator->trans('page', array(), 'printing')
-                                        . " 1/1)");
+                                str_repeat(" ", $marginBadan) . $barisTandatangan2 . "("
+                                        . $translator->trans('page', array(), 'printing') . " 1/1)");
             }
 
             $commands->addFormFeed();
