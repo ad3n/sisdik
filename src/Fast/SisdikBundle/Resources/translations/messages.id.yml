@@ -614,6 +614,7 @@ alert:
     student.nofilter: Membuat ulang hanya berguna bersama dengan penyaringan siswa
     username.numeric.forstudent: Username numerik-saja hanya bisa dipakai untuk siswa
     filter.noempty.numeric: Membuat ulang hanya bisa digunakan bersama dengan Saring Siswa dan berisi hanya-angka 
+    registrationfee.is.inserted: Biaya pendaftaran yang dipilih sudah ada di data pembayaran
     
 info:
     errormessage: Pesan Error

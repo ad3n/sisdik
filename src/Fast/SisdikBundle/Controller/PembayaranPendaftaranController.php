@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Filesystem\Exception\IOException;
 use BCC\ExtraToolsBundle\Util\DateFormatter;
 use Fast\SisdikBundle\Util\EscapeCommand;
@@ -230,6 +231,13 @@ class PembayaranPendaftaranController extends Controller
                 ->createForm(new PembayaranPendaftaranType($this->container, $sid, $biayaTerbayar), $entity);
         $form->bind($request);
 
+        // periksa jika item pembayaran sudah digunakan sebelumnya
+        $formdata = $form->getData();
+        if (count($formdata->getDaftarBiayaPendaftaran()) <= 0) {
+            $message = $this->get('translator')->trans('alert.registrationfee.is.inserted');
+            $form->get('daftarBiayaPendaftaran')->addError(new FormError($message));
+        }
+
         if ($form->isValid()) {
 
             $entity->setSiswa($siswa);
@@ -277,9 +285,8 @@ class PembayaranPendaftaranController extends Controller
             }
             $em->flush();
 
-            $this->get('session')
-                    ->setFlash('success',
-                            $this->get('translator')->trans('flash.payment.registration.inserted'));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.payment.registration.inserted'));
 
             return $this
                     ->redirect(
@@ -290,8 +297,8 @@ class PembayaranPendaftaranController extends Controller
                                             )));
         }
 
-        $this->get('session')
-                ->setFlash('error', $this->get('translator')->trans('flash.payment.registration.fail.insert'));
+        $this->get('session')->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.payment.registration.fail.insert'));
 
         return array(
                 'entities' => $entities, 'siswa' => $siswa, 'jumlahItemBiaya' => $jumlahItemBiaya,
