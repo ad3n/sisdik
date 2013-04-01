@@ -1058,7 +1058,7 @@ class PembayaranPendaftaranController extends Controller
             $spasiKolomPenerima1 = $lebarKolom8 - strlen($kolomPenerima1);
             $barisTandatangan1 .= $kolomPenerima1 . str_repeat(" ", $spasiKolomPenerima1);
 
-            $commands->addContent(str_repeat(" ", $marginBadan) . $barisTandatangan1 . "\r\n");
+            $commands->addContent($barisTandatangan1 . "\r\n");
 
             $commands->addContent("\r\n");
             $commands->addContent("\r\n");
@@ -1076,13 +1076,13 @@ class PembayaranPendaftaranController extends Controller
             if ($twoPages === true) {
                 $commands
                         ->addContent(
-                                str_repeat(" ", $marginBadan) . $barisTandatangan2 . "("
-                                        . $translator->trans('page', array(), 'printing') . " 2/2)");
+                                $barisTandatangan2 . "(" . $translator->trans('page', array(), 'printing')
+                                        . " 2/2)");
             } else {
                 $commands
                         ->addContent(
-                                str_repeat(" ", $marginBadan) . $barisTandatangan2 . "("
-                                        . $translator->trans('page', array(), 'printing') . " 1/1)");
+                                $barisTandatangan2 . "(" . $translator->trans('page', array(), 'printing')
+                                        . " 1/1)");
             }
 
             $commands->addFormFeed();
