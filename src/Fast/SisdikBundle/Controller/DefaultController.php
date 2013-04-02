@@ -3,7 +3,7 @@
 namespace Fast\SisdikBundle\Controller;
 use Fast\SisdikBundle\Entity\User;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
-use Fast\SisdikBundle\Entity\Tahun;
+use Fast\SisdikBundle\Entity\TahunAkademik;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -20,12 +20,12 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if ($sekolah) {
-            $tahun = $em->getRepository('FastSisdikBundle:Tahun')
+            $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
                     ->findOneBy(
                             array(
                                 'sekolah' => $sekolah->getId(), 'aktif' => true
                             ));
-            $tahunaktif = (is_object($tahun) && $tahun instanceof Tahun) ? $tahun->getNama() : null;
+            $tahunAkademikAktif = (is_object($tahunAkademik) && $tahunAkademik instanceof TahunAkademik) ? $tahunAkademik->getNama() : null;
 
             $panitiaPendaftaran = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
                     ->findOneBy(
@@ -52,13 +52,13 @@ class DefaultController extends Controller
                 $panitiaPendaftaranAktif = null;
             }
         } else {
-            $tahunaktif = null;
+            $tahunAkademikAktif = null;
             $ketuaPanitiaPendaftaranAktif = null;
             $panitiaPendaftaranAktif = null;
         }
 
         return array(
-                'tahunaktif' => $tahunaktif, 'ketuaPanitiaPendaftaranAktif' => $ketuaPanitiaPendaftaranAktif,
+                'tahunAkademikAktif' => $tahunAkademikAktif, 'ketuaPanitiaPendaftaranAktif' => $ketuaPanitiaPendaftaranAktif,
                 'panitiaPendaftaranAktif' => $panitiaPendaftaranAktif,
         );
     }
