@@ -55,9 +55,10 @@ class KehadiranSiswaSearchType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                    ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahun', 't3')->where('t.sekolah = :sekolah')
-                    ->andWhere('t3.aktif = :aktif')->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
-                    ->setParameter('sekolah', $sekolah)->setParameter('aktif', TRUE);
+                    ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahunAkademik', 't3')
+                    ->where('t.sekolah = :sekolah')->andWhere('t3.aktif = :aktif')
+                    ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
+                    ->setParameter('aktif', TRUE);
             $builder
                     ->add('kelas', 'entity',
                             array(

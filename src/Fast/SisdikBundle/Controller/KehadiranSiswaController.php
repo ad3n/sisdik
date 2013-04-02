@@ -60,8 +60,9 @@ class KehadiranSiswaController extends Controller
                 ->addOrderBy('t3.namaLengkap')->setParameter('sekolah', $sekolah->getId());
 
         $querybuilder_class = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')->andWhere('t2.aktif = :aktif')
-                ->orderBy('t.kode')->setParameter('sekolah', $sekolah->getId())->setParameter('aktif', TRUE);
+                ->leftJoin('t.tahunAkademik', 't2')->where('t.sekolah = :sekolah')
+                ->andWhere('t2.aktif = :aktif')->orderBy('t.kode')
+                ->setParameter('sekolah', $sekolah->getId())->setParameter('aktif', TRUE);
 
         $searchform->bind($this->getRequest());
         $buildparam = NULL;
