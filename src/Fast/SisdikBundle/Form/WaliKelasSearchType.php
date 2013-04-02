@@ -25,15 +25,14 @@ class WaliKelasSearchType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
                     ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('tahun', 'entity',
+                    ->add('tahunAkademik', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => 'label.selectacademicyear',
+                                    'class' => 'FastSisdikBundle:TahunAkademik',
+                                    'label' => 'label.year.entry', 'multiple' => false, 'expanded' => false,
+                                    'property' => 'nama', 'empty_value' => 'label.selectacademicyear',
                                     'required' => false, 'query_builder' => $querybuilder1,
                                     'attr' => array(
                                         'class' => 'medium'

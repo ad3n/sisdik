@@ -24,9 +24,9 @@ class SiswaKelasTemplateInitType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahunmasuk', 'entity',
                             array(

@@ -53,15 +53,13 @@ class KelasType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
 
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenjang', 't')->where('t.sekolah = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+                    ->where('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('jenjang', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Jenjang',
-                                    'label' => 'label.level', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'optionLabel',
+                                    'class' => 'FastSisdikBundle:Jenjang', 'label' => 'label.level',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'optionLabel',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                                     'attr' => array(
@@ -70,30 +68,27 @@ class KelasType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
                     ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('tahun', 'entity',
+                    ->add('tahunAkademik', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
+                                    'class' => 'FastSisdikBundle:TahunAkademik',
+                                    'label' => 'label.year.entry', 'multiple' => false, 'expanded' => false,
+                                    'property' => 'nama', 'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                                     'attr' => array(
                                         'class' => 'medium'
                                     )
                             ));
 
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
+                    ->where('t.id = :sekolah')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('sekolah', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
+                                    'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                             ));

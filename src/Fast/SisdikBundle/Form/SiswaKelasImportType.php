@@ -3,7 +3,6 @@
 namespace Fast\SisdikBundle\Form;
 
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
@@ -27,31 +26,29 @@ class SiswaKelasImportType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
+                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
                     ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('tahun', 'entity',
+                    ->add('tahunAkademik', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama', 'required' => true,
+                                    'class' => 'FastSisdikBundle:TahunAkademik',
+                                    'label' => 'label.year.entry', 'multiple' => false, 'expanded' => false,
+                                    'property' => 'nama', 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
                                         'class' => 'medium selectyear',
                                     ),
                             ));
 
-            $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
-                    ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+            $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+                    ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
                     ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('kelas', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Kelas',
-                                    'label' => 'label.class.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama', 'required' => true,
-                                    'query_builder' => $querybuilder2,
+                                    'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                    'required' => true, 'query_builder' => $querybuilder2,
                                     'attr' => array(
                                         'class' => 'medium selectclass'
                                     ),
@@ -63,8 +60,8 @@ class SiswaKelasImportType extends AbstractType
                         array(
                                 'label' => 'label.fielddelimiter',
                                 'choices' => array(
-                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]',
-                                        '|' => 'pipe [ | ]', ':' => 'colon [ : ]'
+                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]', '|' => 'pipe [ | ]',
+                                        ':' => 'colon [ : ]'
                                 ),
                                 'attr' => array(
                                     'class' => 'medium'
@@ -83,7 +80,7 @@ class SiswaKelasImportType extends AbstractType
     //         $resolver
     //                 ->setDefaults(
     //                         array(
-    //                             'data_class' => 'Fast\SisdikBundle\Entity\Tahun'
+    //                             'data_class' => 'Fast\SisdikBundle\Entity\TahunAkademik'
     //                         ));
     //     }
 

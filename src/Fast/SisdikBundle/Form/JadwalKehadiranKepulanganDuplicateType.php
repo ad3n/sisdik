@@ -12,19 +12,18 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
 {
     private $container;
     private $sekolahSrc;
-    private $tahunSrc = NULL;
+    private $tahunAkademikSrc = NULL;
     private $kelasSrc = NULL;
     private $perulanganSrc = NULL;
     private $requestUri = NULL;
     private $mingguanHariKeSrc = NULL;
     private $bulananHariKeSrc = NULL;
 
-    public function __construct(ContainerInterface $container, $sekolah, $tahun = NULL,
-            $kelas = NULL, $perulangan = NULL, $requestUri = NULL, $mingguanHariKe = NULL,
-            $bulananHariKe = NULL) {
+    public function __construct(ContainerInterface $container, $sekolah, $tahunAkademik = NULL, $kelas = NULL,
+            $perulangan = NULL, $requestUri = NULL, $mingguanHariKe = NULL, $bulananHariKe = NULL) {
         $this->container = $container;
         $this->sekolahSrc = $sekolah;
-        $this->tahunSrc = $tahun;
+        $this->tahunAkademikSrc = $tahunAkademik;
         $this->kelasSrc = $kelas;
         $this->perulanganSrc = $perulangan;
         $this->requestUri = $requestUri;
@@ -40,9 +39,9 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                         array(
                             'data' => $this->sekolahSrc,
                         ))
-                ->add('tahunSrc', 'hidden',
+                ->add('tahunAkademikSrc', 'hidden',
                         array(
-                            'data' => $this->tahunSrc,
+                            'data' => $this->tahunAkademikSrc,
                         ))
                 ->add('kelasSrc', 'hidden',
                         array(
@@ -65,13 +64,13 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                             'data' => $this->bulananHariKeSrc,
                         ));
 
-        $querybuilder1 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $this->sekolahSrc);
+        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
+                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
+                ->setParameter('sekolah', $this->sekolahSrc);
         $builder
-                ->add('tahun', 'entity',
+                ->add('tahunAkademik', 'entity',
                         array(
-                                'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                'class' => 'FastSisdikBundle:TahunAkademik', 'label' => 'label.year.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                 'required' => true, 'query_builder' => $querybuilder1,
                                 'attr' => array(
@@ -79,17 +78,15 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                                 ), 'label_render' => false
                         ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
-                ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
                 ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolahSrc);
         $builder
                 ->add('kelas', 'entity',
                         array(
-                                'class' => 'FastSisdikBundle:Kelas',
-                                'label' => 'label.class.entry', 'multiple' => false,
-                                'expanded' => false, 'property' => 'nama', 'required' => true,
-                                'query_builder' => $querybuilder2,
+                                'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                'required' => true, 'query_builder' => $querybuilder2,
                                 'attr' => array(
                                     'class' => 'medium selectclassduplicate'
                                 ), 'label_render' => false
@@ -99,8 +96,7 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                 ->add('perulangan', 'choice',
                         array(
                                 'choices' => array(
-                                        'harian' => 'harian', 'mingguan' => 'mingguan',
-                                        'bulanan' => 'bulanan'
+                                    'harian' => 'harian', 'mingguan' => 'mingguan', 'bulanan' => 'bulanan'
                                 ), 'label' => 'label.selectrepetition', 'multiple' => false,
                                 'expanded' => false, 'required' => true,
                                 'attr' => array(
@@ -118,9 +114,8 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                         ))
                 ->add('bulananHariKe', 'choice',
                         array(
-                                'choices' => $this->buildDays(), 'multiple' => false,
-                                'expanded' => false, 'required' => false,
-                                'empty_value' => 'label.selectmonthday',
+                                'choices' => $this->buildDays(), 'multiple' => false, 'expanded' => false,
+                                'required' => false, 'empty_value' => 'label.selectmonthday',
                                 'attr' => array(
                                     'class' => 'medium'
                                 ), 'label_render' => false
@@ -139,8 +134,8 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
 
     public function buildDayNames() {
         return array(
-                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday',
-                'label.thursday', 'label.friday', 'label.saturday',
+                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday', 'label.thursday',
+                'label.friday', 'label.saturday',
         );
     }
 

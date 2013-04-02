@@ -24,13 +24,13 @@ class JadwalKehadiranKepulanganType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         $securityContext = $this->container->get('security.context');
 
-        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
+        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
                 ->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('tahun', 'entity',
+                ->add('tahunAkademik', 'entity',
                         array(
-                                'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                'class' => 'FastSisdikBundle:TahunAkademik', 'label' => 'label.year.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                 'required' => true, 'query_builder' => $querybuilder1,
                                 'attr' => array(

@@ -22,14 +22,14 @@ class JadwalKehadiranKepulanganSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $em = $this->container->get('doctrine')->getManager();
-        
-        $querybuilder1 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $this->sekolah);
+
+        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
+                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
+                ->setParameter('sekolah', $this->sekolah);
         $builder
-                ->add('tahun', 'entity',
+                ->add('tahunAkademik', 'entity',
                         array(
-                                'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                'class' => 'FastSisdikBundle:TahunAkademik', 'label' => 'label.year.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                 'required' => true, 'query_builder' => $querybuilder1,
                                 'attr' => array(
@@ -37,17 +37,15 @@ class JadwalKehadiranKepulanganSearchType extends AbstractType
                                 ), 'label_render' => false,
                         ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')->leftJoin('t.jenjang', 't2')
-                ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
                 ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolah);
         $builder
                 ->add('kelas', 'entity',
                         array(
-                                'class' => 'FastSisdikBundle:Kelas',
-                                'label' => 'label.class.entry', 'multiple' => false,
-                                'expanded' => false, 'property' => 'nama', 'required' => true,
-                                'query_builder' => $querybuilder2,
+                                'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                'required' => true, 'query_builder' => $querybuilder2,
                                 'attr' => array(
                                     'class' => 'medium selectclass'
                                 ), 'label_render' => false
@@ -57,8 +55,7 @@ class JadwalKehadiranKepulanganSearchType extends AbstractType
                 ->add('perulangan', 'choice',
                         array(
                                 'choices' => array(
-                                        'harian' => 'harian', 'mingguan' => 'mingguan',
-                                        'bulanan' => 'bulanan'
+                                    'harian' => 'harian', 'mingguan' => 'mingguan', 'bulanan' => 'bulanan'
                                 ), 'label' => 'label.selectrepetition', 'multiple' => false,
                                 'expanded' => false, 'required' => true,
                                 'attr' => array(
@@ -111,8 +108,8 @@ class JadwalKehadiranKepulanganSearchType extends AbstractType
 
     public function buildDayNames() {
         return array(
-                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday',
-                'label.thursday', 'label.friday', 'label.saturday',
+                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday', 'label.thursday',
+                'label.friday', 'label.saturday',
         );
     }
 
