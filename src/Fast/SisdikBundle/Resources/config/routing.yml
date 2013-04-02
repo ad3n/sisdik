@@ -102,7 +102,7 @@ class:
     prefix:   /
 
 year:
-    resource: "@FastSisdikBundle/Controller/TahunController.php"
+    resource: "@FastSisdikBundle/Controller/TahunAkademikController.php"
     type:     annotation
     prefix:   /
 
