@@ -53,7 +53,7 @@ class SiswaController extends Controller
         $searchform = $this->createForm(new SiswaSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', false)
                 ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->orderBy('t2.tahun', 'DESC')->addOrderBy('t.namaLengkap', 'ASC');
@@ -62,9 +62,9 @@ class SiswaController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder->andWhere("t.namaLengkap LIKE :searchkey OR t.nomorInduk = :searchkey2");
@@ -362,13 +362,13 @@ class SiswaController extends Controller
                 $file = $form['file']->getData();
                 $delimiter = $form['delimiter']->getData();
 
-                $tahunmasuk = $form['tahunmasuk']->getData();
+                $tahun = $form['tahun']->getData();
                 $gelombang = $form['gelombang']->getData();
 
                 $reader = new Reader($file->getPathName(), "r+", $delimiter);
 
                 while ($row = $reader->getRow()) {
-                    $this->importStudent($row, $reader->getHeaders(), $sekolah, $tahunmasuk, $gelombang);
+                    $this->importStudent($row, $reader->getHeaders(), $sekolah, $tahun, $gelombang);
                 }
 
                 try {
@@ -387,7 +387,7 @@ class SiswaController extends Controller
                                         ->trans('flash.data.student.imported',
                                                 array(
                                                         '%count%' => $this->importStudentCount,
-                                                        '%year%' => $tahunmasuk->getTahun(),
+                                                        '%year%' => $tahun->getTahun(),
                                                         '%admission%' => $gelombang->getNama()
                                                 )));
 
@@ -525,12 +525,12 @@ class SiswaController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            $tahunmasuk = $form->get('tahunmasuk')->getData()->getId();
+            $tahun = $form->get('tahun')->getData()->getId();
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahunmasuk = :tahunmasuk')->andWhere('t.sekolah = :sekolah');
-            $querybuilder->setParameter('tahunmasuk', $tahunmasuk);
+                    ->where('t.tahun = :tahun')->andWhere('t.sekolah = :sekolah');
+            $querybuilder->setParameter('tahun', $tahun);
             $querybuilder->setParameter('sekolah', $sekolah->getId());
 
             $results = $querybuilder->getQuery()->getResult();
@@ -716,12 +716,12 @@ class SiswaController extends Controller
 
             $filename = "data_siswa_pertahun.csv";
 
-            $tahunmasuk = $form->get('tahunmasuk')->getData()->getId();
+            $tahun = $form->get('tahun')->getData()->getId();
 
             // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahunmasuk = :tahunmasuk')->andWhere('t.sekolah = :sekolah');
-            $querybuilder->setParameter('tahunmasuk', $tahunmasuk);
+                    ->where('t.tahun = :tahun')->andWhere('t.sekolah = :sekolah');
+            $querybuilder->setParameter('tahun', $tahun);
             $querybuilder->setParameter('sekolah', $sekolah->getId());
 
             $results = $querybuilder->getQuery()->getResult();
@@ -733,7 +733,7 @@ class SiswaController extends Controller
                 $fieldName = $property->getName();
                 if (preg_match('/^id/', $fieldName) || $fieldName === 'file' || $fieldName === 'foto'
                         || $fieldName === 'nomorPendaftaran' || $fieldName === 'nomorUrutPersekolah'
-                        || $fieldName === 'gelombang' || $fieldName === 'tahunmasuk'
+                        || $fieldName === 'gelombang' || $fieldName === 'tahun'
                         || $fieldName === 'sekolah')
                     continue;
                 $fields[] = $fieldName;
@@ -819,7 +819,7 @@ class SiswaController extends Controller
 
     }
 
-    private function importStudent($row, $headers, $sekolah, $tahunmasuk, $gelombang, $andFlush = false) {
+    private function importStudent($row, $headers, $sekolah, $tahun, $gelombang, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
         // Create new entity
@@ -851,7 +851,7 @@ class SiswaController extends Controller
                         $entity->{'set' . ucfirst($fieldName)}(trim($value));
                     }
                     $entity->setSekolah($sekolah);
-                    $entity->setTahunmasuk($tahunmasuk);
+                    $entity->setTahun($tahun);
                     $entity->setGelombang($gelombang);
                     // print '$entity->set' . ucfirst($fieldName) . '(' . trim($value) . ")\n";
                 }

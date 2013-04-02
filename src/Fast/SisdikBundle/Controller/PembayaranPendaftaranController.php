@@ -53,7 +53,7 @@ class PembayaranPendaftaranController extends Controller
                 $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                         ->findBy(
                                 array(
-                                        'tahunmasuk' => $siswa->getTahunmasuk(),
+                                        'tahun' => $siswa->getTahun(),
                                         'gelombang' => $siswa->getGelombang(),
                                 )));
 
@@ -163,7 +163,7 @@ class PembayaranPendaftaranController extends Controller
                 $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                         ->findBy(
                                 array(
-                                        'tahunmasuk' => $siswa->getTahunmasuk(),
+                                        'tahun' => $siswa->getTahun(),
                                         'gelombang' => $siswa->getGelombang(),
                                 )));
 
@@ -259,7 +259,7 @@ class PembayaranPendaftaranController extends Controller
 
             $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran() + $currentPaymentAmount;
             $payableAmount = $this
-                    ->getPayableRegistrationFees($siswa->getTahunmasuk()->getId(),
+                    ->getPayableRegistrationFees($siswa->getTahun()->getId(),
                             $siswa->getGelombang()->getId());
             $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran() + $currentDiscount;
             $payableAmountDiscounted = $payableAmount - $totalDiscount;
@@ -312,12 +312,12 @@ class PembayaranPendaftaranController extends Controller
      * Get payable registration fee amount
      *
      */
-    private function getPayableRegistrationFees($tahunmasuk, $gelombang) {
+    private function getPayableRegistrationFees($tahun, $gelombang) {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                 ->findBy(
                         array(
-                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
+                            'tahun' => $tahun, 'gelombang' => $gelombang
                         ));
 
         $feeamount = 0;
@@ -530,7 +530,7 @@ class PembayaranPendaftaranController extends Controller
 
             $totalPayment = $totalPayment + $currentPaymentAmount;
             $payableAmount = $this
-                    ->getPayableRegistrationFees($siswa->getTahunmasuk()->getId(),
+                    ->getPayableRegistrationFees($siswa->getTahun()->getId(),
                             $siswa->getGelombang()->getId());
             $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran();
             $payableAmountDiscounted = $payableAmount - $totalDiscount;

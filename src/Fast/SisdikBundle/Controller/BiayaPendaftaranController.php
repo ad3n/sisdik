@@ -40,7 +40,7 @@ class BiayaPendaftaranController extends Controller
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->from('FastSisdikBundle:BiayaPendaftaran', 't')->leftJoin('t.tahun', 't2')
                 ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
                 ->where('t2.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC')
@@ -50,9 +50,9 @@ class BiayaPendaftaranController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t.tahunmasuk = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t.tahun = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
             if ($searchdata['gelombang'] != '') {
                 $querybuilder->andWhere('t.gelombang = :gelombang');
@@ -309,16 +309,16 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds total payables registration fee info
      *
-     * @Route("/totalinfo/{tahunmasuk}/{gelombang}/{potongan}/{json}", name="fee_registration_totalinfo", defaults={"potongan"=0, "json"=0})
+     * @Route("/totalinfo/{tahun}/{gelombang}/{potongan}/{json}", name="fee_registration_totalinfo", defaults={"potongan"=0, "json"=0})
      */
-    public function getTotalFeeInfoAction($tahunmasuk, $gelombang, $potongan, $json) {
+    public function getTotalFeeInfoAction($tahun, $gelombang, $potongan, $json) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                 ->findBy(
                         array(
-                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
+                            'tahun' => $tahun, 'gelombang' => $gelombang
                         ));
 
         $total = 0;
@@ -344,16 +344,16 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds total payment remains registration fee info
      *
-     * @Route("/remains/{tahunmasuk}/{gelombang}/{paid}/{potongan}", name="fee_registration_remains", defaults={"potongan"=0})
+     * @Route("/remains/{tahun}/{gelombang}/{paid}/{potongan}", name="fee_registration_remains", defaults={"potongan"=0})
      */
-    public function getRemainsPaymentInfoAction($tahunmasuk, $gelombang, $paid, $potongan) {
+    public function getRemainsPaymentInfoAction($tahun, $gelombang, $paid, $potongan) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                 ->findBy(
                         array(
-                            'tahunmasuk' => $tahunmasuk, 'gelombang' => $gelombang
+                            'tahun' => $tahun, 'gelombang' => $gelombang
                         ));
 
         $total = 0;

@@ -37,7 +37,7 @@ class BiayaSekaliController extends Controller
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
                 ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
@@ -46,9 +46,9 @@ class BiayaSekaliController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
             if ($searchdata['gelombang'] != '') {
                 $querybuilder->andWhere('t3.id = :gelombang');

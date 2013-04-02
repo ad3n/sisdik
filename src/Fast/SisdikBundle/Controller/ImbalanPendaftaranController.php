@@ -10,9 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\ImbalanPendaftaran;
 use Fast\SisdikBundle\Form\ImbalanPendaftaranType;
-use Fast\SisdikBundle\Form\SimpleTahunmasukSearchType;
+use Fast\SisdikBundle\Form\SimpleTahunSearchType;
 use Fast\SisdikBundle\Entity\JenisImbalan;
-use Fast\SisdikBundle\Entity\Tahunmasuk;
+use Fast\SisdikBundle\Entity\Tahun;
 use Fast\SisdikBundle\Entity\Gelombang;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
@@ -37,10 +37,10 @@ class ImbalanPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SimpleTahunmasukSearchType($this->container));
+        $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->from('FastSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahun', 't2')
                 ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisImbalan', 't4')
                 ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
@@ -49,9 +49,9 @@ class ImbalanPendaftaranController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
         }
 

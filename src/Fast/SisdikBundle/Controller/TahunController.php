@@ -9,21 +9,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Tahunmasuk;
-use Fast\SisdikBundle\Form\TahunmasukType;
+use Fast\SisdikBundle\Entity\Tahun;
+use Fast\SisdikBundle\Form\TahunType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * Tahunmasuk controller.
+ * Tahun controller.
  *
  * @Route("/yearentry")
  * @PreAuthorize("hasRole('ROLE_ADMIN')")
  */
-class TahunmasukController extends Controller
+class TahunController extends Controller
 {
     /**
-     * Lists all Tahunmasuk entities.
+     * Lists all Tahun entities.
      *
      * @Route("/", name="settings_yearentry")
      * @Template()
@@ -33,7 +33,7 @@ class TahunmasukController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
                 ->leftJoin('t.panitiaPendaftaran', 't2')->where('t.sekolah = :sekolah')
                 ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId());
 
@@ -46,7 +46,7 @@ class TahunmasukController extends Controller
     }
 
     /**
-     * Finds and displays a Tahunmasuk entity.
+     * Finds and displays a Tahun entity.
      *
      * @Route("/{id}/show", name="settings_yearentry_show")
      * @Template()
@@ -57,10 +57,10 @@ class TahunmasukController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Tahunmasuk')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Entity Tahunmasuk tak ditemukan.');
+            throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -71,7 +71,7 @@ class TahunmasukController extends Controller
     }
 
     /**
-     * Displays a form to create a new Tahunmasuk entity.
+     * Displays a form to create a new Tahun entity.
      *
      * @Route("/new", name="settings_yearentry_new")
      * @Template()
@@ -80,8 +80,8 @@ class TahunmasukController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $entity = new Tahunmasuk();
-        $form = $this->createForm(new TahunmasukType($this->container), $entity);
+        $entity = new Tahun();
+        $form = $this->createForm(new TahunType($this->container), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView()
@@ -89,18 +89,18 @@ class TahunmasukController extends Controller
     }
 
     /**
-     * Creates a new Tahunmasuk entity.
+     * Creates a new Tahun entity.
      *
      * @Route("/create", name="settings_yearentry_create")
      * @Method("post")
-     * @Template("FastSisdikBundle:Tahunmasuk:new.html.twig")
+     * @Template("FastSisdikBundle:Tahun:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $entity = new Tahunmasuk();
-        $form = $this->createForm(new TahunmasukType($this->container), $entity);
+        $entity = new Tahun();
+        $form = $this->createForm(new TahunType($this->container), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -137,7 +137,7 @@ class TahunmasukController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Tahunmasuk entity.
+     * Displays a form to edit an existing Tahun entity.
      *
      * @Route("/{id}/edit", name="settings_yearentry_edit")
      * @Template()
@@ -148,19 +148,19 @@ class TahunmasukController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        // restrict modification if the current Tahunmasuk is already used elsewhere
+        // restrict modification if the current Tahun is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
             $message = $this->get('translator')->trans('exception.update.yearentry.restrict');
             throw new DBALException($message);
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:Tahunmasuk')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Entity Tahunmasuk tak ditemukan.');
+            throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new TahunmasukType($this->container), $entity);
+        $editForm = $this->createForm(new TahunType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -170,11 +170,11 @@ class TahunmasukController extends Controller
     }
 
     /**
-     * Edits an existing Tahunmasuk entity.
+     * Edits an existing Tahun entity.
      *
      * @Route("/{id}/update", name="settings_yearentry_update")
      * @Method("post")
-     * @Template("FastSisdikBundle:Tahunmasuk:edit.html.twig")
+     * @Template("FastSisdikBundle:Tahun:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -182,19 +182,19 @@ class TahunmasukController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        // restrict modification if the current Tahunmasuk is already used elsewhere
+        // restrict modification if the current Tahun is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
             $message = $this->get('translator')->trans('exception.update.yearentry.restrict');
             throw new DBALException($message);
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:Tahunmasuk')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Entity Tahunmasuk tak ditemukan.');
+            throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new TahunmasukType($this->container), $entity);
+        $editForm = $this->createForm(new TahunType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $editForm->bind($request);
@@ -232,7 +232,7 @@ class TahunmasukController extends Controller
     }
 
     /**
-     * Deletes a Tahunmasuk entity.
+     * Deletes a Tahun entity.
      *
      * @Route("/{id}/delete", name="settings_yearentry_delete")
      * @Method("post")
@@ -247,10 +247,10 @@ class TahunmasukController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Tahunmasuk')->find($id);
+            $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Entity Tahunmasuk tak ditemukan.');
+                throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
             }
 
             try {
@@ -316,15 +316,15 @@ class TahunmasukController extends Controller
 
         $biayaRutinEntity = $em->getRepository('FastSisdikBundle:BiayaRutin')
                 ->findOneBy(array(
-                    'tahunmasuk' => $id
+                    'tahun' => $id
                 ));
         $biayaSekaliEntity = $em->getRepository('FastSisdikBundle:BiayaSekali')
                 ->findOneBy(array(
-                    'tahunmasuk' => $id
+                    'tahun' => $id
                 ));
         $siswaEntity = $em->getRepository('FastSisdikBundle:Siswa')
                 ->findOneBy(array(
-                    'tahunmasuk' => $id
+                    'tahun' => $id
                 ));
         if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity) {
             return true;

@@ -42,20 +42,20 @@ class SiswaApplicantController extends Controller
         $user = $this->get('security.context')->getToken()->getUser();
 
         $qb1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->where('t.sekolah = :sekolah')
+                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
         $results = $qb1->getQuery()->getResult();
-        $daftarTahunmasuk = array();
+        $daftarTahun = array();
         foreach ($results as $entity) {
             if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
                 if ((is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia()))
                         || $entity->getKetuaPanitia()->getId() == $user->getId()) {
-                    $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
+                    $daftarTahun[] = $entity->getTahun()->getId();
                 }
             }
         }
 
-        if (count($daftarTahunmasuk) == 0) {
+        if (count($daftarTahun) == 0) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.register.as.committee'));
         }
@@ -63,19 +63,19 @@ class SiswaApplicantController extends Controller
         $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id IN (?1)')->setParameter(1, $daftarTahunmasuk)->orderBy('t2.tahun', 'DESC')
+                ->andWhere('t2.id IN (?1)')->setParameter(1, $daftarTahun)->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
 
             if ($searchdata['searchkey'] != '') {
@@ -90,7 +90,7 @@ class SiswaApplicantController extends Controller
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'tahunaktif' => $this->getTahunmasukPanitiaAktif(),
+                'tahunaktif' => $this->getTahunPanitiaAktif(),
         );
     }
 
@@ -116,7 +116,7 @@ class SiswaApplicantController extends Controller
 
         return array(
                 'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'tahunaktif' => $this->getTahunmasukPanitiaAktif(),
+                'tahunaktif' => $this->getTahunPanitiaAktif(),
         );
     }
 
@@ -207,7 +207,7 @@ class SiswaApplicantController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
 
-        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+        $this->verifyTahun($entity->getTahun()->getTahun());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -237,7 +237,7 @@ class SiswaApplicantController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
 
-        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+        $this->verifyTahun($entity->getTahun()->getTahun());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -332,7 +332,7 @@ class SiswaApplicantController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
 
-        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+        $this->verifyTahun($entity->getTahun()->getTahun());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -360,7 +360,7 @@ class SiswaApplicantController extends Controller
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
 
-        $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+        $this->verifyTahun($entity->getTahun()->getTahun());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -416,7 +416,7 @@ class SiswaApplicantController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
 
-            $this->verifyTahunmasuk($entity->getTahunmasuk()->getTahun());
+            $this->verifyTahun($entity->getTahun()->getTahun());
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -457,26 +457,26 @@ class SiswaApplicantController extends Controller
                 ))->add('id', 'hidden')->getForm();
     }
 
-    private function getTahunmasukPanitiaAktif() {
+    private function getTahunPanitiaAktif() {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
         $qb0 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
+                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
                 ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
         $results = $qb0->getQuery()->getResult();
         foreach ($results as $entity) {
             if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                $tahunaktif = $entity->getTahunmasuk()->getTahun();
+                $tahunaktif = $entity->getTahun()->getTahun();
             }
         }
 
         return $tahunaktif;
     }
 
-    private function verifyTahunmasuk($tahun) {
-        if ($this->getTahunmasukPanitiaAktif() != $tahun) {
+    private function verifyTahun($tahun) {
+        if ($this->getTahunPanitiaAktif() != $tahun) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('cannot.alter.applicant.inactive.yearentry'));
         }

@@ -1,7 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\Tahunmasuk;
+use Fast\SisdikBundle\Entity\Tahun;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Fast\SisdikBundle\Entity\User;
@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
 use Fast\SisdikBundle\Form\PanitiaPendaftaranType;
 use Fast\SisdikBundle\Entity\Personil;
-use Fast\SisdikBundle\Form\SimpleTahunmasukSearchType;
+use Fast\SisdikBundle\Form\SimpleTahunSearchType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
@@ -39,10 +39,10 @@ class PanitiaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SimpleTahunmasukSearchType($this->container));
+        $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
+                ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')
                 ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
@@ -50,9 +50,9 @@ class PanitiaPendaftaranController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
         }
 
@@ -106,19 +106,19 @@ class PanitiaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
         }
 
-        $results = $em->getRepository('FastSisdikBundle:Tahunmasuk')
+        $results = $em->getRepository('FastSisdikBundle:Tahun')
                 ->findBy(array(
                     'sekolah' => $sekolah->getId()
                 ));
-        $daftarTahunmasuk = array();
-        foreach ($results as $tahunmasuk) {
-            if (is_object($tahunmasuk) && $tahunmasuk instanceof Tahunmasuk) {
-                $daftarTahunmasuk[] = $tahunmasuk->getId();
+        $daftarTahun = array();
+        foreach ($results as $tahun) {
+            if (is_object($tahun) && $tahun instanceof Tahun) {
+                $daftarTahun[] = $tahun->getId();
             }
         }
 
         $query = $em->createQueryBuilder()->update('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->set('t.aktif', '0')->where('t.tahunmasuk IN (?1)')->setParameter(1, $daftarTahunmasuk)
+                ->set('t.aktif', '0')->where('t.tahun IN (?1)')->setParameter(1, $daftarTahun)
                 ->getQuery();
         $query->execute();
 
@@ -211,13 +211,13 @@ class PanitiaPendaftaranController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.registration.committee.inserted',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahunmasuk()->getTahun()
+                                                    '%yearentry%' => $entity->getTahun()->getTahun()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')
                         ->trans('exception.unique.registration.committee',
                                 array(
-                                    '%yearentry%' => $entity->getTahunmasuk()->getTahun()
+                                    '%yearentry%' => $entity->getTahun()->getTahun()
                                 ));
                 throw new DBALException($message);
             }
@@ -329,14 +329,14 @@ class PanitiaPendaftaranController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.registration.committee.updated',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahunmasuk()->getTahun()
+                                                    '%yearentry%' => $entity->getTahun()->getTahun()
                                                 )));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')
                         ->trans('exception.unique.registration.committee',
                                 array(
-                                    '%yearentry%' => $entity->getTahunmasuk()->getTahun()
+                                    '%yearentry%' => $entity->getTahun()->getTahun()
                                 ));
                 throw new DBALException($message);
             }
@@ -382,7 +382,7 @@ class PanitiaPendaftaranController extends Controller
                             $this->get('translator')
                                     ->trans('flash.registration.committee.deleted',
                                             array(
-                                                '%yearentry%' => $entity->getTahunmasuk()->getTahun()
+                                                '%yearentry%' => $entity->getTahun()->getTahun()
                                             )));
         } else {
             $this->get('session')->getFlashBag()
@@ -390,7 +390,7 @@ class PanitiaPendaftaranController extends Controller
                             $this->get('translator')
                                     ->trans('flash.registration.committee.fail.delete',
                                             array(
-                                                '%yearentry%' => $entity->getTahunmasuk()->getTahun()
+                                                '%yearentry%' => $entity->getTahun()->getTahun()
                                             )));
         }
 

@@ -43,7 +43,7 @@ class SiswaApplicantPaymentController extends Controller
         $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahunmasuk', 't2')->leftJoin('t.gelombang', 't3')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC')
@@ -53,9 +53,9 @@ class SiswaApplicantPaymentController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunmasuk'] != '') {
-                $querybuilder->andWhere('t2.id = :tahunmasuk');
-                $querybuilder->setParameter('tahunmasuk', $searchdata['tahunmasuk']->getId());
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
 
             if ($searchdata['searchkey'] != '') {

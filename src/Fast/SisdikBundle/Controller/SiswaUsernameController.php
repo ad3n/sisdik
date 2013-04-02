@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Form\SimpleSearchFormType;
 use Fast\SisdikBundle\Form\SiswaSearchType;
-use Fast\SisdikBundle\Entity\Tahunmasuk;
+use Fast\SisdikBundle\Entity\Tahun;
 use Fast\SisdikBundle\Util\PasswordGenerator;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,7 +65,7 @@ class SiswaUsernameController extends Controller
 
             if ($form->isValid()) {
                 $retval = $this
-                        ->generateUsernamePasswordList($data['tahunmasuk'], $data['filter'], $data['output'],
+                        ->generateUsernamePasswordList($data['tahun'], $data['filter'], $data['output'],
                                 $data['regenerate']);
                 if (is_array($retval) && array_key_exists('sessiondata', $retval)) {
                     return $this
@@ -163,11 +163,11 @@ class SiswaUsernameController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
-        $idtahunmasuk = $this->getRequest()->query->get('tahunmasuk');
+        $idtahun = $this->getRequest()->query->get('tahun');
         $nomorIndukSistem = $this->getRequest()->query->get('siswa');
         $regenerate = $this->getRequest()->query->get('regenerate');
 
-        $tahunmasuk = $em->getRepository('FastSisdikBundle:Tahunmasuk')->find($idtahunmasuk);
+        $tahun = $em->getRepository('FastSisdikBundle:Tahun')->find($idtahun);
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')
                 ->findOneBy(
                         array(
@@ -244,7 +244,7 @@ class SiswaUsernameController extends Controller
             $entities = $em->getRepository('FastSisdikBundle:Siswa')
                     ->findBy(
                             array(
-                                'tahunmasuk' => $tahunmasuk
+                                'tahun' => $tahun
                             ));
 
             $siswa_num = count($entities);
@@ -256,9 +256,9 @@ class SiswaUsernameController extends Controller
                 $query = $em
                         ->createQuery(
                                 "SELECT COUNT(t.id) FROM FastSisdikBundle:User t JOIN t.siswa t1 "
-                                        . " WHERE t.siswa IS NOT NULL AND t1.tahunmasuk = :tahunmasuk "
+                                        . " WHERE t.siswa IS NOT NULL AND t1.tahun = :tahun "
                                         . " AND t.sekolah = :sekolah ");
-                $query->setParameter("tahunmasuk", $tahunmasuk);
+                $query->setParameter("tahun", $tahun);
                 $query->setParameter("sekolah", $sekolah->getId());
                 $username_num = $query->getSingleScalarResult();
 
@@ -273,7 +273,7 @@ class SiswaUsernameController extends Controller
                     $info = $this->get('translator')
                             ->trans('alert.username.partially.generated',
                                     array(
-                                            '%year%' => $tahunmasuk->getTahun(), '%num%' => $diff_num,
+                                            '%year%' => $tahun->getTahun(), '%num%' => $diff_num,
                                             '%total%' => $siswa_num
                                     ));
                     $retval = array(
@@ -282,12 +282,12 @@ class SiswaUsernameController extends Controller
                 } elseif ($siswa_num > $username_num && $username_num == 0) {
                     $searchtype = new SiswaSearchType($this->container);
                     $linktotal = $this->generateUrl("data_student")
-                            . "?{$searchtype->getName()}[tahunmasuk]=" . $tahunmasuk->getId();
+                            . "?{$searchtype->getName()}[tahun]=" . $tahun->getId();
 
                     $info = $this->get('translator')
                             ->trans('shortinfo.username.not.generated',
                                     array(
-                                            '%year%' => $tahunmasuk->getTahun(), '%total%' => $siswa_num,
+                                            '%year%' => $tahun->getTahun(), '%total%' => $siswa_num,
                                             '%linktotal%' => $linktotal,
                                     ));
 
@@ -298,7 +298,7 @@ class SiswaUsernameController extends Controller
                     $info = $this->get('translator')
                             ->trans('alert.username.fully.generated',
                                     array(
-                                        '%year%' => $tahunmasuk->getTahun()
+                                        '%year%' => $tahun->getTahun()
                                     ));
                     $retval = array(
                         'generated' => 'YES', 'partial' => 'NO', 'info' => $info, 'proceedpost' => 'NO'
@@ -307,7 +307,7 @@ class SiswaUsernameController extends Controller
                     $info = $this->get('translator')
                             ->trans('shortinfo.username.not.generated',
                                     array(
-                                        '%year%' => $tahunmasuk->getTahun()
+                                        '%year%' => $tahun->getTahun()
                                     ));
                     $retval = array(
                         'generated' => 'NO', 'partial' => 'NO', 'info' => $info, 'proceedpost' => 'YES'
@@ -316,7 +316,7 @@ class SiswaUsernameController extends Controller
                     $info = $this->get('translator')
                             ->trans('alert.username.generated.bigger',
                                     array(
-                                            '%year%' => $tahunmasuk->getTahun(), '%num%' => $username_num,
+                                            '%year%' => $tahun->getTahun(), '%num%' => $username_num,
                                             '%total%' => $siswa_num
                                     ));
                     $retval = array(
@@ -327,7 +327,7 @@ class SiswaUsernameController extends Controller
                 $info = $this->get('translator')
                         ->trans('alert.username.nostudent',
                                 array(
-                                    '%year%' => $tahunmasuk->getTahun()
+                                    '%year%' => $tahun->getTahun()
                                 ));
                 $retval = array(
                     'generated' => 'NO', 'partial' => 'NO', 'info' => $info, 'proceedpost' => 'NO'
@@ -350,17 +350,17 @@ class SiswaUsernameController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
-        $idtahunmasuk = $this->getRequest()->query->get('tahunmasuk');
+        $idtahun = $this->getRequest()->query->get('tahun');
         $filter = $this->getRequest()->query->get('filter');
 
-        $tahunmasuk = $em->getRepository('FastSisdikBundle:Tahunmasuk')->find($idtahunmasuk);
+        $tahun = $em->getRepository('FastSisdikBundle:Tahun')->find($idtahun);
 
         $query = $em
                 ->createQuery(
-                        "SELECT t FROM FastSisdikBundle:Siswa t " . " WHERE t.tahunmasuk = :tahunmasuk "
+                        "SELECT t FROM FastSisdikBundle:Siswa t " . " WHERE t.tahun = :tahun "
                                 . " AND t.sekolah = :sekolah "
                                 . " AND (t.nomorIndukSistem LIKE :filter OR t.namaLengkap LIKE :filter) ");
-        $query->setParameter("tahunmasuk", $tahunmasuk);
+        $query->setParameter("tahun", $tahun);
         $query->setParameter("sekolah", $sekolah->getId());
         $query->setParameter('filter', "%$filter%");
         $results = $query->getResult();
@@ -381,14 +381,14 @@ class SiswaUsernameController extends Controller
 
     /**
      *
-     * @param Tahunmasuk $tahunmasuk
+     * @param Tahun $tahun
      * @param int $penyaring
      * @param string $outputfiletype
      * @param boolean $regenerate
      *
      * @return string $filename
      */
-    private function generateUsernamePasswordList($tahunmasuk, $penyaring, $outputfiletype = "ods",
+    private function generateUsernamePasswordList($tahun, $penyaring, $outputfiletype = "ods",
             $regenerate = FALSE) {
         $em = $this->getDoctrine()->getManager();
 
@@ -400,15 +400,15 @@ class SiswaUsernameController extends Controller
         if ($penyaring != '') {
             // get filtered student
             $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahunmasuk = :tahunmasuk')->andWhere('t.nomorIndukSistem = :nomorsistem')
-                    ->setParameter('tahunmasuk', $tahunmasuk->getId())
+                    ->where('t.tahun = :tahun')->andWhere('t.nomorIndukSistem = :nomorsistem')
+                    ->setParameter('tahun', $tahun->getId())
                     ->setParameter('nomorsistem', $penyaring);
             $results = $querybuilder->getQuery()->getResult();
         } else {
             // get students in a year
             $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahunmasuk = :tahunmasuk')->orderBy('t.nomorIndukSistem', 'ASC')
-                    ->setParameter('tahunmasuk', $tahunmasuk->getId());
+                    ->where('t.tahun = :tahun')->orderBy('t.nomorIndukSistem', 'ASC')
+                    ->setParameter('tahun', $tahun->getId());
             $results = $querybuilder->getQuery()->getResult();
         }
 
@@ -447,7 +447,7 @@ class SiswaUsernameController extends Controller
         $extensiontarget = "." . $outputfiletype;
 
         $time = time();
-        $filenameoutput = self::OUTPUTPREFIX . preg_replace('/\s+/', '', strtolower($tahunmasuk->getTahun()))
+        $filenameoutput = self::OUTPUTPREFIX . preg_replace('/\s+/', '', strtolower($tahun->getTahun()))
                 . $time;
 
         $this->get('session')->set($filenameoutput, $outputusername);
