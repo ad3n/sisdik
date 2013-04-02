@@ -1,13 +1,13 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}data.year.list{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}data.academicyear.list{% endtrans %}{% endblock %}
 
 {% block content %}
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('data_year_new') }}" class="add-link-a">
+	<a href="{{ path('academicyear_new') }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.year.add'|trans }}
+	    {{ 'label.academicyear.add'|trans }}
 	</a>
 {% endimage %}
 </div>
@@ -18,7 +18,7 @@
     <thead>
     	<tr>
     		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.year.name'|trans, 't.nama') }}
+    		    {{ knp_pagination_sortable(pagination, 'label.academicyear.name'|trans, 't.nama') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
@@ -38,7 +38,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.academicyear.name'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
     		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
@@ -51,19 +51,19 @@
     	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
     		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
     		        {% endimage %}
-    		        <a href="{{ path('data_year_activate', {'id': data.id, 'page': pagination.paginationData.current}) }}">{{ 'label.activate'|trans }}</a>
+    		        <a href="{{ path('academicyear_activate', {'id': data.id, 'page': pagination.paginationData.current}) }}">{{ 'label.activate'|trans }}</a>
     		    {% endif %}
     	    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('data_year_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('data_year_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('academicyear_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('academicyear_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
     		</td>
     	</tr>
     {% endfor %}
     </tbody>
 </table>
 
-<p style="font-style: italic;">* {{ 'shortinfo.onlyoneactive.year'|trans }}</p>
+<p style="font-style: italic;">* {{ 'shortinfo.onlyoneactive.academicyear'|trans }}</p>
 
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}

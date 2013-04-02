@@ -16,7 +16,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 /**
  * TahunAkademik controller.
  *
- * @Route("/data/year")
+ * @Route("/academicyear")
  * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
  */
 class TahunAkademikController extends Controller
@@ -24,7 +24,7 @@ class TahunAkademikController extends Controller
     /**
      * Lists all TahunAkademik entities.
      *
-     * @Route("/", name="data_year")
+     * @Route("/", name="academicyear")
      * @Template()
      */
     public function indexAction() {
@@ -50,7 +50,7 @@ class TahunAkademikController extends Controller
     /**
      * Activate a TahunAkademik entity, and deactivate the rests.
      *
-     * @Route("/{id}/activate", name="data_year_activate")
+     * @Route("/{id}/activate", name="academicyear_activate")
      */
     public function activateAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -76,7 +76,7 @@ class TahunAkademikController extends Controller
         return $this
                 ->redirect(
                         $this
-                                ->generateUrl('data_year',
+                                ->generateUrl('academicyear',
                                         array(
                                             'page' => $this->getRequest()->get('page')
                                         )));
@@ -85,7 +85,7 @@ class TahunAkademikController extends Controller
     /**
      * Finds and displays a TahunAkademik entity.
      *
-     * @Route("/{id}/show", name="data_year_show")
+     * @Route("/{id}/show", name="academicyear_show")
      * @Template()
      */
     public function showAction($id) {
@@ -110,7 +110,7 @@ class TahunAkademikController extends Controller
     /**
      * Displays a form to create a new TahunAkademik entity.
      *
-     * @Route("/new", name="data_year_new")
+     * @Route("/new", name="academicyear_new")
      * @Template()
      */
     public function newAction() {
@@ -128,7 +128,7 @@ class TahunAkademikController extends Controller
     /**
      * Creates a new TahunAkademik entity.
      *
-     * @Route("/create", name="data_year_create")
+     * @Route("/create", name="academicyear_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:TahunAkademik:new.html.twig")
      */
@@ -150,7 +150,7 @@ class TahunAkademikController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.data.year.inserted',
+                                        ->trans('flash.data.academicyear.inserted',
                                                 array(
                                                     '%year%' => $entity->getNama()
                                                 )));
@@ -158,7 +158,7 @@ class TahunAkademikController extends Controller
                 return $this
                         ->redirect(
                                 $this
-                                        ->generateUrl('data_year_show',
+                                        ->generateUrl('academicyear_show',
                                                 array(
                                                     'id' => $entity->getId()
                                                 )));
@@ -176,7 +176,7 @@ class TahunAkademikController extends Controller
     /**
      * Displays a form to edit an existing TahunAkademik entity.
      *
-     * @Route("/{id}/edit", name="data_year_edit")
+     * @Route("/{id}/edit", name="academicyear_edit")
      * @Template()
      */
     public function editAction($id) {
@@ -203,7 +203,7 @@ class TahunAkademikController extends Controller
     /**
      * Edits an existing TahunAkademik entity.
      *
-     * @Route("/{id}/update", name="data_year_update")
+     * @Route("/{id}/update", name="academicyear_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:TahunAkademik:edit.html.twig")
      */
@@ -232,7 +232,7 @@ class TahunAkademikController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.data.year.updated',
+                                        ->trans('flash.data.academicyear.updated',
                                                 array(
                                                     '%year%' => $entity->getNama()
                                                 )));
@@ -240,7 +240,7 @@ class TahunAkademikController extends Controller
                 return $this
                         ->redirect(
                                 $this
-                                        ->generateUrl('data_year_edit',
+                                        ->generateUrl('academicyear_edit',
                                                 array(
                                                     'id' => $id, 'page' => $this->getRequest()->get('page')
                                                 )));
@@ -259,7 +259,7 @@ class TahunAkademikController extends Controller
     /**
      * Deletes a TahunAkademik entity.
      *
-     * @Route("/{id}/delete", name="data_year_delete")
+     * @Route("/{id}/delete", name="academicyear_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
@@ -283,7 +283,7 @@ class TahunAkademikController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.data.year.deleted',
+                                        ->trans('flash.data.academicyear.deleted',
                                                 array(
                                                     '%year%' => $entity->getNama()
                                                 )));
@@ -293,13 +293,13 @@ class TahunAkademikController extends Controller
             }
         } else {
             $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.data.year.fail.delete'));
+                    ->add('error', $this->get('translator')->trans('flash.data.academicyear.fail.delete'));
         }
 
         return $this
                 ->redirect(
                         $this
-                                ->generateUrl('data_year',
+                                ->generateUrl('academicyear',
                                         array(
                                             'page' => $this->getRequest()->get('page')
                                         )));
@@ -313,7 +313,7 @@ class TahunAkademikController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.year']->setCurrent(true);
+        $menu['headings.setting']['links.academicyear']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

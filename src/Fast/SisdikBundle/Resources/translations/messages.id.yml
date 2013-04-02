@@ -120,7 +120,7 @@ label:
     inactive: Tidak aktif
     active: Aktif    
     detailinfo: Info Detail
-    selectacademicyear: Pilih Tahun Ajaran
+    selectacademicyear: Pilih Tahun Akademik
     enabled: Aktif
     gender: Jenis Kelamin
     photo: Pas Foto
@@ -200,8 +200,8 @@ label:
     reset: Reset
     chief: Kepala
     year:
-        add: Tambah Tahun Masuk
-        entry: Tahun Masuk
+        add: Tambah Tahun
+        entry: Tahun
     admissiongroup:
         add: Tambah Gelombang Masuk
         name: Nama Gelombang Masuk
@@ -242,10 +242,10 @@ label:
         add: Tambah Kelas
         name: Nama Kelas
         entry: Kelas
-    year:
-        add: Tambah Tahun Ajaran
-        name: Nama Tahun Ajaran
-        entry: Tahun Ajaran
+    academicyear:
+        add: Tambah Tahun Akademik
+        name: Nama Tahun Akademik
+        entry: Tahun Akademik
     classguardian:
         add: Tambah Wali Kelas
         name: Nama Wali Kelas
@@ -340,10 +340,10 @@ flash:
             deleted: Sekolah '%schoolname%' berhasil dihapus
             fail.delete: Sekolah '%schoolname%' gagal dihapus
         year:
-            inserted: Tahun Masuk '%year%' berhasil ditambah
-            updated: Tahun Masuk '%year%' berhasil diperbarui
-            deleted: Tahun Masuk '%year%' berhasil dihapus
-            fail.delete: Tahun Masuk gagal dihapus
+            inserted: Tahun '%year%' berhasil ditambah
+            updated: Tahun '%year%' berhasil diperbarui
+            deleted: Tahun '%year%' berhasil dihapus
+            fail.delete: Tahun gagal dihapus
         admissiongroup:
             inserted: Gelombang '%admissiongroup%' berhasil ditambah
             updated: Gelombang '%admissiongroup%' berhasil diperbarui
@@ -389,13 +389,13 @@ flash:
             updated: Kelas '%class%' tahun '%year%' berhasil diperbarui
             deleted: Kelas '%class%' tahun '%year%' berhasil dihapus
             fail.delete: Kelas gagal dihapus
-            duplicated: Kelas dari tahun ajaran '%yearfrom%' berhasil disalin ke tahun ajaran '%yearto%'
+            duplicated: Kelas dari tahun akademik '%yearfrom%' berhasil disalin ke tahun akademik '%yearto%'
             fail.duplicate: Kelas gagal disalin
-        year:
-            inserted: Tahun Ajaran '%year%' berhasil ditambah
-            updated: Tahun Ajaran '%year%' berhasil diperbarui
-            deleted: Tahun Ajaran '%year%' berhasil dihapus
-            fail.delete: Tahun Ajaran '%year%' gagal dihapus
+        academicyear:
+            inserted: Tahun Akademik '%year%' berhasil ditambah
+            updated: Tahun Akademik '%year%' berhasil diperbarui
+            deleted: Tahun Akademik '%year%' berhasil dihapus
+            fail.delete: Tahun Akademik '%year%' gagal dihapus
         classguardian:
             inserted: Wali Kelas '%classguardian%' berhasil ditambah
             updated: Wali Kelas '%classguardian%' berhasil diperbarui
@@ -406,7 +406,7 @@ flash:
             updated: Riwayat Kelas Siswa '%student%' berhasil diperbarui
             deleted: Riwayat Kelas Siswa '%student%' di kelas '%class%' tahun '%year%' berhasil dihapus
             fail.delete: Riwayat Kelas Siswa '%student%' gagal dihapus
-            imported: Berhasil mengimpor/memetakan %count% siswa-kelas untuk tahun ajaran %year% ke kelas %class%
+            imported: Berhasil mengimpor/memetakan %count% siswa-kelas untuk tahun akademik %year% ke kelas %class%
         academic.calendar:
             updated: Kalender Pendidikan tahun '%year%' bulan '%month%' berhasil diperbarui
     sms:
@@ -503,13 +503,13 @@ confirm.drop:
     classguardian: Hapus Wali Kelas '%name%'?
     studentclass: Hapus Riwayat Kelas '%student%' di kelas '%class%' tahun '%year%'?
     class: Hapus Kelas '%class%'?
-    year: Hapus Tahun Ajaran '%year%'?
+    academicyear: Hapus Tahun Akademik '%year%'?
     fee.recur: Hapus Biaya Berulang '%fee%', nominal '%nominal%'?
     fee.once: Hapus Biaya Sekali Bayar '%fee%', nominal '%nominal%'?
     fee.registration: Hapus Biaya Pendaftaran '%fee%', nominal '%nominal%'?
     fee.type: Hapus Jenis Biaya '%fee%' (%code%)?
     admissiongroup: Hapus Gelombang Penerimaan '%admission%' (%code%)?
-    year: Hapus Tahun Masuk '%year%'?
+    year: Hapus Tahun '%year%'?
     sms.template: Hapus Template SMS '%name%'?
     presence.status: Hapus Status Kehadiran '%name%'?
     presence.schedule: Hapus Jadwal Kehadiran/Kepulangan?
@@ -541,22 +541,22 @@ exception:
     delete.restrict.registrationfee: Data pembayaran telah dipakai; tidak bisa dihapus.
     update.restrict.registrationfee: Data pembayaran telah dipakai; tidak bisa diubah.
     unique.studentclass: Tidak bisa mendaftarkan siswa di kelas yang sama
-    unique.studentclass.active: Siswa hanya bisa aktif di satu kelas pada satu tahun ajaran
+    unique.studentclass.active: Siswa hanya bisa aktif di satu kelas pada satu tahun akademik
     studentid.unique: Nomor induk harus unik, tidak boleh ada yang sama
     import.error: Proses impor data gagal. Hubungi kami jika anda pikir ini adalah kesalahan sistem
-    studentclass.unique: Kombinasi siswa, tahun ajaran, dan kelas harus unik. Ada duplikat pada data yang diimpor.
-    unique.year: Tahun masuk yang dipilih telah ada di database
+    studentclass.unique: Kombinasi siswa, tahun akademik, dan kelas harus unik. Ada duplikat pada data yang diimpor.
+    unique.year: Tahun yang dipilih telah ada di database
     update.year.restrict: Tidak bisa mengubah data tahun yang telah dipakai di data lain yang terkait
     unique.class.year.school: Kode kelas pada suatu sekolah harus unik
-    unique.year.school: Kode tahun ajaran pada suatu sekolah harus unik
-    unique.classguardian: Wali kelas untuk tahun ajaran dan kelas yang dipilih telah ada 
+    unique.year.school: Kode tahun akademik pada suatu sekolah harus unik
+    unique.classguardian: Wali kelas untuk tahun akademik dan kelas yang dipilih telah ada 
     unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardtype: Jenis imbalan yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardamount: Kombinasi unik tahun, gelombang, dan jenis imbalan sudah digunakan
     unique.fee.registration: Kombinasi jenis biaya, tahun, dan gelombang sudah digunakan
     unique.fee.once: Kombinasi jenis biaya, tahun, dan gelombang sudah digunakan
     unique.fee.recur: Kombinasi jenis biaya, tahun, dan gelombang sudah digunakan
-    unique.registration.committee: Tahun masuk %year% telah ada dalam basis data
+    unique.registration.committee: Tahun %year% telah ada dalam basis data
     register.as.committee: User tidak terdaftar sebagai panitia PSB di tahun manapun
     register.as.active.committee: User tidak terdaftar sebagai panitia PSB yang sedang aktif
     unique.applicant: Data calon siswa tahun dan nomor pendaftaran tidak unik. Hubungi developer
@@ -572,16 +572,16 @@ shortinfo:
     username: username 
     checked: yang terpilih
     inselectedyear: dalam tahun terpilih
-    onlyoneactive.year: hanya satu tahun ajaran yang bisa aktif dalam satu waktu
+    onlyoneactive.academicyear: hanya satu tahun akademik yang bisa aktif dalam satu waktu
     onlyoneactive.regcommittee: hanya satu panitia pendaftaran yang bisa aktif dalam satu waktu
     duplicate.schedule: Salin jadwal ke
     duplicate.classes: Salin kelas
     onlyforactiveyear: hanya untuk tahun aktif
     using.year: menggunakan tahun
-    using.year.and.level: menggunakan tahun ajaran dan jenjang kelas
+    using.year.and.level: menggunakan tahun akademik dan jenjang kelas
     no.student.data: Tidak ada data siswa
     no.class.data: Tidak ada data kelas
-    username.generated: Username siswa untuk tahun ajaran dan kelas terpilih telah dibuat sebelumnya
+    username.generated: Username siswa untuk tahun akademik dan kelas terpilih telah dibuat sebelumnya
     regenerate.fillcaptcha: Isi captcha untuk membuat ulang username
     username.not.generated: >
         Semua siswa (<a href="%linktotal%">%total%</a> orang) di tahun %year% belum dibuat usernamenya.

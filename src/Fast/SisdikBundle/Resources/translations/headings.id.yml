@@ -31,10 +31,10 @@ settings:
         add: Tambah Node Penjurusan
         detail: Detail Node Penjurusan
     year:
-        list: Daftar Tahun Masuk
-        edit: Mengubah Tahun Masuk
-        creation: Membuat Tahun Masuk
-        detail: Detail Tahun Masuk
+        list: Daftar Tahun
+        edit: Mengubah Tahun
+        creation: Membuat Tahun
+        detail: Detail Tahun
     admissiongroup:
         list: Daftar Gelombang Masuk
         edit: Mengubah Gelombang Masuk
@@ -85,11 +85,11 @@ data:
         edit: Mengubah Kelas
         creation: Membuat Kelas
         detail: Detail Kelas
-    year:
-        list: Daftar Tahun Ajaran
-        edit: Mengubah Tahun Ajaran
-        creation: Membuat Tahun Ajaran
-        detail: Detail Tahun Ajaran
+    academicyear:
+        list: Daftar Tahun Akademik
+        edit: Mengubah Tahun Akademik
+        creation: Membuat Tahun Akademik
+        detail: Detail Tahun Akademik
     classguardian:
         list: Daftar Wali Kelas
         edit: Mengubah Wali Kelas

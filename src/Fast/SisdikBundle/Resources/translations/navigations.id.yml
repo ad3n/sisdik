@@ -28,7 +28,7 @@ links:
     user: User
     alluser: Semua User
     register: Register
-    year: Tahun Ajaran
+    academicyear: Tahun Akademik
     fee:
         type: Jenis Biaya
         registration: Biaya Pendaftaran

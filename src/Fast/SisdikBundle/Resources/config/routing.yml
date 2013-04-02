@@ -101,7 +101,7 @@ class:
     type:     annotation
     prefix:   /
 
-year:
+academicyear:
     resource: "@FastSisdikBundle/Controller/TahunAkademikController.php"
     type:     annotation
     prefix:   /

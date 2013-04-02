@@ -93,9 +93,9 @@ class Builder extends AbstractNavbarMenuBuilder
                             ));
 
             $settings
-                    ->addChild('links.year',
+                    ->addChild('links.academicyear',
                             array(
-                                'route' => 'data_year'
+                                'route' => 'academicyear'
                             ));
 
             $settings
