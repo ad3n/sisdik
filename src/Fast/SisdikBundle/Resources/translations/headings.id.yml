@@ -30,7 +30,7 @@ settings:
         creation: Membuat Node Penjurusan
         add: Tambah Node Penjurusan
         detail: Detail Node Penjurusan
-    yearentry:
+    year:
         list: Daftar Tahun Masuk
         edit: Mengubah Tahun Masuk
         creation: Membuat Tahun Masuk

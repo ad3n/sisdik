@@ -478,7 +478,7 @@ class SiswaApplicantController extends Controller
     private function verifyTahun($tahun) {
         if ($this->getTahunPanitiaAktif() != $tahun) {
             throw new AccessDeniedException(
-                    $this->get('translator')->trans('cannot.alter.applicant.inactive.yearentry'));
+                    $this->get('translator')->trans('cannot.alter.applicant.inactive.year'));
         }
     }
 

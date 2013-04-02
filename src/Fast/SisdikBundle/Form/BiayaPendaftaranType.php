@@ -29,7 +29,7 @@ class BiayaPendaftaranType extends AbstractType
             $builder
                     ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.yearentry.entry',
+                                    'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
                                     'multiple' => false, 'expanded' => false, 'property' => 'tahun',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder1,

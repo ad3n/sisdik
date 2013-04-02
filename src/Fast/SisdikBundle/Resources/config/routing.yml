@@ -56,8 +56,8 @@ settings_placement:
     type:     annotation
     prefix:   /settings
 
-settings_yearentry:
-    resource: "@FastSisdikBundle/Controller/TahunmasukController.php"
+settings_year:
+    resource: "@FastSisdikBundle/Controller/TahunController.php"
     type:     annotation
     prefix:   /settings
 

@@ -32,7 +32,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.yearentry.entry'|trans }}</th>
+    		<th>{{ 'label.year.entry'|trans }}</th>
     		<th>{{ 'label.registration.committee.entry'|trans }}</th>
     		<th>{{ 'label.committee.leader'|trans }}</th>
     		<th>{{ 'label.active.committee'|trans }}</th>
@@ -42,7 +42,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahun %}{{ data.tahun.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun %}{{ data.tahun.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.registration.committee.entry'|trans }}">
     		{% if data.panitia %}
     		    {% for personil in data.panitia %}

@@ -30,7 +30,7 @@ class ImbalanPendaftaranType extends AbstractType
                     ->add('tahun', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.yearentry.entry',
+                                    'label' => 'label.year.entry',
                                     'multiple' => false, 'expanded' => false,
                                     'property' => 'tahun', 'empty_value' => false,
                                     'required' => true,

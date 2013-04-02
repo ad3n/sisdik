@@ -32,7 +32,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.yearentry.entry'|trans }}</th>
+    		<th>{{ 'label.year.entry'|trans }}</th>
     		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
     		<th>{{ 'label.fee.type.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
@@ -47,7 +47,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
     		<td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>

@@ -53,7 +53,7 @@
     <thead>
     	<tr>
     		<th>{{ 'label.number'|trans }}</th>
-    		<th>{{ 'label.yearentry.entry'|trans }}</th>
+    		<th>{{ 'label.year.entry'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
@@ -71,7 +71,7 @@
     {% for data in pagination %}
         <tr>
     		<td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
     		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>

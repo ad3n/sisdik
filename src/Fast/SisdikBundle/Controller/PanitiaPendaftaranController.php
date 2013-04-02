@@ -211,13 +211,13 @@ class PanitiaPendaftaranController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.registration.committee.inserted',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahun()->getTahun()
+                                                    '%year%' => $entity->getTahun()->getTahun()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')
                         ->trans('exception.unique.registration.committee',
                                 array(
-                                    '%yearentry%' => $entity->getTahun()->getTahun()
+                                    '%year%' => $entity->getTahun()->getTahun()
                                 ));
                 throw new DBALException($message);
             }
@@ -329,14 +329,14 @@ class PanitiaPendaftaranController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.registration.committee.updated',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahun()->getTahun()
+                                                    '%year%' => $entity->getTahun()->getTahun()
                                                 )));
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')
                         ->trans('exception.unique.registration.committee',
                                 array(
-                                    '%yearentry%' => $entity->getTahun()->getTahun()
+                                    '%year%' => $entity->getTahun()->getTahun()
                                 ));
                 throw new DBALException($message);
             }
@@ -382,7 +382,7 @@ class PanitiaPendaftaranController extends Controller
                             $this->get('translator')
                                     ->trans('flash.registration.committee.deleted',
                                             array(
-                                                '%yearentry%' => $entity->getTahun()->getTahun()
+                                                '%year%' => $entity->getTahun()->getTahun()
                                             )));
         } else {
             $this->get('session')->getFlashBag()
@@ -390,7 +390,7 @@ class PanitiaPendaftaranController extends Controller
                             $this->get('translator')
                                     ->trans('flash.registration.committee.fail.delete',
                                             array(
-                                                '%yearentry%' => $entity->getTahun()->getTahun()
+                                                '%year%' => $entity->getTahun()->getTahun()
                                             )));
         }
 

@@ -30,7 +30,7 @@ class SiswaImportType extends AbstractType
                     ->add('tahun', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.yearentry.entry', 'multiple' => false,
+                                    'label' => 'label.year.entry', 'multiple' => false,
                                     'expanded' => false, 'property' => 'tahun', 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(

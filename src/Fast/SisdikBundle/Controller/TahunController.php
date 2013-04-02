@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * Tahun controller.
  *
- * @Route("/yearentry")
+ * @Route("/year")
  * @PreAuthorize("hasRole('ROLE_ADMIN')")
  */
 class TahunController extends Controller
@@ -25,7 +25,7 @@ class TahunController extends Controller
     /**
      * Lists all Tahun entities.
      *
-     * @Route("/", name="settings_yearentry")
+     * @Route("/", name="settings_year")
      * @Template()
      */
     public function indexAction() {
@@ -48,7 +48,7 @@ class TahunController extends Controller
     /**
      * Finds and displays a Tahun entity.
      *
-     * @Route("/{id}/show", name="settings_yearentry_show")
+     * @Route("/{id}/show", name="settings_year_show")
      * @Template()
      */
     public function showAction($id) {
@@ -73,7 +73,7 @@ class TahunController extends Controller
     /**
      * Displays a form to create a new Tahun entity.
      *
-     * @Route("/new", name="settings_yearentry_new")
+     * @Route("/new", name="settings_year_new")
      * @Template()
      */
     public function newAction() {
@@ -91,7 +91,7 @@ class TahunController extends Controller
     /**
      * Creates a new Tahun entity.
      *
-     * @Route("/create", name="settings_yearentry_create")
+     * @Route("/create", name="settings_year_create")
      * @Method("post")
      * @Template("FastSisdikBundle:Tahun:new.html.twig")
      */
@@ -112,19 +112,19 @@ class TahunController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.settings.yearentry.inserted',
+                                        ->trans('flash.settings.year.inserted',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahun()
+                                                    '%year%' => $entity->getTahun()
                                                 )));
             } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.unique.yearentry');
+                $message = $this->get('translator')->trans('exception.unique.year');
                 throw new DBALException($message);
             }
 
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('settings_yearentry_show',
+                                    ->generateUrl('settings_year_show',
                                             array(
                                                 'id' => $entity->getId()
                                             )));
@@ -139,7 +139,7 @@ class TahunController extends Controller
     /**
      * Displays a form to edit an existing Tahun entity.
      *
-     * @Route("/{id}/edit", name="settings_yearentry_edit")
+     * @Route("/{id}/edit", name="settings_year_edit")
      * @Template()
      */
     public function editAction($id) {
@@ -150,7 +150,7 @@ class TahunController extends Controller
 
         // restrict modification if the current Tahun is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
-            $message = $this->get('translator')->trans('exception.update.yearentry.restrict');
+            $message = $this->get('translator')->trans('exception.update.year.restrict');
             throw new DBALException($message);
         }
 
@@ -172,7 +172,7 @@ class TahunController extends Controller
     /**
      * Edits an existing Tahun entity.
      *
-     * @Route("/{id}/update", name="settings_yearentry_update")
+     * @Route("/{id}/update", name="settings_year_update")
      * @Method("post")
      * @Template("FastSisdikBundle:Tahun:edit.html.twig")
      */
@@ -184,7 +184,7 @@ class TahunController extends Controller
 
         // restrict modification if the current Tahun is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
-            $message = $this->get('translator')->trans('exception.update.yearentry.restrict');
+            $message = $this->get('translator')->trans('exception.update.year.restrict');
             throw new DBALException($message);
         }
 
@@ -207,19 +207,19 @@ class TahunController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.settings.yearentry.updated',
+                                        ->trans('flash.settings.year.updated',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahun()
+                                                    '%year%' => $entity->getTahun()
                                                 )));
             } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.unique.yearentry');
+                $message = $this->get('translator')->trans('exception.unique.year');
                 throw new DBALException($message);
             }
 
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('settings_yearentry_edit',
+                                    ->generateUrl('settings_year_edit',
                                             array(
                                                 'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
@@ -234,7 +234,7 @@ class TahunController extends Controller
     /**
      * Deletes a Tahun entity.
      *
-     * @Route("/{id}/delete", name="settings_yearentry_delete")
+     * @Route("/{id}/delete", name="settings_year_delete")
      * @Method("post")
      */
     public function deleteAction(Request $request, $id) {
@@ -260,9 +260,9 @@ class TahunController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.settings.yearentry.deleted',
+                                        ->trans('flash.settings.year.deleted',
                                                 array(
-                                                    '%yearentry%' => $entity->getTahun()
+                                                    '%year%' => $entity->getTahun()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -270,13 +270,13 @@ class TahunController extends Controller
             }
         } else {
             $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.settings.yearentry.fail.delete'));
+                    ->add('error', $this->get('translator')->trans('flash.settings.year.fail.delete'));
         }
 
         return $this
                 ->redirect(
                         $this
-                                ->generateUrl('settings_yearentry',
+                                ->generateUrl('settings_year',
                                         array(
                                             'page' => $this->getRequest()->get('page')
                                         )));
@@ -290,7 +290,7 @@ class TahunController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.yearentry']->setCurrent(true);
+        $menu['headings.setting']['links.year']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {
