@@ -54,7 +54,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year'|trans }}">{% if data.tahun is not null %}{{ data.tahun.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.year'|trans }}">{% if data.tahunAkademik is not null %}{{ data.tahunAkademik.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.class.name'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
     		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>

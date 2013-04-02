@@ -20,7 +20,7 @@
 
 {% if displayresult %}
 
-    <h4>{{ 'label.year.entry'|trans }} {{ searchdata.tahun.nama }}
+    <h4>{{ 'label.year.entry'|trans }} {{ searchdata.tahunAkademik.nama }}
     {{ 'label.class.entry'|trans }} {{ searchdata.kelas.nama }}
     {{ 'label.repetition'|trans }} {{ searchdata.perulangan }}
     {% if searchdata.mingguanHariKe is defined %}{{ 'label.day'|trans }} {{ daynames[searchdata.mingguanHariKe] }}{% endif %}
@@ -59,7 +59,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.school'|trans }}">{% if data.tahun is not null %}{{ data.tahun.sekolah.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.school'|trans }}">{% if data.tahunAkademik is not null %}{{ data.tahunAkademik.sekolah.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.presence.status.entry'|trans }}">
     		    {% if data.statusKehadiranKepulangan is not null %}
     		        {{ data.statusKehadiranKepulangan.nama }}
@@ -179,7 +179,7 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	var url = "{{ path('data_class_ajax_updateclass') }}";
-	$.get(url, {tahun: $(".selectyear").val(){% if searchdata.kelas is not null %}, kelas: {{ searchdata.kelas.id }}{% endif %}}, function(data) {
+	$.get(url, {tahunAkademik: $(".selectyear").val(){% if searchdata.kelas is not null %}, kelas: {{ searchdata.kelas.id }}{% endif %}}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
@@ -194,7 +194,7 @@ $(document).ready(function() {
         $(".selectclass").empty();
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {tahun: $(this).val()}, function(data) {
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'

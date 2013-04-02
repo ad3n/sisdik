@@ -33,7 +33,7 @@ $(document).ready(function() {
 	});
 
 	var url = "{{ path('data_class_ajax_updateclass') }}";
-	$.get(url, {tahun: $(".selectyear").val(), kelas: {{ entity.kelas.id }}}, function(data) {
+	$.get(url, {tahunAkademik: $(".selectyear").val(), kelas: {{ entity.kelas.id }}}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
@@ -48,7 +48,7 @@ $(document).ready(function() {
         $(".selectclass").empty();
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {tahun: $(this).val(), kelas: {{ entity.kelas.id }}}, function(data) {
+        $.get(url, {tahunAkademik: $(this).val(), kelas: {{ entity.kelas.id }}}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
