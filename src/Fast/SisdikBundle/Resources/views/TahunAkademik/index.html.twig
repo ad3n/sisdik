@@ -1,0 +1,69 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.year.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('data_year_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.year.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+    		    {{ knp_pagination_sortable(pagination, 'label.year.name'|trans, 't.nama') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('t.aktif') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.activeyear'|trans, 't.aktif') }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.year.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
+    		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
+    		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
+    		<td data-title="{{ 'label.activeyear'|trans }}">
+    		    {% if data.aktif == 1 %}
+    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
+    		        {% endimage %}
+    	        {% else %}
+    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
+    		        {% endimage %}
+    		        <a href="{{ path('data_year_activate', {'id': data.id, 'page': pagination.paginationData.current}) }}">{{ 'label.activate'|trans }}</a>
+    		    {% endif %}
+    	    </td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('data_year_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('data_year_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p style="font-style: italic;">* {{ 'shortinfo.onlyoneactive.year'|trans }}</p>
+
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
