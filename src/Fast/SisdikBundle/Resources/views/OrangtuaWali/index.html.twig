@@ -6,7 +6,7 @@
 
 <dl>
     <dt>{{ 'label.yearentry.entry'|trans }}</dt>
-    <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
+    <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
     <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
     <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
     <dt>{{ 'label.name.full'|trans }}</dt>

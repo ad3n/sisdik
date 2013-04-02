@@ -42,7 +42,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahunmasuk %}{{ data.tahunmasuk.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}">{% if data.tahun %}{{ data.tahun.tahun }}{% endif %}</td>
     		<td data-title="{{ 'label.registration.committee.entry'|trans }}">
     		{% if data.panitia %}
     		    {% for personil in data.panitia %}

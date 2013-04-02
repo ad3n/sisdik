@@ -36,7 +36,7 @@
 
 <dl>
     <dt>{{ 'label.yearentry.entry'|trans }}</dt>
-    <dd>{% if siswa.tahunmasuk is not null %}{{ siswa.tahunmasuk.tahun }}{% endif %}</dd>
+    <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
     <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
     <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
     <dt>{{ 'label.name.full'|trans }}</dt>
@@ -58,11 +58,11 @@
 	    {% endfor %}
 	{% endif %}
 	<dt>{{ 'label.payables.amount.total'|trans }}</dt>
-	<dd>{% if totalAdaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}{% render url('fee_registration_totalinfo', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id, 'potongan': totalPotongan}) %}</dd>
+	<dd>{% if totalAdaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}{% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'potongan': totalPotongan}) %}</dd>
 	<dt>{{ 'label.paid.amount.total'|trans }}</dt>
 	<dd>{{ siswa.totalNominalPembayaranPendaftaran|number_format(0, ',', '.') }}</dd>
 	<dt>{{ 'label.payment.remains.total'|trans }}</dt>
-	<dd>{% render url('fee_registration_remains', {'tahunmasuk': siswa.tahunmasuk.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran, 'potongan': totalPotongan}) %}</dd>
+	<dd>{% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran, 'potongan': totalPotongan}) %}</dd>
 </dl>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>

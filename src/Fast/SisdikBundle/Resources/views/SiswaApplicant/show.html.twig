@@ -9,7 +9,7 @@
                 <dt>{{ 'label.school'|trans }}</dt>
                 <dd>{% if entity.sekolah is not null %}{{ entity.sekolah.nama }}{% endif %}</dd>
                 <dt>{{ 'label.yearentry.entry'|trans }}</dt>
-                <dd>{% if entity.tahunmasuk is not null %}{{ entity.tahunmasuk.tahun }}{% endif %}</dd>
+                <dd>{% if entity.tahun is not null %}{{ entity.tahun.tahun }}{% endif %}</dd>
                 <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
                 <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
                 <dt>{{ 'label.name.full'|trans }}</dt>
@@ -77,7 +77,7 @@
         <div class="span4">
             <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webcamPhotoPath }}" />
             <ul class="pills">
-        {% if tahunaktif == entity.tahunmasuk.tahun %}
+        {% if tahunaktif == entity.tahun.tahun %}
                 <li>
                     <a href="{{ path('applicant_editregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
                 </li>
@@ -97,7 +97,7 @@
 
 <div class="clearfix"></div>
 
-{% if tahunaktif == entity.tahunmasuk.tahun %}
+{% if tahunaktif == entity.tahun.tahun %}
 <form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
@@ -110,7 +110,7 @@
     <li>
         <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
-{% if tahunaktif == entity.tahunmasuk.tahun %}
+{% if tahunaktif == entity.tahun.tahun %}
     <li>
         <a href="{{ path('applicant_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
     </li>

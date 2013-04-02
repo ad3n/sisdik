@@ -44,7 +44,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahunmasuk is defined %}{{ data.tahunmasuk.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.yearentry.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.application.number'|trans }}">{{ data.nomorPendaftaran }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.paid.amount'|trans }}">
@@ -52,7 +52,7 @@
     		    {% set totalBayar = data.totalNominalPembayaranPendaftaran %}
     		    {{ totalBayar|number_format(0, ',', '.') }} &rarr;
     		    {% set totalInfo %}
-                    {% render url('fee_registration_totalinfo', {'tahunmasuk': data.tahunmasuk.id, 'gelombang': data.gelombang.id, 'json': 1, 'potongan': data.totalPotonganPembayaranPendaftaran}) %}
+                    {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1, 'potongan': data.totalPotonganPembayaranPendaftaran}) %}
                 {% endset %}
                 {% set totalInfo = totalInfo|json_decode %}
                 {% set totalBiaya = totalInfo.biaya %}
