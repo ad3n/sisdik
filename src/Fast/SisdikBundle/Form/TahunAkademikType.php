@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TahunType extends AbstractType
+class TahunAkademikType extends AbstractType
 {
     private $container;
 
@@ -52,15 +52,13 @@ class TahunType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
+                    ->where('t.id = :sekolah')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('sekolah', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
+                                    'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                             ));
@@ -71,7 +69,7 @@ class TahunType extends AbstractType
         $resolver
                 ->setDefaults(
                         array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\Tahun'
+                            'data_class' => 'Fast\SisdikBundle\Entity\TahunAkademik'
                         ));
     }
 
@@ -80,6 +78,6 @@ class TahunType extends AbstractType
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_tahuntype';
+        return 'fast_sisdikbundle_tahunakademiktype';
     }
 }
