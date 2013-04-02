@@ -4,14 +4,14 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Tahun
+ * TahunAkademik
  *
- * @ORM\Table(name="tahun", uniqueConstraints={
+ * @ORM\Table(name="tahun_akademik", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="idsekolah_kode_UNIQ", columns={"sekolah_id", "kode"})
  * })
  * @ORM\Entity
  */
-class Tahun
+class TahunAkademik
 {
     /**
      * @var integer
@@ -80,7 +80,7 @@ class Tahun
      * Set nama
      *
      * @param string $nama
-     * @return Tahun
+     * @return TahunAkademik
      */
     public function setNama($nama) {
         $this->nama = $nama;
@@ -101,7 +101,7 @@ class Tahun
      * Set kode
      *
      * @param string $kode
-     * @return Tahun
+     * @return TahunAkademik
      */
     public function setKode($kode) {
         $this->kode = $kode;
@@ -122,7 +122,7 @@ class Tahun
      * Set urutan
      *
      * @param integer $urutan
-     * @return Tahun
+     * @return TahunAkademik
      */
     public function setUrutan($urutan) {
         $this->urutan = $urutan;
@@ -143,7 +143,7 @@ class Tahun
      * Set keterangan
      *
      * @param string $keterangan
-     * @return Tahun
+     * @return TahunAkademik
      */
     public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
@@ -164,7 +164,7 @@ class Tahun
      * Set aktif
      *
      * @param boolean $aktif
-     * @return Tahun
+     * @return TahunAkademik
      */
     public function setAktif($aktif) {
         $this->aktif = $aktif;
@@ -185,7 +185,7 @@ class Tahun
      * Set sekolah
      *
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return Tahun
+     * @return TahunAkademik
      */
     public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
         $this->sekolah = $sekolah;
