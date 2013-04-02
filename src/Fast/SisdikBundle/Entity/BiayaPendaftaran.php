@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * BiayaPendaftaran
  *
  * @ORM\Table(name="biaya_pendaftaran", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="biaya_pendaftaran_UNIQUE", columns={"jenisbiaya_id", "tahunmasuk_id", "gelombang_id"})
+ *     @ORM\UniqueConstraint(name="biaya_pendaftaran_UNIQUE", columns={"jenisbiaya_id", "tahun_id", "gelombang_id"})
  * })
  * @ORM\Entity
  */
@@ -57,14 +57,14 @@ class BiayaPendaftaran
     private $jenisbiaya;
 
     /**
-     * @var \Tahunmasuk
+     * @var \Tahun
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $tahunmasuk;
+    private $tahun;
 
     /**
      * @var \Gelombang
@@ -170,24 +170,24 @@ class BiayaPendaftaran
     }
 
     /**
-     * Set tahunmasuk
+     * Set tahun
      *
-     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return BiayaPendaftaran
      */
-    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null) {
-        $this->tahunmasuk = $tahunmasuk;
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+        $this->tahun = $tahun;
 
         return $this;
     }
 
     /**
-     * Get tahunmasuk
+     * Get tahun
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
+     * @return \Fast\SisdikBundle\Entity\Tahun
      */
-    public function getTahunmasuk() {
-        return $this->tahunmasuk;
+    public function getTahun() {
+        return $this->tahun;
     }
 
     /**

@@ -11,8 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Siswa
  *
  * @ORM\Table(name="siswa", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="nomor_pendaftaran_UNIQUE", columns={"tahunmasuk_id", "nomor_pendaftaran"}),
- *     @ORM\UniqueConstraint(name="nomor_urut_pendaftaran_UNIQUE", columns={"tahunmasuk_id", "nomor_urut_pendaftaran"}),
+ *     @ORM\UniqueConstraint(name="nomor_pendaftaran_UNIQUE", columns={"tahun_id", "nomor_pendaftaran"}),
+ *     @ORM\UniqueConstraint(name="nomor_urut_pendaftaran_UNIQUE", columns={"tahun_id", "nomor_urut_pendaftaran"}),
  *     @ORM\UniqueConstraint(name="nomor_urut_persekolah_UNIQUE", columns={"sekolah_id", "nomor_urut_persekolah"}),
  *     @ORM\UniqueConstraint(name="nomor_induk_sistem_UNIQUE", columns={"nomor_induk_sistem"})
  * })
@@ -292,14 +292,14 @@ class Siswa
     private $gelombang;
 
     /**
-     * @var \Tahunmasuk
+     * @var \Tahun
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $tahunmasuk;
+    private $tahun;
 
     /**
      * @var \Sekolah
@@ -1126,24 +1126,24 @@ class Siswa
     }
 
     /**
-     * Set tahunmasuk
+     * Set tahun
      *
-     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return Siswa
      */
-    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null) {
-        $this->tahunmasuk = $tahunmasuk;
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+        $this->tahun = $tahun;
 
         return $this;
     }
 
     /**
-     * Get tahunmasuk
+     * Get tahun
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
+     * @return \Fast\SisdikBundle\Entity\Tahun
      */
-    public function getTahunmasuk() {
-        return $this->tahunmasuk;
+    public function getTahun() {
+        return $this->tahun;
     }
 
     /**

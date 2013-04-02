@@ -5,14 +5,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Tahunmasuk
+ * Tahun
  *
- * @ORM\Table(name="tahunmasuk", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="UNIQ_tahunmasuk1", columns={"sekolah_id", "tahun"})
+ * @ORM\Table(name="tahun", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="UNIQ_tahun1", columns={"sekolah_id", "tahun"})
  * })
  * @ORM\Entity
  */
-class Tahunmasuk
+class Tahun
 {
     /**
      * @var integer
@@ -43,7 +43,7 @@ class Tahunmasuk
     /**
      * @var \PanitiaPendaftaran
      *
-     * @ORM\OneToMany(targetEntity="PanitiaPendaftaran", mappedBy="tahunmasuk")
+     * @ORM\OneToMany(targetEntity="PanitiaPendaftaran", mappedBy="tahun")
      */
     private $panitiaPendaftaran;
 
@@ -68,7 +68,7 @@ class Tahunmasuk
      * Set tahun
      *
      * @param \DateTime $tahun
-     * @return Tahunmasuk
+     * @return Tahun
      */
     public function setTahun($tahun) {
         $this->tahun = $tahun;
@@ -89,7 +89,7 @@ class Tahunmasuk
      * Set sekolah
      *
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return Tahunmasuk
+     * @return Tahun
      */
     public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
         $this->sekolah = $sekolah;

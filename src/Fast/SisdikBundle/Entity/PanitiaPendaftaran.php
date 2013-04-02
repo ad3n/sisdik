@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * PanitiaPendaftaran
  *
  * @ORM\Table(name="panitia_pendaftaran", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="tahunmasuk_id_UNIQUE", columns={"tahunmasuk_id"})
+ *     @ORM\UniqueConstraint(name="tahun_id_UNIQUE", columns={"tahun_id"})
  * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
@@ -49,14 +49,14 @@ class PanitiaPendaftaran
     private $ketuaPanitia;
 
     /**
-     * @var \Tahunmasuk
+     * @var \Tahun
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk", inversedBy="panitiaPendaftaran")
+     * @ORM\ManyToOne(targetEntity="Tahun", inversedBy="panitiaPendaftaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $tahunmasuk;
+    private $tahun;
 
     /**
      * @var \Sekolah
@@ -120,24 +120,24 @@ class PanitiaPendaftaran
     }
 
     /**
-     * Set tahunmasuk
+     * Set tahun
      *
-     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return PanitiaPendaftaran
      */
-    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null) {
-        $this->tahunmasuk = $tahunmasuk;
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+        $this->tahun = $tahun;
 
         return $this;
     }
 
     /**
-     * Get tahunmasuk
+     * Get tahun
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk
+     * @return \Fast\SisdikBundle\Entity\Tahun
      */
-    public function getTahunmasuk() {
-        return $this->tahunmasuk;
+    public function getTahun() {
+        return $this->tahun;
     }
 
     /**

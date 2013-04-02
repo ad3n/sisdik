@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * BiayaRutin
  *
  * @ORM\Table(name="biaya_rutin", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="UNQ_biaya_rutin1", columns={"jenisbiaya_id", "tahunmasuk_id", "gelombang_id"})
+ *     @ORM\UniqueConstraint(name="UNQ_biaya_rutin1", columns={"jenisbiaya_id", "tahun_id", "gelombang_id"})
  * })
  * @ORM\Entity
  */
@@ -55,14 +55,14 @@ class BiayaRutin
     private $gelombang;
 
     /**
-     * @var \Tahunmasuk
+     * @var \Tahun
      *
-     * @ORM\ManyToOne(targetEntity="Tahunmasuk")
+     * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahunmasuk_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $tahunmasuk;
+    private $tahun;
 
     /**
      * @var \Jenisbiaya
@@ -179,26 +179,26 @@ class BiayaRutin
     }
 
     /**
-     * Set tahunmasuk
+     * Set tahun
      *
-     * @param \Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
      * @return BiayaRutin
      */
-    public function setTahunmasuk(\Fast\SisdikBundle\Entity\Tahunmasuk $tahunmasuk = null)
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
     {
-        $this->tahunmasuk = $tahunmasuk;
+        $this->tahun = $tahun;
     
         return $this;
     }
 
     /**
-     * Get tahunmasuk
+     * Get tahun
      *
-     * @return \Fast\SisdikBundle\Entity\Tahunmasuk 
+     * @return \Fast\SisdikBundle\Entity\Tahun 
      */
-    public function getTahunmasuk()
+    public function getTahun()
     {
-        return $this->tahunmasuk;
+        return $this->tahun;
     }
 
     /**
