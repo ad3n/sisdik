@@ -27,9 +27,9 @@ class PembayaranSekaliType extends AbstractType
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($this->siswaId);
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
-                ->where('t.tahunmasuk = :tahunmasuk')->andWhere('t.gelombang = :gelombang')
+                ->where('t.tahun = :tahun')->andWhere('t.gelombang = :gelombang')
                 ->orderBy('t.urutan', 'ASC')
-                ->setParameter('tahunmasuk', $siswa->getTahunmasuk()->getId())
+                ->setParameter('tahun', $siswa->getTahun()->getId())
                 ->setParameter('gelombang', $siswa->getGelombang()->getId());
 
         $results = $querybuilder->getQuery()->getResult();

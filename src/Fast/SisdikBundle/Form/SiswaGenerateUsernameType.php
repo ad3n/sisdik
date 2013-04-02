@@ -28,9 +28,9 @@ class SiswaGenerateUsernameType extends AbstractType
                     ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
                     ->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('tahunmasuk', 'entity',
+                    ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahunmasuk',
+                                    'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.yearentry.entry', 'multiple' => false,
                                     'expanded' => false, 'property' => 'tahun', 'required' => true,
                                     'query_builder' => $querybuilder1,

@@ -30,8 +30,8 @@ class PembayaranPendaftaranCicilanType extends AbstractType
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($this->siswaId);
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaPendaftaran', 't')->where('t.tahunmasuk = :tahunmasuk')
-                ->setParameter('tahunmasuk', $siswa->getTahunmasuk()->getId())
+                ->from('FastSisdikBundle:BiayaPendaftaran', 't')->where('t.tahun = :tahun')
+                ->setParameter('tahun', $siswa->getTahun()->getId())
                 ->andWhere('t.gelombang = :gelombang')
                 ->setParameter('gelombang', $siswa->getGelombang()->getId())->orderBy('t.urutan', 'ASC')
                 ->andWhere('t.id = ?1')->setParameter(1, $this->biaya);

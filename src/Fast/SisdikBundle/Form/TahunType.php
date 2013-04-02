@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TahunmasukType extends AbstractType
+class TahunType extends AbstractType
 {
     private $container;
 
@@ -52,11 +52,11 @@ class TahunmasukType extends AbstractType
         $resolver
                 ->setDefaults(
                         array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\Tahunmasuk'
+                            'data_class' => 'Fast\SisdikBundle\Entity\Tahun'
                         ));
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_tahunmasuktype';
+        return 'fast_sisdikbundle_tahuntype';
     }
 }

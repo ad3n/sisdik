@@ -40,35 +40,35 @@ class SiswaApplicantType extends AbstractType
                                 ));
 
                 $qb = $em->createQueryBuilder()->select('t')
-                        ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahunmasuk', 't2')
+                        ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')
                         ->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
                         ->setParameter('sekolah', $sekolah->getId());
                 $results = $qb->getQuery()->getResult();
-                $daftarTahunmasuk = array();
+                $daftarTahun = array();
                 foreach ($results as $entity) {
                     if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
                         if ((is_array($entity->getPanitia())
                                 && in_array($user->getId(), $entity->getPanitia()))
                                 || $entity->getKetuaPanitia()->getId() == $user->getId()) {
-                            $daftarTahunmasuk[] = $entity->getTahunmasuk()->getId();
+                            $daftarTahun[] = $entity->getTahun()->getId();
                         }
                     }
                 }
 
-                if (count($daftarTahunmasuk) == 0) {
+                if (count($daftarTahun) == 0) {
                     throw new AccessDeniedException(
                             $this->container->get('translator')
                                     ->trans('exception.register.as.active.committee'));
                 }
 
                 $querybuilder1 = $em->createQueryBuilder()->select('t')
-                        ->from('FastSisdikBundle:Tahunmasuk', 't')->where('t.sekolah = :sekolah')
+                        ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
                         ->andWhere('t.id IN (?1)')->orderBy('t.tahun', 'DESC')
-                        ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahunmasuk);
+                        ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahun);
                 $builder
-                        ->add('tahunmasuk', 'entity',
+                        ->add('tahun', 'entity',
                                 array(
-                                        'class' => 'FastSisdikBundle:Tahunmasuk',
+                                        'class' => 'FastSisdikBundle:Tahun',
                                         'label' => 'label.yearentry.entry', 'multiple' => false,
                                         'expanded' => false, 'property' => 'tahun', 'empty_value' => false,
                                         'required' => true, 'query_builder' => $querybuilder1,

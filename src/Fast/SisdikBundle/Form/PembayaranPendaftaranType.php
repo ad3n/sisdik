@@ -31,8 +31,8 @@ class PembayaranPendaftaranType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:BiayaPendaftaran', 't')->leftJoin('t.jenisbiaya', 't2')
-                ->where('t.tahunmasuk = :tahunmasuk')
-                ->setParameter('tahunmasuk', $siswa->getTahunmasuk()->getId())
+                ->where('t.tahun = :tahun')
+                ->setParameter('tahun', $siswa->getTahun()->getId())
                 ->andWhere('t.gelombang = :gelombang')
                 ->setParameter('gelombang', $siswa->getGelombang()->getId())->orderBy('t.urutan', 'ASC')
                 ->addOrderBy('t2.nama', 'ASC');

@@ -25,14 +25,14 @@ class SiswaApplicantPaymentSearchType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahunmasuk', 't')
+            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
                     ->setParameter('sekolah', $sekolah->getId());
 
             $builder
-                    ->add('tahunmasuk', 'entity',
+                    ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahunmasuk',
+                                    'class' => 'FastSisdikBundle:Tahun',
                                     'label' => 'label.yearentry.entry', 'multiple' => false,
                                     'expanded' => false, 'property' => 'tahun',
                                     'empty_value' => 'label.selectyear', 'required' => false,
