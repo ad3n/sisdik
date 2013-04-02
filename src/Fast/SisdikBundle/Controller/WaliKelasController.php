@@ -12,7 +12,7 @@ use Fast\SisdikBundle\Entity\WaliKelas;
 use Fast\SisdikBundle\Form\WaliKelasType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\Tahun;
+use Fast\SisdikBundle\Entity\TahunAkademik;
 use Fast\SisdikBundle\Form\WaliKelasSearchType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
@@ -40,7 +40,7 @@ class WaliKelasController extends Controller
         $searchform = $this->createForm(new WaliKelasSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:WaliKelas', 't')
-                ->leftJoin('t.kelas', 't2')->leftJoin('t.tahun', 't3')->where('t2.sekolah = :sekolah')
+                ->leftJoin('t.kelas', 't2')->leftJoin('t.tahunAkademik', 't3')->where('t2.sekolah = :sekolah')
                 ->orderBy('t3.urutan', 'DESC')->addOrderBy('t2.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -48,9 +48,9 @@ class WaliKelasController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t.tahun = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            if ($searchdata['tahunAkademik'] != '') {
+                $querybuilder->andWhere('t.tahunAkademik = :tahunAkademik');
+                $querybuilder->setParameter('tahunAkademik', $searchdata['tahunAkademik']->getId());
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder->andWhere("t.nama LIKE :searchkey");

@@ -34,7 +34,7 @@ class SiswaKelasController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SiswaKelas', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.kelas', 't3')->where('t.siswa = :siswa')
+                ->leftJoin('t.tahunAkademik', 't2')->leftJoin('t.kelas', 't3')->where('t.siswa = :siswa')
                 ->orderBy('t2.urutan', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.aktif', 'ASC')
                 ->setParameter('siswa', $siswa)->getQuery();
 
@@ -92,7 +92,7 @@ class SiswaKelasController extends Controller
                         ->findOneBy(
                                 array(
                                         'siswa' => $siswa,
-                                        'tahun' => $form->get('tahun')->getData()->getId(),
+                                        'tahunAkademik' => $form->get('tahunAkademik')->getData()->getId(),
                                         'aktif' => $aktif
                                 ));
                 if ($obj) {
@@ -196,7 +196,7 @@ class SiswaKelasController extends Controller
                         ->findOneBy(
                                 array(
                                         'siswa' => $siswa,
-                                        'tahun' => $editForm->get('tahun')->getData()->getId(),
+                                        'tahunAkademik' => $editForm->get('tahunAkademik')->getData()->getId(),
                                         'aktif' => $aktif
                                 ));
                 if (is_object($obj) && $obj instanceof SiswaKelas && ($obj->getId() != $entity->getId())) {
@@ -271,7 +271,7 @@ class SiswaKelasController extends Controller
                                             array(
                                                     '%student%' => $siswa->getNamaLengkap(),
                                                     '%class%' => $entity->getKelas()->getNama(),
-                                                    '%year%' => $entity->getTahun()->getNama(),
+                                                    '%year%' => $entity->getTahunAkademik()->getNama(),
                                             )));
         } else {
             $this->get('session')->getFlashBag()

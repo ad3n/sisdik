@@ -39,7 +39,7 @@ class KelasController extends Controller
         $searchform = $this->createForm(new KelasSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahun', 't3')->where('t.sekolah = :sekolah')
+                ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahunAkademik', 't3')->where('t.sekolah = :sekolah')
                 ->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -47,9 +47,9 @@ class KelasController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t.tahun = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            if ($searchdata['tahunAkademik'] != '') {
+                $querybuilder->andWhere('t.tahunAkademik = :tahunAkademik');
+                $querybuilder->setParameter('tahunAkademik', $searchdata['tahunAkademik']->getId());
             }
         }
 
@@ -135,7 +135,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.inserted',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahun()->getNama()
+                                                        '%year%' => $entity->getTahunAkademik()->getNama()
                                                 )));
 
                 return $this
@@ -218,7 +218,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.updated',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahun()->getNama()
+                                                        '%year%' => $entity->getTahunAkademik()->getNama()
                                                 )));
 
                 return $this
@@ -270,7 +270,7 @@ class KelasController extends Controller
                                         ->trans('flash.data.class.deleted',
                                                 array(
                                                         '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahun()->getNama()
+                                                        '%year%' => $entity->getTahunAkademik()->getNama()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -308,24 +308,24 @@ class KelasController extends Controller
 
             $duplicatedata = $form->getData();
 
-            $tahunSource = $duplicatedata['tahunSource'];
-            $tahunTarget = $duplicatedata['tahunTarget'];
+            $tahunAkademikSource = $duplicatedata['tahunAkademikSource'];
+            $tahunAkademikTarget = $duplicatedata['tahunAkademikTarget'];
 
             // get all classes from the source academic year
             $entities = $em->getRepository('FastSisdikBundle:Kelas')
                     ->findBy(
                             array(
-                                'tahun' => $tahunSource->getId()
+                                'tahunAkademik' => $tahunAkademikSource->getId()
                             ));
 
             foreach ($entities as $entity) {
                 // remove year code identity from class code
-                $kode = substr($entity->getKode(), strlen($entity->getTahun()->getKode()));
+                $kode = substr($entity->getKode(), strlen($entity->getTahunAkademik()->getKode()));
 
                 $kelas = new Kelas();
                 $kelas->setJenjang($entity->getJenjang());
                 $kelas->setSekolah($entity->getSekolah());
-                $kelas->setTahun($tahunTarget);
+                $kelas->setTahunAkademik($tahunAkademikTarget);
                 $kelas->setKeterangan($entity->getKeterangan());
                 $kelas->setKode($kode);
                 $kelas->setNama($entity->getNama());
@@ -344,8 +344,8 @@ class KelasController extends Controller
                             $this->get('translator')
                                     ->trans('flash.data.class.duplicated',
                                             array(
-                                                    '%yearfrom%' => $tahunSource->getNama(),
-                                                    '%yearto%' => $tahunTarget->getNama()
+                                                    '%yearfrom%' => $tahunAkademikSource->getNama(),
+                                                    '%yearto%' => $tahunAkademikTarget->getNama()
                                             )));
         } else {
             $this->get('session')->getFlashBag()
@@ -365,13 +365,13 @@ class KelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $tahun = $this->getRequest()->query->get('tahun');
+        $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahun = :tahun')
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahunAkademik = :tahunAkademik')
                 ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
-                ->setParameter('sekolah', $sekolah->getId())->setParameter('tahun', $tahun);
+                ->setParameter('sekolah', $sekolah->getId())->setParameter('tahunAkademik', $tahunAkademik);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
@@ -397,13 +397,13 @@ class KelasController extends Controller
     public function ajaxUpdateclassSchoolDefinedAction(Request $request, $sekolah) {
         $em = $this->getDoctrine()->getManager();
 
-        $tahun = $this->getRequest()->query->get('tahun');
+        $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahun = :tahun')
+                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahunAkademik = :tahunAkademik')
                 ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                ->setParameter('tahun', $tahun);
+                ->setParameter('tahunAkademik', $tahunAkademik);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();

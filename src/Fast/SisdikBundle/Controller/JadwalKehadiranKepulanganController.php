@@ -72,7 +72,7 @@ class JadwalKehadiranKepulanganController extends Controller
                 ->createForm(new JadwalKehadiranKepulanganSearchType($this->container, $sekolah, $repetition));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahunAkademik', 't1')
                 ->leftJoin('t.kelas', 't2')->leftJoin('t.statusKehadiranKepulangan', 't3')
                 ->leftJoin('t.templatesms', 't4')->where('t1.sekolah = :sekolah')
                 ->addOrderBy('t3.nama', 'ASC');
@@ -84,9 +84,9 @@ class JadwalKehadiranKepulanganController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t1.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            if ($searchdata['tahunAkademik'] != '') {
+                $querybuilder->andWhere('t1.id = :tahunAkademik');
+                $querybuilder->setParameter('tahunAkademik', $searchdata['tahunAkademik']->getId());
             }
             if ($searchdata['kelas'] != '') {
                 $querybuilder->andWhere('t2.id = :kelas');
@@ -103,9 +103,9 @@ class JadwalKehadiranKepulanganController extends Controller
                 }
             }
 
-            if ($searchdata['tahun'] != '' && $searchdata['kelas'] != '' && $searchdata['perulangan'] != '') {
+            if ($searchdata['tahunAkademik'] != '' && $searchdata['kelas'] != '' && $searchdata['perulangan'] != '') {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah,
-                        $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
+                        $searchdata['tahunAkademik']->getId(), $searchdata['kelas']->getId(),
                         $searchdata['perulangan'], $this->getRequest()->getRequestUri());
             } else {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah, null,
@@ -113,7 +113,7 @@ class JadwalKehadiranKepulanganController extends Controller
             }
 
             $data = array(
-                    'tahun' => $searchdata['tahun'], 'kelas' => $searchdata['kelas'],
+                    'tahunAkademik' => $searchdata['tahunAkademik'], 'kelas' => $searchdata['kelas'],
                     'perulangan' => $searchdata['perulangan'],
             );
 
@@ -124,7 +124,7 @@ class JadwalKehadiranKepulanganController extends Controller
                 $displayresult = true;
 
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah,
-                        $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
+                        $searchdata['tahunAkademik']->getId(), $searchdata['kelas']->getId(),
                         $searchdata['perulangan'], $this->getRequest()->getRequestUri(),
                         $searchdata['mingguanHariKe']);
             }
@@ -136,7 +136,7 @@ class JadwalKehadiranKepulanganController extends Controller
                 $displayresult = true;
 
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah,
-                        $searchdata['tahun']->getId(), $searchdata['kelas']->getId(),
+                        $searchdata['tahunAkademik']->getId(), $searchdata['kelas']->getId(),
                         $searchdata['perulangan'], $this->getRequest()->getRequestUri(), null,
                         $searchdata['bulananHariKe']);
             }
@@ -376,7 +376,7 @@ class JadwalKehadiranKepulanganController extends Controller
         $form = $this->createForm(new JadwalKehadiranKepulanganDuplicateType($this->container, $sekolah));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahunAkademik', 't1')
                 ->leftJoin('t.kelas', 't2')->leftJoin('t.statusKehadiranKepulangan', 't3')
                 ->leftJoin('t.templatesms', 't4')->where('t1.sekolah = :sekolah')
                 ->addOrderBy('t3.nama', 'ASC');
@@ -391,22 +391,22 @@ class JadwalKehadiranKepulanganController extends Controller
             $requestUri = $data['requestUri'];
 
             // source
-            $tahunSrc = $data['tahunSrc'];
+            $tahunAkademikSrc = $data['tahunAkademikSrc'];
             $kelasSrc = $data['kelasSrc'];
             $perulanganSrc = $data['perulanganSrc'];
             $mingguanHariKeSrc = $data['mingguanHariKeSrc'];
             $bulananHariKeSrc = $data['bulananHariKeSrc'];
 
             // target
-            $tahun = $data['tahun'];
+            $tahunAkademik = $data['tahunAkademik'];
             $kelas = $data['kelas'];
             $perulangan = $data['perulangan'];
             $mingguanHariKe = $data['mingguanHariKe'];
             $bulananHariKe = $data['bulananHariKe'];
 
-            if ($tahunSrc != '') {
-                $querybuilder->andWhere('t1.id = :tahun');
-                $querybuilder->setParameter('tahun', $tahunSrc);
+            if ($tahunAkademikSrc != '') {
+                $querybuilder->andWhere('t1.id = :tahunAkademik');
+                $querybuilder->setParameter('tahunAkademik', $tahunAkademikSrc);
             }
             if ($kelasSrc != '') {
                 $querybuilder->andWhere('t2.id = :kelas');
@@ -430,7 +430,7 @@ class JadwalKehadiranKepulanganController extends Controller
             foreach ($results as $result) {
                 $entity = new JadwalKehadiranKepulangan();
 
-                $entity->setTahun($tahun);
+                $entity->setTahunAkademik($tahunAkademik);
                 $entity->setKelas($kelas);
                 $entity->setPerulangan($perulangan);
                 if ($perulangan == 'mingguan')
@@ -545,7 +545,7 @@ class JadwalKehadiranKepulanganController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahunAkademik', 't1')
                 ->where('t1.aktif = :aktif')->setParameter('aktif', 1);
         $entities = $querybuilder->getQuery()->getResult();
 
@@ -650,7 +650,7 @@ class JadwalKehadiranKepulanganController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahunAkademik', 't1')
                 ->where('t1.aktif = :aktif')->setParameter('aktif', 1);
         $entities = $querybuilder->getQuery()->getResult();
 
@@ -757,7 +757,7 @@ class JadwalKehadiranKepulanganController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahun', 't1')
+                ->from('FastSisdikBundle:JadwalKehadiranKepulangan', 't')->leftJoin('t.tahunAkademik', 't1')
                 ->where('t1.aktif = :aktif')->setParameter('aktif', 1);
         $entities = $querybuilder->getQuery()->getResult();
 
