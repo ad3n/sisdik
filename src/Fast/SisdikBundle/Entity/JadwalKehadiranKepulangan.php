@@ -146,14 +146,14 @@ class JadwalKehadiranKepulangan
     private $kelas;
 
     /**
-     * @var \Tahun
+     * @var \TahunAkademik
      *
-     * @ORM\ManyToOne(targetEntity="Tahun")
+     * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $tahun;
+    private $tahunAkademik;
 
     /**
      * @var \Templatesms
@@ -562,24 +562,24 @@ class JadwalKehadiranKepulangan
     }
 
     /**
-     * Set tahun
+     * Set tahunAkademik
      *
-     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
+     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
      * @return JadwalKehadiranKepulangan
      */
-    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
-        $this->tahun = $tahun;
+    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
+        $this->tahunAkademik = $tahunAkademik;
 
         return $this;
     }
 
     /**
-     * Get tahun
+     * Get tahunAkademik
      *
-     * @return \Fast\SisdikBundle\Entity\Tahun 
+     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
      */
-    public function getTahun() {
-        return $this->tahun;
+    public function getTahunAkademik() {
+        return $this->tahunAkademik;
     }
 
     /**

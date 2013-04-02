@@ -22,14 +22,14 @@ class CukilMp
     private $id;
 
     /**
-     * @var \Tahun
+     * @var \TahunAkademik
      *
-     * @ORM\ManyToOne(targetEntity="Tahun")
+     * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $tahun;
+    private $tahunAkademik;
 
     /**
      * @var \Semester
@@ -64,26 +64,26 @@ class CukilMp
     }
 
     /**
-     * Set tahun
+     * Set tahunAkademik
      *
-     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
+     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
      * @return CukilMp
      */
-    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
+    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
     {
-        $this->tahun = $tahun;
+        $this->tahunAkademik = $tahunAkademik;
     
         return $this;
     }
 
     /**
-     * Get tahun
+     * Get tahunAkademik
      *
-     * @return \Fast\SisdikBundle\Entity\Tahun 
+     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
      */
-    public function getTahun()
+    public function getTahunAkademik()
     {
-        return $this->tahun;
+        return $this->tahunAkademik;
     }
 
     /**
