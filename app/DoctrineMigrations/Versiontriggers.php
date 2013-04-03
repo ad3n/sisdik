@@ -16,9 +16,9 @@ BEGIN
     DECLARE nomorurutpendaftaran INT;
     DECLARE nomorurutpersekolah INT;
 
-    SET nomorurutpendaftaran = (SELECT MAX(nomor_urut_pendaftaran) FROM siswa WHERE tahunmasuk_id = NEW.tahunmasuk_id);
+    SET nomorurutpendaftaran = (SELECT MAX(nomor_urut_pendaftaran) FROM siswa WHERE tahun_id = NEW.tahun_id);
     SET NEW.nomor_urut_pendaftaran = IFNULL(nomorurutpendaftaran, 0) + 1;
-    SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahunmasuk WHERE id = NEW.tahunmasuk_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
+    SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahun WHERE id = NEW.tahun_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
 
     IF (NEW.calon_siswa = 0) THEN
         SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
@@ -136,7 +136,7 @@ END";
 BEFORE INSERT ON `kelas`
 FOR EACH ROW
 BEGIN
-    SET NEW.kode = CONCAT((SELECT kode FROM tahun WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_id), NEW.kode);
+    SET NEW.kode = CONCAT((SELECT kode FROM tahun_akademik WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_akademik_id), NEW.kode);
 END";
 
     private $beforeUpdateKelas = "CREATE TRIGGER `befup_kelas`
@@ -146,7 +146,7 @@ BEGIN
     DECLARE kodetahun VARCHAR(45);
     DECLARE kodekelas VARCHAR(50);
 
-    SET kodetahun = (SELECT kode FROM tahun WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_id);
+    SET kodetahun = (SELECT kode FROM tahun_akademik WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_akademik_id);
     SET kodekelas = NEW.kode;
     SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
 END";
@@ -156,7 +156,7 @@ BEFORE UPDATE ON biaya_pendaftaran
 FOR EACH ROW
 BEGIN
     SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
-    SET NEW.tahunmasuk_id = OLD.tahunmasuk_id;
+    SET NEW.tahun_id = OLD.tahun_id;
     SET NEW.gelombang_id = OLD.gelombang_id;
     SET NEW.nominal = OLD.nominal;
     SET NEW.terpakai = OLD.terpakai;
