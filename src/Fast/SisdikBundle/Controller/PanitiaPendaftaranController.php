@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Entity\Tahun;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
@@ -118,8 +119,7 @@ class PanitiaPendaftaranController extends Controller
         }
 
         $query = $em->createQueryBuilder()->update('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->set('t.aktif', '0')->where('t.tahun IN (?1)')->setParameter(1, $daftarTahun)
-                ->getQuery();
+                ->set('t.aktif', '0')->where('t.tahun IN (?1)')->setParameter(1, $daftarTahun)->getQuery();
         $query->execute();
 
         $entity->setAktif(1);
@@ -169,6 +169,23 @@ class PanitiaPendaftaranController extends Controller
         $entity = new PanitiaPendaftaran();
         $form = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
         $form->bind($request);
+
+        // prevent or remove empty personil to be inserted to database.
+        $formdata = $form->getData();
+        if (count($formdata->getDaftarPersonil()) > 1) {
+            foreach ($formdata->getDaftarPersonil() as $personil) {
+                if ($personil->getId() === null) {
+                    $formdata->getDaftarPersonil()->removeElement($personil);
+                }
+            }
+        } else {
+            foreach ($formdata->getDaftarPersonil() as $personil) {
+                if ($personil->getId() === null) {
+                    $message = $this->get('translator')->trans('alert.regcommittee.notempty');
+                    $form->get('daftarPersonil')->addError(new FormError($message));
+                }
+            }
+        }
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -288,6 +305,23 @@ class PanitiaPendaftaranController extends Controller
 
         $editForm = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
         $editForm->bind($request);
+
+        // prevent or remove empty personil to be inserted to database.
+        $formdata = $editForm->getData();
+        if (count($formdata->getDaftarPersonil()) > 1) {
+            foreach ($formdata->getDaftarPersonil() as $personil) {
+                if ($personil->getId() === null) {
+                    $formdata->getDaftarPersonil()->removeElement($personil);
+                }
+            }
+        } else {
+            foreach ($formdata->getDaftarPersonil() as $personil) {
+                if ($personil->getId() === null) {
+                    $message = $this->get('translator')->trans('alert.regcommittee.notempty');
+                    $editForm->get('daftarPersonil')->addError(new FormError($message));
+                }
+            }
+        }
 
         if ($editForm->isValid()) {
 

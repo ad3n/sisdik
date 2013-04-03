@@ -9,7 +9,7 @@
         {{ tahunAkademikAktif }}</p>
     {% endif %}
 
-    {% if panitiaPendaftaranAktif != '' %}
+    {% if panitiaPendaftaranAktif != '' or ketuaPanitiaPendaftaranAktif != '' %}
         <p><b>{{ 'label.active.regcommittee'|trans }}</b><br />
         {{ 'leader'|trans }}: {{ ketuaPanitiaPendaftaranAktif }}<br />
         {{ 'member'|trans }}: {{ panitiaPendaftaranAktif }}</p>

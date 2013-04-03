@@ -229,9 +229,12 @@ class PanitiaPendaftaran
      * @ORM\PreUpdate()
      */
     public function preSave() {
+        $values = array();
+
         foreach ($this->daftarPersonil as $personil) {
             $values[] = $personil->getId();
         }
+
         $this->panitia = serialize($values);
     }
 }

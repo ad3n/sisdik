@@ -44,8 +44,8 @@ label:
     application.number: Nomor Pendaftaran
     username.undefined: tak-terdefinisi
     committee: Panitia
-    committee.add: Tambah Panitia
-    committee.list: Daftar Panitia
+    committee.add: Anggota
+    committee.list: Daftar Anggota Panitia
     generated.valid: Ya, data valid
     continue: Lanjutkan
     class: Kelas
@@ -616,6 +616,7 @@ alert:
     username.numeric.forstudent: Username numerik-saja hanya bisa dipakai untuk siswa
     filter.noempty.numeric: Membuat ulang hanya bisa digunakan bersama dengan Saring Siswa dan berisi hanya-angka 
     registrationfee.is.inserted: Biaya pendaftaran yang dipilih sudah ada di data pembayaran
+    regcommittee.notempty: Harus ada setidaknya satu anggota panitia pendaftaran
     
 info:
     errormessage: Pesan Error

@@ -7,6 +7,8 @@
     <dd>{{ entity.tahun.sekolah.nama }}</dd>
     <dt>{{ 'label.year.entry'|trans }}</dt>
     <dd>{{ entity.tahun.tahun }}</dd>
+    <dt>{{ 'label.committee.leader'|trans }}</dt>
+    <dd>{% if entity.ketuaPanitia %}{{ entity.ketuaPanitia.name }}{% endif %}</dd>
     <dt>{{ 'label.registration.committee.entry'|trans }}</dt>
     <dd>
 		{% if entity.panitia %}
