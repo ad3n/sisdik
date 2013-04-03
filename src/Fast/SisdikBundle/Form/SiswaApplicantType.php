@@ -61,17 +61,16 @@ class SiswaApplicantType extends AbstractType
                                     ->trans('exception.register.as.active.committee'));
                 }
 
-                $querybuilder1 = $em->createQueryBuilder()->select('t')
-                        ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                        ->andWhere('t.id IN (?1)')->orderBy('t.tahun', 'DESC')
+                $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
+                        ->where('t.sekolah = :sekolah')->andWhere('t.id IN (?1)')->orderBy('t.tahun', 'DESC')
                         ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahun);
                 $builder
                         ->add('tahun', 'entity',
                                 array(
-                                        'class' => 'FastSisdikBundle:Tahun',
-                                        'label' => 'label.year.entry', 'multiple' => false,
-                                        'expanded' => false, 'property' => 'tahun', 'empty_value' => false,
-                                        'required' => true, 'query_builder' => $querybuilder1,
+                                        'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                        'multiple' => false, 'expanded' => false, 'property' => 'tahun',
+                                        'empty_value' => false, 'required' => true,
+                                        'query_builder' => $querybuilder1,
                                         'attr' => array(
                                             'class' => 'medium'
                                         ),
@@ -230,7 +229,7 @@ class SiswaApplicantType extends AbstractType
                                     'label' => 'label.address',
                                     'attr' => array(
                                         'class' => 'xlarge'
-                                    ),
+                                    ), 'required' => true,
                             ))
                     ->add('kodepos', null,
                             array(
