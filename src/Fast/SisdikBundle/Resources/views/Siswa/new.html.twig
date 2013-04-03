@@ -3,6 +3,11 @@
 {% block page_heading %}{% trans from "headings" %}data.student.creation{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+</style>
 <form action="{{ path('data_student_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
@@ -18,7 +23,7 @@
 $(document).ready(function() {
 	$('.date').datepicker({
 	    dateFormat: 'dd/mm/yy',
-    	changeMonth: true,
+    	// changeMonth: true,
         changeYear: true,
         maxDate: "-8Y"
     });
