@@ -871,271 +871,267 @@ class PembayaranPendaftaranController extends Controller
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
-                $num = 1;
-                // uncomment following line for double page test
-                // $daftarBiayaPendaftaran = array_merge($daftarBiayaPendaftaran, $daftarBiayaPendaftaran, $daftarBiayaPendaftaran);
-                if (count($daftarBiayaPendaftaran) > 1) {
-                    $totalNominalTransaksi = $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran();
+                /* if (count($daftarBiayaPendaftaran) > 1) { */
 
-                    if (count($daftarBiayaPendaftaran) > 9) {
+                $maxitemPageone = 9;
+                $itemThreshold = 15;
+                if ($pembayaran->getAdaPotongan()) {
+                    // jumlah item pembayaran maximum dalam 1 halaman: 7
+                    // jumlah item pembayaran > 7, buat dua halaman
+                    $maxitemPageone = 7;
+                    if (count($daftarBiayaPendaftaran) > $maxitemPageone) {
                         $twoPages = true;
                     }
-
-                    foreach ($daftarBiayaPendaftaran as $biaya) {
-                        $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
-                                ->find($biaya);
-                        if ($biayaPendaftaran instanceof BiayaPendaftaran) {
-
-                            if ($twoPages === true && $num == 9 && count($daftarBiayaPendaftaran) < 15) {
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
-
-                                $barisKeteranganBerlanjut = $translator
-                                        ->trans('continue.to.pagetwo', array(), 'printing');
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
-                                                        . "\r\n");
-
-                                $commands->addContent("\r\n");
-                                $commands->addContent("\r\n");
-                                $commands->addContent("\r\n");
-                                $commands->addContent("\r\n");
-                                $commands->addContent("\r\n");
-                                $commands->addContent("\r\n");
-
-                                $labelwidthHal2 = 18;
-
-                                $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing')
-                                        . " 1/2)";
-                                $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $spasiBarisHalaman1
-                                                        . $barisHalaman1 . "\r\n");
-
-                                $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
-                                $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorkwitansiHal2)));
-                                $barisNomorkwitansiHal2 = $nomorkwitansiHal2 . $spasi . ": "
-                                        . $transaksi->getNomorTransaksi();
-
-                                $nomorpendaftaranHal2 = $translator
-                                        ->trans('applicationnum', array(), 'printing');
-                                $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorpendaftaranHal2)));
-                                $barisNomorpendaftaranHal2 = $nomorpendaftaranHal2 . $spasi . ": "
-                                        . $transaksi->getPembayaranPendaftaran()->getSiswa()
-                                                ->getNomorPendaftaran();
-
-                                $pengisiBaris1 = strlen($barisNomorkwitansiHal2);
-                                $pengisiBaris2 = strlen($barisNomorpendaftaranHal2);
-                                $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1
-                                        : $pengisiBaris2;
-
-                                $sisaBaris = $maxwidth2 - $pengisiBarisTerbesar;
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
-                                                        . $barisNomorkwitansiHal2 . "\r\n");
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
-                                                        . $barisNomorpendaftaranHal2 . "\r\n");
-
-                                $barisKeteranganLanjutan = $translator
-                                        ->trans('continued.from.pageone', array(), 'printing');
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisKeteranganLanjutan
-                                                        . "\r\n");
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
-
-                                $kolomNomor = $translator->trans('num', array(), 'printing');
-                                $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
-                                $barisNamaKolom = "|" . str_repeat(" ", $marginKiriKolom) . $kolomNomor
-                                        . str_repeat(" ", $spasiKolomNomor);
-
-                                $kolomItem = $translator->trans('paymentitem', array(), 'printing');
-                                $spasiKolomItem = $lebarKolom2 - (strlen($kolomItem) + $marginKiriKolom);
-                                $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomItem
-                                        . str_repeat(" ", $spasiKolomItem);
-
-                                $kolomHarga = $translator->trans('price', array(), 'printing') . " ($symbol)";
-                                $spasiKolomHarga = $lebarKolom3 - (strlen($kolomHarga) + $marginKiriKolom);
-                                $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
-                                        . str_repeat(" ", $spasiKolomHarga) . "|";
-
-                                $commands
-                                        ->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
-
-                                $kolomNomorPembayaran = strval($num);
-                                $spasiKolomNomorPembayaran = $lebarKolom1
-                                        - (strlen($kolomNomorPembayaran) + $marginKananKolom);
-                                $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
-                                        . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
-
-                                $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
-                                $spasiKolomItemPembayaran = $lebarKolom2
-                                        - (strlen($kolomItemPembayaran) + $marginKiriKolom);
-                                $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
-                                        . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
-
-                                $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0,
-                                        ',', '.');
-                                $spasiKolomHargaPembayaran = $lebarKolom3
-                                        - (strlen($kolomHargaPembayaran) + $marginKananKolom);
-                                $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
-                                        . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
-
-                            } else if ($twoPages === true && $num == 14
-                                    && count($daftarBiayaPendaftaran) >= 15) {
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
-
-                                $barisKeteranganBerlanjut = $translator
-                                        ->trans('continue.to.pagetwo', array(), 'printing');
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
-                                                        . "\r\n");
-
-                                $commands->addContent("\r\n");
-
-                                $labelwidthHal2 = 18;
-
-                                $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing')
-                                        . " 1/2)";
-                                $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $spasiBarisHalaman1
-                                                        . $barisHalaman1 . "\r\n");
-
-                                $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
-                                $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorkwitansiHal2)));
-                                $barisNomorkwitansiHal2 = $nomorkwitansiHal2 . $spasi . ": "
-                                        . $transaksi->getNomorTransaksi();
-
-                                $nomorpendaftaranHal2 = $translator
-                                        ->trans('applicationnum', array(), 'printing');
-                                $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorpendaftaranHal2)));
-                                $barisNomorpendaftaranHal2 = $nomorpendaftaranHal2 . $spasi . ": "
-                                        . $transaksi->getPembayaranPendaftaran()->getSiswa()
-                                                ->getNomorPendaftaran();
-
-                                $pengisiBaris1 = strlen($barisNomorkwitansiHal2);
-                                $pengisiBaris2 = strlen($barisNomorpendaftaranHal2);
-                                $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1
-                                        : $pengisiBaris2;
-
-                                $sisaBaris = $maxwidth2 - $pengisiBarisTerbesar;
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
-                                                        . $barisNomorkwitansiHal2 . "\r\n");
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
-                                                        . $barisNomorpendaftaranHal2 . "\r\n");
-
-                                $barisKeteranganLanjutan = $translator
-                                        ->trans('continued.from.pageone', array(), 'printing');
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisKeteranganLanjutan
-                                                        . "\r\n");
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
-
-                                $kolomNomor = $translator->trans('num', array(), 'printing');
-                                $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
-                                $barisNamaKolom = "|" . str_repeat(" ", $marginKiriKolom) . $kolomNomor
-                                        . str_repeat(" ", $spasiKolomNomor);
-
-                                $kolomItem = $translator->trans('paymentitem', array(), 'printing');
-                                $spasiKolomItem = $lebarKolom2 - (strlen($kolomItem) + $marginKiriKolom);
-                                $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomItem
-                                        . str_repeat(" ", $spasiKolomItem);
-
-                                $kolomHarga = $translator->trans('price', array(), 'printing') . " ($symbol)";
-                                $spasiKolomHarga = $lebarKolom3 - (strlen($kolomHarga) + $marginKiriKolom);
-                                $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
-                                        . str_repeat(" ", $spasiKolomHarga) . "|";
-
-                                $commands
-                                        ->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
-
-                                $kolomNomorPembayaran = strval($num);
-                                $spasiKolomNomorPembayaran = $lebarKolom1
-                                        - (strlen($kolomNomorPembayaran) + $marginKananKolom);
-                                $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
-                                        . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
-
-                                $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
-                                $spasiKolomItemPembayaran = $lebarKolom2
-                                        - (strlen($kolomItemPembayaran) + $marginKiriKolom);
-                                $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
-                                        . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
-
-                                $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0,
-                                        ',', '.');
-                                $spasiKolomHargaPembayaran = $lebarKolom3
-                                        - (strlen($kolomHargaPembayaran) + $marginKananKolom);
-                                $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
-                                        . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
-
-                            } else {
-                                $kolomNomorPembayaran = strval($num);
-                                $spasiKolomNomorPembayaran = $lebarKolom1
-                                        - (strlen($kolomNomorPembayaran) + $marginKananKolom);
-                                $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
-                                        . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
-
-                                $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
-                                $spasiKolomItemPembayaran = $lebarKolom2
-                                        - (strlen($kolomItemPembayaran) + $marginKiriKolom);
-                                $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
-                                        . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
-
-                                $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0,
-                                        ',', '.');
-                                $spasiKolomHargaPembayaran = $lebarKolom3
-                                        - (strlen($kolomHargaPembayaran) + $marginKananKolom);
-                                $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
-                                        . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
-
-                                $commands
-                                        ->addContent(
-                                                str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
-                            }
-                        }
-
-                        $num++;
-                    }
+                    // jumlah item pembayaran 8 - 14: 6 item di halaman pertama, 8 - 14 di halaman 2
+                    // jumlah item pembayaran >= 15: 13 item di halaman pertama, 14+ item di halaman 2
                 } else {
+                    if (count($daftarBiayaPendaftaran) > $maxitemPageone) {
+                        $twoPages = true;
+                    }
+                }
+
+                if ($twoPages === true && count($daftarBiayaPendaftaran) < $itemThreshold) {
+                    $twoPageFormat = 1;
+                } else if ($twoPages === true && count($daftarBiayaPendaftaran) >= $itemThreshold) {
+                    $maxitemPageone = 14;
+                    $twoPageFormat = 2;
+                }
+
+                $num = 1;
+                $totalNominalTransaksi = 0;
+                // uncomment following line for double page test
+                // $daftarBiayaPendaftaran = array_merge($daftarBiayaPendaftaran, $daftarBiayaPendaftaran, $daftarBiayaPendaftaran);
+
+                foreach ($daftarBiayaPendaftaran as $biaya) {
+                    $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
+                    if ($biayaPendaftaran instanceof BiayaPendaftaran) {
+                        $totalNominalTransaksi += $biayaPendaftaran->getNominal();
+
+                        if ($twoPageFormat == 1 && $num == $maxitemPageone) {
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
+
+                            $barisKeteranganBerlanjut = $translator
+                                    ->trans('continue.to.pagetwo', array(), 'printing');
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
+                                                    . "\r\n");
+
+                            $commands->addContent("\r\n");
+                            $commands->addContent("\r\n");
+                            $commands->addContent("\r\n");
+                            $commands->addContent("\r\n");
+                            $commands->addContent("\r\n");
+                            $commands->addContent("\r\n");
+
+                            $labelwidthHal2 = 18;
+
+                            $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing') . " 1/2)";
+                            $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $spasiBarisHalaman1
+                                                    . $barisHalaman1 . "\r\n");
+
+                            $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
+                            $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorkwitansiHal2)));
+                            $barisNomorkwitansiHal2 = $nomorkwitansiHal2 . $spasi . ": "
+                                    . $transaksi->getNomorTransaksi();
+
+                            $nomorpendaftaranHal2 = $translator->trans('applicationnum', array(), 'printing');
+                            $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorpendaftaranHal2)));
+                            $barisNomorpendaftaranHal2 = $nomorpendaftaranHal2 . $spasi . ": "
+                                    . $transaksi->getPembayaranPendaftaran()->getSiswa()
+                                            ->getNomorPendaftaran();
+
+                            $pengisiBaris1 = strlen($barisNomorkwitansiHal2);
+                            $pengisiBaris2 = strlen($barisNomorpendaftaranHal2);
+                            $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1
+                                    : $pengisiBaris2;
+
+                            $sisaBaris = $maxwidth2 - $pengisiBarisTerbesar;
+
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorkwitansiHal2 . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorpendaftaranHal2 . "\r\n");
+
+                            $barisKeteranganLanjutan = $translator
+                                    ->trans('continued.from.pageone', array(), 'printing');
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganLanjutan . "\r\n");
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
+
+                            $kolomNomor = $translator->trans('num', array(), 'printing');
+                            $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
+                            $barisNamaKolom = "|" . str_repeat(" ", $marginKiriKolom) . $kolomNomor
+                                    . str_repeat(" ", $spasiKolomNomor);
+
+                            $kolomItem = $translator->trans('paymentitem', array(), 'printing');
+                            $spasiKolomItem = $lebarKolom2 - (strlen($kolomItem) + $marginKiriKolom);
+                            $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomItem
+                                    . str_repeat(" ", $spasiKolomItem);
+
+                            $kolomHarga = $translator->trans('price', array(), 'printing') . " ($symbol)";
+                            $spasiKolomHarga = $lebarKolom3 - (strlen($kolomHarga) + $marginKiriKolom);
+                            $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
+                                    . str_repeat(" ", $spasiKolomHarga) . "|";
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
+
+                            $kolomNomorPembayaran = strval($num);
+                            $spasiKolomNomorPembayaran = $lebarKolom1
+                                    - (strlen($kolomNomorPembayaran) + $marginKananKolom);
+                            $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
+                                    . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
+
+                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
+                            $spasiKolomItemPembayaran = $lebarKolom2
+                                    - (strlen($kolomItemPembayaran) + $marginKiriKolom);
+                            $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
+                                    . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
+
+                            $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0, ',',
+                                    '.');
+                            $spasiKolomHargaPembayaran = $lebarKolom3
+                                    - (strlen($kolomHargaPembayaran) + $marginKananKolom);
+                            $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
+                                    . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
+
+                        } else if ($twoPageFormat == 2 && $num == $maxitemPageone) {
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
+
+                            $barisKeteranganBerlanjut = $translator
+                                    ->trans('continue.to.pagetwo', array(), 'printing');
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
+                                                    . "\r\n");
+
+                            $commands->addContent("\r\n");
+
+                            $labelwidthHal2 = 18;
+
+                            $barisHalaman1 = "(" . $translator->trans('page', array(), 'printing') . " 1/2)";
+                            $spasiBarisHalaman1 = str_repeat(" ", ($maxwidth2 - strlen($barisHalaman1)));
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $spasiBarisHalaman1
+                                                    . $barisHalaman1 . "\r\n");
+
+                            $nomorkwitansiHal2 = $translator->trans('receiptnum', array(), 'printing');
+                            $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorkwitansiHal2)));
+                            $barisNomorkwitansiHal2 = $nomorkwitansiHal2 . $spasi . ": "
+                                    . $transaksi->getNomorTransaksi();
+
+                            $nomorpendaftaranHal2 = $translator->trans('applicationnum', array(), 'printing');
+                            $spasi = str_repeat(" ", ($labelwidthHal2 - strlen($nomorpendaftaranHal2)));
+                            $barisNomorpendaftaranHal2 = $nomorpendaftaranHal2 . $spasi . ": "
+                                    . $transaksi->getPembayaranPendaftaran()->getSiswa()
+                                            ->getNomorPendaftaran();
+
+                            $pengisiBaris1 = strlen($barisNomorkwitansiHal2);
+                            $pengisiBaris2 = strlen($barisNomorpendaftaranHal2);
+                            $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1
+                                    : $pengisiBaris2;
+
+                            $sisaBaris = $maxwidth2 - $pengisiBarisTerbesar;
+
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorkwitansiHal2 . "\r\n");
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . str_repeat(" ", $sisaBaris)
+                                                    . $barisNomorpendaftaranHal2 . "\r\n");
+
+                            $barisKeteranganLanjutan = $translator
+                                    ->trans('continued.from.pageone', array(), 'printing');
+                            $commands
+                                    ->addContent(
+                                            str_repeat(" ", $marginBadan) . $barisKeteranganLanjutan . "\r\n");
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
+
+                            $kolomNomor = $translator->trans('num', array(), 'printing');
+                            $spasiKolomNomor = $lebarKolom1 - (strlen($kolomNomor) + $marginKiriKolom);
+                            $barisNamaKolom = "|" . str_repeat(" ", $marginKiriKolom) . $kolomNomor
+                                    . str_repeat(" ", $spasiKolomNomor);
+
+                            $kolomItem = $translator->trans('paymentitem', array(), 'printing');
+                            $spasiKolomItem = $lebarKolom2 - (strlen($kolomItem) + $marginKiriKolom);
+                            $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomItem
+                                    . str_repeat(" ", $spasiKolomItem);
+
+                            $kolomHarga = $translator->trans('price', array(), 'printing') . " ($symbol)";
+                            $spasiKolomHarga = $lebarKolom3 - (strlen($kolomHarga) + $marginKiriKolom);
+                            $barisNamaKolom .= "|" . str_repeat(" ", $marginKiriKolom) . $kolomHarga
+                                    . str_repeat(" ", $spasiKolomHarga) . "|";
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
+
+                            $kolomNomorPembayaran = strval($num);
+                            $spasiKolomNomorPembayaran = $lebarKolom1
+                                    - (strlen($kolomNomorPembayaran) + $marginKananKolom);
+                            $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
+                                    . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
+
+                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
+                            $spasiKolomItemPembayaran = $lebarKolom2
+                                    - (strlen($kolomItemPembayaran) + $marginKiriKolom);
+                            $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
+                                    . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
+
+                            $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0, ',',
+                                    '.');
+                            $spasiKolomHargaPembayaran = $lebarKolom3
+                                    - (strlen($kolomHargaPembayaran) + $marginKananKolom);
+                            $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
+                                    . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
+
+                        } else {
+                            $kolomNomorPembayaran = strval($num);
+                            $spasiKolomNomorPembayaran = $lebarKolom1
+                                    - (strlen($kolomNomorPembayaran) + $marginKananKolom);
+                            $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
+                                    . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
+
+                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
+                            $spasiKolomItemPembayaran = $lebarKolom2
+                                    - (strlen($kolomItemPembayaran) + $marginKiriKolom);
+                            $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
+                                    . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
+
+                            $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0, ',',
+                                    '.');
+                            $spasiKolomHargaPembayaran = $lebarKolom3
+                                    - (strlen($kolomHargaPembayaran) + $marginKananKolom);
+                            $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
+                                    . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
+
+                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
+                        }
+                    }
+
+                    $num++;
+                }
+                /* } */
+
+                /* else {
                     $totalNominalTransaksi = $transaksi->getNominalPembayaran();
                     foreach ($daftarBiayaPendaftaran as $biaya) {
                         $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
@@ -1162,14 +1158,13 @@ class PembayaranPendaftaranController extends Controller
 
                             $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
                         }
-
-                        $num++;
+                        // $num++;
                     }
-                }
+                } */
 
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
-                $lebarKolom4 = 53;
+                $lebarKolom4 = 55;
                 $lebarKolom5 = 24;
                 $lebarKolom6 = 23;
 
@@ -1180,43 +1175,119 @@ class PembayaranPendaftaranController extends Controller
                 $spasiKolomKeterangan = $lebarKolom4 - (strlen($kolomKeterangan));
                 $barisKolomTotal = $kolomKeterangan . str_repeat(" ", $spasiKolomKeterangan);
 
-                $kolomTotal = $translator->trans('total', array(), 'printing');
-                $spasiKolomTotal = $lebarKolom5 - (strlen($kolomTotal) + $marginKananKolom);
-                $barisKolomTotal .= str_repeat(" ", $spasiKolomTotal) . $kolomTotal
-                        . str_repeat(" ", $marginKananKolom) . ":";
+                if ($pembayaran->getAdaPotongan()) {
 
-                $kolomTotalHarga = number_format($totalNominalTransaksi, 0, ',', '.');
-                $spasiKolomTotalHarga = $lebarKolom6 - (strlen($kolomTotalHarga) + $marginKananKolom);
-                $barisKolomTotal .= str_repeat(" ", $spasiKolomTotalHarga) . $kolomTotalHarga
-                        . str_repeat(" ", $marginKananKolom) . " ";
+                    $kolomSubtotal = $translator->trans('subtotal', array(), 'printing');
+                    $spasiKolomSubtotal = $lebarKolom5 - (strlen($kolomSubtotal) + $marginKananKolom);
+                    $barisKolomSubtotal = $barisKolomTotal . str_repeat(" ", $spasiKolomSubtotal)
+                            . $kolomSubtotal . str_repeat(" ", $marginKananKolom) . ":";
 
-                $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomTotal . "\r\n");
+                    $kolomSubtotalHarga = number_format($totalNominalTransaksi, 0, ',', '.');
+                    $spasiKolomSubtotalHarga = $lebarKolom6
+                            - (strlen($kolomSubtotalHarga) + $marginKananKolom);
+                    $barisKolomSubtotal .= str_repeat(" ", $spasiKolomSubtotalHarga) . $kolomSubtotalHarga
+                            . str_repeat(" ", $marginKananKolom) . " ";
 
-                $commands->addContent("\r\n");
+                    $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomSubtotal . "\r\n");
 
-                if (count($daftarBiayaPendaftaran) < 9) {
-                    $maxJarakVertikal = 9;
-                    $jarakVertikal = str_repeat("\r\n", $maxJarakVertikal - count($daftarBiayaPendaftaran));
-                    $commands->addContent($jarakVertikal);
-                }
-                if (count($daftarBiayaPendaftaran) > 9 && count($daftarBiayaPendaftaran) < 15) {
-                    $maxJarakVertikal = 12;
-                    $jarakVertikal = str_repeat("\r\n",
-                            $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 10));
-                    $commands->addContent($jarakVertikal);
-                }
-                if (count($daftarBiayaPendaftaran) >= 15) {
-                    $maxJarakVertikal = 12;
-                    $jarakVertikal = str_repeat("\r\n",
-                            $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 15));
-                    $commands->addContent($jarakVertikal);
+                    $nominalPotongan = 0;
+                    $persenPotongan = "";
+                    if ($pembayaran->getJenisPotongan() == 'nominal') {
+                        $nominalPotongan = $pembayaran->getNominalPotongan();
+                    } else {
+                        $nominalPotongan = $pembayaran->getPersenPotonganDinominalkan();
+                        $persenPotongan = " (" . $pembayaran->getPersenPotongan() . "%)";
+                    }
+                    $kolomPotongan = $translator->trans('discount', array(), 'printing');
+                    $spasiKolomPotongan = $lebarKolom4 + $lebarKolom5
+                            - (strlen($kolomPotongan) + $marginKananKolom);
+                    $barisKolomPotongan = str_repeat(" ", $spasiKolomPotongan) . $kolomPotongan
+                            . str_repeat(" ", $marginKananKolom) . ":";
+
+                    $kolomPotonganHarga = number_format($nominalPotongan, 0, ',', '.');
+                    $spasiKolomPotonganHarga = $lebarKolom6
+                            - (strlen($kolomPotonganHarga) + $marginKananKolom);
+                    $barisKolomPotongan .= str_repeat(" ", $spasiKolomPotonganHarga) . $kolomPotonganHarga
+                            . str_repeat(" ", $marginKananKolom) . " " . $persenPotongan;
+
+                    $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomPotongan . "\r\n");
+
+                    $kolomTotal = $translator->trans('total', array(), 'printing');
+                    $spasiKolomTotal = $lebarKolom4 + $lebarKolom5
+                            - (strlen($kolomTotal) + $marginKananKolom);
+                    $barisKolomTotal = str_repeat(" ", $spasiKolomTotal) . $kolomTotal
+                            . str_repeat(" ", $marginKananKolom) . ":";
+
+                    $kolomTotalHarga = number_format($totalNominalTransaksi - $nominalPotongan, 0, ',', '.');
+                    $spasiKolomTotalHarga = $lebarKolom6 - (strlen($kolomTotalHarga) + $marginKananKolom);
+                    $barisKolomTotal .= str_repeat(" ", $spasiKolomTotalHarga) . $kolomTotalHarga
+                            . str_repeat(" ", $marginKananKolom) . " ";
+
+                    $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomTotal . "\r\n");
+
+                    $commands->addContent("\r\n");
+
+                    if (count($daftarBiayaPendaftaran) < $maxitemPageone) {
+                        $maxJarakVertikal = $maxitemPageone;
+                        $jarakVertikal = str_repeat("\r\n",
+                                $maxJarakVertikal - count($daftarBiayaPendaftaran));
+                        $commands->addContent($jarakVertikal);
+                    }
+                    if ($twoPageFormat == 1) {
+                        $maxJarakVertikal = $maxitemPageone + 3;
+                        $jarakVertikal = str_repeat("\r\n",
+                                $maxJarakVertikal - (count($daftarBiayaPendaftaran) - ($maxitemPageone + 1)));
+                        $commands->addContent($jarakVertikal);
+                    }
+                    if ($twoPageFormat == 2) {
+                        $maxJarakVertikal = $maxitemPageone + 3;
+                        $jarakVertikal = str_repeat("\r\n",
+                                $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 15));
+                        $commands->addContent($jarakVertikal);
+                    }
+
+                } else {
+
+                    $kolomTotal = $translator->trans('total', array(), 'printing');
+                    $spasiKolomTotal = $lebarKolom5 - (strlen($kolomTotal) + $marginKananKolom);
+                    $barisKolomTotal .= str_repeat(" ", $spasiKolomTotal) . $kolomTotal
+                            . str_repeat(" ", $marginKananKolom) . ":";
+
+                    $kolomTotalHarga = number_format($totalNominalTransaksi, 0, ',', '.');
+                    $spasiKolomTotalHarga = $lebarKolom6 - (strlen($kolomTotalHarga) + $marginKananKolom);
+                    $barisKolomTotal .= str_repeat(" ", $spasiKolomTotalHarga) . $kolomTotalHarga
+                            . str_repeat(" ", $marginKananKolom) . " ";
+
+                    $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomTotal . "\r\n");
+
+                    $commands->addContent("\r\n");
+
+                    if (count($daftarBiayaPendaftaran) < $maxitemPageone) {
+                        $maxJarakVertikal = 9;
+                        $jarakVertikal = str_repeat("\r\n",
+                                $maxJarakVertikal - count($daftarBiayaPendaftaran));
+                        $commands->addContent($jarakVertikal);
+                    }
+                    if ($twoPageFormat == 1) {
+                        $maxJarakVertikal = 12;
+                        $jarakVertikal = str_repeat("\r\n",
+                                $maxJarakVertikal - (count($daftarBiayaPendaftaran) - ($maxitemPageone + 1)));
+                        $commands->addContent($jarakVertikal);
+                    }
+                    if ($twoPageFormat == 2) {
+                        $maxJarakVertikal = 12;
+                        $jarakVertikal = str_repeat("\r\n",
+                                $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 15));
+                        $commands->addContent($jarakVertikal);
+                    }
+
                 }
 
                 /****** selesai kwitansi format non-cicilan ******/
             }
 
-            $marginKiriTtd = 13;
-            $lebarKolom7 = 69;
+            $marginKiriTtd = 20;
+            $lebarKolom7 = 62;
             $lebarKolom8 = 59;
 
             $kolomPendaftar1 = $translator->trans('applicant.name', array(), 'printing');
