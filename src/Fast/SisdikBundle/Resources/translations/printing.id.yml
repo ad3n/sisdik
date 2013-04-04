@@ -4,7 +4,15 @@ applicationnum: No. Pendaftaran
 date: Tanggal
 num: No
 paymentitem: Item Pembayaran
+paymentnum: Pembayaran Ke
+paymentamount: Nominal Pembayaran
+totalpaidamount: Total Sudah Bayar
+unpaidamount: Sisa Pembayaran
+itemprice: Harga Item
+discount: Potongan
 price: Harga
+settled: lunas
+totalprice: Harga Total
 description: Keterangan
 total: Total
 applicant.name: Nama Pendaftar
