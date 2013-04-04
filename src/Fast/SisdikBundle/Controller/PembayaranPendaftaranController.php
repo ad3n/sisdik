@@ -615,9 +615,6 @@ class PembayaranPendaftaranController extends Controller
         }
         $nomorCicilan = $jumlahTransaksi <= 1 ? 0 : $nomorCicilan;
         $adaCicilan = $jumlahTransaksi > 1 ? true : false;
-        var_dump($adaCicilan);
-        var_dump($nomorCicilan);
-        exit;
 
         $tahun = $transaksi->getWaktuSimpan()->format('Y');
         $bulan = $transaksi->getWaktuSimpan()->format('m');
