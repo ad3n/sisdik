@@ -633,34 +633,21 @@ class PembayaranPendaftaranController extends Controller
             $output = $pilihan->getOutput();
         }
 
+        $fs = new Filesystem();
+        $schoolReceiptDir = $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId();
+        if (!$fs->exists($schoolReceiptDir)) {
+            $fs->mkdir($schoolReceiptDir);
+        }
+        if (!$fs->exists($schoolReceiptDir . '/' . $tahun)) {
+            $fs->mkdir($schoolReceiptDir . '/' . $tahun);
+        }
+        if (!$fs->exists($schoolReceiptDir . '/' . $tahun . '/' . $bulan)) {
+            $fs->mkdir($schoolReceiptDir . '/' . $tahun . '/' . $bulan);
+        }
+
         if ($output == 'esc_p') {
             $filetarget = $transaksi->getNomorTransaksi() . ".sisdik.direct";
-
-            $fs = new Filesystem();
-            if (!$fs->exists($this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId())) {
-                $fs->mkdir($this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId());
-            }
-            if (!$fs
-                    ->exists(
-                            $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId() . '/'
-                                    . $tahun)) {
-                $fs
-                        ->mkdir(
-                                $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId()
-                                        . '/' . $tahun);
-            }
-            if (!$fs
-                    ->exists(
-                            $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId() . '/'
-                                    . $tahun . '/' . $bulan)) {
-                $fs
-                        ->mkdir(
-                                $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId()
-                                        . '/' . $tahun . '/' . $bulan);
-            }
-
-            $documenttarget = $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId()
-                    . '/' . $tahun . '/' . $bulan . '/' . $filetarget;
+            $documenttarget = $schoolReceiptDir . '/' . $tahun . '/' . $bulan . '/' . $filetarget;
 
             $commands = new EscapeCommand();
             $commands->addLineSpacing_1_6();
@@ -681,9 +668,13 @@ class PembayaranPendaftaranController extends Controller
             $commands->addContent($sekolah->getNama() . "\r\n");
             $commands->addContent($sekolah->getAlamat() . ", " . $sekolah->getKodepos() . "\r\n");
 
-            $phonefaxline = $sekolah->getTelepon() != "" ? "Tel " . $sekolah->getTelepon() : "";
-            $phonefaxline .= $sekolah->getFax() != "" ? ($phonefaxline != "" ? ", Fax " . $sekolah->getFax()
-                            : "Fax " . $sekolah->getFax()) : "";
+            $phonefaxline = $sekolah->getTelepon() != "" ? $translator
+                            ->trans('telephone', array(), 'printing') . " " . $sekolah->getTelepon() : "";
+            $phonefaxline .= $sekolah->getFax() != "" ? ($phonefaxline != "" ? ", "
+                                    . $translator->trans('faximile', array(), 'printing') . " "
+                                    . $sekolah->getFax()
+                            : $translator->trans('faximile', array(), 'printing') . " " . $sekolah->getFax())
+                    : "";
 
             $commands->addContent($phonefaxline . "\r\n");
 

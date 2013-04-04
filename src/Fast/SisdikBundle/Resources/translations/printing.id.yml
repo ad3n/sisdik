@@ -3,6 +3,8 @@ applicantname: Nama Calon Siswa
 applicationnum: No. Pendaftaran
 date: Tanggal
 num: No
+telephone: Tel
+faximile: Fax
 paymentitem: Item Pembayaran
 paymentnum: Pembayaran Ke
 paymentamount: Nominal Pembayaran
