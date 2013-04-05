@@ -823,9 +823,9 @@ class PembayaranPendaftaranController extends Controller
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelSisaPembayaran)));
                 $nominalSisaPembayaran = $nominalHargaItemPembayaran - $nominalPotongan
                         - $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran();
-                var_dump(
-                        $nominalSisaPembayaran . ":" . $nominalPotongan . ":"
-                                . $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran());
+                var_dump($nominalHargaItemPembayaran);
+                var_dump($nominalPotongan);
+                var_dump($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran());
                 exit;
                 if ($nominalSisaPembayaran <= 0) {
                     $valueSisaPembayaran = number_format($nominalSisaPembayaran, 0, ',', '.');
