@@ -783,6 +783,8 @@ class PembayaranPendaftaranController extends Controller
                     $commands->addContent(str_repeat(" ", $marginBadan) . $barisTotalHarga . "\r\n");
                 }
 
+                $commands->addContent("\r\n");
+
                 $labelPembayaranKe = $translator->trans('paymentnum', array(), 'printing');
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelPembayaranKe)));
                 $barisPembayaranKe = $labelPembayaranKe . $spasi . ": " . $nomorCicilan;
@@ -806,6 +808,8 @@ class PembayaranPendaftaranController extends Controller
                         . $valueKeteranganPembayaran;
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisKeteranganPembayaran . "\r\n");
 
+                $commands->addContent("\r\n");
+
                 $labelTotalSudahBayar = $translator->trans('totalpaidamount', array(), 'printing');
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalSudahBayar)));
                 $valueTotalSudahBayar = number_format(
@@ -819,6 +823,10 @@ class PembayaranPendaftaranController extends Controller
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelSisaPembayaran)));
                 $nominalSisaPembayaran = $nominalHargaItemPembayaran - $nominalPotongan
                         - $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran();
+                var_dump(
+                        $nominalSisaPembayaran . ":" . $nominalPotongan . ":"
+                                . $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran());
+                exit;
                 if ($nominalSisaPembayaran <= 0) {
                     $valueSisaPembayaran = number_format($nominalSisaPembayaran, 0, ',', '.');
                     $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueSisaPembayaran)));
@@ -918,6 +926,10 @@ class PembayaranPendaftaranController extends Controller
                                             str_repeat(" ", $marginBadan) . $barisKeteranganBerlanjut
                                                     . "\r\n");
 
+                            if ($pembayaran->getAdaPotongan()) {
+                                $commands->addContent("\r\n");
+                                $commands->addContent("\r\n");
+                            }
                             $commands->addContent("\r\n");
                             $commands->addContent("\r\n");
                             $commands->addContent("\r\n");
