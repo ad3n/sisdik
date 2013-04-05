@@ -385,7 +385,7 @@ class PembayaranPendaftaran
     /**
      * Get total nominal transaksi pembayaran pendaftaran
      *
-     * @return \Fast\SisdikBundle\TransaksiPembayaranPendaftaran
+     * @return int
      */
     public function getTotalNominalTransaksiPembayaranPendaftaran() {
         $jumlah = 0;

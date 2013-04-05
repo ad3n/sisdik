@@ -826,6 +826,7 @@ class PembayaranPendaftaranController extends Controller
                 var_dump($nominalHargaItemPembayaran);
                 var_dump($nominalPotongan);
                 var_dump($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran());
+                var_dump($nominalSisaPembayaran);
                 exit;
                 if ($nominalSisaPembayaran <= 0) {
                     $valueSisaPembayaran = number_format($nominalSisaPembayaran, 0, ',', '.');
