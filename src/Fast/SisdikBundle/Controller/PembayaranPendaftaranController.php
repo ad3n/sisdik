@@ -890,6 +890,7 @@ class PembayaranPendaftaranController extends Controller
                     }
                 }
 
+                $twoPageFormat = 0;
                 if ($twoPages === true && count($daftarBiayaPendaftaran) < $itemThreshold) {
                     $twoPageFormat = 1;
                 } else if ($twoPages === true && count($daftarBiayaPendaftaran) >= $itemThreshold) {
