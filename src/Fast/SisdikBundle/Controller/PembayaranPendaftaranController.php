@@ -823,22 +823,15 @@ class PembayaranPendaftaranController extends Controller
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelSisaPembayaran)));
                 $nominalSisaPembayaran = $nominalHargaItemPembayaran - $nominalPotongan
                         - $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran();
-                var_dump($nominalHargaItemPembayaran);
-                var_dump($nominalPotongan);
-                var_dump($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran());
-                var_dump($nominalSisaPembayaran);
                 if ($nominalSisaPembayaran <= 0) {
+                    $valueSisaPembayaran = "(" . $translator->trans('settled', array(), 'printing') . ")";
+                    $barisSisaPembayaran = $labelSisaPembayaran . $spasi . ": " . $valueSisaPembayaran;
+                } else {
                     $valueSisaPembayaran = number_format($nominalSisaPembayaran, 0, ',', '.');
                     $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueSisaPembayaran)));
                     $barisSisaPembayaran = $labelSisaPembayaran . $spasi . ": " . $symbol . $spasi2
                             . $valueSisaPembayaran;
-                } else {
-                    $valueSisaPembayaran = "(" . $translator->trans('settled', array(), 'printing') . ")";
-                    $barisSisaPembayaran = $labelSisaPembayaran . $spasi . ": " . $valueSisaPembayaran;
                 }
-                var_dump($nominalSisaPembayaran <= 0);
-                var_dump($valueSisaPembayaran);
-                exit;
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisSisaPembayaran . "\r\n");
 
                 if (!$pembayaran->getAdaPotongan()) {
