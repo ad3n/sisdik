@@ -785,31 +785,6 @@ class PembayaranPendaftaranController extends Controller
 
                 $commands->addContent("\r\n");
 
-                $labelPembayaranKe = $translator->trans('paymentnum', array(), 'printing');
-                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelPembayaranKe)));
-                $barisPembayaranKe = $labelPembayaranKe . $spasi . ": " . $nomorCicilan;
-                $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaranKe . "\r\n");
-
-                $labelNominalPembayaran = $translator->trans('paymentamount', array(), 'printing');
-                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelNominalPembayaran)));
-                $valueNominalPembayaran = number_format($transaksi->getNominalPembayaran(), 0, ',', '.');
-                $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueNominalPembayaran)));
-                $barisNominalPembayaran = $labelNominalPembayaran . $spasi . ": " . $symbol . $spasi2
-                        . $valueNominalPembayaran;
-                $commands->addContent(str_repeat(" ", $marginBadan) . $barisNominalPembayaran . "\r\n");
-
-                $labelKeteranganPembayaran = $translator->trans('description', array(), 'printing');
-                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelKeteranganPembayaran)));
-                $valueKeteranganPembayaran = $transaksi->getKeterangan();
-                $valueKeteranganPembayaran = strlen($valueKeteranganPembayaran) > $lebarketerangan ? substr(
-                                $valueKeteranganPembayaran, 0, ($lebarketerangan - 3)) . "..."
-                        : $valueKeteranganPembayaran;
-                $barisKeteranganPembayaran = $labelKeteranganPembayaran . $spasi . ": "
-                        . $valueKeteranganPembayaran;
-                $commands->addContent(str_repeat(" ", $marginBadan) . $barisKeteranganPembayaran . "\r\n");
-
-                $commands->addContent("\r\n");
-
                 $labelTotalSudahBayar = $translator->trans('totalpaidamount', array(), 'printing');
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalSudahBayar)));
                 $valueTotalSudahBayar = number_format(
@@ -833,6 +808,31 @@ class PembayaranPendaftaranController extends Controller
                             . $valueSisaPembayaran;
                 }
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisSisaPembayaran . "\r\n");
+
+                $commands->addContent("\r\n");
+
+                $labelPembayaranKe = $translator->trans('paymentnum', array(), 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelPembayaranKe)));
+                $barisPembayaranKe = $labelPembayaranKe . $spasi . ": " . $nomorCicilan;
+                $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaranKe . "\r\n");
+
+                $labelNominalPembayaran = $translator->trans('paymentamount', array(), 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelNominalPembayaran)));
+                $valueNominalPembayaran = number_format($transaksi->getNominalPembayaran(), 0, ',', '.');
+                $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueNominalPembayaran)));
+                $barisNominalPembayaran = $labelNominalPembayaran . $spasi . ": " . $symbol . $spasi2
+                        . $valueNominalPembayaran;
+                $commands->addContent(str_repeat(" ", $marginBadan) . $barisNominalPembayaran . "\r\n");
+
+                $labelKeteranganPembayaran = $translator->trans('description', array(), 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelKeteranganPembayaran)));
+                $valueKeteranganPembayaran = $transaksi->getKeterangan();
+                $valueKeteranganPembayaran = strlen($valueKeteranganPembayaran) > $lebarketerangan ? substr(
+                                $valueKeteranganPembayaran, 0, ($lebarketerangan - 3)) . "..."
+                        : $valueKeteranganPembayaran;
+                $barisKeteranganPembayaran = $labelKeteranganPembayaran . $spasi . ": "
+                        . $valueKeteranganPembayaran;
+                $commands->addContent(str_repeat(" ", $marginBadan) . $barisKeteranganPembayaran . "\r\n");
 
                 if (!$pembayaran->getAdaPotongan()) {
                     $commands->addContent("\r\n");
@@ -875,7 +875,8 @@ class PembayaranPendaftaranController extends Controller
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisNamaKolom . "\r\n");
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
-                /* if (count($daftarBiayaPendaftaran) > 1) { */
+                // uncomment following line for double page test
+                // $daftarBiayaPendaftaran = array_merge($daftarBiayaPendaftaran);
 
                 $maxitemPageone = 9;
                 $itemThreshold = 15;
@@ -904,8 +905,6 @@ class PembayaranPendaftaranController extends Controller
 
                 $num = 1;
                 $totalNominalTransaksi = 0;
-                // uncomment following line for double page test
-                $daftarBiayaPendaftaran = array_merge($daftarBiayaPendaftaran, $daftarBiayaPendaftaran);
 
                 foreach ($daftarBiayaPendaftaran as $biaya) {
                     $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
@@ -1138,43 +1137,11 @@ class PembayaranPendaftaranController extends Controller
 
                     $num++;
                 }
-                /* } */
-
-                /* else {
-                    $totalNominalTransaksi = $transaksi->getNominalPembayaran();
-                    foreach ($daftarBiayaPendaftaran as $biaya) {
-                        $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
-                                ->find($biaya);
-                        if ($biayaPendaftaran instanceof BiayaPendaftaran) {
-
-                            $kolomNomorPembayaran = strval($num);
-                            $spasiKolomNomorPembayaran = $lebarKolom1
-                                    - (strlen($kolomNomorPembayaran) + $marginKananKolom);
-                            $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
-                                    . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
-
-                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
-                            $spasiKolomItemPembayaran = $lebarKolom2
-                                    - (strlen($kolomItemPembayaran) + $marginKiriKolom);
-                            $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
-                                    . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
-
-                            $kolomHargaPembayaran = number_format($totalNominalTransaksi, 0, ',', '.');
-                            $spasiKolomHargaPembayaran = $lebarKolom3
-                                    - (strlen($kolomHargaPembayaran) + $marginKananKolom);
-                            $barisPembayaran .= "|" . str_repeat(" ", $spasiKolomHargaPembayaran)
-                                    . $kolomHargaPembayaran . str_repeat(" ", $marginKananKolom) . "|";
-
-                            $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
-                        }
-                        // $num++;
-                    }
-                } */
 
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
                 $lebarKolom4 = 55;
-                $lebarKolom5 = 24;
+                $lebarKolom5 = 22;
                 $lebarKolom6 = 23;
 
                 $kolomKeterangan = $translator->trans('description', array(), 'printing');
@@ -1217,7 +1184,7 @@ class PembayaranPendaftaranController extends Controller
                     $spasiKolomPotonganHarga = $lebarKolom6
                             - (strlen($kolomPotonganHarga) + $marginKananKolom);
                     $barisKolomPotongan .= str_repeat(" ", $spasiKolomPotonganHarga) . $kolomPotonganHarga
-                            . str_repeat(" ", $marginKananKolom) . " " . $persenPotongan;
+                            . str_repeat(" ", $marginKananKolom) . $persenPotongan;
 
                     $commands->addContent(str_repeat(" ", $marginBadan) . $barisKolomPotongan . "\r\n");
 
@@ -1243,13 +1210,13 @@ class PembayaranPendaftaranController extends Controller
                         $commands->addContent($jarakVertikal);
                     }
                     if ($twoPageFormat == 1) {
-                        $maxJarakVertikal = $maxitemPageone + 3;
+                        $maxJarakVertikal = 10;
                         $jarakVertikal = str_repeat("\r\n",
                                 $maxJarakVertikal - (count($daftarBiayaPendaftaran) - ($maxitemPageone + 1)));
                         $commands->addContent($jarakVertikal);
                     }
                     if ($twoPageFormat == 2) {
-                        $maxJarakVertikal = $maxitemPageone + 3;
+                        $maxJarakVertikal = 10;
                         $jarakVertikal = str_repeat("\r\n",
                                 $maxJarakVertikal - (count($daftarBiayaPendaftaran) - 15));
                         $commands->addContent($jarakVertikal);
