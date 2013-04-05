@@ -905,7 +905,7 @@ class PembayaranPendaftaranController extends Controller
                 $num = 1;
                 $totalNominalTransaksi = 0;
                 // uncomment following line for double page test
-                // $daftarBiayaPendaftaran = array_merge($daftarBiayaPendaftaran, $daftarBiayaPendaftaran, $daftarBiayaPendaftaran);
+                $daftarBiayaPendaftaran = array_merge($daftarBiayaPendaftaran, $daftarBiayaPendaftaran);
 
                 foreach ($daftarBiayaPendaftaran as $biaya) {
                     $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
