@@ -836,6 +836,7 @@ class PembayaranPendaftaranController extends Controller
                     $valueSisaPembayaran = "(" . $translator->trans('settled', array(), 'printing') . ")";
                     $barisSisaPembayaran = $labelSisaPembayaran . $spasi . ": " . $valueSisaPembayaran;
                 }
+                var_dump($nominalSisaPembayaran <= 0);
                 var_dump($valueSisaPembayaran);
                 exit;
                 $commands->addContent(str_repeat(" ", $marginBadan) . $barisSisaPembayaran . "\r\n");
