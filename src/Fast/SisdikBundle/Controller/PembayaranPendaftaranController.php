@@ -605,16 +605,21 @@ class PembayaranPendaftaranController extends Controller
                         ));
         $jumlahTransaksi = 0;
         $nomorCicilan = 0;
+        $nomorTransaksi = array();
         foreach ($transaksiPembayaran as $t) {
             if ($t instanceof TransaksiPembayaranPendaftaran) {
                 $jumlahTransaksi++;
+                $nomorTransaksi[$t->getNomorTransaksi()] = $t->getNomorTransaksi();
                 if ($t->getId() == $id) {
                     $nomorCicilan = $jumlahTransaksi;
+                    break;
                 }
             }
         }
         $nomorCicilan = $jumlahTransaksi <= 1 ? 0 : $nomorCicilan;
         $adaCicilan = $jumlahTransaksi > 1 ? true : false;
+        $totalPembayaranHinggaTransaksiTerpilih = $pembayaran
+                ->getTotalNominalTransaksiPembayaranPendaftaranHinggaTransaksiTerpilih($nomorTransaksi);
 
         $tahun = $transaksi->getWaktuSimpan()->format('Y');
         $bulan = $transaksi->getWaktuSimpan()->format('m');
@@ -813,8 +818,7 @@ class PembayaranPendaftaranController extends Controller
 
                 $labelTotalSudahBayar = $translator->trans('totalpaidamount', array(), 'printing');
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalSudahBayar)));
-                $valueTotalSudahBayar = number_format(
-                        $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran(), 0, ',', '.');
+                $valueTotalSudahBayar = number_format($totalPembayaranHinggaTransaksiTerpilih, 0, ',', '.');
                 $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueTotalSudahBayar)));
                 $barisTotalSudahBayar = $labelTotalSudahBayar . $spasi . ": " . $symbol . $spasi2
                         . $valueTotalSudahBayar;
@@ -823,8 +827,8 @@ class PembayaranPendaftaranController extends Controller
                 $labelSisaPembayaran = $translator->trans('unpaidamount', array(), 'printing');
                 $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelSisaPembayaran)));
                 $nominalSisaPembayaran = $nominalHargaItemPembayaran - $nominalPotongan
-                        - $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran();
-                if ($nominalSisaPembayaran <= 0) {
+                        - $totalPembayaranHinggaTransaksiTerpilih;
+                if ($nominalSisaPembayaran == 0) {
                     $valueSisaPembayaran = "(" . $translator->trans('settled', array(), 'printing') . ")";
                     $barisSisaPembayaran = $labelSisaPembayaran . $spasi . ": " . $valueSisaPembayaran;
                 } else {

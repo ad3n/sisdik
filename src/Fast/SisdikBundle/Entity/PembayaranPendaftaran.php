@@ -396,4 +396,22 @@ class PembayaranPendaftaran
 
         return $jumlah;
     }
+
+    /**
+     * Get total nominal transaksi pembayaran pendaftaran hingga transaksi terpilih
+     *
+     * @param array $nomorTransaksi
+     * @return int
+     */
+    public function getTotalNominalTransaksiPembayaranPendaftaranHinggaTransaksiTerpilih($nomorTransaksi) {
+        $jumlah = 0;
+
+        foreach ($this->getTransaksiPembayaranPendaftaran() as $transaksi) {
+            if (array_key_exists($transaksi->getNomorTransaksi(), $nomorTransaksi)) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
+        }
+
+        return $jumlah;
+    }
 }
