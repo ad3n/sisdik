@@ -30,9 +30,9 @@
         "mopa/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "master",
         "gregwar/captcha-bundle": "dev-master",
-        "knplabs/knp-snappy-bundle": "dev-master",
         "doctrine/doctrine-migrations-bundle": "dev-master",
-        "doctrine/doctrine-fixtures-bundle": "dev-master"
+        "doctrine/doctrine-fixtures-bundle": "dev-master",
+        "psliwa/pdf-bundle": "dev-master"
     },
     "repositories": [
 	    {
@@ -50,6 +50,14 @@
 					"type": "zip"
 				}
 			}
+	    },
+	    {
+	        "type": "composer",
+	        "url": "http://packages.zendframework.com/"
+        },
+	    {
+	        "type": "composer",
+	        "url": "http://packagist.org/"
 	    }
     ],
     "scripts":{

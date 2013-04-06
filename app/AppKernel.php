@@ -20,10 +20,10 @@ class AppKernel extends Kernel
                 new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
                 new BCC\ExtraToolsBundle\BCCExtraToolsBundle(),
                 new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-                new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
                 new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
                 new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
                 new Fast\SisdikBundle\FastSisdikBundle(), new Acme\DemoBundle\AcmeDemoBundle(),
+                new Ps\PdfBundle\PsPdfBundle(),
         );
 
         if (in_array($this->getEnvironment(), array(
