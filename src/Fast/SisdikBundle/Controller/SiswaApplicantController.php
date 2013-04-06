@@ -63,30 +63,46 @@ class SiswaApplicantController extends Controller
         $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id IN (?1)')->setParameter(1, $daftarTahun)->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id IN (?1)')
+                ->setParameter(1, $daftarTahun)->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'DESC')
+                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $searchform->bind($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
+            $searchparam = '';
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('t2.id = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+
+                $searchparam = " tahun = '{$searchdata['tahun']->getId()}' ";
             }
 
             if ($searchdata['searchkey'] != '') {
                 $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+
+                if (is_numeric($searchdata['searchkey'])) {
+                    $dql = "SELECT t FROM FastSisdikBundle:Siswa t "
+                            . " LEFT JOIN t.pembayaranPendaftaran t2 "
+                            . " WHERE t.nomorPendaftaran = CASE WHEN t2.siswa IS NOT NULL THEN '{$searchdata['searchkey']}' ELSE '0' END"
+                            . ($searchparam != '' ? " AND t.$searchparam" : "");
+                    $query = $em->createQuery($dql);
+                }
             }
 
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        if (is_numeric($searchdata['searchkey'])) {
+            $pagination = $paginator
+                    ->paginate($query->getResult(), $this->get('request')->query->get('page', 1));
+        } else {
+            $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        }
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),

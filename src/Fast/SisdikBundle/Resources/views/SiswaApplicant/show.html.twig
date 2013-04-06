@@ -12,6 +12,10 @@
                 <dd>{% if entity.tahun is not null %}{{ entity.tahun.tahun }}{% endif %}</dd>
                 <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
                 <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
+            {% if entity.pembayaranPendaftaran.count > 0 %}
+                <dt>{{ 'label.application.number'|trans }}</dt>
+                <dd>{{ entity.nomorPendaftaran }}</dd>
+            {% endif %}
                 <dt>{{ 'label.name.full'|trans }}</dt>
                 <dd>{{ entity.namaLengkap }}</dd>
                 <dt>{{ 'label.gender'|trans }}</dt>
