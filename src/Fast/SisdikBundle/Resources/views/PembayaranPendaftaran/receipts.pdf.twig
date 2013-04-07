@@ -109,11 +109,12 @@
             </tr>
         </table>
     {% else %}
-        <table margin-left="30px" font-size="11px" line-height="16px" width="80%">
+        <table margin-left="30px" font-size="11px" line-height="16px" width="90%">
             <tr>
                 <td width="30px" padding="3px 5px">{{ 'num'|trans({}, 'printing') }}</td>
                 <td padding="3px 5px">{{ 'paymentitem'|trans({}, 'printing') }}</td>
                 <td width="150px" padding="3px 5px">{{ 'price'|trans({}, 'printing') }} ({{ currencySymbol(locale) }})</td>
+                <td width="50px" border-type="none"></td>
             </tr>
         {% for biaya in pembayaran.daftarBiayaPendaftaran %}
             {% if biaya != '' %}
@@ -121,41 +122,46 @@
                 <td padding="3px 5px" text-align="right">{{ loop.index }}</td>
                 <td padding="3px 5px">{% render url('fee_registration_info', {'id': biaya, 'type': 2}) %}</td>
                 <td padding="3px 5px" text-align="right">{% render url('fee_registration_info', {'id': biaya, 'type': 3}) %}</td>
+                <td border-type="none"></td>
             </tr>
             {% endif %}
         {% endfor %}
         </table>
-        <table margin-left="30px" font-size="11px" line-height="14px" width="80%">
+        <table margin-left="30px" font-size="11px" line-height="14px" width="90%">
         {% if pembayaran.adaPotongan %}
             <tr>
-                <td width="80px" padding="3px 5px" border-type="none">{{ 'description'|trans({}, 'printing') }}</td>
+                <td width="70px" padding="3px 5px" border-type="none">{{ 'description'|trans({}, 'printing') }}</td>
+                <td width="5px" padding="3px 0" border-type="none" text-align="right">:</td>
                 <td padding="3px 5px" border-type="none">{{ transaksi.keterangan }}</td>
-                <td width="60px" padding="3px 5px" border-type="none">{{ 'subtotal'|trans({}, 'printing') }}</td>
+                <td width="60px" padding="3px 5px" border-type="none" text-align="right">{{ 'subtotal'|trans({}, 'printing') }}</td>
                 <td width="150px" padding="3px 5px" text-align="right" border-type="none">{{ totalHarga|number_format(0, ',', '.') }}</td>
+                <td width="50px" border-type="none"></td>
             </tr>
             <tr>
-                <td colspan="2" padding="3px 5px" border-type="none">&nbsp;</td>
-                <td padding="3px 5px" border-type="none">{{ 'discount'|trans({}, 'printing') }}</td>
+                <td colspan="3" padding="3px 5px" border-type="none">&nbsp;</td>
+                <td padding="3px 5px" border-type="none" text-align="right">{{ 'discount'|trans({}, 'printing') }}</td>
                 <td padding="3px 5px" text-align="right" border-type="none">{% spaceless %}
-                    {% if pembayaran.persenPotongan != '' %}
-                        ({{ pembayaran.persenPotongan }}%)
-                    {% endif %}
+
                     {{ (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan)|number_format(0, ',', '.') }}
                 {% endspaceless %}</td>
+                <td padding="3px 5px 3px 0" border-type="none">{% if pembayaran.persenPotongan != '' %}({{ pembayaran.persenPotongan }}%){% endif %}</td>
             </tr>
             <tr>
-                <td colspan="2" padding="3px 5px" border-type="none">&nbsp;</td>
-                <td padding="3px 5px" border-type="none">{{ 'total'|trans({}, 'printing') }}</td>
+                <td colspan="3" padding="3px 5px" border-type="none">&nbsp;</td>
+                <td padding="3px 5px" border-type="none" text-align="right">{{ 'total'|trans({}, 'printing') }}</td>
                 <td padding="3px 5px" text-align="right" border-type="none">{% spaceless %}
                     {{ (totalHarga - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',', '.') }}
                 {% endspaceless %}</td>
+                <td border-type="none"></td>
             </tr>
         {% else %}
             <tr>
-                <td width="80px" padding="3px 5px" border-type="none">{{ 'description'|trans({}, 'printing') }}</td>
+                <td width="70px" padding="3px 5px" border-type="none">{{ 'description'|trans({}, 'printing') }}</td>
+                <td width="5px" padding="3px 0" border-type="none" text-align="right">:</td>
                 <td padding="3px 5px" border-type="none">{{ transaksi.keterangan }}</td>
-                <td width="60px" padding="3px 5px" border-type="none">{{ 'total'|trans({}, 'printing') }}</td>
+                <td width="60px" padding="3px 5px" border-type="none" text-align="right">{{ 'total'|trans({}, 'printing') }}</td>
                 <td width="150px" padding="3px 5px" text-align="right" border-type="none">{{ totalHarga|number_format(0, ',', '.') }}</td>
+                <td width="50px" border-type="none"></td>
             </tr>
         {% endif %}
         </table>
