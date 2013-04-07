@@ -369,17 +369,23 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds info of a fee
      *
-     * @Route("/info/{id}", name="fee_registration_info")
+     * @Route("/info/{id}/{type}", name="fee_registration_info")
      */
-    public function getFeeInfoAction($id) {
+    public function getFeeInfoAction($id, $type = 1) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
 
         if ($entity instanceof BiayaPendaftaran) {
-            $info = $entity->getJenisbiaya()->getNama() . " ("
-                    . number_format($entity->getNominal(), 0, ',', '.') . ")";
+            if ($type == 1) {
+                $info = $entity->getJenisbiaya()->getNama() . " ("
+                        . number_format($entity->getNominal(), 0, ',', '.') . ")";
+            } else if ($type == 2) {
+                $info = $entity->getJenisbiaya()->getNama();
+            } else if ($type == 3) {
+                $info = number_format($entity->getNominal(), 0, ',', '.');
+            }
         } else {
             $info = $this->get('translator')->trans('label.fee.undefined');
         }

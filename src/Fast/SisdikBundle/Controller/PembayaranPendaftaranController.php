@@ -374,7 +374,7 @@ class PembayaranPendaftaranController extends Controller
                             'pembayaranPendaftaran' => $id
                         ),
                         array(
-                            'nomorTransaksi' => 'ASC'
+                            'waktuSimpan' => 'ASC'
                         ));
 
         return array(
@@ -585,6 +585,11 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
         $pembayaran = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($pid);
         if (!(is_object($pembayaran) && $pembayaran instanceof PembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
@@ -601,23 +606,23 @@ class PembayaranPendaftaranController extends Controller
                             'pembayaranPendaftaran' => $pid
                         ),
                         array(
-                            'nomorTransaksi' => 'ASC'
+                            'waktuSimpan' => 'ASC'
                         ));
-        $jumlahTransaksi = 0;
+        $counterTransaksi = 0;
         $nomorCicilan = 0;
         $nomorTransaksi = array();
         foreach ($transaksiPembayaran as $t) {
             if ($t instanceof TransaksiPembayaranPendaftaran) {
-                $jumlahTransaksi++;
+                $counterTransaksi++;
                 $nomorTransaksi[$t->getNomorTransaksi()] = $t->getNomorTransaksi();
                 if ($t->getId() == $id) {
-                    $nomorCicilan = $jumlahTransaksi;
+                    $nomorCicilan = $counterTransaksi;
                     break;
                 }
             }
         }
-        $nomorCicilan = $jumlahTransaksi <= 1 ? 0 : $nomorCicilan;
-        $adaCicilan = $jumlahTransaksi > 1 ? true : false;
+        $nomorCicilan = count($transaksiPembayaran) <= 1 ? 0 : $nomorCicilan;
+        $adaCicilan = count($transaksiPembayaran) > 1 ? true : false;
         $totalPembayaranHinggaTransaksiTerpilih = $pembayaran
                 ->getTotalNominalTransaksiPembayaranPendaftaranHinggaTransaksiTerpilih($nomorTransaksi);
 
@@ -693,8 +698,7 @@ class PembayaranPendaftaranController extends Controller
 
             $namasiswa = $translator->trans('applicantname', array(), 'printing');
             $spasi = str_repeat(" ", ($labelwidth1 - strlen($namasiswa)));
-            $barisNamasiswa = $namasiswa . $spasi . ": "
-                    . $transaksi->getPembayaranPendaftaran()->getSiswa()->getNamaLengkap();
+            $barisNamasiswa = $namasiswa . $spasi . ": " . $siswa->getNamaLengkap();
 
             $tanggal = $translator->trans('date', array(), 'printing');
             $spasi = str_repeat(" ", ($labelwidth2 - strlen($tanggal)));
@@ -704,8 +708,7 @@ class PembayaranPendaftaranController extends Controller
 
             $nomorpendaftaran = $translator->trans('applicationnum', array(), 'printing');
             $spasi = str_repeat(" ", ($labelwidth1 - strlen($nomorpendaftaran)));
-            $barisNomorPendaftaran = $nomorpendaftaran . $spasi . ": "
-                    . $transaksi->getPembayaranPendaftaran()->getSiswa()->getNomorPendaftaran();
+            $barisNomorPendaftaran = $nomorpendaftaran . $spasi . ": " . $siswa->getNomorPendaftaran();
 
             $pengisiBaris1 = strlen($barisNomorkwitansi);
             $pengisiBaris2 = strlen($barisTanggal);
@@ -1284,7 +1287,7 @@ class PembayaranPendaftaranController extends Controller
             $commands->addContent("\r\n");
             $commands->addContent("\r\n");
 
-            $kolomPendaftar2 = $transaksi->getPembayaranPendaftaran()->getSiswa()->getNamaLengkap();
+            $kolomPendaftar2 = $siswa->getNamaLengkap();
             $spasiKolomPendaftar2 = $lebarKolom7 - (strlen($kolomPendaftar2) + $marginKiriTtd);
             $barisTandatangan2 = str_repeat(" ", $marginKiriTtd) . $kolomPendaftar2
                     . str_repeat(" ", $spasiKolomPendaftar2);
@@ -1318,7 +1321,7 @@ class PembayaranPendaftaranController extends Controller
             }
 
             $response = new Response(file_get_contents($documenttarget), 200);
-            $response->headers->set('Content-Description', 'File Transfer');
+            $response->headers->set('Content-Description', 'Dokumen kwitansi');
             $response->headers->set('Content-Type', 'application/vnd.sisdik.directprint');
             $response->headers->set('Content-Transfer-Encoding', 'binary');
             $response->headers->set('Expires', '0');
@@ -1327,11 +1330,54 @@ class PembayaranPendaftaranController extends Controller
             $response->headers->set('Content-Length', filesize($documenttarget));
 
         } else {
-            $filetarget = $transaksi->getNomorTransaksi() . ".pdf";
 
-            // $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
-            // $response->headers->set('Content-Disposition', $d);
-            // $response->headers->set('Content-Description', 'File Transfer');
+            $filetarget = $transaksi->getNomorTransaksi() . ".sisdik.pdf";
+            $documenttarget = $schoolReceiptDir . '/' . $tahun . '/' . $bulan . '/' . $filetarget;
+
+            $totalHarga = 0;
+            foreach ($daftarBiayaPendaftaran as $biaya) {
+                $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
+                if ($biayaPendaftaran instanceof BiayaPendaftaran) {
+                    $namaItemPembayaranCicilan = $biayaPendaftaran->getJenisbiaya()->getNama();
+                    $totalHarga += $biayaPendaftaran->getNominal();
+                }
+            }
+
+            $facade = $this->get('ps_pdf.facade');
+            $tmpResponse = new Response();
+
+            $this
+                    ->render('FastSisdikBundle:PembayaranPendaftaran:receipts.pdf.twig',
+                            array(
+                                    'sekolah' => $sekolah, 'siswa' => $siswa, 'pembayaran' => $pembayaran,
+                                    'transaksi' => $transaksi, 'totalHarga' => $totalHarga,
+                                    'adaCicilan' => $adaCicilan,
+                                    'namaItemPembayaranCicilan' => $namaItemPembayaranCicilan,
+                                    'nomorCicilan' => $nomorCicilan,
+                                    'totalPembayaranHinggaTransaksiTerpilih' => $totalPembayaranHinggaTransaksiTerpilih,
+                            ), $tmpResponse);
+            $xml = $tmpResponse->getContent();
+            $content = $facade->render($xml);
+
+            $fp = fopen($documenttarget, "w");
+
+            if (!$fp) {
+                throw new IOException($translator->trans("exception.open.file.pdf"));
+            } else {
+                fwrite($fp, $content);
+                fclose($fp);
+            }
+
+            $response = new Response(file_get_contents($documenttarget), 200);
+            $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filetarget);
+            $response->headers->set('Content-Disposition', $d);
+            $response->headers->set('Content-Description', 'Dokumen kwitansi');
+            $response->headers->set('Content-Type', 'application/pdf');
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Expires', '0');
+            $response->headers->set('Cache-Control', 'must-revalidate');
+            $response->headers->set('Pragma', 'public');
+            $response->headers->set('Content-Length', filesize($documenttarget));
         }
 
         return $response;

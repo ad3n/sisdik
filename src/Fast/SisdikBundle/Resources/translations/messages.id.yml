@@ -566,6 +566,7 @@ exception:
     registrationfee.paidoff: Item pendaftaran sudah lunas
     unique.printreceiptsoption: Tidak bisa menyimpan pilihan cetak. Sudah ada data pilihan di dalam sistem.
     directprint.file: Error ketika membuat file untuk cetak langsung
+    open.file.pdf: Error ketika membuat file pdf
 
 shortinfo:
     password.mustequal: password harus sama
