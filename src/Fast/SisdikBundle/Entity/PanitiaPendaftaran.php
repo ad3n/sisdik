@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * PanitiaPendaftaran
  *
  * @ORM\Table(name="panitia_pendaftaran", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="tahun_id_UNIQUE", columns={"tahun_id"})
+ *     @ORM\UniqueConstraint(name="sekolah_tahun_id_UNIQUE", columns={"sekolah_id", "tahun_id"})
  * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
