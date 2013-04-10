@@ -206,5 +206,10 @@ parentguard:
     type:     annotation
     prefix:   /
 
+sendmessageoptions:
+    resource: "@FastSisdikBundle/Controller/PilihanKirimSmsController.php"
+    type:     annotation
+    prefix:   /
+
 
 

@@ -3,6 +3,10 @@ leader: Ketua
 paidoff: lunas
 
 label:
+    applicant.recorded: Pendaftar Tercatat
+    registrationfee.firstpay: Pertama Kali Bayar Biaya Pendaftaran
+    registrationfee.pay: Membayar Biaya Pendaftaran
+    registrationfee.settled: Lunas Biaya Pendaftaran
     discount: Potongan Harga
     discount.fee: Jumlah Diskon
     discounted: Harga Terdiskon
@@ -300,6 +304,9 @@ label:
         add: Tambah Data Orang Tua/Wali
         name: Nama Orang Tua/Wali
         entry: Orang Tua/Wali
+    sendmessage.options:
+        add: Tambah Pengaturan Pilihan Kirim SMS
+        entry: Entri Pengaturan
 
 link:
     backtolist: « Kembali ke Daftar
@@ -476,6 +483,11 @@ flash:
             fail.insert: Data Pembayaran Pendaftaran gagal ditambah. Perbaiki input form pembayaran.
             mortgage.updated: Data cicilan Pembayaran Pendaftaran berhasil diperbarui
             mortgage.fail.insert: Data cicilan Pembayaran Pendaftaran gagal ditambah. Perbaiki input form.
+    sendmessageoptions:
+        inserted: Pilihan Kirim SMS sekolah %school% berhasil ditambah
+        updated: Pilihan Kirim SMS sekolah %school% berhasil diperbarui
+        deleted: Pilihan Kirim SMS sekolah %school% berhasil dihapus
+        fail.delete: Pilihan Kirim SMS sekolah %school% gagal dihapus
 
 tip:
     edit: Ubah
@@ -522,6 +534,7 @@ confirm.drop:
     registration.committee: Hapus Panitia Pendaftaran tahun %year%?
     applicant: Hapus calon siswa %name%?
     parentguard: Hapus Orang Tua/Wali %name%, dari siswa %studentname%?
+    sendmessageoptions: Hapus Pilihan Kirim SMS sekolah %school%?
 
 alt:
     add: ikon tambah
@@ -567,6 +580,7 @@ exception:
     unique.printreceiptsoption: Tidak bisa menyimpan pilihan cetak. Sudah ada data pilihan di dalam sistem.
     directprint.file: Error ketika membuat file untuk cetak langsung
     open.file.pdf: Error ketika membuat file pdf
+    unique.sendmessageoptions: Pilihan Kirim SMS hanya bisa satu untuk satu sekolah
 
 shortinfo:
     password.mustequal: password harus sama

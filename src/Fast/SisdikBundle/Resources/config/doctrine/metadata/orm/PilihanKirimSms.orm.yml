@@ -1,0 +1,28 @@
+PilihanKirimSms:
+    type: entity
+    table: pilihan_kirim_sms
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        pendaftaranTercatat:
+            type: boolean
+            nullable: true
+            column: pendaftaran_tercatat
+        pendaftaranBayarMinimalSatu:
+            type: boolean
+            nullable: true
+            column: pendaftaran_bayar_minimal_satu
+        pendaftaranBayar:
+            type: boolean
+            nullable: true
+            column: pendaftaran_bayar
+        pendaftaranBayarLunas:
+            type: boolean
+            nullable: true
+            column: pendaftaran_bayar_lunas
+    lifecycleCallbacks: {  }
