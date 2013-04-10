@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * PilihanCetakKwitansi
  *
  * @ORM\Table(name="pilihan_cetak_kwitansi", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="sekolah_id_UNIQUE", columns={"sekolah_id"})
+ *     @ORM\UniqueConstraint(name="fk_pilihan_cetak_kwitansi_sekolah1_idx", columns={"sekolah_id"})
  * })
  * @ORM\Entity
  */
