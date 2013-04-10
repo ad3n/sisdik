@@ -635,6 +635,7 @@ class PembayaranPendaftaranController extends Controller
                 \NumberFormatter::CURRENCY);
         $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
 
+        $output = 'pdf';
         $pilihanCetak = $em->getRepository('FastSisdikBundle:PilihanCetakKwitansi')
                 ->findBy(array(
                     'sekolah' => $sekolah->getId()
