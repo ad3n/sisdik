@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\JadwalKehadiranKepulangan;
 use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganType;
 use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Controller\SekolahList;
 use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganSingleSearchType;
 use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganDuplicateType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
@@ -135,11 +134,8 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
-        $sekolahlist = new SekolahList($this->container);
-        $sekolahKehadiranList = $sekolahlist->buildSekolahList();
-
         return array(
-                'pagination' => $pagination, 'schools' => $sekolahKehadiranList, 'sekolah' => $sekolah,
+                'pagination' => $pagination, 'sekolah' => $sekolah,
                 'searchform' => $searchform->createView(), 'repetition' => $repetition,
                 'displayresult' => $displayresult, 'searchdata' => $data,
                 'duplicateform' => $duplicateform->createView(), 'daynames' => $this->buildDayNames()

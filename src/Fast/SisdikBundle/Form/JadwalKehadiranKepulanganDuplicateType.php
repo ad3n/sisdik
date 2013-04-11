@@ -122,10 +122,12 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                         ));
     }
 
-    public function getDefaultOptions(array $options) {
-        return array(
-            'csrf_protection' => false,
-        );
+    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+        $resolver
+                ->setDefaults(
+                        array(
+                            'csrf_protection' => false,
+                        ));
     }
 
     public function getName() {

@@ -3,6 +3,8 @@ leader: Ketua
 paidoff: lunas
 
 label:
+    pilih.sekolah: Pilih Sekolah
+    # ^^^ id
     allschool: Semua Sekolah
     unregistered.school: Tak Teregister
     applicant.recorded: Pendaftar Tercatat

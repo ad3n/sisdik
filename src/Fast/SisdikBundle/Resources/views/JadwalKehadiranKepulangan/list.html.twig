@@ -16,8 +16,8 @@
         <a class="{% if key == sekolah %}current{% endif %}" href="{{ path('presence_schedule_list', {'sekolah': key}) }}">{{ value }}</a>{% if not loop.last %} | {% endif %}
         {%- endfor -%}
     </div>
-    <div style="padding-top: 10px;">
-        <form method="GET" action="{{ path('presence_schedule_list', {'sekolah': sekolah, 'repetition': repetition}) }}" id="{{ searchform.get('id') }}" class="form-search form-inline">
+    <div style="padding-top: 1em;">
+        <form method="GET" action="{{ path('presence_schedule_list', {'sekolah': sekolah, 'repetition': repetition}) }}" class="form-search form-inline">
             {{ form_widget(searchform) }}
             <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
             <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_schedule_list', {'sekolah': sekolah}) }}'">{{ 'label.reset'|trans }}</button>
