@@ -3,6 +3,7 @@ leader: Ketua
 paidoff: lunas
 
 label:
+    unregistered.school: Tak Teregister
     applicant.recorded: Pendaftar Tercatat
     registrationfee.firstpay: Pertama Kali Bayar Biaya Pendaftaran
     registrationfee.pay: Membayar Biaya Pendaftaran

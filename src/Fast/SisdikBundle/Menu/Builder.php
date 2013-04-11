@@ -53,7 +53,7 @@ class Builder extends AbstractNavbarMenuBuilder
                 $settings
                         ->addChild('links.alluser',
                                 array(
-                                    'route' => 'settings_user_list',
+                                    'route' => 'settings_user',
                                 ));
                 $settings
                         ->addChild('links.schools',

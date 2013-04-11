@@ -12,6 +12,7 @@
     <form method="GET" action="{{ path('settings_user_inschool_list') }}" class="form-search form-inline">
         {{ form_widget(form) }}
         <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('settings_user_inschool_list') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 

@@ -2,17 +2,19 @@
 
 {% block page_heading %}{% trans from "headings" %}settings.user.list.main{% endtrans %}{% endblock %}
 {% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
 <div class="filter-section">
-    <div>
-    {%- for key, value in schools -%}
-    <a class="{% if key == filter %}current{% endif %}" href="{{ path('settings_user_list', {'filter': key}) }}">{{ value }}</a>{% if not loop.last %} | {% endif %}
-    {%- endfor -%}
-    </div>
-    <div style="padding-top: 10px;">
-        <form method="GET" action="{{ path('settings_user_list', {'filter': filter}) }}" class="form-search form-inline">
-            {{ form_widget(form.searchkey, {'attr': {'class':'input-medium search-query'}}) }}
-            {{ form_rest(form) }}
+    <div style="padding-top: 1em;">
+        <form method="GET" action="{{ path('settings_user') }}" class="form-search form-inline">
+            {{ form_widget(form) }}
             <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+            <button class="btn" type="reset" onclick="window.location.href='{{ path('settings_user') }}'">{{ 'label.reset'|trans }}</button>
         </form>
     </div>
 </div>
@@ -21,11 +23,11 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('settings_user_register_noschool', {'filter': filter}) }}" class="add-link-a">
+	<a href="{{ path('settings_user_register_noschool') }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.adduser.noschool'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
 	    {{ 'label.add.user.noschool'|trans }}
 	</a><br />
-	<a href="{{ path('settings_user_register_withschool', {'filter': filter}) }}" class="add-link-a">
+	<a href="{{ path('settings_user_register_withschool') }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.adduser.withschool'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
 	    {{ 'label.add.user.withschool'|trans }}
 	</a>
@@ -64,8 +66,8 @@
     		    {% endfor %}
     	    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('settings_user_edit', {'id': user.id, 'page': pagination.paginationData.current, 'filter': filter}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-        		<a href="{{ path('settings_user_delete', {'id': user.id, 'filter': filter}) }}" title="{% trans %}tip.delete{% endtrans %}" class="icon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
+        		<a href="{{ path('settings_user_edit', {'id': user.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('settings_user_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="icon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
     		</td>
     	</tr>
     {% endfor %}

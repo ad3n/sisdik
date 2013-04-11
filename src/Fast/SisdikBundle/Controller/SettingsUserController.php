@@ -1,8 +1,10 @@
 <?php
+
 namespace Fast\SisdikBundle\Controller;
+use Doctrine\DBAL\DBALException;
+use Fast\SisdikBundle\Form\SimpleUserSearchType;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Controller\SekolahList;
 use Fast\SisdikBundle\Entity\Staf;
 use Fast\SisdikBundle\Entity\Guru;
 use Fast\SisdikBundle\Entity\Siswa;
@@ -23,76 +25,67 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  *
  * @author Ihsan Faisal
  * @Route("/user")
+ * @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
  *
  */
 class SettingsUserController extends Controller
 {
     /**
      * @Route("/", name="settings_user")
+     * @Template()
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function indexAction() {
-        return $this->redirect($this->generateUrl('settings_user_list'));
-    }
-
-    /**
-     * @Template()
-     * @Route("/list/{filter}", name="settings_user_list", defaults={"filter"="all"})
-     * @Secure(roles="ROLE_SUPER_ADMIN")
-     */
-    public function listAction(Request $request, $filter) {
         $em = $this->getDoctrine()->getManager();
 
-        $searchcondition = '';
-
-        $searchform = $this->createForm(new SimpleSearchFormType());
+        $searchform = $this->createForm(new SimpleUserSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('u')->from('FastSisdikBundle:User', 'u')
                 ->orderBy('u.username', 'ASC');
 
-        $searchform->bind($request);
-        $searchdata = $searchform->getData();
-        if ($searchdata['searchkey'] != '') {
-            $querybuilder->where('u.name LIKE ?1');
-            $querybuilder->orWhere('u.username LIKE ?2');
-            $querybuilder->orWhere('u.email LIKE ?3');
-            $querybuilder->setParameter(1, "%{$searchdata['searchkey']}%");
-            $querybuilder->setParameter(2, "%{$searchdata['searchkey']}%");
-            $querybuilder->setParameter(3, "%{$searchdata['searchkey']}%");
-        }
+        $searchform->bind($this->getRequest());
+        if ($searchform->isValid()) {
+            $searchdata = $searchform->getData();
 
-        if ($filter == 'all') {
-            // don't do anything
-        } else if ($filter == 'unset') {
-            $querybuilder->andWhere("u.sekolah IS NULL");
-        } else {
-            $querybuilder->leftJoin("u.sekolah", 't2');
-            $querybuilder->andWhere("u.sekolah = :sekolah");
-            $querybuilder->setParameter(':sekolah', $filter);
+            if ($searchdata['searchoption'] != '') {
+                if ($searchdata['searchoption'] == 'unset') {
+                    $querybuilder->andWhere("u.sekolah IS NULL");
+                } else {
+                    $querybuilder->leftJoin("u.sekolah", 't2');
+                    $querybuilder->andWhere("u.sekolah = :sekolah");
+                    $querybuilder->setParameter(':sekolah', $searchdata['searchoption']);
+                }
+            }
+
+            if ($searchdata['searchkey'] != '') {
+                $querybuilder->andWhere('u.name LIKE ?1 OR u.username LIKE ?2 OR u.email LIKE ?3');
+                $querybuilder->setParameter(1, "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter(2, "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter(3, "%{$searchdata['searchkey']}%");
+            }
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        $sekolahlist = new SekolahList($this->container);
         return array(
-                'form' => $searchform->createView(), 'pagination' => $pagination, 'filter' => $filter,
-                'schools' => $sekolahlist->buildSekolahUserList(),
+            'form' => $searchform->createView(), 'pagination' => $pagination,
         );
     }
 
     /**
      * @Template()
-     * @Route("/edit/{filter}/{id}/{page}", name="settings_user_edit", defaults={"filter"="all","page"=1})
+     * @Route("/edit/{id}", name="settings_user_edit")
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
-    public function editAction(Request $request, $id, $filter, $page) {
+    public function editAction(Request $request, $id) {
         $this->setCurrentMenu(1);
 
         $em = $this->getDoctrine()->getManager();
@@ -179,27 +172,21 @@ class SettingsUserController extends Controller
                                                     '%username%' => $user->getUsername()
                                                 )));
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('settings_user_list',
-                                                array(
-                                                    'page' => $page, 'filter' => $filter
-                                                )));
+                return $this->redirect($this->generateUrl('settings_user'));
             }
         }
 
         return array(
-            'form' => $form->createView(), 'id' => $id, 'page' => $page, 'filter' => $filter
+            'form' => $form->createView(), 'id' => $id
         );
     }
 
     /**
-     * @Route("/register/ns/{filter}", name="settings_user_register_noschool", defaults={"filter"="all"})
+     * @Route("/register/ns", name="settings_user_register_noschool")
      * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Template("FastSisdikBundle:SettingsUser:register.ns.html.twig")
      */
-    public function registerNoSchoolAction(Request $request, $filter) {
+    public function registerNoSchoolAction(Request $request) {
         $this->setCurrentMenu(1);
 
         $em = $this->getDoctrine()->getManager();
@@ -233,27 +220,21 @@ class SettingsUserController extends Controller
                                                     '%username%' => $user->getUsername()
                                                 )));
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('settings_user_list',
-                                                array(
-                                                    'filter' => $filter
-                                                )));
+                return $this->redirect($this->generateUrl('settings_user'));
             }
         }
 
         return array(
-            'form' => $form->createView(), 'filter' => $filter,
+            'form' => $form->createView(),
         );
     }
 
     /**
-     * @Route("/register/ws/{filter}", name="settings_user_register_withschool", defaults={"filter"="all"})
+     * @Route("/register/ws", name="settings_user_register_withschool")
      * @Secure(roles="ROLE_ADMIN")
      * @Template("FastSisdikBundle:SettingsUser:register.ws.html.twig")
      */
-    public function registerWithSchoolAction(Request $request, $filter) {
+    public function registerWithSchoolAction(Request $request) {
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->setCurrentMenu(1);
         } else {
@@ -331,13 +312,7 @@ class SettingsUserController extends Controller
                                                 )));
 
                 if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-                    return $this
-                            ->redirect(
-                                    $this
-                                            ->generateUrl('settings_user_list',
-                                                    array(
-                                                        'filter' => $filter
-                                                    )));
+                    return $this->redirect($this->generateUrl('settings_user'));
                 } else {
                     return $this->redirect($this->generateUrl('settings_user_inschool_list'));
                 }
@@ -345,38 +320,38 @@ class SettingsUserController extends Controller
         }
 
         return array(
-            'form' => $form->createView(), 'filter' => $filter,
+            'form' => $form->createView(),
         );
     }
 
     /**
-     * @Route("/delete/{filter}/{id}/{confirmed}", name="settings_user_delete", defaults={"filter"="all","confirmed"=0}, requirements={"id"="\d+"})
+     * @Route("/delete/{id}/{confirmed}", name="settings_user_delete", defaults={"confirmed"=0}, requirements={"id"="\d+"})
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
-    public function deleteAction($id, $filter, $confirmed) {
+    public function deleteAction($id, $confirmed) {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('FastSisdikBundle:User');
         $user = $repository->find($id);
         $username = $user->getUsername();
 
         if ($confirmed == 1) {
-            $this->container->get('fos_user.user_manager')->deleteUser($user);
+            try {
+                $this->container->get('fos_user.user_manager')->deleteUser($user);
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.settings.user.deleted',
-                                            array(
-                                                '%username%' => $username
-                                            )));
+                $this->get('session')->getFlashBag()
+                        ->add('success',
+                                $this->get('translator')
+                                        ->trans('flash.settings.user.deleted',
+                                                array(
+                                                    '%username%' => $username
+                                                )));
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('settings_user_list',
-                                            array(
-                                                'filter' => $filter
-                                            )));
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.delete.restrict');
+                throw new DBALException($message);
+            }
+
+            return $this->redirect($this->generateUrl('settings_user'));
         }
 
         // should be returned to the originated page
@@ -388,71 +363,7 @@ class SettingsUserController extends Controller
                                             '%username%' => $username
                                         )));
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('settings_user_list',
-                                        array(
-                                            'filter' => $filter
-                                        )));
-    }
-
-    /**
-     * @Route("/deletesome/{filter}/{confirmed}", name="settings_user_delete_some", defaults={"filter"="all","confirmed"=0})
-     * @Secure(roles="ROLE_SUPER_ADMIN")
-     */
-    public function deleteManyAction(Request $request, $filter, $confirmed) {
-        if ($request->getMethod() == 'POST') {
-            $checks = $request->get('checks');
-            $wherein = array();
-            if (is_array($checks)) {
-                foreach ($checks as $keys => $values) {
-                    $wherein[] = $keys;
-                }
-
-                $em = $this->getDoctrine()->getManager();
-                $query = $em->createQuery("DELETE FastSisdikBundle:User u WHERE u.id IN (?1)")
-                        ->setParameter(1, $wherein);
-
-                $query->execute();
-                $em->flush();
-
-                $this->get('session')->getFlashBag()
-                        ->add('success', $this->get('translator')->trans('flash.settings.user.some.deleted'));
-
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('settings_user_list',
-                                                array(
-                                                    'filter' => $filter
-                                                )));
-            } else {
-                // better be returned to the originated page
-                $this->get('session')->getFlashBag()
-                        ->add('error', $this->get('translator')->trans('flash.settings.user.fail.noselected'));
-
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('settings_user_list',
-                                                array(
-                                                    'filter' => $filter
-                                                )));
-            }
-        } else {
-            // better be returned to the originated page
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.settings.user.fail.deletesome'));
-
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('settings_user_list',
-                                            array(
-                                                'filter' => $filter
-                                            )));
-        }
+        return $this->redirect($this->generateUrl('settings_user'));
     }
 
     /**
@@ -620,15 +531,21 @@ class SettingsUserController extends Controller
         $username = $user->getUsername();
 
         if ($confirmed == 1) {
-            $this->container->get('fos_user.user_manager')->deleteUser($user);
+            try {
+                $this->container->get('fos_user.user_manager')->deleteUser($user);
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.settings.user.deleted',
-                                            array(
-                                                '%username%' => $username
-                                            )));
+                $this->get('session')->getFlashBag()
+                        ->add('success',
+                                $this->get('translator')
+                                        ->trans('flash.settings.user.deleted',
+                                                array(
+                                                    '%username%' => $username
+                                                )));
+
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.delete.restrict');
+                throw new DBALException($message);
+            }
 
             return $this->redirect($this->generateUrl('settings_user_inschool_list'));
         }
@@ -653,11 +570,5 @@ class SettingsUserController extends Controller
             $menu = $this->get('fast_sisdik.menu.main');
             $menu['headings.setting']['links.user']->setCurrent(true);
         }
-    }
-
-    private function getBreadcrumb() {
-        $menu = $this->get('fast_sisdik.menu.main');
-        $currentitem = $menu['headings.setting']['links.user'];
-        return $currentitem->getBreadcrumbsArray();
     }
 }
