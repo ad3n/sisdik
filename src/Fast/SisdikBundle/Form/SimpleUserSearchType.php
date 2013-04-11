@@ -21,8 +21,8 @@ class SimpleUserSearchType extends AbstractType
         $builder
                 ->add('searchoption', 'choice',
                         array(
-                                'choices' => $this->buildChoices(), 'multiple' => false,
-                                'expanded' => false, 'required' => false,
+                                'choices' => $this->buildChoices(), 'multiple' => false, 'expanded' => false,
+                                'required' => false,
                                 'attr' => array(
                                     'class' => 'large'
                                 ), 'label_render' => false,
@@ -39,8 +39,13 @@ class SimpleUserSearchType extends AbstractType
 
     private function buildChoices() {
         $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:Sekolah')->findAll();
-        $choices = array('' => 'label.all', 'unset' => 'label.unregistered.school');
+        $entities = $em->getRepository('FastSisdikBundle:Sekolah')
+                ->findBy(array(), array(
+                    'nama' => 'ASC'
+                ));
+        $choices = array(
+            '' => 'label.allschool', 'unset' => 'label.unregistered.school'
+        );
         foreach ($entities as $entity) {
             if ($entity instanceof Sekolah) {
                 $choices[$entity->getId()] = $entity->getNama();
