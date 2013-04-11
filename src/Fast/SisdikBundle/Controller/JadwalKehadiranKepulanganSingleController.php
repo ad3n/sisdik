@@ -11,7 +11,7 @@ use Fast\SisdikBundle\Entity\JadwalKehadiranKepulangan;
 use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Controller\SekolahList;
-use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganSearchType;
+use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganSingleSearchType;
 use Fast\SisdikBundle\Form\JadwalKehadiranKepulanganDuplicateType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
@@ -47,7 +47,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $searchform = $this
                 ->createForm(
-                        new JadwalKehadiranKepulanganSearchType($this->container, $sekolah->getId(),
+                        new JadwalKehadiranKepulanganSingleSearchType($this->container, $sekolah->getId(),
                                 $repetition));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
@@ -83,10 +83,12 @@ class JadwalKehadiranKepulanganSingleController extends Controller
                 }
             }
 
-            if ($searchdata['tahunAkademik'] != '' && $searchdata['kelas'] != '' && $searchdata['perulangan'] != '') {
+            if ($searchdata['tahunAkademik'] != '' && $searchdata['kelas'] != ''
+                    && $searchdata['perulangan'] != '') {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), $searchdata['tahunAkademik']->getId(), $searchdata['kelas']->getId(),
-                        $searchdata['perulangan'], $this->getRequest()->getRequestUri());
+                        $sekolah->getId(), $searchdata['tahunAkademik']->getId(),
+                        $searchdata['kelas']->getId(), $searchdata['perulangan'],
+                        $this->getRequest()->getRequestUri());
             } else {
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
                         $sekolah->getId(), null, null, null, $this->getRequest()->getRequestUri());
@@ -104,9 +106,9 @@ class JadwalKehadiranKepulanganSingleController extends Controller
                 $displayresult = true;
 
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), $searchdata['tahunAkademik']->getId(), $searchdata['kelas']->getId(),
-                        $searchdata['perulangan'], $this->getRequest()->getRequestUri(),
-                        $searchdata['mingguanHariKe']);
+                        $sekolah->getId(), $searchdata['tahunAkademik']->getId(),
+                        $searchdata['kelas']->getId(), $searchdata['perulangan'],
+                        $this->getRequest()->getRequestUri(), $searchdata['mingguanHariKe']);
             }
 
             if ($searchdata['perulangan'] == 'bulanan' && array_key_exists('bulananHariKe', $searchdata)) {
@@ -116,9 +118,9 @@ class JadwalKehadiranKepulanganSingleController extends Controller
                 $displayresult = true;
 
                 $duplicatetype = new JadwalKehadiranKepulanganDuplicateType($this->container,
-                        $sekolah->getId(), $searchdata['tahunAkademik']->getId(), $searchdata['kelas']->getId(),
-                        $searchdata['perulangan'], $this->getRequest()->getRequestUri(), null,
-                        $searchdata['bulananHariKe']);
+                        $sekolah->getId(), $searchdata['tahunAkademik']->getId(),
+                        $searchdata['kelas']->getId(), $searchdata['perulangan'],
+                        $this->getRequest()->getRequestUri(), null, $searchdata['bulananHariKe']);
             }
 
             $duplicateform = $this->createForm($duplicatetype);
@@ -127,7 +129,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         // recreate form
         $searchform = $this
                 ->createForm(
-                        new JadwalKehadiranKepulanganSearchType($this->container, $sekolah->getId(),
+                        new JadwalKehadiranKepulanganSingleSearchType($this->container, $sekolah->getId(),
                                 $searchdata['perulangan']), $data);
 
         $paginator = $this->get('knp_paginator');
