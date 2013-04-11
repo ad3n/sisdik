@@ -3,6 +3,7 @@ leader: Ketua
 paidoff: lunas
 
 label:
+    allschool: Semua Sekolah
     unregistered.school: Tak Teregister
     applicant.recorded: Pendaftar Tercatat
     registrationfee.firstpay: Pertama Kali Bayar Biaya Pendaftaran
@@ -45,6 +46,7 @@ label:
     search.notpaid: belum bayar
     search.paymentnotcomplete: belum lunas
     searchkey.name: Nama
+    searchkey.statusname: Nama Status
     name.parent.or.guardian: Nama Orang Tua/Wali
     application.number: Nomor Pendaftaran
     username.undefined: tak-terdefinisi
@@ -425,10 +427,10 @@ flash:
             fail.delete: Template SMS '%name%' gagal dihapus
     presence:
         status:
-            inserted: Status Kehadiran '%name%' di sekolah '%school%' berhasil dibuat
-            updated: Status Kehadiran '%name%' di sekolah '%school%' berhasil diperbarui
-            deleted: Status Kehadiran '%name%' di sekolah '%school%' berhasil dihapus
-            fail.delete: Status Kehadiran '%name%' di sekolah '%school%' gagal dihapus
+            inserted: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' berhasil dibuat
+            updated: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' berhasil diperbarui
+            deleted: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' berhasil dihapus
+            fail.delete: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' gagal dihapus
         schedule:
             inserted: Jadwal Kehadiran/Kepulangan berhasil dibuat
             updated: Jadwal Kehadiran/Kepulangan berhasil diperbarui
@@ -524,7 +526,7 @@ confirm.drop:
     admissiongroup: Hapus Gelombang Penerimaan '%admission%' (%code%)?
     year: Hapus Tahun '%year%'?
     sms.template: Hapus Template SMS '%name%'?
-    presence.status: Hapus Status Kehadiran '%name%'?
+    presence.status: Hapus Status Kehadiran/Kepulangan '%name%' sekolah '%school%'?
     presence.schedule: Hapus Jadwal Kehadiran/Kepulangan?
     placement: Hapus Node Penjurusan '%node%'?
     student: Hapus siswa '%student%'?

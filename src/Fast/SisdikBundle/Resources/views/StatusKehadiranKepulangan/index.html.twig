@@ -3,13 +3,24 @@
 {% block page_heading %}{% trans from "headings" %}presence.status.list{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
 <div class="filter-section">
-    {%- for key, value in schools -%}
-    <a class="{% if key == filter %}current{% endif %}" href="{{ path('presence_status_list', {'filter': key}) }}">{{ value }}</a>{% if not loop.last %} | {% endif %}
-    {%- endfor -%}
+    <div style="padding-top: 1em;">
+        <form method="GET" action="{{ path('presence_status') }}" class="form-search form-inline">
+            {{ form_widget(form) }}
+            <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+            <button class="btn" type="reset" onclick="window.location.href='{{ path('presence_status') }}'">{{ 'label.reset'|trans }}</button>
+        </form>
+    </div>
 </div>
 
-<div class="clearfix" style="margin-top: 1em;"></div>
+<div class="clearfix"></div>
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}

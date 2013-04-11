@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\StatusKehadiranKepulanganSearchType;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -10,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\StatusKehadiranKepulangan;
 use Fast\SisdikBundle\Form\StatusKehadiranKepulanganType;
 use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Controller\SekolahList;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -25,44 +25,37 @@ class StatusKehadiranKepulanganController extends Controller
      * route to list
      *
      * @Route("/", name="presence_status")
-     */
-    public function indexAction() {
-        return $this->redirect($this->generateUrl('presence_status_list'));
-    }
-
-    /**
-     * Lists all StatusKehadiranKepulangan entities, filtered by school
-     *
-     * @Route("/list/{filter}", name="presence_status_list", defaults={"filter"="all"})
      * @Template()
      */
-    public function listAction($filter) {
-        $this->setCurrentMenu();
-
+    public function indexAction() {
         $em = $this->getDoctrine()->getManager();
 
-        if ($filter == 'all') {
-            $query = $em
-                    ->createQuery(
-                            "SELECT t FROM FastSisdikBundle:StatusKehadiranKepulangan t
-                            JOIN t.sekolah t1
-                            ORDER BY t1.nama ASC, t.nama ASC");
-        } else {
-            $query = $em
-                    ->createQuery(
-                            "SELECT t FROM FastSisdikBundle:StatusKehadiranKepulangan t
-                            JOIN t.sekolah t1
-                            WHERE t.sekolah = '$filter'
-                            ORDER BY t.nama ASC");
+        $searchform = $this->createForm(new StatusKehadiranKepulanganSearchType($this->container));
+
+        $querybuilder = $em->createQueryBuilder()->select('t')
+                ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->leftJoin('t.sekolah', 't2')
+                ->orderBy('t2.nama', 'ASC')->addOrderBy('t.nama', 'ASC');
+
+        $searchform->bind($this->getRequest());
+        if ($searchform->isValid()) {
+            $searchdata = $searchform->getData();
+
+            if ($searchdata['searchoption'] != '') {
+                $querybuilder->andWhere("t.sekolah = :sekolah");
+                $querybuilder->setParameter(':sekolah', $searchdata['searchoption']);
+            }
+
+            if ($searchdata['searchkey'] != '') {
+                $querybuilder->andWhere('t.nama LIKE ?1');
+                $querybuilder->setParameter(1, "%{$searchdata['searchkey']}%");
+            }
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($query, $this->getRequest()->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        $sekolahlist = new SekolahList($this->container);
         return array(
-                'pagination' => $pagination,
-                'schools' => $sekolahlist->buildSekolahStatusKehadiranKepulanganList(), 'filter' => $filter,
+            'pagination' => $pagination, 'form' => $searchform->createView(),
         );
     }
 
