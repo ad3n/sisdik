@@ -98,6 +98,6 @@ class ProfileFormType extends BaseType
     }
 
     public function getName() {
-        return 'fast_user_profile';
+        return 'fast_sisdikbundle_profile';
     }
 }

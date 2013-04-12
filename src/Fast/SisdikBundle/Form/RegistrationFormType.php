@@ -40,6 +40,6 @@ class RegistrationFormType extends BaseType
     }
 
     public function getName() {
-        return 'fast_user_registration';
+        return 'fast_sisdikbundle_registration';
     }
 }

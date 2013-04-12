@@ -35,29 +35,29 @@ services:
         tags:
             - { name: knp_menu.voter }
 
-    fast_user.registration.form.type:
+    fast_sisdik.registration.form.type:
         class: Fast\SisdikBundle\Form\RegistrationFormType
         arguments: [%fos_user.model.user.class%]
         tags:
-            - { name: form.type, alias: fast_user_registration }
+            - { name: form.type, alias: fast_sisdikbundle_registration }
 
-    fast_user.profile.form.type:
+    fast_sisdik.profile.form.type:
         class: Fast\SisdikBundle\Form\ProfileFormType
         arguments: ["@service_container", %fos_user.model.user.class%]
         tags:
-            - { name: form.type, alias: fast_user_profile }
+            - { name: form.type, alias: fast_sisdikbundle_profile }
 
-    fast_setting.user.form.type:
-        class: Fast\SisdikBundle\Form\UserFormType
-        arguments: ["@service_container"]
-        tags:
-            - { name: form.type, alias: fast_setting_user }
-
-    fast_setting.user.register.form.type:
-        class: Fast\SisdikBundle\Form\UserRegisterFormType
-        arguments: ["@service_container"]
-        tags:
-            - { name: form.type, alias: fast_setting_user_register }
+#    fast_sisdik.setting.user.form.type:
+#        class: Fast\SisdikBundle\Form\UserFormType
+#        arguments: ["@service_container"]
+#        tags:
+#            - { name: form.type, alias: fast_setting_user }
+#
+#    fast_sisdik.setting.user.register.form.type:
+#        class: Fast\SisdikBundle\Form\UserRegisterFormType
+#        arguments: ["@service_container"]
+#        tags:
+#            - { name: form.type, alias: fast_setting_user_register }
 
     bcc.twig.extension:
         class: BCC\ExtraToolsBundle\Twig\TwigExtension

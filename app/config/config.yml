@@ -79,10 +79,10 @@ fos_user:
     user_class: Fast\SisdikBundle\Entity\User
     registration:
         form:
-            type: fast_user_registration
+            type: fast_sisdikbundle_registration
     profile:
         form:
-            type: fast_user_profile
+            type: fast_sisdikbundle_profile
 
 knp_menu:
     twig:
