@@ -44,7 +44,7 @@ class SimpleUserSearchType extends AbstractType
                     'nama' => 'ASC'
                 ));
         $choices = array(
-            '' => 'label.allschool', 'unset' => 'label.unregistered.school'
+            '' => 'label.all', 'unset' => 'label.unregistered.school'
         );
         foreach ($entities as $entity) {
             if ($entity instanceof Sekolah) {
