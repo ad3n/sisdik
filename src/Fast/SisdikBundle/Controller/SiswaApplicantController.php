@@ -1,6 +1,9 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Util\Messenger;
+use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Fast\SisdikBundle\Entity\PilihanLayananSms;
 use Fast\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
@@ -182,6 +185,75 @@ class SiswaApplicantController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
+                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                        ->findBy(
+                                array(
+                                    'sekolah' => $sekolah, 'jenisLayanan' => 'a-pendaftaran-tercatat',
+                                ));
+
+                foreach ($pilihanLayananSms as $pilihan) {
+                    if ($pilihan instanceof PilihanLayananSms) {
+                        if ($pilihan->getStatus()) {
+                            $layananSmsPendaftaran = $em
+                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->findBy(
+                                            array(
+                                                    'sekolah' => $sekolah,
+                                                    'jenisLayanan' => 'a-pendaftaran-tercatat'
+                                            ));
+                            foreach ($layananSmsPendaftaran as $layanan) {
+                                if ($layanan instanceof LayananSmsPendaftaran) {
+                                    $tekstemplate = $layanan->getTemplatesms()->getTeks();
+
+                                    $namaOrtuWali = "";
+                                    $ponselOrtuWali = "";
+                                    foreach ($entity->getOrangtuaWali() as $orangtuaWali) {
+                                        if ($orangtuaWali instanceof OrangtuaWali) {
+                                            if ($orangtuaWali->getAktif()) {
+                                                $namaOrtuWali = $orangtuaWali->getNama();
+                                                $ponselOrtuWali = $orangtuaWali->getPonsel();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali,
+                                            $tekstemplate);
+                                    $tekstemplate = str_replace("%nama-calonsiswa%",
+                                            $entity->getNamaLengkap(), $tekstemplate);
+
+                                    if ($ponselOrtuWali != "") {
+                                        $messenger = $this->get('fast_sisdik.messenger');
+                                        if ($messenger instanceof Messenger) {
+                                            $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                            foreach ($nomorponsel as $ponsel) {
+
+                                                $messenger->setPhoneNumber($ponsel);
+                                                $messenger->setMessage($tekstemplate);
+
+                                                $logid = $messenger->setLogEntry();
+                                                // $logid = 0; // for debugging
+
+                                                $dlrurl = "http://" . $this->getRequest()->getHost()
+                                                        . $this
+                                                                ->generateUrl(
+                                                                        "localapi_logsmskeluar_dlr_update",
+                                                                        array(
+                                                                                'logid' => $logid,
+                                                                                'status' => "%d",
+                                                                                'time' => "%T"
+                                                                        ));
+                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
+
+                                                $messenger->sendMessage();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
@@ -192,7 +264,7 @@ class SiswaApplicantController extends Controller
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.applicant');
-                throw new DBALException($message);
+                throw new DBALException($message . $e);
             }
 
             return $this

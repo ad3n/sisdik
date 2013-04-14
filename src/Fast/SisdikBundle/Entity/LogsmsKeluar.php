@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
+use Symfony\Component\Config\Definition\IntegerNode;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -36,9 +37,9 @@ class LogsmsKeluar
     private $teks;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="dlr", type="boolean", nullable=true)
+     * @ORM\Column(name="dlr", type="smallint", nullable=true)
      */
     private $dlr;
 
@@ -49,15 +50,12 @@ class LogsmsKeluar
      */
     private $dlrtime;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -67,8 +65,7 @@ class LogsmsKeluar
      * @param string $ke
      * @return LogsmsKeluar
      */
-    public function setKe($ke)
-    {
+    public function setKe($ke) {
         $this->ke = $ke;
 
         return $this;
@@ -77,10 +74,9 @@ class LogsmsKeluar
     /**
      * Get ke
      *
-     * @return string 
+     * @return string
      */
-    public function getKe()
-    {
+    public function getKe() {
         return $this->ke;
     }
 
@@ -90,8 +86,7 @@ class LogsmsKeluar
      * @param string $teks
      * @return LogsmsKeluar
      */
-    public function setTeks($teks)
-    {
+    public function setTeks($teks) {
         $this->teks = $teks;
 
         return $this;
@@ -100,21 +95,19 @@ class LogsmsKeluar
     /**
      * Get teks
      *
-     * @return string 
+     * @return string
      */
-    public function getTeks()
-    {
+    public function getTeks() {
         return $this->teks;
     }
 
     /**
      * Set dlr
      *
-     * @param boolean $dlr
+     * @param integer $dlr
      * @return LogsmsKeluar
      */
-    public function setDlr($dlr)
-    {
+    public function setDlr($dlr) {
         $this->dlr = $dlr;
 
         return $this;
@@ -123,10 +116,9 @@ class LogsmsKeluar
     /**
      * Get dlr
      *
-     * @return boolean 
+     * @return integer
      */
-    public function getDlr()
-    {
+    public function getDlr() {
         return $this->dlr;
     }
 
@@ -136,8 +128,7 @@ class LogsmsKeluar
      * @param \DateTime $dlrtime
      * @return LogsmsKeluar
      */
-    public function setDlrtime($dlrtime)
-    {
+    public function setDlrtime($dlrtime) {
         $this->dlrtime = $dlrtime;
 
         return $this;
@@ -146,10 +137,9 @@ class LogsmsKeluar
     /**
      * Get dlrtime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getDlrtime()
-    {
+    public function getDlrtime() {
         return $this->dlrtime;
     }
 }

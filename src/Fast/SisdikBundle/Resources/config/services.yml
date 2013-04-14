@@ -69,3 +69,7 @@ services:
         tags:
             - { name: twig.extension }
 
+    fast_sisdik.messenger:
+        class:        Fast\SisdikBundle\Util\Messenger
+        arguments:    ["@doctrine.orm.default_entity_manager", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%"]
+

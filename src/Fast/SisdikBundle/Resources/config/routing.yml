@@ -217,4 +217,11 @@ smspendaftaran:
     prefix:   /
 
 
+# local APIs ---------------------------------------------------------------------------------- #
+localapi_logsmskeluar:
+    resource: "@FastSisdikBundle/Controller/LocalAPILogsmsKeluarController.php"
+    type:     annotation
+    prefix:   /
 
+
+# end of local APIs ---------------------------------------------------------------------------------- #
