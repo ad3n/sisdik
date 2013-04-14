@@ -62,10 +62,10 @@ class PilihanLayananSms
      */
     public static function getDaftarLayanan() {
         return array(
-                '1-pendaftaran-tercatat' => 'Pendaftar tercatat di sistem',
-                '2-pendaftaran-bayar-pertama' => 'Pendaftar pertama kali membayar biaya pendaftaran',
-                '3-pendaftaran-bayar' => 'Pendaftar membayar biaya pendaftaran',
-                '4-pendaftaran-bayar-lunas' => 'Calon siswa atau siswa lunas membayar biaya pendaftaran',
+                'a-pendaftaran-tercatat' => 'Pendaftar tercatat di database',
+                'b-pendaftaran-bayar-pertama' => 'Pertama kali membayar biaya pendaftaran',
+                'c-pendaftaran-bayar' => 'Membayar biaya pendaftaran',
+                'd-pendaftaran-bayar-lunas' => 'Lunas biaya pendaftaran',
         );
     }
 

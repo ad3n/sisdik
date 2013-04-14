@@ -270,7 +270,7 @@ class PilihanLayananSmsController extends Controller
             $this->get('session')->getFlashBag()
                     ->add('error',
                             $this->get('translator')
-                                    ->trans('flash.layanan.gagal.dihapus',
+                                    ->trans('flash.layanansms.gagal.dihapus',
                                             array(
                                                 '%sekolah%' => $entity->getSekolah()->getNama()
                                             )));
