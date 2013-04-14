@@ -61,9 +61,9 @@ class Builder extends AbstractNavbarMenuBuilder
                                     'route' => 'settings_school_list'
                                 ));
                 $settings
-                        ->addChild('links.sendmessageoptions',
+                        ->addChild('links.layanansms',
                                 array(
-                                    'route' => 'sendmessageoptions'
+                                    'route' => 'layanansms'
                                 ));
             }
 

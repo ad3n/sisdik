@@ -175,11 +175,11 @@ parentguard:
     creation: Menambah Data Orang Tua/Wali
     detail: Detail Data Orang Tua/Wali
 
-sendmessage.options:
-    list: Pengaturan Pilihan Kirim SMS
-    edit: Mengubah Pilihan Kirim SMS
-    creation: Membuat Pilihan Kirim SMS
-    detail: Detail Pilihan Kirim SMS
+layanansms:
+    daftar: Daftar Pilihan Layanan SMS
+    edit: Mengubah Pilihan Layanan SMS
+    pembuatan: Membuat Pilihan Layanan SMS
+    detail: Detail Pilihan Layanan SMS
 
 
 

@@ -1,0 +1,31 @@
+PilihanLayananSms:
+    type: entity
+    table: pilihan_layanan_sms
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        jenisLayanan:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+            column: jenis_layanan
+        status:
+            type: boolean
+            nullable: true
+    manyToOne:
+        sekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sekolah_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
