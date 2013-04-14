@@ -264,7 +264,7 @@ class SiswaApplicantController extends Controller
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.applicant');
-                throw new DBALException($message . $e);
+                throw new DBALException($message);
             }
 
             return $this
