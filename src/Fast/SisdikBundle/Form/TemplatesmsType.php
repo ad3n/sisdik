@@ -20,12 +20,14 @@ class TemplatesmsType extends AbstractType
         $builder
                 ->add('nama', null,
                         array(
+                                'required' => true,
                                 'attr' => array(
-                                    'class' => 'small'
+                                    'class' => 'medium'
                                 )
                         ))
                 ->add('teks', 'textarea',
                         array(
+                                'required' => true,
                                 'attr' => array(
                                     'class' => 'xlarge', 'rows' => 6
                                 )
@@ -42,15 +44,13 @@ class TemplatesmsType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
+                    ->where('t.id = :sekolah')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('sekolah', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
+                                    'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                             ));
