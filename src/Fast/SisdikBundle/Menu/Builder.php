@@ -109,6 +109,12 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'sms_template'
                             ));
 
+            $settings
+                    ->addChild('links.smspendaftaran',
+                            array(
+                                'route' => 'smspendaftaran'
+                            ));
+
         }
 
         if ($securityContext

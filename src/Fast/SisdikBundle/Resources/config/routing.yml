@@ -211,5 +211,10 @@ layanansms:
     type:     annotation
     prefix:   /
 
+smspendaftaran:
+    resource: "@FastSisdikBundle/Controller/LayananSmsPendaftaranController.php"
+    type:     annotation
+    prefix:   /
+
 
 

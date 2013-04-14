@@ -1,0 +1,41 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}smspendaftaran.daftar{% endtrans %}{% endblock %}
+
+{% block content %}
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('smspendaftaran_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.smspendaftaran.tambah'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th class="{% if pagination.isSorted('t.jenisLayanan') %}sorted{% endif %}">
+    		    {{ knp_pagination_sortable(pagination, 'label.layanansms.jenis'|trans, 't.jenisLayanan') }}
+    	    </th>
+    		<th>{{ 'label.sms.template.entry'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.layanansms.jenis'|trans }}">{{ daftarJenisLayanan[data.jenisLayanan] }}</td>
+    		<td data-title="{{ 'label.sms.template.entry'|trans }}">{{ data.templatesms.nama }} &raquo; {{ data.templatesms.teks }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('smspendaftaran_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('smspendaftaran_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}

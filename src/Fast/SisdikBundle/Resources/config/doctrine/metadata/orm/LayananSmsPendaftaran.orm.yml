@@ -1,0 +1,37 @@
+LayananSmsPendaftaran:
+    type: entity
+    table: layanan_sms_pendaftaran
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        jenisLayanan:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+            column: jenis_layanan
+    manyToOne:
+        sekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sekolah_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        templatesms:
+            targetEntity: Templatesms
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                templatesms_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

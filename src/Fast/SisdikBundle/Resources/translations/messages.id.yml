@@ -316,6 +316,8 @@ label:
         tambah: Tambah Pilihan Layanan SMS
         jenis: Jenis Layanan
         entri: Layanan
+    smspendaftaran:
+        tambah: Tambah Pengaturan SMS Pendaftaran
 
 link:
     backtolist: « Kembali ke Daftar
@@ -336,6 +338,16 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    smspendaftaran:
+        tersimpan: Pengaturan SMS Pendaftaran berhasil disimpan
+        terbarui: Pengaturan SMS Pendaftaran berhasil diperbarui
+        terhapus: Pengaturan SMS Pendaftaran berhasil dihapus
+        gagal.dihapus: Pengaturan SMS Pendaftaran gagal dihapus
+    layanansms:
+        tersimpan: Pilihan Layanan SMS sekolah %sekolah% berhasil ditambah
+        terbarui: Pilihan Layanan SMS sekolah %sekolah% berhasil diperbarui
+        terhapus: Pilihan Layanan SMS sekolah %sekolah% berhasil dihapus
+        gagal.dihapus: Pilihan Layanan SMS sekolah %sekolah% gagal dihapus
     profile:
         updated: Profil berhasil diperbarui
     settings:
@@ -492,11 +504,6 @@ flash:
             fail.insert: Data Pembayaran Pendaftaran gagal ditambah. Perbaiki input form pembayaran.
             mortgage.updated: Data cicilan Pembayaran Pendaftaran berhasil diperbarui
             mortgage.fail.insert: Data cicilan Pembayaran Pendaftaran gagal ditambah. Perbaiki input form.
-    layanansms:
-        tersimpan: Pilihan Layanan SMS sekolah %sekolah% berhasil ditambah
-        terbarui: Pilihan Layanan SMS sekolah %sekolah% berhasil diperbarui
-        terhapus: Pilihan Layanan SMS sekolah %sekolah% berhasil dihapus
-        gagal.dihapus: Pilihan Layanan SMS sekolah %sekolah% gagal dihapus
 
 tip:
     edit: Ubah
@@ -517,6 +524,8 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    smspendaftaran: Hapus Pengaturan SMS Pendaftaran?
+    layanansms: Hapus Pilihan Layanan SMS sekolah %sekolah%?
     user: Hapus user '%username%'?
     someusers: Hapus user-user terpilih?\nKlik OK jika benar-benar yakin, karena aksi ini tidak dapat dibatalkan.
     school: Hapus Sekolah '%schoolname%'?
@@ -543,7 +552,6 @@ confirm.drop:
     registration.committee: Hapus Panitia Pendaftaran tahun %year%?
     applicant: Hapus calon siswa %name%?
     parentguard: Hapus Orang Tua/Wali %name%, dari siswa %studentname%?
-    layanansms: Hapus Pilihan Layanan SMS sekolah %sekolah%?
 
 alt:
     add: ikon tambah
@@ -555,6 +563,8 @@ alt:
     student.generate.username: buat username
 
 exception:
+    unik.smspendaftaran: Jenis Layanan yang dipilih sudah digunakan
+    unik.layanansms: Layanan SMS yang dipilih sudah tersedia untuk sekolah yang dipilih
     useadmin: gunakan user admin sekolah untuk mengakses ini
     useadmin.or.headmaster: gunakan user admin atau kepala sekolah untuk mengakses ini
     limitedtoadmin: modul ini terbatas hanya untuk admin sekolah
@@ -589,7 +599,6 @@ exception:
     unique.printreceiptsoption: Tidak bisa menyimpan pilihan cetak. Sudah ada data pilihan di dalam sistem.
     directprint.file: Error ketika membuat file untuk cetak langsung
     open.file.pdf: Error ketika membuat file pdf
-    unik.layanansms: Layanan SMS yang dipilih sudah tersedia untuk sekolah yang dipilih
 
 shortinfo:
     password.mustequal: password harus sama

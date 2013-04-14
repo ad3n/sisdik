@@ -181,6 +181,12 @@ layanansms:
     pembuatan: Membuat Pilihan Layanan SMS
     detail: Detail Pilihan Layanan SMS
 
+smspendaftaran:
+    daftar: Daftar SMS Pendaftaran
+    edit: Mengubah SMS Pendaftaran
+    pembuatan: Menentukan SMS Pendaftaran
+    detail: Detail SMS Pendaftaran
+
 
 
 
