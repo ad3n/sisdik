@@ -3,7 +3,6 @@
 namespace Fast\SisdikBundle\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Filesystem\Exception\IOException;
-use BCC\ExtraToolsBundle\Util\DateFormatter;
 use Fast\SisdikBundle\Util\EscapeCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -703,9 +702,9 @@ class PembayaranPendaftaranController extends Controller
 
             $tanggal = $translator->trans('date', array(), 'printing');
             $spasi = str_repeat(" ", ($labelwidth2 - strlen($tanggal)));
-            $formatter = new DateFormatter();
+            $dateFormatter = $this->get('bcc_extra_tools.date_formatter');
             $barisTanggal = $tanggal . $spasi . ": "
-                    . $formatter->format($transaksi->getWaktuSimpan(), 'long');
+                    . $dateFormatter->format($transaksi->getWaktuSimpan(), 'long');
 
             $nomorpendaftaran = $translator->trans('applicationnum', array(), 'printing');
             $spasi = str_repeat(" ", ($labelwidth1 - strlen($nomorpendaftaran)));
