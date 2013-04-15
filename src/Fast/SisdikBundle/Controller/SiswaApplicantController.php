@@ -216,10 +216,15 @@ class SiswaApplicantController extends Controller
                                             }
                                         }
                                     }
+
                                     $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali,
                                             $tekstemplate);
                                     $tekstemplate = str_replace("%nama-calonsiswa%",
                                             $entity->getNamaLengkap(), $tekstemplate);
+                                    $tekstemplate = str_replace("%tahun%", $entity->getTahun()->getTahun(),
+                                            $tekstemplate);
+                                    $tekstemplate = str_replace("%gelombang%",
+                                            $entity->getGelombang()->getNama(), $tekstemplate);
 
                                     if ($ponselOrtuWali != "") {
                                         $messenger = $this->get('fast_sisdik.messenger');
