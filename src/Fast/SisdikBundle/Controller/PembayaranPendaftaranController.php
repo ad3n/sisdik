@@ -461,7 +461,6 @@ class PembayaranPendaftaranController extends Controller
             }
 
             if ($totalPayment == $payableAmountDiscounted) {
-                // TODO kirim sms pemberitahuan lunas
                 $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
@@ -796,7 +795,6 @@ class PembayaranPendaftaranController extends Controller
 
             if ($totalPayment == $payableAmountDiscounted) {
                 $siswa->setLunasBiayaPendaftaran(true);
-                // TODO kirim sms pemberitahuan lunas
             }
 
             // print("\$totalPayment: $totalPayment<br />");
@@ -903,7 +901,6 @@ class PembayaranPendaftaranController extends Controller
             }
 
             if ($totalPayment == $payableAmountDiscounted) {
-                // TODO kirim sms pemberitahuan lunas
                 $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
