@@ -1,6 +1,10 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Util\Messenger;
+use Fast\SisdikBundle\Entity\OrangtuaWali;
+use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Fast\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Fast\SisdikBundle\Util\EscapeCommand;
@@ -281,6 +285,262 @@ class PembayaranPendaftaranController extends Controller
             }
             $em->flush();
 
+            if ($jumlahItemBiayaTerbayar == 0) {
+                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                        ->findBy(
+                                array(
+                                    'sekolah' => $sekolah, 'jenisLayanan' => 'b-pendaftaran-bayar-pertama',
+                                ));
+
+                foreach ($pilihanLayananSms as $pilihan) {
+                    if ($pilihan instanceof PilihanLayananSms) {
+                        if ($pilihan->getStatus()) {
+                            $layananSmsPendaftaran = $em
+                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->findBy(
+                                            array(
+                                                    'sekolah' => $sekolah,
+                                                    'jenisLayanan' => 'b-pendaftaran-bayar-pertama'
+                                            ));
+                            foreach ($layananSmsPendaftaran as $layanan) {
+                                if ($layanan instanceof LayananSmsPendaftaran) {
+                                    $tekstemplate = $layanan->getTemplatesms()->getTeks();
+
+                                    $namaOrtuWali = "";
+                                    $ponselOrtuWali = "";
+                                    foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
+                                        if ($orangtuaWali instanceof OrangtuaWali) {
+                                            if ($orangtuaWali->getAktif()) {
+                                                $namaOrtuWali = $orangtuaWali->getNama();
+                                                $ponselOrtuWali = $orangtuaWali->getPonsel();
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    $tekstemplate = str_replace("%nama-pendaftar%", $siswa->getNamaLengkap(),
+                                            $tekstemplate);
+                                    $tekstemplate = str_replace("%nomor-pendaftaran%",
+                                            $siswa->getNomorPendaftaran(), $tekstemplate);
+                                    $tekstemplate = str_replace("%tahun%", $siswa->getTahun()->getTahun(),
+                                            $tekstemplate);
+                                    $tekstemplate = str_replace("%gelombang%",
+                                            $siswa->getGelombang()->getNama(), $tekstemplate);
+
+                                    if ($ponselOrtuWali != "") {
+                                        $messenger = $this->get('fast_sisdik.messenger');
+                                        if ($messenger instanceof Messenger) {
+                                            $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                            foreach ($nomorponsel as $ponsel) {
+
+                                                $messenger->setPhoneNumber($ponsel);
+                                                $messenger->setMessage($tekstemplate);
+
+                                                $logid = $messenger->setLogEntry();
+                                                // $logid = 0; // for debugging
+
+                                                $dlrurl = "http://" . $this->getRequest()->getHost()
+                                                        . $this
+                                                                ->generateUrl(
+                                                                        "localapi_logsmskeluar_dlr_update",
+                                                                        array(
+                                                                                'logid' => $logid,
+                                                                                'status' => "%d",
+                                                                                'time' => "%T"
+                                                                        ));
+                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
+
+                                                $messenger->sendMessage();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                    ->findBy(
+                            array(
+                                'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar',
+                            ));
+
+            foreach ($pilihanLayananSms as $pilihan) {
+                if ($pilihan instanceof PilihanLayananSms) {
+                    if ($pilihan->getStatus()) {
+                        $layananSmsPendaftaran = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                ->findBy(
+                                        array(
+                                            'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar'
+                                        ));
+                        foreach ($layananSmsPendaftaran as $layanan) {
+                            if ($layanan instanceof LayananSmsPendaftaran) {
+                                $tekstemplate = $layanan->getTemplatesms()->getTeks();
+
+                                $namaOrtuWali = "";
+                                $ponselOrtuWali = "";
+                                foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
+                                    if ($orangtuaWali instanceof OrangtuaWali) {
+                                        if ($orangtuaWali->getAktif()) {
+                                            $namaOrtuWali = $orangtuaWali->getNama();
+                                            $ponselOrtuWali = $orangtuaWali->getPonsel();
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                $tekstemplate = str_replace("%nama-pendaftar%", $siswa->getNamaLengkap(),
+                                        $tekstemplate);
+
+                                $nomorTransaksi = "";
+                                $em->refresh($entity);
+                                foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
+                                    if ($transaksi instanceof TransaksiPembayaranPendaftaran) {
+                                        $em->refresh($transaksi);
+                                        $nomorTransaksi = $transaksi->getNomorTransaksi();
+                                    }
+                                }
+                                $tekstemplate = str_replace("%nomor-kwitansi%", $nomorTransaksi,
+                                        $tekstemplate);
+
+                                $counter = 1;
+                                $daftarBiayaPendaftaranDibayar = array();
+                                foreach ($entity->getDaftarBiayaPendaftaran() as $biayaPendaftaran) {
+                                    $biaya = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                                            ->find($biayaPendaftaran);
+                                    if ($counter > 3) {
+                                        $daftarBiayaPendaftaranDibayar[] = $this->get('translator')
+                                                ->trans('dll');
+                                        break;
+                                    }
+                                    $daftarBiayaPendaftaranDibayar[] = $biaya->getJenisbiaya()->getNama();
+                                    $counter++;
+                                }
+                                $tekstemplate = str_replace("%daftar-biaya%",
+                                        (implode(", ", $daftarBiayaPendaftaranDibayar)), $tekstemplate);
+
+                                $formatter = new \NumberFormatter($this->container->getParameter('locale'),
+                                        \NumberFormatter::CURRENCY);
+                                $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+                                $tekstemplate = str_replace("%besar-pembayaran%",
+                                        $symbol . ". " . number_format($currentPaymentAmount, 0, ',', '.'),
+                                        $tekstemplate);
+
+                                if ($ponselOrtuWali != "") {
+                                    $messenger = $this->get('fast_sisdik.messenger');
+                                    if ($messenger instanceof Messenger) {
+                                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                        foreach ($nomorponsel as $ponsel) {
+
+                                            $messenger->setPhoneNumber($ponsel);
+                                            $messenger->setMessage($tekstemplate);
+
+                                            $logid = $messenger->setLogEntry();
+                                            // $logid = 0; // for debugging
+
+                                            $dlrurl = "http://" . $this->getRequest()->getHost()
+                                                    . $this
+                                                            ->generateUrl(
+                                                                    "localapi_logsmskeluar_dlr_update",
+                                                                    array(
+                                                                            'logid' => $logid,
+                                                                            'status' => "%d", 'time' => "%T"
+                                                                    ));
+                                            $messenger->setDeliveryReportURL(urldecode($dlrurl));
+
+                                            $messenger->sendMessage();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($totalPayment == $payableAmountDiscounted) {
+                // TODO kirim sms pemberitahuan lunas
+                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                        ->findBy(
+                                array(
+                                    'sekolah' => $sekolah, 'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
+                                ));
+
+                foreach ($pilihanLayananSms as $pilihan) {
+                    if ($pilihan instanceof PilihanLayananSms) {
+                        if ($pilihan->getStatus()) {
+                            $layananSmsPendaftaran = $em
+                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->findBy(
+                                            array(
+                                                    'sekolah' => $sekolah,
+                                                    'jenisLayanan' => 'd-pendaftaran-bayar-lunas'
+                                            ));
+                            foreach ($layananSmsPendaftaran as $layanan) {
+                                if ($layanan instanceof LayananSmsPendaftaran) {
+                                    $tekstemplate = $layanan->getTemplatesms()->getTeks();
+
+                                    $namaOrtuWali = "";
+                                    $ponselOrtuWali = "";
+                                    foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
+                                        if ($orangtuaWali instanceof OrangtuaWali) {
+                                            if ($orangtuaWali->getAktif()) {
+                                                $namaOrtuWali = $orangtuaWali->getNama();
+                                                $ponselOrtuWali = $orangtuaWali->getPonsel();
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali,
+                                            $tekstemplate);
+                                    $tekstemplate = str_replace("%nama-pendaftar%", $siswa->getNamaLengkap(),
+                                            $tekstemplate);
+
+                                    $formatter = new \NumberFormatter(
+                                            $this->container->getParameter('locale'),
+                                            \NumberFormatter::CURRENCY);
+                                    $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+                                    $tekstemplate = str_replace("%total-pembayaran%",
+                                            $symbol . ". " . number_format($totalPayment, 0, ',', '.'),
+                                            $tekstemplate);
+
+                                    if ($ponselOrtuWali != "") {
+                                        $messenger = $this->get('fast_sisdik.messenger');
+                                        if ($messenger instanceof Messenger) {
+                                            $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                            foreach ($nomorponsel as $ponsel) {
+
+                                                $messenger->setPhoneNumber($ponsel);
+                                                $messenger->setMessage($tekstemplate);
+
+                                                $logid = $messenger->setLogEntry();
+                                                // $logid = 0; // for debugging
+
+                                                $dlrurl = "http://" . $this->getRequest()->getHost()
+                                                        . $this
+                                                                ->generateUrl(
+                                                                        "localapi_logsmskeluar_dlr_update",
+                                                                        array(
+                                                                                'logid' => $logid,
+                                                                                'status' => "%d",
+                                                                                'time' => "%T"
+                                                                        ));
+                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
+
+                                                $messenger->sendMessage();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             $this->get('session')->getFlashBag()
                     ->add('success', $this->get('translator')->trans('flash.payment.registration.inserted'));
 
@@ -536,6 +796,7 @@ class PembayaranPendaftaranController extends Controller
 
             if ($totalPayment == $payableAmountDiscounted) {
                 $siswa->setLunasBiayaPendaftaran(true);
+                // TODO kirim sms pemberitahuan lunas
             }
 
             // print("\$totalPayment: $totalPayment<br />");
@@ -548,6 +809,180 @@ class PembayaranPendaftaranController extends Controller
             $em->persist($siswa);
 
             $em->flush();
+
+            $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                    ->findBy(
+                            array(
+                                'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar',
+                            ));
+
+            foreach ($pilihanLayananSms as $pilihan) {
+                if ($pilihan instanceof PilihanLayananSms) {
+                    if ($pilihan->getStatus()) {
+                        $layananSmsPendaftaran = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                ->findBy(
+                                        array(
+                                            'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar'
+                                        ));
+                        foreach ($layananSmsPendaftaran as $layanan) {
+                            if ($layanan instanceof LayananSmsPendaftaran) {
+                                $tekstemplate = $layanan->getTemplatesms()->getTeks();
+
+                                $namaOrtuWali = "";
+                                $ponselOrtuWali = "";
+                                foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
+                                    if ($orangtuaWali instanceof OrangtuaWali) {
+                                        if ($orangtuaWali->getAktif()) {
+                                            $namaOrtuWali = $orangtuaWali->getNama();
+                                            $ponselOrtuWali = $orangtuaWali->getPonsel();
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                $tekstemplate = str_replace("%nama-pendaftar%", $siswa->getNamaLengkap(),
+                                        $tekstemplate);
+
+                                $nomorTransaksi = "";
+                                $em->refresh($entity);
+                                foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
+                                    if ($transaksi instanceof TransaksiPembayaranPendaftaran) {
+                                        $em->refresh($transaksi);
+                                        $nomorTransaksi = $transaksi->getNomorTransaksi();
+                                    }
+                                }
+                                $tekstemplate = str_replace("%nomor-kwitansi%", $nomorTransaksi,
+                                        $tekstemplate);
+
+                                $daftarBiayaPendaftaranDibayar = array();
+                                foreach ($entity->getDaftarBiayaPendaftaran() as $biayaPendaftaran) {
+                                    $biaya = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                                            ->find($biayaPendaftaran);
+                                    $daftarBiayaPendaftaranDibayar[] = $biaya->getJenisbiaya()->getNama();
+                                }
+                                $tekstemplate = str_replace("%daftar-biaya%",
+                                        (implode(", ", $daftarBiayaPendaftaranDibayar)), $tekstemplate);
+
+                                $formatter = new \NumberFormatter($this->container->getParameter('locale'),
+                                        \NumberFormatter::CURRENCY);
+                                $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+                                $tekstemplate = str_replace("%besar-pembayaran%",
+                                        $symbol . ". " . number_format($currentPaymentAmount, 0, ',', '.'),
+                                        $tekstemplate);
+
+                                if ($ponselOrtuWali != "") {
+                                    $messenger = $this->get('fast_sisdik.messenger');
+                                    if ($messenger instanceof Messenger) {
+                                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                        foreach ($nomorponsel as $ponsel) {
+
+                                            $messenger->setPhoneNumber($ponsel);
+                                            $messenger->setMessage($tekstemplate);
+
+                                            $logid = $messenger->setLogEntry();
+                                            // $logid = 0; // for debugging
+
+                                            $dlrurl = "http://" . $this->getRequest()->getHost()
+                                                    . $this
+                                                            ->generateUrl(
+                                                                    "localapi_logsmskeluar_dlr_update",
+                                                                    array(
+                                                                            'logid' => $logid,
+                                                                            'status' => "%d", 'time' => "%T"
+                                                                    ));
+                                            $messenger->setDeliveryReportURL(urldecode($dlrurl));
+
+                                            $messenger->sendMessage();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($totalPayment == $payableAmountDiscounted) {
+                // TODO kirim sms pemberitahuan lunas
+                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                        ->findBy(
+                                array(
+                                    'sekolah' => $sekolah, 'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
+                                ));
+
+                foreach ($pilihanLayananSms as $pilihan) {
+                    if ($pilihan instanceof PilihanLayananSms) {
+                        if ($pilihan->getStatus()) {
+                            $layananSmsPendaftaran = $em
+                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->findBy(
+                                            array(
+                                                    'sekolah' => $sekolah,
+                                                    'jenisLayanan' => 'd-pendaftaran-bayar-lunas'
+                                            ));
+                            foreach ($layananSmsPendaftaran as $layanan) {
+                                if ($layanan instanceof LayananSmsPendaftaran) {
+                                    $tekstemplate = $layanan->getTemplatesms()->getTeks();
+
+                                    $namaOrtuWali = "";
+                                    $ponselOrtuWali = "";
+                                    foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
+                                        if ($orangtuaWali instanceof OrangtuaWali) {
+                                            if ($orangtuaWali->getAktif()) {
+                                                $namaOrtuWali = $orangtuaWali->getNama();
+                                                $ponselOrtuWali = $orangtuaWali->getPonsel();
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali,
+                                            $tekstemplate);
+                                    $tekstemplate = str_replace("%nama-pendaftar%", $siswa->getNamaLengkap(),
+                                            $tekstemplate);
+
+                                    $formatter = new \NumberFormatter(
+                                            $this->container->getParameter('locale'),
+                                            \NumberFormatter::CURRENCY);
+                                    $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
+                                    $tekstemplate = str_replace("%total-pembayaran%",
+                                            $symbol . ". " . number_format($totalPayment, 0, ',', '.'),
+                                            $tekstemplate);
+
+                                    if ($ponselOrtuWali != "") {
+                                        $messenger = $this->get('fast_sisdik.messenger');
+                                        if ($messenger instanceof Messenger) {
+                                            $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                            foreach ($nomorponsel as $ponsel) {
+
+                                                $messenger->setPhoneNumber($ponsel);
+                                                $messenger->setMessage($tekstemplate);
+
+                                                $logid = $messenger->setLogEntry();
+                                                // $logid = 0; // for debugging
+
+                                                $dlrurl = "http://" . $this->getRequest()->getHost()
+                                                        . $this
+                                                                ->generateUrl(
+                                                                        "localapi_logsmskeluar_dlr_update",
+                                                                        array(
+                                                                                'logid' => $logid,
+                                                                                'status' => "%d",
+                                                                                'time' => "%T"
+                                                                        ));
+                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
+
+                                                $messenger->sendMessage();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             $this->get('session')->getFlashBag()
                     ->add('success',
                             $this->get('translator')->trans('flash.payment.registration.mortgage.updated'));
