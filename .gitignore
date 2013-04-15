@@ -5,6 +5,7 @@ web/js/
 app/bootstrap.php.cache
 app/cache/*
 app/logs/*
+app/config/parameters.ini
 build/
 vendor
 composer.phar
