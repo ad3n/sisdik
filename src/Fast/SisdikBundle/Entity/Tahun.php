@@ -24,7 +24,7 @@ class Tahun
     private $id;
 
     /**
-     * @var \DateTime
+     * @var string
      *
      * @ORM\Column(name="tahun", type="string", nullable=false)
      */
@@ -67,7 +67,7 @@ class Tahun
     /**
      * Set tahun
      *
-     * @param \DateTime $tahun
+     * @param string $tahun
      * @return Tahun
      */
     public function setTahun($tahun) {
@@ -79,7 +79,7 @@ class Tahun
     /**
      * Get tahun
      *
-     * @return \DateTime
+     * @return string
      */
     public function getTahun() {
         return $this->tahun;
