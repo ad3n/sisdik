@@ -243,7 +243,7 @@ class MesinKehadiranController extends Controller
     }
 
     private function isRegisteredToSchool() {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {

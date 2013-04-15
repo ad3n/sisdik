@@ -23,7 +23,7 @@ class ProfileController extends FOSProfileController
      * Show the user
      */
     public function showAction() {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
 
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException(
@@ -46,7 +46,7 @@ class ProfileController extends FOSProfileController
      * Edit the user
      */
     public function editAction(Request $request) {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException(
                     'This user does not have access to this section.');

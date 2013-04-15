@@ -240,7 +240,7 @@ class PembayaranPendaftaranController extends Controller
 
             $entity->setSiswa($siswa);
             foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
-                $transaksi->setDibuatOleh($this->container->get('security.context')->getToken()->getUser());
+                $transaksi->setDibuatOleh($this->getUser());
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
             }
 
@@ -525,7 +525,7 @@ class PembayaranPendaftaranController extends Controller
 
             $currentPaymentAmount = 0;
             foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
-                $transaksi->setDibuatOleh($this->container->get('security.context')->getToken()->getUser());
+                $transaksi->setDibuatOleh($this->getUser());
                 $currentPaymentAmount += $transaksi->getNominalPembayaran();
             }
 
@@ -1390,7 +1390,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     private function isRegisteredToSchool() {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {

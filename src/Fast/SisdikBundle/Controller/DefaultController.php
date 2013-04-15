@@ -64,7 +64,7 @@ class DefaultController extends Controller
     }
 
     private function getSchool() {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {

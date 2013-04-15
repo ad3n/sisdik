@@ -373,7 +373,7 @@ class SettingsUserController extends Controller
      */
     public function inschoolListAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
 
         $searchcondition = '';
         $searchkey = '';
