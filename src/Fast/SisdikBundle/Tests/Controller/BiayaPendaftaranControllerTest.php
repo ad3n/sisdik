@@ -1,41 +1,67 @@
 <?php
 
 namespace Fast\SisdikBundle\Tests\Controller;
-
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Pixellaneous\UserBundle\Entity\User;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BiayaPendaftaranControllerTest extends WebTestCase
 {
-    /*
-    public function testCompleteScenario()
-    {
+
+    public function testCompleteScenario() {
         // Create a new client to browse the application
         $client = static::createClient();
+        $client->getCookieJar()->set(new Cookie(session_name(), true));
 
-        // Create a new entry in the database
+        // dummy call to bypass the hasPreviousSession check
+        $crawler = $client->request('GET', '/');
+
+        $em = $client->getContainer()->get('doctrine')->getEntityManager();
+        $user = $em->getRepository('FastSisdikBundle:User')->findOneByUsername('bendahara');
+
+        $token = new UsernamePasswordToken($user, $user->getPassword(), 'main_firewall', $user->getRoles());
+        self::$kernel->getContainer()->get('security.context')->setToken($token);
+
+        $session = $client->getContainer()->get('session');
+        $session->set('_security_' . 'main_firewall', serialize($token));
+        $session->save();
+
         $crawler = $client->request('GET', '/fee/registration/');
+
         $this->assertTrue(200 === $client->getResponse()->getStatusCode());
-        $crawler = $client->click($crawler->selectLink('Create a new entry')->link());
+
+        $link = $crawler->selectLink('Tambah Biaya')->link();
+        $crawler = $client->click($link);
 
         // Fill in the form and submit it
-        $form = $crawler->selectButton('Create')->form(array(
-            'fast_sisdikbundle_biayapendaftarantype[field_name]'  => 'Test',
-            // ... other fields to fill
-        ));
+        $form = $crawler->selectButton('Tambah')
+                ->form(
+                        array(
+                            'fast_sisdikbundle_biayapendaftarantype[tahun]' => '11',
+                            'fast_sisdikbundle_biayapendaftarantype[gelombang]' => '3',
+                            'fast_sisdikbundle_biayapendaftarantype[jenisbiaya]' => '9',
+                            'fast_sisdikbundle_biayapendaftarantype[nominal]' => '150.000',
+                        // ... other fields to fill
+                        ));
 
         $client->submit($form);
-        $crawler = $client->followRedirect();
+//         $crawler = $client->followRedirect();
 
         // Check data in the show view
-        $this->assertTrue($crawler->filter('td:contains("Test")')->count() > 0);
+        $this->assertTrue($crawler->filter('html:contains("Detail")')->count() > 0);
 
+        /*
         // Edit the entity
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
-        $form = $crawler->selectButton('Edit')->form(array(
-            'fast_sisdikbundle_biayapendaftarantype[field_name]'  => 'Foo',
-            // ... other fields to fill
-        ));
+        $form = $crawler->selectButton('Edit')
+                ->form(
+                        array(
+                            'fast_sisdikbundle_biayapendaftarantype[field_name]' => 'Foo',
+                        // ... other fields to fill
+                        ));
 
         $client->submit($form);
         $crawler = $client->followRedirect();
@@ -49,7 +75,7 @@ class BiayaPendaftaranControllerTest extends WebTestCase
 
         // Check the entity has been delete on the list
         $this->assertNotRegExp('/Foo/', $client->getResponse()->getContent());
+         */
     }
 
-    */
 }
