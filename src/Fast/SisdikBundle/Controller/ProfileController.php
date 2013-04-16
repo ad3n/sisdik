@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * 
+ *
  * @author Ihsan Faisal
  *
  */
@@ -23,11 +23,10 @@ class ProfileController extends FOSProfileController
      * Show the user
      */
     public function showAction() {
-        $user = $this->getUser();
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException(
-                    'This user does not have access to this section.');
+            throw new AccessDeniedException('This user does not have access to this section.');
         }
 
         foreach ($user->getRoles() as $keys => $values) {
@@ -37,8 +36,7 @@ class ProfileController extends FOSProfileController
         return $this->container->get('templating')
                 ->renderResponse('FastSisdikBundle:Profile:show.html.twig',
                         array(
-                                'user' => $user, 'roles' => $roles,
-                                'name' => $user->getName()
+                            'user' => $user, 'roles' => $roles, 'name' => $user->getName()
                         ));
     }
 
@@ -48,8 +46,7 @@ class ProfileController extends FOSProfileController
     public function editAction(Request $request) {
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException(
-                    'This user does not have access to this section.');
+            throw new AccessDeniedException('This user does not have access to this section.');
         }
 
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
@@ -90,8 +87,7 @@ class ProfileController extends FOSProfileController
                 $userManager->updateUser($user);
 
                 if (null === $response = $event->getResponse()) {
-                    $url = $this->container->get('router')
-                            ->generate('fos_user_profile_show');
+                    $url = $this->container->get('router')->generate('fos_user_profile_show');
                     $response = new RedirectResponse($url);
                 }
 
@@ -106,8 +102,7 @@ class ProfileController extends FOSProfileController
         return $this->container->get('templating')
                 ->renderResponse(
                         'FOSUserBundle:Profile:edit.html.'
-                                . $this->container
-                                        ->getParameter('fos_user.template.engine'),
+                                . $this->container->getParameter('fos_user.template.engine'),
                         array(
                             'form' => $form->createView()
                         ));
