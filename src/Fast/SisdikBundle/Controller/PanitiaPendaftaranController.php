@@ -72,7 +72,7 @@ class PanitiaPendaftaranController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -143,7 +143,7 @@ class PanitiaPendaftaranController extends Controller
      * @Template()
      */
     public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new PanitiaPendaftaran();
@@ -163,7 +163,7 @@ class PanitiaPendaftaranController extends Controller
      * @Template("FastSisdikBundle:PanitiaPendaftaran:new.html.twig")
      */
     public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new PanitiaPendaftaran();
@@ -260,7 +260,7 @@ class PanitiaPendaftaranController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -288,7 +288,7 @@ class PanitiaPendaftaranController extends Controller
      * @Template("FastSisdikBundle:PanitiaPendaftaran:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -437,7 +437,7 @@ class PanitiaPendaftaranController extends Controller
      * @Route("/name/{id}", name="regcommittee_getname")
      */
     public function getNameAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('FastSisdikBundle:User')->find($id);
