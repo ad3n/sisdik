@@ -236,7 +236,8 @@ class PanitiaPendaftaranController extends Controller
                                 array(
                                     '%year%' => $entity->getTahun()->getTahun()
                                 ));
-                throw new DBALException($message);
+                $this->get('session')->getFlashBag()->add('error', $message);
+                // throw new DBALException($message);
             }
 
             return $this
