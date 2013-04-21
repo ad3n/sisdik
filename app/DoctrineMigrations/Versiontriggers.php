@@ -159,7 +159,15 @@ BEGIN
     SET NEW.tahun_id = OLD.tahun_id;
     SET NEW.gelombang_id = OLD.gelombang_id;
     SET NEW.nominal = OLD.nominal;
-    SET NEW.terpakai = OLD.terpakai;
+END";
+
+    private $beforeUpdateBiayaSekali = "CREATE TRIGGER `befup_bs`
+BEFORE UPDATE ON biaya_sekali
+FOR EACH ROW
+BEGIN
+    SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
+    SET NEW.tahun_id = OLD.tahun_id;
+    SET NEW.nominal = OLD.nominal;
 END";
 
     public function up(Schema $schema) {
@@ -182,6 +190,8 @@ END";
         $this->addSql($this->beforeUpdateKelas);
 
         $this->addSql($this->beforeUpdateBiayaPendaftaran);
+
+        $this->addSql($this->beforeUpdateBiayaSekali);
     }
 
     public function down(Schema $schema) {
@@ -204,6 +214,8 @@ END";
         $this->addSql("DROP TRIGGER IF EXISTS `befup_kelas`;");
 
         $this->addSql("DROP TRIGGER IF EXISTS `befup_bp`;");
+
+        $this->addSql("DROP TRIGGER IF EXISTS `befup_bs`;");
     }
 }
 
