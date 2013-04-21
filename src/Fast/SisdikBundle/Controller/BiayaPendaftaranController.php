@@ -182,7 +182,7 @@ class BiayaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
-        if ($entity->getTerpakai() === true) {
+        if ($entity->isTerpakai() === true) {
             $this->get('session')->getFlashBag()
                     ->add('info',
                             $this->get('translator')->trans('flash.fee.registration.update.restriction'));
@@ -273,7 +273,7 @@ class BiayaPendaftaranController extends Controller
             }
 
             try {
-                if ($entity->getTerpakai() === true) {
+                if ($entity->isTerpakai() === true) {
                     $message = $this->get('translator')->trans('exception.delete.restrict.registrationfee');
                     throw new \Exception($message);
                 }

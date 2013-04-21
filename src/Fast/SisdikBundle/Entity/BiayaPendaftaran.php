@@ -44,7 +44,7 @@ class BiayaPendaftaran
      *
      * @ORM\Column(name="terpakai", type="boolean", nullable=false, options={"default" = 0})
      */
-    private $terpakai = 0;
+    private $terpakai = false;
 
     /**
      * @var \Jenisbiaya
@@ -144,7 +144,7 @@ class BiayaPendaftaran
      *
      * @return boolean
      */
-    public function getTerpakai() {
+    public function isTerpakai() {
         return $this->terpakai;
     }
 
