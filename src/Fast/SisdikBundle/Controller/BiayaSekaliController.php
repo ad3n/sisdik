@@ -2,7 +2,7 @@
 
 namespace Fast\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
-use Fast\SisdikBundle\Form\BiayaSearchFormType;
+use Fast\SisdikBundle\Form\BiayaSekaliSearchFormType;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,12 +34,11 @@ class BiayaSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new BiayaSearchFormType($this->container));
+        $searchform = $this->createForm(new BiayaSekaliSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
-                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')
+                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
@@ -49,10 +48,6 @@ class BiayaSekaliController extends Controller
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('t2.id = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
-            }
-            if ($searchdata['gelombang'] != '') {
-                $querybuilder->andWhere('t3.id = :gelombang');
-                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
             }
             if ($searchdata['jenisbiaya'] != '') {
                 $querybuilder->andWhere("(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
@@ -76,7 +71,7 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -101,7 +96,7 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new BiayaSekali();
@@ -120,7 +115,7 @@ class BiayaSekaliController extends Controller
      * @Template("FastSisdikBundle:BiayaSekali:new.html.twig")
      */
     public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new BiayaSekali();
@@ -164,7 +159,7 @@ class BiayaSekaliController extends Controller
      * @Template()
      */
     public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -173,6 +168,11 @@ class BiayaSekaliController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaSekali tak ditemukan.');
+        }
+
+        if ($entity->isTerpakai() === true) {
+            $this->get('session')->getFlashBag()
+                    ->add('info', $this->get('translator')->trans('flash.fee.once.update.restriction'));
         }
 
         $editForm = $this->createForm(new BiayaSekaliType($this->container), $entity);
@@ -192,7 +192,7 @@ class BiayaSekaliController extends Controller
      * @Template("FastSisdikBundle:BiayaSekali:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -244,7 +244,7 @@ class BiayaSekaliController extends Controller
      * @Method("post")
      */
     public function deleteAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);
@@ -258,6 +258,11 @@ class BiayaSekaliController extends Controller
             }
 
             try {
+                if ($entity->isTerpakai() === true) {
+                    $message = $this->get('translator')->trans('exception.delete.restrict.oncefee');
+                    throw new \Exception($message);
+                }
+
                 $em->remove($entity);
                 $em->flush();
 

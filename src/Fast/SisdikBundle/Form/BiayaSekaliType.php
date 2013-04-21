@@ -23,15 +23,14 @@ class BiayaSekaliType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun',
+                                    'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'tahun',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
@@ -39,33 +38,16 @@ class BiayaSekaliType extends AbstractType
                                     )
                             ));
 
-            $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('gelombang', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Gelombang',
-                                    'label' => 'label.admissiongroup.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder2,
-                                    'attr' => array(
-                                        'class' => 'xlarge'
-                                    )
-                            ));
-
-            $querybuilder3 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Jenisbiaya', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah);
+            $querybuilder3 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('jenisbiaya', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Jenisbiaya',
                                     'label' => 'label.fee.type.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder3,
+                                    'expanded' => false, 'property' => 'nama', 'empty_value' => false,
+                                    'required' => true, 'query_builder' => $querybuilder3,
                                     'attr' => array(
                                         'class' => 'xlarge'
                                     )
@@ -75,8 +57,7 @@ class BiayaSekaliType extends AbstractType
         $builder
                 ->add('nominal', 'money',
                         array(
-                                'currency' => 'IDR', 'required' => true, 'precision' => 0,
-                                'grouping' => 3,
+                                'currency' => 'IDR', 'required' => true, 'precision' => 0, 'grouping' => 3,
                                 'attr' => array(
                                     'class' => 'large'
                                 )

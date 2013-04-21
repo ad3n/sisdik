@@ -400,6 +400,7 @@ flash:
             updated: Data Biaya Sekali Bayar berhasil diperbarui
             deleted: Data Biaya Sekali Bayar berhasil dihapus
             fail.delete: Data Biaya Sekali Bayar gagal dihapus
+            update.restriction: Data Biaya Sekali Bayar telah digunakan. Hanya urutan yang bisa diubah.
         recur:
             inserted: Data Biaya Berulang berhasil ditambah
             updated: Data Biaya Berulang berhasil diperbarui
@@ -564,6 +565,7 @@ alt:
     student.generate.username: buat username
 
 exception:
+    delete.restrict.oncefee: Data pembayaran telah dipakai; tidak bisa dihapus.
     unik.smspendaftaran: Jenis Layanan yang dipilih sudah digunakan
     unik.layanansms: Layanan SMS yang dipilih sudah tersedia untuk sekolah yang dipilih
     useadmin: gunakan user admin sekolah untuk mengakses ini
@@ -572,7 +574,6 @@ exception:
     registertoschool: user harus diregistrasikan ke sekolah terlebih dahulu
     delete.restrict: Tidak bisa menghapus data yang telah dipakai di data lain yang terkait
     delete.restrict.registrationfee: Data pembayaran telah dipakai; tidak bisa dihapus.
-    update.restrict.registrationfee: Data pembayaran telah dipakai; tidak bisa diubah.
     unique.studentclass: Tidak bisa mendaftarkan siswa di kelas yang sama
     unique.studentclass.active: Siswa hanya bisa aktif di satu kelas pada satu tahun akademik
     studentid.unique: Nomor induk harus unik, tidak boleh ada yang sama

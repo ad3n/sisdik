@@ -17,11 +17,7 @@
 
 <ul class="pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('fee_once', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
         <a href="{{ path('fee_once', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
     </li>
 </ul>
 <script language="javascript" type="text/javascript">

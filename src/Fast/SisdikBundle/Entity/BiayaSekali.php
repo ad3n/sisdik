@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  * BiayaSekali
  *
  * @ORM\Table(name="biaya_sekali", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="UNQ_biaya_sekali1", columns={"jenisbiaya_id", "tahun_id", "gelombang_id"})
+ *     @ORM\UniqueConstraint(name="biaya_sekali_UNIQUE", columns={"jenisbiaya_id", "tahun_id"})
  * })
  * @ORM\Entity
  */
@@ -37,14 +37,11 @@ class BiayaSekali
     private $urutan;
 
     /**
-     * @var \Gelombang
+     * @var boolean
      *
-     * @ORM\ManyToOne(targetEntity="Gelombang")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
-     * })
+     * @ORM\Column(name="terpakai", type="boolean", nullable=false, options={"default" = 0})
      */
-    private $gelombang;
+    private $terpakai = false;
 
     /**
      * @var \Tahun
@@ -118,24 +115,24 @@ class BiayaSekali
     }
 
     /**
-     * Set gelombang
+     * Set terpakai
      *
-     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
+     * @param boolean $terpakai
      * @return BiayaSekali
      */
-    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null) {
-        $this->gelombang = $gelombang;
+    public function setTerpakai($terpakai) {
+        $this->terpakai = $terpakai;
 
         return $this;
     }
 
     /**
-     * Get gelombang
+     * Is terpakai
      *
-     * @return \Fast\SisdikBundle\Entity\Gelombang
+     * @return boolean
      */
-    public function getGelombang() {
-        return $this->gelombang;
+    public function isTerpakai() {
+        return $this->terpakai;
     }
 
     /**
