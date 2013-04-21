@@ -20,7 +20,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * PembayaranSekali controller.
  *
  * @Route("/payment/oncefee/{cid}")
- * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KETUA_PANITIA_PSB')")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA')")
  */
 class PembayaranSekaliController extends Controller
 {
