@@ -237,7 +237,6 @@ class PanitiaPendaftaranController extends Controller
                                     '%year%' => $entity->getTahun()->getTahun()
                                 ));
                 $this->get('session')->getFlashBag()->add('error', $message);
-                // throw new DBALException($message);
             }
 
             return $this
@@ -373,7 +372,7 @@ class PanitiaPendaftaranController extends Controller
                                 array(
                                     '%year%' => $entity->getTahun()->getTahun()
                                 ));
-                throw new DBALException($message);
+                $this->get('session')->getFlashBag()->add('error', $message);
             }
 
             return $this
