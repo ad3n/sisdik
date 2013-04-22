@@ -4,6 +4,19 @@ leader: Ketua
 paidoff: lunas
 
 label:
+    nama.siswa: Nama Siswa
+    alamat: Alamat
+    hubungan.terhadap.siswa: Hubungan terhadap siswa
+    pendidikan.tertinggi: Pendidikan Tertinggi
+    pekerjaan: Pekerjaan
+    penghasilan.bulanan: Penghasilan per bulan
+    penghasilan.tahunan: Penghasilan per tahun
+    nama.ortuwali: Nama Orang Tua/Wali
+    ponsel: Nomor Ponsel
+    keterangan: Keterangan
+    kewarganegaraan: Kewarganegaraan
+    tempat.lahir: Tempat Lahir
+    tanggal.lahir: Tanggal Lahir
     status: Status
     aktif: Aktif
     pilih.sekolah: Pilih Sekolah
@@ -321,6 +334,7 @@ label:
         tambah: Tambah Pengaturan SMS Pendaftaran
 
 link:
+    ortuwali: Orang Tua/Wali
     backtolist: « Kembali ke Daftar
     backto: « Kembali ke
     edit: Ubah
@@ -330,7 +344,6 @@ link:
     backtodetail: « Kembali ke Info
     download.template: Unduh Berkas Template
     applicant.edit.regphoto: Ubah Foto Registrasi
-    edit.parent.or.guardian: Ubah/Tambah Orangtua/Wali
     studentinfo: Info Data Siswa
     backto.registration.payment: « Kembali ke Info Pembayaran Biaya Pendaftaran
 
@@ -339,6 +352,11 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    ortuwali.siswa:
+        tersimpan: Data Orang Tua/Wali siswa '%siswa%' berhasil disimpan
+        terbarui: Data Orang Tua/Wali siswa '%siswa%' berhasil diperbarui
+        terhapus: Data Orang Tua/Wali siswa '%siswa%' berhasil dihapus
+        gagal.dihapus: Data Orang Tua/Wali siswa '%siswa%' gagal dihapus
     smspendaftaran:
         tersimpan: Pengaturan SMS Pendaftaran berhasil disimpan
         terbarui: Pengaturan SMS Pendaftaran berhasil diperbarui
@@ -565,6 +583,7 @@ alt:
     student.generate.username: buat username
 
 exception:
+    larangan.hapus.ortuwali: Orang Tua Wali siswa aktif tidak bisa dihapus
     delete.restrict.oncefee: Data pembayaran telah dipakai; tidak bisa dihapus.
     unik.smspendaftaran: Jenis Layanan yang dipilih sudah digunakan
     unik.layanansms: Layanan SMS yang dipilih sudah tersedia untuk sekolah yang dipilih
@@ -603,6 +622,7 @@ exception:
     open.file.pdf: Error ketika membuat file pdf
 
 shortinfo:
+    ortuwali.hanya.satu.aktif: hanya satu orang tua/wali yang bisa aktif dalam satu waktu
     password.mustequal: password harus sama
     username: username 
     checked: yang terpilih

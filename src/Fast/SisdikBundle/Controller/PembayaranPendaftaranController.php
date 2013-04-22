@@ -310,7 +310,7 @@ class PembayaranPendaftaranController extends Controller
                                     $ponselOrtuWali = "";
                                     foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
                                         if ($orangtuaWali instanceof OrangtuaWali) {
-                                            if ($orangtuaWali->getAktif()) {
+                                            if ($orangtuaWali->isAktif()) {
                                                 $namaOrtuWali = $orangtuaWali->getNama();
                                                 $ponselOrtuWali = $orangtuaWali->getPonsel();
                                                 break;
@@ -383,7 +383,7 @@ class PembayaranPendaftaranController extends Controller
                                 $ponselOrtuWali = "";
                                 foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
                                     if ($orangtuaWali instanceof OrangtuaWali) {
-                                        if ($orangtuaWali->getAktif()) {
+                                        if ($orangtuaWali->isAktif()) {
                                             $namaOrtuWali = $orangtuaWali->getNama();
                                             $ponselOrtuWali = $orangtuaWali->getPonsel();
                                             break;
@@ -485,7 +485,7 @@ class PembayaranPendaftaranController extends Controller
                                     $ponselOrtuWali = "";
                                     foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
                                         if ($orangtuaWali instanceof OrangtuaWali) {
-                                            if ($orangtuaWali->getAktif()) {
+                                            if ($orangtuaWali->isAktif()) {
                                                 $namaOrtuWali = $orangtuaWali->getNama();
                                                 $ponselOrtuWali = $orangtuaWali->getPonsel();
                                                 break;
@@ -830,7 +830,7 @@ class PembayaranPendaftaranController extends Controller
                                 $ponselOrtuWali = "";
                                 foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
                                     if ($orangtuaWali instanceof OrangtuaWali) {
-                                        if ($orangtuaWali->getAktif()) {
+                                        if ($orangtuaWali->isAktif()) {
                                             $namaOrtuWali = $orangtuaWali->getNama();
                                             $ponselOrtuWali = $orangtuaWali->getPonsel();
                                             break;
@@ -925,7 +925,7 @@ class PembayaranPendaftaranController extends Controller
                                     $ponselOrtuWali = "";
                                     foreach ($siswa->getOrangtuaWali() as $orangtuaWali) {
                                         if ($orangtuaWali instanceof OrangtuaWali) {
-                                            if ($orangtuaWali->getAktif()) {
+                                            if ($orangtuaWali->isAktif()) {
                                                 $namaOrtuWali = $orangtuaWali->getNama();
                                                 $ponselOrtuWali = $orangtuaWali->getPonsel();
                                                 break;
