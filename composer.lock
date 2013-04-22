@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "faaeecc2a18c1d8234cf8849b307d02f",
+    "hash": "24b42c46f66b122763c12c968f81cce7",
     "packages": [
         {
             "name": "bcc/extra-tools-bundle",
@@ -2736,6 +2736,50 @@
             "time": "2013-02-08 06:13:13"
         },
         {
+            "name": "whiteoctober/breadcrumbs-bundle",
+            "version": "dev-master",
+            "target-dir": "WhiteOctober/BreadcrumbsBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/whiteoctober/BreadcrumbsBundle.git",
+                "reference": "ee9edb60239e4dec78ead6329260731ca88a26ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/whiteoctober/BreadcrumbsBundle/zipball/ee9edb60239e4dec78ead6329260731ca88a26ad",
+                "reference": "ee9edb60239e4dec78ead6329260731ca88a26ad",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "2.*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "WhiteOctober\\BreadcrumbsBundle": ""
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rich Sage",
+                    "email": "rich.sage@gmail.com",
+                    "homepage": "http://www.richsage.co.uk/"
+                }
+            ],
+            "description": "A small breadcrumbs bundle for Symfony2",
+            "homepage": "https://github.com/whiteoctober/BreadcrumbsBundle",
+            "keywords": [
+                "breadcrumbs",
+                "symfony"
+            ],
+            "time": "2013-03-25 09:45:07"
+        },
+        {
             "name": "zendframework/zend-cache",
             "version": "dev-master",
             "target-dir": "Zend/Cache",
@@ -3031,7 +3075,8 @@
         "gregwar/captcha-bundle": 20,
         "doctrine/doctrine-migrations-bundle": 20,
         "doctrine/doctrine-fixtures-bundle": 20,
-        "psliwa/pdf-bundle": 20
+        "psliwa/pdf-bundle": 20,
+        "whiteoctober/breadcrumbs-bundle": 20
     },
     "platform": {
         "php": ">=5.3.3"

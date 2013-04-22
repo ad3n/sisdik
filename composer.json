@@ -32,7 +32,8 @@
         "gregwar/captcha-bundle": "dev-master",
         "doctrine/doctrine-migrations-bundle": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
-        "psliwa/pdf-bundle": "dev-master"
+        "psliwa/pdf-bundle": "dev-master",
+        "whiteoctober/breadcrumbs-bundle": "dev-master"
     },
     "repositories": [
 	    {

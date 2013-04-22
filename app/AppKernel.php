@@ -24,6 +24,7 @@ class AppKernel extends Kernel
                 new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
                 new Fast\SisdikBundle\FastSisdikBundle(), new Acme\DemoBundle\AcmeDemoBundle(),
                 new Ps\PdfBundle\PsPdfBundle(),
+                new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array(
