@@ -151,7 +151,7 @@ class OrangtuaWaliController extends Controller
             $this->get('session')->getFlashBag()
                     ->add('success',
                             $this->get('translator')
-                                    ->trans('flash.ortuwali.siswa.tersimpan',
+                                    ->trans('flash.ortuwali.tersimpan',
                                             array(
                                                 '%siswa%' => $entity->getSiswa()->getNamaLengkap()
                                             )));
@@ -166,7 +166,8 @@ class OrangtuaWaliController extends Controller
         }
 
         return array(
-            'entity' => $entity, 'form' => $form->createView(),
+                'entity' => $entity, 'form' => $form->createView(),
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
         );
     }
 
@@ -228,7 +229,7 @@ class OrangtuaWaliController extends Controller
             $this->get('session')->getFlashBag()
                     ->add('success',
                             $this->get('translator')
-                                    ->trans('flash.ortuwali.siswa.terbarui',
+                                    ->trans('flash.ortuwali.terbarui',
                                             array(
                                                 '%siswa%' => $entity->getSiswa()->getNamaLengkap()
                                             )));
@@ -245,6 +246,7 @@ class OrangtuaWaliController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
         );
     }
 
@@ -278,7 +280,7 @@ class OrangtuaWaliController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.ortuwali.siswa.terhapus',
+                                        ->trans('flash.ortuwali.terhapus',
                                                 array(
                                                     '%siswa%' => $entity->getSiswa()->getNamaLengkap()
                                                 )));
@@ -290,7 +292,7 @@ class OrangtuaWaliController extends Controller
             $this->get('session')->getFlashBag()
                     ->add('error',
                             $this->get('translator')
-                                    ->trans('flash.ortuwali.siswa.gagal.dihapus',
+                                    ->trans('flash.ortuwali.gagal.dihapus',
                                             array(
                                                 '%siswa%' => $entity->getSiswa()->getNamaLengkap()
                                             )));

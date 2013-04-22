@@ -1,14 +1,16 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}parentguard.detail{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}parentguard.detail{% endtrans %}<br />{{ entity.siswa.namaLengkap }}{% endblock %}
 {% block content %}
 <dl>
     <dt>{{ 'label.nama.siswa'|trans }}</dt>
     <dd>{{ entity.siswa.namaLengkap }}</dd>
-{% if entity.siswa.pembayaranPendaftaran.count > 0 %}
-    <dt>{{ 'label.application.number'|trans }}</dt>
-    <dd>{{ entity.siswa.nomorPendaftaran }}</dd>
-{% endif %}
+    <dt>{{ 'label.year.entry'|trans }}</dt>
+    <dd>{% if entity.siswa.tahun is not null %}{{ entity.siswa.tahun.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+    <dd>{% if entity.siswa.gelombang is not null %}{{ entity.siswa.gelombang.nama }}{% endif %}</dd>
+    <dt>{{ 'label.gender'|trans }}</dt>
+    <dd>{% if entity.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
     <dt>{{ 'label.nama.ortuwali'|trans }}</dt>
     <dd>{{ entity.nama }}</dd>
     <dt>{{ 'label.ponsel'|trans }}</dt>
@@ -63,7 +65,6 @@
 	</a>
 {% endimage %}
 </div>
-
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$("#delete-form").submit(function(){

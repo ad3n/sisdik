@@ -25,12 +25,6 @@ $(document).ready(function() {
         changeYear: true,
         maxDate: "-15Y"
     });
-
-	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.parentguard'|trans({ '%name%': entity.nama , '%studentname%': siswa.namaLengkap }) }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
 });
 </script>
 {% endblock content %}
