@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,7 +16,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 /**
  * OrangtuaWali controller.
  *
- * @Route("/{sid}/parentguard", requirements={"siswa"="\d+"})
+ * @Route("/{sid}/parentguard", requirements={"sid"="\d+"})
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_WALI_KELAS', 'ROLE_PANITIA_PSB')")
  */
 class OrangtuaWaliController extends Controller
@@ -27,13 +28,13 @@ class OrangtuaWaliController extends Controller
      * @Template()
      */
     public function indexAction($sid) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:OrangtuaWali', 't')
-                ->where('t.siswa = :siswa')->orderBy('t.aktif', 'ASC')->setParameter('siswa', $sid);
+                ->where('t.siswa = :siswa')->orderBy('t.aktif', 'DESC')->setParameter('siswa', $sid);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
@@ -44,13 +45,12 @@ class OrangtuaWaliController extends Controller
     }
 
     /**
-     * Finds and displays a OrangtuaWali entity.
+     * Mengaktifkan status orang tua wali, dan menonaktifkan yang lain
      *
-     * @Route("/{id}/show", name="parentguard_show")
-     * @Template()
+     * @Route("/{id}/activate", name="parentguard_activate")
      */
-    public function showAction($sid, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function activateAction($sid, $id) {
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -58,7 +58,42 @@ class OrangtuaWaliController extends Controller
         $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrangtuaWali entity.');
+            throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
+        }
+
+        $query = $em->createQueryBuilder()->update('FastSisdikBundle:OrangtuaWali', 't')->set('t.aktif', 0)
+                ->where('t.siswa = :siswa')->setParameter('siswa', $sid)->getQuery();
+        $query->execute();
+
+        $entity->setAktif(true);
+        $em->persist($entity);
+        $em->flush();
+
+        return $this
+                ->redirect(
+                        $this
+                                ->generateUrl('parentguard',
+                                        array(
+                                            'sid' => $sid
+                                        )));
+    }
+
+    /**
+     * Finds and displays a OrangtuaWali entity.
+     *
+     * @Route("/{id}/show", name="parentguard_show")
+     * @Template()
+     */
+    public function showAction($sid, $id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -75,14 +110,17 @@ class OrangtuaWaliController extends Controller
      * @Template()
      */
     public function newAction($sid) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
 
         $entity = new OrangtuaWali();
         $form = $this->createForm(new OrangtuaWaliType(), $entity);
 
         return array(
-            'entity' => $entity, 'form' => $form->createView(),
+                'entity' => $entity, 'form' => $form->createView(),
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
         );
     }
 
@@ -94,7 +132,7 @@ class OrangtuaWaliController extends Controller
      * @Template("FastSisdikBundle:OrangtuaWali:new.html.twig")
      */
     public function createAction(Request $request, $sid) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new OrangtuaWali();
@@ -103,15 +141,27 @@ class OrangtuaWaliController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+            $entity->setSiswa($siswa);
+            $entity->setAktif(false);
+
             $em->persist($entity);
             $em->flush();
+
+            $this->get('session')->getFlashBag()
+                    ->add('success',
+                            $this->get('translator')
+                                    ->trans('flash.ortuwali.siswa.tersimpan',
+                                            array(
+                                                '%siswa%' => $entity->getSiswa()->getNamaLengkap()
+                                            )));
 
             return $this
                     ->redirect(
                             $this
                                     ->generateUrl('parentguard_show',
                                             array(
-                                                'id' => $entity->getId()
+                                                'sid' => $sid, 'id' => $entity->getId()
                                             )));
         }
 
@@ -127,7 +177,7 @@ class OrangtuaWaliController extends Controller
      * @Template()
      */
     public function editAction($sid, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -135,7 +185,7 @@ class OrangtuaWaliController extends Controller
         $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrangtuaWali entity.');
+            throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
         }
 
         $editForm = $this->createForm(new OrangtuaWaliType(), $entity);
@@ -156,12 +206,15 @@ class OrangtuaWaliController extends Controller
      * @Template("FastSisdikBundle:OrangtuaWali:edit.html.twig")
      */
     public function updateAction(Request $request, $sid, $id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find OrangtuaWali entity.');
+            throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -172,12 +225,20 @@ class OrangtuaWaliController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $this->get('session')->getFlashBag()
+                    ->add('success',
+                            $this->get('translator')
+                                    ->trans('flash.ortuwali.siswa.terbarui',
+                                            array(
+                                                '%siswa%' => $entity->getSiswa()->getNamaLengkap()
+                                            )));
+
             return $this
                     ->redirect(
                             $this
                                     ->generateUrl('parentguard_edit',
                                             array(
-                                                'id' => $id
+                                                'sid' => $sid, 'id' => $id
                                             )));
         }
 
@@ -202,14 +263,46 @@ class OrangtuaWaliController extends Controller
             $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find OrangtuaWali entity.');
+                throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            try {
+                if ($entity->isAktif() === true) {
+                    $message = $this->get('translator')->trans('exception.larangan.hapus.ortuwali');
+                    throw new \Exception($message);
+                }
+
+                $em->remove($entity);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()
+                        ->add('success',
+                                $this->get('translator')
+                                        ->trans('flash.ortuwali.siswa.terhapus',
+                                                array(
+                                                    '%siswa%' => $entity->getSiswa()->getNamaLengkap()
+                                                )));
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.delete.restrict');
+                throw new DBALException($message);
+            }
+        } else {
+            $this->get('session')->getFlashBag()
+                    ->add('error',
+                            $this->get('translator')
+                                    ->trans('flash.ortuwali.siswa.gagal.dihapus',
+                                            array(
+                                                '%siswa%' => $entity->getSiswa()->getNamaLengkap()
+                                            )));
         }
 
-        return $this->redirect($this->generateUrl('parentguard'));
+        return $this
+                ->redirect(
+                        $this
+                                ->generateUrl('parentguard',
+                                        array(
+                                            'sid' => $sid,
+                                        )));
     }
 
     private function createDeleteForm($id) {

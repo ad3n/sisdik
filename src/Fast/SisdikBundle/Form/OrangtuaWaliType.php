@@ -41,19 +41,20 @@ class OrangtuaWaliType extends AbstractType
                                 'label' => 'label.nationality',
                                 'attr' => array(
                                     'class' => 'medium'
-                                )
+                                ), 'required' => false
                         ))
                 ->add('hubunganDenganSiswa', 'choice',
                         array(
                                 'choices' => $this->buildRelationsToStudent(),
-                                'label' => 'label.relation.tostudent',
+                                'label' => 'label.relation.tostudent', 'required' => true
                         ))
                 ->add('pendidikanTertinggi', 'choice',
                         array(
                                 'choices' => $this->buildEducationList(),
-                                'label' => 'label.highest.education', 'attr' => array(
+                                'label' => 'label.highest.education',
+                                'attr' => array(
                                     'class' => 'medium'
-                                )
+                                ), 'required' => true
                         ))
                 ->add('pekerjaan', null,
                         array(

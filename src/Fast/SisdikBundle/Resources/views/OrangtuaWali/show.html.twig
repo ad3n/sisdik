@@ -1,81 +1,76 @@
-<h1>CalonOrangtuaWali</h1>
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-<table class="record_properties">
-    <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ entity.id }}</td>
-        </tr>
-        <tr>
-            <th>Nama</th>
-            <td>{{ entity.nama }}</td>
-        </tr>
-        <tr>
-            <th>Tempatlahir</th>
-            <td>{{ entity.tempatLahir }}</td>
-        </tr>
-        <tr>
-            <th>Tanggallahir</th>
-            <td>{{ entity.tanggalLahir|date('Y-m-d H:i:s') }}</td>
-        </tr>
-        <tr>
-            <th>Ponsel</th>
-            <td>{{ entity.ponsel }}</td>
-        </tr>
-        <tr>
-            <th>Kewarganegaraan</th>
-            <td>{{ entity.kewarganegaraan }}</td>
-        </tr>
-        <tr>
-            <th>Hubungandengansiswa</th>
-            <td>{{ entity.hubunganDenganSiswa }}</td>
-        </tr>
-        <tr>
-            <th>Pendidikantertinggi</th>
-            <td>{{ entity.pendidikanTertinggi }}</td>
-        </tr>
-        <tr>
-            <th>Pekerjaan</th>
-            <td>{{ entity.pekerjaan }}</td>
-        </tr>
-        <tr>
-            <th>Penghasilanbulanan</th>
-            <td>{{ entity.penghasilanBulanan }}</td>
-        </tr>
-        <tr>
-            <th>Penghasilantahunan</th>
-            <td>{{ entity.penghasilanTahunan }}</td>
-        </tr>
-        <tr>
-            <th>Alamat</th>
-            <td>{{ entity.alamat }}</td>
-        </tr>
-        <tr>
-            <th>Keterangan</th>
-            <td>{{ entity.keterangan }}</td>
-        </tr>
-        <tr>
-            <th>Aktif</th>
-            <td>{{ entity.aktif }}</td>
-        </tr>
-    </tbody>
-</table>
+{% block page_heading %}{% trans from "headings" %}parentguard.detail{% endtrans %}{% endblock %}
+{% block content %}
+<dl>
+    <dt>{{ 'label.nama.siswa'|trans }}</dt>
+    <dd>{{ entity.siswa.namaLengkap }}</dd>
+{% if entity.siswa.pembayaranPendaftaran.count > 0 %}
+    <dt>{{ 'label.application.number'|trans }}</dt>
+    <dd>{{ entity.siswa.nomorPendaftaran }}</dd>
+{% endif %}
+    <dt>{{ 'label.nama.ortuwali'|trans }}</dt>
+    <dd>{{ entity.nama }}</dd>
+    <dt>{{ 'label.ponsel'|trans }}</dt>
+    <dd>{{ entity.ponsel }}</dd>
+    <dt>{{ 'label.tempat.lahir'|trans }}</dt>
+    <dd>{{ entity.tempatLahir }}</dd>
+    <dt>{{ 'label.tanggal.lahir'|trans }}</dt>
+    <dd>{{ entity.tanggalLahir|localeDate('long') }}</dd>
+    <dt>{{ 'label.kewarganegaraan'|trans }}</dt>
+    <dd>{{ entity.kewarganegaraan }}</dd>
+    <dt>{{ 'label.hubungan.terhadap.siswa'|trans }}</dt>
+    <dd>{{ entity.hubunganDenganSiswa }}</dd>
+    <dt>{{ 'label.pendidikan.tertinggi'|trans }}</dt>
+    <dd>{{ entity.pendidikanTertinggi }}</dd>
+    <dt>{{ 'label.pekerjaan'|trans }}</dt>
+    <dd>{{ entity.pekerjaan }}</dd>
+    <dt>{{ 'label.penghasilan.bulanan'|trans }}</dt>
+    <dd>{% if entity.penghasilanBulanan != 0 %}{{ currencySymbol(locale) }}. {{ entity.penghasilanBulanan|number_format(0, ',', '.') }}{% endif %}</dd>
+    <dt>{{ 'label.penghasilan.tahunan'|trans }}</dt>
+    <dd>{% if entity.penghasilanTahunan != 0 %}{{ currencySymbol(locale) }}. {{ entity.penghasilanTahunan|number_format(0, ',', '.') }}{% endif %}</dd>
+    <dt>{{ 'label.alamat'|trans }}</dt>
+    <dd>{{ entity.alamat }}</dd>
+    <dt>{{ 'label.keterangan'|trans }}</dt>
+    <dd>{{ entity.keterangan }}</dd>
+</dl>
 
-<ul class="record_actions">
+<div class="clearfix"></div>
+
+<form id="delete-form" action="{{ path('parentguard_delete', { 'sid': entity.siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+
+<ul class="pills">
     <li>
-        <a href="{{ path('appguardian') }}">
-            Back to the list
-        </a>
+        <a href="{{ path('parentguard', { 'sid': entity.siswa.id }) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('appguardian_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('appguardian_delete', { 'id': entity.id }) }}" method="post">
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
+        <a href="{{ path('parentguard_edit', { 'sid': entity.siswa.id, 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
+
+<div class="clearfix"></div>
+
+<div class="add-link pull-right">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('parentguard_new', { 'sid': entity.siswa.id }) }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.parentguard.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.parentguard'|trans({ '%name%': entity.nama, '%studentname%': entity.siswa.namaLengkap }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

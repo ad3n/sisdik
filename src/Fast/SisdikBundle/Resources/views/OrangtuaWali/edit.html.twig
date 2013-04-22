@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}parentguard.edit{% endtrans %} {{ 'label.from'|trans }} {{ siswa.namaLengkap }}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}parentguard.edit{% endtrans %}<br />{{ 'label.from'|trans }} {{ siswa.namaLengkap }}{% endblock %}
 
 {% block content %}
 <style type="text/css">
@@ -8,6 +8,9 @@
     z-index: -10;
 }
 </style>
+
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
 <form action="{{ path('parentguard_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
 	<div class="form-actions">

@@ -110,7 +110,7 @@ class OrangtuaWali
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
      */
-    private $aktif = 1;
+    private $aktif = true;
 
     /**
      * @var \Siswa
@@ -400,7 +400,7 @@ class OrangtuaWali
      *
      * @return boolean
      */
-    public function getAktif() {
+    public function isAktif() {
         return $this->aktif;
     }
 

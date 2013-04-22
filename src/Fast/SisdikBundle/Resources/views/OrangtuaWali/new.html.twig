@@ -1,16 +1,36 @@
-<h1>CalonOrangtuaWali creation</h1>
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-<form action="{{ path('appguardian_create') }}" method="post" {{ form_enctype(form) }}>
+{% block page_heading %}{% trans from "headings" %}parentguard.creation{% endtrans %}<br />{{ 'label.from'|trans }} {{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
+<form action="{{ path('parentguard_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
-    <p>
-        <button type="submit">Create</button>
-    </p>
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
 </form>
-
-<ul class="record_actions">
+<ul class="pills">
     <li>
-        <a href="{{ path('appguardian') }}">
-            Back to the list
-        </a>
+        <a href="{{ path('parentguard', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$('.date').datepicker({
+	    dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+        changeYear: true,
+        maxDate: "-15Y"
+    });
+
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.parentguard'|trans({ '%name%': entity.nama , '%studentname%': siswa.namaLengkap }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

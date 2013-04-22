@@ -5,12 +5,12 @@
 {% block content %}
 
 <dl>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
     <dt>{{ 'label.year.entry'|trans }}</dt>
     <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
     <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
     <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
-    <dt>{{ 'label.name.full'|trans }}</dt>
-    <dd>{{ siswa.namaLengkap }}</dd>
     <dt>{{ 'label.gender'|trans }}</dt>
     <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
 </dl>
@@ -53,7 +53,7 @@
     	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
     		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
     		        {% endimage %}
-{#     		        <a href="{{ path('academicyear_activate', {'id': data.id}) }}">{{ 'label.activate'|trans }}</a>#}
+    		        <a href="{{ path('parentguard_activate', {'sid': siswa.id, 'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
     		    {% endif %}
     		</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
@@ -64,6 +64,8 @@
     {% endfor %}
     </tbody>
 </table>
+
+<p style="font-style: italic;">* {{ 'shortinfo.ortuwali.hanya.satu.aktif'|trans }}</p>
 
 <div class="clearfix"></div>
 
