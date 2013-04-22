@@ -1,8 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * PenyakitSiswa
@@ -25,6 +25,7 @@ class PenyakitSiswa
      * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     * @Assert\NotBlank
      */
     private $nama;
 
@@ -66,15 +67,12 @@ class PenyakitSiswa
      */
     private $siswa;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -84,20 +82,18 @@ class PenyakitSiswa
      * @param string $nama
      * @return PenyakitSiswa
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -107,20 +103,18 @@ class PenyakitSiswa
      * @param string $kelas
      * @return PenyakitSiswa
      */
-    public function setKelas($kelas)
-    {
+    public function setKelas($kelas) {
         $this->kelas = $kelas;
-    
+
         return $this;
     }
 
     /**
      * Get kelas
      *
-     * @return string 
+     * @return string
      */
-    public function getKelas()
-    {
+    public function getKelas() {
         return $this->kelas;
     }
 
@@ -130,20 +124,18 @@ class PenyakitSiswa
      * @param string $tahun
      * @return PenyakitSiswa
      */
-    public function setTahun($tahun)
-    {
+    public function setTahun($tahun) {
         $this->tahun = $tahun;
-    
+
         return $this;
     }
 
     /**
      * Get tahun
      *
-     * @return string 
+     * @return string
      */
-    public function getTahun()
-    {
+    public function getTahun() {
         return $this->tahun;
     }
 
@@ -153,20 +145,18 @@ class PenyakitSiswa
      * @param string $lamasakit
      * @return PenyakitSiswa
      */
-    public function setLamasakit($lamasakit)
-    {
+    public function setLamasakit($lamasakit) {
         $this->lamasakit = $lamasakit;
-    
+
         return $this;
     }
 
     /**
      * Get lamasakit
      *
-     * @return string 
+     * @return string
      */
-    public function getLamasakit()
-    {
+    public function getLamasakit() {
         return $this->lamasakit;
     }
 
@@ -176,20 +166,18 @@ class PenyakitSiswa
      * @param string $keterangan
      * @return PenyakitSiswa
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
     }
 
@@ -199,20 +187,18 @@ class PenyakitSiswa
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return PenyakitSiswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
     }
 }

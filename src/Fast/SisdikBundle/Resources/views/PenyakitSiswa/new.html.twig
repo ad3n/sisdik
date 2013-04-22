@@ -1,0 +1,20 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}riwayat.penyakit.pembuatan{% endtrans %}<br />{{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
+<form action="{{ path('riwayat-penyakit_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        <a href="{{ path('riwayat-penyakit', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.riwayat.penyakit'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

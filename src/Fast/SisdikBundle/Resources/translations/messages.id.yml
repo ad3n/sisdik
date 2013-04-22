@@ -5,6 +5,11 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    terjadi.di.kelas: Terjadi di Kelas
+    tahun.sakit: Tahun Sakit
+    lama.sakit: Lama Sakit
+    nama.penyakit: Nama Penyakit
+    riwayat.penyakit.tambah: Tambah Info Riwayat Penyakit
     nama.siswa: Nama Siswa
     alamat: Alamat
     hubungan.terhadap.siswa: Hubungan terhadap siswa
@@ -354,11 +359,16 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
-    ortuwali.siswa:
-        tersimpan: Data Orang Tua/Wali siswa '%siswa%' berhasil disimpan
-        terbarui: Data Orang Tua/Wali siswa '%siswa%' berhasil diperbarui
-        terhapus: Data Orang Tua/Wali siswa '%siswa%' berhasil dihapus
-        gagal.dihapus: Data Orang Tua/Wali siswa '%siswa%' gagal dihapus
+    riwayat.penyakit:
+        tersimpan: Data Riwayat Penyakit '%siswa%' berhasil disimpan
+        terbarui: Data Riwayat Penyakit '%siswa%' berhasil diperbarui
+        terhapus: Data Riwayat Penyakit '%siswa%' berhasil dihapus
+        gagal.dihapus: Data Riwayat Penyakit '%siswa%' gagal dihapus
+    ortuwali:
+        tersimpan: Data Orang Tua/Wali '%siswa%' berhasil disimpan
+        terbarui: Data Orang Tua/Wali '%siswa%' berhasil diperbarui
+        terhapus: Data Orang Tua/Wali '%siswa%' berhasil dihapus
+        gagal.dihapus: Data Orang Tua/Wali '%siswa%' gagal dihapus
     smspendaftaran:
         tersimpan: Pengaturan SMS Pendaftaran berhasil disimpan
         terbarui: Pengaturan SMS Pendaftaran berhasil diperbarui
@@ -546,6 +556,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    riwayat.penyakit: Hapus Riwayat Penyakit %nama% %siswa%?
     smspendaftaran: Hapus Pengaturan SMS Pendaftaran?
     layanansms: Hapus Pilihan Layanan SMS sekolah %sekolah%?
     user: Hapus user '%username%'?

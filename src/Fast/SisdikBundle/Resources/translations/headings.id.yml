@@ -1,6 +1,11 @@
 welcome: Selamat Datang
-
 dashboard: Dasbor
+
+riwayat.penyakit:
+    daftar: Daftar Riwayat Penyakit
+    edit: Mengubah Info Riwayat Penyakit
+    pembuatan: Menambah Info Riwayat Penyakit
+    detail: Detail Info Riwayat Penyakit
 
 profile:
     edit: Edit Profil

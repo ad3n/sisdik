@@ -201,7 +201,7 @@ printreceiptsoption:
     type:     annotation
     prefix:   /
 
-parentguard:
+ortuwali.pendaftar:
     resource: "@FastSisdikBundle/Controller/OrangtuaWaliController.php"
     type:     annotation
     prefix:   /
@@ -213,6 +213,11 @@ layanansms:
 
 smspendaftaran:
     resource: "@FastSisdikBundle/Controller/LayananSmsPendaftaranController.php"
+    type:     annotation
+    prefix:   /
+
+riwayatpenyakit:
+    resource: "@FastSisdikBundle/Controller/PenyakitSiswaController.php"
     type:     annotation
     prefix:   /
 

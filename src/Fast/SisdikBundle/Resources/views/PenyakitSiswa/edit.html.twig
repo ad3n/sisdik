@@ -1,0 +1,34 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}riwayat.penyakit.edit{% endtrans %}<br />{{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
+<form action="{{ path('riwayat-penyakit_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {{ form_widget(edit_form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    </div>
+</form>
+
+<form id="delete-form" action="{{ path('riwayat-penyakit_delete', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('riwayat-penyakit', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.riwayat.penyakit'|trans }}</a>
+    </li>
+</ul>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.riwayat.penyakit'|trans({ '%nama%': entity.nama , '%siswa%': siswa.namaLengkap }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

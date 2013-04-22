@@ -1,0 +1,63 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}riwayat.penyakit.daftar{% endtrans %} {{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+
+<dl>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
+    <dt>{{ 'label.year.entry'|trans }}</dt>
+    <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+    <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+    <dt>{{ 'label.gender'|trans }}</dt>
+    <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('riwayat-penyakit_new', {'sid': siswa.id}) }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.riwayat.penyakit.tambah'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.nama.penyakit'|trans }}</th>
+    		<th>{{ 'label.tahun.sakit'|trans }}</th>
+    		<th>{{ 'label.lama.sakit'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.penyakit.nama'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.tahun.sakit'|trans }}">{{ data.tahun }}</td>
+    		<td data-title="{{ 'label.lama.sakit'|trans }}">{{ data.lamasakit }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('riwayat-penyakit_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('riwayat-penyakit_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.studentinfo'|trans }}</a>
+    </li>
+</ul>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
