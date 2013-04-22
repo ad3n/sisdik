@@ -2,6 +2,7 @@ dll: dll
 member: Anggota
 leader: Ketua
 paidoff: lunas
+untuk: Untuk
 
 label:
     nama.siswa: Nama Siswa
