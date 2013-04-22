@@ -88,11 +88,14 @@
         {% endif %}
             </ul>
 
-            <h4 style="margin-top: 1em;">{{ 'heading.personalinfo'|trans }}</h4>
-        	{{ 'text.personalinfo'|trans }}<br />
+            <h4 style="margin-top: 1em;">{{ 'heading.info.pendukung'|trans }}</h4>
+        	{{ 'text.info.pendukung'|trans }}<br />
             <ul class="pills">
                 <li>
                     <a href="{{ path('parentguard', { 'sid': entity.id }) }}">{{ 'link.ortuwali'|trans }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('riwayat-penyakit', { 'sid': entity.id }) }}">{{ 'link.riwayat.penyakit'|trans }}</a>
                 </li>
             </ul>
         </div>

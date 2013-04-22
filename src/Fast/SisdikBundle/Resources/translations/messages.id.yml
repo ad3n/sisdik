@@ -334,6 +334,7 @@ label:
         tambah: Tambah Pengaturan SMS Pendaftaran
 
 link:
+    riwayat.penyakit: Penyakit Yang Pernah Diderita
     ortuwali: Orang Tua/Wali
     backtolist: « Kembali ke Daftar
     backto: « Kembali ke
@@ -692,8 +693,8 @@ male: Laki-laki
 female: Perempuan
 
 heading:
+    info.pendukung: Info Pendukung
     academicinfo: Info Akademik
-    personalinfo: Info Personal
     download.selection: Pilihan mengunduh berkas data
     classmapping.initialization: Untuk Inisialisasi
     classmapping.nextgrade: Untuk Kenaikan Kelas
@@ -701,8 +702,8 @@ heading:
     download.data.formerge: Unduh berkas data yang akan diimpor-gabungkan
 
 text:
+    info.pendukung: Data orang tua, riwayat penyakit, pendidikan sebelumnya, referensi, dan lain-lain
     academicinfo: Riwayat kelas, nilai, tugas akhir, pembayaran, dan lain-lain
-    personalinfo: Data orang tua, riwayat penyakit, pendidikan sebelumnya, referensi, dan lain-lain
 
 profile:
     add:
