@@ -39,12 +39,12 @@ class SiswaKelasTemplateMapType extends AbstractType
                                     ), 'label_render' => false
                             ));
 
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.kode')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('jenjang', 'entity',
+                    ->add('tingkat', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Jenjang', 'label' => 'label.class.entry',
+                                    'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.class.entry',
                                     'multiple' => false, 'expanded' => false, 'required' => true,
                                     'property' => 'optionLabel', 'query_builder' => $querybuilder,
                                     'attr' => array(

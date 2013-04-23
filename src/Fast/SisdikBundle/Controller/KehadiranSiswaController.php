@@ -85,16 +85,16 @@ class KehadiranSiswaController extends Controller
             } else {
                 $buildparam['searchkey'] = '';
             }
-            if ($searchdata['jenjang'] != '') {
-                $querybuilder->andWhere("t2.jenjang = :jenjang");
-                $querybuilder->setParameter('jenjang', $searchdata['jenjang']->getId());
+            if ($searchdata['tingkat'] != '') {
+                $querybuilder->andWhere("t2.tingkat = :tingkat");
+                $querybuilder->setParameter('tingkat', $searchdata['tingkat']->getId());
 
-                $querybuilder_class->andWhere("t.jenjang = :jenjang");
-                $querybuilder_class->setParameter('jenjang', $searchdata['jenjang']->getId());
+                $querybuilder_class->andWhere("t.tingkat = :tingkat");
+                $querybuilder_class->setParameter('tingkat', $searchdata['tingkat']->getId());
 
-                $buildparam['jenjang'] = $searchdata['jenjang']->getId();
+                $buildparam['tingkat'] = $searchdata['tingkat']->getId();
             } else {
-                $buildparam['jenjang'] = '';
+                $buildparam['tingkat'] = '';
             }
             if ($searchdata['kelas'] != '') {
                 $querybuilder->andWhere("t2.id = :kelas");

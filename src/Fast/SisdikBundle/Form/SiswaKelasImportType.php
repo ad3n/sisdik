@@ -41,7 +41,7 @@ class SiswaKelasImportType extends AbstractType
                             ));
 
             $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                    ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
+                    ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
                     ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('kelas', 'entity',

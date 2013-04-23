@@ -53,12 +53,12 @@ class KelasType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
 
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
                     ->where('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('jenjang', 'entity',
+                    ->add('tingkat', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Jenjang', 'label' => 'label.level',
+                                    'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.tingkat',
                                     'multiple' => false, 'expanded' => false, 'property' => 'optionLabel',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,

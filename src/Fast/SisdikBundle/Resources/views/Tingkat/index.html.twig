@@ -1,13 +1,13 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}data.studylevel.list{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}tingkat.kelas.daftar{% endtrans %}{% endblock %}
 
 {% block content %}
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('data_level_new') }}" class="add-link-a">
+	<a href="{{ path('tingkat-kelas_new') }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.studylevel.add'|trans }}
+	    {{ 'label.tingkat.kelas.tambah'|trans }}
 	</a>
 {% endimage %}
 </div>
@@ -18,7 +18,7 @@
     <thead>
         <tr>
     		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.studylevel.name'|trans, 't.nama') }}
+    		    {{ knp_pagination_sortable(pagination, 'label.tingkat.kelas.nama'|trans, 't.nama') }}
     	    </th>
     		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
@@ -32,12 +32,12 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.studylevel.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.tingkat.kelas.nama'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('data_level_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('data_level_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('tingkat-kelas_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('tingkat-kelas_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
     		</td>
     	</tr>
     {% endfor %}

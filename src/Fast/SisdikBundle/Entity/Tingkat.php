@@ -4,12 +4,12 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Jenjang
+ * Tingkat
  *
- * @ORM\Table(name="jenjang")
+ * @ORM\Table(name="tingkat")
  * @ORM\Entity
  */
-class Jenjang
+class Tingkat
 {
     /**
      * @var integer
@@ -54,7 +54,7 @@ class Jenjang
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -64,7 +64,7 @@ class Jenjang
      * Set kode
      *
      * @param string $kode
-     * @return Jenjang
+     * @return Tingkat
      */
     public function setKode($kode) {
         $this->kode = $kode;
@@ -75,7 +75,7 @@ class Jenjang
     /**
      * Get kode
      *
-     * @return string 
+     * @return string
      */
     public function getKode() {
         return $this->kode;
@@ -85,7 +85,7 @@ class Jenjang
      * Set nama
      *
      * @param string $nama
-     * @return Jenjang
+     * @return Tingkat
      */
     public function setNama($nama) {
         $this->nama = $nama;
@@ -96,7 +96,7 @@ class Jenjang
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
     public function getNama() {
         return $this->nama;
@@ -106,7 +106,7 @@ class Jenjang
      * Set urutan
      *
      * @param integer $urutan
-     * @return Jenjang
+     * @return Tingkat
      */
     public function setUrutan($urutan) {
         $this->urutan = $urutan;
@@ -117,7 +117,7 @@ class Jenjang
     /**
      * Get urutan
      *
-     * @return integer 
+     * @return integer
      */
     public function getUrutan() {
         return $this->urutan;
@@ -127,7 +127,7 @@ class Jenjang
      * Set sekolah
      *
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return Jenjang
+     * @return Tingkat
      */
     public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
         $this->sekolah = $sekolah;
@@ -138,7 +138,7 @@ class Jenjang
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah() {
         return $this->sekolah;

@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class JenjangType extends AbstractType
+class TingkatType extends AbstractType
 {
     private $container;
 
@@ -65,7 +65,7 @@ class JenjangType extends AbstractType
         $resolver
                 ->setDefaults(
                         array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\Jenjang'
+                            'data_class' => 'Fast\SisdikBundle\Entity\Tingkat'
                         ));
     }
 
@@ -74,6 +74,6 @@ class JenjangType extends AbstractType
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_jenjangtype';
+        return 'fast_sisdikbundle_tingkattype';
     }
 }

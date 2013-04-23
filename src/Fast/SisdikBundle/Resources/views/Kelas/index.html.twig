@@ -47,7 +47,7 @@
     		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
     	    </th>
-    		<th>{{ 'label.level'|trans }}</th>
+    		<th>{{ 'label.tingkat'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
@@ -59,7 +59,7 @@
     		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
     		<td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
-    		<td data-title="{{ 'label.level'|trans }}">{% if data.jenjang is not null %}{{ data.jenjang.kode }} ({{ data.jenjang.nama }}){% endif %}</td>
+    		<td data-title="{{ 'label.tingkat'|trans }}">{% if data.tingkat is not null %}{{ data.tingkat.kode }} ({{ data.tingkat.nama }}){% endif %}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('data_class_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('data_class_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>

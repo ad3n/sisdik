@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -72,24 +71,21 @@ class Kelas
     private $sekolah;
 
     /**
-     * @var \Jenjang
+     * @var \Tingkat
      *
-     * @ORM\ManyToOne(targetEntity="Jenjang")
+     * @ORM\ManyToOne(targetEntity="Tingkat")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenjang_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="tingkat_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $jenjang;
-
-
+    private $tingkat;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -99,20 +95,18 @@ class Kelas
      * @param string $nama
      * @return Kelas
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -122,20 +116,18 @@ class Kelas
      * @param string $kode
      * @return Kelas
      */
-    public function setKode($kode)
-    {
+    public function setKode($kode) {
         $this->kode = $kode;
-    
+
         return $this;
     }
 
     /**
      * Get kode
      *
-     * @return string 
+     * @return string
      */
-    public function getKode()
-    {
+    public function getKode() {
         return $this->kode;
     }
 
@@ -145,20 +137,18 @@ class Kelas
      * @param string $keterangan
      * @return Kelas
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
     }
 
@@ -168,20 +158,18 @@ class Kelas
      * @param integer $urutan
      * @return Kelas
      */
-    public function setUrutan($urutan)
-    {
+    public function setUrutan($urutan) {
         $this->urutan = $urutan;
-    
+
         return $this;
     }
 
     /**
      * Get urutan
      *
-     * @return integer 
+     * @return integer
      */
-    public function getUrutan()
-    {
+    public function getUrutan() {
         return $this->urutan;
     }
 
@@ -191,20 +179,18 @@ class Kelas
      * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
      * @return Kelas
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
-    {
+    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
         $this->tahunAkademik = $tahunAkademik;
-    
+
         return $this;
     }
 
     /**
      * Get tahunAkademik
      *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return \Fast\SisdikBundle\Entity\TahunAkademik
      */
-    public function getTahunAkademik()
-    {
+    public function getTahunAkademik() {
         return $this->tahunAkademik;
     }
 
@@ -214,43 +200,39 @@ class Kelas
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return Kelas
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
-    {
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
         $this->sekolah = $sekolah;
-    
+
         return $this;
     }
 
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
-    public function getSekolah()
-    {
+    public function getSekolah() {
         return $this->sekolah;
     }
 
     /**
-     * Set jenjang
+     * Set tingkat
      *
-     * @param \Fast\SisdikBundle\Entity\Jenjang $jenjang
+     * @param \Fast\SisdikBundle\Entity\Tingkat $tingkat
      * @return Kelas
      */
-    public function setJenjang(\Fast\SisdikBundle\Entity\Jenjang $jenjang = null)
-    {
-        $this->jenjang = $jenjang;
-    
+    public function setTingkat(\Fast\SisdikBundle\Entity\Tingkat $tingkat = null) {
+        $this->tingkat = $tingkat;
+
         return $this;
     }
 
     /**
-     * Get jenjang
+     * Get tingkat
      *
-     * @return \Fast\SisdikBundle\Entity\Jenjang 
+     * @return \Fast\SisdikBundle\Entity\Tingkat
      */
-    public function getJenjang()
-    {
-        return $this->jenjang;
+    public function getTingkat() {
+        return $this->tingkat;
     }
 }

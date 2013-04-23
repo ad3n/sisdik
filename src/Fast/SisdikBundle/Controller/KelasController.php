@@ -39,8 +39,8 @@ class KelasController extends Controller
         $searchform = $this->createForm(new KelasSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahunAkademik', 't3')->where('t.sekolah = :sekolah')
-                ->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
+                ->leftJoin('t.tingkat', 't2')->leftJoin('t.tahunAkademik', 't3')
+                ->where('t.sekolah = :sekolah')->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
@@ -323,7 +323,7 @@ class KelasController extends Controller
                 $kode = substr($entity->getKode(), strlen($entity->getTahunAkademik()->getKode()));
 
                 $kelas = new Kelas();
-                $kelas->setJenjang($entity->getJenjang());
+                $kelas->setTingkat($entity->getTingkat());
                 $kelas->setSekolah($entity->getSekolah());
                 $kelas->setTahunAkademik($tahunAkademikTarget);
                 $kelas->setKeterangan($entity->getKeterangan());
@@ -369,9 +369,10 @@ class KelasController extends Controller
         $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahunAkademik = :tahunAkademik')
-                ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')
-                ->setParameter('sekolah', $sekolah->getId())->setParameter('tahunAkademik', $tahunAkademik);
+                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')
+                ->andWhere('t.tahunAkademik = :tahunAkademik')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah->getId())
+                ->setParameter('tahunAkademik', $tahunAkademik);
         $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
@@ -401,8 +402,9 @@ class KelasController extends Controller
         $kelas = $this->getRequest()->query->get('kelas');
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.jenjang', 't2')->where('t.sekolah = :sekolah')->andWhere('t.tahunAkademik = :tahunAkademik')
-                ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
+                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')
+                ->andWhere('t.tahunAkademik = :tahunAkademik')->orderBy('t2.urutan', 'ASC')
+                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
                 ->setParameter('tahunAkademik', $tahunAkademik);
         $results = $querybuilder->getQuery()->getResult();
 

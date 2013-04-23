@@ -40,7 +40,7 @@
             {{ form_widget(dlform_initialization) }}
             <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
         </form>
-        
+
         <h4>{{ 'heading.classmapping.nextgrade'|trans }}:</h4>
         ({{ 'shortinfo.using.year.and.level'|trans }})
         <form method="post" action="{{ path('data_student_studentclass_templatemap') }}" class="form-search form-inline">
@@ -61,20 +61,20 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	var url = "{{ path('data_class_ajax_updateclass') }}";
-    $.get(url, {tahun: $(".selectyear").val()}, function(data) {
+    $.get(url, {tahunAkademik: $(".selectyear").val()}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
         }
         $(".selectclass").html(options);
     });
-    
+
     $(".selectyear").change(function() {
         // clear class select box content
         $(".selectclass").empty();
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {tahun: $(this).val()}, function(data) {
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';

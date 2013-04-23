@@ -141,8 +141,8 @@ presence_schedule:
     type:     annotation
     prefix:   /
     
-studylevel:
-    resource: "@FastSisdikBundle/Controller/JenjangController.php"
+tingkatkelas:
+    resource: "@FastSisdikBundle/Controller/TingkatController.php"
     type:     annotation
     prefix:   /
     

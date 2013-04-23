@@ -1,6 +1,12 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+tingkat.kelas:
+    daftar: Daftar Tingkat Kelas
+    edit: Mengubah Tingkat Kelas
+    pembuatan: Membuat Tingkat Kelas
+    detail: Detail Tingkat Kelas
+
 riwayat.penyakit:
     daftar: Daftar Riwayat Penyakit
     edit: Mengubah Info Riwayat Penyakit
@@ -70,11 +76,6 @@ fee:
         detail: Detail Biaya Berulang
 
 data:
-    studylevel:
-        list: Daftar Jenjang
-        edit: Mengubah Jenjang
-        creation: Membuat Jenjang
-        detail: Detail Jenjang
     student:
         list: Daftar Siswa
         edit: Mengubah Data Siswa

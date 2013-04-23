@@ -1,11 +1,11 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}data.studylevel.detail{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}tingkat.kelas.detail{% endtrans %}{% endblock %}
 {% block content %}
 <dl>
     <dt>{{ 'label.school'|trans }}</dt>
     <dd>{{ entity.sekolah.nama }}</dd>
-    <dt>{{ 'label.studylevel.name'|trans }}</dt>
+    <dt>{{ 'label.tingkat.kelas.nama'|trans }}</dt>
     <dd>{{ entity.nama }}</dd>
     <dt>{{ 'label.code'|trans }}</dt>
     <dd>{{ entity.kode }}</dd>
@@ -15,7 +15,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('data_level_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('tingkat-kelas_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -24,10 +24,10 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('data_level', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('tingkat-kelas', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('data_level_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('tingkat-kelas_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 
@@ -35,16 +35,16 @@
 
 <div class="add-link pull-right">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('data_level_new') }}" class="add-link-a">
+	<a href="{{ path('tingkat-kelas_new') }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.studylevel.add'|trans }}
+	    {{ 'label.tingkat.kelas.tambah'|trans }}
 	</a>
 {% endimage %}
 </div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.studylevel'|trans({ '%code%': entity.kode }) }}";
+		var confirmtext = "{{ 'confirm.drop.tingkat.kelas'|trans({ '%code%': entity.kode }) }}";
 		confirmtext = confirmtext.replace(/&#039;/g, "'");
 		return confirmDropButton(confirmtext);
 	});

@@ -200,9 +200,9 @@ class Builder extends AbstractNavbarMenuBuilder
                                 ));
 
                 $academic
-                        ->addChild('links.data.level',
+                        ->addChild('links.tingkat',
                                 array(
-                                    'route' => 'data_level'
+                                    'route' => 'tingkat-kelas'
                                 ));
 
                 $academic

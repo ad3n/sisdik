@@ -1,9 +1,9 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}data.studylevel.creation{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}tingkat.kelas.pembuatan{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('data_level_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form action="{{ path('tingkat-kelas_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -11,7 +11,7 @@
 </form>
 <ul class="pills">
     <li>
-        <a href="{{ path('data_level') }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('tingkat-kelas') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}

@@ -5,8 +5,8 @@
 <dl>
     <dt>{{ 'label.school'|trans }}</dt>
     <dd>{{ entity.sekolah.nama }}</dd>
-    <dt>{{ 'label.level'|trans }}</dt>
-    <dd>{% if entity.jenjang is not null %}{{ entity.jenjang.kode }}{% endif %}</dd>
+    <dt>{{ 'label.tingkat'|trans }}</dt>
+    <dd>{% if entity.tingkat is not null %}{{ entity.tingkat.optionLabel }}{% endif %}</dd>
     <dt>{{ 'label.class.entry'|trans }}</dt>
     <dd>{{ entity.nama }}</dd>
     <dt>{{ 'label.code'|trans }}</dt>

@@ -7,6 +7,7 @@ headings:
     payments: Pembayaran
 
 links:
+    tingkat: Tingkat Kelas
     smspendaftaran: SMS Pendaftaran
     layanansms: Layanan SMS
     printreceiptsoption: Opsi Cetak Kwitansi
@@ -37,7 +38,6 @@ links:
         once: Biaya Sekali Bayar
         recur: Biaya Berulang
     data:
-        level: Jenjang
         student: Siswa
         class: Kelas
         classguardian: Wali Kelas

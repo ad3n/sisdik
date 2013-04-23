@@ -8,23 +8,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Jenjang;
-use Fast\SisdikBundle\Form\JenjangType;
+use Fast\SisdikBundle\Entity\Tingkat;
+use Fast\SisdikBundle\Form\TingkatType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Jenjang controller.
+ * Tingkat controller.
  *
- * @Route("/data/level")
+ * @Route("/tingkat-kelas")
  * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
  */
-class JenjangController extends Controller
+class TingkatController extends Controller
 {
     /**
-     * Lists all Jenjang entities.
+     * Lists all Tingkat entities.
      *
-     * @Route("/", name="data_level")
+     * @Route("/", name="tingkat-kelas")
      * @Template()
      */
     public function indexAction() {
@@ -34,7 +34,7 @@ class JenjangController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.kode', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
         }
@@ -48,9 +48,9 @@ class JenjangController extends Controller
     }
 
     /**
-     * Finds and displays a Jenjang entity.
+     * Finds and displays a Tingkat entity.
      *
-     * @Route("/{id}/show", name="data_level_show")
+     * @Route("/{id}/show", name="tingkat-kelas_show")
      * @Template()
      */
     public function showAction($id) {
@@ -59,10 +59,10 @@ class JenjangController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Jenjang')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Entity Jenjang tak ditemukan.');
+            throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -73,17 +73,17 @@ class JenjangController extends Controller
     }
 
     /**
-     * Displays a form to create a new Jenjang entity.
+     * Displays a form to create a new Tingkat entity.
      *
-     * @Route("/new", name="data_level_new")
+     * @Route("/new", name="tingkat-kelas_new")
      * @Template()
      */
     public function newAction() {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $entity = new Jenjang();
-        $form = $this->createForm(new JenjangType($this->container), $entity);
+        $entity = new Tingkat();
+        $form = $this->createForm(new TingkatType($this->container), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView(),
@@ -91,18 +91,18 @@ class JenjangController extends Controller
     }
 
     /**
-     * Creates a new Jenjang entity.
+     * Creates a new Tingkat entity.
      *
-     * @Route("/create", name="data_level_create")
+     * @Route("/create", name="tingkat-kelas_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Jenjang:new.html.twig")
+     * @Template("FastSisdikBundle:Tingkat:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $entity = new Jenjang();
-        $form = $this->createForm(new JenjangType($this->container), $entity);
+        $entity = new Tingkat();
+        $form = $this->createForm(new TingkatType($this->container), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
@@ -113,15 +113,15 @@ class JenjangController extends Controller
             $this->get('session')->getFlashBag()
                     ->add('success',
                             $this->get('translator')
-                                    ->trans('flash.studylevel.inserted',
+                                    ->trans('flash.tingkat.kelas.tersimpan',
                                             array(
-                                                '%name%' => $entity->getNama()
+                                                '%nama%' => $entity->getNama()
                                             )));
 
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('data_level_show',
+                                    ->generateUrl('tingkat-kelas_show',
                                             array(
                                                 'id' => $entity->getId()
                                             )));
@@ -133,9 +133,9 @@ class JenjangController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Jenjang entity.
+     * Displays a form to edit an existing Tingkat entity.
      *
-     * @Route("/{id}/edit", name="data_level_edit")
+     * @Route("/{id}/edit", name="tingkat-kelas_edit")
      * @Template()
      */
     public function editAction($id) {
@@ -144,13 +144,13 @@ class JenjangController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Jenjang')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Entity Jenjang tak ditemukan.');
+            throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new JenjangType($this->container), $entity);
+        $editForm = $this->createForm(new TingkatType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -160,11 +160,11 @@ class JenjangController extends Controller
     }
 
     /**
-     * Edits an existing Jenjang entity.
+     * Edits an existing Tingkat entity.
      *
-     * @Route("/{id}/update", name="data_level_update")
+     * @Route("/{id}/update", name="tingkat-kelas_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Jenjang:edit.html.twig")
+     * @Template("FastSisdikBundle:Tingkat:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -172,14 +172,14 @@ class JenjangController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Jenjang')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Entity Jenjang tak ditemukan.');
+            throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new JenjangType($this->container), $entity);
+        $editForm = $this->createForm(new TingkatType($this->container), $entity);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
@@ -189,15 +189,15 @@ class JenjangController extends Controller
             $this->get('session')->getFlashBag()
                     ->add('success',
                             $this->get('translator')
-                                    ->trans('flash.studylevel.updated',
+                                    ->trans('flash.tingkat.kelas.terbarui',
                                             array(
-                                                '%name%' => $entity->getNama()
+                                                '%nama%' => $entity->getNama()
                                             )));
 
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('data_level_edit',
+                                    ->generateUrl('tingkat-kelas_edit',
                                             array(
                                                 'id' => $id, 'page' => $this->getRequest()->get('page')
                                             )));
@@ -210,9 +210,9 @@ class JenjangController extends Controller
     }
 
     /**
-     * Deletes a Jenjang entity.
+     * Deletes a Tingkat entity.
      *
-     * @Route("/{id}/delete", name="data_level_delete")
+     * @Route("/{id}/delete", name="tingkat-kelas_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
@@ -223,10 +223,10 @@ class JenjangController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Jenjang')->find($id);
+            $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Entity Jenjang tak ditemukan.');
+                throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
             }
 
             try {
@@ -236,9 +236,9 @@ class JenjangController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.studylevel.deleted',
+                                        ->trans('flash.tingkat.kelas.terhapus',
                                                 array(
-                                                    '%name%' => $entity->getNama()
+                                                    '%nama%' => $entity->getNama()
                                                 )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
@@ -246,13 +246,13 @@ class JenjangController extends Controller
             }
         } else {
             $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.studylevel.fail.delete'));
+                    ->add('error', $this->get('translator')->trans('flash.tingkat.kelas.gagal.dihapus'));
         }
 
         return $this
                 ->redirect(
                         $this
-                                ->generateUrl('data_level',
+                                ->generateUrl('tingkat-kelas',
                                         array(
                                             'page' => $this->getRequest()->get('page')
                                         )));
@@ -266,7 +266,7 @@ class JenjangController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.data.level']->setCurrent(true);
+        $menu['headings.academic']['links.tingkat']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

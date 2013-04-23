@@ -50,8 +50,6 @@ class KelasSearchType extends AbstractType
     }
 
     public function getName() {
-        // return '';
-        // return 'fast_sisdikbundle_kelassearchtype';
         return 'searchform';
     }
 }

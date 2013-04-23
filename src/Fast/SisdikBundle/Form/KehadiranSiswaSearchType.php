@@ -41,12 +41,12 @@ class KehadiranSiswaSearchType extends AbstractType
                         ));
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenjang', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.kode')->setParameter('sekolah', $sekolah);
             $builder
-                    ->add('jenjang', 'entity',
+                    ->add('tingkat', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Jenjang', 'label' => 'label.class.entry',
+                                    'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.class.entry',
                                     'multiple' => false, 'expanded' => false, 'required' => true,
                                     'property' => 'optionLabel', 'query_builder' => $querybuilder,
                                     'attr' => array(
@@ -55,10 +55,10 @@ class KehadiranSiswaSearchType extends AbstractType
                             ));
 
             $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                    ->leftJoin('t.jenjang', 't2')->leftJoin('t.tahunAkademik', 't3')
+                    ->leftJoin('t.tingkat', 't2')->leftJoin('t.tahunAkademik', 't3')
                     ->where('t.sekolah = :sekolah')->andWhere('t3.aktif = :aktif')
                     ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                    ->setParameter('aktif', TRUE);
+                    ->setParameter('aktif', true);
             $builder
                     ->add('kelas', 'entity',
                             array(

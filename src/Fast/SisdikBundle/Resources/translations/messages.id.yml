@@ -5,6 +5,7 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    tingkat: Tingkat Kelas
     terjadi.di.kelas: Terjadi di Kelas
     tahun.sakit: Tahun Sakit
     lama.sakit: Lama Sakit
@@ -98,7 +99,6 @@ label:
     merge: Gabung
     commkey: Communication Key
     ipaddress: Alamat IP
-    level: Jenjang
     allplacement: Semua Penjurusan Studi
     allclass: Semua Kelas
     download: Unduh
@@ -303,10 +303,10 @@ label:
         name: Nama Penjurusan
         entry: Node Penjurusan
         study: Penjurusan Studi
-    studylevel:
-        add: Tambah Jenjang
-        name: Nama Jenjang
-        entry: Jenjang
+    tingkat.kelas:
+        tambah: Tambah Tingkat Kelas
+        nama: Nama Tingkat Kelas
+        entri: Tingkat Kelas
     attendancemachine:
         add: Tambah Mesin Kehadiran
         name: Nama Mesin Kehadiran
@@ -359,6 +359,11 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    tingkat.kelas:
+        tersimpan: Tingkat Kelas '%nama%' berhasil dibuat
+        terbarui: Tingkat Kelas '%nama%' berhasil diperbarui
+        terhapus: Tingkat Kelas '%nama%' berhasil dihapus
+        gagal.diahpus: Tingkat Kelas '%nama%' gagal dihapus
     riwayat.penyakit:
         tersimpan: Data Riwayat Penyakit '%siswa%' berhasil disimpan
         terbarui: Data Riwayat Penyakit '%siswa%' berhasil diperbarui
@@ -492,11 +497,6 @@ flash:
             duplicate.fail: Jadwal Kehadiran/Kepulangan gagal disalin
         student:
             updated: Kehadiran siswa yang terpilih berhasil diperbarui
-    studylevel:
-        inserted: Jenjang '%name%' berhasil dibuat
-        updated: Jenjang '%name%' berhasil diperbarui
-        deleted: Jenjang '%name%' berhasil dihapus
-        fail.delete: Jenjang '%name%' gagal dihapus
     attendancemachine:
         inserted: Mesin Kehadiran '%ip%' berhasil dibuat
         updated: Mesin Kehadiran '%ip%' berhasil diperbarui
@@ -556,6 +556,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    tingkat.kelas: Hapus tingkat kelas '%code%'?
     riwayat.penyakit: Hapus Riwayat Penyakit %nama% %siswa%?
     smspendaftaran: Hapus Pengaturan SMS Pendaftaran?
     layanansms: Hapus Pilihan Layanan SMS sekolah %sekolah%?
@@ -578,7 +579,6 @@ confirm.drop:
     presence.schedule: Hapus Jadwal Kehadiran/Kepulangan?
     placement: Hapus Node Penjurusan '%node%'?
     student: Hapus siswa '%student%'?
-    studylevel: Hapus jenjang '%code%'?
     attendancemachine: Hapus Mesin Kehadiran '%ip%'?
     reward.type: Hapus Jenis Imbalan '%rewardtype%'?
     reward.amount: Hapus Imbalan Pendaftaran '%year%', '%admissiongroup%', '%rewardtype%', '%nominal%'?
@@ -646,7 +646,7 @@ shortinfo:
     duplicate.classes: Salin kelas
     onlyforactiveyear: hanya untuk tahun aktif
     using.year: menggunakan tahun
-    using.year.and.level: menggunakan tahun akademik dan jenjang kelas
+    using.year.and.level: menggunakan tahun akademik dan tingkat kelas
     no.student.data: Tidak ada data siswa
     no.class.data: Tidak ada data kelas
     username.generated: Username siswa untuk tahun akademik dan kelas terpilih telah dibuat sebelumnya
