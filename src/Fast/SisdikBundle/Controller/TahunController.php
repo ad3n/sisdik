@@ -326,7 +326,16 @@ class TahunController extends Controller
                 ->findOneBy(array(
                     'tahun' => $id
                 ));
-        if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity) {
+        $panitiaPendaftaranEntity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
+                ->findOneBy(array(
+                    'tahun' => $id
+                ));
+        $biayaPendaftaranEntity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                ->findOneBy(array(
+                    'tahun' => $id
+                ));
+        if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity || $panitiaPendaftaranEntity
+                || $biayaPendaftaranEntity) {
             return true;
         }
         return false;

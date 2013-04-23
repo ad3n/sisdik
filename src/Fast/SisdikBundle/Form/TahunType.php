@@ -20,7 +20,10 @@ class TahunType extends AbstractType
         $builder
                 ->add('tahun', 'choice',
                         array(
-                            'required' => true, 'choices' => $this->buildYearChoices()
+                                'required' => true, 'choices' => $this->buildYearChoices(),
+                                'attr' => array(
+                                    'class' => 'small'
+                                )
                         ));
 
         $user = $this->container->get('security.context')->getToken()->getUser();
@@ -37,6 +40,9 @@ class TahunType extends AbstractType
                                     'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
+                                    'attr' => array(
+                                        'class' => 'xlarge'
+                                    )
                             ));
         }
     }

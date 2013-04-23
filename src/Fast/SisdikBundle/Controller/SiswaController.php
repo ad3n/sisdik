@@ -30,7 +30,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * Siswa controller.
  *
- * @Route("/data/student")
+ * @Route("/siswa")
  * @PreAuthorize("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
 class SiswaController extends Controller
