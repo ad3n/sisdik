@@ -340,6 +340,8 @@ label:
         tambah: Tambah Pengaturan SMS Pendaftaran
 
 link:
+    info.pendaftar: Info Pendaftar
+    info.siswa: Info Data Siswa
     riwayat.penyakit: Penyakit Yang Pernah Diderita
     ortuwali: Orang Tua/Wali
     backtolist: « Kembali ke Daftar
@@ -351,7 +353,6 @@ link:
     backtodetail: « Kembali ke Info
     download.template: Unduh Berkas Template
     applicant.edit.regphoto: Ubah Foto Registrasi
-    studentinfo: Info Data Siswa
     backto.registration.payment: « Kembali ke Info Pembayaran Biaya Pendaftaran
 
 fos_user:

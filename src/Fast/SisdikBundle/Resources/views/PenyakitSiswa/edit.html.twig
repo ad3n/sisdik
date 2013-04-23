@@ -5,21 +5,21 @@
 {% block content %}
 <div class="clearfix" style="margin-bottom: 1em;"></div>
 
-<form action="{{ path('riwayat-penyakit_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('riwayat-penyakit_delete', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_delete', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
 <ul class="pills">
     <li>
-        <a href="{{ path('riwayat-penyakit', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.riwayat.penyakit'|trans }}</a>
+        <a href="{{ path('riwayat-penyakit-' ~ ruteasal, { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.riwayat.penyakit'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">

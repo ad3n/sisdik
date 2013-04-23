@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Util\RuteAsal;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,25 +22,6 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  */
 class OrangtuaWaliController extends Controller
 {
-
-    /**
-     * Menyetel rute untuk kembali ke
-     * info siswa atau pendaftar berdasarkan path
-     */
-    private function ambilRuteAsal() {
-        $path = $this->getRequest()->getPathInfo();
-
-        if (strpos($path, 'pendaftar')) {
-            $rute = "pendaftar";
-        } else if (strpos($path, "siswa")) {
-            $rute = "siswa";
-        } else {
-            $rute = "";
-        }
-
-        return $rute;
-    }
-
     /**
      * Lists all OrangtuaWali entities.
      *
@@ -62,7 +44,7 @@ class OrangtuaWaliController extends Controller
         return array(
                 'pagination' => $pagination,
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => $this->ambilRuteAsal(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -96,8 +78,8 @@ class OrangtuaWaliController extends Controller
                 ->redirect(
                         $this
                                 ->generateUrl(
-                                        $this->ambilRuteAsal() == 'pendaftar' ? 'ortuwali-pendaftar'
-                                                : 'ortuwali-siswa',
+                                        RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo())
+                                                == 'pendaftar' ? 'ortuwali-pendaftar' : 'ortuwali-siswa',
                                         array(
                                             'sid' => $sid
                                         )));
@@ -126,7 +108,7 @@ class OrangtuaWaliController extends Controller
 
         return array(
                 'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'ruteasal' => $this->ambilRuteAsal(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -149,7 +131,7 @@ class OrangtuaWaliController extends Controller
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => $this->ambilRuteAsal(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -190,7 +172,8 @@ class OrangtuaWaliController extends Controller
                     ->redirect(
                             $this
                                     ->generateUrl(
-                                            $this->ambilRuteAsal() == 'pendaftar' ? 'ortuwali-pendaftar_show'
+                                            RuteAsal::ruteAsalSiswaPendaftar(
+                                                    $this->getRequest()->getPathInfo()) == 'pendaftar' ? 'ortuwali-pendaftar_show'
                                                     : 'ortuwali-siswa_show',
                                             array(
                                                 'sid' => $sid, 'id' => $entity->getId()
@@ -200,7 +183,7 @@ class OrangtuaWaliController extends Controller
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => $this->ambilRuteAsal(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -230,7 +213,7 @@ class OrangtuaWaliController extends Controller
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => $this->ambilRuteAsal(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -274,7 +257,8 @@ class OrangtuaWaliController extends Controller
                     ->redirect(
                             $this
                                     ->generateUrl(
-                                            $this->ambilRuteAsal() == 'pendaftar' ? 'ortuwali-pendaftar_edit'
+                                            RuteAsal::ruteAsalSiswaPendaftar(
+                                                    $this->getRequest()->getPathInfo()) == 'pendaftar' ? 'ortuwali-pendaftar_edit'
                                                     : 'ortuwali-siswa_edit',
                                             array(
                                                 'sid' => $sid, 'id' => $id
@@ -285,7 +269,7 @@ class OrangtuaWaliController extends Controller
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => $this->ambilRuteAsal(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -342,8 +326,8 @@ class OrangtuaWaliController extends Controller
                 ->redirect(
                         $this
                                 ->generateUrl(
-                                        $this->ambilRuteAsal() == 'pendaftar' ? 'ortuwali-pendaftar'
-                                                : 'ortuwali-siswa',
+                                        RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo())
+                                                == 'pendaftar' ? 'ortuwali-pendaftar' : 'ortuwali-siswa',
                                         array(
                                             'sid' => $sid,
                                         )));
@@ -357,7 +341,7 @@ class OrangtuaWaliController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        if ($this->ambilRuteAsal() == 'pendaftar') {
+        if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
             $menu['headings.academic']['links.registration']->setCurrent(true);
         } else {
             $menu['headings.academic']['links.data.student']->setCurrent(true);

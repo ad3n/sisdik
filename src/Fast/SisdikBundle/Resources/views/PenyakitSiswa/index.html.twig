@@ -19,7 +19,7 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('riwayat-penyakit_new', {'sid': siswa.id}) }}" class="add-link-a">
+	<a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_new', {'sid': siswa.id}) }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
 	    {{ 'label.riwayat.penyakit.tambah'|trans }}
 	</a>
@@ -44,8 +44,8 @@
     		<td data-title="{{ 'label.tahun.sakit'|trans }}">{{ data.tahun }}</td>
     		<td data-title="{{ 'label.lama.sakit'|trans }}">{{ data.lamasakit }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('riwayat-penyakit_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('riwayat-penyakit_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+        		<a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
     		</td>
     	</tr>
     {% endfor %}
@@ -56,7 +56,11 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.studentinfo'|trans }}</a>
+    {% if ruteasal == 'pendaftar' %}
+        <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.pendaftar'|trans }}</a>
+    {% else %}
+        <a href="{{ path('data_student_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.siswa'|trans }}</a>
+    {% endif %}
     </li>
 </ul>
 {{ knp_pagination_render(pagination) }}

@@ -6,7 +6,7 @@
 
 <div class="clearfix" style="margin-bottom: 1em;"></div>
 
-<form action="{{ path('riwayat-penyakit_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form action="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -14,7 +14,7 @@
 </form>
 <ul class="pills">
     <li>
-        <a href="{{ path('riwayat-penyakit', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.riwayat.penyakit'|trans }}</a>
+        <a href="{{ path('riwayat-penyakit-' ~ ruteasal, { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.riwayat.penyakit'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}

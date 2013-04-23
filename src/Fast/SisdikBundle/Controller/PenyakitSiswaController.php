@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Util\RuteAsal;
 use Doctrine\DBAL\DBALException;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -25,7 +26,8 @@ class PenyakitSiswaController extends Controller
     /**
      * Lists all PenyakitSiswa entities.
      *
-     * @Route("/", name="riwayat-penyakit")
+     * @Route("/pendaftar", name="riwayat-penyakit-pendaftar")
+     * @Route("/siswa", name="riwayat-penyakit-siswa")
      * @Method("GET")
      * @Template()
      */
@@ -42,14 +44,17 @@ class PenyakitSiswaController extends Controller
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
-            'pagination' => $pagination, 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
+                'pagination' => $pagination,
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
     /**
      * Displays a form to create a new PenyakitSiswa entity.
      *
-     * @Route("/new", name="riwayat-penyakit_new")
+     * @Route("/pendaftar/new", name="riwayat-penyakit-pendaftar_new")
+     * @Route("/siswa/new", name="riwayat-penyakit-siswa_new")
      * @Method("GET")
      * @Template()
      */
@@ -64,14 +69,16 @@ class PenyakitSiswaController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
     /**
      * Creates a new PenyakitSiswa entity.
      *
-     * @Route("/", name="riwayat-penyakit_create")
+     * @Route("/pendaftar", name="riwayat-penyakit-pendaftar_create")
+     * @Route("/siswa", name="riwayat-penyakit-siswa_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:PenyakitSiswa:new.html.twig")
      */
@@ -102,7 +109,10 @@ class PenyakitSiswaController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('riwayat-penyakit_show',
+                                    ->generateUrl(
+                                            RuteAsal::ruteAsalSiswaPendaftar(
+                                                    $this->getRequest()->getPathInfo()) == 'pendaftar' ? 'riwayat-penyakit-pendaftar_show'
+                                                    : 'riwayat-penyakit-siswa_show',
                                             array(
                                                 'sid' => $sid, 'id' => $entity->getId()
                                             )));
@@ -110,14 +120,16 @@ class PenyakitSiswaController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid)
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
     /**
      * Finds and displays a PenyakitSiswa entity.
      *
-     * @Route("/{id}", name="riwayat-penyakit_show")
+     * @Route("/pendaftar/{id}", name="riwayat-penyakit-pendaftar_show")
+     * @Route("/siswa/{id}", name="riwayat-penyakit-siswa_show")
      * @Method("GET")
      * @Template()
      */
@@ -136,14 +148,16 @@ class PenyakitSiswaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
     /**
      * Displays a form to edit an existing PenyakitSiswa entity.
      *
-     * @Route("/{id}/edit", name="riwayat-penyakit_edit")
+     * @Route("/pendaftar/{id}/edit", name="riwayat-penyakit-pendaftar_edit")
+     * @Route("/siswa/{id}/edit", name="riwayat-penyakit-siswa_edit")
      * @Method("GET")
      * @Template()
      */
@@ -166,13 +180,15 @@ class PenyakitSiswaController extends Controller
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
     /**
      * Edits an existing PenyakitSiswa entity.
      *
-     * @Route("/{id}", name="riwayat-penyakit_update")
+     * @Route("/pendaftar/{id}", name="riwayat-penyakit-pendaftar_update")
+     * @Route("/siswa/{id}", name="riwayat-penyakit-siswa_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:PenyakitSiswa:edit.html.twig")
      */
@@ -207,7 +223,10 @@ class PenyakitSiswaController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('riwayat-penyakit_edit',
+                                    ->generateUrl(
+                                            RuteAsal::ruteAsalSiswaPendaftar(
+                                                    $this->getRequest()->getPathInfo()) == 'pendaftar' ? 'riwayat-penyakit-pendaftar_edit'
+                                                    : 'riwayat-penyakit-siswa_edit',
                                             array(
                                                 'sid' => $sid, 'id' => $id
                                             )));
@@ -217,13 +236,15 @@ class PenyakitSiswaController extends Controller
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
     /**
      * Deletes a PenyakitSiswa entity.
      *
-     * @Route("/{id}/delete", name="riwayat-penyakit_delete")
+     * @Route("/pendaftar/{id}/delete", name="riwayat-penyakit-pendaftar_delete")
+     * @Route("/siswa/{id}/delete", name="riwayat-penyakit-siswa_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $sid, $id) {
@@ -266,7 +287,10 @@ class PenyakitSiswaController extends Controller
         return $this
                 ->redirect(
                         $this
-                                ->generateUrl('riwayat-penyakit',
+                                ->generateUrl(
+                                        RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo())
+                                                == 'pendaftar' ? 'riwayat-penyakit-pendaftar'
+                                                : 'riwayat-penyakit-siswa',
                                         array(
                                             'sid' => $sid,
                                         )));
