@@ -97,8 +97,12 @@
 	<h4>{{ 'heading.info.pendukung'|trans }}</h4>
 	{{ 'text.info.pendukung'|trans }}<br />
 	<ul class="pills">
-    	<li><a href="#">info pendukung #1</a></li>
-    	<li><a href="#">info pendukung #2</a></li>
+        <li>
+            <a href="{{ path('ortuwali-siswa', { 'sid': entity.id }) }}">{{ 'link.ortuwali'|trans }}</a>
+        </li>
+        <li>
+            <a href="{{ path('riwayat-penyakit', { 'sid': entity.id }) }}">{{ 'link.riwayat.penyakit'|trans }}</a>
+        </li>
     </ul>
 </div>
 
@@ -112,7 +116,6 @@
         <a href="{{ path('data_student_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
-
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$("#delete-form").submit(function(){

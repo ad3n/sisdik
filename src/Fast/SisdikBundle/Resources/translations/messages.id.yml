@@ -328,10 +328,10 @@ label:
         name: Nama Calon Siswa
         entry: Calon Siswa
         show: Info Detail Calon Siswa
-    parentguard:
-        add: Tambah Data Orang Tua/Wali
-        name: Nama Orang Tua/Wali
-        entry: Orang Tua/Wali
+    ortuwali:
+        tambah: Tambah Data Orang Tua/Wali
+        nama: Nama Orang Tua/Wali
+        entri: Orang Tua/Wali
     layanansms:
         tambah: Tambah Pilihan Layanan SMS
         jenis: Jenis Layanan
@@ -584,7 +584,7 @@ confirm.drop:
     reward.amount: Hapus Imbalan Pendaftaran '%year%', '%admissiongroup%', '%rewardtype%', '%nominal%'?
     registration.committee: Hapus Panitia Pendaftaran tahun %year%?
     applicant: Hapus calon siswa %name%?
-    parentguard: Hapus Orang Tua/Wali %name%, dari siswa %studentname%?
+    ortuwali: Hapus Orang Tua/Wali %nama%, dari siswa %siswa%?
 
 alt:
     add: ikon tambah

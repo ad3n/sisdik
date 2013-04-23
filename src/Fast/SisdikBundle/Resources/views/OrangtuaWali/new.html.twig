@@ -1,12 +1,12 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}parentguard.creation{% endtrans %}<br />{{ 'untuk'|trans }} {{ siswa.namaLengkap }}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}ortuwali.pembuatan{% endtrans %}<br />{{ 'untuk'|trans }} {{ siswa.namaLengkap }}{% endblock %}
 
 {% block content %}
 
 <div class="clearfix" style="margin-bottom: 1em;"></div>
 
-<form action="{{ path('parentguard_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form action="{{ path('ortuwali-' ~ ruteasal ~ '_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -14,7 +14,7 @@
 </form>
 <ul class="pills">
     <li>
-        <a href="{{ path('parentguard', { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.ortuwali'|trans }}</a>
+        <a href="{{ path('ortuwali-' ~ ruteasal, {'sid': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.ortuwali'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">

@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}parentguard.list{% endtrans %} {{ 'label.from'|trans }} {{ siswa.namaLengkap }}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}ortuwali.daftar{% endtrans %} {{ 'label.from'|trans }} {{ siswa.namaLengkap }}{% endblock %}
 
 {% block content %}
 
@@ -19,9 +19,9 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('parentguard_new', {'sid': siswa.id}) }}" class="add-link-a">
+	<a href="{{ path('ortuwali-' ~ ruteasal ~ '_new', {'sid': siswa.id}) }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.parentguard.add'|trans }}
+	    {{ 'label.ortuwali.tambah'|trans }}
 	</a>
 {% endimage %}
 </div>
@@ -31,7 +31,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.parentguard.name'|trans }}</th>
+    		<th>{{ 'label.ortuwali.nama'|trans }}</th>
     		<th>{{ 'label.relation.tostudent'|trans }}</th>
     		<th>{{ 'label.mobilephone'|trans }}</th>
     		<th>{{ 'label.active'|trans }}</th>
@@ -41,7 +41,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.parentguard.name'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.ortuwali.nama'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.relation.tostudent'|trans }}">{{ data.hubunganDenganSiswa }}</td>
     		<td data-title="{{ 'label.mobilephone'|trans }}">{{ data.ponsel }}</td>
     		<td data-title="{{ 'label.active'|trans }}">
@@ -53,12 +53,12 @@
     	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
     		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
     		        {% endimage %}
-    		        <a href="{{ path('parentguard_activate', {'sid': siswa.id, 'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
+    		        <a href="{{ path('ortuwali-' ~ ruteasal ~ '_activate', {'sid': siswa.id, 'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
     		    {% endif %}
     		</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('parentguard_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('parentguard_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+        		<a href="{{ path('ortuwali-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('ortuwali-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
     		</td>
     	</tr>
     {% endfor %}
@@ -71,7 +71,11 @@
 
 <ul class="pills">
     <li>
+    {% if ruteasal == 'pendaftar' %}
         <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.studentinfo'|trans }}</a>
+    {% else %}
+        <a href="{{ path('data_student_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.studentinfo'|trans }}</a>
+    {% endif %}
     </li>
 </ul>
 {{ knp_pagination_render(pagination) }}

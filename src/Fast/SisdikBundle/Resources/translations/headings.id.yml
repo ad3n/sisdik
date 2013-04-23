@@ -1,6 +1,13 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+
+ortuwali:
+    daftar: Orang Tua/Wali
+    edit: Mengubah Data Orang Tua/Wali
+    pembuatan: Menambah Data Orang Tua/Wali
+    detail: Detail Data Orang Tua/Wali
+
 tingkat.kelas:
     daftar: Daftar Tingkat Kelas
     edit: Mengubah Tingkat Kelas
@@ -174,12 +181,6 @@ payment:
         transaction: Transaksi Pembayaran Biaya Pendaftaran
 
 printreceiptsoption: Mengatur Pilihan Cetak Kwitansi
-
-parentguard:
-    list: Orang Tua/Wali
-    edit: Mengubah Data Orang Tua/Wali
-    creation: Menambah Data Orang Tua/Wali
-    detail: Detail Data Orang Tua/Wali
 
 layanansms:
     daftar: Daftar Pilihan Layanan SMS
