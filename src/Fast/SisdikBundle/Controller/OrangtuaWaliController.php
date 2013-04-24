@@ -86,33 +86,6 @@ class OrangtuaWaliController extends Controller
     }
 
     /**
-     * Finds and displays a OrangtuaWali entity.
-     *
-     * @Route("/pendaftar/{id}/show", name="ortuwali-pendaftar_show")
-     * @Route("/siswa/{id}/show", name="ortuwali-siswa_show")
-     * @Template()
-     */
-    public function showAction($sid, $id) {
-        $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
-    }
-
-    /**
      * Displays a form to create a new OrangtuaWali entity.
      *
      * @Route("/pendaftar/new", name="ortuwali-pendaftar_new")
@@ -147,12 +120,13 @@ class OrangtuaWaliController extends Controller
         $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new OrangtuaWali();
         $form = $this->createForm(new OrangtuaWaliType(), $entity);
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
             $entity->setSiswa($siswa);
             $entity->setAktif(false);
@@ -183,6 +157,33 @@ class OrangtuaWaliController extends Controller
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
                 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        );
+    }
+
+    /**
+     * Finds and displays a OrangtuaWali entity.
+     *
+     * @Route("/pendaftar/{id}/show", name="ortuwali-pendaftar_show")
+     * @Route("/siswa/{id}/show", name="ortuwali-siswa_show")
+     * @Template()
+     */
+    public function showAction($sid, $id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
