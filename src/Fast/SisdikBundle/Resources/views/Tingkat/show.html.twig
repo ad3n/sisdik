@@ -44,7 +44,7 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.tingkat.kelas'|trans({ '%code%': entity.kode }) }}";
+		var confirmtext = "{{ 'confirm.drop.tingkat.kelas'|trans({ '%kode%': entity.kode }) }}";
 		confirmtext = confirmtext.replace(/&#039;/g, "'");
 		return confirmDropButton(confirmtext);
 	});
