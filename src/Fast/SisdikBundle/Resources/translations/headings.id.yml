@@ -1,6 +1,11 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+pendidikan.sebelumnya:
+    daftar: Pendidikan Sebelumnya
+    edit: Mengubah Data Pendidikan Sebelumnya
+    pembuatan: Menambah Data Pendidikan Sebelumnya
+    detail: Detail Data Pendidikan Sebelumnya
 
 ortuwali:
     daftar: Orang Tua/Wali

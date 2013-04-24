@@ -8,3 +8,4 @@ chmod 777 web/uploads
 chmod 777 web/uploads/students
 chmod 777 web/uploads/students/photos
 chmod 777 web/uploads/students/webcam-photos
+chmod 777 web/uploads/students/pendidikan-sebelumnya

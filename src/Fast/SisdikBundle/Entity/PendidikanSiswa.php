@@ -1,17 +1,22 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * PendidikanSiswa
  *
  * @ORM\Table(name="pendidikan_siswa")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class PendidikanSiswa
 {
+    const PENDIDIKAN_DIR = 'uploads/students/pendidikan-sebelumnya/';
+
     /**
      * @var integer
      *
@@ -22,9 +27,10 @@ class PendidikanSiswa
     private $id;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="jenjang", type="integer", nullable=true)
+     * @ORM\Column(name="jenjang", type="string", length=50, nullable=true)
+     * @Assert\NotBlank
      */
     private $jenjang;
 
@@ -32,6 +38,7 @@ class PendidikanSiswa
      * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     * @Assert\NotBlank
      */
     private $nama;
 
@@ -39,15 +46,23 @@ class PendidikanSiswa
      * @var string
      *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     * @Assert\NotBlank
      */
     private $alamat;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="ijazah_tanggal", type="date", nullable=true)
+     */
+    private $ijazahTanggal;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="ijazah", type="string", length=400, nullable=true)
+     * @ORM\Column(name="ijazah_nomor", type="string", length=100, nullable=true)
      */
-    private $ijazah;
+    private $ijazahNomor;
 
     /**
      * @var string
@@ -57,16 +72,21 @@ class PendidikanSiswa
     private $ijazahFile;
 
     /**
-     * @var \DateTime
+     * @Assert\File(maxSize="5000000")
+     */
+    private $fileUploadIjazah;
+
+    /**
+     * @var string
      *
-     * @ORM\Column(name="tahunmasuk", type="date", nullable=true)
+     * @ORM\Column(name="tahunmasuk", type="string", length=45, nullable=true)
      */
     private $tahunmasuk;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="tahunkeluar", type="date", nullable=true)
+     * @ORM\Column(name="tahunkeluar", type="string", length=45, nullable=true)
      */
     private $tahunkeluar;
 
@@ -80,9 +100,9 @@ class PendidikanSiswa
     /**
      * @var string
      *
-     * @ORM\Column(name="sttb_no", type="string", length=100, nullable=true)
+     * @ORM\Column(name="sttb_nomor", type="string", length=100, nullable=true)
      */
-    private $sttbNo;
+    private $sttbNomor;
 
     /**
      * @var string
@@ -90,6 +110,11 @@ class PendidikanSiswa
      * @ORM\Column(name="sttb_file", type="string", length=300, nullable=true)
      */
     private $sttbFile;
+
+    /**
+     * @Assert\File(maxSize="5000000")
+     */
+    private $fileUploadSttb;
 
     /**
      * @var string
@@ -108,38 +133,40 @@ class PendidikanSiswa
      */
     private $siswa;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
+    }
+
+    public static function daftarPilihanJenjangSekolah() {
+        return array(
+                'a-PAUD/TK' => 'PAUD/TK', 'b-SD/MI' => 'SD/MI', 'c-SMP/MTS' => 'SMP/MTS',
+                'd-SMA/SMK/ALIYAH' => 'SMA/SMK/ALIYAH'
+        );
     }
 
     /**
      * Set jenjang
      *
-     * @param integer $jenjang
+     * @param string $jenjang
      * @return PendidikanSiswa
      */
-    public function setJenjang($jenjang)
-    {
+    public function setJenjang($jenjang) {
         $this->jenjang = $jenjang;
-    
+
         return $this;
     }
 
     /**
      * Get jenjang
      *
-     * @return integer 
+     * @return string
      */
-    public function getJenjang()
-    {
+    public function getJenjang() {
         return $this->jenjang;
     }
 
@@ -149,20 +176,18 @@ class PendidikanSiswa
      * @param string $nama
      * @return PendidikanSiswa
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -172,44 +197,61 @@ class PendidikanSiswa
      * @param string $alamat
      * @return PendidikanSiswa
      */
-    public function setAlamat($alamat)
-    {
+    public function setAlamat($alamat) {
         $this->alamat = $alamat;
-    
+
         return $this;
     }
 
     /**
      * Get alamat
      *
-     * @return string 
+     * @return string
      */
-    public function getAlamat()
-    {
+    public function getAlamat() {
         return $this->alamat;
     }
 
     /**
-     * Set ijazah
+     * Set ijazahTanggal
      *
-     * @param string $ijazah
+     * @param \DateTime $ijazahTanggal
      * @return PendidikanSiswa
      */
-    public function setIjazah($ijazah)
-    {
-        $this->ijazah = $ijazah;
-    
+    public function setIjazahTanggal($ijazahTanggal) {
+        $this->ijazahTanggal = $ijazahTanggal;
+
         return $this;
     }
 
     /**
-     * Get ijazah
+     * Get ijazahTanggal
      *
-     * @return string 
+     * @return \DateTime
      */
-    public function getIjazah()
-    {
-        return $this->ijazah;
+    public function getIjazahTanggal() {
+        return $this->ijazahTanggal;
+    }
+
+    /**
+     * Set ijazahNomor
+     *
+     * @param string $ijazahNomor
+     * @return PendidikanSiswa
+     */
+    public function setIjazahNomor($ijazahNomor) {
+        $this->ijazahNomor = $ijazahNomor;
+
+        return $this;
+    }
+
+    /**
+     * Get ijazahNomor
+     *
+     * @return string
+     */
+    public function getIjazahNomor() {
+        return $this->ijazahNomor;
     }
 
     /**
@@ -218,66 +260,63 @@ class PendidikanSiswa
      * @param string $ijazahFile
      * @return PendidikanSiswa
      */
-    public function setIjazahFile($ijazahFile)
-    {
+    public function setIjazahFile($ijazahFile) {
         $this->ijazahFile = $ijazahFile;
-    
+
         return $this;
     }
 
     /**
      * Get ijazahFile
      *
-     * @return string 
+     * @return string
      */
-    public function getIjazahFile()
-    {
+    public function getIjazahFile() {
+        if (strlen($this->ijazahFile) > 20) {
+            return '...' . substr($this->ijazahFile, -17);
+        }
         return $this->ijazahFile;
     }
 
     /**
      * Set tahunmasuk
      *
-     * @param \DateTime $tahunmasuk
+     * @param string $tahunmasuk
      * @return PendidikanSiswa
      */
-    public function setTahunmasuk($tahunmasuk)
-    {
+    public function setTahunmasuk($tahunmasuk) {
         $this->tahunmasuk = $tahunmasuk;
-    
+
         return $this;
     }
 
     /**
      * Get tahunmasuk
      *
-     * @return \DateTime 
+     * @return string
      */
-    public function getTahunmasuk()
-    {
+    public function getTahunmasuk() {
         return $this->tahunmasuk;
     }
 
     /**
      * Set tahunkeluar
      *
-     * @param \DateTime $tahunkeluar
+     * @param string $tahunkeluar
      * @return PendidikanSiswa
      */
-    public function setTahunkeluar($tahunkeluar)
-    {
+    public function setTahunkeluar($tahunkeluar) {
         $this->tahunkeluar = $tahunkeluar;
-    
+
         return $this;
     }
 
     /**
      * Get tahunkeluar
      *
-     * @return \DateTime 
+     * @return string
      */
-    public function getTahunkeluar()
-    {
+    public function getTahunkeluar() {
         return $this->tahunkeluar;
     }
 
@@ -287,44 +326,40 @@ class PendidikanSiswa
      * @param \DateTime $sttbTanggal
      * @return PendidikanSiswa
      */
-    public function setSttbTanggal($sttbTanggal)
-    {
+    public function setSttbTanggal($sttbTanggal) {
         $this->sttbTanggal = $sttbTanggal;
-    
+
         return $this;
     }
 
     /**
      * Get sttbTanggal
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getSttbTanggal()
-    {
+    public function getSttbTanggal() {
         return $this->sttbTanggal;
     }
 
     /**
-     * Set sttbNo
+     * Set sttbNomor
      *
-     * @param string $sttbNo
+     * @param string $sttbNomor
      * @return PendidikanSiswa
      */
-    public function setSttbNo($sttbNo)
-    {
-        $this->sttbNo = $sttbNo;
-    
+    public function setSttbNomor($sttbNomor) {
+        $this->sttbNomor = $sttbNomor;
+
         return $this;
     }
 
     /**
-     * Get sttbNo
+     * Get sttbNomor
      *
-     * @return string 
+     * @return string
      */
-    public function getSttbNo()
-    {
-        return $this->sttbNo;
+    public function getSttbNomor() {
+        return $this->sttbNomor;
     }
 
     /**
@@ -333,20 +368,21 @@ class PendidikanSiswa
      * @param string $sttbFile
      * @return PendidikanSiswa
      */
-    public function setSttbFile($sttbFile)
-    {
+    public function setSttbFile($sttbFile) {
         $this->sttbFile = $sttbFile;
-    
+
         return $this;
     }
 
     /**
      * Get sttbFile
      *
-     * @return string 
+     * @return string
      */
-    public function getSttbFile()
-    {
+    public function getSttbFile() {
+        if (strlen($this->sttbFile) > 20) {
+            return '...' . substr($this->sttbFile, -17);
+        }
         return $this->sttbFile;
     }
 
@@ -356,20 +392,18 @@ class PendidikanSiswa
      * @param string $keterangan
      * @return PendidikanSiswa
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
     }
 
@@ -379,20 +413,96 @@ class PendidikanSiswa
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return PendidikanSiswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
+    }
+
+    public function getFileUploadIjazah() {
+        return $this->fileUploadIjazah;
+    }
+
+    public function setFileUploadIjazah(UploadedFile $file) {
+        $this->fileUploadIjazah = $file;
+
+        return $this;
+    }
+
+    public function getFileUploadSttb() {
+        return $this->fileUploadSttb;
+    }
+
+    public function setFileUploadSttb(UploadedFile $file) {
+        $this->fileUploadSttb = $file;
+
+        return $this;
+    }
+
+    public function getWebPathIjazah() {
+        return null === $this->ijazahFile ? null : $this->getUploadDir() . '/' . $this->ijazahFile;
+    }
+
+    public function getWebPathSttb() {
+        return null === $this->sttbFile ? null : $this->getUploadDir() . '/' . $this->sttbFile;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function prePersist() {
+        if (null !== $this->fileUploadIjazah) {
+            $this->ijazahFile = sha1(uniqid(mt_rand(), true)) . '.'
+                    . $this->fileUploadIjazah->guessExtension();
+        }
+        if (null !== $this->fileUploadSttb) {
+            $this->sttbFile = sha1(uniqid(mt_rand(), true)) . '.' . $this->fileUploadSttb->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function postPersist() {
+        if ($this->fileUploadIjazah === null || $this->fileUploadSttb === null) {
+            return;
+        }
+
+        // if there is an error when moving the file, an exception will
+        // be automatically thrown by move(). This will properly prevent
+        // the entity from being persisted to the database on error
+        $this->fileUploadIjazah->move($this->getUploadRootDir(), $this->ijazahFile);
+        $this->fileUploadSttb->move($this->getUploadRootDir(), $this->sttbFile);
+
+        unset($this->fileUploadIjazah);
+        unset($this->fileUploadSttb);
+    }
+
+    protected function getUploadRootDir() {
+        // the absolute directory path where uploaded documents should be saved
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+    }
+
+    protected function getUploadDir() {
+        // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
+        $fs = new Filesystem();
+        if (!$fs->exists(self::PENDIDIKAN_DIR)) {
+            $fs->mkdir(self::PENDIDIKAN_DIR);
+        }
+        if (!$fs->exists(self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId())) {
+            $fs->mkdir(self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId());
+        }
+        return self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId();
     }
 }

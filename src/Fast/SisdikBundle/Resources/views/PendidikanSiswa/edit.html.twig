@@ -1,0 +1,52 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}pendidikan.sebelumnya.edit{% endtrans %}<br />{{ 'untuk'|trans }} {{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.add-on {
+    z-index: -10;
+}
+</style>
+
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
+<form action="{{ path('pendidikan-sebelumnya-' ~ ruteasal ~ '_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {{ form_widget(edit_form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    </div>
+</form>
+
+<form id="delete-form" action="{{ path('pendidikan-sebelumnya-' ~ ruteasal ~ '_delete', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('pendidikan-sebelumnya-' ~ ruteasal, { 'sid': siswa.id }) }}">{{ 'link.backtolist'|trans }} {{ 'link.pendidikan.sebelumnya'|trans }}</a>
+    </li>
+</ul>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$('.date-ijazah').datepicker({
+	    dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+        changeYear: true,
+    });
+
+	$('.date-sttb').datepicker({
+	    dateFormat: 'dd/mm/yy',
+    	changeMonth: true,
+        changeYear: true,
+    });
+
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.pendidikan.sebelumnya'|trans({ '%nama%': entity.nama , '%siswa%': siswa.namaLengkap }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

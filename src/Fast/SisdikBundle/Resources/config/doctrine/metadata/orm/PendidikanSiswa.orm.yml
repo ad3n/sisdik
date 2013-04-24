@@ -1,0 +1,84 @@
+PendidikanSiswa:
+    type: entity
+    table: pendidikan_siswa
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        jenjang:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+        nama:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+        alamat:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+        ijazahTanggal:
+            type: date
+            nullable: true
+            column: ijazah_tanggal
+        ijazahNomor:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: ijazah_nomor
+        ijazahFile:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+            column: ijazah_file
+        tahunmasuk:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+        tahunkeluar:
+            type: string
+            length: 45
+            fixed: false
+            nullable: true
+        sttbTanggal:
+            type: date
+            nullable: true
+            column: sttb_tanggal
+        sttbNomor:
+            type: string
+            length: 100
+            fixed: false
+            nullable: true
+            column: sttb_nomor
+        sttbFile:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+            column: sttb_file
+        keterangan:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+    manyToOne:
+        siswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

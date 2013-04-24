@@ -5,6 +5,17 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    jenjang: Jenjang
+    nama.lembaga: Nama Lembaga
+    alamat.sekolah: Alamat Sekolah
+    tanggal.ijazah: Tanggal Ijazah
+    nomor.ijazah: Nomor Ijazah
+    file.ijazah: File Ijazah
+    tahun.masuk: Tahun Masuk
+    tahun.keluar: Tahun Keluar
+    tanggal.sttb: Tanggal STTB
+    nomor.sttb: Nomor STTB
+    file.sttb: File STTB
     tingkat: Tingkat Kelas
     terjadi.di.kelas: Terjadi di Kelas
     tahun.sakit: Tahun Sakit
@@ -94,7 +105,7 @@ label:
     allpresencestatus: Semua Kehadiran
     date: Tanggal
     adduser.withschool: Tambah User di Sekolah
-    adduser.noschool: Tambah User tanpa register Sekolah 
+    adduser.noschool: Tambah User tanpa register Sekolah
     actions: Tindakan
     merge: Gabung
     commkey: Communication Key
@@ -150,7 +161,7 @@ label:
     activate: Aktifkan
     text: Teks
     inactive: Tidak aktif
-    active: Aktif    
+    active: Aktif
     detailinfo: Info Detail
     selectacademicyear: Pilih Tahun Akademik
     enabled: Aktif
@@ -338,8 +349,11 @@ label:
         entri: Layanan
     smspendaftaran:
         tambah: Tambah Pengaturan SMS Pendaftaran
+    pendidikan.sebelumnya:
+        tambah: Tambah Info Pendidikan Sebelumnya
 
 link:
+    pendidikan.sebelumnya: Pendidikan Sebelumnya
     info.pendaftar: Info Pendaftar
     info.siswa: Info Data Siswa
     riwayat.penyakit: Penyakit Yang Pernah Diderita
@@ -360,11 +374,16 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    pendidikan.sebelumnya:
+        tersimpan: Info Pendidikan Sebelumnya '%siswa%' di '%nama%' berhasil dibuat
+        terbarui: Info Pendidikan Sebelumnya '%siswa%' di '%nama%' berhasil diperbarui
+        terhapus: Info Pendidikan Sebelumnya '%siswa%' di '%nama%' berhasil dihapus
+        gagal.dihapus: Info Pendidikan Sebelumnya '%siswa%' di '%nama%' gagal dihapus
     tingkat.kelas:
         tersimpan: Tingkat Kelas '%nama%' berhasil dibuat
         terbarui: Tingkat Kelas '%nama%' berhasil diperbarui
         terhapus: Tingkat Kelas '%nama%' berhasil dihapus
-        gagal.diahpus: Tingkat Kelas '%nama%' gagal dihapus
+        gagal.dihapus: Tingkat Kelas '%nama%' gagal dihapus
     riwayat.penyakit:
         tersimpan: Data Riwayat Penyakit '%siswa%' berhasil disimpan
         terbarui: Data Riwayat Penyakit '%siswa%' berhasil diperbarui
@@ -557,7 +576,8 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
-    tingkat.kelas: Hapus tingkat kelas '%code%'?
+    pendidikan.sebelumnya: Hapus info pendidikan sebelumnya '%siswa%' di '%nama%'?
+    tingkat.kelas: Hapus tingkat kelas '%kode%'?
     riwayat.penyakit: Hapus Riwayat Penyakit %nama% %siswa%?
     smspendaftaran: Hapus Pengaturan SMS Pendaftaran?
     layanansms: Hapus Pilihan Layanan SMS sekolah %sekolah%?
@@ -616,7 +636,7 @@ exception:
     update.year.restrict: Tidak bisa mengubah data tahun yang telah dipakai di data lain yang terkait
     unique.class.year.school: Kode kelas pada suatu sekolah harus unik
     unique.year.school: Kode tahun akademik pada suatu sekolah harus unik
-    unique.classguardian: Wali kelas untuk tahun akademik dan kelas yang dipilih telah ada 
+    unique.classguardian: Wali kelas untuk tahun akademik dan kelas yang dipilih telah ada
     unique.presencestatus: Nama status yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardtype: Jenis imbalan yang dipilih sudah terdaftar di sekolah yang dipilih
     unique.rewardamount: Kombinasi unik tahun, gelombang, dan jenis imbalan sudah digunakan
@@ -638,7 +658,7 @@ exception:
 shortinfo:
     ortuwali.hanya.satu.aktif: hanya satu orang tua/wali yang bisa aktif dalam satu waktu
     password.mustequal: password harus sama
-    username: username 
+    username: username
     checked: yang terpilih
     inselectedyear: dalam tahun terpilih
     onlyoneactive.academicyear: hanya satu tahun akademik yang bisa aktif dalam satu waktu
@@ -672,7 +692,7 @@ shortinfo:
     pay.lessthan.fee.oneitem: Mencicil (jumlah bayar lebih kecil dari jumlah biaya) hanya bisa untuk satu item biaya
     pay.nozero: Tidak bisa membayar 0 rupiah
     discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
-    
+
 alert:
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
     username.partially.generated: >
@@ -683,13 +703,13 @@ alert:
     student.noexists: Tidak ada siswa dengan penyaringan '%filter%'
     student.nofilter: Membuat ulang hanya berguna bersama dengan penyaringan siswa
     username.numeric.forstudent: Username numerik-saja hanya bisa dipakai untuk siswa
-    filter.noempty.numeric: Membuat ulang hanya bisa digunakan bersama dengan Saring Siswa dan berisi hanya-angka 
+    filter.noempty.numeric: Membuat ulang hanya bisa digunakan bersama dengan Saring Siswa dan berisi hanya-angka
     registrationfee.is.inserted: Biaya pendaftaran yang dipilih sudah ada di data pembayaran
     regcommittee.notempty: Harus ada setidaknya satu anggota panitia pendaftaran
-    
+
 info:
     errormessage: Pesan Error
-    
+
 errorinfo:
     cannot.open: Tidak bisa membuka file %filename%
     cannot.write: Tidak bisa menulis ke file %filename%
@@ -729,7 +749,7 @@ title:
     register: Registrasi
 
 app.title: SisDik
-    
+
 help:
     regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.
     filterby.name.systemid: Nama atau Nomor Induk Sistem
