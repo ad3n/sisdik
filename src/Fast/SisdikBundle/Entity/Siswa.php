@@ -1482,6 +1482,9 @@ class Siswa
     protected function getUploadDir() {
         // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
         $fs = new Filesystem();
+        if (!$fs->exists(self::PHOTO_DIR)) {
+            $fs->mkdir(self::PHOTO_DIR);
+        }
         if (!$fs->exists(self::PHOTO_DIR . $this->getSekolah()->getId())) {
             $fs->mkdir(self::PHOTO_DIR . $this->getSekolah()->getId());
         }
