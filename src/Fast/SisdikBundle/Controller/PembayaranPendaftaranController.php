@@ -57,7 +57,8 @@ class PembayaranPendaftaranController extends Controller
                         ->findBy(
                                 array(
                                     'tahun' => $siswa->getTahun(), 'gelombang' => $siswa->getGelombang(),
-                                ), array(
+                                ),
+                                array(
                                     'urutan' => 'ASC'
                                 )));
 
