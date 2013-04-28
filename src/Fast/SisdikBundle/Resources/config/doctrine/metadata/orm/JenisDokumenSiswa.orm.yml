@@ -1,0 +1,28 @@
+JenisDokumenSiswa:
+    type: entity
+    table: jenis_dokumen_siswa
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        namaDokumen:
+            type: string
+            length: 255
+            fixed: false
+            nullable: true
+            column: nama_dokumen
+    manyToOne:
+        sekolah:
+            targetEntity: Sekolah
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sekolah_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,46 @@
+DokumenSiswa:
+    type: entity
+    table: dokumen_siswa
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        ada:
+            type: boolean
+            nullable: false
+        namaFile:
+            type: string
+            length: 255
+            fixed: false
+            nullable: true
+            column: nama_file
+        namaFileDisk:
+            type: string
+            length: 255
+            fixed: false
+            nullable: true
+            column: nama_file_disk
+    manyToOne:
+        jenisDokumenSiswa:
+            targetEntity: JenisDokumenSiswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                jenis_dokumen_siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        siswa:
+            targetEntity: Siswa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                siswa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
