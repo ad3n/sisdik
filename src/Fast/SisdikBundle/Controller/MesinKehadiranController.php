@@ -167,6 +167,9 @@ class MesinKehadiranController extends Controller
      * @Template("FastSisdikBundle:MesinKehadiran:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:MesinKehadiran')->find($id);
@@ -226,6 +229,22 @@ class MesinKehadiranController extends Controller
 
             $em->remove($entity);
             $em->flush();
+
+            $this->get('session')->getFlashBag()
+                    ->add('success',
+                            $this->get('translator')
+                                    ->trans('flash.attendancemachine.deleted',
+                                            array(
+                                                '%ip%' => $entity->getAlamatIp()
+                                            )));
+        } else {
+            $this->get('session')->getFlashBag()
+                    ->add('error',
+                            $this->get('translator')
+                                    ->trans('flash.attendancemachine.fail.delete',
+                                            array(
+                                                '%ip%' => $entity->getAlamatIp()
+                                            )));
         }
 
         return $this->redirect($this->generateUrl('attendancemachine'));
