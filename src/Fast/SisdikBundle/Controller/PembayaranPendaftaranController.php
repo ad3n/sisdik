@@ -57,9 +57,6 @@ class PembayaranPendaftaranController extends Controller
                         ->findBy(
                                 array(
                                     'tahun' => $siswa->getTahun(), 'gelombang' => $siswa->getGelombang(),
-                                ),
-                                array(
-                                    'urutan' => 'ASC'
                                 )));
 
         $entities = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')
