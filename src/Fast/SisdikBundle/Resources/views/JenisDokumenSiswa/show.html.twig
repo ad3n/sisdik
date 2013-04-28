@@ -1,0 +1,53 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}jenis.dokumen.siswa.detail{% endtrans %}{% endblock %}
+{% block content %}
+<dl>
+    <dt>{{ 'label.schoolname'|trans }}</dt>
+    <dd>{{ entity.sekolah.nama }}</dd>
+    <dt>{{ 'label.nama.jenis.dokumen.siswa'|trans }}</dt>
+    <dd>{{ entity.namaDokumen }}</dd>
+    <dt>{{ 'label.keterangan'|trans }}</dt>
+    <dd>{{ entity.keterangan|nl2br }}</dd>
+    <dt>{{ 'label.order'|trans }}</dt>
+    <dd>{{ entity.urutan }}</dd>
+</dl>
+
+<div class="clearfix"></div>
+
+<form id="delete-form" action="{{ path('jenisdokumensiswa_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('jenisdokumensiswa') }}">{{ 'link.backtolist'|trans }} {{ 'link.jenis.dokumen.siswa'|trans }}</a>
+    </li>
+    <li>
+        <a href="{{ path('jenisdokumensiswa_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<div class="add-link pull-right">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('jenisdokumensiswa_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.tambah.jenis.dokumen.siswa'|trans }}
+	</a>
+{% endimage %}
+</div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.jenis.dokumen.siswa'|trans({ '%nama%': entity.namaDokumen }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

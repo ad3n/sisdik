@@ -28,6 +28,20 @@ class JenisDokumenSiswa
     private $namaDokumen;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="string", length=255, nullable=true)
+     */
+    private $keterangan;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="urutan", type="smallint", nullable=true)
+     */
+    private $urutan;
+
+    /**
      * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
@@ -59,12 +73,54 @@ class JenisDokumenSiswa
     }
 
     /**
+     * Set keterangan
+     *
+     * @param string $keterangan
+     * @return JenisDokumenSiswa
+     */
+    public function setKeterangan($keterangan) {
+        $this->keterangan = $keterangan;
+
+        return $this;
+    }
+
+    /**
+     * Get keterangan
+     *
+     * @return string
+     */
+    public function getKeterangan() {
+        return $this->keterangan;
+    }
+
+    /**
      * Get namaDokumen
      *
      * @return string
      */
     public function getNamaDokumen() {
         return $this->namaDokumen;
+    }
+
+    /**
+     * Set urutan
+     *
+     * @param integer $urutan
+     * @return JenisDokumenSiswa
+     */
+    public function setUrutan($urutan) {
+        $this->urutan = $urutan;
+
+        return $this;
+    }
+
+    /**
+     * Get urutan
+     *
+     * @return integer
+     */
+    public function getUrutan() {
+        return $this->urutan;
     }
 
     /**

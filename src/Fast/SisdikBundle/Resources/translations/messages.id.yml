@@ -5,6 +5,9 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    tambah.jenis.dokumen.siswa: Tambah Jenis Dokumen Siswa
+    nama.jenis.dokumen.siswa: Nama Jenis Dokumen Siswa
+    jenis.dokumen.siswa: Jenis Dokumen Siswa
     jenjang: Jenjang
     nama.lembaga: Nama Lembaga
     alamat.sekolah: Alamat Sekolah
@@ -353,6 +356,7 @@ label:
         tambah: Tambah Info Pendidikan Sebelumnya
 
 link:
+    jenis.dokumen.siswa: Jenis Dokumen Siswa
     pendidikan.sebelumnya: Pendidikan Sebelumnya
     info.pendaftar: Info Pendaftar
     info.siswa: Info Data Siswa
@@ -374,6 +378,11 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    jenis.dokumen.siswa:
+        tersimpan: Jenis Dokumen Siswa '%nama%' berhasil dibuat
+        terbarui: Jenis Dokumen Siswa '%nama%' berhasil diperbarui
+        terhapus: Jenis Dokumen Siswa '%nama%' berhasil dihapus
+        gagal.dihapus: Jenis Dokumen Siswa '%nama%' gagal dihapus
     pendidikan.sebelumnya:
         tersimpan: Info Pendidikan Sebelumnya '%siswa%' di '%nama%' berhasil dibuat
         terbarui: Info Pendidikan Sebelumnya '%siswa%' di '%nama%' berhasil diperbarui
@@ -576,6 +585,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    jenis.dokumen.siswa: Hapus jenis dokumen siswa '%nama%'?
     pendidikan.sebelumnya: Hapus info pendidikan sebelumnya '%siswa%' di '%nama%'?
     tingkat.kelas: Hapus tingkat kelas '%kode%'?
     riwayat.penyakit: Hapus Riwayat Penyakit %nama% %siswa%?

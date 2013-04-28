@@ -1,6 +1,12 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+jenis.dokumen.siswa:
+    daftar: Daftar Jenis Dokumen Siswa
+    edit: Mengubah Jenis Dokumen Siswa
+    pembuatan: Menambah Jenis Dokumen Siswa
+    detail: Detail Jenis Dokumen Siswa
+
 pendidikan.sebelumnya:
     daftar: Pendidikan Sebelumnya
     edit: Mengubah Data Pendidikan Sebelumnya
@@ -38,7 +44,7 @@ settings:
     user:
         list:
             main: Daftar User
-            modify: Pengaturan User 
+            modify: Pengaturan User
         edit: Ubah User
         add: Tambah User
         add.inschool: Tambah User di Sekolah
@@ -125,7 +131,7 @@ attendancemachine:
     edit: Mengubah Mesin Kehadiran
     creation: Membuat Mesin Kehadiran
     detail: Detail Mesin Kehadiran
-    
+
 academic.calendar: Kalender Akademik
 
 sms:

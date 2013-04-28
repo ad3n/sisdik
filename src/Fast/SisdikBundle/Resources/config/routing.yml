@@ -24,7 +24,7 @@ fos_user_change_password:
     prefix: /profile
 
 gregwar_captcha_routing:
-    resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"    
+    resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
     prefix: /_gcb
 
 
@@ -45,7 +45,7 @@ settings_school:
     resource: "@FastSisdikBundle/Controller/SettingsSchoolController.php"
     type:     annotation
     prefix:   /settings
-    
+
 settings_specsch:
     resource: "@FastSisdikBundle/Controller/SekolahController.php"
     type:     annotation
@@ -70,17 +70,17 @@ settings_feetype:
     resource: "@FastSisdikBundle/Controller/JenisbiayaController.php"
     type:     annotation
     prefix:   /
-    
+
 settings_feeonce:
     resource: "@FastSisdikBundle/Controller/BiayaSekaliController.php"
     type:     annotation
     prefix:   /
-    
+
 settings_feerecur:
     resource: "@FastSisdikBundle/Controller/BiayaRutinController.php"
     type:     annotation
     prefix:   /
-    
+
 fee_registration:
     resource: "@FastSisdikBundle/Controller/BiayaPendaftaranController.php"
     type:     annotation
@@ -90,7 +90,7 @@ student:
     resource: "@FastSisdikBundle/Controller/SiswaController.php"
     type:     annotation
     prefix:   /
-    
+
 student_username:
     resource: "@FastSisdikBundle/Controller/SiswaUsernameController.php"
     type:     annotation
@@ -130,32 +130,32 @@ presence_status:
     resource: "@FastSisdikBundle/Controller/StatusKehadiranKepulanganController.php"
     type:     annotation
     prefix:   /
-    
+
 presence_schedule_single:
     resource: "@FastSisdikBundle/Controller/JadwalKehadiranKepulanganSingleController.php"
     type:     annotation
     prefix:   /
-    
+
 presence_schedule:
     resource: "@FastSisdikBundle/Controller/JadwalKehadiranKepulanganController.php"
     type:     annotation
     prefix:   /
-    
+
 tingkatkelas:
     resource: "@FastSisdikBundle/Controller/TingkatController.php"
     type:     annotation
     prefix:   /
-    
+
 attendance_machine:
     resource: "@FastSisdikBundle/Controller/MesinKehadiranController.php"
     type:     annotation
     prefix:   /
-    
+
 studentspresence:
     resource: "@FastSisdikBundle/Controller/KehadiranSiswaController.php"
     type:     annotation
     prefix:   /
-    
+
 studentspresence_localapi:
     resource: "@FastSisdikBundle/Controller/KehadiranSiswaLocalAPIController.php"
     type:     annotation
@@ -165,27 +165,27 @@ rewardtype:
     resource: "@FastSisdikBundle/Controller/JenisImbalanController.php"
     type:     annotation
     prefix:   /
-    
+
 rewardamount:
     resource: "@FastSisdikBundle/Controller/ImbalanPendaftaranController.php"
     type:     annotation
     prefix:   /
-    
+
 regcommittee:
     resource: "@FastSisdikBundle/Controller/PanitiaPendaftaranController.php"
     type:     annotation
     prefix:   /
-    
+
 applicant:
     resource: "@FastSisdikBundle/Controller/SiswaApplicantController.php"
     type:     annotation
     prefix:   /
-    
+
 payment:
     resource: "@FastSisdikBundle/Controller/SiswaApplicantPaymentController.php"
     type:     annotation
     prefix:   /
-    
+
 payment_oncefee:
     resource: "@FastSisdikBundle/Controller/PembayaranSekaliController.php"
     type:     annotation
@@ -223,6 +223,11 @@ riwayatpenyakit:
 
 pendidikansiswa:
     resource: "@FastSisdikBundle/Controller/PendidikanSiswaController.php"
+    type:     annotation
+    prefix:   /
+
+jenisdokumensiswa:
+    resource: "@FastSisdikBundle/Controller/JenisDokumenSiswaController.php"
     type:     annotation
     prefix:   /
 

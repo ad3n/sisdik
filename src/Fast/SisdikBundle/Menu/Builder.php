@@ -115,6 +115,12 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'smspendaftaran'
                             ));
 
+            $settings
+                    ->addChild('links.jenisdokumensiswa',
+                            array(
+                                'route' => 'jenisdokumensiswa'
+                            ));
+
         }
 
         if ($securityContext
