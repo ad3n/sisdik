@@ -10,7 +10,7 @@
     <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
     <dd>{% if entity.siswa.gelombang is not null %}{{ entity.siswa.gelombang.nama }}{% endif %}</dd>
     <dt>{{ 'label.gender'|trans }}</dt>
-    <dd>{% if entity.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% else %}{{ 'female'|trans }}{% endif %}</dd>
+    <dd>{% if entity.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
     <dt>&nbsp;</dt>
     <dd>&nbsp;</dd>
     <dt>{{ 'label.jenjang'|trans }}</dt>

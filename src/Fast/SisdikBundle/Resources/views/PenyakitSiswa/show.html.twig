@@ -6,7 +6,7 @@
     <dt>{{ 'label.nama.siswa'|trans }}</dt>
     <dd>{{ entity.siswa.namaLengkap }}</dd>
     <dt>{{ 'label.gender'|trans }}</dt>
-    <dd>{% if entity.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+    <dd>{% if entity.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
     <dt>{{ 'label.nama.penyakit'|trans }}</dt>
     <dd>{{ entity.nama }}</dd>
     <dt>{{ 'label.terjadi.di.kelas'|trans }}</dt>

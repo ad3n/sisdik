@@ -19,7 +19,7 @@
                 <dt>{{ 'label.name.full'|trans }}</dt>
                 <dd>{{ entity.namaLengkap }}</dd>
                 <dt>{{ 'label.gender'|trans }}</dt>
-                <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+                <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
                 <dt>{{ 'label.photo'|trans }}</dt>
                 <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.getWebPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
                 <dt>{{ 'label.religion'|trans }}</dt>

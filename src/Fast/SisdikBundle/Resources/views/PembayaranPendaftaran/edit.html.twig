@@ -26,7 +26,7 @@
             <dt>{{ 'label.application.number'|trans }}</dt>
             <dd>{{ siswa.nomorPendaftaran }}</dd>
             <dt>{{ 'label.gender'|trans }}</dt>
-            <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin %}{{ 'female'|trans }}{% endif %}</dd>
+            <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
     		{% if siswa.orangtuaWali %}
     		    {% for orangtua in siswa.orangtuaWali %}
     		        {% if orangtua %}
