@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,7 +46,7 @@ class DokumenSiswa
      *
      * @ORM\ManyToOne(targetEntity="JenisDokumenSiswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenis_dokumen_siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="jenis_dokumen_siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $jenisDokumenSiswa;
@@ -57,20 +56,17 @@ class DokumenSiswa
      *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $siswa;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -80,8 +76,7 @@ class DokumenSiswa
      * @param boolean $ada
      * @return DokumenSiswa
      */
-    public function setAda($ada)
-    {
+    public function setAda($ada) {
         $this->ada = $ada;
 
         return $this;
@@ -90,10 +85,9 @@ class DokumenSiswa
     /**
      * Get ada
      *
-     * @return boolean 
+     * @return boolean
      */
-    public function getAda()
-    {
+    public function getAda() {
         return $this->ada;
     }
 
@@ -103,8 +97,7 @@ class DokumenSiswa
      * @param string $namaFile
      * @return DokumenSiswa
      */
-    public function setNamaFile($namaFile)
-    {
+    public function setNamaFile($namaFile) {
         $this->namaFile = $namaFile;
 
         return $this;
@@ -113,10 +106,9 @@ class DokumenSiswa
     /**
      * Get namaFile
      *
-     * @return string 
+     * @return string
      */
-    public function getNamaFile()
-    {
+    public function getNamaFile() {
         return $this->namaFile;
     }
 
@@ -126,8 +118,7 @@ class DokumenSiswa
      * @param string $namaFileDisk
      * @return DokumenSiswa
      */
-    public function setNamaFileDisk($namaFileDisk)
-    {
+    public function setNamaFileDisk($namaFileDisk) {
         $this->namaFileDisk = $namaFileDisk;
 
         return $this;
@@ -136,10 +127,9 @@ class DokumenSiswa
     /**
      * Get namaFileDisk
      *
-     * @return string 
+     * @return string
      */
-    public function getNamaFileDisk()
-    {
+    public function getNamaFileDisk() {
         return $this->namaFileDisk;
     }
 
@@ -149,8 +139,8 @@ class DokumenSiswa
      * @param \Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa
      * @return DokumenSiswa
      */
-    public function setJenisDokumenSiswa(\Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa = null)
-    {
+    public function setJenisDokumenSiswa(
+            \Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa = null) {
         $this->jenisDokumenSiswa = $jenisDokumenSiswa;
 
         return $this;
@@ -159,10 +149,9 @@ class DokumenSiswa
     /**
      * Get jenisDokumenSiswa
      *
-     * @return \Fast\SisdikBundle\Entity\JenisDokumenSiswa 
+     * @return \Fast\SisdikBundle\Entity\JenisDokumenSiswa
      */
-    public function getJenisDokumenSiswa()
-    {
+    public function getJenisDokumenSiswa() {
         return $this->jenisDokumenSiswa;
     }
 
@@ -172,8 +161,7 @@ class DokumenSiswa
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return DokumenSiswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
 
         return $this;
@@ -182,10 +170,9 @@ class DokumenSiswa
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
     }
 }
