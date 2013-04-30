@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\SimpleTahunSearchType;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,16 +36,28 @@ class JenisDokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
+
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:JenisDokumenSiswa', 't')->where('t.sekolah = :sekolah')
-                ->orderBy('t.urutan', 'ASC')->AddOrderBy('t.namaDokumen', 'ASC')
-                ->setParameter('sekolah', $sekolah->getId());
+                ->from('FastSisdikBundle:JenisDokumenSiswa', 't')->leftJoin('t.tahun', 't2')
+                ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->AddOrderBy('t.urutan', 'ASC')
+                ->AddOrderBy('t.namaDokumen', 'ASC')->setParameter('sekolah', $sekolah->getId());
+
+        $searchform->bind($this->getRequest());
+        if ($searchform->isValid()) {
+            $searchdata = $searchform->getData();
+
+            if ($searchdata['tahun'] != '') {
+                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            }
+        }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
 
         return array(
-            'pagination' => $pagination
+            'pagination' => $pagination, 'searchform' => $searchform->createView()
         );
     }
 

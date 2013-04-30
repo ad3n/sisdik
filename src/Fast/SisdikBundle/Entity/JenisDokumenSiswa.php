@@ -52,6 +52,16 @@ class JenisDokumenSiswa
     private $sekolah;
 
     /**
+     * @var \Tahun
+     *
+     * @ORM\ManyToOne(targetEntity="Tahun")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $tahun;
+
+    /**
      * Get id
      *
      * @return integer
@@ -142,5 +152,26 @@ class JenisDokumenSiswa
      */
     public function getSekolah() {
         return $this->sekolah;
+    }
+
+    /**
+     * Set tahun
+     *
+     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
+     * @return BiayaPendaftaran
+     */
+    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+        $this->tahun = $tahun;
+
+        return $this;
+    }
+
+    /**
+     * Get tahun
+     *
+     * @return \Fast\SisdikBundle\Entity\Tahun
+     */
+    public function getTahun() {
+        return $this->tahun;
     }
 }

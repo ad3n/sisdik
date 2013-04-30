@@ -3,6 +3,21 @@
 {% block page_heading %}{% trans from "headings" %}jenis.dokumen.siswa.daftar{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('jenisdokumensiswa') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('jenisdokumensiswa') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
 	<a href="{{ path('jenisdokumensiswa_new') }}" class="add-link-a">
@@ -20,6 +35,7 @@
     		<th class="{% if pagination.isSorted('t.namaDokumen') %}sorted{% endif %}">
     		    {{ knp_pagination_sortable(pagination, 'label.jenis.dokumen.siswa'|trans, 't.namaDokumen') }}
     		</th>
+    		<th>{{ 'label.tahun'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
     		    {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
     		</th>
@@ -30,6 +46,7 @@
     {% for data in pagination %}
         <tr>
     		<td data-title="{{ 'label.jenis.dokumen.siswa'|trans }}">{{ data.namaDokumen }}</td>
+    		<td data-title="{{ 'label.tahun'|trans }}">{{ data.tahun.tahun }}</td>
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('jenisdokumensiswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>

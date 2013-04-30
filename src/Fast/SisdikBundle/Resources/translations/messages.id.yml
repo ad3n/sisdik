@@ -5,6 +5,7 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    tahun: Tahun
     tambah.jenis.dokumen.siswa: Tambah Jenis Dokumen Siswa
     nama.jenis.dokumen.siswa: Nama Jenis Dokumen Siswa
     jenis.dokumen.siswa: Jenis Dokumen Siswa
@@ -356,6 +357,7 @@ label:
         tambah: Tambah Info Pendidikan Sebelumnya
 
 link:
+    dokumen.siswa: Dokumen Siswa
     jenis.dokumen.siswa: Jenis Dokumen Siswa
     pendidikan.sebelumnya: Pendidikan Sebelumnya
     info.pendaftar: Info Pendaftar
@@ -585,7 +587,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
-    jenis.dokumen.siswa: Hapus jenis dokumen siswa '%nama%'?
+    jenis.dokumen.siswa: Hapus jenis dokumen siswa '%nama%' tahun '%tahun%'?
     pendidikan.sebelumnya: Hapus info pendidikan sebelumnya '%siswa%' di '%nama%'?
     tingkat.kelas: Hapus tingkat kelas '%kode%'?
     riwayat.penyakit: Hapus Riwayat Penyakit %nama% %siswa%?
