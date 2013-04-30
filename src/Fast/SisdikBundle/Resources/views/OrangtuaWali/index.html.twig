@@ -64,6 +64,7 @@
     {% endfor %}
     </tbody>
 </table>
+{{ knp_pagination_render(pagination) }}
 
 <p style="font-style: italic;">* {{ 'shortinfo.ortuwali.hanya.satu.aktif'|trans }}</p>
 
@@ -78,5 +79,5 @@
     {% endif %}
     </li>
 </ul>
-{{ knp_pagination_render(pagination) }}
+
 {% endblock content %}

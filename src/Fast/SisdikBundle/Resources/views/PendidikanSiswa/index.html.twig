@@ -53,6 +53,7 @@
     {% endfor %}
     </tbody>
 </table>
+{{ knp_pagination_render(pagination) }}
 
 <div class="clearfix"></div>
 
@@ -65,5 +66,5 @@
     {% endif %}
     </li>
 </ul>
-{{ knp_pagination_render(pagination) }}
+
 {% endblock content %}
