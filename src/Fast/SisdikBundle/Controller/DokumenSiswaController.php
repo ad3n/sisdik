@@ -64,10 +64,10 @@ class DokumenSiswaController extends Controller
             }
         }
 
-        $entities = $em->getRepository('FastSisdikBundle:DokumenSiswa')
-                ->findBy(array(
-                    'siswa' => $siswa
-                ));
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:DokumenSiswa', 't')
+                ->leftJoin('t.jenisDokumenSiswa', 't2')->where('t.siswa = :siswa')
+                ->setParameter('siswa', $siswa)->orderBy('t2.urutan', 'ASC');
+        $entities = $querybuilder->getQuery()->getResult();
 
         $jumlahDokumenTersimpan = count($entities);
 
@@ -149,10 +149,10 @@ class DokumenSiswaController extends Controller
             }
         }
 
-        $entities = $em->getRepository('FastSisdikBundle:DokumenSiswa')
-                ->findBy(array(
-                    'siswa' => $siswa
-                ));
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:DokumenSiswa', 't')
+                ->leftJoin('t.jenisDokumenSiswa', 't2')->where('t.siswa = :siswa')
+                ->setParameter('siswa', $siswa)->orderBy('t2.urutan', 'ASC');
+        $entities = $querybuilder->getQuery()->getResult();
 
         $jumlahDokumenTersimpan = count($entities);
 
