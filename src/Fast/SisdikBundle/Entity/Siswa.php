@@ -102,7 +102,9 @@ class Siswa
     private $fotoPendaftaran;
 
     /**
-     * @Assert\File(maxSize="5000000")
+     * @var UploadedFile
+     *
+     * @Assert\File(maxSize="5M")
      */
     private $file;
 

@@ -72,7 +72,9 @@ class PendidikanSiswa
     private $ijazahFile;
 
     /**
-     * @Assert\File(maxSize="5000000")
+     * @var UploadedFile
+     *
+     * @Assert\File(maxSize="5M")
      */
     private $fileUploadIjazah;
 
@@ -112,7 +114,9 @@ class PendidikanSiswa
     private $sttbFile;
 
     /**
-     * @Assert\File(maxSize="5000000")
+     * @var UploadedFile
+     *
+     * @Assert\File(maxSize="5M")
      */
     private $fileUploadSttb;
 
