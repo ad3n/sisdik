@@ -101,7 +101,7 @@ class DokumenSiswaController extends Controller
                     ->createForm('collection', $dokumenCollection,
                             array(
                                     'type' => new DokumenSiswaType($this->container), 'required' => true,
-                                    'allow_add' => true, 'allow_delete' => true, 'by_reference' => true,
+                                    'allow_add' => true, 'allow_delete' => true, 'by_reference' => false,
                                     'options' => array(
                                         'widget_control_group' => false, 'label_render' => false,
                                     ), 'label_render' => false, 'widget_control_group' => false,
@@ -179,7 +179,7 @@ class DokumenSiswaController extends Controller
                 ->createForm('collection', $dokumenCollection,
                         array(
                                 'type' => new DokumenSiswaType($this->container), 'required' => true,
-                                'allow_add' => true, 'allow_delete' => true, 'by_reference' => true,
+                                'allow_add' => true, 'allow_delete' => true, 'by_reference' => false,
                                 'options' => array(
                                     'widget_control_group' => false, 'label_render' => false,
                                 ), 'label_render' => false, 'widget_control_group' => false,
@@ -192,10 +192,21 @@ class DokumenSiswaController extends Controller
             }
             $em->flush();
 
+            $this->get('session')->getFlashBag()
+                    ->add('success',
+                            $this->get('translator')
+                                    ->trans('flash.dokumen.siswa.tersimpan',
+                                            array(
+                                                '%siswa%' => $siswa->getNamaLengkap()
+                                            )));
+
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('dokumen-pendaftar',
+                                    ->generateUrl(
+                                            'dokumen-'
+                                                    . RuteAsal::ruteAsalSiswaPendaftar(
+                                                            $this->getRequest()->getPathInfo()),
                                             array(
                                                 'sid' => $siswa->getId()
                                             )));
@@ -216,19 +227,23 @@ class DokumenSiswaController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id) {
+    public function showAction($sid, $id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find DokumenSiswa entity.');
+            throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -240,21 +255,30 @@ class DokumenSiswaController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id) {
+    public function editAction($sid, $id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
+
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
 
         $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find DokumenSiswa entity.');
+            throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
         }
 
         $editForm = $this->createForm(new DokumenSiswaType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
+                'entity' => $entity, 'siswa' => $siswa, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
 
@@ -266,13 +290,21 @@ class DokumenSiswaController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:DokumenSiswa:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
+    public function updateAction(Request $request, $sid, $id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
+
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
 
         $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find DokumenSiswa entity.');
+            throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -283,17 +315,30 @@ class DokumenSiswaController extends Controller
             $em->persist($entity);
             $em->flush();
 
+            $this->get('session')->getFlashBag()
+                    ->add('success',
+                            $this->get('translator')
+                                    ->trans('flash.dokumen.siswa.terbarui',
+                                            array(
+                                                    '%siswa%' => $siswa->getNamaLengkap(),
+                                                    '%nama%' => $entity->getJenisDokumenSiswa()
+                                                            ->getNamaDokumen()
+                                            )));
+
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('dokumen_edit',
+                                    ->generateUrl(
+                                            'dokumen-'
+                                                    . RuteAsal::ruteAsalSiswaPendaftar(
+                                                            $this->getRequest()->getPathInfo()) . '_show',
                                             array(
-                                                'id' => $id
+                                                'sid' => $sid, 'id' => $id
                                             )));
         }
 
         return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
+                'entity' => $entity, 'siswa' => $siswa, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
         );
     }
@@ -305,7 +350,9 @@ class DokumenSiswaController extends Controller
      * @Route("/siswa/{id}/delete", name="dokumen-siswa_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
+    public function deleteAction(Request $request, $sid, $id) {
+        $this->isRegisteredToSchool();
+
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 
@@ -314,14 +361,47 @@ class DokumenSiswaController extends Controller
             $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find DokumenSiswa entity.');
+                throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            try {
+                $em->remove($entity);
+                $em->flush();
+
+                $this->get('session')->getFlashBag()
+                        ->add('success',
+                                $this->get('translator')
+                                        ->trans('flash.dokumen.siswa.terhapus',
+                                                array(
+                                                        '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
+                                                        '%nama%' => $entity->getJenisDokumenSiswa()
+                                                                ->getNamaDokumen()
+                                                )));
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.delete.restrict');
+                throw new DBALException($message);
+            }
+        } else {
+            $this->get('session')->getFlashBag()
+                    ->add('error',
+                            $this->get('translator')
+                                    ->trans('flash.dokumen.siswa.gagal.dihapus',
+                                            array(
+                                                    '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
+                                                    '%nama%' => $entity->getNama()
+                                            )));
         }
 
-        return $this->redirect($this->generateUrl('dokumen'));
+        return $this
+                ->redirect(
+                        $this
+                                ->generateUrl(
+                                        'dokumen-'
+                                                . RuteAsal::ruteAsalSiswaPendaftar(
+                                                        $this->getRequest()->getPathInfo()),
+                                        array(
+                                            'sid' => $sid,
+                                        )));
     }
 
     /**

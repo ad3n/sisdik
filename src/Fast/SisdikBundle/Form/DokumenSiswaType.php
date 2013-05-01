@@ -30,7 +30,7 @@ class DokumenSiswaType extends AbstractType
                             'class' => 'FastSisdikBundle:Siswa', 'label_render' => false,
                         ));
 
-        $builder->addEventSubscriber(new DokumenFieldSubscriber());
+        $builder->addEventSubscriber(new DokumenFieldSubscriber($em));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

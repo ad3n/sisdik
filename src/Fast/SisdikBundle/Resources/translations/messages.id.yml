@@ -5,6 +5,8 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    nama.dokumen: Nama Dokumen
+    file.dokumen: File Dokumen
     lengkap: Lengkap
     tidak.lengkap: Tidak Lengkap
     tahun: Tahun
@@ -382,6 +384,11 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    dokumen.siswa:
+        tersimpan: Dokumen siswa '%siswa%' berhasil dibuat
+        terbarui: Dokumen '%nama%' siswa '%siswa%' berhasil diperbarui
+        terhapus: Dokumen '%nama%' siswa '%siswa%' berhasil dihapus
+        gagal.dihapus: Dokumen '%nama%' siswa '%siswa%' gagal dihapus
     jenis.dokumen.siswa:
         tersimpan: Jenis Dokumen Siswa '%nama%' berhasil dibuat
         terbarui: Jenis Dokumen Siswa '%nama%' berhasil diperbarui
@@ -589,6 +596,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    dokumen.siswa: Hapus dokumen '%nama%' siswa '%siswa%'?
     jenis.dokumen.siswa: Hapus jenis dokumen siswa '%nama%' tahun '%tahun%'?
     pendidikan.sebelumnya: Hapus info pendidikan sebelumnya '%siswa%' di '%nama%'?
     tingkat.kelas: Hapus tingkat kelas '%kode%'?

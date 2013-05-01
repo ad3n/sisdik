@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,6 +18,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DokumenSiswa
 {
+    const DOKUMEN_DIR = 'uploads/students/dokumen/';
+
     /**
      * @var integer
      *
@@ -28,9 +32,9 @@ class DokumenSiswa
     /**
      * @var boolean
      *
-     * @ORM\Column(name="lengkap", type="boolean", nullable=false)
+     * @ORM\Column(name="lengkap", type="boolean", nullable=false, options={"default"=0})
      */
-    private $lengkap;
+    private $lengkap = false;
 
     /**
      * @var string
@@ -69,9 +73,14 @@ class DokumenSiswa
     /**
      * @var UploadedFile
      *
-     * @Assert\File(maxSize="5000000")
+     * @Assert\File(maxSize="5M")
      */
     private $fileUpload;
+
+    /**
+     * @var string
+     */
+    private $fileDiskSebelumnya;
 
     /**
      * Get id
@@ -88,7 +97,7 @@ class DokumenSiswa
      * @param boolean $lengkap
      * @return DokumenSiswa
      */
-    public function setLengkap($lengkap) {
+    public function setLengkap($lengkap = false) {
         $this->lengkap = $lengkap;
 
         return $this;
@@ -121,7 +130,7 @@ class DokumenSiswa
      * @return string
      */
     public function getNamaFile() {
-        return $this->namaFile;
+        return strlen($this->namaFile) > 20 ? '...' . substr($this->namaFile, -17) : $this->namaFile;
     }
 
     /**
@@ -196,5 +205,112 @@ class DokumenSiswa
         $this->fileUpload = $file;
 
         return $this;
+    }
+
+    public function getWebPathNamaFileDisk() {
+        return null === $this->namaFileDisk ? null : $this->getUploadDir() . '/' . $this->namaFileDisk;
+    }
+
+    public function getRelativePathNamaFileDisk() {
+        return null === $this->namaFileDisk ? null : $this->getUploadRootDir() . '/' . $this->namaFileDisk;
+    }
+
+    public function getRelativePathNamaFileDiskSebelumnya() {
+        return null === $this->fileDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . $this->fileDiskSebelumnya;
+    }
+
+    public function getFilesizeNamaFileDisk($type = 'KB') {
+        $file = new File($this->getRelativePathNamaFileDisk());
+        return $this->formatBytes($file->getSize(), $type);
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function prePersist() {
+        if (null !== $this->fileUpload) {
+            $this->fileDiskSebelumnya = $this->namaFileDisk;
+
+            $this->namaFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
+                    . $this->fileUpload->getClientOriginalName();
+            $this->namaFile = $this->fileUpload->getClientOriginalName();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function postPersist() {
+        if ($this->fileUpload === null) {
+            return;
+        }
+
+        $this->fileUpload->move($this->getUploadRootDir(), $this->namaFileDisk);
+
+        $this->removeFileSebelumnya();
+
+        unset($this->fileUpload);
+    }
+
+    private function removeFileSebelumnya() {
+        if ($file = $this->getRelativePathNamaFileDiskSebelumnya()) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeFile() {
+        if ($file = $this->getRelativePathNamaFileDisk()) {
+            unlink($file);
+        }
+    }
+
+    protected function getUploadRootDir() {
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+    }
+
+    protected function getUploadDir() {
+        $fs = new Filesystem();
+        if (!$fs->exists(self::DOKUMEN_DIR)) {
+            $fs->mkdir(self::DOKUMEN_DIR);
+        }
+        if (!$fs->exists(self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId())) {
+            $fs->mkdir(self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId());
+        }
+        if (!$fs
+                ->exists(
+                        self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
+                                . $this->getSiswa()->getTahun()->getTahun())) {
+            $fs
+                    ->mkdir(
+                            self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
+                                    . $this->getSiswa()->getTahun()->getTahun());
+        }
+        return self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
+                . $this->getSiswa()->getTahun()->getTahun();
+    }
+
+    private function formatBytes($size, $type) {
+        switch ($type) {
+            case "KB":
+                $size = $size * .0009765625;
+                break;
+            case "MB":
+                $size = ($size * .0009765625) * .0009765625;
+                break;
+            case "GB":
+                $size = (($size * .0009765625) * .0009765625) * .0009765625;
+                break;
+        }
+        if ($size <= 0) {
+            return $size = 'unknown';
+        } else {
+            return round($size, 2) . ' ' . $type;
+        }
     }
 }

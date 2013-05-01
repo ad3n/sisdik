@@ -7,13 +7,19 @@
 .controls {
 /*     display: inline-block; */
 }
+.collection-item {
+    margin-bottom: 1.5em;
+}
+.control-label {
+    margin-bottom: 0;
+}
 .control-group {
     display: inline-block;
-    margin-right: 1em;
-    margin-bottom: 1em;
+    margin-right: 1.5em;
+    margin-bottom: 0;
 }
 .radio {
-    margin-right: 0.5em;
+    margin-right: 1em;
 }
 </style>
 
@@ -44,7 +50,9 @@
         <tr>
     		<td data-title="{{ 'label.nama.dokumen'|trans }}">{{ data.jenisDokumenSiswa.namaDokumen }}</td>
     		<td data-title="{{ 'label.file.dokumen'|trans }}">
-{#     		    <a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ data.webPathIjazah }}">{{ data.ijazahFile }}</a>#}
+    		{% if data.namaFile != '' and data.namaFileDisk != '' %}
+    		    <a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ data.webPathNamaFileDisk }}" target="_blank">{{ data.namaFile }}</a> ({{ data.filesizeNamaFileDisk }})
+		    {% endif %}
 		    </td>
     		<td data-title="{{ 'label.lengkap'|trans }}">{% if data.lengkap == 1 %}{{ 'label.lengkap'|trans }}{% elseif data.lengkap == 0 %}{{ 'label.tidak.lengkap'|trans }}{% endif %}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
