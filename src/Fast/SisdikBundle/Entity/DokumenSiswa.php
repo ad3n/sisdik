@@ -1,13 +1,16 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * DokumenSiswa
  *
- * @ORM\Table(name="dokumen_siswa")
+ * @ORM\Table(name="dokumen_siswa", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="dokumen_siswa_UNIQUE", columns={"siswa_id", "jenis_dokumen_siswa_id"})
+ * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  */
@@ -64,13 +67,11 @@ class DokumenSiswa
     private $siswa;
 
     /**
-     * @var ArrayCollection dokumenSiswa
+     * @var UploadedFile
+     *
+     * @Assert\File(maxSize="5000000")
      */
-    private $dokumenSiswa;
-
-    public function __construct() {
-        $this->dokumenSiswa = new ArrayCollection();
-    }
+    private $fileUpload;
 
     /**
      * Get id
@@ -187,37 +188,13 @@ class DokumenSiswa
         return $this->siswa;
     }
 
-    /**
-     * Get dokumenSiswa
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection $dokumenSiswa
-     */
-    public function getDokumenSiswa() {
-        return $this->dokumenSiswa;
+    public function getFileUpload() {
+        return $this->fileUpload;
     }
 
-    /**
-     * Set dokumenSiswa
-     *
-     * @param ArrayCollection $dokumenSiswa
-     */
-    public function setDokumenSiswa(ArrayCollection $dokumenSiswa) {
-        $this->dokumenSiswa = $dokumenSiswa;
-    }
+    public function setFileUpload(UploadedFile $file) {
+        $this->fileUpload = $file;
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preSave() {
-        foreach ($this->dokumenSiswa as $dokumen) {
-            if ($dokumen instanceof Dokumen) {
-                $this->lengkap = $dokumen->isLengkap();
-                $this->namaFile = $dokumen->getNamaFile();
-                $this->namaFileDisk = $dokumen->getNamaFileDisk();
-                $this->jenisDokumenSiswa = $dokumen->getJenisDokumenSiswa();
-                $this->siswa = $dokumen->getSiswa();
-            }
-        }
+        return $this;
     }
 }

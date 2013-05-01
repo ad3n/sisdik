@@ -1,6 +1,10 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Fast\SisdikBundle\Form\DokumenType;
+
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\JenisDokumenSiswa;
 use Fast\SisdikBundle\Util\RuteAsal;
@@ -49,6 +53,8 @@ class DokumenSiswaController extends Controller
                 ->findBy(
                         array(
                             'sekolah' => $siswa->getSekolah(), 'tahun' => $siswa->getTahun(),
+                        ), array(
+                            'urutan' => 'ASC'
                         ));
         $jumlahJenisDokumen = count($jenisDokumen);
         $idJenisDokumen = array();
@@ -81,16 +87,25 @@ class DokumenSiswaController extends Controller
                     'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
             );
         } else {
-            $entity = new DokumenSiswa();
+            $dokumenCollection = new ArrayCollection();
             foreach ($idJenisDokumenForm as $id) {
-                $dokumen = new Dokumen();
+                $dokumen = new DokumenSiswa();
                 $dokumen
                         ->setJenisDokumenSiswa(
                                 $em->getRepository('FastSisdikBundle:JenisDokumenSiswa')->find($id));
                 $dokumen->setSiswa($siswa);
-                $entity->getDokumenSiswa()->add($dokumen);
+                $dokumenCollection->add($dokumen);
             }
-            $form = $this->createForm(new DokumenSiswaType($this->container), $entity);
+
+            $form = $this
+                    ->createForm('collection', $dokumenCollection,
+                            array(
+                                    'type' => new DokumenSiswaType($this->container), 'required' => true,
+                                    'allow_add' => true, 'allow_delete' => true, 'by_reference' => true,
+                                    'options' => array(
+                                        'widget_control_group' => false, 'label_render' => false,
+                                    ), 'label_render' => false, 'widget_control_group' => false,
+                            ));
 
             return array(
                     'entities' => $entities, 'siswa' => $siswa, 'jumlahJenisDokumen' => $jumlahJenisDokumen,
@@ -123,6 +138,8 @@ class DokumenSiswaController extends Controller
                 ->findBy(
                         array(
                             'sekolah' => $siswa->getSekolah(), 'tahun' => $siswa->getTahun(),
+                        ), array(
+                            'urutan' => 'ASC'
                         ));
         $jumlahJenisDokumen = count($jenisDokumen);
         $idJenisDokumen = array();
@@ -148,12 +165,31 @@ class DokumenSiswaController extends Controller
 
         $idJenisDokumenForm = array_diff($idJenisDokumen, $idDokumenTersimpan);
 
-        $entity = new DokumenSiswa();
-        $form = $this->createForm(new DokumenSiswaType($this->container), $entity);
+        $dokumenCollection = new ArrayCollection();
+        foreach ($idJenisDokumenForm as $id) {
+            $dokumen = new DokumenSiswa();
+            $dokumen
+                    ->setJenisDokumenSiswa(
+                            $em->getRepository('FastSisdikBundle:JenisDokumenSiswa')->find($id));
+            $dokumen->setSiswa($siswa);
+            $dokumenCollection->add($dokumen);
+        }
+
+        $form = $this
+                ->createForm('collection', $dokumenCollection,
+                        array(
+                                'type' => new DokumenSiswaType($this->container), 'required' => true,
+                                'allow_add' => true, 'allow_delete' => true, 'by_reference' => true,
+                                'options' => array(
+                                    'widget_control_group' => false, 'label_render' => false,
+                                ), 'label_render' => false, 'widget_control_group' => false,
+                        ));
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em->persist($entity);
+            foreach ($dokumenCollection as $dokumen) {
+                $em->persist($dokumen);
+            }
             $em->flush();
 
             return $this

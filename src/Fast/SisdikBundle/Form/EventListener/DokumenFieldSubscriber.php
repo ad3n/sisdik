@@ -1,7 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form\EventListener;
-use Fast\SisdikBundle\Entity\Dokumen;
+use Fast\SisdikBundle\Entity\DokumenSiswa;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,7 +18,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
         $data = $event->getData();
         $form = $event->getForm();
 
-        if ($data instanceof Dokumen) {
+        if ($data instanceof DokumenSiswa) {
             $label = $data->getJenisDokumenSiswa()->getNamaDokumen();
             $form
                     ->add('fileUpload', 'file',

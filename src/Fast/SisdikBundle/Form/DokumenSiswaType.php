@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Fast\SisdikBundle\Form\EventListener\DokumenFieldSubscriber;
 use Doctrine\ORM\EntityRepository;
 use Fast\SisdikBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,21 +18,19 @@ class DokumenSiswaType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
         $em = $this->container->get('doctrine')->getManager();
 
         $builder
-                ->add('dokumenSiswa', 'collection',
+                ->add('jenisDokumenSiswa', new EntityHiddenType($em),
                         array(
-                                'type' => new DokumenType($this->container), 'required' => true,
-                                'allow_add' => true, 'allow_delete' => true, 'by_reference' => true,
-                                'prototype' => true,
-                                'options' => array(
-                                    'widget_control_group' => true, 'label_render' => false,
-                                ), 'label_render' => false, 'widget_control_group' => false,
+                            'class' => 'FastSisdikBundle:JenisDokumenSiswa', 'label_render' => false,
+                        ))
+                ->add('siswa', new EntityHiddenType($em),
+                        array(
+                            'class' => 'FastSisdikBundle:Siswa', 'label_render' => false,
                         ));
+
+        $builder->addEventSubscriber(new DokumenFieldSubscriber());
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

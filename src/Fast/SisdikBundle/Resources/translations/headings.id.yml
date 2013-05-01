@@ -2,7 +2,7 @@ welcome: Selamat Datang
 dashboard: Dasbor
 
 dokumen.siswa:
-    daftar: Daftar Dokumen Siswa
+    daftar: Dokumen Siswa
     edit: Mengubah Dokumen Siswa
     pembuatan: Menambah Dokumen Siswa
     detail: Detail Dokumen Siswa
