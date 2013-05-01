@@ -502,6 +502,8 @@ class SiswaApplicantController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
+        $this->isRegisteredToSchool();
+
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 

@@ -244,7 +244,7 @@ class PenjurusanController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);

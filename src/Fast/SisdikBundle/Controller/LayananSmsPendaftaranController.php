@@ -222,7 +222,7 @@ class LayananSmsPendaftaranController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);

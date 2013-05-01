@@ -252,6 +252,8 @@ class PendidikanSiswaController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $sid, $id) {
+        $this->isRegisteredToSchool();
+
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 

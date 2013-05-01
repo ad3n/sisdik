@@ -226,7 +226,7 @@ class GelombangController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function deleteAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();

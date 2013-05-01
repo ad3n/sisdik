@@ -314,7 +314,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function deleteAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);

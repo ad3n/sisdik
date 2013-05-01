@@ -223,7 +223,7 @@ class JenisbiayaController extends Controller
      * @Method("post")
      */
     public function deleteAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);

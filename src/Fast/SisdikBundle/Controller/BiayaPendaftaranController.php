@@ -259,7 +259,7 @@ class BiayaPendaftaranController extends Controller
      * @Secure(roles="ROLE_BENDAHARA")
      */
     public function deleteAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);

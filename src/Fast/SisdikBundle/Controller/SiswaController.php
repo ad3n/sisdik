@@ -276,7 +276,7 @@ class SiswaController extends Controller
      * @Template("FastSisdikBundle:Siswa:deleteconfirm.html.twig")
      */
     public function deleteConfirmAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -301,7 +301,7 @@ class SiswaController extends Controller
      * @Method("post")
      */
     public function deleteAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);

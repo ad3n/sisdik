@@ -246,7 +246,7 @@ class SiswaKelasController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $siswa, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
 
         $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
 

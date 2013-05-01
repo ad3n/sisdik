@@ -250,6 +250,8 @@ class BiayaRutinController extends Controller
      * @Method("post")
      */
     public function deleteAction($id) {
+        $this->isRegisteredToSchool();
+
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
