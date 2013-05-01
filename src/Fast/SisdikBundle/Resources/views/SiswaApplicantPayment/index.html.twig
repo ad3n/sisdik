@@ -69,7 +69,7 @@
     		    {% endif %}
 		    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('payment_registrationfee', {'sid': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
+        		<a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
     		</td>
     	</tr>
     {% endfor %}

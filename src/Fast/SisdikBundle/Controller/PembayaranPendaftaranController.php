@@ -42,6 +42,7 @@ class PembayaranPendaftaranController extends Controller
      * Lists all PembayaranPendaftaran entities.
      *
      * @Route("/", name="payment_registrationfee")
+     * @Method("GET")
      * @Template()
      */
     public function indexAction($sid) {
@@ -146,7 +147,7 @@ class PembayaranPendaftaranController extends Controller
     /**
      * Creates a new PembayaranPendaftaran entity.
      *
-     * @Route("/create", name="payment_registrationfee_create")
+     * @Route("/", name="payment_registrationfee_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranPendaftaran:index.html.twig")
      */
