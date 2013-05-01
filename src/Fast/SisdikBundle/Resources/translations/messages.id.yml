@@ -5,6 +5,8 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    lengkap: Lengkap
+    tidak.lengkap: Tidak Lengkap
     tahun: Tahun
     tambah.jenis.dokumen.siswa: Tambah Jenis Dokumen Siswa
     nama.jenis.dokumen.siswa: Nama Jenis Dokumen Siswa

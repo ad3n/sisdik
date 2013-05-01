@@ -1,76 +1,48 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * DokumenSiswa
- *
- * @ORM\Table(name="dokumen_siswa")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- */
-class DokumenSiswa
+class Dokumen
 {
     /**
      * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
      * @var boolean
-     *
-     * @ORM\Column(name="lengkap", type="boolean", nullable=false)
      */
     private $lengkap;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="nama_file", type="string", length=255, nullable=true)
      */
     private $namaFile;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="nama_file_disk", type="string", length=255, nullable=true)
      */
     private $namaFileDisk;
 
     /**
      * @var \JenisDokumenSiswa
-     *
-     * @ORM\ManyToOne(targetEntity="JenisDokumenSiswa")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenis_dokumen_siswa_id", referencedColumnName="id", nullable=false)
-     * })
      */
     private $jenisDokumenSiswa;
 
     /**
      * @var \Siswa
-     *
-     * @ORM\ManyToOne(targetEntity="Siswa")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
-     * })
      */
     private $siswa;
 
     /**
-     * @var ArrayCollection dokumenSiswa
+     * @var UploadedFile
+     *
+     * @Assert\File(maxSize="5000000")
      */
-    private $dokumenSiswa;
-
-    public function __construct() {
-        $this->dokumenSiswa = new ArrayCollection();
-    }
+    private $fileUpload;
 
     /**
      * Get id
@@ -85,7 +57,7 @@ class DokumenSiswa
      * Set lengkap
      *
      * @param boolean $lengkap
-     * @return DokumenSiswa
+     * @return Dokumen
      */
     public function setLengkap($lengkap) {
         $this->lengkap = $lengkap;
@@ -106,7 +78,7 @@ class DokumenSiswa
      * Set namaFile
      *
      * @param string $namaFile
-     * @return DokumenSiswa
+     * @return Dokumen
      */
     public function setNamaFile($namaFile) {
         $this->namaFile = $namaFile;
@@ -127,7 +99,7 @@ class DokumenSiswa
      * Set namaFileDisk
      *
      * @param string $namaFileDisk
-     * @return DokumenSiswa
+     * @return Dokumen
      */
     public function setNamaFileDisk($namaFileDisk) {
         $this->namaFileDisk = $namaFileDisk;
@@ -148,7 +120,7 @@ class DokumenSiswa
      * Set jenisDokumenSiswa
      *
      * @param \Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa
-     * @return DokumenSiswa
+     * @return Dokumen
      */
     public function setJenisDokumenSiswa(
             \Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa = null) {
@@ -170,7 +142,7 @@ class DokumenSiswa
      * Set siswa
      *
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return DokumenSiswa
+     * @return Dokumen
      */
     public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
@@ -187,37 +159,13 @@ class DokumenSiswa
         return $this->siswa;
     }
 
-    /**
-     * Get dokumenSiswa
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection $dokumenSiswa
-     */
-    public function getDokumenSiswa() {
-        return $this->dokumenSiswa;
+    public function getFileUpload() {
+        return $this->fileUpload;
     }
 
-    /**
-     * Set dokumenSiswa
-     *
-     * @param ArrayCollection $dokumenSiswa
-     */
-    public function setDokumenSiswa(ArrayCollection $dokumenSiswa) {
-        $this->dokumenSiswa = $dokumenSiswa;
-    }
+    public function setFileUpload(UploadedFile $file) {
+        $this->fileUpload = $file;
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreUpdate()
-     */
-    public function preSave() {
-        foreach ($this->dokumenSiswa as $dokumen) {
-            if ($dokumen instanceof Dokumen) {
-                $this->lengkap = $dokumen->isLengkap();
-                $this->namaFile = $dokumen->getNamaFile();
-                $this->namaFileDisk = $dokumen->getNamaFileDisk();
-                $this->jenisDokumenSiswa = $dokumen->getJenisDokumenSiswa();
-                $this->siswa = $dokumen->getSiswa();
-            }
-        }
+        return $this;
     }
 }

@@ -2,9 +2,7 @@
 
 namespace Fast\SisdikBundle\Entity;
 /**
- * 
  * @author Ihsan Faisal
- *
  */
 class Personil
 {
@@ -20,7 +18,7 @@ class Personil
 
     /**
      * Get id
-     * 
+     *
      * @param int $id
      * @return \Fast\SisdikBundle\Entity\Personil
      */
@@ -32,7 +30,7 @@ class Personil
 
     /**
      * Set id
-     * 
+     *
      * @return int
      */
     public function getId() {

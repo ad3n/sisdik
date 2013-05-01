@@ -1,0 +1,30 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}dokumen.siswa.pembuatan{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.collection-item {
+/*     display: inline-block; */
+}
+.collection-item .control-group {
+    display: inline-block;
+    margin-bottom: 3px;
+    margin-right: 5px;
+}
+.collection-item .controls {
+    margin-left: 0;
+}
+</style>
+<form action="{{ path('dokumen_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        <a href="{{ path('dokumen') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

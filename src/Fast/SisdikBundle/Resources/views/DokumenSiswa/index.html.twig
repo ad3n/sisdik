@@ -1,0 +1,80 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}dokumen.siswa.daftar{% endtrans %}<br />{{ siswa.namaLengkap }}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.controls {
+/*     display: inline-block; */
+}
+.control-group {
+    display: inline-block;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}
+.radio {
+    margin-right: 0.5em;
+}
+</style>
+
+<dl>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
+    <dt>{{ 'label.year.entry'|trans }}</dt>
+    <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+    <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+    <dt>{{ 'label.gender'|trans }}</dt>
+    <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.nama.dokumen'|trans }}</th>
+    		<th>{{ 'label.file.dokumen'|trans }}</th>
+    		<th>{{ 'label.lengkap'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in entities %}
+        <tr>
+    		<td data-title="{{ 'label.nama.dokumen'|trans }}">{{ data.jenisDokumenSiswa.namaDokumen }}</td>
+    		<td data-title="{{ 'label.file.dokumen'|trans }}">
+{#     		    <a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ data.webPathIjazah }}">{{ data.ijazahFile }}</a>#}
+		    </td>
+    		<td data-title="{{ 'label.lengkap'|trans }}">{% if data.lengkap == 1 %}{{ 'label.lengkap'|trans }}{% elseif data.lengkap == 0 %}{{ 'label.tidak.lengkap'|trans }}{% endif %}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('dokumen-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('dokumen-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="clearfix"></div>
+
+{% if jumlahJenisDokumen > jumlahDokumenTersimpan %}
+<form action="{{ path('dokumen-' ~ ruteasal ~ '_create', {'sid': siswa.id}) }}" method="post" {{ form_enctype(form) }} class="form-inline">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    </div>
+</form>
+{% endif %}
+
+<ul class="pills">
+    <li>
+    {% if ruteasal == 'pendaftar' %}
+        <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.pendaftar'|trans }}</a>
+    {% else %}
+        <a href="{{ path('data_student_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.siswa'|trans }}</a>
+    {% endif %}
+    </li>
+</ul>
+
+{% endblock content %}

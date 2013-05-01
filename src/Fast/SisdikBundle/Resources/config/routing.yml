@@ -231,6 +231,11 @@ jenisdokumensiswa:
     type:     annotation
     prefix:   /
 
+dokumensiswa:
+    resource: "@FastSisdikBundle/Controller/DokumenSiswaController.php"
+    type:     annotation
+    prefix:   /
+
 
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:
