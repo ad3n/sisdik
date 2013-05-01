@@ -757,7 +757,7 @@ heading:
     download.data.formerge: Unduh berkas data yang akan diimpor-gabungkan
 
 text:
-    info.pendukung: Data orang tua, riwayat penyakit, pendidikan sebelumnya, referensi, dan lain-lain
+    info.pendukung: Data orang tua, pendidikan sebelumnya, dokumen siswa, penyakit yang pernah diderita, referensi pendaftaran
     academicinfo: Riwayat kelas, nilai, tugas akhir, pembayaran, dan lain-lain
 
 profile:
