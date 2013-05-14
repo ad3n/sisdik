@@ -124,7 +124,7 @@ label:
     number: Nomor
     fielddelimiter: Pemisah kolom
     import: Impor
-    importclassmap: Impor/Pemetaan Kelas
+    importclassmap: Impor/Penempatan Siswa-Kelas
     moveup: Naik
     movedown: Turun
     movement: Perubahan Posisi
@@ -286,7 +286,7 @@ label:
         name: Nama Siswa
         entry: Siswa
         import: Impor-Baru Data Siswa
-        importclassmap: Impor-Pemetaan Data Kelas Siswa
+        importclassmap: Impor/Penempatan Data Siswa-Kelas
         merge: Impor-Gabung Data Siswa
         generate.username: Buat username siswa
     class:

@@ -130,7 +130,7 @@ data:
         edit: Mengubah Kelas Siswa
         creation: Menentukan Kelas Untuk Siswa
         detail: Data Kelas Siswa
-        import: Impor/Pemetaan Kelas Siswa
+        import: Impor/Penempatan Siswa-Kelas
 
 attendancemachine:
     list: Daftar Mesin Kehadiran
