@@ -2,9 +2,6 @@
 
 namespace Fast\SisdikBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
-
-use Fast\SisdikBundle\Form\DokumenType;
-
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\JenisDokumenSiswa;
 use Fast\SisdikBundle\Util\RuteAsal;
@@ -432,7 +429,7 @@ class DokumenSiswaController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
