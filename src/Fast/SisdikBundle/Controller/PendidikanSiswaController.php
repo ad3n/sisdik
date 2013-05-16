@@ -40,7 +40,7 @@ class PendidikanSiswaController extends Controller
                 ->where('t.siswa = :siswa')->orderBy('t.jenjang', 'ASC')->setParameter('siswa', $sid);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
                 'pagination' => $pagination,

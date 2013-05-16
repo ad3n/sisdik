@@ -38,7 +38,7 @@ class TahunController extends Controller
                 ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId());
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
             'pagination' => $pagination

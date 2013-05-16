@@ -58,7 +58,7 @@ class PanitiaPendaftaranController extends Controller
         }
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
             'pagination' => $pagination, 'searchform' => $searchform->createView()

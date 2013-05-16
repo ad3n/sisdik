@@ -153,7 +153,7 @@ class JadwalKehadiranKepulanganController extends Controller
                                 $searchdata['perulangan']), $data);
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         $sekolahlist = new SekolahList($this->container);
         $sekolahKehadiranList = $sekolahlist->buildSekolahList();

@@ -32,17 +32,12 @@ class JenisbiayaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
-        } else {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
-                    ->orderBy('t.nama', 'ASC');
-        }
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
+                ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
+                ->setParameter('sekolah', $sekolah->getId());
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
             'pagination' => $pagination
