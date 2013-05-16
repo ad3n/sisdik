@@ -31,6 +31,11 @@
 * html .ui-autocomplete {
     height: 7.4em;
 }
+.ui-autocomplete-loading {
+{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+	background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
 </style>
 
 <form action="{{ path('regcommittee_update', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
@@ -54,10 +59,12 @@
         {% endif %}
     </li>
 </ul>
+
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	var options = {
     	minLength: 2,
+    	delay: 1000,
     	source: function(request, response) {
     		$.ajax({
     			url: "{{ path("regcommittee_ajax_get_username") }}",
@@ -69,7 +76,7 @@ $(document).ready(function() {
                 			value: item.value,
                 			id: item.id,
                 			source: item.source,
-                			target: item.target 
+                			target: item.target
             			}
     			    }));
 				}
@@ -79,7 +86,7 @@ $(document).ready(function() {
 		},
     	select: function(event, ui) {
         	var attrid = $(event.target).attr("id");
-        	
+
     		prefix = strstr(attrid, ui.item.source, true);
       		suffix = ui.item.target;
 

@@ -457,7 +457,7 @@ class PanitiaPendaftaranController extends Controller
      * Get username through autocomplete box
      *
      * @param Request $request
-     * @Route("/ajax/filterstudent", name="regcommittee_ajax_get_username")
+     * @Route("/ajax/ambilusername", name="regcommittee_ajax_get_username")
      */
     public function ajaxGetUsername(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
