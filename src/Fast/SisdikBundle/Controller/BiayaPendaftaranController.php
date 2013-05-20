@@ -107,7 +107,7 @@ class BiayaPendaftaranController extends Controller
      * @Secure(roles="ROLE_BENDAHARA")
      */
     public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new BiayaPendaftaran();
