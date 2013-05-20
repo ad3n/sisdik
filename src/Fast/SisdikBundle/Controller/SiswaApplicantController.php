@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\Referensi;
 use Fast\SisdikBundle\Util\Messenger;
 use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
 use Fast\SisdikBundle\Entity\PilihanLayananSms;
@@ -102,9 +103,9 @@ class SiswaApplicantController extends Controller
         $paginator = $this->get('knp_paginator');
         if (is_numeric($searchdata['searchkey'])) {
             $pagination = $paginator
-                    ->paginate($query->getResult(), $this->get('request')->query->get('page', 1));
+                    ->paginate($query->getResult(), $this->getRequest()->query->get('page', 1));
         } else {
-            $pagination = $paginator->paginate($querybuilder, $this->get('request')->query->get('page', 1));
+            $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
         }
 
         return array(
@@ -180,6 +181,14 @@ class SiswaApplicantController extends Controller
 
             $entity->setDibuatOleh($this->get('security.context')->getToken()->getUser());
             $entity->setCalonSiswa(true);
+
+            if ($form['adaReferensi']->getData() === true && $form['referensi']->getData() === null
+                    && $form['namaReferensi']->getData() != "") {
+                $referensi = new Referensi();
+                $referensi->setNama($form['namaReferensi']->getData());
+                $referensi->setSekolah($sekolah);
+                $entity->setReferensi($referensi);
+            }
 
             try {
                 $em->persist($entity);

@@ -334,9 +334,19 @@ class Siswa
     private $diubahOleh;
 
     /**
+     * @var boolean
+     */
+    protected $adaReferensi;
+
+    /**
+     * @var string
+     */
+    private $namaReferensi;
+
+    /**
      * @var \Referensi
      *
-     * @ORM\ManyToOne(targetEntity="Referensi")
+     * @ORM\OneToOne(targetEntity="Referensi", inversedBy="siswa", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      * })
@@ -1209,6 +1219,48 @@ class Siswa
      */
     public function getDiubahOleh() {
         return $this->diubahOleh;
+    }
+
+    /**
+     * Set adaReferensi
+     *
+     * @param boolean $adaReferensi
+     * @return Siswa
+     */
+    public function setAdaReferensi($adaReferensi) {
+        $this->adaReferensi = $adaReferensi;
+
+        return $this;
+    }
+
+    /**
+     * Is adaReferensi
+     *
+     * @return boolean
+     */
+    public function isAdaReferensi() {
+        return $this->adaReferensi;
+    }
+
+    /**
+     * Set namaReferensi
+     *
+     * @param string $namaReferensi
+     * @return Siswa
+     */
+    public function setNamaReferensi($namaReferensi) {
+        $this->namaReferensi = $namaReferensi;
+
+        return $this;
+    }
+
+    /**
+     * Get namaReferensi
+     *
+     * @return string
+     */
+    public function getNamaReferensi() {
+        return $this->namaReferensi;
     }
 
     /**

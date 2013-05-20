@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
@@ -24,9 +25,9 @@ class SiswaApplicantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
+        $em = $this->container->get('doctrine')->getManager();
 
         if ($this->mode != 'editregphoto') {
-            $em = $this->container->get('doctrine')->getManager();
             if (is_object($sekolah) && $sekolah instanceof Sekolah) {
                 $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
                         ->where('t.id = :id')->setParameter('id', $sekolah->getId());
@@ -111,6 +112,29 @@ class SiswaApplicantType extends AbstractType
                                     'options' => array(
                                         'widget_control_group' => false, 'label_render' => false,
                                     ), 'label_render' => false, 'allow_add' => true,
+                            ))
+                    ->add('adaReferensi', 'checkbox',
+                            array(
+                                    'label' => 'label.ada.referensi', 'required' => false,
+                                    'attr' => array(
+                                        'class' => 'referensi-check'
+                                    ), 'widget_checkbox_label' => 'widget',
+                            ))
+                    ->add('referensi', new EntityHiddenType($em),
+                            array(
+                                    'class' => 'FastSisdikBundle:Referensi', 'label_render' => false,
+                                    'required' => false,
+                                    'attr' => array(
+                                        'class' => 'large id-referensi'
+                                    ),
+                            ))
+                    ->add('namaReferensi', 'text',
+                            array(
+                                    'required' => false,
+                                    'attr' => array(
+                                            'class' => 'large nama-referensi',
+                                            'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
+                                    ), 'label' => 'label.perujuk'
                             ));
         } else if ($this->mode == 'editregphoto') {
             $builder

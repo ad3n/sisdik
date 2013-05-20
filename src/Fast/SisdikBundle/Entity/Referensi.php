@@ -1,8 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Referensi
@@ -25,6 +25,8 @@ class Referensi
      * @var string
      *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     * @Assert\NotBlank
+     * @Assert\Length(min=3)
      */
     private $nama;
 
@@ -49,15 +51,29 @@ class Referensi
      */
     private $nomorIdentitas;
 
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $sekolah;
 
+    /**
+     * @var \Siswa
+     *
+     * @ORM\OneToOne(targetEntity="Siswa", mappedBy="referensi")
+     */
+    private $siswa;
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -67,20 +83,18 @@ class Referensi
      * @param string $nama
      * @return Referensi
      */
-    public function setNama($nama)
-    {
+    public function setNama($nama) {
         $this->nama = $nama;
-    
+
         return $this;
     }
 
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
-    public function getNama()
-    {
+    public function getNama() {
         return $this->nama;
     }
 
@@ -90,20 +104,18 @@ class Referensi
      * @param string $ponsel
      * @return Referensi
      */
-    public function setPonsel($ponsel)
-    {
+    public function setPonsel($ponsel) {
         $this->ponsel = $ponsel;
-    
+
         return $this;
     }
 
     /**
      * Get ponsel
      *
-     * @return string 
+     * @return string
      */
-    public function getPonsel()
-    {
+    public function getPonsel() {
         return $this->ponsel;
     }
 
@@ -113,20 +125,18 @@ class Referensi
      * @param string $alamat
      * @return Referensi
      */
-    public function setAlamat($alamat)
-    {
+    public function setAlamat($alamat) {
         $this->alamat = $alamat;
-    
+
         return $this;
     }
 
     /**
      * Get alamat
      *
-     * @return string 
+     * @return string
      */
-    public function getAlamat()
-    {
+    public function getAlamat() {
         return $this->alamat;
     }
 
@@ -136,20 +146,39 @@ class Referensi
      * @param string $nomorIdentitas
      * @return Referensi
      */
-    public function setNomorIdentitas($nomorIdentitas)
-    {
+    public function setNomorIdentitas($nomorIdentitas) {
         $this->nomorIdentitas = $nomorIdentitas;
-    
+
         return $this;
     }
 
     /**
      * Get nomorIdentitas
      *
-     * @return string 
+     * @return string
      */
-    public function getNomorIdentitas()
-    {
+    public function getNomorIdentitas() {
         return $this->nomorIdentitas;
+    }
+
+    /**
+     * Set sekolah
+     *
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return Referensi
+     */
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah
+     */
+    public function getSekolah() {
+        return $this->sekolah;
     }
 }

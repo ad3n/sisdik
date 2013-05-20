@@ -185,6 +185,11 @@ class Builder extends AbstractNavbarMenuBuilder
                                 array(
                                     'route' => 'applicant'
                                 ));
+                $academic
+                        ->addChild('links.referensi',
+                                array(
+                                    'route' => 'referensi'
+                                ));
             }
 
             if ($securityContext

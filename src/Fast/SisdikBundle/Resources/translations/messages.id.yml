@@ -5,6 +5,12 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    tambah.perujuk: Tambah Perujuk
+    nama.perujuk: Nama Perujuk
+    nomor.identitas: Nomor Identitas
+    ketik-pilih.atau.ketik-tambah: Ketik-Pilih atau Ketik-Tambah
+    ada.referensi: Ada Referensi
+    perujuk: Perujuk
     nama.dokumen: Nama Dokumen
     file.dokumen: File Dokumen
     lengkap: Lengkap
@@ -361,6 +367,7 @@ label:
         tambah: Tambah Info Pendidikan Sebelumnya
 
 link:
+    referensi: Referensi
     dokumen.siswa: Dokumen Siswa
     jenis.dokumen.siswa: Jenis Dokumen Siswa
     pendidikan.sebelumnya: Pendidikan Sebelumnya
@@ -384,6 +391,11 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    perujuk:
+        tersimpan: Perujuk '%nama%' berhasil dibuat
+        terbarui: Perujuk '%nama%' berhasil diperbarui
+        terhapus: Perujuk '%nama%' berhasil dihapus
+        gagal.dihapus: Perujuk '%nama%' gagal dihapus
     dokumen.siswa:
         tersimpan: Dokumen siswa '%siswa%' berhasil dibuat
         terbarui: Dokumen '%nama%' siswa '%siswa%' berhasil diperbarui
@@ -596,6 +608,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    referensi: Hapus perujuk '%nama%'?
     dokumen.siswa: Hapus dokumen '%nama%' siswa '%siswa%'?
     jenis.dokumen.siswa: Hapus jenis dokumen siswa '%nama%' tahun '%tahun%'?
     pendidikan.sebelumnya: Hapus info pendidikan sebelumnya '%siswa%' di '%nama%'?

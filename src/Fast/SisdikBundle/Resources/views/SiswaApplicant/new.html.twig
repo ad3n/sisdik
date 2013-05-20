@@ -10,6 +10,34 @@
 .collection-item .control-group {
 /*     margin-bottom: 0; */
 }
+#referensi-container {
+    background-color: #F2F3C9;
+    margin-bottom: 18px;
+}
+#referensi-container .control-group {
+    margin-bottom: 0;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
+.ui-autocomplete-loading {
+{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+	background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
 </style>
 <form action="{{ path('applicant_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     <div class="control-group">
@@ -37,6 +65,12 @@
         </div>
     </div>
     {{ form_widget(form.orangtuaWali) }}
+
+    {{ form_row(form.adaReferensi) }}
+    <div id="referensi-container">
+        {{ form_row(form.namaReferensi) }}
+    </div>
+
     {{ form_rest(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -48,4 +82,59 @@
         <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+
+<script language="javascript" type="text/javascript">
+var duration = 400;
+
+$(document).ready(function() {
+	$(".referensi-check").change(function(){
+		if ($(this).is(":checked")) {
+			$('#referensi-container').show(duration);
+		} else {
+			$('#referensi-container').hide(duration);
+			$(".nama-referensi").val("");
+			$(".id-referensi").val("");
+		}
+	});
+	if ($(".referensi-check").is(":checked")) {
+	    $('#referensi-container').show(duration);
+	} else {
+		$('#referensi-container').hide(duration);
+		$(".nama-referensi").val("");
+		$(".id-referensi").val("");
+	}
+
+	var options = {
+    	minLength: 2,
+    	delay: 1000,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("referensi_ajax_ambilusername") }}",
+    			data: {filter: request.term},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+            			}
+    			    }));
+				}
+			});
+		},
+		open: function(event, ui) {
+			$(".id-referensi").val("");
+		},
+		search: function(event, ui) {},
+    	select: function(event, ui) {
+      		$(".id-referensi").val(ui.item.id);
+    	}
+	};
+
+	$(".nama-referensi").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options);
+    });
+});
+</script>
+
 {% endblock content %}

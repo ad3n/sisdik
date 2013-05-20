@@ -1,6 +1,12 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+referensi:
+    daftar: Daftar Perujuk
+    edit: Mengubah Data Perujuk
+    pembuatan: Menambah Perujuk
+    detail: Detail Perujuk
+
 dokumen.siswa:
     daftar: Dokumen Siswa
     edit: Mengubah Dokumen Siswa

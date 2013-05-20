@@ -18,6 +18,17 @@
             {% endif %}
                 <dt>{{ 'label.name.full'|trans }}</dt>
                 <dd>{{ entity.namaLengkap }}</dd>
+            {% if entity.referensi is not null %}
+                <dt>{{ 'label.perujuk'|trans }}</dt>
+                <dd>
+                    <a href="{{ path('referensi_show', { 'id': entity.referensi.id }) }}" target="_blank">
+                        {{ entity.referensi.nama }}
+                        {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'alt.referensi'|trans }}" border="0" style="vertical-align: baseline;" />
+                        {% endimage %}
+                    </a>
+                </dd>
+            {% endif %}
                 <dt>{{ 'label.gender'|trans }}</dt>
                 <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
                 <dt>{{ 'label.photo'|trans }}</dt>

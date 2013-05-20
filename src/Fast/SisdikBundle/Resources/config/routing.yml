@@ -236,6 +236,11 @@ dokumensiswa:
     type:     annotation
     prefix:   /
 
+referensi:
+    resource: "@FastSisdikBundle/Controller/ReferensiController.php"
+    type:     annotation
+    prefix:   /
+
 
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:

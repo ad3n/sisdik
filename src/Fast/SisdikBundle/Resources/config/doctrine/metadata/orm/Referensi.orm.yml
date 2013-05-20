@@ -1,0 +1,33 @@
+Referensi:
+    type: entity
+    table: referensi
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 400
+            fixed: false
+            nullable: true
+        ponsel:
+            type: string
+            length: 50
+            fixed: false
+            nullable: true
+        alamat:
+            type: string
+            length: 500
+            fixed: false
+            nullable: true
+        nomorIdentitas:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+            column: nomor_identitas
+    lifecycleCallbacks: {  }
