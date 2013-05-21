@@ -7,35 +7,91 @@
 .ui-datepicker-month {
     font-size: 0.9em;
 }
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
+.ui-autocomplete-loading {
+{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+	background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
 </style>
-<form action="{{ path('applicant_update', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('applicant_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
 <ul class="pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('applicant', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
         <a href="{{ path('applicant_show', {'id': entity.id}) }}">{{ 'link.info.pendaftar'|trans }}</a>
     </li>
 </ul>
-
 <script language="javascript" type="text/javascript">
-
 $(document).ready(function() {
+	var options = {
+    	minLength: 2,
+    	delay: 1000,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("referensi_ajax_ambilnama") }}",
+    			data: {filter: request.term},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+            			}
+    			    }));
+				}
+			});
+		},
+		open: function(event, ui) {
+			$(".id-referensi").val("");
+		},
+		search: function(event, ui) {},
+    	select: function(event, ui) {
+      		$(".id-referensi").val(ui.item.id);
+    	}
+	};
+
+	$(".nama-referensi").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options);
+    });
+
+	if ($(".id-referensi").val() != "") {
+		$.ajax({
+			url: "{{ path("referensi_ajax_ambilnama") }}",
+			data: {id: $(".id-referensi").val()},
+			success: function(data) {
+				$(".nama-referensi").val(data[0].value);
+			}
+		});
+	}
+
 	$('.date').datepicker({
 	    dateFormat: 'dd/mm/yy',
     	// changeMonth: true,

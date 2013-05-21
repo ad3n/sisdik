@@ -153,6 +153,22 @@ class SiswaApplicantType extends AbstractType
                                         'class' => 'large'
                                     ), 'label' => 'label.name.full'
                             ))
+                    ->add('referensi', new EntityHiddenType($em),
+                            array(
+                                    'class' => 'FastSisdikBundle:Referensi', 'label_render' => false,
+                                    'required' => false,
+                                    'attr' => array(
+                                        'class' => 'large id-referensi'
+                                    ),
+                            ))
+                    ->add('namaReferensi', 'text',
+                            array(
+                                    'required' => false,
+                                    'attr' => array(
+                                            'class' => 'large nama-referensi',
+                                            'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
+                                    ), 'label' => 'label.perujuk'
+                            ))
                     ->add('jenisKelamin', 'choice',
                             array(
                                     'required' => true,

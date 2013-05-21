@@ -15,11 +15,13 @@ use Fast\SisdikBundle\Entity\Referensi;
 use Fast\SisdikBundle\Form\ReferensiType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Referensi controller.
  *
  * @Route("/referensi")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_PANITIA_PSB', 'ROLE_USER')")
  */
 class ReferensiController extends Controller
 {
@@ -30,6 +32,7 @@ class ReferensiController extends Controller
      * @Route("/", name="referensi")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function indexAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -67,6 +70,7 @@ class ReferensiController extends Controller
      * @Route("/new", name="referensi_new")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function newAction() {
         $this->isRegisteredToSchool();
@@ -86,6 +90,7 @@ class ReferensiController extends Controller
      * @Route("/", name="referensi_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:Referensi:new.html.twig")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function createAction(Request $request) {
         $this->isRegisteredToSchool();
@@ -128,6 +133,7 @@ class ReferensiController extends Controller
      * @Route("/{id}", name="referensi_show")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function showAction($id) {
         $this->isRegisteredToSchool();
@@ -154,6 +160,7 @@ class ReferensiController extends Controller
      * @Route("/{id}/edit", name="referensi_edit")
      * @Method("GET")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function editAction($id) {
         $this->isRegisteredToSchool();
@@ -182,6 +189,7 @@ class ReferensiController extends Controller
      * @Route("/{id}", name="referensi_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:Referensi:edit.html.twig")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function updateAction(Request $request, $id) {
         $this->isRegisteredToSchool();
@@ -231,6 +239,7 @@ class ReferensiController extends Controller
      *
      * @Route("/{id}/delete", name="referensi_delete")
      * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function deleteAction(Request $request, $id) {
         $this->isRegisteredToSchool();
@@ -279,7 +288,7 @@ class ReferensiController extends Controller
      * Mengambil referensi menggunakan kotak autocomplete
      *
      * @param Request $request
-     * @Route("/ajax/ambilreferensi", name="referensi_ajax_ambilusername")
+     * @Route("/ajax/ambilreferensi", name="referensi_ajax_ambilnama")
      */
     public function ajaxGetReferensi(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -287,14 +296,21 @@ class ReferensiController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $filter = $this->getRequest()->query->get('filter');
+        $id = $this->getRequest()->query->get('id');
 
-        $query = $em
-                ->createQuery(
-                        "SELECT t FROM FastSisdikBundle:Referensi t " . " WHERE t.sekolah = :sekolah "
-                                . " AND t.nama LIKE :filter ");
-        $query->setParameter("sekolah", $sekolah->getId());
-        $query->setParameter('filter', "%$filter%");
-        $results = $query->getResult();
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Referensi', 't')
+                ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
+                ->setParameter('sekolah', $sekolah->getId());
+
+        if ($id != '') {
+            $querybuilder->andWhere('t.id = :id');
+            $querybuilder->setParameter('id', $id);
+        } else {
+            $querybuilder->andWhere('t.nama LIKE :filter');
+            $querybuilder->setParameter('filter', "%$filter%");
+        }
+
+        $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
         foreach ($results as $result) {

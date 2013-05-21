@@ -185,11 +185,6 @@ class Builder extends AbstractNavbarMenuBuilder
                                 array(
                                     'route' => 'applicant'
                                 ));
-                $academic
-                        ->addChild('links.referensi',
-                                array(
-                                    'route' => 'referensi'
-                                ));
             }
 
             if ($securityContext
@@ -202,6 +197,11 @@ class Builder extends AbstractNavbarMenuBuilder
                         ->addChild('links.regcommittee',
                                 array(
                                     'route' => 'regcommittee'
+                                ));
+                $academic
+                        ->addChild('links.referensi',
+                                array(
+                                    'route' => 'referensi'
                                 ));
 
                 $academic
