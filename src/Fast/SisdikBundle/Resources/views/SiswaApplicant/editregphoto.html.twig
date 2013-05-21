@@ -3,7 +3,7 @@
 {% block page_heading %}{% trans from "headings" %}applicant.edit.regphoto{% endtrans %}{% endblock %}
 
 {% block content %}
-<form id="edit-form" action="{{ path('applicant_updateregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form id="edit-form" action="{{ path('applicant_updateregphoto', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     <div class="row-fluid">
         <div class="span12">
             <div id="webcam" style="width: 320px; height: 240px; margin: 0 auto;"></div>
@@ -30,11 +30,7 @@
 
 <ul class="pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('applicant', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
         <a href="{{ path('applicant_show', {'id': entity.id}) }}">{{ 'label.applicant.show'|trans }}</a>
@@ -44,7 +40,6 @@
 {% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.min.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
-
 <script language="javascript" type="text/javascript">
 
 webcam.set_api_url("{{ path('applicant_webcam_uploadhandler') }}");

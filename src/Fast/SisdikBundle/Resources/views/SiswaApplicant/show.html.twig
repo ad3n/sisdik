@@ -94,7 +94,7 @@
             <ul class="pills">
         {% if tahunaktif == entity.tahun.tahun %}
                 <li>
-                    <a href="{{ path('applicant_editregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
+                    <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
                 </li>
         {% endif %}
             </ul>
@@ -122,7 +122,7 @@
 <div class="clearfix"></div>
 
 {% if tahunaktif == entity.tahun.tahun %}
-<form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -132,14 +132,14 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('applicant', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 {% if tahunaktif == entity.tahun.tahun %}
     <li>
-        <a href="{{ path('applicant_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('applicant_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('applicant_editregphoto', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
+        <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
     </li>
 {% endif %}
 </ul>

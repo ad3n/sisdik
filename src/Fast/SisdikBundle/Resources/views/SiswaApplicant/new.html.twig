@@ -109,7 +109,7 @@ $(document).ready(function() {
     	delay: 1000,
     	source: function(request, response) {
     		$.ajax({
-    			url: "{{ path("referensi_ajax_ambilusername") }}",
+    			url: "{{ path("referensi_ajax_ambilnama") }}",
     			data: {filter: request.term},
     			success: function(data) {
         			response( $.map(data, function(item) {
