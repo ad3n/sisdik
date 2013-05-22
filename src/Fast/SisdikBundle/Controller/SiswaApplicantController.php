@@ -35,6 +35,7 @@ class SiswaApplicantController extends Controller
      * Lists all Siswa (applicant only) entities.
      *
      * @Route("/", name="applicant")
+     * @Method("GET")
      * @Template()
      */
     public function indexAction() {
@@ -117,7 +118,8 @@ class SiswaApplicantController extends Controller
     /**
      * Finds and displays a Siswa applicant entity.
      *
-     * @Route("/{id}/show", name="applicant_show")
+     * @Route("/{id}", name="applicant_show")
+     * @Method("GET")
      * @Template()
      */
     public function showAction($id) {
@@ -144,6 +146,7 @@ class SiswaApplicantController extends Controller
      * Displays a form to create a new Siswa applicant entity.
      *
      * @Route("/new", name="applicant_new")
+     * @Method("GET")
      * @Template()
      */
     public function newAction() {
@@ -164,7 +167,7 @@ class SiswaApplicantController extends Controller
     /**
      * Creates a new Siswa applicant entity.
      *
-     * @Route("/create", name="applicant_create")
+     * @Route("/", name="applicant_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:SiswaApplicant:new.html.twig")
      */
@@ -299,6 +302,7 @@ class SiswaApplicantController extends Controller
      * Displays a form to edit an existing Siswa applicant entity.
      *
      * @Route("/{id}/edit", name="applicant_edit")
+     * @Method("GET")
      * @Template()
      */
     public function editAction($id) {
@@ -327,7 +331,7 @@ class SiswaApplicantController extends Controller
     /**
      * Edits an existing Siswa applicant entity.
      *
-     * @Route("/{id}/update", name="applicant_update")
+     * @Route("/{id}", name="applicant_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:SiswaApplicant:edit.html.twig")
      */
@@ -352,6 +356,14 @@ class SiswaApplicantController extends Controller
         if ($editForm->isValid()) {
 
             try {
+
+                if ($editForm['referensi']->getData() === null
+                        && $editForm['namaReferensi']->getData() != "") {
+                    $referensi = new Referensi();
+                    $referensi->setNama($editForm['namaReferensi']->getData());
+                    $referensi->setSekolah($sekolah);
+                    $entity->setReferensi($referensi);
+                }
 
                 $entity->setDiubahOleh($this->getUser());
 
@@ -424,6 +436,7 @@ class SiswaApplicantController extends Controller
      * Displays a form to edit only registration photo of Siswa applicant entity.
      *
      * @Route("/{id}/editregphoto", name="applicant_editregphoto")
+     * @Method("GET")
      * @Template("FastSisdikBundle:SiswaApplicant:editregphoto.html.twig")
      */
     public function editRegistrationPhotoAction($id) {
