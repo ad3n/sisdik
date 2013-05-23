@@ -525,8 +525,8 @@ class PendidikanSiswa
     }
 
     public function getRelativePathIjazahFileDisk() {
-        return null === $this->ijazahFileDisk ? null
-                : $this->getUploadRootDir() . '/' . $this->ijazahFileDisk;
+        return null === $this->ijazahFileDisk ? null : $this->getUploadRootDir() . '/'
+                . $this->ijazahFileDisk;
     }
 
     public function getRelativePathIjazahFileDiskSebelumnya() {
@@ -601,13 +601,13 @@ class PendidikanSiswa
 
     private function removeIjazahFileSebelumnya() {
         if ($file = $this->getRelativePathIjazahFileDiskSebelumnya()) {
-            unlink($file);
+            @unlink($file);
         }
     }
 
     private function removeSttbFileSebelumnya() {
         if ($file = $this->getRelativePathSttbFileDiskSebelumnya()) {
-            unlink($file);
+            @unlink($file);
         }
     }
 

@@ -258,7 +258,7 @@ class DokumenSiswa
 
     private function removeFileSebelumnya() {
         if ($file = $this->getRelativePathNamaFileDiskSebelumnya()) {
-            unlink($file);
+            @unlink($file);
         }
     }
 
@@ -267,7 +267,7 @@ class DokumenSiswa
      */
     public function removeFile() {
         if ($file = $this->getRelativePathNamaFileDisk()) {
-            unlink($file);
+            @unlink($file);
         }
     }
 
