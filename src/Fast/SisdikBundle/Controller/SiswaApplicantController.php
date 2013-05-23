@@ -44,7 +44,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
 
         $qb1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
                 ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')
