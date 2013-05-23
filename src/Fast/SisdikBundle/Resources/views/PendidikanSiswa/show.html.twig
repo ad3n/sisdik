@@ -24,7 +24,7 @@
     <dt>{{ 'label.nomor.ijazah'|trans }}</dt>
     <dd>{{ entity.ijazahNomor }}</dd>
     <dt>{{ 'label.file.ijazah'|trans }}</dt>
-    <dd><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathIjazah }}">{{ entity.ijazahFile }}</a></dd>
+    <dd><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathIjazahFileDisk }}">{{ entity.ijazahFile }}</a> ({{ entity.filesizeIjazahFileDisk }})</dd>
     <dt>{{ 'label.tahun.masuk'|trans }}</dt>
     <dd>{{ entity.tahunmasuk }}</dd>
     <dt>{{ 'label.tahun.keluar'|trans }}</dt>
@@ -34,7 +34,7 @@
     <dt>{{ 'label.nomor.sttb'|trans }}</dt>
     <dd>{{ entity.sttbNomor }}</dd>
     <dt>{{ 'label.file.sttb'|trans }}</dt>
-    <dd><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathSttb }}">{{ entity.sttbFile }}</a></dd>
+    <dd><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathSttbFileDisk }}">{{ entity.sttbFile }}</a> ({{ entity.filesizeSttbFileDisk }})</dd>
     <dt>{{ 'label.keterangan'|trans }}</dt>
     <dd>{{ entity.keterangan }}</dd>
 </dl>

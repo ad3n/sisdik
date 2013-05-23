@@ -5,6 +5,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Filesystem\Filesystem;
+use Fast\SisdikBundle\Util\FileSizeFormatter;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * PendidikanSiswa
@@ -72,6 +74,18 @@ class PendidikanSiswa
     private $ijazahFile;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="ijazah_file_disk", type="string", length=300, nullable=true)
+     */
+    private $ijazahFileDisk;
+
+    /**
+     * @var string
+     */
+    private $ijazahFileDiskSebelumnya;
+
+    /**
      * @var UploadedFile
      *
      * @Assert\File(maxSize="5M")
@@ -112,6 +126,18 @@ class PendidikanSiswa
      * @ORM\Column(name="sttb_file", type="string", length=300, nullable=true)
      */
     private $sttbFile;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="sttb_file_disk", type="string", length=300, nullable=true)
+     */
+    private $sttbFileDisk;
+
+    /**
+     * @var string
+     */
+    private $sttbFileDiskSebelumnya;
 
     /**
      * @var UploadedFile
@@ -283,6 +309,27 @@ class PendidikanSiswa
     }
 
     /**
+     * Set ijazahFileDisk
+     *
+     * @param string $ijazahFileDisk
+     * @return DokumenSiswa
+     */
+    public function setIjazahFileDisk($ijazahFileDisk) {
+        $this->ijazahFileDisk = $ijazahFileDisk;
+
+        return $this;
+    }
+
+    /**
+     * Get ijazahFileDisk
+     *
+     * @return string
+     */
+    public function getIjazahFileDisk() {
+        return $this->ijazahFileDisk;
+    }
+
+    /**
      * Set tahunmasuk
      *
      * @param string $tahunmasuk
@@ -391,6 +438,27 @@ class PendidikanSiswa
     }
 
     /**
+     * Set sttbFileDisk
+     *
+     * @param string $sttbFileDisk
+     * @return DokumenSiswa
+     */
+    public function setSttbFileDisk($sttbFileDisk) {
+        $this->sttbFileDisk = $sttbFileDisk;
+
+        return $this;
+    }
+
+    /**
+     * Get sttbFileDisk
+     *
+     * @return string
+     */
+    public function getSttbFileDisk() {
+        return $this->sttbFileDisk;
+    }
+
+    /**
      * Set keterangan
      *
      * @param string $keterangan
@@ -452,12 +520,41 @@ class PendidikanSiswa
         return $this;
     }
 
-    public function getWebPathIjazah() {
-        return null === $this->ijazahFile ? null : $this->getUploadDir() . '/' . $this->ijazahFile;
+    public function getWebPathIjazahFileDisk() {
+        return null === $this->ijazahFileDisk ? null : $this->getUploadDir() . '/' . $this->ijazahFileDisk;
     }
 
-    public function getWebPathSttb() {
-        return null === $this->sttbFile ? null : $this->getUploadDir() . '/' . $this->sttbFile;
+    public function getRelativePathIjazahFileDisk() {
+        return null === $this->ijazahFileDisk ? null
+                : $this->getUploadRootDir() . '/' . $this->ijazahFileDisk;
+    }
+
+    public function getRelativePathIjazahFileDiskSebelumnya() {
+        return null === $this->ijazahFileDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . $this->ijazahFileDiskSebelumnya;
+    }
+
+    public function getFilesizeIjazahFileDisk($type = 'KB') {
+        $file = new File($this->getRelativePathIjazahFileDisk());
+        return FileSizeFormatter::formatBytes($file->getSize(), $type);
+    }
+
+    public function getWebPathSttbFileDisk() {
+        return null === $this->sttbFileDisk ? null : $this->getUploadDir() . '/' . $this->sttbFileDisk;
+    }
+
+    public function getRelativePathSttbFileDisk() {
+        return null === $this->sttbFileDisk ? null : $this->getUploadRootDir() . '/' . $this->sttbFileDisk;
+    }
+
+    public function getRelativePathSttbFileDiskSebelumnya() {
+        return null === $this->sttbFileDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . $this->sttbFileDiskSebelumnya;
+    }
+
+    public function getFilesizeSttbFileDisk($type = 'KB') {
+        $file = new File($this->getRelativePathSttbFileDisk());
+        return FileSizeFormatter::formatBytes($file->getSize(), $type);
     }
 
     /**
@@ -466,11 +563,20 @@ class PendidikanSiswa
      */
     public function prePersist() {
         if (null !== $this->fileUploadIjazah) {
-            $this->ijazahFile = sha1(uniqid(mt_rand(), true)) . '.'
-                    . $this->fileUploadIjazah->guessExtension();
+            $this->ijazahFileDiskSebelumnya = $this->ijazahFileDisk;
+
+            $this->ijazahFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
+                    . $this->fileUploadIjazah->getClientOriginalName();
+            $this->ijazahFile = $this->fileUploadIjazah->getClientOriginalName();
+
         }
+
         if (null !== $this->fileUploadSttb) {
-            $this->sttbFile = sha1(uniqid(mt_rand(), true)) . '.' . $this->fileUploadSttb->guessExtension();
+            $this->sttbFileDiskSebelumnya = $this->sttbFileDisk;
+
+            $this->sttbFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
+                    . $this->fileUploadSttb->getClientOriginalName();
+            $this->sttbFile = $this->fileUploadSttb->getClientOriginalName();
         }
     }
 
@@ -483,23 +589,33 @@ class PendidikanSiswa
             return;
         }
 
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
-        $this->fileUploadIjazah->move($this->getUploadRootDir(), $this->ijazahFile);
-        $this->fileUploadSttb->move($this->getUploadRootDir(), $this->sttbFile);
+        $this->fileUploadIjazah->move($this->getUploadRootDir(), $this->ijazahFileDisk);
+        $this->fileUploadSttb->move($this->getUploadRootDir(), $this->sttbFileDisk);
+
+        $this->removeIjazahFileSebelumnya();
+        $this->removeSttbFileSebelumnya();
 
         unset($this->fileUploadIjazah);
         unset($this->fileUploadSttb);
     }
 
+    private function removeIjazahFileSebelumnya() {
+        if ($file = $this->getRelativePathIjazahFileDiskSebelumnya()) {
+            unlink($file);
+        }
+    }
+
+    private function removeSttbFileSebelumnya() {
+        if ($file = $this->getRelativePathSttbFileDiskSebelumnya()) {
+            unlink($file);
+        }
+    }
+
     protected function getUploadRootDir() {
-        // the absolute directory path where uploaded documents should be saved
         return __DIR__ . '/../../../../web/' . $this->getUploadDir();
     }
 
     protected function getUploadDir() {
-        // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
         $fs = new Filesystem();
         if (!$fs->exists(self::PENDIDIKAN_DIR)) {
             $fs->mkdir(self::PENDIDIKAN_DIR);
@@ -507,6 +623,16 @@ class PendidikanSiswa
         if (!$fs->exists(self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId())) {
             $fs->mkdir(self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId());
         }
-        return self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId();
+        if (!$fs
+                ->exists(
+                        self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
+                                . $this->getSiswa()->getTahun()->getTahun())) {
+            $fs
+                    ->mkdir(
+                            self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
+                                    . $this->getSiswa()->getTahun()->getTahun());
+        }
+        return self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
+                . $this->getSiswa()->getTahun()->getTahun();
     }
 }

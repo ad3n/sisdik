@@ -44,7 +44,7 @@
     		<td data-title="{{ 'label.jenjang'|trans }}">{{ daftarPilihanJenjangSekolah[data.jenjang] }}</td>
     		<td data-title="{{ 'label.nama.lembaga'|trans }}">{{ data.nama }}</td>
     		<td data-title="{{ 'label.nomor.ijazah'|trans }}">{{ data.ijazahNomor }}</td>
-    		<td data-title="{{ 'label.file.ijazah'|trans }}"><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ data.webPathIjazah }}">{{ data.ijazahFile }}</a></td>
+    		<td data-title="{{ 'label.file.ijazah'|trans }}"><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ data.webPathIjazahFileDisk }}">{{ data.ijazahFile }}</a> ({{ data.filesizeIjazahFileDisk }})</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('pendidikan-sebelumnya-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('pendidikan-sebelumnya-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
