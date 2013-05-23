@@ -21,7 +21,7 @@
         <dt>{{ 'label.gender'|trans }}</dt>
         <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
         <dt>{{ 'label.photo'|trans }}</dt>
-        <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.getWebPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
+        <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
         <dt>{{ 'label.religion'|trans }}</dt>
         <dd>{{ entity.agama|title }}</dd>
         <dt>{{ 'label.birthplace'|trans }}</dt>
@@ -68,7 +68,7 @@
 
     <div class="clearfix"></div>
 
-    <form id="delete-form" action="{{ path('data_student_deleteconfirm', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+    <form id="delete-form" action="{{ path('data_student_deleteconfirm', { 'id': entity.id }) }}" method="post" class="form-inline">
         {{ form_widget(delete_form) }}
         <div class="form-actions">
             <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -116,10 +116,10 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('data_student', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('data_student_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('data_student_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">

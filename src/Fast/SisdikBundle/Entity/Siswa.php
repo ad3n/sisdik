@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\File;
+use Fast\SisdikBundle\Util\FileSizeFormatter;
 
 /**
  * Siswa
@@ -18,6 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * })
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
+ * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
 class Siswa
 {
@@ -114,6 +117,18 @@ class Siswa
      * @ORM\Column(name="foto", type="string", length=100, nullable=true)
      */
     private $foto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="foto_disk", type="string", length=100, nullable=true)
+     */
+    private $fotoDisk;
+
+    /**
+     * @var string
+     */
+    private $fotoDiskSebelumnya;
 
     /**
      * @var string
@@ -610,6 +625,27 @@ class Siswa
      */
     public function getFoto() {
         return $this->foto;
+    }
+
+    /**
+     * Set fotoDisk
+     *
+     * @param string $fotoDisk
+     * @return DokumenSiswa
+     */
+    public function setFotoDisk($fotoDisk) {
+        $this->fotoDisk = $fotoDisk;
+
+        return $this;
+    }
+
+    /**
+     * Get fotoDisk
+     *
+     * @return string
+     */
+    public function getFotoDisk() {
+        return $this->fotoDisk;
     }
 
     /**
@@ -1420,13 +1456,39 @@ class Siswa
         return $this;
     }
 
+    public function getWebPathFotoDisk() {
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . '/' . $this->fotoDisk;
+    }
+
+    public function getRelativePathFotoDisk() {
+        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . '/' . $this->fotoDisk;
+    }
+
+    public function getRelativePathFotoDiskSebelumnya() {
+        return null === $this->fotoDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . $this->fotoDiskSebelumnya;
+    }
+
+    public function getRelativePathFotoDiskThumbSebelumnya() {
+        return null === $this->fotoDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->fotoDiskSebelumnya;
+    }
+
+    public function getFilesizeFotoDisk($type = 'KB') {
+        $file = new File($this->getRelativePathFotoDisk());
+        return FileSizeFormatter::formatBytes($file->getSize(), $type);
+    }
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
     public function preUpload() {
         if (null !== $this->file) {
-            $this->foto = sha1(uniqid(mt_rand(), true)) . '.' . $this->file->guessExtension();
+            $this->fotoDiskSebelumnya = $this->fotoDisk;
+
+            $this->fotoDisk = sha1(uniqid(mt_rand(), true)) . '_' . $this->file->getClientOriginalName();
+            $this->foto = $this->file->getClientOriginalName();
         }
     }
 
@@ -1442,10 +1504,10 @@ class Siswa
         // if there is an error when moving the file, an exception will
         // be automatically thrown by move(). This will properly prevent
         // the entity from being persisted to the database on error
-        if ($this->file->move($this->getUploadRootDir(), $this->foto)) {
+        if ($this->file->move($this->getUploadRootDir(), $this->fotoDisk)) {
 
             $targetfile = $this->getAbsolutePath();
-            $thumbnailfile = $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->foto;
+            $thumbnailfile = $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->fotoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
             if (is_numeric($type)) {
@@ -1504,7 +1566,18 @@ class Siswa
             }
         }
 
+        $this->removeFotoSebelumnya();
+
         unset($this->file);
+    }
+
+    private function removeFotoSebelumnya() {
+        if ($file = $this->getRelativePathFotoDiskSebelumnya()) {
+            @unlink($file);
+        }
+        if ($fileThumb = $this->getRelativePathFotoDiskThumbSebelumnya()) {
+            @unlink($fileThumb);
+        }
     }
 
     /**
@@ -1512,21 +1585,21 @@ class Siswa
      */
     public function removeUpload() {
         if ($file = $this->getAbsolutePath()) {
-            unlink($file);
+            @unlink($file);
         }
     }
 
     public function getAbsolutePath() {
-        return null === $this->foto ? null : $this->getUploadRootDir() . '/' . $this->foto;
+        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . '/' . $this->fotoDisk;
     }
 
     public function getWebPath() {
-        return null === $this->foto ? null : $this->getUploadDir() . '/' . $this->foto;
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . '/' . $this->fotoDisk;
     }
 
     public function getWebPathThumbnail() {
-        return null === $this->foto ? null
-                : $this->getUploadDir() . '/' . self::THUMBNAIL_PREFIX . $this->foto;
+        return null === $this->fotoDisk ? null
+                : $this->getUploadDir() . '/' . self::THUMBNAIL_PREFIX . $this->fotoDisk;
     }
 
     protected function getUploadRootDir() {

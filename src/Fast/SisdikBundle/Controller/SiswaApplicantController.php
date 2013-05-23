@@ -364,6 +364,10 @@ class SiswaApplicantController extends Controller
                     $entity->setReferensi($referensi);
                 }
 
+                // force unit of work detect entity 'changes'
+                // possible problem source: too many objects handled by doctrine
+                $entity->setWaktuUbah(new \DateTime());
+
                 $entity->setDiubahOleh($this->getUser());
 
                 $em->persist($entity);
