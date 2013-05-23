@@ -42,7 +42,7 @@
 {% endjavascripts %}
 <script language="javascript" type="text/javascript">
 
-webcam.set_api_url("{{ path('applicant_webcam_uploadhandler') }}");
+webcam.set_api_url("{{ path('applicant_webcam_uploadhandler', {'tahun': entity.tahun.tahun}) }}");
 webcam.set_hook('onComplete', 'webcamUploadCompleteHandler');
 webcam.set_quality(100);
 {% image '@FastSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.mp3' %}

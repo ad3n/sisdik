@@ -56,7 +56,7 @@ class Siswa
      *
      * @ORM\Column(name="calon_siswa", type="boolean", nullable=false, options={"default"=0})
      */
-    private $calonSiswa = 0;
+    private $calonSiswa = true;
 
     /**
      * @var integer
@@ -461,7 +461,7 @@ class Siswa
      *
      * @return boolean
      */
-    public function getCalonSiswa() {
+    public function isCalonSiswa() {
         return $this->calonSiswa;
     }
 
@@ -1406,7 +1406,8 @@ class Siswa
 
     public function getWebcamPhotoPath() {
         return null === $this->fotoPendaftaran ? null
-                : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->fotoPendaftaran;
+                : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun()
+                        . '/' . $this->fotoPendaftaran;
     }
 
     public function getFile() {
@@ -1542,6 +1543,14 @@ class Siswa
         if (!$fs->exists(self::PHOTO_DIR . $this->getSekolah()->getId())) {
             $fs->mkdir(self::PHOTO_DIR . $this->getSekolah()->getId());
         }
-        return self::PHOTO_DIR . $this->getSekolah()->getId();
+
+        if (!$fs
+                ->exists(self::PHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun())) {
+            $fs
+                    ->mkdir(
+                            self::PHOTO_DIR . $this->getSekolah()->getId() . '/'
+                                    . $this->getTahun()->getTahun());
+        }
+        return self::PHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun();
     }
 }

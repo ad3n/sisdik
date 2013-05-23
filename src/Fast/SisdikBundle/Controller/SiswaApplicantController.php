@@ -357,8 +357,7 @@ class SiswaApplicantController extends Controller
 
             try {
 
-                if ($editForm['referensi']->getData() === null
-                        && $editForm['namaReferensi']->getData() != "") {
+                if ($editForm['referensi']->getData() === null && $editForm['namaReferensi']->getData() != "") {
                     $referensi = new Referensi();
                     $referensi->setNama($editForm['namaReferensi']->getData());
                     $referensi->setSekolah($sekolah);
@@ -401,19 +400,28 @@ class SiswaApplicantController extends Controller
     /**
      * Handling HTTP RAW DATA sent from jpegcam library
      *
-     * @Route("/webcamupload", name="applicant_webcam_uploadhandler")
+     * @Route("/webcamupload/{tahun}", name="applicant_webcam_uploadhandler")
      * @Method("POST")
      */
-    public function webcamUploadHandlerAction(Request $request) {
+    public function webcamUploadHandlerAction(Request $request, $tahun) {
         $sekolah = $this->isRegisteredToSchool();
 
         $fs = new Filesystem();
+
+        if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR)) {
+            $fs->mkdir(Siswa::WEBCAMPHOTO_DIR);
+        }
+
         if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId())) {
             $fs->mkdir(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId());
         }
 
+        if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun)) {
+            $fs->mkdir(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun);
+        }
+
         $filename = date('YmdHis') . '.jpg';
-        $targetfile = Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $filename;
+        $targetfile = Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun . '/' . $filename;
 
         $output = $filename;
 
