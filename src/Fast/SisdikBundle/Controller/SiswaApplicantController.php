@@ -182,7 +182,7 @@ class SiswaApplicantController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $entity->setDibuatOleh($this->get('security.context')->getToken()->getUser());
+            $entity->setDibuatOleh($this->getUser());
             $entity->setCalonSiswa(true);
 
             if ($form['adaReferensi']->getData() === true && $form['referensi']->getData() === null
