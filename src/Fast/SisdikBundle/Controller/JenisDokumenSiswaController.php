@@ -62,25 +62,6 @@ class JenisDokumenSiswaController extends Controller
     }
 
     /**
-     * Displays a form to create a new JenisDokumenSiswa entity.
-     *
-     * @Route("/new", name="jenisdokumensiswa_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $entity = new JenisDokumenSiswa();
-        $form = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
-
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
-    }
-
-    /**
      * Creates a new JenisDokumenSiswa entity.
      *
      * @Route("/", name="jenisdokumensiswa_create")
@@ -116,6 +97,25 @@ class JenisDokumenSiswaController extends Controller
                                                 'id' => $entity->getId()
                                             )));
         }
+
+        return array(
+            'entity' => $entity, 'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to create a new JenisDokumenSiswa entity.
+     *
+     * @Route("/new", name="jenisdokumensiswa_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $entity = new JenisDokumenSiswa();
+        $form = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView(),

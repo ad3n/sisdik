@@ -116,55 +116,6 @@ class SiswaApplicantController extends Controller
     }
 
     /**
-     * Finds and displays a Siswa applicant entity.
-     *
-     * @Route("/{id}", name="applicant_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'tahunaktif' => $this->getTahunPanitiaAktif(),
-        );
-    }
-
-    /**
-     * Displays a form to create a new Siswa applicant entity.
-     *
-     * @Route("/new", name="applicant_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $entity = new Siswa();
-        $orangtuaWali = new OrangtuaWali();
-        $entity->getOrangtuaWali()->add($orangtuaWali);
-
-        $form = $this->createForm(new SiswaApplicantType($this->container, 'new'), $entity);
-
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
-    }
-
-    /**
      * Creates a new Siswa applicant entity.
      *
      * @Route("/", name="applicant_create")
@@ -295,6 +246,55 @@ class SiswaApplicantController extends Controller
 
         return array(
             'entity' => $entity, 'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to create a new Siswa applicant entity.
+     *
+     * @Route("/new", name="applicant_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $entity = new Siswa();
+        $orangtuaWali = new OrangtuaWali();
+        $entity->getOrangtuaWali()->add($orangtuaWali);
+
+        $form = $this->createForm(new SiswaApplicantType($this->container, 'new'), $entity);
+
+        return array(
+            'entity' => $entity, 'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Finds and displays a Siswa applicant entity.
+     *
+     * @Route("/{id}", name="applicant_show")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction($id) {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+                'tahunaktif' => $this->getTahunPanitiaAktif(),
         );
     }
 

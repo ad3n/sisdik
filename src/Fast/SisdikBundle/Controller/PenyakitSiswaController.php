@@ -51,30 +51,6 @@ class PenyakitSiswaController extends Controller
     }
 
     /**
-     * Displays a form to create a new PenyakitSiswa entity.
-     *
-     * @Route("/pendaftar/new", name="riwayat-penyakit-pendaftar_new")
-     * @Route("/siswa/new", name="riwayat-penyakit-siswa_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction($sid) {
-        $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = new PenyakitSiswa();
-        $form = $this->createForm(new PenyakitSiswaType(), $entity);
-
-        return array(
-                'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
-    }
-
-    /**
      * Creates a new PenyakitSiswa entity.
      *
      * @Route("/pendaftar", name="riwayat-penyakit-pendaftar_create")
@@ -117,6 +93,30 @@ class PenyakitSiswaController extends Controller
                                                 'sid' => $sid, 'id' => $entity->getId()
                                             )));
         }
+
+        return array(
+                'entity' => $entity, 'form' => $form->createView(),
+                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        );
+    }
+
+    /**
+     * Displays a form to create a new PenyakitSiswa entity.
+     *
+     * @Route("/pendaftar/new", name="riwayat-penyakit-pendaftar_new")
+     * @Route("/siswa/new", name="riwayat-penyakit-siswa_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction($sid) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = new PenyakitSiswa();
+        $form = $this->createForm(new PenyakitSiswaType(), $entity);
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
