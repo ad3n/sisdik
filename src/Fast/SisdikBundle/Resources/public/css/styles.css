@@ -9,7 +9,7 @@
 /***** STRUCTURE *****/
 body { /* 	background: url('../images/bg.png') repeat-x; */
 	/* 	background-color: #fff; */
-	
+
 }
 
 h1,h2,h3,h4,h5,h6 {
@@ -53,9 +53,9 @@ h4,h5,h6 {
 }
 
 #school-name {
-	font-size: 1.1em;
+	font-size: 1.4em;
 	clear: both;
-	line-height: 1.7em;
+	line-height: 1.4em;
 }
 
 .page-title {

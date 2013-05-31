@@ -51,18 +51,18 @@ body {
         	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" width="92" /></a>
         {% endimage %}
         </div>
-        <div id="copyright" style="margin: 0 0 10px 0; padding: 0; border: 0;">&copy; 2012 Fast Solution</div>
+        <div id="copyright" style="margin: 0 0 10px 0; padding: 0; border: 0;">&copy; 2012 &ndash; {{ "now"|date("Y") }} Fast Solution</div>
 		<input type="text" id="username" name="_username" value="{{ last_username }}" class="input-block-level" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}">
 		<input type="password" id="password" name="_password" class="input-block-level" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}">
 	    <button class="btn large primary" type="submit">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
 	    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-	    
+
     	{% block fos_user_content %}
             {% if error %}
                 <div class="login-error">{{ error|trans({}, 'FOSUserBundle') }}</div>
             {% endif %}
         {% endblock fos_user_content %}
-	</form> 
+	</form>
 </div>
 
 {% endblock content %}
