@@ -90,7 +90,7 @@
             </dl>
         </div>
         <div class="span4">
-            <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webcamPhotoPath }}" class="img-polaroid" />
+            {% if entity.webcamPhotoPath != "" %}<img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webcamPhotoPath }}" class="img-polaroid" />{% endif %}
             <ul class="pills">
         {% if tahunaktif == entity.tahun.tahun %}
                 <li>
