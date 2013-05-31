@@ -215,11 +215,11 @@ class Builder extends AbstractNavbarMenuBuilder
                                     new Expression(
                                             'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")')
                             ))) {
-                $pendaftaran
-                        ->addChild('links.tahkik',
-                                array(
-                                    'route' => 'tahkik'
-                                ));
+                //                 $pendaftaran
+                //                         ->addChild('links.tahkik',
+                //                                 array(
+                //                                     'route' => 'tahkik'
+                //                                 ));
             }
 
             $pendaftaran
