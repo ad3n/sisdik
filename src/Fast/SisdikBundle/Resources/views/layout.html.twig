@@ -60,7 +60,7 @@
 {% block body %}
 
 <!-- TOP MENU NAVIGATION -->
-{{ mopa_bootstrap_navbar('frontendNavbar') }}
+{{ mopa_bootstrap_navbar('frontendNavbar', {'template': 'FastSisdikBundle::navbar.html.twig'}) }}
 {# <div class="navbar navbar-fixed-top">#}
 {# 	<div class="navbar-inner">#}
 {# 		<div class="container">#}
@@ -88,14 +88,14 @@
 	<div class="row-fluid">
 	    <div class="span12 pull-right" style="text-align: right">
 	        <div id="page-header">
-        		{% image '@FastSisdikBundle/Resources/public/images/logo_black.png' %}
-            	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" width="60"></a>
+        		{% image '@FastSisdikBundle/Resources/public/images/logo-smp-sma-smk-kosgoro.jpg' %}
+                	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.kosgoro'|trans }}" border="0" height="70" class="img-polaroid"></a>
                 {% endimage %}
-                <div id="school-name">
+                <div id="school-name">{% spaceless %}
                     {% if app.user is not null %}
                         {% if app.user.sekolah is not null %}{{ app.user.sekolah.nama }}{% endif %}
                     {% endif %}
-                </div>
+                {% endspaceless %}</div>
             </div>
             <div id="log-info">
                 &raquo; {{ app.user.username }}<br />
