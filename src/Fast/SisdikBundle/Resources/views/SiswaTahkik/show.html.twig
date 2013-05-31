@@ -1,0 +1,166 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.detail{% endtrans %}{% endblock %}
+{% block content %}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="span8">
+            <dl>
+                <dt>{{ 'label.school'|trans }}</dt>
+                <dd>{% if entity.sekolah is not null %}{{ entity.sekolah.nama }}{% endif %}</dd>
+                <dt>{{ 'label.year.entry'|trans }}</dt>
+                <dd>{% if entity.tahun is not null %}{{ entity.tahun.tahun }}{% endif %}</dd>
+                <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+                <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
+            {% if entity.pembayaranPendaftaran.count > 0 %}
+                <dt>{{ 'label.application.number'|trans }}</dt>
+                <dd>{{ entity.nomorPendaftaran }}</dd>
+            {% endif %}
+                <dt>{{ 'label.name.full'|trans }}</dt>
+                <dd>{{ entity.namaLengkap }}</dd>
+            {% if entity.referensi is not null %}
+                <dt>{{ 'label.perujuk'|trans }}</dt>
+                <dd>
+                    <a href="{{ path('referensi_show', { 'id': entity.referensi.id }) }}" target="_blank">
+                        {{ entity.referensi.nama }}
+                        {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'alt.referensi'|trans }}" border="0" style="vertical-align: baseline;" />
+                        {% endimage %}
+                    </a>
+                </dd>
+            {% endif %}
+                <dt>{{ 'label.gender'|trans }}</dt>
+                <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
+                <dt>{{ 'label.photo'|trans }}</dt>
+                <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
+                <dt>{{ 'label.religion'|trans }}</dt>
+                <dd>{{ entity.agama|title }}</dd>
+                <dt>{{ 'label.birthplace'|trans }}</dt>
+                <dd>{{ entity.tempatLahir }}</dd>
+                <dt>{{ 'label.birthday'|trans }}</dt>
+                <dd>{{ entity.tanggalLahir|localeDate('long') }}</dd>
+                <dt>{{ 'label.email'|trans }}</dt>
+                <dd>{{ entity.email }}</dd>
+                <dt>{{ 'label.nickname'|trans }}</dt>
+                <dd>{{ entity.namaPanggilan }}</dd>
+                {% if entity.orangtuaWali %}
+                    {% for orangtua in entity.orangtuaWali %}
+                        {% if orangtua %}
+                            {% if orangtua.aktif == 1 %}
+                	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                	            <dd>{{ orangtua.nama }}</dd>
+                	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                	            <dd>{{ orangtua.ponsel }}</dd>
+                	        {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                <dt>{{ 'label.nationality'|trans }}</dt>
+                <dd>{{ entity.kewarganegaraan }}</dd>
+                <dt>{{ 'label.childno'|trans }}</dt>
+                <dd>{{ entity.anakKe }}</dd>
+                <dt>{{ 'label.brothers.num'|trans }}</dt>
+                <dd>{{ entity.jumlahSaudarakandung }}</dd>
+                <dt>{{ 'label.brothersinlaw.num'|trans }}</dt>
+                <dd>{{ entity.jumlahSaudaratiri }}</dd>
+                <dt>{{ 'label.orphanstatus'|trans }}</dt>
+                <dd>{{ entity.statusOrphan }}</dd>
+                <dt>{{ 'label.dailylanguage'|trans }}</dt>
+                <dd>{{ entity.bahasaSeharihari }}</dd>
+                <dt>{{ 'label.address'|trans }}</dt>
+                <dd>{{ entity.alamat }}</dd>
+                <dt>{{ 'label.postalcode'|trans }}</dt>
+                <dd>{{ entity.kodepos }}</dd>
+                <dt>{{ 'label.phone'|trans }}</dt>
+                <dd>{{ entity.telepon }}</dd>
+                <dt>{{ 'label.mobilephone.student'|trans }}</dt>
+                <dd>{{ entity.ponselSiswa }}</dd>
+                <dt>{{ 'label.livein.whilestudy'|trans }}</dt>
+                <dd>{{ entity.sekolahTinggaldi }}</dd>
+                <dt>{{ 'label.distance.toschool'|trans }}</dt>
+                <dd>{{ entity.jarakTempat }}</dd>
+                <dt>{{ 'label.how.toschool'|trans }}</dt>
+                <dd>{{ entity.caraKesekolah }}</dd>
+                <dt>{{ 'label.bodyweight'|trans }}</dt>
+                <dd>{{ entity.beratbadan }}</dd>
+                <dt>{{ 'label.bodyheight'|trans }}</dt>
+                <dd>{{ entity.tinggibadan }}</dd>
+                <dt>{{ 'label.bloodtype'|trans }}</dt>
+                <dd>{{ entity.golongandarah }}</dd>
+            </dl>
+        </div>
+        <div class="span4">
+            <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webcamPhotoPath }}" />
+            <ul class="pills">
+        {% if tahunaktif == entity.tahun.tahun %}
+                <li>
+                    <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
+                </li>
+        {% endif %}
+            </ul>
+
+            <h4 style="margin-top: 1em;">{{ 'heading.info.pendukung'|trans }}</h4>
+        	{{ 'text.info.pendukung'|trans }}<br />
+            <ul class="pills">
+                <li>
+                    <a href="{{ path('ortuwali-pendaftar', { 'sid': entity.id }) }}">{{ 'link.ortuwali'|trans }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('dokumen-pendaftar', { 'sid': entity.id }) }}">{{ 'link.dokumen.siswa'|trans }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('pendidikan-sebelumnya-pendaftar', { 'sid': entity.id }) }}">{{ 'link.pendidikan.sebelumnya'|trans }}</a>
+                </li>
+                <li>
+                    <a href="{{ path('riwayat-penyakit-pendaftar', { 'sid': entity.id }) }}">{{ 'link.riwayat.penyakit'|trans }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>
+
+{% if tahunaktif == entity.tahun.tahun %}
+<form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+{% endif %}
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+{% if tahunaktif == entity.tahun.tahun %}
+    <li>
+        <a href="{{ path('applicant_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
+    </li>
+    <li>
+        <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
+    </li>
+{% endif %}
+</ul>
+
+<div class="clearfix"></div>
+
+<div class="add-link pull-right">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('applicant_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.applicant.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.applicant'|trans({ '%name%': entity.namaLengkap, '%regnum%': '#' ~ entity.nomorPendaftaran }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

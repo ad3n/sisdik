@@ -1,0 +1,200 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}applicant.list{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+#sign-percent {
+    cursor: pointer;
+    text-shadow: none;
+}
+#persen-bayar {
+    padding-left: 7px;
+}
+.arrow-down-lanjut {
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #555;
+	display: inline-block;
+	margin-left: 0.3em;
+	vertical-align: middle;
+}
+#cari-lanjutan {
+    display: none;
+}
+#anchor {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-cari-lanjutan {
+    color: #555;
+}
+.anchor-cari-lanjutan-sel {
+    color: #999;
+}
+.anchor-cari-lanjutan, .anchor-cari-lanjutan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel:hover {
+    color: #222;
+}
+#cari-lanjutan .control-group {
+    margin-right: 0.8em;
+}
+#cari-lanjutan .kelengkapan-dokumen {
+    border: 0px none;
+    width: 3em;
+    box-shadow: none;
+}
+#slider {
+    display: inline-block;
+    width: 100px;
+    margin-right: 2em;
+    font-size: 0.7em;
+}
+#slider .ui-slider-range { background: #729fcf; }
+#blue .ui-slider-handle { border-color: #729fcf; }
+</style>
+
+{% javascripts
+    '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('tahkik') }}" class="form-search form-inline">
+        <div id="cari-standar">
+            {{ form_row(searchform.tahun) }}
+            {{ form_row(searchform.gelombang) }}
+            {{ form_row(searchform.searchkey) }}
+            <a href="" id="anchor" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        </div>
+        <div id="cari-lanjutan">
+            <div class="control-group">
+                {% spaceless %}
+                <div class="controls">
+                    <div class="input-prepend input-append">
+                        {{ form_widget(searchform.pembandingBayar) }}
+                        {{ form_widget(searchform.jumlahBayar) }}
+                        <label class="add-on checkbox" id="persen-bayar">%{{ form_widget(searchform.persenBayar) }}
+                    </div>
+                </div>
+                {% endspaceless %}
+            </div>
+            {{ form_row(searchform.jenisKelamin) }}
+            {{ form_row(searchform.tertahkik) }}
+            <br>
+            {{ 'label.kelengkapan.dokumen'|trans }}{{ form_row(searchform.kelengkapanDokumen) }}
+            <div id="slider"></div>
+            {{ form_rest(searchform) }}
+        </div>
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('tahkik') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('applicant_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.applicant.add'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+    	    </th>
+    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
+    		<th>{{ 'label.mobilephone.parent'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+    		{% if data.orangtuaWali %}
+    		    {% for orangtua in data.orangtuaWali %}
+    		        {% if orangtua %}
+    		            {% if orangtua.aktif == 1 %}
+        		            <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ orangtua.nama }}</td>
+        		            <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ orangtua.ponsel }}</td>
+        		        {% endif %}
+    		        {% endif %}
+    		    {% endfor %}
+    		{% endif %}
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+    		{% if tahunaktif == data.tahun.tahun %}
+        		<a href="{{ path('applicant_editregphoto', {'id': data.id}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
+        		<a href="{{ path('applicant_edit', {'id': data.id}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>
+    		{% endif %}
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+<script language="javascript" type="text/javascript">
+var duration = 300;
+
+$(document).ready(function() {
+	$(".pembanding-bayar").dropkick();
+
+	$(".anchor-cari-lanjutan").click(function(){
+		if ($("#cari-lanjutan").is(":visible")) {
+			$("#cari-lanjutan").hide(duration);
+			$(this).removeClass("anchor-cari-lanjutan-sel");
+			$(this).addClass("anchor-cari-lanjutan");
+		} else {
+			$("#cari-lanjutan").show(duration);
+			$(this).addClass("anchor-cari-lanjutan-sel");
+			$(this).removeClass("anchor-cari-lanjutan");
+		}
+	});
+
+    $("#slider").slider({
+    	range: "min",
+        value: 0,
+        min: 0,
+        max: 100,
+        step: 25,
+        slide: function(event, ui) {
+            $(".kelengkapan-dokumen").val(ui.value + "%");
+        }
+    });
+    $(".kelengkapan-dokumen").val($("#slider").slider("value") + "%");
+});
+</script>
+{% endblock content %}
