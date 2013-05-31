@@ -14,7 +14,7 @@ label:
     nama.perujuk: Nama Perujuk
     nomor.identitas: Nomor Identitas
     ketik-pilih.atau.ketik-tambah: Ketik-Pilih atau Ketik-Tambah
-    ada.referensi: Ada Referensi
+    ada.referensi: Ada Rujukan
     perujuk: Perujuk
     nama.dokumen: Nama Dokumen
     file.dokumen: File Dokumen
@@ -372,7 +372,7 @@ label:
         tambah: Tambah Info Pendidikan Sebelumnya
 
 link:
-    referensi: Referensi
+    referensi: Rujukan
     dokumen.siswa: Dokumen Siswa
     jenis.dokumen.siswa: Jenis Dokumen Siswa
     pendidikan.sebelumnya: Pendidikan Sebelumnya
