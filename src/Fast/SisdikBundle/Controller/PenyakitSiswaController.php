@@ -313,7 +313,11 @@ class PenyakitSiswaController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.registration']->setCurrent(true);
+        if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
+            $menu['headings.pendaftaran']['links.registration']->setCurrent(true);
+        } else {
+            $menu['headings.academic']['links.data.student']->setCurrent(true);
+        }
     }
 
     private function isRegisteredToSchool() {

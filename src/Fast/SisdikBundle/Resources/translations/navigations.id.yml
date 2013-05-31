@@ -1,12 +1,15 @@
 headings:
+    pengaturan.sisdik: SisDik
     setting: Pengaturan
     student: Siswa
     presence: Kehadiran
     fee: Biaya
     academic: Akademik
     payments: Pembayaran
+    pendaftaran: Pendaftaran
 
 links:
+    tahkik: Penahkikkan Siswa
     referensi: Referensi
     jenisdokumensiswa: Jenis Dokumen Siswa
     tingkat: Tingkat Kelas
@@ -16,7 +19,7 @@ links:
     applicant.payment: Pendaftaran
     studentspresence: Kehadiran Siswa
     attendancemachine: Mesin Kehadiran
-    registration: Pendaftaran
+    registration: Pendaftaran Siswa
     presencestatus: Status Kehadiran
     presenceschedule: Jadwal Kehadiran
     schools: Semua Sekolah

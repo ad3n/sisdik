@@ -613,7 +613,7 @@ class SiswaApplicantController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.registration']->setCurrent(true);
+        $menu['headings.pendaftaran']['links.registration']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

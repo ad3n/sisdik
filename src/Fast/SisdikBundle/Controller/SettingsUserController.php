@@ -231,7 +231,6 @@ class SettingsUserController extends Controller
 
     /**
      * @Route("/register/ws", name="settings_user_register_withschool")
-     * @Secure(roles="ROLE_ADMIN")
      * @Template("FastSisdikBundle:SettingsUser:register.ws.html.twig")
      */
     public function registerWithSchoolAction(Request $request) {
@@ -565,7 +564,7 @@ class SettingsUserController extends Controller
     private function setCurrentMenu($option = 1) {
         if ($option == 1) {
             $menu = $this->get('fast_sisdik.menu.main');
-            $menu['headings.setting']['links.alluser']->setCurrent(true);
+            $menu['headings.pengaturan.sisdik']['links.alluser']->setCurrent(true);
         } else if ($option == 2) {
             $menu = $this->get('fast_sisdik.menu.main');
             $menu['headings.setting']['links.user']->setCurrent(true);

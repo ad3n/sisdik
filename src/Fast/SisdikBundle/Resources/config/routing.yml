@@ -241,6 +241,11 @@ referensi:
     type:     annotation
     prefix:   /
 
+tahkik:
+    resource: "@FastSisdikBundle/Controller/SiswaTahkikController.php"
+    type:     annotation
+    prefix:   /
+
 
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:

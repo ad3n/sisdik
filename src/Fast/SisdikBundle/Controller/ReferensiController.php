@@ -342,7 +342,7 @@ class ReferensiController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.referensi']->setCurrent(true);
+        $menu['headings.pendaftaran']['links.referensi']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

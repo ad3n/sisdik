@@ -40,32 +40,47 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
+                            new Expression('hasRole("ROLE_SUPER_ADMIN")')
+                        ))) {
+
+            $supersettings = $this->createDropdownMenuItem($menu, 'headings.pengaturan.sisdik');
+
+            $supersettings
+                    ->addChild('links.alluser',
+                            array(
+                                'route' => 'settings_user',
+                            ));
+            $supersettings
+                    ->addChild('links.schools',
+                            array(
+                                'route' => 'settings_school_list'
+                            ));
+            $supersettings
+                    ->addChild('links.layanansms',
+                            array(
+                                'route' => 'layanansms'
+                            ));
+
+            $supersettings
+                    ->addChild('links.presencestatus',
+                            array(
+                                'route' => 'presence_status'
+                            ));
+
+            $supersettings
+                    ->addChild('links.presenceschedule',
+                            array(
+                                'route' => 'presence_schedule'
+                            ));
+        }
+
+        if ($securityContext
+                ->isGranted(
+                        array(
                             new Expression('hasRole("ROLE_ADMIN")')
                         ))) {
 
             $settings = $this->createDropdownMenuItem($menu, 'headings.setting');
-
-            if ($securityContext
-                    ->isGranted(
-                            array(
-                                new Expression('hasRole("ROLE_SUPER_ADMIN")')
-                            ))) {
-                $settings
-                        ->addChild('links.alluser',
-                                array(
-                                    'route' => 'settings_user',
-                                ));
-                $settings
-                        ->addChild('links.schools',
-                                array(
-                                    'route' => 'settings_school_list'
-                                ));
-                $settings
-                        ->addChild('links.layanansms',
-                                array(
-                                    'route' => 'layanansms'
-                                ));
-            }
 
             $settings
                     ->addChild('links.user',
@@ -126,7 +141,7 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                            new Expression('hasAnyRole("ROLE_BENDAHARA")')
+                            new Expression('hasAnyRole("ROLE_BENDAHARA", "ROLE_BENDAHARA_YAYASAN")')
                         ))) {
             // fees
             $fees = $this->createDropdownMenuItem($menu, 'headings.fee');
@@ -166,26 +181,14 @@ class Builder extends AbstractNavbarMenuBuilder
 
         }
 
-        $rolecondition = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB")';
+        $rolependaftaran = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB", "ROLE_KETUA_PANITIA_PSB")';
         if ($securityContext
                 ->isGranted(
                         array(
-                            new Expression($rolecondition)
+                            new Expression($rolependaftaran)
                         ))) {
-            // academic
-            $academic = $this->createDropdownMenuItem($menu, 'headings.academic');
-
-            if ($securityContext
-                    ->isGranted(
-                            array(
-                                new Expression('hasRole("ROLE_PANITIA_PSB")')
-                            ))) {
-                $academic
-                        ->addChild('links.registration',
-                                array(
-                                    'route' => 'applicant'
-                                ));
-            }
+            // pendaftaran
+            $pendaftaran = $this->createDropdownMenuItem($menu, 'headings.pendaftaran');
 
             if ($securityContext
                     ->isGranted(
@@ -193,47 +196,78 @@ class Builder extends AbstractNavbarMenuBuilder
                                     new Expression(
                                             "hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
                             ))) {
-                $academic
+                $pendaftaran
                         ->addChild('links.regcommittee',
                                 array(
                                     'route' => 'regcommittee'
                                 ));
-                $academic
-                        ->addChild('links.referensi',
-                                array(
-                                    'route' => 'referensi'
-                                ));
+            }
 
-                $academic
-                        ->addChild('links.data.academiccalendar',
-                                array(
-                                    'route' => 'data_kaldemik'
-                                ));
+            $pendaftaran
+                    ->addChild('links.registration',
+                            array(
+                                'route' => 'applicant'
+                            ));
 
-                $academic
-                        ->addChild('links.tingkat',
+            if ($securityContext
+                    ->isGranted(
+                            array(
+                                    new Expression(
+                                            'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")')
+                            ))) {
+                $pendaftaran
+                        ->addChild('links.tahkik',
                                 array(
-                                    'route' => 'tingkat-kelas'
-                                ));
-
-                $academic
-                        ->addChild('links.data.class',
-                                array(
-                                    'route' => 'data_class'
-                                ));
-
-                $academic
-                        ->addChild('links.data.classguardian',
-                                array(
-                                    'route' => 'data_classguardian'
-                                ));
-
-                $academic
-                        ->addChild('links.data.student',
-                                array(
-                                    'route' => 'data_student'
+                                    'route' => 'tahkik'
                                 ));
             }
+
+            $pendaftaran
+                    ->addChild('links.referensi',
+                            array(
+                                'route' => 'referensi'
+                            ));
+
+        }
+
+        $roleakademik = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH")';
+        if ($securityContext
+                ->isGranted(
+                        array(
+                            new Expression($roleakademik)
+                        ))) {
+            // academic
+            $academic = $this->createDropdownMenuItem($menu, 'headings.academic');
+
+            $academic
+                    ->addChild('links.data.academiccalendar',
+                            array(
+                                'route' => 'data_kaldemik'
+                            ));
+
+            $academic
+                    ->addChild('links.tingkat',
+                            array(
+                                'route' => 'tingkat-kelas'
+                            ));
+
+            $academic
+                    ->addChild('links.data.class',
+                            array(
+                                'route' => 'data_class'
+                            ));
+
+            $academic
+                    ->addChild('links.data.classguardian',
+                            array(
+                                'route' => 'data_classguardian'
+                            ));
+
+            $academic
+                    ->addChild('links.data.student',
+                            array(
+                                'route' => 'data_student'
+                            ));
         }
 
         if ($securityContext
@@ -261,22 +295,10 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                            new Expression('hasRole("ROLE_GURU") or hasRole("ROLE_GURU_PIKET")')
+                            new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_GURU", "ROLE_GURU_PIKET")')
                         ))) {
             // presence
             $presence = $this->createDropdownMenuItem($menu, 'headings.presence');
-
-            if ($securityContext
-                    ->isGranted(
-                            array(
-                                new Expression('hasRole("ROLE_SUPER_ADMIN")')
-                            ))) {
-                $presence
-                        ->addChild('links.presencestatus',
-                                array(
-                                    'route' => 'presence_status'
-                                ));
-            }
 
             if ($securityContext
                     ->isGranted(
@@ -295,23 +317,11 @@ class Builder extends AbstractNavbarMenuBuilder
                                     'route' => 'presence_schedule_single'
                                 ));
 
-                if ($securityContext
-                        ->isGranted(
-                                array(
-                                    new Expression('hasRole("ROLE_SUPER_ADMIN")')
-                                ))) {
-                    $presence
-                            ->addChild('links.presenceschedule',
-                                    array(
-                                        'route' => 'presence_schedule'
-                                    ));
-                }
-
-                $presence
-                        ->addChild('links.smsbulk',
-                                array(
-                                    'uri' => '#no'
-                                ));
+                //                 $presence
+                //                         ->addChild('links.smsbulk',
+                //                                 array(
+                //                                     'uri' => '#no'
+                //                                 ));
             }
 
             $presence

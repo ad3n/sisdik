@@ -61,7 +61,7 @@ class SettingsSchoolController extends Controller
      */
     public function addAction(Request $request) {
         $menu = $this->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.schools']->setCurrent(true);
+        $menu['headings.pengaturan.sisdik']['links.schools']->setCurrent(true);
 
         $school = new Sekolah();
         $form = $this->createForm(new SekolahFormType(), $school);
@@ -100,7 +100,7 @@ class SettingsSchoolController extends Controller
      */
     public function editAction(Request $request, $id, $page) {
         $menu = $this->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.schools']->setCurrent(true);
+        $menu['headings.pengaturan.sisdik']['links.schools']->setCurrent(true);
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('FastSisdikBundle:Sekolah');

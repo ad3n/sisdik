@@ -291,6 +291,6 @@ class StatusKehadiranKepulanganController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.presence']['links.presencestatus']->setCurrent(true);
+        $menu['headings.pengaturan.sisdik']['links.presencestatus']->setCurrent(true);
     }
 }

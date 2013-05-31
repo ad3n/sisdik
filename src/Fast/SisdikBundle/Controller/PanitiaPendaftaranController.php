@@ -503,7 +503,7 @@ class PanitiaPendaftaranController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.regcommittee']->setCurrent(true);
+        $menu['headings.pendaftaran']['links.regcommittee']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

@@ -17,7 +17,7 @@ security:
         ROLE_WAKIL_KEPALA_SEKOLAH: [ROLE_GURU, ROLE_USER]
         ROLE_KEPALA_SEKOLAH: [ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_GURU, ROLE_USER]
         ROLE_ADMIN: [ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_GURU_PIKET, ROLE_PANITIA_PSB, ROLE_USER]
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_SISWA, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: [ROLE_SISWA, ROLE_ALLOWED_TO_SWITCH]
 
     providers:
         fos_userbundle:
@@ -60,7 +60,6 @@ security:
         #- { path: ^/, roles: ROLE_ADMIN }
         #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
 
-        
-        
-        
-        
+
+
+

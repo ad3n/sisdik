@@ -294,6 +294,6 @@ class PilihanLayananSmsController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.layanansms']->setCurrent(true);
+        $menu['headings.pengaturan.sisdik']['links.layanansms']->setCurrent(true);
     }
 }

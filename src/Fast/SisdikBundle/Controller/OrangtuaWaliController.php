@@ -345,7 +345,7 @@ class OrangtuaWaliController extends Controller
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
-            $menu['headings.academic']['links.registration']->setCurrent(true);
+            $menu['headings.pendaftaran']['links.registration']->setCurrent(true);
         } else {
             $menu['headings.academic']['links.data.student']->setCurrent(true);
         }

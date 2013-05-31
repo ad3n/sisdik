@@ -822,7 +822,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.presence']['links.presenceschedule']->setCurrent(true);
+        $menu['headings.pengaturan.sisdik']['links.presenceschedule']->setCurrent(true);
     }
 
     /**
