@@ -465,6 +465,7 @@ class SettingsUserController extends Controller
                     } else {
                         $guru = new Guru();
                         $guru->setUsername($user->getUsername());
+                        $guru->setSekolah($user->getSekolah());
                         $user->setGuru($guru);
                     }
                 }
@@ -485,6 +486,7 @@ class SettingsUserController extends Controller
                     } else {
                         $staf = new Staf();
                         $staf->setUsername($user->getUsername());
+                        $staf->setSekolah($user->getSekolah());
                         $user->setStaf($staf);
                     }
                 }
