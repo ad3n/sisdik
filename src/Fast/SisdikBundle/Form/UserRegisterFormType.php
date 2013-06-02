@@ -67,8 +67,8 @@ class UserRegisterFormType extends BaseType
                 }
             } else {
                 // registration type other than 1, with school
-                if ($keys == 'ROLE_SUPER_ADMIN' || $keys == 'ROLE_SISWA' || $keys == 'ROLE_PANITIA_PSB'
-                        || $keys == 'ROLE_KETUA_PANITIA_PSB') {
+                if ($keys == 'ROLE_USER' || $keys == 'ROLE_SUPER_ADMIN' || $keys == 'ROLE_SISWA'
+                        || $keys == 'ROLE_PANITIA_PSB' || $keys == 'ROLE_KETUA_PANITIA_PSB') {
                     continue;
                 }
             }

@@ -66,9 +66,9 @@ class UserFormType extends AbstractType
         } else if ($this->formoption == 2) {
             // role siswa, nothing
         } else if ($this->formoption == 3) {
-            // role other than siswa and super admin
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
-                if ($keys == 'ROLE_SISWA' || $keys == 'ROLE_SUPER_ADMIN') {
+                if ($keys == 'ROLE_USER' || $keys == 'ROLE_SISWA' || $keys == 'ROLE_SUPER_ADMIN'
+                        || $keys == 'ROLE_PANITIA_PSB' || $keys == 'ROLE_KETUA_PANITIA_PSB') {
                     continue;
                 }
                 $roles[$keys] = str_replace('_', ' ', $keys);

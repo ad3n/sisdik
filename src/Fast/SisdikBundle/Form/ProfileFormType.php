@@ -50,8 +50,7 @@ class ProfileFormType extends BaseType
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
                 if ($keys == 'ROLE_SUPER_ADMIN') {
-                    if ($this->container->get('security.context')
-                            ->isGranted('ROLE_SUPER_ADMIN')) {
+                    if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
                         $roles[$keys] = str_replace('_', ' ', $keys);
                     } else {
                         break;
@@ -62,20 +61,19 @@ class ProfileFormType extends BaseType
             $builder
                     ->add('roles', 'choice',
                             array(
-                                    'choices' => $roles, 'label' => 'label.roles',
-                                    'multiple' => true, 'expanded' => true,
+                                    'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
+                                    'expanded' => true,
                             ));
         } else if ($securityContext->isGranted('ROLE_ADMIN')) {
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
                 if ($keys == 'ROLE_SUPER_ADMIN') {
-                    if ($this->container->get('security.context')
-                            ->isGranted('ROLE_SUPER_ADMIN')) {
+                    if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
                         $roles[$keys] = str_replace('_', ' ', $keys);
                     } else {
                         break;
                     }
                 }
-                if ($keys == 'ROLE_SISWA') {
+                if ($keys == 'ROLE_USER' || $keys == 'ROLE_SISWA') {
                     continue;
                 }
                 $roles[$keys] = str_replace('_', ' ', $keys);
@@ -83,8 +81,8 @@ class ProfileFormType extends BaseType
             $builder
                     ->add('roles', 'choice',
                             array(
-                                    'choices' => $roles, 'label' => 'label.roles',
-                                    'multiple' => true, 'expanded' => true,
+                                    'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
+                                    'expanded' => true,
                             ));
         }
     }
