@@ -88,9 +88,19 @@
 	<div class="row-fluid">
 	    <div class="span12 pull-right" style="text-align: right">
 	        <div id="page-header">
-        		{% image '@FastSisdikBundle/Resources/public/images/logo-smp-sma-smk-kosgoro.jpg' %}
-                	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.kosgoro'|trans }}" border="0" height="70" class="img-polaroid"></a>
+	        {% if app.user.sekolah is not null %}
+    	        {% if app.user.sekolah.logo != "" %}
+                	<a href="{{ path("_index") }}"><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ app.user.sekolah.webPathLogoThumbnailDisk }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" class="img-polaroid"></a>
+                {% else %}
+                    {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
+                    	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
+                    {% endimage %}
+                {% endif %}
+            {% else  %}
+                {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
+                	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
                 {% endimage %}
+            {% endif %}
                 <div id="school-name">{% spaceless %}
                     {% if app.user is not null %}
                         {% if app.user.sekolah is not null %}{{ app.user.sekolah.nama }}{% endif %}

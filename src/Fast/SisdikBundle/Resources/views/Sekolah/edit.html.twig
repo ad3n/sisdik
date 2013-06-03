@@ -3,6 +3,12 @@
 {% block page_heading %}{% trans from "headings" %}settings.school.edit{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.form-horizontal .help-block {
+    margin-top: 0;
+}
+</style>
+
 <form action="{{ path('settings_specsch_update') }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
 	<div class="form-actions">

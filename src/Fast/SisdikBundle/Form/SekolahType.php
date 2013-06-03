@@ -18,7 +18,7 @@ class SekolahType extends AbstractType
                         ))
                 ->add('kode', null,
                         array(
-                            'required' => true, 'label' => 'label.code',
+                                'required' => true, 'label' => 'label.code',
                                 'attr' => array(
                                     'class' => 'mini'
                                 )
@@ -32,21 +32,21 @@ class SekolahType extends AbstractType
                         ))
                 ->add('kodepos', null,
                         array(
-                            'label' => 'label.postalcode',
+                                'label' => 'label.postalcode',
                                 'attr' => array(
                                     'class' => 'small'
                                 )
                         ))
                 ->add('telepon', null,
                         array(
-                            'label' => 'label.phone', 
+                                'label' => 'label.phone',
                                 'attr' => array(
                                     'class' => 'medium'
                                 )
                         ))
                 ->add('fax', null,
                         array(
-                            'label' => 'label.fax',
+                                'label' => 'label.fax',
                                 'attr' => array(
                                     'class' => 'medium'
                                 )
@@ -78,6 +78,11 @@ class SekolahType extends AbstractType
                                 'attr' => array(
                                     'class' => 'large'
                                 )
+                        ))
+                ->add('fileUpload', 'file',
+                        array(
+                                'required' => false, 'label_render' => true, 'label' => 'label.logo.sekolah',
+                                'help_block' => 'help.logo.sekolah',
                         ));
     }
 

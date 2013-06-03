@@ -1,6 +1,11 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Fast\SisdikBundle\Util\FileSizeFormatter;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -8,9 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="sekolah")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Sekolah
 {
+    const LOGO_DIR = 'uploads/sekolah/logo/';
+    const THUMBNAIL_PREFIX = 'th1-';
+    const MEMORY_LIMIT = '256M';
+    const PHOTO_THUMB_WIDTH = 80;
+    const PHOTO_THUMB_HEIGHT = 80;
+
     /**
      * @var integer
      *
@@ -89,6 +101,32 @@ class Sekolah
      * @ORM\Column(name="kepsek", type="string", length=400, nullable=false)
      */
     private $kepsek;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="logo", type="string", length=200, nullable=true)
+     */
+    private $logo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="logo_disk", type="string", length=200, nullable=true)
+     */
+    private $logoDisk;
+
+    /**
+     * @var UploadedFile
+     *
+     * @Assert\File(maxSize="300k")
+     */
+    private $fileUpload;
+
+    /**
+     * @var string
+     */
+    private $fileDiskSebelumnya;
 
     /**
      * Get id
@@ -307,5 +345,205 @@ class Sekolah
      */
     public function getKepsek() {
         return $this->kepsek;
+    }
+
+    /**
+     * Set logo
+     *
+     * @param string $logo
+     * @return Sekolah
+     */
+    public function setLogo($logo) {
+        $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * Get logo
+     *
+     * @return string
+     */
+    public function getLogo() {
+        return strlen($this->logo) > 20 ? '...' . substr($this->logo, -17) : $this->logo;
+    }
+
+    /**
+     * Set logoDisk
+     *
+     * @param string $logoDisk
+     * @return Sekolah
+     */
+    public function setLogoDisk($logoDisk) {
+        $this->logoDisk = $logoDisk;
+
+        return $this;
+    }
+
+    /**
+     * Get logoDisk
+     *
+     * @return string
+     */
+    public function getLogoDisk() {
+        return $this->logoDisk;
+    }
+
+    public function getFileUpload() {
+        return $this->fileUpload;
+    }
+
+    public function setFileUpload(UploadedFile $file) {
+        $this->fileUpload = $file;
+
+        return $this;
+    }
+
+    public function getWebPathLogoDisk() {
+        return null === $this->logoDisk ? null : $this->getUploadDir() . '/' . $this->logoDisk;
+    }
+
+    public function getWebPathLogoThumbnailDisk() {
+        return null === $this->logoDisk ? null
+                : $this->getUploadDir() . '/' . self::THUMBNAIL_PREFIX . $this->logoDisk;
+    }
+
+    public function getRelativePathLogoDisk() {
+        return null === $this->logoDisk ? null : $this->getUploadRootDir() . '/' . $this->logoDisk;
+    }
+
+    public function getRelativePathLogoDiskSebelumnya() {
+        return null === $this->fileDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . $this->fileDiskSebelumnya;
+    }
+
+    public function getRelativePathLogoThumbDiskSebelumnya() {
+        return null === $this->fileDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->fileDiskSebelumnya;
+    }
+
+    public function getFilesizeLogoDisk($type = 'KB') {
+        $file = new File($this->getRelativePathLogoDisk());
+        return FileSizeFormatter::formatBytes($file->getSize(), $type);
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function prePersist() {
+        if (null !== $this->fileUpload) {
+            $this->fileDiskSebelumnya = $this->logoDisk;
+
+            $this->logoDisk = sha1(uniqid(mt_rand(), true)) . '_'
+                    . $this->fileUpload->getClientOriginalName();
+            $this->logo = $this->fileUpload->getClientOriginalName();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function postPersist() {
+        if ($this->fileUpload === null) {
+            return;
+        }
+
+        if ($this->fileUpload->move($this->getUploadRootDir(), $this->logoDisk)) {
+
+            $targetfile = $this->getRelativePathLogoDisk();
+            $thumbnailfile = $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->logoDisk;
+
+            list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
+            if (is_numeric($type)) {
+
+                $origRatio = $origWidth / $origHeight;
+                $resultWidth = self::PHOTO_THUMB_WIDTH;
+                $resultHeight = self::PHOTO_THUMB_HEIGHT;
+                if ($resultWidth / $resultHeight > $origRatio) {
+                    $resultWidth = $resultHeight * $origRatio;
+                } else {
+                    $resultHeight = $resultWidth / $origRatio;
+                }
+
+                @ini_set('memory_limit', self::MEMORY_LIMIT);
+
+                switch ($type) {
+                    case IMAGETYPE_JPEG:
+                        if (imagetypes() & IMG_JPEG) {
+                            $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
+
+                            $srcImage = imagecreatefromjpeg($targetfile);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
+                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagejpeg($resultImage, $thumbnailfile, 90);
+                        }
+                        break;
+                    case IMAGETYPE_PNG:
+                        if (imagetypes() & IMG_PNG) {
+                            // resample image
+                            // for png, we use imagecreate instead
+                            $resultImage = imagecreate($resultWidth, $resultHeight);
+
+                            $srcImage = imagecreatefrompng($targetfile);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
+                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagepng($resultImage, $thumbnailfile, 0);
+                        }
+                        break;
+                    case IMAGETYPE_GIF:
+                        if (imagetypes() & IMG_GIF) {
+                            $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
+
+                            $srcImage = imagecreatefromgif($targetfile);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
+                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagegif($resultImage, $thumbnailfile);
+                        }
+                        break;
+                }
+            }
+        }
+
+        $this->removeFileSebelumnya();
+
+        unset($this->fileUpload);
+    }
+
+    private function removeFileSebelumnya() {
+        if ($file = $this->getRelativePathLogoDiskSebelumnya()) {
+            @unlink($file);
+        }
+        if ($fileThumb = $this->getRelativePathLogoThumbDiskSebelumnya()) {
+            @unlink($fileThumb);
+        }
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeFile() {
+        if ($file = $this->getRelativePathLogoDisk()) {
+            @unlink($file);
+        }
+    }
+
+    protected function getUploadRootDir() {
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+    }
+
+    protected function getUploadDir() {
+        $fs = new Filesystem();
+        if (!$fs->exists(self::LOGO_DIR)) {
+            $fs->mkdir(self::LOGO_DIR);
+        }
+        if (!$fs->exists(self::LOGO_DIR . $this->getId())) {
+            $fs->mkdir(self::LOGO_DIR . $this->getId());
+        }
+        return self::LOGO_DIR . $this->getId();
     }
 }

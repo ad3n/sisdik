@@ -118,6 +118,10 @@ class SekolahController extends Controller
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
+            if ($editForm['fileUpload']->getData() !== null) {
+                $entity->setLogo("temp_" . rand(0, 100));
+            }
+
             $em->persist($entity);
             $em->flush();
 
