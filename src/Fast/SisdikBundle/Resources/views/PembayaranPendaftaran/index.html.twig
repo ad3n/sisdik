@@ -4,10 +4,6 @@
 
 {% block content %}
 <style type="text/css">
-.gray-out {
-    opacity: 0.2;
-    filter: alpha(opacity=20); /* msie */
-}
 .content .popover-content p {
     margin-bottom: 0;
 }
@@ -100,8 +96,8 @@
 		    {% if data.transaksiPembayaranPendaftaran|length > 1 %}
 		        <a href="#" onclick="return false"
 		            title="{{ 'tip.print.receipt'|trans }}"
-		            class="icon-print gray-out"
-		            id="popover-{{ data.id }}"></a>
+		            class="icon-print"
+		            id="popover-{{ data.id }}"><b> &nbsp; &rarr;</b></a>
 	            <script language="javascript" type="text/javascript">
 	                var popContent =
 	                {% for transaksi in data.transaksiPembayaranPendaftaran %}
