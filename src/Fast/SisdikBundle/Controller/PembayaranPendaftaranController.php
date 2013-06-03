@@ -1041,7 +1041,7 @@ class PembayaranPendaftaranController extends Controller
                             'waktuSimpan' => 'ASC'
                         ));
         $counterTransaksi = 0;
-        $nomorCicilan = 0;
+        $nomorCicilan = 1;
         $nomorTransaksi = array();
         foreach ($transaksiPembayaran as $t) {
             if ($t instanceof TransaksiPembayaranPendaftaran) {
@@ -1053,8 +1053,10 @@ class PembayaranPendaftaranController extends Controller
                 }
             }
         }
-        $nomorCicilan = count($transaksiPembayaran) <= 1 ? 0 : $nomorCicilan;
-        $adaCicilan = count($transaksiPembayaran) > 1 ? true : false;
+        $nomorCicilan = count($transaksiPembayaran) <= 1 ? 1 : $nomorCicilan;
+        $adaCicilan = count($transaksiPembayaran) > 1 ? true
+                : ($transaksiPembayaran[0]->getNominalPembayaran()
+                        == $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() ? true : false);
         $totalPembayaranHinggaTransaksiTerpilih = $pembayaran
                 ->getTotalNominalTransaksiPembayaranPendaftaranHinggaTransaksiTerpilih($nomorTransaksi);
 
