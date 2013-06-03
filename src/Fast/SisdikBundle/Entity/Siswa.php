@@ -27,7 +27,7 @@ class Siswa
     const WEBCAMPHOTO_DIR = 'uploads/students/webcam-photos/';
     const PHOTO_DIR = 'uploads/students/photos/';
     const THUMBNAIL_PREFIX = 'th1-';
-    const MEMORY_LIMIT = '128M';
+    const MEMORY_LIMIT = '256M';
     const PHOTO_THUMB_WIDTH = 80;
     const PHOTO_THUMB_HEIGHT = 150;
 
