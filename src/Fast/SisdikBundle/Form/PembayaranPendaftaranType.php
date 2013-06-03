@@ -78,7 +78,7 @@ class PembayaranPendaftaranType extends AbstractType
                         ))
                 ->add('persenPotongan', 'percent',
                         array(
-                                'type' => 'integer', 'required' => false,
+                                'type' => 'integer', 'required' => false, 'precision' => 0,
                                 'attr' => array(
                                     'class' => 'small percentage-discount', 'autocomplete' => 'off'
                                 ), 'label' => 'label.discount.percentage',

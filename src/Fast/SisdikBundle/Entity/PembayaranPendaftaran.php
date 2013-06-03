@@ -219,7 +219,7 @@ class PembayaranPendaftaran
      * @return PembayaranPendaftaran
      */
     public function setPersenPotongan($persenPotongan) {
-        $this->persenPotongan = $persenPotongan;
+        $this->persenPotongan = intval($persenPotongan);
 
         return $this;
     }
