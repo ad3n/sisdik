@@ -155,10 +155,12 @@ END";
 BEFORE UPDATE ON biaya_pendaftaran
 FOR EACH ROW
 BEGIN
-    SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
-    SET NEW.tahun_id = OLD.tahun_id;
-    SET NEW.gelombang_id = OLD.gelombang_id;
-    SET NEW.nominal = OLD.nominal;
+    IF (OLD.terpakai = 1) THEN
+        SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
+        SET NEW.tahun_id = OLD.tahun_id;
+        SET NEW.gelombang_id = OLD.gelombang_id;
+        SET NEW.nominal = OLD.nominal;
+    END IF;
 END";
 
     private $beforeUpdateBiayaSekali = "CREATE TRIGGER `befup_bs`
