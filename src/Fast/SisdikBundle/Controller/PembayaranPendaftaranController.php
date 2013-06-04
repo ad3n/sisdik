@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Fast\SisdikBundle\Util\Messenger;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
@@ -340,15 +341,12 @@ class PembayaranPendaftaranController extends Controller
                                                 $logid = $messenger->setLogEntry();
                                                 // $logid = 0; // for debugging
 
-                                                $dlrurl = "http://" . $this->getRequest()->getHost()
-                                                        . $this
-                                                                ->generateUrl(
-                                                                        "localapi_logsmskeluar_dlr_update",
-                                                                        array(
-                                                                                'logid' => $logid,
-                                                                                'status' => "%d",
-                                                                                'time' => "%T"
-                                                                        ));
+                                                $dlrurl = $this
+                                                        ->generateUrl("localapi_logsmskeluar_dlr_update",
+                                                                array(
+                                                                        'logid' => $logid, 'status' => "%d",
+                                                                        'time' => "%T"
+                                                                ), UrlGeneratorInterface::ABSOLUTE_URL);
                                                 $messenger->setDeliveryReportURL(urldecode($dlrurl));
 
                                                 $messenger->sendMessage();
@@ -441,14 +439,12 @@ class PembayaranPendaftaranController extends Controller
                                             $logid = $messenger->setLogEntry();
                                             // $logid = 0; // for debugging
 
-                                            $dlrurl = "http://" . $this->getRequest()->getHost()
-                                                    . $this
-                                                            ->generateUrl(
-                                                                    "localapi_logsmskeluar_dlr_update",
-                                                                    array(
-                                                                            'logid' => $logid,
-                                                                            'status' => "%d", 'time' => "%T"
-                                                                    ));
+                                            $dlrurl = $this
+                                                    ->generateUrl("localapi_logsmskeluar_dlr_update",
+                                                            array(
+                                                                    'logid' => $logid, 'status' => "%d",
+                                                                    'time' => "%T"
+                                                            ), UrlGeneratorInterface::ABSOLUTE_URL);
                                             $messenger->setDeliveryReportURL(urldecode($dlrurl));
 
                                             $messenger->sendMessage();
@@ -519,15 +515,12 @@ class PembayaranPendaftaranController extends Controller
                                                 $logid = $messenger->setLogEntry();
                                                 // $logid = 0; // for debugging
 
-                                                $dlrurl = "http://" . $this->getRequest()->getHost()
-                                                        . $this
-                                                                ->generateUrl(
-                                                                        "localapi_logsmskeluar_dlr_update",
-                                                                        array(
-                                                                                'logid' => $logid,
-                                                                                'status' => "%d",
-                                                                                'time' => "%T"
-                                                                        ));
+                                                $dlrurl = $this
+                                                        ->generateUrl("localapi_logsmskeluar_dlr_update",
+                                                                array(
+                                                                        'logid' => $logid, 'status' => "%d",
+                                                                        'time' => "%T"
+                                                                ), UrlGeneratorInterface::ABSOLUTE_URL);
                                                 $messenger->setDeliveryReportURL(urldecode($dlrurl));
 
                                                 $messenger->sendMessage();
@@ -881,14 +874,12 @@ class PembayaranPendaftaranController extends Controller
                                             $logid = $messenger->setLogEntry();
                                             // $logid = 0; // for debugging
 
-                                            $dlrurl = "http://" . $this->getRequest()->getHost()
-                                                    . $this
-                                                            ->generateUrl(
-                                                                    "localapi_logsmskeluar_dlr_update",
-                                                                    array(
-                                                                            'logid' => $logid,
-                                                                            'status' => "%d", 'time' => "%T"
-                                                                    ));
+                                            $dlrurl = $this
+                                                    ->generateUrl("localapi_logsmskeluar_dlr_update",
+                                                            array(
+                                                                    'logid' => $logid, 'status' => "%d",
+                                                                    'time' => "%T"
+                                                            ), UrlGeneratorInterface::ABSOLUTE_URL);
                                             $messenger->setDeliveryReportURL(urldecode($dlrurl));
 
                                             $messenger->sendMessage();
@@ -959,15 +950,12 @@ class PembayaranPendaftaranController extends Controller
                                                 $logid = $messenger->setLogEntry();
                                                 // $logid = 0; // for debugging
 
-                                                $dlrurl = "http://" . $this->getRequest()->getHost()
-                                                        . $this
-                                                                ->generateUrl(
-                                                                        "localapi_logsmskeluar_dlr_update",
-                                                                        array(
-                                                                                'logid' => $logid,
-                                                                                'status' => "%d",
-                                                                                'time' => "%T"
-                                                                        ));
+                                                $dlrurl = $this
+                                                        ->generateUrl("localapi_logsmskeluar_dlr_update",
+                                                                array(
+                                                                        'logid' => $logid, 'status' => "%d",
+                                                                        'time' => "%T"
+                                                                ), UrlGeneratorInterface::ABSOLUTE_URL);
                                                 $messenger->setDeliveryReportURL(urldecode($dlrurl));
 
                                                 $messenger->sendMessage();
