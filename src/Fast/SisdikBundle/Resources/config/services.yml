@@ -11,7 +11,7 @@ services:
             - { title: "%app_title%", titleRoute: "_index", fixedTop: true, isFluid: false }
         tags:
             - { name: mopa_bootstrap.navbar, alias: frontendNavbar }
-            
+
     fast_sisdik.menu_builder:
         class: Fast\SisdikBundle\Menu\Builder
         arguments: ["@knp_menu.factory", "@service_container"]
@@ -71,5 +71,5 @@ services:
 
     fast_sisdik.messenger:
         class:        Fast\SisdikBundle\Util\Messenger
-        arguments:    ["@doctrine.orm.default_entity_manager", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%"]
+        arguments:    ["@service_container", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
 

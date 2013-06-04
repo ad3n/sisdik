@@ -334,21 +334,8 @@ class PembayaranPendaftaranController extends Controller
                                         if ($messenger instanceof Messenger) {
                                             $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
                                             foreach ($nomorponsel as $ponsel) {
-
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-
-                                                $logid = $messenger->setLogEntry();
-                                                // $logid = 0; // for debugging
-
-                                                $dlrurl = $this
-                                                        ->generateUrl("localapi_logsmskeluar_dlr_update",
-                                                                array(
-                                                                        'logid' => $logid, 'status' => "%d",
-                                                                        'time' => "%T"
-                                                                ), UrlGeneratorInterface::ABSOLUTE_URL);
-                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
-
                                                 $messenger->sendMessage();
                                             }
                                         }
@@ -432,21 +419,8 @@ class PembayaranPendaftaranController extends Controller
                                     if ($messenger instanceof Messenger) {
                                         $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
                                         foreach ($nomorponsel as $ponsel) {
-
                                             $messenger->setPhoneNumber($ponsel);
                                             $messenger->setMessage($tekstemplate);
-
-                                            $logid = $messenger->setLogEntry();
-                                            // $logid = 0; // for debugging
-
-                                            $dlrurl = $this
-                                                    ->generateUrl("localapi_logsmskeluar_dlr_update",
-                                                            array(
-                                                                    'logid' => $logid, 'status' => "%d",
-                                                                    'time' => "%T"
-                                                            ), UrlGeneratorInterface::ABSOLUTE_URL);
-                                            $messenger->setDeliveryReportURL(urldecode($dlrurl));
-
                                             $messenger->sendMessage();
                                         }
                                     }
@@ -508,21 +482,8 @@ class PembayaranPendaftaranController extends Controller
                                         if ($messenger instanceof Messenger) {
                                             $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
                                             foreach ($nomorponsel as $ponsel) {
-
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-
-                                                $logid = $messenger->setLogEntry();
-                                                // $logid = 0; // for debugging
-
-                                                $dlrurl = $this
-                                                        ->generateUrl("localapi_logsmskeluar_dlr_update",
-                                                                array(
-                                                                        'logid' => $logid, 'status' => "%d",
-                                                                        'time' => "%T"
-                                                                ), UrlGeneratorInterface::ABSOLUTE_URL);
-                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
-
                                                 $messenger->sendMessage();
                                             }
                                         }
@@ -867,21 +828,8 @@ class PembayaranPendaftaranController extends Controller
                                     if ($messenger instanceof Messenger) {
                                         $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
                                         foreach ($nomorponsel as $ponsel) {
-
                                             $messenger->setPhoneNumber($ponsel);
                                             $messenger->setMessage($tekstemplate);
-
-                                            $logid = $messenger->setLogEntry();
-                                            // $logid = 0; // for debugging
-
-                                            $dlrurl = $this
-                                                    ->generateUrl("localapi_logsmskeluar_dlr_update",
-                                                            array(
-                                                                    'logid' => $logid, 'status' => "%d",
-                                                                    'time' => "%T"
-                                                            ), UrlGeneratorInterface::ABSOLUTE_URL);
-                                            $messenger->setDeliveryReportURL(urldecode($dlrurl));
-
                                             $messenger->sendMessage();
                                         }
                                     }
@@ -943,21 +891,8 @@ class PembayaranPendaftaranController extends Controller
                                         if ($messenger instanceof Messenger) {
                                             $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
                                             foreach ($nomorponsel as $ponsel) {
-
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-
-                                                $logid = $messenger->setLogEntry();
-                                                // $logid = 0; // for debugging
-
-                                                $dlrurl = $this
-                                                        ->generateUrl("localapi_logsmskeluar_dlr_update",
-                                                                array(
-                                                                        'logid' => $logid, 'status' => "%d",
-                                                                        'time' => "%T"
-                                                                ), UrlGeneratorInterface::ABSOLUTE_URL);
-                                                $messenger->setDeliveryReportURL(urldecode($dlrurl));
-
                                                 $messenger->sendMessage();
                                             }
                                         }

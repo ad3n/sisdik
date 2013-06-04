@@ -1,8 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-use Symfony\Component\Config\Definition\IntegerNode;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,6 +19,20 @@ class LogsmsKeluar
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="penyedia_api", type="string", length=200, nullable=true)
+     */
+    private $penyediaApi;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="api_terpanggil", type="text", nullable=true)
+     */
+    private $apiTerpanggil;
 
     /**
      * @var string
@@ -51,12 +63,78 @@ class LogsmsKeluar
     private $dlrtime;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="hasil_api", type="text", nullable=true)
+     */
+    private $hasilApi;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="waktu_panggil_api", type="datetime", nullable=true)
+     */
+    private $waktuPanggilApi;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $sekolah;
+
+    /**
      * Get id
      *
      * @return integer
      */
     public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Set penyediaApi
+     *
+     * @param string $penyediaApi
+     * @return LogsmsKeluar
+     */
+    public function setPenyediaApi($penyediaApi) {
+        $this->penyediaApi = $penyediaApi;
+
+        return $this;
+    }
+
+    /**
+     * Get penyediaApi
+     *
+     * @return string
+     */
+    public function getPenyediaApi() {
+        return $this->penyediaApi;
+    }
+
+    /**
+     * Set apiTerpanggil
+     *
+     * @param string $apiTerpanggil
+     * @return LogsmsKeluar
+     */
+    public function setApiTerpanggil($apiTerpanggil) {
+        $this->apiTerpanggil = $apiTerpanggil;
+
+        return $this;
+    }
+
+    /**
+     * Get apiTerpanggil
+     *
+     * @return string
+     */
+    public function getApiTerpanggil() {
+        return $this->apiTerpanggil;
     }
 
     /**
@@ -141,5 +219,68 @@ class LogsmsKeluar
      */
     public function getDlrtime() {
         return $this->dlrtime;
+    }
+
+    /**
+     * Set hasilApi
+     *
+     * @param string $hasilApi
+     * @return LogsmsKeluar
+     */
+    public function setHasilApi($hasilApi) {
+        $this->hasilApi = $hasilApi;
+
+        return $this;
+    }
+
+    /**
+     * Get hasilApi
+     *
+     * @return string
+     */
+    public function getHasilApi() {
+        return $this->hasilApi;
+    }
+
+    /**
+     * Set waktuPanggilApi
+     *
+     * @param \DateTime $waktuPanggilApi
+     * @return LogsmsKeluar
+     */
+    public function setWaktuPanggilApi($waktuPanggilApi) {
+        $this->waktuPanggilApi = $waktuPanggilApi;
+
+        return $this;
+    }
+
+    /**
+     * Get waktuPanggilApi
+     *
+     * @return \DateTime
+     */
+    public function getWaktuPanggilApi() {
+        return $this->waktuPanggilApi;
+    }
+
+    /**
+     * Set sekolah
+     *
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return LogsmsKeluar
+     */
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah
+     */
+    public function getSekolah() {
+        return $this->sekolah;
     }
 }
