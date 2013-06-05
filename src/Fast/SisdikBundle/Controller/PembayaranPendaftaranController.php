@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Fast\SisdikBundle\Util\Messenger;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
@@ -12,7 +11,6 @@ use Fast\SisdikBundle\Util\EscapeCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Response;
-use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -27,7 +25,6 @@ use Fast\SisdikBundle\Entity\BiayaPendaftaran;
 use Fast\SisdikBundle\Form\PembayaranPendaftaranType;
 use Fast\SisdikBundle\Form\PembayaranPendaftaranCicilanType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * PembayaranPendaftaran controller.
@@ -46,7 +43,8 @@ class PembayaranPendaftaranController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction($sid) {
+    public function indexAction($sid)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -89,7 +87,7 @@ class PembayaranPendaftaranController extends Controller
                     if ($jenisPotongan == 'nominal') {
                         $nominalBiayaTerpotong = $nominalBiaya - $pembayaran->getNominalPotongan();
                         $totalPotongan += $pembayaran->getNominalPotongan();
-                    } else if ($jenisPotongan == 'persentase') {
+                    } elseif ($jenisPotongan == 'persentase') {
                         $nominalBiayaTerpotong = $nominalBiaya
                                 - ($nominalBiaya * ($pembayaran->getPersenPotongan() / 100));
                         $totalPotongan += $nominalBiaya * ($pembayaran->getPersenPotongan() / 100);
@@ -152,7 +150,8 @@ class PembayaranPendaftaranController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranPendaftaran:index.html.twig")
      */
-    public function createAction(Request $request, $sid) {
+    public function createAction(Request $request, $sid)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -198,7 +197,7 @@ class PembayaranPendaftaranController extends Controller
                     if ($jenisPotongan == 'nominal') {
                         $nominalBiayaTerpotong = $nominalBiaya - $pembayaran->getNominalPotongan();
                         $totalPotongan += $pembayaran->getNominalPotongan();
-                    } else if ($jenisPotongan == 'persentase') {
+                    } elseif ($jenisPotongan == 'persentase') {
                         $nominalBiayaTerpotong = $nominalBiaya
                                 - ($nominalBiaya * ($pembayaran->getPersenPotongan() / 100));
                         $totalPotongan += $nominalBiaya * ($pembayaran->getPersenPotongan() / 100);
@@ -522,7 +521,8 @@ class PembayaranPendaftaranController extends Controller
      * Get payable registration fee amount
      *
      */
-    private function getPayableRegistrationFees($tahun, $gelombang) {
+    private function getPayableRegistrationFees($tahun, $gelombang)
+    {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                 ->findBy(
@@ -546,7 +546,8 @@ class PembayaranPendaftaranController extends Controller
      * @Route("/{id}/show", name="payment_registrationfee_show")
      * @Template()
      */
-    public function showAction($sid, $id) {
+    public function showAction($sid, $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -575,7 +576,7 @@ class PembayaranPendaftaranController extends Controller
             $jenisPotongan = $entity->getJenisPotongan();
             if ($jenisPotongan == 'nominal') {
                 $nominalPotongan = $entity->getNominalPotongan();
-            } else if ($jenisPotongan == 'persentase') {
+            } elseif ($jenisPotongan == 'persentase') {
                 $nominalPotongan = $nominalBiaya * ($entity->getPersenPotongan() / 100);
                 $persenPotongan = $entity->getPersenPotongan();
             }
@@ -605,7 +606,8 @@ class PembayaranPendaftaranController extends Controller
      * @Route("/{id}/edit", name="payment_registrationfee_edit")
      * @Template()
      */
-    public function editAction($sid, $id) {
+    public function editAction($sid, $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -637,7 +639,7 @@ class PembayaranPendaftaranController extends Controller
             $jenisPotongan = $entity->getJenisPotongan();
             if ($jenisPotongan == 'nominal') {
                 $nominalPotongan = $entity->getNominalPotongan();
-            } else if ($jenisPotongan == 'persentase') {
+            } elseif ($jenisPotongan == 'persentase') {
                 $nominalPotongan = $nominalBiaya * ($entity->getPersenPotongan() / 100);
                 $persenPotongan = $entity->getPersenPotongan();
             }
@@ -673,7 +675,8 @@ class PembayaranPendaftaranController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranPendaftaran:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id) {
+    public function updateAction(Request $request, $sid, $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -710,7 +713,7 @@ class PembayaranPendaftaranController extends Controller
             $jenisPotongan = $entity->getJenisPotongan();
             if ($jenisPotongan == 'nominal') {
                 $nominalPotongan = $entity->getNominalPotongan();
-            } else if ($jenisPotongan == 'persentase') {
+            } elseif ($jenisPotongan == 'persentase') {
                 $nominalPotongan = $nominalBiaya * ($entity->getPersenPotongan() / 100);
                 $persenPotongan = $entity->getPersenPotongan();
             }
@@ -935,7 +938,8 @@ class PembayaranPendaftaranController extends Controller
      *
      * @Route("/{pid}/printreceipt/{id}", name="payment_registrationfee_printreceipt")
      */
-    public function printReceiptAction(Request $request, $sid, $pid, $id) {
+    public function printReceiptAction(Request $request, $sid, $pid, $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -1262,7 +1266,7 @@ class PembayaranPendaftaranController extends Controller
                 $twoPageFormat = 0;
                 if ($twoPages === true && count($daftarBiayaPendaftaran) < $itemThreshold) {
                     $twoPageFormat = 1;
-                } else if ($twoPages === true && count($daftarBiayaPendaftaran) >= $itemThreshold) {
+                } elseif ($twoPages === true && count($daftarBiayaPendaftaran) >= $itemThreshold) {
                     $maxitemPageone = 14;
                     $twoPageFormat = 2;
                 }
@@ -1379,7 +1383,7 @@ class PembayaranPendaftaranController extends Controller
 
                             $commands->addContent(str_repeat(" ", $marginBadan) . $barisPembayaran . "\r\n");
 
-                        } else if ($twoPageFormat == 2 && $num == $maxitemPageone) {
+                        } elseif ($twoPageFormat == 2 && $num == $maxitemPageone) {
 
                             $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
 
@@ -1741,18 +1745,20 @@ class PembayaranPendaftaranController extends Controller
         return $response;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('fast_sisdik.menu.main');
         $menu['headings.payments']['links.applicant.payment']->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
