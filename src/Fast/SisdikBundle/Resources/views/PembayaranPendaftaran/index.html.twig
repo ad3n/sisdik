@@ -28,6 +28,9 @@
 #fee-amount, #fee-amount-discounted {
     cursor: pointer;
 }
+#icon-preview {
+    margin-left: 10px;
+}
 </style>
 
 <dl>
@@ -95,9 +98,11 @@
     		    <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': data.id }) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
 		    {% if data.transaksiPembayaranPendaftaran|length > 1 %}
 		        <a href="#" onclick="return false"
-		            title="{{ 'tip.print.receipt'|trans }}"
-		            class="icon-print"
-		            id="popover-{{ data.id }}"><b> &nbsp; &rarr;</b></a>
+		            title="{{ 'tip.print.receipt'|trans }}" id="popover-{{ data.id }}">
+		            {% image '@FastSisdikBundle/Resources/public/images/print-preview.png' %}
+                    	<img src="{{ asset_url }}" id="icon-preview" />
+                    {% endimage %}
+	            </a>
 	            <script language="javascript" type="text/javascript">
 	                var popContent =
 	                {% for transaksi in data.transaksiPembayaranPendaftaran %}
