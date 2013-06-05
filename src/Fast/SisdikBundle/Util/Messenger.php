@@ -70,7 +70,7 @@ class Messenger
     /**
      * Set log entry
      *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @param  \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return integer
      */
     public function setLogEntry(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
@@ -141,7 +141,7 @@ class Messenger
             if ($this->report == "1") {
                 $this
                         ->setDeliveryReportURL(
-                                $this->container->get('request')
+                                $this->container->get('router')
                                         ->generate("localapi_logsmskeluar_dlr_update",
                                                 array(
                                                     'logid' => $this->logid, 'status' => "%d", 'time' => "%T"
@@ -156,7 +156,7 @@ class Messenger
             $hasil = curl_exec($ch);
             $this->updateLogHasilAPI($url, $hasil);
 
-        } else if ($this->provider == "rajasms") {
+        } elseif ($this->provider == "rajasms") {
 
             $param = "?nohp=" . $this->phonenumber . "&pesan=" . urlencode($this->message) . "&key="
                     . $this->apikey;
@@ -166,7 +166,7 @@ class Messenger
             $hasil = curl_exec($ch);
             $this->updateLogHasilAPI($url, $hasil);
 
-        } else if ($this->provider == "zenziva") {
+        } elseif ($this->provider == "zenziva") {
 
             $param = "?userkey=" . $this->user . "&passkey=" . $this->password . "&nohp="
                     . $this->phonenumber . "&pesan=" . urlencode($this->message);
@@ -182,4 +182,3 @@ class Messenger
 
     }
 }
-
