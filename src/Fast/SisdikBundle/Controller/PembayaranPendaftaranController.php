@@ -43,8 +43,7 @@ class PembayaranPendaftaranController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function indexAction($sid)
-    {
+    public function indexAction($sid) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -150,8 +149,7 @@ class PembayaranPendaftaranController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranPendaftaran:index.html.twig")
      */
-    public function createAction(Request $request, $sid)
-    {
+    public function createAction(Request $request, $sid) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -521,8 +519,7 @@ class PembayaranPendaftaranController extends Controller
      * Get payable registration fee amount
      *
      */
-    private function getPayableRegistrationFees($tahun, $gelombang)
-    {
+    private function getPayableRegistrationFees($tahun, $gelombang) {
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                 ->findBy(
@@ -546,8 +543,7 @@ class PembayaranPendaftaranController extends Controller
      * @Route("/{id}/show", name="payment_registrationfee_show")
      * @Template()
      */
-    public function showAction($sid, $id)
-    {
+    public function showAction($sid, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -606,8 +602,7 @@ class PembayaranPendaftaranController extends Controller
      * @Route("/{id}/edit", name="payment_registrationfee_edit")
      * @Template()
      */
-    public function editAction($sid, $id)
-    {
+    public function editAction($sid, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -675,8 +670,7 @@ class PembayaranPendaftaranController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:PembayaranPendaftaran:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id)
-    {
+    public function updateAction(Request $request, $sid, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -938,8 +932,7 @@ class PembayaranPendaftaranController extends Controller
      *
      * @Route("/{pid}/printreceipt/{id}", name="payment_registrationfee_printreceipt")
      */
-    public function printReceiptAction(Request $request, $sid, $pid, $id)
-    {
+    public function printReceiptAction(Request $request, $sid, $pid, $id) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -1745,14 +1738,12 @@ class PembayaranPendaftaranController extends Controller
         return $response;
     }
 
-    private function setCurrentMenu()
-    {
+    private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
         $menu['headings.payments']['links.applicant.payment']->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
-    {
+    private function isRegisteredToSchool() {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
