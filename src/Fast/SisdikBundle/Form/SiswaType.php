@@ -22,28 +22,25 @@ class SiswaType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :id')
-                    ->setParameter('id', $sekolah);
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
+                    ->where('t.id = :id')->setParameter('id', $sekolah);
             $builder
                     ->add('sekolah', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
+                                    'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder,
                             ));
 
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun',
+                                    'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'tahun',
                                     'empty_value' => false, 'required' => true,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
@@ -51,17 +48,16 @@ class SiswaType extends AbstractType
                                     ),
                             ));
 
-            $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
+            $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Gelombang', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('gelombang', 'entity',
                             array(
                                     'class' => 'FastSisdikBundle:Gelombang',
                                     'label' => 'label.admissiongroup.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder2,
+                                    'expanded' => false, 'property' => 'nama', 'empty_value' => false,
+                                    'required' => true, 'query_builder' => $querybuilder2,
                                     'attr' => array(
                                         'class' => 'medium'
                                     ),
@@ -88,7 +84,7 @@ class SiswaType extends AbstractType
                                 'required' => true,
                                 'choices' => array(
                                     'L' => 'Laki-laki', 'P' => 'Perempuan'
-                                ),
+                                ), 'expanded' => true, 'multiple' => false,
                                 'attr' => array(
                                     'class' => 'medium'
                                 ), 'label' => 'label.gender'
@@ -247,6 +243,13 @@ class SiswaType extends AbstractType
                                 'attr' => array(
                                     'class' => 'mini'
                                 ),
+                        ))
+                ->add('keterangan', 'textarea',
+                        array(
+                                'label' => 'label.keterangan',
+                                'attr' => array(
+                                    'class' => 'xlarge'
+                                ), 'required' => true,
                         ));
 
     }

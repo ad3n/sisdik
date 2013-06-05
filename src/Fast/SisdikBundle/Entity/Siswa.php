@@ -285,6 +285,13 @@ class Siswa
     private $lunasBiayaPendaftaran = 0;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="keterangan", type="text", nullable=true)
+     */
+    private $keterangan;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
@@ -1150,6 +1157,27 @@ class Siswa
      */
     public function getWaktuUbah() {
         return $this->waktuUbah;
+    }
+
+    /**
+     * Set keterangan
+     *
+     * @param string $keterangan
+     * @return Siswa
+     */
+    public function setKeterangan($keterangan) {
+        $this->keterangan = $keterangan;
+
+        return $this;
+    }
+
+    /**
+     * Get keterangan
+     *
+     * @return string
+     */
+    public function getKeterangan() {
+        return $this->keterangan;
     }
 
     /**

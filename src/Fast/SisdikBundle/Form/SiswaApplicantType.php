@@ -333,6 +333,13 @@ class SiswaApplicantType extends AbstractType
                                     'attr' => array(
                                         'class' => 'mini'
                                     ),
+                            ))
+                    ->add('keterangan', 'textarea',
+                            array(
+                                    'label' => 'label.keterangan',
+                                    'attr' => array(
+                                        'class' => 'xlarge'
+                                    ), 'required' => true,
                             ));
         }
     }
