@@ -43,6 +43,8 @@ class SettingsUserController extends Controller
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function indexAction() {
+        $this->setCurrentMenu(1);
+
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm(new SimpleUserSearchType($this->container));
@@ -371,6 +373,8 @@ class SettingsUserController extends Controller
      * @Secure(roles="ROLE_ADMIN")
      */
     public function inschoolListAction(Request $request) {
+        $this->setCurrentMenu(2);
+
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 

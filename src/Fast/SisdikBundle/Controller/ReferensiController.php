@@ -243,7 +243,6 @@ class ReferensiController extends Controller
      */
     public function deleteAction(Request $request, $id) {
         $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
         $form->bind($request);

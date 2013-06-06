@@ -219,7 +219,6 @@ class JenisbiayaController extends Controller
      */
     public function deleteAction($id) {
         $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();

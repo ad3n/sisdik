@@ -34,15 +34,16 @@ class BiayaRutinController extends Controller
      */
     public function indexAction() {
         $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaRutin', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
-                ->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC');
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
+                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
+                ->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
         $searchform->bind($this->getRequest());
@@ -292,8 +293,7 @@ class BiayaRutinController extends Controller
     }
 
     private function createDeleteForm($id) {
-        return $this
-                ->createFormBuilder(array(
+        return $this->createFormBuilder(array(
                     'id' => $id
                 ))->add('id', 'hidden')->getForm();
     }

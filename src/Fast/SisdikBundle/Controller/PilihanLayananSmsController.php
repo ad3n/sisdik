@@ -243,8 +243,6 @@ class PilihanLayananSmsController extends Controller
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id) {
-        $this->setCurrentMenu();
-
         $form = $this->createDeleteForm($id);
         $form->bind($request);
 

@@ -28,6 +28,8 @@ class StatusKehadiranKepulanganController extends Controller
      * @Template()
      */
     public function indexAction() {
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm(new StatusKehadiranKepulanganSearchType($this->container));

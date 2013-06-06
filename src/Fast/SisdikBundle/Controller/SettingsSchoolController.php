@@ -28,6 +28,7 @@ class SettingsSchoolController extends Controller
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function listAction(Request $request) {
+        $this->setCurrentMenu();
 
         $searchcondition = '';
 
@@ -60,8 +61,7 @@ class SettingsSchoolController extends Controller
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function addAction(Request $request) {
-        $menu = $this->get('fast_sisdik.menu.main');
-        $menu['headings.pengaturan.sisdik']['links.schools']->setCurrent(true);
+        $this->setCurrentMenu();
 
         $school = new Sekolah();
         $form = $this->createForm(new SekolahFormType(), $school);
@@ -99,8 +99,7 @@ class SettingsSchoolController extends Controller
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function editAction(Request $request, $id, $page) {
-        $menu = $this->get('fast_sisdik.menu.main');
-        $menu['headings.pengaturan.sisdik']['links.schools']->setCurrent(true);
+        $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('FastSisdikBundle:Sekolah');
@@ -177,5 +176,10 @@ class SettingsSchoolController extends Controller
                                         )));
 
         return $this->redirect($this->generateUrl('settings_school_list'));
+    }
+
+    private function setCurrentMenu() {
+        $menu = $this->get('fast_sisdik.menu.main');
+        $menu['headings.pengaturan.sisdik']['links.schools']->setCurrent(true);
     }
 }

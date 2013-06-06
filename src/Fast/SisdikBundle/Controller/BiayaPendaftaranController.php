@@ -34,6 +34,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function indexAction() {
         $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
