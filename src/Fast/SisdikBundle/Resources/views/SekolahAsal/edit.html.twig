@@ -1,28 +1,32 @@
-{% extends '::base.html.twig' %}
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>SekolahAsal edit</h1>
+{% block page_heading %}{% trans from "headings" %}sekolah.asal.ubah{% endtrans %}{% endblock %}
 
-    <form action="{{ path('sekolahasal_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-        <input type="hidden" name="_method" value="PUT" />
-        {{ form_widget(edit_form) }}
-        <p>
-            <button type="submit">Edit</button>
-        </p>
-    </form>
+{% block content %}
+<form action="{{ path('sekolahasal_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {{ form_widget(edit_form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    </div>
+</form>
 
-        <ul class="record_actions">
+<form id="delete-form" action="{{ path('sekolahasal_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
+    {{ form_widget(delete_form) }}
+    <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+</form>
+
+<ul class="pills">
     <li>
-        <a href="{{ path('sekolahasal') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('sekolahasal_delete', { 'id': entity.id }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">Delete</button>
-        </form>
+        <a href="{{ path('sekolahasal') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
-{% endblock %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	$("#delete-form").submit(function(){
+		var confirmtext = "{{ 'confirm.drop.sekolah.asal'|trans({ '%nama%': entity.nama, '%kode%': entity.kode }) }}";
+		confirmtext = confirmtext.replace(/&#039;/g, "'");
+		return confirmDropButton(confirmtext);
+	});
+});
+</script>
+{% endblock content %}

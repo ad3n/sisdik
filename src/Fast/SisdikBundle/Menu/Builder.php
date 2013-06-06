@@ -223,6 +223,12 @@ class Builder extends AbstractNavbarMenuBuilder
             }
 
             $pendaftaran
+                    ->addChild('links.sekolahasal',
+                            array(
+                                'route' => 'sekolahasal'
+                            ));
+
+            $pendaftaran
                     ->addChild('links.referensi',
                             array(
                                 'route' => 'referensi'

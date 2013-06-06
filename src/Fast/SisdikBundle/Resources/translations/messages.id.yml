@@ -5,6 +5,11 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    kode.sekolah: Kode Sekolah
+    tambah.sekolah.asal: Tambah Sekolah Asal
+    nama.sekolah: Nama Sekolah
+    nama.penghubung: Nama Penghubung
+    nomor.ponsel.penghubung: No Ponsel Penghubung
     sekolah.asal: Asal Sekolah
     logo.sekolah: Logo Sekolah
     kelengkapan.dokumen: Kelengkapan Dokumen
@@ -398,6 +403,11 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    sekolah.asal:
+        tersimpan: Sekolah Asal '%nama% (%kode%)' berhasil dibuat
+        terbarui: Sekolah Asal '%nama% (%kode%)' berhasil diperbarui
+        terhapus: Sekolah Asal '%nama% (%kode%)' berhasil dihapus
+        gagal.dihapus: Sekolah Asal '%nama% (%kode%)' gagal dihapus
     perujuk:
         tersimpan: Perujuk '%nama%' berhasil dibuat
         terbarui: Perujuk '%nama%' berhasil diperbarui
@@ -615,6 +625,7 @@ tip:
 "Current": Password aktif
 
 confirm.drop:
+    sekolah.asal: Hapus sekolah asal '%nama% (%kode%)'?
     referensi: Hapus perujuk '%nama%'?
     dokumen.siswa: Hapus dokumen '%nama%' siswa '%siswa%'?
     jenis.dokumen.siswa: Hapus jenis dokumen siswa '%nama%' tahun '%tahun%'?

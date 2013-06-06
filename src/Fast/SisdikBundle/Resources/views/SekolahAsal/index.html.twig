@@ -1,49 +1,62 @@
-{% extends '::base.html.twig' %}
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>SekolahAsal list</h1>
+{% block page_heading %}{% trans from "headings" %}sekolah.asal.daftar{% endtrans %}{% endblock %}
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nama</th>
-                <th>Kode</th>
-                <th>Alamat</th>
-                <th>Penghubung</th>
-                <th>Ponselpenghubung</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('sekolahasal_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.nama }}</td>
-                <td>{{ entity.kode }}</td>
-                <td>{{ entity.alamat }}</td>
-                <td>{{ entity.penghubung }}</td>
-                <td>{{ entity.ponselPenghubung }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('sekolahasal_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('sekolahasal_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
 
-        <ul>
-        <li>
-            <a href="{{ path('sekolahasal_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+<div class="filter-section">
+    <form method="GET" action="{{ path('sekolahasal') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('sekolahasal') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="add-link">
+{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
+	<a href="{{ path('sekolahasal_new') }}" class="add-link-a">
+	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+	    {{ 'label.tambah.sekolah.asal'|trans }}
+	</a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nama.sekolah'|trans, 't.nama') }}
+		    </th>
+    		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+    		    {{ knp_pagination_sortable(pagination, 'label.kode.sekolah'|trans, 't.kode') }}
+		    </th>
+    		<th class="{% if pagination.isSorted('t.penghubung') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nama.penghubung'|trans, 't.penghubung') }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.nama'|trans }}">{{ data.nama }}</td>
+    		<td data-title="{{ 'label.kode'|trans }}">{{ data.kode }}</td>
+    		<td data-title="{{ 'label.nama.penghubung'|trans }}">{{ data.penghubung }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        		<a href="{{ path('sekolahasal_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('sekolahasal_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}

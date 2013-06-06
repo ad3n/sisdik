@@ -1,6 +1,12 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+sekolah.asal:
+    daftar: Daftar Sekolah Asal
+    ubah: Mengubah Data Sekolah Asal
+    pembuatan: Menambah Sekolah Asal
+    rincian: Rincian Sekolah Asal
+
 referensi:
     daftar: Daftar Perujuk
     edit: Mengubah Data Perujuk

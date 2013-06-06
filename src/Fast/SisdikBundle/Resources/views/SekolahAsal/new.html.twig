@@ -1,20 +1,17 @@
-{% extends '::base.html.twig' %}
+{% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>SekolahAsal creation</h1>
+{% block page_heading %}{% trans from "headings" %}sekolah.asal.pembuatan{% endtrans %}{% endblock %}
 
-    <form action="{{ path('sekolahasal_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
-
-        <ul class="record_actions">
+{% block content %}
+<form action="{{ path('sekolahasal_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
     <li>
-        <a href="{{ path('sekolahasal') }}">
-            Back to the list
-        </a>
+        <a href="{{ path('sekolahasal') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
-{% endblock %}
+{% endblock content %}

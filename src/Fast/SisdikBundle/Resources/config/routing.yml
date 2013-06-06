@@ -241,6 +241,11 @@ referensi:
     type:     annotation
     prefix:   /
 
+sekolahasal:
+    resource: "@FastSisdikBundle/Controller/SekolahAsalController.php"
+    type:     annotation
+    prefix:   /
+
 tahkik:
     resource: "@FastSisdikBundle/Controller/SiswaTahkikController.php"
     type:     annotation
