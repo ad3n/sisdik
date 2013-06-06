@@ -1,0 +1,210 @@
+<?php
+
+namespace Fast\SisdikBundle\Controller;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Fast\SisdikBundle\Entity\SekolahAsal;
+use Fast\SisdikBundle\Form\SekolahAsalType;
+
+/**
+ * SekolahAsal controller.
+ *
+ * @Route("/sekolahasal")
+ */
+class SekolahAsalController extends Controller
+{
+
+    /**
+     * Lists all SekolahAsal entities.
+     *
+     * @Route("/", name="sekolahasal")
+     * @Method("GET")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('FastSisdikBundle:SekolahAsal')->findAll();
+
+        return array(
+            'entities' => $entities,
+        );
+    }
+    /**
+     * Creates a new SekolahAsal entity.
+     *
+     * @Route("/", name="sekolahasal_create")
+     * @Method("POST")
+     * @Template("FastSisdikBundle:SekolahAsal:new.html.twig")
+     */
+    public function createAction(Request $request)
+    {
+        $entity  = new SekolahAsal();
+        $form = $this->createForm(new SekolahAsalType(), $entity);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('sekolahasal_show', array('id' => $entity->getId())));
+        }
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to create a new SekolahAsal entity.
+     *
+     * @Route("/new", name="sekolahasal_new")
+     * @Method("GET")
+     * @Template()
+     */
+    public function newAction()
+    {
+        $entity = new SekolahAsal();
+        $form   = $this->createForm(new SekolahAsalType(), $entity);
+
+        return array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        );
+    }
+
+    /**
+     * Finds and displays a SekolahAsal entity.
+     *
+     * @Route("/{id}", name="sekolahasal_show")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find SekolahAsal entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to edit an existing SekolahAsal entity.
+     *
+     * @Route("/{id}/edit", name="sekolahasal_edit")
+     * @Method("GET")
+     * @Template()
+     */
+    public function editAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find SekolahAsal entity.');
+        }
+
+        $editForm = $this->createForm(new SekolahAsalType(), $entity);
+        $deleteForm = $this->createDeleteForm($id);
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Edits an existing SekolahAsal entity.
+     *
+     * @Route("/{id}", name="sekolahasal_update")
+     * @Method("PUT")
+     * @Template("FastSisdikBundle:SekolahAsal:edit.html.twig")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find SekolahAsal entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createForm(new SekolahAsalType(), $entity);
+        $editForm->submit($request);
+
+        if ($editForm->isValid()) {
+            $em->persist($entity);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('sekolahasal_edit', array('id' => $id)));
+        }
+
+        return array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        );
+    }
+
+    /**
+     * Deletes a SekolahAsal entity.
+     *
+     * @Route("/{id}", name="sekolahasal_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->submit($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Unable to find SekolahAsal entity.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('sekolahasal'));
+    }
+
+    /**
+     * Creates a form to delete a SekolahAsal entity by id.
+     *
+     * @param mixed $id The entity id
+     *
+     * @return Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder(array('id' => $id))
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
+    }
+}
