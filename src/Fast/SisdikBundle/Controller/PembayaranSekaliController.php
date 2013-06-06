@@ -110,7 +110,7 @@ class PembayaranSekaliController extends Controller
 
         $entity = new PembayaranSekali();
         $form = $this->createForm(new PembayaranSekaliType($this->container, $cid), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $entity->setSiswa($siswa);
@@ -197,7 +197,7 @@ class PembayaranSekaliController extends Controller
         }
 
         $editForm = $this->createForm(new PembayaranSekaliType($this->container, $cid), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 

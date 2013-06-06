@@ -78,7 +78,7 @@ class SiswaKelasController extends Controller
 
         $entity = new SiswaKelas();
         $form = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
 
@@ -185,7 +185,7 @@ class SiswaKelasController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -251,7 +251,7 @@ class SiswaKelasController extends Controller
         $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

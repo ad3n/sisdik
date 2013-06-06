@@ -48,7 +48,7 @@ class SiswaTahkikController extends Controller
                 ->setParameter('sekolah', $sekolah->getId())->addOrderBy('t3.urutan', 'DESC')
                 ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -138,7 +138,7 @@ class SiswaTahkikController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new SiswaApplicantType($this->container, 'edit'), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 

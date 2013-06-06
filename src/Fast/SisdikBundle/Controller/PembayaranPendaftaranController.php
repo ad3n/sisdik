@@ -229,7 +229,7 @@ class PembayaranPendaftaranController extends Controller
         $entity = new PembayaranPendaftaran();
         $form = $this
                 ->createForm(new PembayaranPendaftaranType($this->container, $sid, $biayaTerbayar), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         // periksa jika item pembayaran sudah digunakan sebelumnya
         $formdata = $form->getData();
@@ -680,7 +680,7 @@ class PembayaranPendaftaranController extends Controller
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
-        // total payment start here because of the unknown behavior during binding request
+        // total payment start here because of the unknown behavior during submiting request
         $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran();
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
@@ -723,7 +723,7 @@ class PembayaranPendaftaranController extends Controller
                 ->createForm(
                         new PembayaranPendaftaranCicilanType($this->container, $sid,
                                 $daftarBiayaPendaftaran[0]), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 

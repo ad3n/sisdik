@@ -103,7 +103,7 @@ class TingkatController extends Controller
 
         $entity = new Tingkat();
         $form = $this->createForm(new TingkatType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -180,7 +180,7 @@ class TingkatController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new TingkatType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -219,7 +219,7 @@ class TingkatController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

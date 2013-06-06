@@ -64,7 +64,7 @@ class PenyakitSiswaController extends Controller
 
         $entity = new PenyakitSiswa();
         $form = $this->createForm(new PenyakitSiswaType(), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -206,7 +206,7 @@ class PenyakitSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new PenyakitSiswaType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -251,7 +251,7 @@ class PenyakitSiswaController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

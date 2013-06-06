@@ -54,7 +54,7 @@ class KalenderPendidikanController extends Controller
         $searchform = $this->createForm(new KalenderPendidikanSearchType());
 
         $request = $this->getRequest();
-        $searchform->bind($request);
+        $searchform->submit($request);
 
         $data = $searchform->getData();
 
@@ -129,7 +129,7 @@ class KalenderPendidikanController extends Controller
         $calendar = $this->createCalendar($year, $month);
 
         $form = $this->createForm(new KalenderPendidikanType($calendar));
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

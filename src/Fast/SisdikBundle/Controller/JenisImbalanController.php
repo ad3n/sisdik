@@ -103,7 +103,7 @@ class JenisImbalanController extends Controller
 
         $entity = new JenisImbalan();
         $form = $this->createForm(new JenisImbalanType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -187,7 +187,7 @@ class JenisImbalanController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new JenisImbalanType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -232,7 +232,7 @@ class JenisImbalanController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

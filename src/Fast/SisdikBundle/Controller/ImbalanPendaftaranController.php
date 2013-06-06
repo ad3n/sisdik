@@ -45,7 +45,7 @@ class ImbalanPendaftaranController extends Controller
                 ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -119,7 +119,7 @@ class ImbalanPendaftaranController extends Controller
 
         $entity = new ImbalanPendaftaran();
         $form = $this->createForm(new ImbalanPendaftaranType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -198,7 +198,7 @@ class ImbalanPendaftaranController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new ImbalanPendaftaranType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -239,7 +239,7 @@ class ImbalanPendaftaranController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

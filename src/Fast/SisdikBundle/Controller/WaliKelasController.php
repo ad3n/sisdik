@@ -44,7 +44,7 @@ class WaliKelasController extends Controller
                 ->orderBy('t3.urutan', 'DESC')->addOrderBy('t2.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -122,7 +122,7 @@ class WaliKelasController extends Controller
 
         $entity = new WaliKelas();
         $form = $this->createForm(new WaliKelasType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -205,7 +205,7 @@ class WaliKelasController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new WaliKelasType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             try {
@@ -249,7 +249,7 @@ class WaliKelasController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

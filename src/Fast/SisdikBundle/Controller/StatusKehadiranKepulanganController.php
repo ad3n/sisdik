@@ -38,7 +38,7 @@ class StatusKehadiranKepulanganController extends Controller
                 ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->leftJoin('t.sekolah', 't2')
                 ->orderBy('t2.nama', 'ASC')->addOrderBy('t.nama', 'ASC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -114,7 +114,7 @@ class StatusKehadiranKepulanganController extends Controller
 
         $entity = new StatusKehadiranKepulangan();
         $form = $this->createForm(new StatusKehadiranKepulanganType(), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -196,7 +196,7 @@ class StatusKehadiranKepulanganController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new StatusKehadiranKepulanganType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             try {
@@ -239,7 +239,7 @@ class StatusKehadiranKepulanganController extends Controller
      */
     public function deleteAction(Request $request, $id) {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

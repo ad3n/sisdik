@@ -101,7 +101,7 @@ class JenisbiayaController extends Controller
         $entity = new Jenisbiaya();
         $request = $this->getRequest();
         $form = $this->createForm(new JenisbiayaType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -182,7 +182,7 @@ class JenisbiayaController extends Controller
 
         $request = $this->getRequest();
 
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -223,7 +223,7 @@ class JenisbiayaController extends Controller
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

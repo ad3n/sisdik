@@ -34,7 +34,7 @@ class SettingsSchoolController extends Controller
 
         $searchform = $this->createForm(new SimpleSearchFormType());
 
-        $searchform->bind($request);
+        $searchform->submit($request);
         $searchdata = $searchform->getData();
         if ($searchdata['searchkey'] != '') {
             $searchcondition = "( s.nama LIKE '%{$searchdata['searchkey']}%' OR s.kode LIKE '%{$searchdata['searchkey']}%' )";
@@ -67,7 +67,7 @@ class SettingsSchoolController extends Controller
         $form = $this->createForm(new SekolahFormType(), $school);
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->submit($request);
 
             if ($form->isValid()) {
                 $school = $form->getData();
@@ -108,7 +108,7 @@ class SettingsSchoolController extends Controller
         $form = $this->createForm(new SekolahFormType(), $school);
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->submit($request);
 
             if ($form->isValid()) {
                 $school = $form->getData();

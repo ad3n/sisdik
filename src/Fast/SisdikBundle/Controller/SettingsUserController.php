@@ -52,7 +52,7 @@ class SettingsUserController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('u')->from('FastSisdikBundle:User', 'u')
                 ->orderBy('u.username', 'ASC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -113,7 +113,7 @@ class SettingsUserController extends Controller
         $form = $this->createForm(new UserFormType($this->container, $formoption), $user);
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->submit($request);
 
             if ($form->isValid()) {
                 $roleselected = $form->getData()->getRoles();
@@ -199,7 +199,7 @@ class SettingsUserController extends Controller
         $form = $this->createForm(new UserRegisterFormType($this->container, 1), $user);
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->submit($request);
 
             $data = $form->getData();
             if (is_numeric($data->getUsername())) {
@@ -250,7 +250,7 @@ class SettingsUserController extends Controller
         $form = $this->createForm(new UserRegisterFormType($this->container, 2), $user);
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->submit($request);
 
             $data = $form->getData();
             if (is_numeric($data->getUsername())) {
@@ -386,7 +386,7 @@ class SettingsUserController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('u')->from('FastSisdikBundle:User', 'u')
                 ->where("u.sekolah != ''")->orderBy('u.username', 'ASC');
 
-        $searchform->bind($request);
+        $searchform->submit($request);
         $searchdata = $searchform->getData();
         if ($searchdata['searchkey'] != '') {
             $querybuilder->where('u.name LIKE ?1');
@@ -449,7 +449,7 @@ class SettingsUserController extends Controller
         $form = $this->createForm(new UserFormType($this->container, $formoption), $user);
 
         if ($request->getMethod() == 'POST') {
-            $form->bind($request);
+            $form->submit($request);
 
             if ($form->isValid()) {
                 $roleselected = $form->getData()->getRoles();

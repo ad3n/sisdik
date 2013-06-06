@@ -66,7 +66,7 @@ class ProfileController extends FOSProfileController
         $form->setData($user);
 
         if ('POST' === $request->getMethod()) {
-            $form->bind($request);
+            $form->submit($request);
 
             $data = $form->getData();
             if (!in_array('ROLE_SISWA', $data->getRoles(), true)) {

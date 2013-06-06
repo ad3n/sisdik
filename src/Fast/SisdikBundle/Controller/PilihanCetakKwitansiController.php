@@ -90,7 +90,7 @@ class PilihanCetakKwitansiController extends Controller
 
         $entity = new PilihanCetakKwitansi();
         $form = $this->createForm(new PilihanCetakKwitansiType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -159,7 +159,7 @@ class PilihanCetakKwitansiController extends Controller
         }
 
         $editForm = $this->createForm(new PilihanCetakKwitansiType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 

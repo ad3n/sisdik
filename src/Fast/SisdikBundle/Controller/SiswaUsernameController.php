@@ -53,7 +53,7 @@ class SiswaUsernameController extends Controller
 
         $request = $this->getRequest();
         if ($request->isMethod("POST")) {
-            $form->bind($request);
+            $form->submit($request);
             $data = $form->getData();
 
             if ($data['regenerate'] == TRUE) {
@@ -100,7 +100,7 @@ class SiswaUsernameController extends Controller
 
         $request = $this->getRequest();
         if ($request->isMethod("POST")) {
-            $form->bind($request);
+            $form->submit($request);
             if ($form->isValid()) {
 
                 $sessiondata = $form['sessiondata']->getData();

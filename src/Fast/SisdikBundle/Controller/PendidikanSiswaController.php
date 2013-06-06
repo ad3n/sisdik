@@ -90,7 +90,7 @@ class PendidikanSiswaController extends Controller
 
         $entity = new PendidikanSiswa();
         $form = $this->createForm(new PendidikanSiswaType(), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
@@ -209,7 +209,7 @@ class PendidikanSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new PendidikanSiswaType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -255,7 +255,7 @@ class PendidikanSiswaController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

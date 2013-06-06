@@ -40,7 +40,7 @@ class PilihanLayananSmsController extends Controller
                 ->from('FastSisdikBundle:PilihanLayananSms', 't')->leftJoin('t.sekolah', 't2')
                 ->orderBy('t2.nama', 'ASC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -94,7 +94,7 @@ class PilihanLayananSmsController extends Controller
 
         $entity = new PilihanLayananSms();
         $form = $this->createForm(new PilihanLayananSmsType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -202,7 +202,7 @@ class PilihanLayananSmsController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new PilihanLayananSmsType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             try {
@@ -244,7 +244,7 @@ class PilihanLayananSmsController extends Controller
      */
     public function deleteAction(Request $request, $id) {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

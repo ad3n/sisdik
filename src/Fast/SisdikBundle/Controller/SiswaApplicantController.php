@@ -75,7 +75,7 @@ class SiswaApplicantController extends Controller
                 ->setParameter(1, $daftarTahun)->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'DESC')
                 ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -129,7 +129,7 @@ class SiswaApplicantController extends Controller
 
         $entity = new Siswa();
         $form = $this->createForm(new SiswaApplicantType($this->container, 'new'), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -336,7 +336,7 @@ class SiswaApplicantController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new SiswaApplicantType($this->container, 'edit'), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -479,7 +479,7 @@ class SiswaApplicantController extends Controller
         }
 
         $editForm = $this->createForm(new SiswaApplicantType($this->container, 'editregphoto'), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -524,7 +524,7 @@ class SiswaApplicantController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

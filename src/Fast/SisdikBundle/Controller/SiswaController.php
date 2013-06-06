@@ -59,7 +59,7 @@ class SiswaController extends Controller
                 ->setParameter('sekolah', $sekolah->getId())->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t.namaLengkap', 'ASC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -145,7 +145,7 @@ class SiswaController extends Controller
         $entity = new Siswa();
         $request = $this->getRequest();
         $form = $this->createForm(new SiswaType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -234,7 +234,7 @@ class SiswaController extends Controller
 
         $request = $this->getRequest();
 
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             try {
@@ -308,7 +308,7 @@ class SiswaController extends Controller
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -355,7 +355,7 @@ class SiswaController extends Controller
         $form = $this->createForm(new SiswaImportType($this->container));
 
         if ('POST' == $this->getRequest()->getMethod()) {
-            $form->bind($this->getRequest());
+            $form->submit($this->getRequest());
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
@@ -452,7 +452,7 @@ class SiswaController extends Controller
         $form = $this->createForm(new SiswaKelasImportType($this->container));
 
         if ('POST' == $this->getRequest()->getMethod()) {
-            $form->bind($this->getRequest());
+            $form->submit($this->getRequest());
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
@@ -520,7 +520,7 @@ class SiswaController extends Controller
 
         $filename = "template_kelas_siswa_init.csv";
 
-        $form->bind($this->getRequest());
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
 
@@ -581,7 +581,7 @@ class SiswaController extends Controller
 
         $filename = "template_kelas_siswa_pertingkat.csv";
 
-        $form->bind($this->getRequest());
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -658,7 +658,7 @@ class SiswaController extends Controller
         $form = $this->createForm(new SiswaMergeType());
 
         if ('POST' == $this->getRequest()->getMethod()) {
-            $form->bind($this->getRequest());
+            $form->submit($this->getRequest());
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
@@ -713,7 +713,7 @@ class SiswaController extends Controller
 
         $form = $this->createForm(new SiswaExportType($this->container));
 
-        $form->bind($this->getRequest());
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

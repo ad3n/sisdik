@@ -102,7 +102,7 @@ class TahunController extends Controller
 
         $entity = new Tahun();
         $form = $this->createForm(new TahunType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -198,7 +198,7 @@ class TahunController extends Controller
         $editForm = $this->createForm(new TahunType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             try {
@@ -244,7 +244,7 @@ class TahunController extends Controller
 
         $form = $this->createDeleteForm($id);
 
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

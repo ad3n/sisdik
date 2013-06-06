@@ -64,7 +64,7 @@ class KehadiranSiswaController extends Controller
                 ->andWhere('t2.aktif = :aktif')->orderBy('t.kode')
                 ->setParameter('sekolah', $sekolah->getId())->setParameter('aktif', TRUE);
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         $buildparam = NULL;
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();

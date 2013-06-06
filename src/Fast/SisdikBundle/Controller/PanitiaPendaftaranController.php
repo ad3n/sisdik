@@ -47,7 +47,7 @@ class PanitiaPendaftaranController extends Controller
                 ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -168,7 +168,7 @@ class PanitiaPendaftaranController extends Controller
 
         $entity = new PanitiaPendaftaran();
         $form = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         // prevent or remove empty personil to be inserted to database.
         $formdata = $form->getData();
@@ -304,7 +304,7 @@ class PanitiaPendaftaranController extends Controller
         $entity->setPanitia(''); // prevent form generation read from database
 
         $editForm = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         // prevent or remove empty personil to be inserted to database.
         $formdata = $editForm->getData();
@@ -400,7 +400,7 @@ class PanitiaPendaftaranController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

@@ -57,7 +57,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
 
         $displayresult = false;
         if ($searchform->isValid()) {
@@ -205,7 +205,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         $entity = new JadwalKehadiranKepulangan();
         $form = $this
                 ->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah->getId()), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -281,7 +281,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -317,7 +317,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -368,7 +368,7 @@ class JadwalKehadiranKepulanganSingleController extends Controller
 
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $data = $form->getData();

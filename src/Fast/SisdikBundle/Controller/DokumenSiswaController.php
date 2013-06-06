@@ -180,7 +180,7 @@ class DokumenSiswaController extends Controller
                                     'widget_control_group' => false, 'label_render' => false,
                                 ), 'label_render' => false, 'widget_control_group' => false,
                         ));
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             foreach ($dokumenCollection as $dokumen) {
@@ -305,7 +305,7 @@ class DokumenSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new DokumenSiswaType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -350,7 +350,7 @@ class DokumenSiswaController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

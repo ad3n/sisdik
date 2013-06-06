@@ -115,7 +115,7 @@ class SekolahController extends Controller
         }
 
         $editForm = $this->createForm(new SekolahType(), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             if ($editForm['fileUpload']->getData() !== null) {

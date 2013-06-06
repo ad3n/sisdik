@@ -43,7 +43,7 @@ class JenisDokumenSiswaController extends Controller
                 ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->AddOrderBy('t.urutan', 'ASC')
                 ->AddOrderBy('t.namaDokumen', 'ASC')->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -74,7 +74,7 @@ class JenisDokumenSiswaController extends Controller
 
         $entity = new JenisDokumenSiswa();
         $form = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -197,7 +197,7 @@ class JenisDokumenSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -236,7 +236,7 @@ class JenisDokumenSiswaController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

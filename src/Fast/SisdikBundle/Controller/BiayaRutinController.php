@@ -46,7 +46,7 @@ class BiayaRutinController extends Controller
                 ->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -130,7 +130,7 @@ class BiayaRutinController extends Controller
         $entity = new BiayaRutin();
         $request = $this->getRequest();
         $form = $this->createForm(new BiayaRutinType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -213,7 +213,7 @@ class BiayaRutinController extends Controller
 
         $request = $this->getRequest();
 
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -256,7 +256,7 @@ class BiayaRutinController extends Controller
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

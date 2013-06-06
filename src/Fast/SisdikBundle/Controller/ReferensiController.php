@@ -46,7 +46,7 @@ class ReferensiController extends Controller
                 ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -98,7 +98,7 @@ class ReferensiController extends Controller
 
         $entity = new Referensi();
         $form = $this->createForm(new ReferensiType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -205,7 +205,7 @@ class ReferensiController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new ReferensiType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -245,7 +245,7 @@ class ReferensiController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

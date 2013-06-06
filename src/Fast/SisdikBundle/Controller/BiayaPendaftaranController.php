@@ -47,7 +47,7 @@ class BiayaPendaftaranController extends Controller
                 ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC')
                 ->addOrderBy('t4.nama', 'ASC');
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -133,7 +133,7 @@ class BiayaPendaftaranController extends Controller
 
         $entity = new BiayaPendaftaran();
         $form = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -220,7 +220,7 @@ class BiayaPendaftaranController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -263,7 +263,7 @@ class BiayaPendaftaranController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

@@ -42,7 +42,7 @@ class BiayaSekaliController extends Controller
                 ->orderBy('t2.tahun', 'DESC')->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
@@ -121,7 +121,7 @@ class BiayaSekaliController extends Controller
 
         $entity = new BiayaSekali();
         $form = $this->createForm(new BiayaSekaliType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -207,7 +207,7 @@ class BiayaSekaliController extends Controller
         $editForm = $this->createForm(new BiayaSekaliType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -248,7 +248,7 @@ class BiayaSekaliController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

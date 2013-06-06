@@ -79,7 +79,7 @@ class LayananSmsPendaftaranController extends Controller
 
         $entity = new LayananSmsPendaftaran();
         $form = $this->createForm(new LayananSmsPendaftaranType($this->container), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -185,7 +185,7 @@ class LayananSmsPendaftaranController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new LayananSmsPendaftaranType($this->container), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
 
@@ -225,7 +225,7 @@ class LayananSmsPendaftaranController extends Controller
         $this->isRegisteredToSchool();
 
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();

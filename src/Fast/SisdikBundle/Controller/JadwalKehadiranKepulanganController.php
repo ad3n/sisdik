@@ -78,7 +78,7 @@ class JadwalKehadiranKepulanganController extends Controller
                 ->addOrderBy('t3.nama', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah);
 
-        $searchform->bind($this->getRequest());
+        $searchform->submit($this->getRequest());
 
         $displayresult = false;
         if ($searchform->isValid()) {
@@ -227,7 +227,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
         $entity = new JadwalKehadiranKepulangan();
         $form = $this->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -300,7 +300,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm(new JadwalKehadiranKepulanganType($this->container, $sekolah), $entity);
-        $editForm->bind($request);
+        $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -334,7 +334,7 @@ class JadwalKehadiranKepulanganController extends Controller
      */
     public function deleteAction(Request $request, $sekolah, $id) {
         $form = $this->createDeleteForm($id);
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -383,7 +383,7 @@ class JadwalKehadiranKepulanganController extends Controller
 
         $querybuilder->setParameter('sekolah', $sekolah);
 
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
@@ -486,7 +486,7 @@ class JadwalKehadiranKepulanganController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $form = $this->createForm(new JadwalKehadiranKepulanganCommandType());
-        $form->bind($request);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $data = $form->getData();
