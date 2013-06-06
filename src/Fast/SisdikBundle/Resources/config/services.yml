@@ -17,23 +17,20 @@ services:
         arguments: ["@knp_menu.factory", "@service_container"]
 
     fast_sisdik.menu.main:
-        # the service definition requires setting the class
-        class: Knp\Menu\MenuItem
+        class: Knp\Menu\MenuItem # the service definition requires setting the class
         factory_service: fast_sisdik.menu_builder
         factory_method: createMainMenu
         arguments: ["@request"]
-        # needed as we have the request as a dependency here
-        scope: request
+        scope: request # needed as we have the request as a dependency here
         tags:
-            # The alias is what is used to retrieve the menu
-            - { name: knp_menu.menu, alias: mainmenu }
+            - { name: knp_menu.menu, alias: mainmenu } # The alias is what is used to retrieve the menu
 
-    fast.sisdik.menu.voter.request:
-        class: Fast\SisdikBundle\Menu\RouteVoter
-        arguments:
-            - "@service_container"
-        tags:
-            - { name: knp_menu.voter }
+#     fast.sisdik.menu.voter.request:
+#         class: Fast\SisdikBundle\Menu\RouteVoter
+#         arguments:
+#             - "@service_container"
+#         tags:
+#             - { name: knp_menu.voter }
 
     fast_sisdik.registration.form.type:
         class: Fast\SisdikBundle\Form\RegistrationFormType
