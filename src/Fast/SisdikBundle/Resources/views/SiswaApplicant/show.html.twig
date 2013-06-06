@@ -29,6 +29,17 @@
                     </a>
                 </dd>
             {% endif %}
+            {% if entity.sekolahAsal is not null %}
+                <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+                <dd>
+                    <a href="{{ path('sekolahasal_show', { 'id': entity.sekolahAsal.id }) }}" target="_blank">
+                        {{ entity.sekolahAsal.nama }}
+                        {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
+                        {% endimage %}
+                    </a>
+                </dd>
+            {% endif %}
                 <dt>{{ 'label.gender'|trans }}</dt>
                 <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
                 <dt>{{ 'label.photo'|trans }}</dt>

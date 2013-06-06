@@ -661,6 +661,8 @@ confirm.drop:
     ortuwali: Hapus Orang Tua/Wali %nama%, dari siswa %siswa%?
 
 alt:
+    sekolah.asal: sekolah asal
+    referensi: perujuk
     add: ikon tambah
     import: ikon impor
     logo: logo
