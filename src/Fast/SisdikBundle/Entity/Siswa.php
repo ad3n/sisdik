@@ -368,12 +368,27 @@ class Siswa
     /**
      * @var \Referensi
      *
-     * @ORM\OneToOne(targetEntity="Referensi", inversedBy="siswa", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Referensi", inversedBy="siswa", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      * })
      */
     private $referensi;
+
+    /**
+     * @var string
+     */
+    private $namaSekolahAsal;
+
+    /**
+     * @var \SekolahAsal
+     *
+     * @ORM\ManyToOne(targetEntity="SekolahAsal", inversedBy="siswa", cascade={"persist"})
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_asal_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     * })
+     */
+    private $sekolahAsal;
 
     /**
      * @var \OrangtuaWali
@@ -1346,6 +1361,48 @@ class Siswa
      */
     public function getReferensi() {
         return $this->referensi;
+    }
+
+    /**
+     * Set namaSekolahAsal
+     *
+     * @param string $namaSekolahAsal
+     * @return Siswa
+     */
+    public function setNamaSekolahAsal($namaSekolahAsal) {
+        $this->namaSekolahAsal = $namaSekolahAsal;
+
+        return $this;
+    }
+
+    /**
+     * Get namaSekolahAsal
+     *
+     * @return string
+     */
+    public function getNamaSekolahAsal() {
+        return $this->namaSekolahAsal;
+    }
+
+    /**
+     * Set sekolahAsal
+     *
+     * @param \Fast\SisdikBundle\Entity\SekolahAsal $sekolahAsal
+     * @return Siswa
+     */
+    public function setSekolahAsal(\Fast\SisdikBundle\Entity\SekolahAsal $sekolahAsal = null) {
+        $this->sekolahAsal = $sekolahAsal;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolahAsal
+     *
+     * @return \Fast\SisdikBundle\Entity\SekolahAsal
+     */
+    public function getSekolahAsal() {
+        return $this->sekolahAsal;
     }
 
     /**
