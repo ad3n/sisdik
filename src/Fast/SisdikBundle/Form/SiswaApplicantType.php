@@ -355,7 +355,7 @@ class SiswaApplicantType extends AbstractType
                                     'label' => 'label.keterangan',
                                     'attr' => array(
                                         'class' => 'xlarge'
-                                    ), 'required' => true,
+                                    ), 'required' => false,
                             ));
         }
     }
