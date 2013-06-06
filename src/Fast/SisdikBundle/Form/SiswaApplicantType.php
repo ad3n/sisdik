@@ -158,16 +158,32 @@ class SiswaApplicantType extends AbstractType
                                     'class' => 'FastSisdikBundle:Referensi', 'label_render' => false,
                                     'required' => false,
                                     'attr' => array(
-                                        'class' => 'large id-referensi'
+                                        'class' => 'id-referensi'
                                     ),
                             ))
                     ->add('namaReferensi', 'text',
                             array(
                                     'required' => false,
                                     'attr' => array(
-                                            'class' => 'large nama-referensi',
+                                            'class' => 'xlarge nama-referensi',
                                             'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
                                     ), 'label' => 'label.perujuk'
+                            ))
+                    ->add('sekolahAsal', new EntityHiddenType($em),
+                            array(
+                                    'class' => 'FastSisdikBundle:SekolahAsal', 'label_render' => false,
+                                    'required' => false,
+                                    'attr' => array(
+                                        'class' => 'id-sekolah-asal'
+                                    ),
+                            ))
+                    ->add('namaSekolahAsal', 'text',
+                            array(
+                                    'required' => false,
+                                    'attr' => array(
+                                            'class' => 'xlarge nama-sekolah-asal',
+                                            'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
+                                    ), 'label' => 'label.sekolah.asal'
                             ))
                     ->add('jenisKelamin', 'choice',
                             array(
