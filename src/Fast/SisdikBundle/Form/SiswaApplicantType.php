@@ -195,18 +195,32 @@ class SiswaApplicantType extends AbstractType
                                         'class' => 'medium'
                                     ), 'label' => 'label.gender'
                             ))
-                    ->add('file', 'file',
-                            array(
-                                    'required' => false, 'label' => 'label.photo',
-                                    'attr' => array(
-                                        'class' => 'small'
-                                    ),
-                            ))
                     ->add('agama', null,
                             array(
                                     'required' => true, 'label' => 'label.religion',
                                     'attr' => array(
                                         'class' => 'medium'
+                                    ),
+                            ))
+                    ->add('alamat', 'textarea',
+                            array(
+                                    'label' => 'label.address',
+                                    'attr' => array(
+                                        'class' => 'xlarge'
+                                    ), 'required' => true,
+                            ))
+                    ->add('keterangan', 'textarea',
+                            array(
+                                    'label' => 'label.keterangan',
+                                    'attr' => array(
+                                        'class' => 'xlarge'
+                                    ), 'required' => false,
+                            ))
+                    ->add('file', 'file',
+                            array(
+                                    'required' => false, 'label' => 'label.photo',
+                                    'attr' => array(
+                                        'class' => 'small'
                                     ),
                             ))
                     ->add('tempatLahir', null,
@@ -280,13 +294,6 @@ class SiswaApplicantType extends AbstractType
                                         'class' => 'large'
                                     )
                             ))
-                    ->add('alamat', 'textarea',
-                            array(
-                                    'label' => 'label.address',
-                                    'attr' => array(
-                                        'class' => 'xlarge'
-                                    ), 'required' => true,
-                            ))
                     ->add('kodepos', null,
                             array(
                                     'label' => 'label.postalcode',
@@ -349,13 +356,6 @@ class SiswaApplicantType extends AbstractType
                                     'attr' => array(
                                         'class' => 'mini'
                                     ),
-                            ))
-                    ->add('keterangan', 'textarea',
-                            array(
-                                    'label' => 'label.keterangan',
-                                    'attr' => array(
-                                        'class' => 'xlarge'
-                                    ), 'required' => false,
                             ));
         }
     }
