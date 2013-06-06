@@ -287,6 +287,50 @@ class SekolahAsalController extends Controller
     }
 
     /**
+     * Mengambil sekolah asal menggunakan kotak autocomplete
+     *
+     * @param Request $request
+     * @Route("/ajax/ambilsekolah", name="sekolahasal_ajax_ambilnama")
+     */
+    public function ajaxGetSekolahAsal(Request $request) {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $filter = $this->getRequest()->query->get('filter');
+        $id = $this->getRequest()->query->get('id');
+
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SekolahAsal', 't')
+                ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
+                ->setParameter('sekolah', $sekolah->getId());
+
+        if ($id != '') {
+            $querybuilder->andWhere('t.id = :id');
+            $querybuilder->setParameter('id', $id);
+        } else {
+            $querybuilder->andWhere('t.nama LIKE ?1 OR t.kode LIKE ?2');
+            $querybuilder->setParameter(1, "%$filter%");
+            $querybuilder->setParameter(2, "%$filter%");
+        }
+
+        $results = $querybuilder->getQuery()->getResult();
+
+        $retval = array();
+        foreach ($results as $result) {
+            if ($result instanceof SekolahAsal) {
+                $retval[] = array(
+                    'id' => $result->getId(), 'label' => $result->getNama(), 'value' => $result->getNama(),
+                );
+            }
+        }
+
+        return new Response(json_encode($retval), 200,
+                array(
+                    'Content-Type' => 'application/json'
+                ));
+    }
+
+    /**
      * Creates a form to delete a SekolahAsal entity by id.
      *
      * @param mixed $id The entity id

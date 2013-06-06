@@ -88,7 +88,7 @@ $(document).ready(function() {
     	delay: 1000,
     	source: function(request, response) {
     		$.ajax({
-    			url: "{{ path("referensi_ajax_ambilnama") }}",
+    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
     			data: {filter: request.term},
     			success: function(data) {
         			response( $.map(data, function(item) {
@@ -130,7 +130,7 @@ $(document).ready(function() {
 
 	if ($(".id-sekolah-asal").val() != "") {
 		$.ajax({
-			url: "{{ path("referensi_ajax_ambilnama") }}",
+			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
 			data: {id: $(".id-sekolah-asal").val()},
 			success: function(data) {
 				$(".nama-sekolah-asal").val(data[0].value);
