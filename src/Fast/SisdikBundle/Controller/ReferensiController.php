@@ -3,7 +3,6 @@
 namespace Fast\SisdikBundle\Controller;
 use Fast\SisdikBundle\Form\SimpleSearchFormType;
 use Symfony\Component\HttpFoundation\Response;
-use Fast\SisdikBundle\Util\RuteAsal;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
