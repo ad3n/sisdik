@@ -64,7 +64,7 @@ class Referensi
     /**
      * @var \Siswa
      *
-     * @ORM\OneToOne(targetEntity="Siswa", mappedBy="referensi")
+     * @ORM\OneToMany(targetEntity="Siswa", mappedBy="referensi")
      */
     private $siswa;
 
