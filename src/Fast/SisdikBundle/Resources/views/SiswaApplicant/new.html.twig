@@ -41,12 +41,6 @@
 </style>
 <form action="{{ path('applicant_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     <div class="control-group">
-        {{ form_label(form.sekolah) }}
-        <div class="controls">
-            {{ form_widget(form.sekolah) }}
-        </div>
-    </div>
-    <div class="control-group">
         {{ form_label(form.tahun) }}
         <div class="controls">
             {{ form_widget(form.tahun) }}

@@ -29,8 +29,8 @@
                     </a>
                 </dd>
             {% endif %}
-            {% if entity.sekolahAsal is not null %}
                 <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+            {% if entity.sekolahAsal is not null %}
                 <dd>
                     <a href="{{ path('sekolahasal_show', { 'id': entity.sekolahAsal.id }) }}" target="_blank">
                         {{ entity.sekolahAsal.nama }}
@@ -39,13 +39,19 @@
                         {% endimage %}
                     </a>
                 </dd>
+            {% else %}
+                <dd>&nbsp;</dd>
             {% endif %}
                 <dt>{{ 'label.gender'|trans }}</dt>
                 <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
-                <dt>{{ 'label.photo'|trans }}</dt>
-                <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
                 <dt>{{ 'label.religion'|trans }}</dt>
                 <dd>{{ entity.agama|title }}</dd>
+                <dt>{{ 'label.address'|trans }}</dt>
+                <dd>{{ entity.alamat }}</dd>
+                <dt>{{ 'label.keterangan'|trans }}</dt>
+                <dd>{{ entity.keterangan }}</dd>
+                <dt>{{ 'label.photo'|trans }}</dt>
+                <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
                 <dt>{{ 'label.birthplace'|trans }}</dt>
                 <dd>{{ entity.tempatLahir }}</dd>
                 <dt>{{ 'label.birthday'|trans }}</dt>
@@ -78,8 +84,6 @@
                 <dd>{{ entity.statusOrphan }}</dd>
                 <dt>{{ 'label.dailylanguage'|trans }}</dt>
                 <dd>{{ entity.bahasaSeharihari }}</dd>
-                <dt>{{ 'label.address'|trans }}</dt>
-                <dd>{{ entity.alamat }}</dd>
                 <dt>{{ 'label.postalcode'|trans }}</dt>
                 <dd>{{ entity.kodepos }}</dd>
                 <dt>{{ 'label.phone'|trans }}</dt>

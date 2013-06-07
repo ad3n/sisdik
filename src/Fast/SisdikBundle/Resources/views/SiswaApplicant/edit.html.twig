@@ -23,19 +23,79 @@
 * html .ui-autocomplete {
     height: 7.4em;
 }
-.nama-referensi, .nama-sekolah-asal {
-{% image '@FastSisdikBundle/Resources/public/images/keyboard.png' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
-{% endimage %}
-}
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
 	background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
+#form-rest {
+    display: none;
+}
+#anchor {
+    outline: none;
+    text-decoration: none;
+}
+.arrow-down-form-rest {
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #555;
+	display: inline-block;
+	margin-left: 0.3em;
+	vertical-align: middle;
+}
+.anchor-form-rest {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-form-rest-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-form-rest, .anchor-form-rest-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-form-rest:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-form-rest-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-form-rest-sel:hover {
+    color: #222;
+}
 </style>
 <form action="{{ path('applicant_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-    {{ form_widget(edit_form) }}
+    {{ form_row(edit_form.tahun) }}
+    {{ form_row(edit_form.gelombang) }}
+    {{ form_row(edit_form.namaLengkap) }}
+    {{ form_row(edit_form.namaReferensi) }}
+    {{ form_row(edit_form.namaSekolahAsal) }}
+    {{ form_row(edit_form.jenisKelamin) }}
+    {{ form_row(edit_form.agama) }}
+    {{ form_row(edit_form.alamat) }}
+    {{ form_row(edit_form.keterangan) }}
+
+    <div class="control-group">
+        <div class="controls">
+            <a href="" id="anchor" class="anchor-form-rest" onclick="return false;">{{ 'label.form.lengkap'|trans }} <span class="arrow-down-form-rest"></span></a>
+        </div>
+    </div>
+
+    <div id="form-rest">
+        {{ form_rest(edit_form) }}
+    </div>
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
     </div>
@@ -55,6 +115,8 @@
     </li>
 </ul>
 <script language="javascript" type="text/javascript">
+var duration = 800;
+
 $(document).ready(function() {
 	var options1 = {
     	minLength: 2,
@@ -74,10 +136,10 @@ $(document).ready(function() {
 				}
 			});
 		},
-		open: function(event, ui) {
+		open: function(event, ui) {},
+		search: function(event, ui) {
 			$(".id-referensi").val("");
 		},
-		search: function(event, ui) {},
     	select: function(event, ui) {
       		$(".id-referensi").val(ui.item.id);
     	}
@@ -101,10 +163,10 @@ $(document).ready(function() {
 				}
 			});
 		},
-		open: function(event, ui) {
+		open: function(event, ui) {},
+		search: function(event, ui) {
 			$(".id-sekolah-asal").val("");
 		},
-		search: function(event, ui) {},
     	select: function(event, ui) {
       		$(".id-sekolah-asal").val(ui.item.id);
     	}
@@ -143,6 +205,22 @@ $(document).ready(function() {
     	// changeMonth: true,
         changeYear: true,
         maxDate: "-8Y"
+    });
+
+	$(".anchor-form-rest").click(function(){
+		if ($("#form-rest").is(":visible")) {
+			$("#form-rest").hide(duration);
+			$(this).removeClass("anchor-form-rest-sel");
+			$(this).addClass("anchor-form-rest");
+		} else {
+			$("#form-rest").show(duration);
+			$(this).addClass("anchor-form-rest-sel");
+			$(this).removeClass("anchor-form-rest");
+		}
+	});
+
+    $("#form-rest-anchor").click(function(){
+    	$("#form-rest").slideToggle(duration);
     });
 
 	$("#delete-form").submit(function(){

@@ -1,15 +1,12 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SiswaApplicantType extends AbstractType
@@ -29,15 +26,11 @@ class SiswaApplicantType extends AbstractType
 
         if ($this->mode != 'editregphoto') {
             if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-                $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
-                        ->where('t.id = :id')->setParameter('id', $sekolah->getId());
                 $builder
-                        ->add('sekolah', 'entity',
+                        ->add('sekolah', new EntityHiddenType($em),
                                 array(
-                                        'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
-                                        'multiple' => false, 'expanded' => false, 'property' => 'nama',
-                                        'empty_value' => false, 'required' => true,
-                                        'query_builder' => $querybuilder,
+                                        'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                        'data' => $sekolah->getId(),
                                 ));
 
                 $qb = $em->createQueryBuilder()->select('t')
@@ -132,11 +125,11 @@ class SiswaApplicantType extends AbstractType
                             array(
                                     'required' => false,
                                     'attr' => array(
-                                            'class' => 'large nama-referensi',
+                                            'class' => 'xlarge nama-referensi ketik-pilih-tambah',
                                             'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
                                     ), 'label' => 'label.perujuk'
                             ));
-        } else if ($this->mode == 'editregphoto') {
+        } elseif ($this->mode == 'editregphoto') {
             $builder
                     ->add('fotoPendaftaran', 'hidden',
                             array(
@@ -165,7 +158,7 @@ class SiswaApplicantType extends AbstractType
                             array(
                                     'required' => false,
                                     'attr' => array(
-                                            'class' => 'xlarge nama-referensi',
+                                            'class' => 'xlarge nama-referensi ketik-pilih-tambah',
                                             'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
                                     ), 'label' => 'label.perujuk'
                             ))
@@ -181,7 +174,7 @@ class SiswaApplicantType extends AbstractType
                             array(
                                     'required' => false,
                                     'attr' => array(
-                                            'class' => 'xlarge nama-sekolah-asal',
+                                            'class' => 'xlarge nama-sekolah-asal ketik-pilih-tambah',
                                             'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
                                     ), 'label' => 'label.sekolah.asal'
                             ))
