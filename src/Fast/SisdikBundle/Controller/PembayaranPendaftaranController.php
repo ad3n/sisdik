@@ -981,7 +981,21 @@ class PembayaranPendaftaranController extends Controller
             if ($transaksiPembayaran[0]->getNominalPembayaran()
                     == $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
                     && count($transaksiPembayaran) == 1) {
-                $adaCicilan = false;
+
+                $hargaItem = 0;
+                foreach ($daftarBiayaPendaftaran as $biaya) {
+                    $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
+                    if ($biayaPendaftaran instanceof BiayaPendaftaran) {
+                        $hargaItem = $biayaPendaftaran->getNominal();
+                    }
+                }
+
+                if ($hargaItem > $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()) {
+                    $adaCicilan = true;
+                } else {
+                    $adaCicilan = false;
+                }
+
             } else {
                 $adaCicilan = true;
             }
