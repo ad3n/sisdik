@@ -946,6 +946,7 @@ class PembayaranPendaftaranController extends Controller
         if (!(is_object($pembayaran) && $pembayaran instanceof PembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
+        $daftarBiayaPendaftaran = $pembayaran->getDaftarBiayaPendaftaran();
 
         $transaksi = $em->getRepository('FastSisdikBundle:TransaksiPembayaranPendaftaran')->find($id);
         if (!$transaksi && !($transaksi instanceof TransaksiPembayaranPendaftaran)) {
@@ -974,15 +975,22 @@ class PembayaranPendaftaranController extends Controller
             }
         }
         $nomorCicilan = count($transaksiPembayaran) <= 1 ? 1 : $nomorCicilan;
-        $adaCicilan = count($transaksiPembayaran) > 1 ? true
-                : ($transaksiPembayaran[0]->getNominalPembayaran()
-                        == $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() ? true : false);
+        if (count($daftarBiayaPendaftaran) > 1) {
+            $adaCicilan = false;
+        } else {
+            if ($transaksiPembayaran[0]->getNominalPembayaran()
+                    == $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
+                    && count($transaksiPembayaran) == 1) {
+                $adaCicilan = false;
+            } else {
+                $adaCicilan = true;
+            }
+        }
         $totalPembayaranHinggaTransaksiTerpilih = $pembayaran
                 ->getTotalNominalTransaksiPembayaranPendaftaranHinggaTransaksiTerpilih($nomorTransaksi);
 
         $tahun = $transaksi->getWaktuSimpan()->format('Y');
         $bulan = $transaksi->getWaktuSimpan()->format('m');
-        $daftarBiayaPendaftaran = $pembayaran->getDaftarBiayaPendaftaran();
 
         $translator = $this->get('translator');
         $formatter = new \NumberFormatter($this->container->getParameter('locale'),
