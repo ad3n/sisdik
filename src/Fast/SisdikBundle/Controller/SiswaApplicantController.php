@@ -1,12 +1,11 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Fast\SisdikBundle\Entity\SekolahAsal;
 use Fast\SisdikBundle\Entity\Referensi;
 use Fast\SisdikBundle\Util\Messenger;
 use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
 use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
@@ -349,6 +348,14 @@ class SiswaApplicantController extends Controller
                     $entity->setReferensi($referensi);
                 }
 
+                if ($editForm['sekolahAsal']->getData() === null
+                        && $editForm['namaSekolahAsal']->getData() != "") {
+                    $sekolahAsal = new SekolahAsal();
+                    $sekolahAsal->setNama($editForm['namaSekolahAsal']->getData());
+                    $sekolahAsal->setSekolah($sekolah);
+                    $entity->setSekolahAsal($sekolahAsal);
+                }
+
                 // force unit of work detect entity 'changes'
                 // possible problem source: too many objects handled by doctrine
                 $entity->setWaktuUbah(new \DateTime());
@@ -607,7 +614,7 @@ class SiswaApplicantController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
