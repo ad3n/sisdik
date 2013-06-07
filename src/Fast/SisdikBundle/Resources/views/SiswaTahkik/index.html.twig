@@ -15,6 +15,9 @@
 #persen-bayar {
     padding-left: 7px;
 }
+form .clearfix {
+    margin-bottom: 9px;
+}
 .arrow-down-lanjut {
 	width: 0;
 	height: 0;
@@ -34,9 +37,11 @@
 }
 .anchor-cari-lanjutan {
     color: #555;
+    white-space: nowrap;
 }
 .anchor-cari-lanjutan-sel {
     color: #999;
+    white-space: nowrap;
 }
 .anchor-cari-lanjutan, .anchor-cari-lanjutan-sel {
     padding: 4px 8px;
@@ -92,6 +97,7 @@
             {{ form_row(searchform.searchkey) }}
             <a href="" id="anchor" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
         </div>
+        <div class="clearfix"></div>
         <div id="cari-lanjutan">
             <div class="control-group">
                 {% spaceless %}
