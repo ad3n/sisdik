@@ -126,6 +126,7 @@ class PembayaranPendaftaranController extends Controller
             );
         } else {
             $entity = new PembayaranPendaftaran();
+            $entity->setJenisPotongan("nominal");
             $transaksiPembayaranPendaftaran = new TransaksiPembayaranPendaftaran();
             $entity->getTransaksiPembayaranPendaftaran()->add($transaksiPembayaranPendaftaran);
 
@@ -244,6 +245,10 @@ class PembayaranPendaftaranController extends Controller
             foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
                 $transaksi->setDibuatOleh($this->getUser());
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
+            }
+
+            if ($entity->getAdaPotongan() === false) {
+                $entity->setJenisPotongan(null);
             }
 
             if ($entity->getAdaPotongan() && $entity->getPersenPotongan() != 0) {

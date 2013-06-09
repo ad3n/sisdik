@@ -69,7 +69,7 @@ class PembayaranPendaftaranType extends AbstractType
                         ))
                 ->add('jenisPotongan', 'choice',
                         array(
-                                'label' => 'label.discount', 'required' => false,
+                                'label' => 'label.discount', 'required' => true,
                                 'choices' => $this->buildJenisPotongan(), 'expanded' => true,
                                 'multiple' => false, 'label_render' => false,
                                 'attr' => array(
