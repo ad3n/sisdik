@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}payment.registrationfee.mortgage{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}payment.registrationfee.mortgage{% endtrans %}<br>{{ siswa.namaLengkap }}{% endblock %}
 {% block content %}
 <style type="text/css">
 .controls {
@@ -12,80 +12,107 @@
 .error-info .help-inline {
     color: #B94A48;
 }
+.keterangan-pembayaran:after {
+    content: "{{ 'label.keterangan'|trans }}";
+}
 </style>
 
 <div class="row-fluid">
     <div class="span12">
-        <dl>
-            <dt>{{ 'label.year.entry'|trans }}</dt>
-            <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
-            <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
-            <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
-            <dt>{{ 'label.name.full'|trans }}</dt>
-            <dd>{{ siswa.namaLengkap }}</dd>
-            <dt>{{ 'label.application.number'|trans }}</dt>
-            <dd>{{ siswa.nomorPendaftaran }}</dd>
-            <dt>{{ 'label.gender'|trans }}</dt>
-            <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
-    		{% if siswa.orangtuaWali %}
-    		    {% for orangtua in siswa.orangtuaWali %}
-    		        {% if orangtua %}
-    		            {% if orangtua.aktif == 1 %}
-            	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-            	            <dd>{{ orangtua.nama }}</dd>
-            	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-            	            <dd>{{ orangtua.ponsel }}</dd>
-        		        {% endif %}
-    		        {% endif %}
-    		    {% endfor %}
-    		{% endif %}
-        	</dd>
-        </dl>
-
-        <div class="clearfix" style="margin-bottom: 2em;"></div>
-
-        <h4>{{ 'payment.registrationfee.entry'|trans({}, 'headings') }}</h4>
-        <form id="pay-form" action="{{ path('payment_registrationfee_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-            {{ form_widget(edit_form.daftarBiayaPendaftaran) }}
-            <div id="payment-info" style="margin-bottom: 18px; margin-top: 0.5em;">
-            {% if adaPotongan == 1 %}
-                {% if jenisPotongan == 'nominal' %}
-                    {{ 'label.discount.amount'|trans }} {{ currencySymbol(locale) }}. {{ nominalPotongan|number_format(0, ',', '.') }}<br />
-                {% elseif jenisPotongan == 'persentase' %}
-                    {{ 'label.discount.percentage'|trans }} {{ persenPotongan }}% ({{ nominalPotongan|number_format(0, ',', '.') }})<br />
-                {% endif %}
+        <div class="span8">
+            <dl>
+                <dt>{{ 'label.year.entry'|trans }}</dt>
+                <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+                <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+                <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+                <dt>{{ 'label.application.number'|trans }}</dt>
+                <dd>{{ siswa.nomorPendaftaran }}</dd>
+                <dt>{{ 'label.name.full'|trans }}</dt>
+                <dd>{{ siswa.namaLengkap }}</dd>
+                <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+            {% if siswa.sekolahAsal is not null %}
+                <dd>
+                    <a href="{{ path('sekolahasal_show', { 'id': siswa.sekolahAsal.id }) }}" target="_blank">
+                        {{ siswa.sekolahAsal.nama }}
+                        {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
+                        {% endimage %}
+                    </a>
+                </dd>
+            {% else %}
+                <dd>&nbsp;</dd>
             {% endif %}
-                {{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (nominalBiaya - nominalPotongan)|number_format(0, ',', '.') }}</span></b><br />
-                {{ 'shortinfo.total.paid'|trans }} <b>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</b><br />
-                {{ 'label.payment.remains.total'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya)|number_format(0, ',', '.') }}</span></b>
-            </div>
-            {% for transaksi in edit_form.transaksiPembayaranPendaftaran %}
-                {% if loop.length > 1 %}
-                    {% if not loop.last %}
-                        <div class="control-group">
-                            {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
-                            {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
-                            <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
-                        </div>
-                        <div class="control-group">
-                            {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
-                            {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
-                            <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
-                        </div>
-                    {% else %}
-                        <div class="control-group">
-                            {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
-                            {{ form_widget(transaksi.nominalPembayaran) }}
-                            <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
-                        </div>
-                        <div class="control-group">
-                            {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
-                            {{ form_widget(transaksi.keterangan) }}
-                            <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
-                        </div>
-                    {% endif %}
-                {% else %}
-                    {{ form_row(transaksi) }}
+                <dt>{{ 'label.gender'|trans }}</dt>
+                <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
+                <dt>{{ 'label.religion'|trans }}</dt>
+                <dd>{{ siswa.agama|title }}</dd>
+                <dt>{{ 'label.address'|trans }}</dt>
+                <dd>{{ siswa.alamat }}</dd>
+        		{% if siswa.orangtuaWali %}
+        		    {% for orangtua in siswa.orangtuaWali %}
+        		        {% if orangtua %}
+        		            {% if orangtua.aktif == 1 %}
+                	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                	            <dd>{{ orangtua.nama }}</dd>
+                	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                	            <dd>{{ orangtua.ponsel }}</dd>
+            		        {% endif %}
+        		        {% endif %}
+        		    {% endfor %}
+        		{% endif %}
+            	</dd>
+            </dl>
+        </div>
+        <div class="span4">
+            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran">{{ siswa.keterangan }}</div>{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<h4>{{ 'payment.registrationfee.entry'|trans({}, 'headings') }}</h4>
+<form id="pay-form" action="{{ path('payment_registrationfee_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    {{ form_widget(edit_form.daftarBiayaPendaftaran) }}
+    <div id="payment-info" style="margin-bottom: 18px; margin-top: 0.5em;">
+    {% if adaPotongan == 1 %}
+        {% if jenisPotongan == 'nominal' %}
+            {{ 'label.discount.amount'|trans }} {{ currencySymbol(locale) }}. {{ nominalPotongan|number_format(0, ',', '.') }}<br />
+        {% elseif jenisPotongan == 'persentase' %}
+            {{ 'label.discount.percentage'|trans }} {{ persenPotongan }}% ({{ nominalPotongan|number_format(0, ',', '.') }})<br />
+        {% endif %}
+    {% endif %}
+        {{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (nominalBiaya - nominalPotongan)|number_format(0, ',', '.') }}</span></b><br />
+        {{ 'shortinfo.total.paid'|trans }} <b>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</b><br />
+        {{ 'label.payment.remains.total'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya)|number_format(0, ',', '.') }}</span></b>
+    </div>
+    {% for transaksi in edit_form.transaksiPembayaranPendaftaran %}
+        {% if loop.length > 1 %}
+            {% if not loop.last %}
+                <div class="control-group">
+                    {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                    {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
+                    <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                </div>
+                <div class="control-group">
+                    {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                    {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
+                    <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
+                    {{ form_widget(transaksi.nominalPembayaran) }}
+                    <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                </div>
+                <div class="control-group">
+                    {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
+                    {{ form_widget(transaksi.keterangan) }}
+                    <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                </div>
+            {% endif %}
+        {% else %}
+            {{ form_row(transaksi) }}
 {#                     <div class="control-group">#}
 {#                         {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#}
 {#                         {{ form_widget(transaksi.nominalPembayaran) }}#}
@@ -96,15 +123,13 @@
 {#                         {{ form_widget(transaksi.keterangan) }}#}
 {#                         <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>#}
 {#                     </div>#}
-                {% endif %}
-            {% endfor %}
-            {{ form_rest(edit_form) }}
-        	<div class="form-actions">
-        	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
-            </div>
-        </form>
+        {% endif %}
+    {% endfor %}
+    {{ form_rest(edit_form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
     </div>
-</div>
+</form>
 
 <div class="clearfix"></div>
 

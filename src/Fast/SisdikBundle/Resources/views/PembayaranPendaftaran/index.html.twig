@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}payment.registrationfee.entry{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}payment.registrationfee.entry{% endtrans %}<br>{{ siswa.namaLengkap }}{% endblock %}
 
 {% block content %}
 <style type="text/css">
@@ -31,38 +31,70 @@
 #icon-preview {
     margin-left: 10px;
 }
+.keterangan-pembayaran:after {
+    content: "{{ 'label.keterangan'|trans }}";
+}
 </style>
 
-<dl>
-    <dt>{{ 'label.year.entry'|trans }}</dt>
-    <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
-    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
-    <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
-    <dt>{{ 'label.name.full'|trans }}</dt>
-    <dd>{{ siswa.namaLengkap }}</dd>
-    <dt>{{ 'label.application.number'|trans }}</dt>
-    <dd>{{ siswa.nomorPendaftaran }}</dd>
-    <dt>{{ 'label.gender'|trans }}</dt>
-    <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
-	{% if siswa.orangtuaWali %}
-	    {% for orangtua in siswa.orangtuaWali %}
-	        {% if orangtua %}
-	            {% if orangtua.aktif == 1 %}
-    	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-    	            <dd>{{ orangtua.nama }}</dd>
-    	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-    	            <dd>{{ orangtua.ponsel }}</dd>
-		        {% endif %}
-	        {% endif %}
-	    {% endfor %}
-	{% endif %}
-	<dt>{{ 'label.payables.amount.total'|trans }}</dt>
-	<dd>{% if totalAdaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}{% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'potongan': totalPotongan}) %}</dd>
-	<dt>{{ 'label.paid.amount.total'|trans }}</dt>
-	<dd>{{ siswa.totalNominalPembayaranPendaftaran|number_format(0, ',', '.') }}</dd>
-	<dt>{{ 'label.payment.remains.total'|trans }}</dt>
-	<dd>{% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran, 'potongan': totalPotongan}) %}</dd>
-</dl>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="span8">
+            <dl>
+                <dt>{{ 'label.year.entry'|trans }}</dt>
+                <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+                <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+                <dd>{% if siswa.gelombang is not null %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+                <dt>{{ 'label.application.number'|trans }}</dt>
+                <dd>{{ siswa.nomorPendaftaran }}</dd>
+                <dt>{{ 'label.name.full'|trans }}</dt>
+                <dd>{{ siswa.namaLengkap }}</dd>
+                <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+            {% if siswa.sekolahAsal is not null %}
+                <dd>
+                    <a href="{{ path('sekolahasal_show', { 'id': siswa.sekolahAsal.id }) }}" target="_blank">
+                        {{ siswa.sekolahAsal.nama }}
+                        {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                    	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
+                        {% endimage %}
+                    </a>
+                </dd>
+            {% else %}
+                <dd>&nbsp;</dd>
+            {% endif %}
+                <dt>{{ 'label.gender'|trans }}</dt>
+                <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
+                <dt>{{ 'label.religion'|trans }}</dt>
+                <dd>{{ siswa.agama|title }}</dd>
+                <dt>{{ 'label.address'|trans }}</dt>
+                <dd>{{ siswa.alamat }}</dd>
+            	{% if siswa.orangtuaWali %}
+            	    {% for orangtua in siswa.orangtuaWali %}
+            	        {% if orangtua %}
+            	            {% if orangtua.aktif == 1 %}
+                	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                	            <dd>{{ orangtua.nama }}</dd>
+                	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                	            <dd>{{ orangtua.ponsel }}</dd>
+            		        {% endif %}
+            	        {% endif %}
+            	    {% endfor %}
+            	{% endif %}
+            	<dt>{{ 'label.payables.amount.total'|trans }}</dt>
+            	<dd>{% if totalAdaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}{% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'potongan': totalPotongan}) %}</dd>
+            	<dt>{{ 'label.paid.amount.total'|trans }}</dt>
+            	<dd>{{ siswa.totalNominalPembayaranPendaftaran|number_format(0, ',', '.') }}</dd>
+            	<dt>{{ 'label.payment.remains.total'|trans }}</dt>
+            	<dd>{% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'paid': siswa.totalNominalPembayaranPendaftaran, 'potongan': totalPotongan}) %}</dd>
+            </dl>
+        </div>
+        <div class="span4">
+            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran">{{ siswa.keterangan }}</div>{% endif %}
+            {% if siswa.webcamPhotoPath != "" %}
+                <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webcamPhotoPath }}" class="img-polaroid" width="180" />
+            {% endif %}
+        </div>
+    </div>
+</div>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
