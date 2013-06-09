@@ -12,7 +12,7 @@ class SimpleSearchFormType extends AbstractType
                         array(
                                 'label' => 'label.searchkey', 'required' => false,
                                 'attr' => array(
-                                    'class' => 'medium search-query'
+                                    'class' => 'medium search-query', 'placeholder' => 'label.searchkey'
                                 ), 'label_render' => false,
                         ));
     }
@@ -26,7 +26,6 @@ class SimpleSearchFormType extends AbstractType
     }
 
     public function getName() {
-        // return '';
         return 'searchform';
     }
 }
