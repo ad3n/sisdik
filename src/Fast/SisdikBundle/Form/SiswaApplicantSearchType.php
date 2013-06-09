@@ -26,37 +26,15 @@ class SiswaApplicantSearchType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-
-            $qb = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                    ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')
+            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Gelombang', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
-            $results = $qb->getQuery()->getResult();
-            $daftarTahun = array();
-            foreach ($results as $entity) {
-                if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                    if ((is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia()))
-                            || $entity->getKetuaPanitia()->getId() == $user->getId()) {
-                        $daftarTahun[] = $entity->getTahun()->getId();
-                    }
-                }
-            }
-
-            if (count($daftarTahun) == 0) {
-                throw new AccessDeniedException(
-                        $this->container->get('translator')->trans('exception.register.as.committee'));
-            }
-
-            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
-                    ->where('t.sekolah = :sekolah')->andWhere("t.id IN (?1)")->orderBy('t.tahun', 'DESC')
-                    ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahun);
-
             $builder
-                    ->add('tahun', 'entity',
+                    ->add('gelombang', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun',
-                                    'empty_value' => 'label.selectyear', 'required' => false,
+                                    'class' => 'FastSisdikBundle:Gelombang', 'multiple' => false,
+                                    'expanded' => false, 'property' => 'nama',
+                                    'empty_value' => 'label.selectadmissiongroup', 'required' => false,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
                                         'class' => 'medium'
@@ -68,7 +46,7 @@ class SiswaApplicantSearchType extends AbstractType
                         array(
                                 'required' => false,
                                 'attr' => array(
-                                    'class' => 'medium search-query', 'placeholder' => 'label.searchkey.name'
+                                    'class' => 'medium search-query', 'placeholder' => 'label.searchkey'
                                 ), 'label_render' => false,
                         ));
     }
@@ -85,4 +63,3 @@ class SiswaApplicantSearchType extends AbstractType
         return 'searchform';
     }
 }
-

@@ -1,6 +1,6 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}applicant.list{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}applicant.list{% endtrans %} {{ 'tahun'|trans }} {{ panitiaAktif[3] }}{% endblock %}
 
 {% block content %}
 <style type="text/css">
@@ -32,7 +32,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
@@ -44,7 +44,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ data.nomorPendaftaran }}</td>
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		{% if data.orangtuaWali %}
     		    {% for orangtua in data.orangtuaWali %}
@@ -58,10 +58,8 @@
     		{% endif %}
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-    		{% if tahunaktif == data.tahun.tahun %}
         		<a href="{{ path('applicant_editregphoto', {'id': data.id}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
         		<a href="{{ path('applicant_edit', {'id': data.id}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>
-    		{% endif %}
     		</td>
     	</tr>
     {% endfor %}

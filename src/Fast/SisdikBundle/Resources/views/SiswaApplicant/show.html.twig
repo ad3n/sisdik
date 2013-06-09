@@ -107,11 +107,9 @@
         <div class="span4">
             {% if entity.webcamPhotoPath != "" %}<img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webcamPhotoPath }}" class="img-polaroid" />{% endif %}
             <ul class="pills">
-        {% if tahunaktif == entity.tahun.tahun %}
                 <li>
                     <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
                 </li>
-        {% endif %}
             </ul>
 
             <h4 style="margin-top: 1em;">{{ 'heading.info.pendukung'|trans }}</h4>
@@ -136,27 +134,23 @@
 
 <div class="clearfix"></div>
 
-{% if tahunaktif == entity.tahun.tahun %}
 <form id="delete-form" action="{{ path('applicant_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
     </div>
 </form>
-{% endif %}
 
 <ul class="pills">
     <li>
         <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
-{% if tahunaktif == entity.tahun.tahun %}
     <li>
         <a href="{{ path('applicant_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
     </li>
     <li>
         <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
     </li>
-{% endif %}
 </ul>
 
 <div class="clearfix"></div>
@@ -172,7 +166,7 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.applicant'|trans({ '%name%': entity.namaLengkap, '%regnum%': '#' ~ entity.nomorPendaftaran }) }}";
+		var confirmtext = "{{ 'confirm.drop.applicant'|trans({ '%name%': entity.namaLengkap, '%regnum%': entity.nomorPendaftaran }) }}";
 		confirmtext = confirmtext.replace(/&#039;/g, "'");
 		return confirmDropButton(confirmtext);
 	});

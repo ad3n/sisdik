@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\SiswaApplicantSearchType;
 use Fast\SisdikBundle\Entity\SekolahAsal;
 use Fast\SisdikBundle\Entity\Referensi;
 use Fast\SisdikBundle\Util\Messenger;
@@ -10,7 +11,6 @@ use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
-use Fast\SisdikBundle\Form\SiswaApplicantSearchType;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,76 +42,56 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $em = $this->getDoctrine()->getManager();
-
-        $user = $this->getUser();
-
-        $qb1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId());
-        $results = $qb1->getQuery()->getResult();
-        $daftarTahun = array();
-        foreach ($results as $entity) {
-            if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                if ((is_array($entity->getPanitia()) && in_array($user->getId(), $entity->getPanitia()))
-                        || $entity->getKetuaPanitia()->getId() == $user->getId()) {
-                    $daftarTahun[] = $entity->getTahun()->getId();
-                }
-            }
-        }
-
-        if (count($daftarTahun) == 0) {
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('exception.register.as.committee'));
         }
+
+        $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id IN (?1)')
-                ->setParameter(1, $daftarTahun)->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'DESC')
-                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
+                ->setParameter(1, $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            $searchparam = '';
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
-
-                $searchparam = " tahun = '{$searchdata['tahun']->getId()}' ";
+            if ($searchdata['gelombang'] != '') {
+                $querybuilder->andWhere('t.gelombang = :gelombang');
+                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
             }
 
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
-                $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-
                 if (is_numeric($searchdata['searchkey'])) {
-                    $dql = "SELECT t FROM FastSisdikBundle:Siswa t "
-                            . " LEFT JOIN t.pembayaranPendaftaran t2 "
-                            . " WHERE t.nomorPendaftaran = CASE WHEN t2.siswa IS NOT NULL THEN '{$searchdata['searchkey']}' ELSE '0' END"
-                            . ($searchparam != '' ? " AND t.$searchparam" : "");
-                    $query = $em->createQuery($dql);
+                    // $dql = "SELECT t FROM FastSisdikBundle:Siswa t "
+                    //         . " LEFT JOIN t.pembayaranPendaftaran t2 "
+                    //         . " WHERE t.nomorPendaftaran = CASE WHEN t2.siswa IS NOT NULL THEN '{$searchdata['searchkey']}' ELSE '0' END";
+                    // $query = $em->createQuery($dql);
+
+                    $querybuilder->andWhere('t.nomorPendaftaran = :nomor');
+                    $querybuilder->setParameter('nomor', $searchdata['searchkey']);
+                } else {
+                    $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
+                    $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
                 }
             }
 
         }
 
         $paginator = $this->get('knp_paginator');
-        if (is_numeric($searchdata['searchkey'])) {
-            $pagination = $paginator
-                    ->paginate($query->getResult(), $this->getRequest()->query->get('page', 1));
-        } else {
-            $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
-        }
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'tahunaktif' => $this->getTahunPanitiaAktif(),
+                'panitiaAktif' => $panitiaAktif,
         );
     }
 
@@ -126,8 +106,15 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $entity = new Siswa();
-        $form = $this->createForm(new SiswaApplicantType($this->container, 'new'), $entity);
+        $form = $this->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'new'), $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -244,11 +231,18 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $entity = new Siswa();
         $orangtuaWali = new OrangtuaWali();
         $entity->getOrangtuaWali()->add($orangtuaWali);
 
-        $form = $this->createForm(new SiswaApplicantType($this->container, 'new'), $entity);
+        $form = $this->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'new'), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView(),
@@ -266,6 +260,13 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
@@ -277,8 +278,7 @@ class SiswaApplicantController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'tahunaktif' => $this->getTahunPanitiaAktif(),
+            'entity' => $entity, 'delete_form' => $deleteForm->createView(), 'panitiaAktif' => $panitiaAktif,
         );
     }
 
@@ -293,6 +293,13 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
@@ -303,7 +310,8 @@ class SiswaApplicantController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaApplicantType($this->container, 'edit'), $entity);
+        $editForm = $this
+                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'edit'), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -323,6 +331,13 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
@@ -334,7 +349,8 @@ class SiswaApplicantController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new SiswaApplicantType($this->container, 'edit'), $entity);
+        $editForm = $this
+                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'edit'), $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
@@ -402,6 +418,13 @@ class SiswaApplicantController extends Controller
     public function webcamUploadHandlerAction(Request $request, $tahun) {
         $sekolah = $this->isRegisteredToSchool();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $fs = new Filesystem();
 
         if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR)) {
@@ -447,6 +470,13 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
@@ -457,7 +487,9 @@ class SiswaApplicantController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaApplicantType($this->container, 'editregphoto'), $entity);
+        $editForm = $this
+                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'editregphoto'),
+                        $entity);
 
         return array(
             'entity' => $entity, 'edit_form' => $editForm->createView(),
@@ -475,6 +507,13 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
@@ -485,7 +524,9 @@ class SiswaApplicantController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaApplicantType($this->container, 'editregphoto'), $entity);
+        $editForm = $this
+                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'editregphoto'),
+                        $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
@@ -529,6 +570,13 @@ class SiswaApplicantController extends Controller
      */
     public function deleteAction(Request $request, $id) {
         $this->isRegisteredToSchool();
+
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
+                || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.register.as.committee'));
+        }
 
         $form = $this->createDeleteForm($id);
         $form->submit($request);
@@ -578,7 +626,17 @@ class SiswaApplicantController extends Controller
                 ))->add('id', 'hidden')->getForm();
     }
 
-    private function getTahunPanitiaAktif() {
+    /**
+     * Mencari panitia pendaftaran aktif
+     * Fungsi ini mengembalikan array berisi
+     * index 0: daftar id panitia aktif
+     * index 1: id ketua panitia aktif
+     * index 2: id tahun panitia aktif
+     * index 3: string tahun panitia aktif
+     *
+     * @return array panitiaaktif
+     */
+    private function getPanitiaAktif() {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -587,17 +645,22 @@ class SiswaApplicantController extends Controller
                 ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
                 ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
         $results = $qb0->getQuery()->getResult();
+        $panitiaaktif = array();
         foreach ($results as $entity) {
             if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                $tahunaktif = $entity->getTahun()->getTahun();
+                $panitiaaktif[0] = $entity->getPanitia();
+                $panitiaaktif[1] = $entity->getKetuaPanitia()->getId();
+                $panitiaaktif[2] = $entity->getTahun()->getId();
+                $panitiaaktif[3] = $entity->getTahun()->getTahun();
             }
         }
 
-        return $tahunaktif;
+        return $panitiaaktif;
     }
 
     private function verifyTahun($tahun) {
-        if ($this->getTahunPanitiaAktif() != $tahun) {
+        $panitiaAktif = $this->getPanitiaAktif();
+        if ($panitiaAktif[3] != $tahun) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('cannot.alter.applicant.inactive.year'));
         }

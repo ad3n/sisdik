@@ -12,10 +12,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiswaApplicantType extends AbstractType
 {
     private $container;
+    private $tahunAktif;
     private $mode;
 
-    public function __construct(ContainerInterface $container, $mode = 'new') {
+    public function __construct(ContainerInterface $container, $tahunAktif, $mode = 'new') {
         $this->container = $container;
+        $this->tahunAktif = $tahunAktif;
         $this->mode = $mode;
     }
 
@@ -31,43 +33,11 @@ class SiswaApplicantType extends AbstractType
                                 array(
                                         'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
                                         'data' => $sekolah->getId(),
-                                ));
-
-                $qb = $em->createQueryBuilder()->select('t')
-                        ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')
-                        ->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
-                        ->setParameter('sekolah', $sekolah->getId());
-                $results = $qb->getQuery()->getResult();
-                $daftarTahun = array();
-                foreach ($results as $entity) {
-                    if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                        if ((is_array($entity->getPanitia())
-                                && in_array($user->getId(), $entity->getPanitia()))
-                                || $entity->getKetuaPanitia()->getId() == $user->getId()) {
-                            $daftarTahun[] = $entity->getTahun()->getId();
-                        }
-                    }
-                }
-
-                if (count($daftarTahun) == 0) {
-                    throw new AccessDeniedException(
-                            $this->container->get('translator')
-                                    ->trans('exception.register.as.active.committee'));
-                }
-
-                $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
-                        ->where('t.sekolah = :sekolah')->andWhere('t.id IN (?1)')->orderBy('t.tahun', 'DESC')
-                        ->setParameter('sekolah', $sekolah->getId())->setParameter(1, $daftarTahun);
-                $builder
-                        ->add('tahun', 'entity',
+                                ))
+                        ->add('tahun', new EntityHiddenType($em),
                                 array(
-                                        'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
-                                        'multiple' => false, 'expanded' => false, 'property' => 'tahun',
-                                        'empty_value' => false, 'required' => true,
-                                        'query_builder' => $querybuilder1,
-                                        'attr' => array(
-                                            'class' => 'medium'
-                                        ),
+                                        'required' => true, 'class' => 'FastSisdikBundle:Tahun',
+                                        'data' => $this->tahunAktif,
                                 ));
 
                 $querybuilder2 = $em->createQueryBuilder()->select('t')

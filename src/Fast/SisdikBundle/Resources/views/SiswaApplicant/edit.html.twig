@@ -77,7 +77,6 @@
 }
 </style>
 <form action="{{ path('applicant_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-    {{ form_row(edit_form.tahun) }}
     {{ form_row(edit_form.gelombang) }}
     {{ form_row(edit_form.namaLengkap) }}
     {{ form_row(edit_form.namaReferensi) }}
