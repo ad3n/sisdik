@@ -1,23 +1,15 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
 use Fast\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\PembayaranPendaftaran;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Siswa applicant controller.
@@ -43,9 +35,10 @@ class SiswaApplicantPaymentController extends Controller
         $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
+                ->leftJoin('t.pembayaranPendaftaran', 't5')
+                ->leftJoin('t5.transaksiPembayaranPendaftaran', 't6')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -61,9 +54,16 @@ class SiswaApplicantPaymentController extends Controller
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
                         ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran = :nomorpendaftaran');
+                                't.namaLengkap LIKE :namalengkap '
+                                        . ' OR t.nomorPendaftaran = :nomorpendaftaran '
+                                        . ' OR t.keterangan LIKE :keterangan '
+                                        . ' OR t4.nama LIKE :sekolahasal '
+                                        . ' OR t6.nomorTransaksi = :nomortransaksi ');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('nomorpendaftaran', $searchdata['searchkey']);
+                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('nomortransaksi', $searchdata['searchkey']);
             }
 
             if ($searchdata['nopayment'] == true) {
@@ -104,7 +104,7 @@ class SiswaApplicantPaymentController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));

@@ -38,7 +38,7 @@ class SiswaApplicantPaymentSearchType extends AbstractType
                                     'empty_value' => 'label.selectyear', 'required' => false,
                                     'query_builder' => $querybuilder1,
                                     'attr' => array(
-                                        'class' => 'medium'
+                                        'class' => 'small'
                                     ), 'label_render' => false,
                             ));
         }
