@@ -4,7 +4,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
 class ProfileFormType extends BaseType
@@ -49,13 +48,6 @@ class ProfileFormType extends BaseType
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
-                if ($keys == 'ROLE_SUPER_ADMIN') {
-                    if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-                        $roles[$keys] = str_replace('_', ' ', $keys);
-                    } else {
-                        break;
-                    }
-                }
                 $roles[$keys] = str_replace('_', ' ', $keys);
             }
             $builder
@@ -64,16 +56,10 @@ class ProfileFormType extends BaseType
                                     'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
                                     'expanded' => true,
                             ));
-        } else if ($securityContext->isGranted('ROLE_ADMIN')) {
+        } elseif ($securityContext->isGranted('ROLE_ADMIN')) {
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
-                if ($keys == 'ROLE_SUPER_ADMIN') {
-                    if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-                        $roles[$keys] = str_replace('_', ' ', $keys);
-                    } else {
-                        break;
-                    }
-                }
-                if ($keys == 'ROLE_USER' || $keys == 'ROLE_SISWA') {
+                if ($keys == 'ROLE_SUPER_ADMIN' || $keys == 'ROLE_USER' || $keys == 'ROLE_SISWA'
+                        || $keys == 'ROLE_PANITIA_PSB' || $keys == 'ROLE_KETUA_PANITIA_PSB') {
                     continue;
                 }
                 $roles[$keys] = str_replace('_', ' ', $keys);
