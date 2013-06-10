@@ -92,7 +92,8 @@ class PembayaranPendaftaranType extends AbstractType
                         ))
                 ->add('transaksiPembayaranPendaftaran', 'collection',
                         array(
-                                'type' => new TransaksiPembayaranPendaftaranType(), 'by_reference' => false,
+                                'type' => new TransaksiPembayaranPendaftaranType($this->container),
+                                'by_reference' => false,
                                 'attr' => array(
                                     'class' => 'large'
                                 ), 'label' => 'label.fee.registration.transaction',

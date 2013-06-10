@@ -58,6 +58,16 @@ class TransaksiPembayaranPendaftaran
     private $waktuSimpan;
 
     /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $sekolah;
+
+    /**
      * @var \PembayaranPendaftaran
      *
      * @ORM\ManyToOne(targetEntity="PembayaranPendaftaran", inversedBy="transaksiPembayaranPendaftaran")
@@ -189,6 +199,27 @@ class TransaksiPembayaranPendaftaran
      */
     public function getWaktuSimpan() {
         return $this->waktuSimpan;
+    }
+
+    /**
+     * Set sekolah
+     *
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return TransaksiPembayaranPendaftaran
+     */
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah
+     */
+    public function getSekolah() {
+        return $this->sekolah;
     }
 
     /**

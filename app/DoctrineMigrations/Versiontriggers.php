@@ -72,7 +72,7 @@ BEGIN
     SET nomorurutperbulan = (
         SELECT MAX(nomor_urut_transaksi_perbulan)
             FROM transaksi_pembayaran_pendaftaran
-            WHERE DATE_FORMAT(waktu_simpan, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
+            WHERE DATE_FORMAT(waktu_simpan, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') AND sekolah_id = NEW.sekolah_id
     );
     SET NEW.nomor_urut_transaksi_perbulan = IFNULL(nomorurutperbulan, 0) + 1;
     SET NEW.nomor_transaksi = CONCAT(

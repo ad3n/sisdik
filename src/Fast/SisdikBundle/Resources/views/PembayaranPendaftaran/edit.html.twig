@@ -91,12 +91,12 @@
             {% if not loop.last %}
                 <div class="control-group">
                     {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
-                    {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'disabled': 'disabled'} }) }}
+                    {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'readonly': 'readonly'} }) }}
                     <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
                 </div>
                 <div class="control-group">
                     {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
-                    {{ form_widget(transaksi.keterangan, { 'attr': {'disabled': 'disabled'} }) }}
+                    {{ form_widget(transaksi.keterangan, { 'attr': {'readonly': 'readonly'} }) }}
                     <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
                 </div>
             {% else %}

@@ -31,8 +31,7 @@ class PembayaranPendaftaranCicilanType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:BiayaPendaftaran', 't')->where('t.tahun = :tahun')
-                ->setParameter('tahun', $siswa->getTahun()->getId())
-                ->andWhere('t.gelombang = :gelombang')
+                ->setParameter('tahun', $siswa->getTahun()->getId())->andWhere('t.gelombang = :gelombang')
                 ->setParameter('gelombang', $siswa->getGelombang()->getId())->orderBy('t.urutan', 'ASC')
                 ->andWhere('t.id = ?1')->setParameter(1, $this->biaya);
 
@@ -57,7 +56,8 @@ class PembayaranPendaftaranCicilanType extends AbstractType
                         ))
                 ->add('transaksiPembayaranPendaftaran', 'collection',
                         array(
-                                'type' => new TransaksiPembayaranPendaftaranType(), 'by_reference' => false,
+                                'type' => new TransaksiPembayaranPendaftaranType($this->container),
+                                'by_reference' => false,
                                 'attr' => array(
                                     'class' => 'large'
                                 ), 'label' => 'label.fee.registration.transaction',

@@ -4,11 +4,27 @@ namespace Fast\SisdikBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TransaksiPembayaranPendaftaranType extends AbstractType
 {
+    private $container;
+
+    public function __construct(ContainerInterface $container) {
+        $this->container = $container;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+        $em = $this->container->get('doctrine')->getManager();
+
         $builder
+                ->add('sekolah', new EntityHiddenType($em),
+                        array(
+                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                'data' => $sekolah->getId(),
+                        ))
                 ->add('nominalPembayaran', 'money',
                         array(
                                 'currency' => 'IDR', 'required' => true, 'precision' => 0, 'grouping' => 3,
