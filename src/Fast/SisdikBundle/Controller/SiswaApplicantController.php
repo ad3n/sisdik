@@ -53,6 +53,18 @@ class SiswaApplicantController extends Controller
 
         $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
 
+        $qbtotal = $em->createQueryBuilder()->select('COUNT(t.id)')->from('FastSisdikBundle:Siswa', 't')
+                ->leftJoin('t.tahun', 't2')->where('t.calonSiswa = :calon')->setParameter('calon', true)
+                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('t2.id = ?1')->setParameter(1, $panitiaAktif[2]);
+        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
+
+        $qbsearchnum = $em->createQueryBuilder()->select('COUNT(t.id)')->from('FastSisdikBundle:Siswa', 't')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
+                ->setParameter(1, $panitiaAktif[2]);
+
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('t.sekolah = :sekolah')
@@ -64,9 +76,15 @@ class SiswaApplicantController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
+            $tampilkanTercari = false;
+
             if ($searchdata['gelombang'] != '') {
                 $querybuilder->andWhere('t.gelombang = :gelombang');
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
+
+                $qbsearchnum->andWhere('t.gelombang = :gelombang');
+                $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
+                $tampilkanTercari = true;
             }
 
             if ($searchdata['searchkey'] != '') {
@@ -78,20 +96,30 @@ class SiswaApplicantController extends Controller
 
                     $querybuilder->andWhere('t.nomorPendaftaran = :nomor');
                     $querybuilder->setParameter('nomor', $searchdata['searchkey']);
+
+                    $qbsearchnum->andWhere('t.nomorPendaftaran = :nomor');
+                    $qbsearchnum->setParameter('nomor', $searchdata['searchkey']);
                 } else {
                     $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
                     $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+
+                    $qbsearchnum->andWhere('t.namaLengkap LIKE :namalengkap');
+                    $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
                 }
+                $tampilkanTercari = true;
             }
 
         }
+
+        $pendaftarTercari = $qbsearchnum->getQuery()->getSingleScalarResult();
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'panitiaAktif' => $panitiaAktif,
+                'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
+                'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
         );
     }
 

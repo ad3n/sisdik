@@ -5,6 +5,8 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    jumlah.pendaftar.tercari: ∑ pendaftar tercari
+    jumlah.pendaftar.total: ∑ pendaftar total
     nomor.daftar: "No Daftar"
     form.lengkap: Form Lengkap
     kode.sekolah: Kode Sekolah

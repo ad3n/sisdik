@@ -29,6 +29,18 @@
 
 <div class="clearfix"></div>
 
+{% if tampilkanTercari %}
+<div class="pull-right info-jumlah">
+    {{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}
+</div>
+{% endif %}
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>

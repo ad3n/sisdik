@@ -340,3 +340,7 @@ div.knowledgebase {
     position: absolute;
     top: -1px;
 }
+
+.info-jumlah {
+    color: #DD5500;
+}
