@@ -88,7 +88,7 @@
             </dl>
         </div>
         <div class="span4">
-            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran">{{ siswa.keterangan }}</div>{% endif %}
+            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran" style="min-width: 80%;">{{ siswa.keterangan }}</div><div class="clearfix"></div>{% endif %}
             {% if siswa.webcamPhotoPath != "" %}
                 <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webcamPhotoPath }}" class="img-polaroid" width="180" />
             {% endif %}
