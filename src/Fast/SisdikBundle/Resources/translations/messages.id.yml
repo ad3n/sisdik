@@ -263,13 +263,13 @@ label:
         proceed: Lanjutkan
     school: Sekolah
     choose: Pilih
-    unset: "- Tak terdaftar -"
+    unset: "~ Tak terdaftar ~"
     all: Semua
     search: Cari
     searchkey: Kata Pencarian
     typesearchkey: Ketik kata pencarian di sini
-    selectyear: Pilih Tahun
-    selectadmissiongroup: Pilih Gelombang
+    selectyear: "~ Tahun ~"
+    selectadmissiongroup: "~ Gelombang ~"
     reset: Reset
     chief: Kepala
     year:
