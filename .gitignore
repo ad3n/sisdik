@@ -12,3 +12,5 @@ vendor
 composer.phar
 phpunit.phar
 .settings
+app/config/deploy.rb
+Capfile
