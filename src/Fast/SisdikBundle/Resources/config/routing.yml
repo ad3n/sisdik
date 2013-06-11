@@ -265,3 +265,14 @@ localapi_logsmskeluar:
 
 
 # end of local APIs ---------------------------------------------------------------------------------- #
+
+
+# redirect all non-existent route
+anything:
+    path:     /{path}
+    defaults:
+        _controller: FrameworkBundle:Redirect:urlRedirect
+        path: /
+        permanent: true
+    requirements:
+        path: ".+"
