@@ -86,7 +86,7 @@ class SiswaTahkikSearchType extends AbstractType
                                 ),
                                 'attr' => array(
                                     'class' => 'medium'
-                                ), 'label_render' => false, 'empty_value' => 'label.gender',
+                                ), 'label_render' => false, 'empty_value' => 'label.gender.empty.select',
                         ))
                 ->add('tertahkik', 'checkbox',
                         array(
