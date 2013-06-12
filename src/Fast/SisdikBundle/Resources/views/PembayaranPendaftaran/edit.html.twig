@@ -151,14 +151,14 @@ $(document).ready(function() {
 
 	$("#pay-form").submit(function() {
         var payamount = 0;
-        var feeamount = parseInt($("#payable-amount").text().split('.').join(''));
+        var feeamount = parseInt($.trim($("#payable-amount").text().split('.').join('')));
 
         total = 0;
 
 		$(".pay-amount").each(function() {
 			var num = 0;
 
-			str = $(this).val().split('.').join('');
+			str = $.trim($(this).val().split('.').join(''));
 		    num = str.match(/\d+/);
 		    total += parseInt(num);
 		});

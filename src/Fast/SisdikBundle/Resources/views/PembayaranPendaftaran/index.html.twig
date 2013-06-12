@@ -225,8 +225,8 @@ function getTotalFee(index, element) {
 	if (typeof checkbox.val() !== 'undefined') {
 		var num = 0;
 
-		str = $(this).text().split('.').join('');
-        num = str.match(/\d+/);
+		str = $.trim($(this).text().split('.').join(''));
+        num = str.match(/\d+$/);
         total += parseInt(num);
 	}
 }
@@ -235,10 +235,10 @@ function getTotalFeeDiscounted() {
 	if ($(".discount-check").is(":checked")) {
         type = $("#discount-type input[type='radio']:checked").val();
         if (type == 'nominal') {
-            totaldiscounted = total - $(".nominal-discount").val().split('.').join('').match(/\d+/);
+            totaldiscounted = total - $.trim($(".nominal-discount").val().split('.').join('')).match(/\d+$/);
             totaldiscounted = totaldiscounted <= 0 ? 0 : totaldiscounted;
         } else if (type == 'persentase') {
-            discountpercent = $(".percentage-discount").val().split('.').join('').match(/\d+/);
+            discountpercent = $.trim($(".percentage-discount").val().split('.').join('')).match(/\d+$/);
             totaldiscounted = total - (total * (discountpercent / 100));
         }
 	} else {
@@ -328,14 +328,14 @@ $(document).ready(function() {
     $("#fee-amount-discounted").text(amountdiscounted == "0" ? "" : amountdiscounted);
 
     $(".nominal-discount").keyup(function() {
-        discountnominal = $(this).val().split('.').join('').match(/\d+/);
+        discountnominal = $.trim($(this).val().split('.').join('')).match(/\d+$/);
         totaldiscounted = total - discountnominal;
 
         amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
         $("#fee-amount-discounted").text(amountdiscounted);
     });
     $(".percentage-discount").keyup(function() {
-        discountpercent = $(this).val().split('.').join('').match(/\d+/);
+        discountpercent = $.trim($(this).val().split('.').join('')).match(/\d+$/);
         totaldiscounted = total - (total * (discountpercent / 100));
 
         amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
