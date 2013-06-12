@@ -341,8 +341,10 @@ class PanitiaPendaftaranController extends Controller
                                                     'id' => $personil->getId()
                                                 ));
 
-                                $user->addRole('ROLE_PANITIA_PSB');
-                                $userManager->updateUser($user);
+                                if ($user instanceof User) {
+                                    $user->addRole('ROLE_PANITIA_PSB');
+                                    $userManager->updateUser($user);
+                                }
                             }
                         }
                     }
@@ -465,16 +467,23 @@ class PanitiaPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $filter = $this->getRequest()->query->get('filter');
+        $id = $this->getRequest()->query->get('id');
 
-        $query = $em
-                ->createQuery(
-                        "SELECT t FROM FastSisdikBundle:User t "
-                                . " WHERE t.sekolah IS NOT NULL AND t.sekolah = :sekolah "
-                                . " AND (t.username LIKE :filter OR t.name LIKE :filter) "
-                                . " AND t.siswa IS NULL");
-        $query->setParameter("sekolah", $sekolah->getId());
-        $query->setParameter('filter', "%$filter%");
-        $results = $query->getResult();
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:User', 't')
+                ->where('t.sekolah IS NOT NULL')->andWhere('t.sekolah = :sekolah')
+                ->andWhere('t.siswa IS NULL')->orderBy('t.name', 'ASC')
+                ->setParameter('sekolah', $sekolah->getId());
+
+        if ($id != '') {
+            $querybuilder->andWhere('t.id = :id');
+            $querybuilder->setParameter('id', $id);
+        } else {
+            $querybuilder->andWhere('t.username LIKE ?1 OR t.name LIKE ?2');
+            $querybuilder->setParameter(1, "%$filter%");
+            $querybuilder->setParameter(2, "%$filter%");
+        }
+
+        $results = $querybuilder->getQuery()->getResult();
 
         $retval = array();
         foreach ($results as $result) {
@@ -487,6 +496,13 @@ class PanitiaPendaftaranController extends Controller
                         'value' => $result->getName(), // . $result->getId() . ':' . $result->getUsername(),
                 );
             }
+        }
+
+        if (count($retval) == 0) {
+            $label = $this->container->get('translator')->trans("label.username.undefined");
+            $retval[] = array(
+                'source' => 'user', 'target' => 'id', 'id' => $id, 'label' => $label, 'value' => $label
+            );
         }
 
         return new Response(json_encode($retval), 200,
@@ -512,7 +528,7 @@ class PanitiaPendaftaranController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));

@@ -8,7 +8,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class PersonilType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder->add('id', 'hidden');
+        $builder
+                ->add('id', 'hidden',
+                        array(
+                                'label_render' => false, 'required' => false,
+                                'attr' => array(
+                                    'class' => 'id-panitia'
+                                ),
+                        ));
 
         $builder
                 ->add('user', 'text',

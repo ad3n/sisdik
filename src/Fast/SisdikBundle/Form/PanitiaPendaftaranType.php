@@ -1,6 +1,9 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Symfony\Component\Translation\IdentityTranslator;
+
+use Fast\SisdikBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fast\SisdikBundle\Entity\Personil;
 use Fast\SisdikBundle\Form\PersonilType;
@@ -42,10 +45,10 @@ class PanitiaPendaftaranType extends AbstractType
             $builder
                     ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun', 'empty_value' => false,
-                                    'required' => true, 'query_builder' => $querybuilder1,
+                                    'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'tahun',
+                                    'empty_value' => false, 'required' => true,
+                                    'query_builder' => $querybuilder1,
                                     'attr' => array(
                                         'class' => 'small'
                                     )
@@ -89,25 +92,6 @@ class PanitiaPendaftaranType extends AbstractType
                                         ), 'label_render' => false,
                                 ), 'label_render' => true, 'widget_control_group' => true,
                         ));
-
-        $panitia = $builder->getData()->getDaftarPersonil();
-        if (is_object($panitia) && $panitia->count() > 0) {
-            $daftarPersonil = new ArrayCollection();
-            foreach ($panitia as $personil) {
-                if ($personil instanceof Personil) {
-                    if ($personil->getId() !== NULL) {
-                        $entity = $em->getRepository('FastSisdikBundle:User')->find($personil->getId());
-                        $personil->setUser($entity->getName());
-
-                        $daftarPersonil->add($personil);
-                    }
-                }
-            }
-            if ($daftarPersonil->count() > 0) {
-                $builder->getData()->setDaftarPersonil($daftarPersonil);
-            }
-        }
-
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

@@ -116,7 +116,7 @@ label:
     searchkey.statusname: Nama Status
     name.parent.or.guardian: Nama Orang Tua/Wali
     application.number: "#Pendaftaran"
-    username.undefined: tak-terdefinisi
+    username.undefined: pengguna tak terdefinisi
     committee: Panitia
     committee.add: Anggota
     committee.list: Daftar Anggota Panitia

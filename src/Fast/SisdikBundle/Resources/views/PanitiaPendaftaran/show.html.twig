@@ -22,7 +22,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('regcommittee_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('regcommittee_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -31,10 +31,10 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('regcommittee', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('regcommittee') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('regcommittee_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('regcommittee_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 
