@@ -58,7 +58,6 @@
         <a href="{{ path('regcommittee') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
-
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	var options = {
@@ -98,6 +97,10 @@ $(document).ready(function() {
         $(this).autocomplete(options);
     });
 
+	$(".committee-username").each(function(){
+		$(this).addClass("ui-autocomplete-loading");
+	});
+
     $(".id-panitia").each(function(){
         var idpanitia = $(this);
         var attrid = $(idpanitia).attr("id");
@@ -116,6 +119,8 @@ $(document).ready(function() {
     	      		if (data[0].value == "{{ 'label.username.undefined'|trans }}") {
         	      		$(target).addClass("tak-terdefinisi");
     	      		}
+
+    	      		$(target).removeClass("ui-autocomplete-loading");
     			}
     		});
     	}
