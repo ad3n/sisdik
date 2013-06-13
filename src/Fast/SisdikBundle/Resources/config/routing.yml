@@ -251,6 +251,11 @@ sekolahasal:
     type:     annotation
     prefix:   /
 
+laporanpendaftaran:
+    resource: "@FastSisdikBundle/Controller/SiswaApplicantReportController.php"
+    type:     annotation
+    prefix:   /
+
 tahkik:
     resource: "@FastSisdikBundle/Controller/SiswaTahkikController.php"
     type:     annotation

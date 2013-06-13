@@ -25,7 +25,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * PembayaranPendaftaran controller.
  *
  * @Route("/payment/registrationfee/{sid}")
- * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KETUA_PANITIA_PSB')")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR')")
  */
 class PembayaranPendaftaranController extends Controller
 {

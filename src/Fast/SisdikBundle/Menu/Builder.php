@@ -141,7 +141,7 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                            new Expression('hasAnyRole("ROLE_BENDAHARA", "ROLE_BENDAHARA_YAYASAN")')
+                            new Expression('hasAnyRole("ROLE_BENDAHARA")')
                         ))) {
             // fees
             $fees = $this->createDropdownMenuItem($menu, 'headings.fee');
@@ -215,12 +215,18 @@ class Builder extends AbstractNavbarMenuBuilder
                                     new Expression(
                                             'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")')
                             ))) {
-                //                 $pendaftaran
-                //                         ->addChild('links.tahkik',
-                //                                 array(
-                //                                     'route' => 'tahkik'
-                //                                 ));
+                // $pendaftaran
+                //         ->addChild('links.tahkik',
+                //                 array(
+                //                     'route' => 'tahkik'
+                //                 ));
             }
+
+            $pendaftaran
+                    ->addChild('links.laporan.pendaftaran',
+                            array(
+                                'route' => 'laporan-pendaftaran'
+                            ));
 
             $pendaftaran
                     ->addChild('links.sekolahasal',
@@ -279,7 +285,7 @@ class Builder extends AbstractNavbarMenuBuilder
         if ($securityContext
                 ->isGranted(
                         array(
-                            new Expression('hasAnyRole("ROLE_KETUA_PANITIA_PSB", "ROLE_BENDAHARA")')
+                            new Expression('hasAnyRole("ROLE_BENDAHARA", "ROLE_KASIR")')
                         ))) {
             // payments
             $payments = $this->createDropdownMenuItem($menu, 'headings.payments');

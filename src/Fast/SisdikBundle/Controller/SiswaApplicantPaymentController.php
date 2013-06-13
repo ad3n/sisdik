@@ -15,7 +15,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * Siswa applicant controller.
  *
  * @Route("/applicant/payment")
- * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KETUA_PANITIA_PSB')")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR')")
  */
 class SiswaApplicantPaymentController extends Controller
 {

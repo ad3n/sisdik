@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * PilihanCetakKwitansi controller.
  *
  * @Route("/printreceiptsoption")
- * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KETUA_PANITIA_PSB')")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR')")
  */
 class PilihanCetakKwitansiController extends Controller
 {
