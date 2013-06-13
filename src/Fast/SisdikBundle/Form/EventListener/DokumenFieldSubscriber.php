@@ -18,7 +18,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents() {
         return array(
-            FormEvents::PRE_SET_DATA => 'preSetData', FormEvents::PRE_BIND => 'preBind'
+            FormEvents::PRE_SET_DATA => 'preSetData', FormEvents::PRE_SUBMIT => 'preSubmit'
         );
     }
 
@@ -43,7 +43,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function preBind(FormEvent $event) {
+    public function preSubmit(FormEvent $event) {
         $data = $event->getData();
 
         $jenisDokumen = $this->objectManager->getRepository('FastSisdikBundle:JenisDokumenSiswa')
