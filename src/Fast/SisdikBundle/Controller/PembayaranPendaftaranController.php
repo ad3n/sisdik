@@ -241,9 +241,13 @@ class PembayaranPendaftaranController extends Controller
                 $transaksi->setDibuatOleh($this->getUser());
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
             }
+            $entity->setNominalTotal($entity->getNominalTotal() + $currentPaymentAmount);
 
             if ($entity->getAdaPotongan() === false) {
                 $entity->setJenisPotongan(null);
+                $entity->setNominalPotongan(0);
+                $entity->setPersenPotongan(0);
+                $entity->setPersenPotonganDinominalkan(0);
             }
 
             if ($entity->getAdaPotongan() && $entity->getPersenPotongan() != 0) {
@@ -254,6 +258,7 @@ class PembayaranPendaftaranController extends Controller
                 }
                 $persenPotonganDinominalkan = $nominal * ($entity->getPersenPotongan() / 100);
                 $entity->setPersenPotonganDinominalkan($persenPotonganDinominalkan);
+                $entity->setNominalPotongan(0);
             }
             $currentDiscount = $entity->getNominalPotongan() + $entity->getPersenPotonganDinominalkan();
 
@@ -738,6 +743,7 @@ class PembayaranPendaftaranController extends Controller
                 $transaksi->setDibuatOleh($this->getUser());
                 $currentPaymentAmount += $transaksi->getNominalPembayaran();
             }
+            $entity->setNominalTotal($currentPaymentAmount);
 
             $totalPayment = $totalPayment + $currentPaymentAmount;
             $payableAmount = $this

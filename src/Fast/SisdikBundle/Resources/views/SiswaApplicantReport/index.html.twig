@@ -1,0 +1,261 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}laporan.pendaftaran.daftar{% endtrans %} {{ 'tahun'|trans }} {{ panitiaAktif[3] }}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
+#sign-percent {
+    cursor: pointer;
+    text-shadow: none;
+}
+#persen-bayar {
+    padding-left: 7px;
+}
+form .clearfix {
+    margin-bottom: 5px;
+}
+.arrow-down-lanjut {
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #555;
+	display: inline-block;
+	margin-left: 0.3em;
+	vertical-align: middle;
+}
+#cari-lanjutan {
+    display: none;
+}
+#anchor {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-cari-lanjutan {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-cari-lanjutan-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-cari-lanjutan, .anchor-cari-lanjutan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel:hover {
+    color: #222;
+}
+#cari-lanjutan .control-group {
+    margin-right: 0.4em;
+}
+.ui-autocomplete-loading {
+{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+	background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
+#cari-error {
+    margin-bottom: 5px;
+    color: #ff0000;
+}
+#cari-error .help-inline {
+    color: inherit;
+    margin-left: 0;
+    padding-left: 0;
+}
+</style>
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('laporan-pendaftaran') }}" class="form-search form-inline" id="search-form">
+        <div id="cari-standar">
+            {{ form_row(searchform.gelombang) }}
+            {{ form_row(searchform.dariTanggal) }}
+            {{ form_row(searchform.hinggaTanggal) }}
+            {{ form_row(searchform.searchkey) }}
+            <a href="" id="anchor" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        </div>
+        <div class="clearfix"></div>
+        <div id="cari-lanjutan">
+            {{ form_row(searchform.jenisKelamin) }}
+            {{ form_row(searchform.sekolahAsal) }}
+            {{ form_row(searchform.namaSekolahAsal) }}
+            <div class="control-group">
+                {% spaceless %}
+                <div class="controls">
+                    <div class="input-prepend input-append">
+                        {{ form_widget(searchform.pembandingBayar) }}
+                        {{ form_widget(searchform.jumlahBayar) }}
+                        <label class="add-on checkbox" id="persen-bayar">%{{ form_widget(searchform.persenBayar) }}
+                    </div>
+                </div>
+                {% endspaceless %}
+            </div>
+            {{ form_rest(searchform) }}
+        </div>
+        {% if form_errors(searchform) %}
+        <div id="cari-error">
+            {{ form_errors(searchform) }}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('laporan-pendaftaran') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix"></div>
+
+{% if tampilkanTercari %}
+<div class="pull-right info-jumlah">
+    {{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}
+    <button type="submit" class="btn success">{{ 'label.ekspor'|trans }}</button>
+</div>
+{% endif %}
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
+    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+    	    </th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ data.nomorPendaftaran }}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;">
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
+        	    </a>
+                {% endimage %}
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+<script language="javascript" type="text/javascript">
+var duration = 300;
+var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
+
+$(document).ready(function() {
+	var options = {
+    	minLength: 2,
+    	delay: 1000,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+    			data: {filter: request.term},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+            			}
+    			    }));
+				}
+			});
+		},
+		open: function(event, ui) {},
+		search: function(event, ui) {
+			$(".id-sekolah-asal").val("");
+		},
+    	select: function(event, ui) {
+      		$(".id-sekolah-asal").val(ui.item.id);
+    	}
+	};
+
+	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options);
+    });
+
+	$(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
+
+	if ($(".id-sekolah-asal").val() != "") {
+		$.ajax({
+			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+			data: {id: $(".id-sekolah-asal").val()},
+			success: function(data) {
+				$(".nama-sekolah-asal").val(data[0].value);
+	      		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+			}
+		});
+	} else {
+		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+	}
+
+	$(".pembanding-bayar").dropkick();
+
+	$(".anchor-cari-lanjutan").click(function(){
+		if ($("#cari-lanjutan").is(":visible")) {
+			$("#cari-lanjutan").hide(duration);
+			$(this).removeClass("anchor-cari-lanjutan-sel");
+			$(this).addClass("anchor-cari-lanjutan");
+		} else {
+			$("#cari-lanjutan").show(duration);
+			$(this).addClass("anchor-cari-lanjutan-sel");
+			$(this).removeClass("anchor-cari-lanjutan");
+		}
+	});
+
+	$('.date').datepicker({
+	    dateFormat: 'dd/mm/yy',
+        changeYear: false,
+        maxDate: 0
+    });
+
+    if (pencarianLanjutan != 0) {
+		$("#cari-lanjutan").css("display", "block");
+		$(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
+		$(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
+    }
+
+    $("#search-form").submit(function() {
+        if ($(".nama-sekolah-asal").val() == "") {
+            $(".id-sekolah-asal").val("");
+        }
+        return true;
+    });
+});
+</script>
+{% endblock content %}

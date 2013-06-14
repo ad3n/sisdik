@@ -5,6 +5,11 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    jumlah.bayar: Jumlah Bayar
+    ekspor: Ekspor
+    dari.tanggal: Dari Tanggal
+    hingga.tanggal: Hingga Tanggal
+    hingga.tanggal.singkat: Hingga Tgl
     jumlah.pendaftar.tercari: ∑ pendaftar tercari
     jumlah.pendaftar.total: ∑ pendaftar total
     nomor.daftar: "No Daftar"
@@ -196,6 +201,7 @@ label:
     selectacademicyear: Pilih Tahun Akademik
     enabled: Aktif
     gender: Jenis Kelamin
+    gender.empty.select: "~ Jenis Kelamin ~"
     photo: Pas Foto
     religion: Agama
     birthplace: Tempat Lahir
@@ -611,6 +617,7 @@ flash:
             mortgage.fail.insert: Data cicilan Pembayaran Pendaftaran gagal ditambah. Perbaiki input form.
 
 tip:
+    lihat.data.pendaftar: Lihat Data Pendaftar
     edit: Ubah
     delete: Hapus
     detail: Detail

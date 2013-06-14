@@ -1,6 +1,10 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+laporan.pendaftaran:
+    daftar: Laporan Pendaftaran
+    rincian: Detail Pendaftar
+
 sekolah.asal:
     daftar: Daftar Sekolah Asal
     ubah: Mengubah Data Sekolah Asal

@@ -53,23 +53,23 @@ class PembayaranPendaftaran
     /**
      * @var integer
      *
-     * @ORM\Column(name="persen_potongan", type="smallint", nullable=true)
+     * @ORM\Column(name="persen_potongan", type="smallint", nullable=true, options={"default" = 0})
      */
-    private $persenPotongan;
+    private $persenPotongan = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=true)
+     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=true, options={"default" = 0})
      */
-    private $persenPotonganDinominalkan;
+    private $persenPotonganDinominalkan = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=true, options={"default" = 0})
      */
-    private $nominalPotongan;
+    private $nominalPotongan = 0;
 
     /**
      * @var string
