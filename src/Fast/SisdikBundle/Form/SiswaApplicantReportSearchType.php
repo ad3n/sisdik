@@ -72,7 +72,7 @@ class SiswaApplicantReportSearchType extends AbstractType
                         ))
                 ->add('sekolahAsal', new EntityHiddenType($em),
                         array(
-                                'class' => 'FastSisdikBundle:SekolahAsal', 'required' => false,
+                                'class' => 'FastSisdikBundle:SekolahAsal',
                                 'attr' => array(
                                     'class' => 'id-sekolah-asal'
                                 ), 'required' => false, 'label_render' => false,
@@ -82,6 +82,20 @@ class SiswaApplicantReportSearchType extends AbstractType
                                 'attr' => array(
                                         'class' => 'xlarge nama-sekolah-asal ketik-pilih-tambah',
                                         'placeholder' => 'label.sekolah.asal',
+                                ), 'required' => false, 'label_render' => false,
+                        ))
+                ->add('referensi', new EntityHiddenType($em),
+                        array(
+                                'class' => 'FastSisdikBundle:Referensi',
+                                'attr' => array(
+                                    'class' => 'large id-referensi'
+                                ), 'required' => false, 'label_render' => false,
+                        ))
+                ->add('namaReferensi', 'text',
+                        array(
+                                'attr' => array(
+                                        'class' => 'xlarge nama-referensi ketik-pilih-tambah',
+                                        'placeholder' => 'label.perujuk',
                                 ), 'required' => false, 'label_render' => false,
                         ))
                 ->add('pembandingBayar', 'choice',

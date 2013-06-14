@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\Referensi;
+
 use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Entity\Gelombang;
 use Fast\SisdikBundle\Form\SiswaApplicantReportSearchType;
@@ -181,6 +183,21 @@ class SiswaApplicantReportController extends Controller
                 $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
                 $qbAdvsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
+
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            }
+
+            if ($searchdata['referensi'] instanceof Referensi) {
+                $querybuilder->leftJoin('t.referensi', 'ref');
+                $querybuilder->andWhere('ref.id = :referensi');
+                $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
+
+                $qbsearchnum->leftJoin('t.referensi', 'ref');
+                $qbsearchnum->andWhere('ref.id = :referensi');
+                $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
+
+                $qbAdvsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
 
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;

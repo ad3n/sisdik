@@ -178,7 +178,7 @@ var duration = 300;
 var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
 
 $(document).ready(function() {
-	var options = {
+	var options1 = {
     	minLength: 2,
     	delay: 1000,
     	source: function(request, response) {
@@ -205,12 +205,42 @@ $(document).ready(function() {
     	}
 	};
 
+	var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+            	url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+                		}
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+        	$(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+        	$(".id-referensi").val(ui.item.id);
+        }
+	};
+
 	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options);
+        $(this).autocomplete(options1);
+    });
+
+    $(".nama-referensi").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options2);
     });
 
 	$(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
-
 	if ($(".id-sekolah-asal").val() != "") {
 		$.ajax({
 			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
@@ -223,6 +253,20 @@ $(document).ready(function() {
 	} else {
 		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
 	}
+
+    $(".nama-referensi").addClass("ui-autocomplete-loading");
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+                $(".nama-referensi").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+    	$(".nama-referensi").removeClass("ui-autocomplete-loading");
+    }
 
 	$(".pembanding-bayar").dropkick();
 
@@ -253,6 +297,9 @@ $(document).ready(function() {
     $("#search-form").submit(function() {
         if ($(".nama-sekolah-asal").val() == "") {
             $(".id-sekolah-asal").val("");
+        }
+        if ($(".nama-referensi").val() == "") {
+            $(".id-referensi").val("");
         }
         return true;
     });
