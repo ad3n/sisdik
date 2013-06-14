@@ -62,10 +62,10 @@
                 {{ totalBiaya|number_format(0, ',', '.') }}
 		    </td>
     		<td data-title="{{ 'label.payment.remains'|trans }}">
-                {% if (totalBiaya - totalBayar) == 0 %}
-                    ({{ 'paidoff'|trans }})
-                {% else %}
-                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+    		    {% if data.lunasBiayaPendaftaran == 1 and (totalBiaya - totalBayar) == 0 %}
+    		        ({{ 'paidoff'|trans }})
+    		    {% else %}
+    		        {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
     		    {% endif %}
 		    </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
