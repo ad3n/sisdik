@@ -133,12 +133,10 @@ form .clearfix {
 
 <div class="clearfix"></div>
 
-{% if tampilkanTercari %}
-<div class="pull-right info-jumlah">
-    {{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}
-    <button type="submit" class="btn success">{{ 'label.ekspor'|trans }}</button>
+<div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
 </div>
-{% endif %}
 
 <div class="pull-left info-jumlah">
     {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}
@@ -153,17 +151,21 @@ form .clearfix {
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
+    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
+    		<th>{{ 'label.mobilephone.parent'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ data.nomorPendaftaran }}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;">
+                <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
             	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
         	    </a>
                 {% endimage %}
@@ -173,6 +175,13 @@ form .clearfix {
     </tbody>
 </table>
 {{ knp_pagination_render(pagination) }}
+
+<div class="export-section">
+    <a href="{{ path("laporan-pendaftaran_export", app.request.query.all) }}">export</a>
+    <button type="submit" class="btn success">{{ 'label.ekspor'|trans }}</button>
+</div>
+
+<div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
 var duration = 300;
 var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};

@@ -1,8 +1,9 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Filesystem\Filesystem;
 use Fast\SisdikBundle\Entity\Referensi;
-
 use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Entity\Gelombang;
 use Fast\SisdikBundle\Form\SiswaApplicantReportSearchType;
@@ -16,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Siswa laporan-pendaftaran controller.
@@ -25,6 +27,10 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  */
 class SiswaApplicantReportController extends Controller
 {
+    const DOCUMENTS_BASEDIR = "/documents/base/";
+    const BASEFILE = "base.ods";
+    const DOCUMENTS_OUTPUTDIR = "uploads/sekolah/laporan-psb/";
+
     /**
      * Laporan pendaftaran siswa baru
      *
@@ -41,8 +47,6 @@ class SiswaApplicantReportController extends Controller
         $em = $this->getDoctrine()->getManager();
         $qbe = $em->createQueryBuilder();
 
-        $searchform = $this->createForm(new SiswaApplicantReportSearchType($this->container));
-
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
                 ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 't2')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
@@ -50,12 +54,23 @@ class SiswaApplicantReportController extends Controller
                 ->andWhere('t2.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
+                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
+                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
+                ->setParameter('tahunaktif', $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+
         $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
                 ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 't2')
                 ->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
+                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
+                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
+                ->setParameter('tahunaktif', $panitiaAktif[2]);
 
         $qbAdvsearchnum = $em->createQueryBuilder()->select('COUNT(tcount.id)')
                 ->from('FastSisdikBundle:Siswa', 'tcount');
@@ -64,19 +79,14 @@ class SiswaApplicantReportController extends Controller
                 ->from('FastSisdikBundle:BiayaPendaftaran', 't');
         $biaya = 0;
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2])
-                ->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'DESC')
-                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
-
         $tampilkanTercari = false;
         $pencarianLanjutan = false;
-        $searchform->submit($this->getRequest());
+        $searchkey = '';
 
+        $searchform = $this->createForm(new SiswaApplicantReportSearchType($this->container));
+        $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
+
         if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true
                 && !($searchdata['gelombang'] instanceof Gelombang)) {
             $message = $this->get('translator')
@@ -103,36 +113,41 @@ class SiswaApplicantReportController extends Controller
             }
 
             if ($searchdata['searchkey'] != '') {
-                if (is_numeric($searchdata['searchkey'])) {
-                    $querybuilder->andWhere('t.nomorPendaftaran = :nomor');
-                    $querybuilder->setParameter('nomor', $searchdata['searchkey']);
+                $searchkey = $searchdata['searchkey'];
 
-                    $qbsearchnum->andWhere('t.nomorPendaftaran = :nomor');
-                    $qbsearchnum->setParameter('nomor', $searchdata['searchkey']);
+                $querybuilder
+                        ->andWhere(
+                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
+                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                        . ' OR orangtua.nama LIKE :namaortu '
+                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
+                $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('nomor', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                    $qbAdvsearchnum->setParameter('nomor', $searchdata['searchkey']);
-                } else {
-                    $querybuilder
-                            ->andWhere(
-                                    't.namaLengkap LIKE :namalengkap OR t.keterangan LIKE :keterangan OR t4.nama LIKE :sekolahasal OR t.alamat LIKE :alamat');
-                    $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                    $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                    $querybuilder->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
-                    $querybuilder->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $qbsearchnum
+                        ->andWhere(
+                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
+                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                        . ' OR orangtua.nama LIKE :namaortu '
+                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
+                $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                    $qbsearchnum
-                            ->andWhere(
-                                    't.namaLengkap LIKE :namalengkap OR t.keterangan LIKE :keterangan OR t4.nama LIKE :sekolahasal OR t.alamat LIKE :alamat');
-                    $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                    $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                    $qbsearchnum->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
-                    $qbsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $qbAdvsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $qbAdvsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
+                $qbAdvsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $qbAdvsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $qbAdvsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
+                $qbAdvsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                    $qbAdvsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                    $qbAdvsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                    $qbAdvsearchnum->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
-                    $qbAdvsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                }
                 $tampilkanTercari = true;
             }
 
@@ -262,42 +277,109 @@ class SiswaApplicantReportController extends Controller
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
                 'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
                 'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
-                'pencarianLanjutan' => $pencarianLanjutan,
+                'pencarianLanjutan' => $pencarianLanjutan, 'searchkey' => $searchdata['searchkey']
         );
     }
 
     /**
-     * Finds and displays a Siswa laporan-pendaftaran entity.
+     * ekspor data laporan pendaftaran siswa baru
      *
-     * @Route("/{id}", name="laporan-pendaftaran_show")
+     * @Route("/export", name="laporan-pendaftaran_export")
      * @Method("GET")
-     * @Template()
+     * @Secure(roles="ROLE_KETUA_PANITIA_PSB")
      */
-    public function showAction($id) {
+    public function exportAction() {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
 
         $em = $this->getDoctrine()->getManager();
+        $qbe = $em->createQueryBuilder();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+        $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        $filenameoutput = preg_replace('/\s+/', '', $panitiaAktif[3]) . '-' . date("Y-m-d-h-i");
+
+        $extensiontarget = $extensionsource = ".ods";
+        $filesource = $filenameoutput . $extensionsource;
+        $filetarget = $filenameoutput . $extensiontarget;
+
+        $fs = new Filesystem();
+        if (!$fs->exists($outputdir)) {
+            $fs->mkdir($outputdir);
+        }
+        if (!$fs->exists($outputdir . $sekolah->getId())) {
+            $fs->mkdir($outputdir . $sekolah->getId());
+        }
+        if (!$fs->exists($outputdir . $sekolah->getId() . '/' . $panitiaAktif[3])) {
+            $fs->mkdir($outputdir . $sekolah->getId() . '/' . $panitiaAktif[3]);
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+        $documentsource = $outputdir . $filesource;
+        $documenttarget = $outputdir . $filetarget;
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(), 'panitiaAktif' => $panitiaAktif,
-        );
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
+                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
+                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
+                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
+                ->setParameter('tahunaktif', $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
+                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+        $results = $querybuilder->getQuery()->getResult();
+
+        if ($outputfiletype == 'ods') {
+            if (copy($documentbase, $documenttarget) === TRUE) {
+                $ziparchive = new \ZipArchive();
+                $ziparchive->open($documenttarget);
+                $ziparchive
+                        ->addFromString('content.xml',
+                                $this
+                                        ->renderView(
+                                                "FastSisdikBundle:SiswaApplicantReport:report.xml.twig",
+                                                array(
+                                                    'data' => $results,
+                                                )));
+                if ($ziparchive->close() === TRUE) {
+                    return $this->downloadReportFileAction($file, $type);
+                }
+            }
+        }
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    /**
+     * download the generated file report
+     *
+     * @Route("/download/{file}.{type}", name="laporan-pendaftaran_download")
+     */
+    public function downloadReportFileAction($file, $type) {
+        $filetarget = $file . '.' . $type;
+
+        $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
+                . self::DOCUMENTS_OUTPUTDIR . $filetarget;
+
+        $response = new Response(file_get_contents($documenttarget), 200);
+        $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
+        $response->headers->set('Content-Disposition', $d);
+        $response->headers->set('Content-Description', 'File Transfer');
+
+        if ($type == 'xls') {
+            $response->headers->set('Content-Type', 'application/vnd.ms-excel');
+        } else if ($type == 'ods') {
+            $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
+        } else {
+            $response->headers->set('Content-Type', 'application');
+        }
+
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Expires', '0');
+        $response->headers->set('Cache-Control', 'must-revalidate');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Content-Length', filesize($documenttarget));
+
+        return $response;
     }
 
     /**
