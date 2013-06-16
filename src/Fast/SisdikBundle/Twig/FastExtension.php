@@ -5,7 +5,8 @@ class FastExtension extends \Twig_Extension
 {
     public function getFunctions() {
         return array(
-            'currencySymbol' => new \Twig_Function_Method($this, 'currencySymbolFunction'),
+                'currencySymbol' => new \Twig_Function_Method($this, 'currencySymbolFunction'),
+                'highlightResult' => new \Twig_Function_Method($this, 'highlightResultFunction'),
         );
     }
 
@@ -25,6 +26,10 @@ class FastExtension extends \Twig_Extension
         $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
 
         return $symbol;
+    }
+
+    public function highlightResultFunction($subject, $search) {
+        return preg_replace("/" . preg_quote($search, "/") . "/i", "<mark>$0</mark>", htmlspecialchars($subject));
     }
 
     public function getName() {
