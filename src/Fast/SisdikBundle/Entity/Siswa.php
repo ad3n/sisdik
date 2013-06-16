@@ -1522,10 +1522,32 @@ class Siswa
     }
 
     public function getWebcamPhotoDir() {
+        $fs = new Filesystem();
+        if (!$fs->exists(self::WEBCAMPHOTO_DIR)) {
+            $fs->mkdir(self::WEBCAMPHOTO_DIR);
+        }
         return self::WEBCAMPHOTO_DIR;
     }
 
     public function getWebcamPhotoPath() {
+        $fs = new Filesystem();
+        if (!$fs->exists(self::WEBCAMPHOTO_DIR)) {
+            $fs->mkdir(self::WEBCAMPHOTO_DIR);
+        }
+        if (!$fs->exists(self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId())) {
+            $fs->mkdir(self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId());
+        }
+
+        if (!$fs
+                ->exists(
+                        self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/'
+                                . $this->getTahun()->getTahun())) {
+            $fs
+                    ->mkdir(
+                            self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/'
+                                    . $this->getTahun()->getTahun());
+        }
+
         return null === $this->fotoPendaftaran ? null
                 : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun()
                         . '/' . $this->fotoPendaftaran;
