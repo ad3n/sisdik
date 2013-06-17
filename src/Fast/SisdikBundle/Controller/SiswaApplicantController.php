@@ -50,6 +50,7 @@ class SiswaApplicantController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
+        $searchkey = '';
 
         $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
 
@@ -61,15 +62,19 @@ class SiswaApplicantController extends Controller
 
         $qbsearchnum = $em->createQueryBuilder()->select('COUNT(t.id)')->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = ?1')->setParameter(1, $panitiaAktif[2]);
+                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
+                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
+                ->setParameter(1, $panitiaAktif[2]);
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = ?1')->setParameter(1, $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
+                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
+                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
+                ->setParameter(1, $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
                 ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $searchform->submit($this->getRequest());
@@ -88,32 +93,34 @@ class SiswaApplicantController extends Controller
             }
 
             if ($searchdata['searchkey'] != '') {
-                if (is_numeric($searchdata['searchkey'])) {
-                    // $dql = "SELECT t FROM FastSisdikBundle:Siswa t "
-                    //         . " LEFT JOIN t.pembayaranPendaftaran t2 "
-                    //         . " WHERE t.nomorPendaftaran = CASE WHEN t2.siswa IS NOT NULL THEN '{$searchdata['searchkey']}' ELSE '0' END";
-                    // $query = $em->createQuery($dql);
+                $searchkey = $searchdata['searchkey'];
 
-                    $querybuilder->andWhere('t.nomorPendaftaran = :nomor');
-                    $querybuilder->setParameter('nomor', $searchdata['searchkey']);
+                $querybuilder
+                        ->andWhere(
+                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
+                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                        . ' OR orangtua.nama LIKE :namaortu '
+                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
+                $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('nomor', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                    $qbsearchnum->andWhere('t.nomorPendaftaran = :nomor');
-                    $qbsearchnum->setParameter('nomor', $searchdata['searchkey']);
-                } else {
-                    $querybuilder
-                            ->andWhere(
-                                    't.namaLengkap LIKE :namalengkap OR t.keterangan LIKE :keterangan OR t4.nama LIKE :sekolahasal');
-                    $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                    $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                    $querybuilder->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
+                $qbsearchnum
+                        ->andWhere(
+                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
+                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                        . ' OR orangtua.nama LIKE :namaortu '
+                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
+                $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                    $qbsearchnum
-                            ->andWhere(
-                                    't.namaLengkap LIKE :namalengkap OR t.keterangan LIKE :keterangan OR t4.nama LIKE :sekolahasal');
-                    $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                    $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                    $qbsearchnum->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
-                }
                 $tampilkanTercari = true;
             }
 
@@ -128,6 +135,7 @@ class SiswaApplicantController extends Controller
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
                 'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
                 'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
+                'searchkey' => $searchkey,
         );
     }
 

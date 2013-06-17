@@ -56,18 +56,10 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ data.nomorPendaftaran }}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
-    		{% if data.orangtuaWali %}
-    		    {% for orangtua in data.orangtuaWali %}
-    		        {% if orangtua %}
-    		            {% if orangtua.aktif == 1 %}
-        		            <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ orangtua.nama }}</td>
-        		            <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ orangtua.ponsel }}</td>
-        		        {% endif %}
-    		        {% endif %}
-    		    {% endfor %}
-    		{% endif %}
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
         		<a href="{{ path('applicant_editregphoto', {'id': data.id}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
