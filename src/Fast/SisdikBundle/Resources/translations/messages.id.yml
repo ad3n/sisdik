@@ -5,6 +5,26 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    klik.jika.tak.otomatis: Klik nama file jika tak terbuka otomatis
+    gelombang: Gelombang
+    nomor.pendaftaran: Nomor Pendaftaran
+    nama.lengkap: Nama Lengkap
+    agama: Agama
+    nama.panggilan: Nama Panggilan
+    anak.ke: Anak Ke
+    jumlah.saudara.kandung: Jumlah Saudara Kandung
+    jumlah.saudara.tiri: Jumlah Saudara Tiri
+    status.yatimpiatu: Status Yatim/Piatu
+    bahasa.seharihari: Bahasa Sehari-hari
+    kodepos: Kode Pos
+    telepon: Telepon
+    nomor.ponsel.siswa: No Ponsel Siswa
+    sekolah.tinggal.di: Sekolah Tinggal Di
+    jarak.ke.sekolah: Jarak Ke Sekolah
+    ke.sekolah.menggunakan: Ke Sekolah Menggunakan
+    berat.badan: Berat Badan
+    tinggi.badan: Tinggi Badan
+    golongan.darah: Golongan Darah
     jumlah.bayar: Jumlah Bayar
     ekspor: Ekspor
     dari.tanggal: Dari Tanggal
@@ -672,6 +692,7 @@ confirm.drop:
     ortuwali: Hapus Orang Tua/Wali %nama%, dari siswa %siswa%?
 
 alt:
+    logo.sekolah: Logo Sekolah
     sekolah.asal: sekolah asal
     referensi: perujuk
     add: ikon tambah
@@ -777,6 +798,7 @@ info:
     errormessage: Pesan Error
 
 errorinfo:
+    persentase.harus.dengan.gelombang: persentase hanya bisa digunakan bersama dengan gelombang tertentu
     cannot.open: Tidak bisa membuka file %filename%
     cannot.write: Tidak bisa menulis ke file %filename%
     cannot.remove.previousfile: Tidak bisa menghapus file sebelumnya

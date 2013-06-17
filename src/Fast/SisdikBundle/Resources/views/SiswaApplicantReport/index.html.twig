@@ -89,6 +89,16 @@ form .clearfix {
     margin-left: 0;
     padding-left: 0;
 }
+.loading {
+    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
+#filename {
+    display: inline-block;
+    line-height: 1.5em;
+    min-width: 10em;
+}
 </style>
 {% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -177,14 +187,25 @@ form .clearfix {
 {{ knp_pagination_render(pagination) }}
 
 <div class="export-section">
-    <a href="{{ path("laporan-pendaftaran_export", app.request.query.all) }}">export</a>
-    <button type="submit" class="btn success">{{ 'label.ekspor'|trans }}</button>
+    <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
+        <button type="submit" class="btn success">{{ 'label.ekspor'|trans }}</button>
+        <div id="filename"></div>
+    </form>
 </div>
 
 <div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
 var duration = 300;
 var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
+
+function bersihkanKetikPilih() {
+	if ($(".nama-sekolah-asal").val() == "") {
+        $(".id-sekolah-asal").val("");
+    }
+    if ($(".nama-referensi").val() == "") {
+        $(".id-referensi").val("");
+    }
+}
 
 $(document).ready(function() {
 	var options1 = {
@@ -304,13 +325,23 @@ $(document).ready(function() {
     }
 
     $("#search-form").submit(function() {
-        if ($(".nama-sekolah-asal").val() == "") {
-            $(".id-sekolah-asal").val("");
-        }
-        if ($(".nama-referensi").val() == "") {
-            $(".id-referensi").val("");
-        }
+    	bersihkanKetikPilih();
         return true;
+    });
+
+    $("#export-form").submit(function() {
+        var url = $(this).attr("action");
+        bersihkanKetikPilih();
+        $("#filename").addClass("loading");
+        $("#filename").html("&nbsp;&nbsp;&nbsp;&nbsp;");
+        $.post(url, $("#search-form").serialize(), function(response) {
+            if (response.redirectUrl) {
+            	window.location.href = "/" + response.redirectUrl;
+            	$("#filename").html('<a href="/' + response.redirectUrl + '">' + response.filename + '</a> ({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	$("#filename").removeClass("loading");
+            }
+        });
+        return false;
     });
 });
 </script>
