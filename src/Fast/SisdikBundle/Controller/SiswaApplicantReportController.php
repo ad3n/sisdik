@@ -277,7 +277,7 @@ class SiswaApplicantReportController extends Controller
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
                 'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
                 'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
-                'pencarianLanjutan' => $pencarianLanjutan, 'searchkey' => $searchdata['searchkey']
+                'pencarianLanjutan' => $pencarianLanjutan, 'searchkey' => $searchkey,
         );
     }
 
