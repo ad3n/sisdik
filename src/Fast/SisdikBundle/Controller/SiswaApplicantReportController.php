@@ -286,7 +286,6 @@ class SiswaApplicantReportController extends Controller
      *
      * @Route("/export", name="laporan-pendaftaran_export")
      * @Method("POST")
-     * @Secure(roles="ROLE_KETUA_PANITIA_PSB")
      */
     public function exportAction() {
         $sekolah = $this->isRegisteredToSchool();
