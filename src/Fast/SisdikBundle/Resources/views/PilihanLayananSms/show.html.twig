@@ -6,7 +6,7 @@
     <dt>{{ 'label.school'|trans }}</dt>
     <dd>{{ entity.sekolah.nama }}</dd>
     <dt>{{ 'label.layanansms.jenis'|trans }}</dt>
-    <dd>{{ daftarJenisLayanan[entity.jenisLayanan] }}</dd>
+    <dd>{% if daftarJenisLayanan[entity.jenisLayanan] is defined %}{{ daftarJenisLayanan[entity.jenisLayanan] }}{% endif %}</dd>
     <dt>{{ 'label.aktif'|trans }}</dt>
     <dd>
     {% if entity.status == 1 %}
