@@ -2,9 +2,7 @@
 
 namespace Fast\SisdikBundle\Controller;
 use Fast\SisdikBundle\Util\Messenger;
-
 use Fast\SisdikBundle\Entity\PilihanLayananSms;
-
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Fast\SisdikBundle\Form\ReportSummaryType;
@@ -721,6 +719,7 @@ class SiswaApplicantReportController extends Controller
             'teksterformat' => $teks
         );
         $return = json_encode($return);
+
         return new Response($return, 200,
                 array(
                     'Content-Type' => 'application/json'
