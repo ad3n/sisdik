@@ -1531,13 +1531,6 @@ class Siswa
 
     public function getWebcamPhotoPath() {
         $fs = new Filesystem();
-        if (!$fs->exists(self::WEBCAMPHOTO_DIR)) {
-            $fs->mkdir(self::WEBCAMPHOTO_DIR);
-        }
-        if (!$fs->exists(self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId())) {
-            $fs->mkdir(self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId());
-        }
-
         if (!$fs
                 ->exists(
                         self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/'
@@ -1717,13 +1710,6 @@ class Siswa
     protected function getUploadDir() {
         // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
         $fs = new Filesystem();
-        if (!$fs->exists(self::PHOTO_DIR)) {
-            $fs->mkdir(self::PHOTO_DIR);
-        }
-        if (!$fs->exists(self::PHOTO_DIR . $this->getSekolah()->getId())) {
-            $fs->mkdir(self::PHOTO_DIR . $this->getSekolah()->getId());
-        }
-
         if (!$fs
                 ->exists(self::PHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun())) {
             $fs

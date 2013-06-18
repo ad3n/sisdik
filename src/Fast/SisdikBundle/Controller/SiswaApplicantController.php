@@ -470,15 +470,6 @@ class SiswaApplicantController extends Controller
         }
 
         $fs = new Filesystem();
-
-        if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR)) {
-            $fs->mkdir(Siswa::WEBCAMPHOTO_DIR);
-        }
-
-        if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId())) {
-            $fs->mkdir(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId());
-        }
-
         if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun)) {
             $fs->mkdir(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun);
         }

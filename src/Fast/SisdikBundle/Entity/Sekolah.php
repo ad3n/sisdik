@@ -539,9 +539,6 @@ class Sekolah
 
     protected function getUploadDir() {
         $fs = new Filesystem();
-        if (!$fs->exists(self::LOGO_DIR)) {
-            $fs->mkdir(self::LOGO_DIR);
-        }
         if (!$fs->exists(self::LOGO_DIR . $this->getId())) {
             $fs->mkdir(self::LOGO_DIR . $this->getId());
         }

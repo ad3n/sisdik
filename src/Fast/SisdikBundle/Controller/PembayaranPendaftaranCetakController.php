@@ -128,12 +128,6 @@ class PembayaranPendaftaranCetakController extends Controller
 
         $fs = new Filesystem();
         $schoolReceiptDir = $this->get('kernel')->getRootDir() . self::RECEIPTS_DIR . $sekolah->getId();
-        if (!$fs->exists($schoolReceiptDir)) {
-            $fs->mkdir($schoolReceiptDir);
-        }
-        if (!$fs->exists($schoolReceiptDir . '/' . $tahun)) {
-            $fs->mkdir($schoolReceiptDir . '/' . $tahun);
-        }
         if (!$fs->exists($schoolReceiptDir . '/' . $tahun . '/' . $bulan)) {
             $fs->mkdir($schoolReceiptDir . '/' . $tahun . '/' . $bulan);
         }

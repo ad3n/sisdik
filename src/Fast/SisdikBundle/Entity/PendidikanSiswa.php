@@ -525,8 +525,8 @@ class PendidikanSiswa
     }
 
     public function getRelativePathIjazahFileDisk() {
-        return null === $this->ijazahFileDisk ? null : $this->getUploadRootDir() . '/'
-                . $this->ijazahFileDisk;
+        return null === $this->ijazahFileDisk ? null
+                : $this->getUploadRootDir() . '/' . $this->ijazahFileDisk;
     }
 
     public function getRelativePathIjazahFileDiskSebelumnya() {
@@ -617,12 +617,6 @@ class PendidikanSiswa
 
     protected function getUploadDir() {
         $fs = new Filesystem();
-        if (!$fs->exists(self::PENDIDIKAN_DIR)) {
-            $fs->mkdir(self::PENDIDIKAN_DIR);
-        }
-        if (!$fs->exists(self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId())) {
-            $fs->mkdir(self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId());
-        }
         if (!$fs
                 ->exists(
                         self::PENDIDIKAN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'

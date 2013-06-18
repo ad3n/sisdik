@@ -277,12 +277,6 @@ class DokumenSiswa
 
     protected function getUploadDir() {
         $fs = new Filesystem();
-        if (!$fs->exists(self::DOKUMEN_DIR)) {
-            $fs->mkdir(self::DOKUMEN_DIR);
-        }
-        if (!$fs->exists(self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId())) {
-            $fs->mkdir(self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId());
-        }
         if (!$fs
                 ->exists(
                         self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
