@@ -66,6 +66,7 @@ class PilihanLayananSms
                 'b-pendaftaran-bayar-pertama' => 'Pertama kali membayar biaya pendaftaran',
                 'c-pendaftaran-bayar' => 'Membayar biaya pendaftaran',
                 'd-pendaftaran-bayar-lunas' => 'Lunas biaya pendaftaran',
+                'e-pendaftaran-ringkasan-laporan' => 'Ringkasan laporan pendaftaran',
         );
     }
 
