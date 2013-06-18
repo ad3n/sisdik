@@ -31,7 +31,8 @@ class PilihanLayananSmsType extends AbstractType
         $builder
                 ->add('jenisLayanan', 'choice',
                         array(
-                                'choices' => PilihanLayananSms::getDaftarLayanan(), 'required' => true,
+                                'choices' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
+                                        PilihanLayananSms::getDaftarLayananLaporan()), 'required' => true,
                                 'label' => 'label.layanansms.jenis',
                         ))
                 ->add('status', 'checkbox',

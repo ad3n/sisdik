@@ -60,7 +60,8 @@ class PilihanLayananSmsController extends Controller
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayanan()
+                'daftarJenisLayanan' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
+                        PilihanLayananSms::getDaftarLayananLaporan())
         );
     }
 
@@ -151,7 +152,8 @@ class PilihanLayananSmsController extends Controller
 
         return array(
                 'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayanan()
+                'daftarJenisLayanan' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
+                        PilihanLayananSms::getDaftarLayananLaporan())
         );
     }
 

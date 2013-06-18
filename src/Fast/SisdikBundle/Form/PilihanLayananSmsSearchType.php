@@ -60,7 +60,8 @@ class PilihanLayananSmsSearchType extends AbstractType
     private function buildServiceChoices() {
         $choices = array_merge(array(
                     '' => 'label.semua.layanan'
-                ), PilihanLayananSms::getDaftarLayanan());
+                ), PilihanLayananSms::getDaftarLayananPendaftaran(),
+                PilihanLayananSms::getDaftarLayananLaporan());
 
         return $choices;
     }

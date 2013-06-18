@@ -35,8 +35,8 @@ class LayananSmsPendaftaranType extends AbstractType
         $builder
                 ->add('jenisLayanan', 'choice',
                         array(
-                                'choices' => PilihanLayananSms::getDaftarLayanan(), 'required' => true,
-                                'label' => 'label.layanansms.jenis',
+                                'choices' => PilihanLayananSms::getDaftarLayananPendaftaran(),
+                                'required' => true, 'label' => 'label.layanansms.jenis',
                         ));
 
         $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Templatesms', 't')

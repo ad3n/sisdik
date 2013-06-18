@@ -56,17 +56,27 @@ class PilihanLayananSms
     }
 
     /**
-     * Daftar layanan yang bisa ada di database
+     * Daftar layanan sms pendaftaran yang bisa ada di database
      *
      * @return array
      */
-    public static function getDaftarLayanan() {
+    public static function getDaftarLayananPendaftaran() {
         return array(
                 'a-pendaftaran-tercatat' => 'Pendaftar tercatat di database',
                 'b-pendaftaran-bayar-pertama' => 'Pertama kali membayar biaya pendaftaran',
                 'c-pendaftaran-bayar' => 'Membayar biaya pendaftaran',
                 'd-pendaftaran-bayar-lunas' => 'Lunas biaya pendaftaran',
-                'e-pendaftaran-ringkasan-laporan' => 'Ringkasan laporan pendaftaran',
+        );
+    }
+
+    /**
+     * Daftar layanan sms laporan yang bisa ada di database
+     *
+     * @return array
+     */
+    public static function getDaftarLayananLaporan() {
+        return array(
+            'e-laporan-ringkasan' => 'Ringkasan laporan pendaftaran',
         );
     }
 

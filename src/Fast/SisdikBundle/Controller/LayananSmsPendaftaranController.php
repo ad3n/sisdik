@@ -43,7 +43,8 @@ class LayananSmsPendaftaranController extends Controller
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
-            'pagination' => $pagination, 'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayanan()
+                'pagination' => $pagination,
+                'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayananPendaftaran()
         );
     }
 
@@ -132,7 +133,7 @@ class LayananSmsPendaftaranController extends Controller
 
         return array(
                 'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayanan()
+                'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayananPendaftaran()
         );
     }
 
