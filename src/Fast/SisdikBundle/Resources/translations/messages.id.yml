@@ -5,6 +5,7 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    perlu.untuk.sms: Perlu untuk kirim SMS
     teks.ringkasan: Teks Ringkasan
     kirim.sms: Kirim SMS
     cetak.pdf: Cetak PDF
@@ -438,6 +439,9 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    ringkasan.laporan.pendaftaran:
+        gagal.dibuat: Ringkasan laporan pendaftaran gagal dibuat
+        sms.berhasil.dikirim: SMS ringkasan laporan pendaftaran berhasil diterima untuk dikirim
     sekolah.asal:
         tersimpan: Sekolah Asal '%nama% (%kode%)' berhasil dibuat
         terbarui: Sekolah Asal '%nama% (%kode%)' berhasil diperbarui
@@ -803,6 +807,8 @@ info:
     errormessage: Pesan Error
 
 errorinfo:
+    kesalahan.ketika.memformat.teks: Terjadi kesalahan ketika memformat teks
+    nomor.ponsel.tak.boleh.kosong: Nomor ponsel tak boleh kosong
     persentase.harus.dengan.gelombang: persentase hanya bisa digunakan bersama dengan gelombang tertentu
     cannot.open: Tidak bisa membuka file %filename%
     cannot.write: Tidak bisa menulis ke file %filename%
@@ -844,7 +850,7 @@ title:
 app.title: SisDik
 
 help:
-    tag.standar.laporan.psb: tag standar tanpa pencarian adalah %jumlah-total% dan %tanggal-sekarang%
+    tag.standar.laporan.psb: tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%
     logo.sekolah: Maksimum file 300kB
     regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.
     filterby.name.systemid: Nama atau Nomor Induk Sistem

@@ -1,6 +1,11 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Util\Messenger;
+
+use Fast\SisdikBundle\Entity\PilihanLayananSms;
+
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Fast\SisdikBundle\Form\ReportSummaryType;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +24,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Siswa laporan-pendaftaran controller.
@@ -32,6 +36,7 @@ class SiswaApplicantReportController extends Controller
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
     const OUTPUTFILE = "laporan-pendaftaran.";
+    const OUTPUTSUMMARYFILE = "ringkasan-pendaftaran.";
     const DOCUMENTS_OUTPUTDIR = "uploads/sekolah/laporan-psb/";
 
     /**
@@ -276,14 +281,15 @@ class SiswaApplicantReportController extends Controller
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        $summaryform = $this->createForm(new ReportSummaryType($this->container));
+        $summaryform = $this->createForm(new ReportSummaryType());
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
                 'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
                 'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
                 'pencarianLanjutan' => $pencarianLanjutan, 'searchkey' => $searchkey,
-                'summaryform' => $summaryform->createView(),
+                'summaryform' => $summaryform->createView(), 'searchdata' => $searchdata,
+                'tanggalSekarang' => new \DateTime(),
         );
     }
 
@@ -490,7 +496,7 @@ class SiswaApplicantReportController extends Controller
                 $pendaftarTercari = $qbAdvsearchnum->getQuery()->getSingleScalarResult();
             }
         } else {
-            // display error response
+            // TODO: display error response
         }
 
         $pendaftarTercari = $pendaftarTercari != "" ? $pendaftarTercari
@@ -500,7 +506,7 @@ class SiswaApplicantReportController extends Controller
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
         $filenameoutput = self::OUTPUTFILE . preg_replace('/\s+/', '', $panitiaAktif[3]) . '-'
-                . date("m-d-h-i");
+                . date("m-d-h-i") . ".sisdik";
 
         $outputfiletype = "ods";
         $extensiontarget = $extensionsource = ".$outputfiletype";
@@ -508,12 +514,6 @@ class SiswaApplicantReportController extends Controller
         $filetarget = $filenameoutput . $extensiontarget;
 
         $fs = new Filesystem();
-        if (!$fs->exists($outputdir)) {
-            $fs->mkdir($outputdir);
-        }
-        if (!$fs->exists($outputdir . $sekolah->getId())) {
-            $fs->mkdir($outputdir . $sekolah->getId());
-        }
         if (!$fs->exists($outputdir . $sekolah->getId() . '/' . $panitiaAktif[3])) {
             $fs->mkdir($outputdir . $sekolah->getId() . '/' . $panitiaAktif[3]);
         }
@@ -547,6 +547,7 @@ class SiswaApplicantReportController extends Controller
                     );
 
                     $return = json_encode($return);
+
                     return new Response($return, 200,
                             array(
                                 'Content-Type' => 'application/json'
@@ -559,10 +560,10 @@ class SiswaApplicantReportController extends Controller
     /**
      * download the generated file report
      *
-     * @Route("/download/{filename}", name="laporan-pendaftaran_download")
+     * @Route("/download/{filename}/{type}", name="laporan-pendaftaran_download")
      * @Method("GET")
      */
-    public function downloadReportFileAction($filename) {
+    public function downloadReportFileAction($filename, $type = 'ods') {
         $sekolah = $this->isRegisteredToSchool();
         $panitiaAktif = $this->getPanitiaAktif();
 
@@ -573,9 +574,13 @@ class SiswaApplicantReportController extends Controller
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
         $response->headers->set('Content-Disposition', $doc);
-        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Description', 'Laporan Pendaftaran');
 
-        $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
+        if ($type == 'ods') {
+            $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
+        } elseif ($type == 'pdf') {
+            $response->headers->set('Content-Type', 'application/pdf');
+        }
 
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Expires', '0');
@@ -596,7 +601,170 @@ class SiswaApplicantReportController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $panitiaAktif = $this->getPanitiaAktif();
 
+        $em = $this->getDoctrine()->getManager();
 
+        $summaryform = $this->createForm(new ReportSummaryType());
+        $summaryform->submit($this->getRequest());
+        $summarydata = $summaryform->getData();
+
+        if ($summarydata['output'] === 'sms' && $summarydata['nomorPonsel'] === null) {
+            $message = $this->get('translator')->trans('errorinfo.nomor.ponsel.tak.boleh.kosong');
+            $summaryform->get('nomorPonsel')->addError(new FormError($message));
+        }
+
+        if ($summaryform->isValid()) {
+            if ($summarydata['output'] == 'pdf') {
+                $filename = self::OUTPUTSUMMARYFILE . preg_replace('/\s+/', '', $panitiaAktif[3]) . '-'
+                        . date("m-d-h-i") . ".sisdik.pdf";
+                $outputdir = self::DOCUMENTS_OUTPUTDIR;
+
+                $fs = new Filesystem();
+                if (!$fs->exists($outputdir . $sekolah->getId() . '/' . $panitiaAktif[3])) {
+                    $fs->mkdir($outputdir . $sekolah->getId() . '/' . $panitiaAktif[3]);
+                }
+
+                $documenttarget = $outputdir . $sekolah->getId() . '/' . $panitiaAktif[3] . '/' . $filename;
+
+                $facade = $this->get('ps_pdf.facade');
+                $tmpResponse = new Response();
+
+                $this
+                        ->render('FastSisdikBundle:SiswaApplicantReport:summary.pdf.twig',
+                                array(
+                                    'sekolah' => $sekolah, 'teks' => $summarydata['teksTerformat'],
+                                ), $tmpResponse);
+                $xml = $tmpResponse->getContent();
+                $content = $facade->render($xml);
+
+                $fp = fopen($documenttarget, "w");
+
+                if (!$fp) {
+                    throw new IOException($translator->trans("exception.open.file.pdf"));
+                } else {
+                    fwrite($fp, $content);
+                    fclose($fp);
+                }
+
+                return $this
+                        ->redirect(
+                                $this
+                                        ->generateUrl('laporan-pendaftaran_download',
+                                                array(
+                                                    'filename' => $filename, 'type' => 'pdf',
+                                                )));
+            } elseif ($summarydata['output'] == 'sms') {
+                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                        ->findBy(
+                                array(
+                                    'sekolah' => $sekolah, 'jenisLayanan' => 'e-laporan-ringkasan',
+                                ));
+
+                foreach ($pilihanLayananSms as $pilihan) {
+                    if ($pilihan instanceof PilihanLayananSms) {
+                        if ($pilihan->getStatus()) {
+                            $nomorponsel = preg_split("/[\s,]+/", $summarydata['nomorPonsel']);
+                            foreach ($nomorponsel as $ponsel) {
+                                $messenger = $this->get('fast_sisdik.messenger');
+                                if ($messenger instanceof Messenger) {
+                                    $messenger->setPhoneNumber($ponsel);
+                                    $messenger->setMessage($summarydata['teksTerformat']);
+                                    $messenger->sendMessage();
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $this->get('session')->getFlashBag()
+                        ->add('success',
+                                $this->get('translator')
+                                        ->trans('flash.ringkasan.laporan.pendaftaran.sms.berhasil.dikirim'));
+            }
+        } elseif ($summarydata['output'] == 'sms' && $summarydata['nomorPonsel'] === null) {
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('errorinfo.nomor.ponsel.tak.boleh.kosong'));
+        } else {
+            $this->get('session')->getFlashBag()
+                    ->add('error',
+                            $this->get('translator')
+                                    ->trans('flash.ringkasan.laporan.pendaftaran.gagal.dibuat'));
+        }
+
+        return $this->redirect($this->generateUrl('laporan-pendaftaran'));
+    }
+
+    /**
+     * format template
+     *
+     * @Route("/format", name="laporan-pendaftaran_format")
+     * @Method("GET")
+     */
+    public function formatTemplateAction() {
+        $this->isRegisteredToSchool();
+
+        $teks = $this->getRequest()->query->get('teks');
+        $teks = $this
+                ->formatTemplate($teks, $this->getRequest()->query->get('gelombang'),
+                        $this->getRequest()->query->get('dariTanggal'),
+                        $this->getRequest()->query->get('hinggaTanggal'),
+                        $this->getRequest()->query->get('jenisKelamin'),
+                        $this->getRequest()->query->get('sekolahAsal'),
+                        $this->getRequest()->query->get('pembandingBayar'),
+                        $this->getRequest()->query->get('jumlahBayar'),
+                        $this->getRequest()->query->get('persenBayar'),
+                        $this->getRequest()->query->get('referensi'),
+                        $this->getRequest()->query->get('pendaftarTotal'),
+                        $this->getRequest()->query->get('pendaftarTercari'),
+                        $this->getRequest()->query->get('tanggalSekarang'));
+
+        $return = array(
+            'teksterformat' => $teks
+        );
+        $return = json_encode($return);
+        return new Response($return, 200,
+                array(
+                    'Content-Type' => 'application/json'
+                ));
+    }
+
+    /**
+     * memformat teks template
+     *
+     * @param  string $teks
+     * @param  string $gelombang
+     * @param  string $dariTanggal
+     * @param  string $hinggaTanggal
+     * @param  string $jenisKelamin
+     * @param  string $sekolahAsal
+     * @param  string $pembandingBayar
+     * @param  string $jumlahBayar
+     * @param  string $persenBayar
+     * @param  string $referensi
+     * @param  string $pendaftarTotal
+     * @param  string $pendaftarTercari
+     * @param  string $tanggalSekarang
+     * @return string $teks
+     */
+    private function formatTemplate($teks, $gelombang = '', $dariTanggal = '', $hinggaTanggal = '',
+            $jenisKelamin = '', $sekolahAsal = '', $pembandingBayar = '', $jumlahBayar = '',
+            $persenBayar = '', $referensi = '', $pendaftarTotal = '', $pendaftarTercari = '',
+            $tanggalSekarang = '') {
+        $teks = str_replace("%gelombang%", $gelombang, $teks);
+        $teks = str_replace("%dari-tanggal%", $dariTanggal, $teks);
+        $teks = str_replace("%hingga-tanggal%", $hinggaTanggal, $teks);
+        $teks = str_replace("%jenis-kelamin%", $jenisKelamin, $teks);
+        $teks = str_replace("%sekolah-asal%", $sekolahAsal, $teks);
+
+        $teks = str_replace("%pembanding-bayar%", $pembandingBayar, $teks);
+        $teks = str_replace("%jumlah-bayar%", $jumlahBayar, $teks);
+        $teks = str_replace("%persen-bayar%", ($persenBayar == '1') ? '%' : '', $teks);
+
+        $teks = str_replace("%perujuk%", $referensi, $teks);
+        $teks = str_replace("%jumlah-total%", $pendaftarTotal, $teks);
+        $teks = str_replace("%jumlah-tercari%", $pendaftarTercari, $teks);
+        $teks = str_replace("%tanggal-sekarang%", $tanggalSekarang, $teks);
+
+        return $teks;
     }
 
     /**

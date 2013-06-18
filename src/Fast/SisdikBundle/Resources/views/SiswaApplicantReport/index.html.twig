@@ -160,6 +160,10 @@ form .clearfix {
 	display: inline-block;
 	vertical-align: middle;
 }
+.pratinjau-loader {
+    min-width: 15px;
+    margin-left: 8px;
+}
 /* end of ringkasan */
 </style>
 {% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
@@ -271,7 +275,9 @@ form .clearfix {
                 {{ form_help(summaryform.teks) }}
 
                 {{ form_rest(summaryform) }}
-                <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button>
+                <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button><span class="pratinjau-loader">&nbsp;&nbsp;&nbsp;</span>
+                <div class="clearfix"></div>
+                <span id="teks-terformat"></span>
                 <div class="clearfix"></div>
                 <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
                 <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
@@ -435,7 +441,6 @@ $(document).ready(function() {
         var url = $(this).attr("action");
         bersihkanKetikPilih();
         $("#filename").addClass("loading");
-        $("#filename").html("&nbsp;&nbsp;&nbsp;&nbsp;");
         $.post(url, $("#search-form").serialize(), function(response) {
             if (response.redirectUrl) {
             	window.location.href = response.redirectUrl;
@@ -448,7 +453,33 @@ $(document).ready(function() {
     });
 
     $("#report-preview").click(function() {
-        // generate summary preview
+        var url = "{{ path('laporan-pendaftaran_format') }}";
+        $(".pratinjau-loader").addClass("loading");
+        $.get(url, {
+                gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
+                dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
+                hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
+                jenisKelamin: "{% if searchdata.jenisKelamin is not null %}{% if searchdata.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif searchdata.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}{% endif %}",
+                sekolahAsal: "{% if searchdata.sekolahAsal is not null %}{{ searchdata.sekolahAsal.nama }}{% endif %}",
+                pembandingBayar: "{{ searchdata.pembandingBayar|raw }}",
+                jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
+                persenBayar: "{% if searchdata.persenBayar is not null %}{{ searchdata.persenBayar }}{% endif %}",
+                referensi: "{% if searchdata.referensi is not null %}{{ searchdata.referensi.nama }}{% endif %}",
+                pendaftarTotal: "{{ pendaftarTotal }}",
+                pendaftarTercari: "{{ pendaftarTercari }}",
+                tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
+                teks: $(".ringkasan-teks").val()
+            }, function(response) {
+                if (response.teksterformat) {
+                	$("#teks-terformat").html(response.teksterformat);
+                	$(".teks-terformat").val(response.teksterformat);
+                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+                } else {
+                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                }
+            	$(".pratinjau-loader").removeClass("loading");
+            }
+        );
         return false;
     });
 
@@ -456,6 +487,51 @@ $(document).ready(function() {
         $(".ringkasan-teks").val(gantiTemplate());
         console.log(templateAktif);
         $("#penanda-template").css("background-color", gantiPenanda());
+    });
+
+    $("#report-sms").click(function() {
+        $(".output-ringkasan").val("sms");
+        if ($(".nomor-ponsel").val() == "") {
+            $(".nomor-ponsel").focus();
+            return false;
+        }
+    });
+
+    $("#report-pdf").click(function() {
+        $(".output-ringkasan").val("pdf");
+    });
+
+    var summaryform = $("#summary-form");
+    summaryform.submit(function() {
+    	var url = "{{ path('laporan-pendaftaran_format') }}";
+        $(".pratinjau-loader").addClass("loading");
+        $.get(url, {
+                gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
+                dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
+                hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
+                jenisKelamin: "{% if searchdata.jenisKelamin is not null %}{% if searchdata.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif searchdata.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}{% endif %}",
+                sekolahAsal: "{% if searchdata.sekolahAsal is not null %}{{ searchdata.sekolahAsal.nama }}{% endif %}",
+                pembandingBayar: "{{ searchdata.pembandingBayar|raw }}",
+                jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
+                persenBayar: "{% if searchdata.persenBayar is not null %}{{ searchdata.persenBayar }}{% endif %}",
+                referensi: "{% if searchdata.referensi is not null %}{{ searchdata.referensi.nama }}{% endif %}",
+                pendaftarTotal: "{{ pendaftarTotal }}",
+                pendaftarTercari: "{{ pendaftarTercari }}",
+                tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
+                teks: $(".ringkasan-teks").val()
+            }, function(response) {
+            	$(".pratinjau-loader").removeClass("loading");
+                if (response.teksterformat) {
+                	$("#teks-terformat").html(response.teksterformat);
+                	$(".teks-terformat").val(response.teksterformat);
+                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+            	    summaryform[0].submit();
+                } else {
+                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                }
+            }
+        );
+        return false;
     });
 });
 
@@ -469,18 +545,18 @@ function gantiTemplate() {
 	} else if (templateAktif == 1) {
 		string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
 	} else if (templateAktif == 2) {
-		string = "Jumlah pendaftar berjenis kelamin %jenis-kelamin% adalah %jumlah-pencarian% dari %jumlah-total% siswa";
+		string = "Jumlah pendaftar berjenis kelamin %jenis-kelamin% adalah %jumlah-tercari% dari %jumlah-total% siswa";
 	} else if (templateAktif == 3) {
-		string = "Jumlah pendaftar dari %asal-sekolah% sebanyak %jumlah-pencarian% dari total %jumlah-total%";
+		string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
 	} else if (templateAktif == 4) {
-		string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-pencarian%";
+		string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
 	} else if (templateAktif == 5) {
-		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-pencarian% siswa";
+		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
 	} else if (templateAktif == 6) {
 		templateAktif = -1;
 		string = "Pendaftar %jenis-kelamin% pada %gelombang% dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
-            		"yang berasal dari %asal-sekolah% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar% " +
-            		"yang dirujuk oleh Bpk %perujuk% berjumlah %jumlah-pencarian% orang (total pendaftar %jumlah-total% orang)";
+            		"yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
+            		"yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
 	}
 
 	return string;
