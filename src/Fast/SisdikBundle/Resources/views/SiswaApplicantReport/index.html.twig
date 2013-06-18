@@ -268,6 +268,7 @@ form .clearfix {
                 {% endimage %}
                 <div class="clearfix" style="margin-bottom: 0;"></div>
                 {{ form_widget(summaryform.teks) }}
+                {{ form_help(summaryform.teks) }}
 
                 {{ form_rest(summaryform) }}
                 <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button>

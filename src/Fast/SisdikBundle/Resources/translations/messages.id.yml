@@ -844,6 +844,7 @@ title:
 app.title: SisDik
 
 help:
+    tag.standar.laporan.psb: tag standar tanpa pencarian adalah %jumlah-total% dan %tanggal-sekarang%
     logo.sekolah: Maksimum file 300kB
     regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.
     filterby.name.systemid: Nama atau Nomor Induk Sistem
