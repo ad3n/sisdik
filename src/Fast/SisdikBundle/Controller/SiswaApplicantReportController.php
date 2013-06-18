@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Fast\SisdikBundle\Form\ReportSummaryType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Fast\SisdikBundle\Entity\Referensi;
@@ -29,7 +31,7 @@ class SiswaApplicantReportController extends Controller
 {
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
-    const OUTPUTFILE = "Laporan-Pendaftaran.";
+    const OUTPUTFILE = "laporan-pendaftaran.";
     const DOCUMENTS_OUTPUTDIR = "uploads/sekolah/laporan-psb/";
 
     /**
@@ -48,6 +50,7 @@ class SiswaApplicantReportController extends Controller
         $em = $this->getDoctrine()->getManager();
         $qbe = $em->createQueryBuilder();
 
+        $pendaftarTercari = 0;
         $tampilkanTercari = false;
         $pencarianLanjutan = false;
         $searchkey = '';
@@ -267,17 +270,20 @@ class SiswaApplicantReportController extends Controller
             $pencarianLanjutan = true;
         }
 
-        $pendaftarTercari = $pendaftarTercari != "" ? $pendaftarTercari
+        $pendaftarTercari = $pendaftarTercari != 0 ? $pendaftarTercari
                 : $qbsearchnum->getQuery()->getSingleScalarResult();
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+
+        $summaryform = $this->createForm(new ReportSummaryType($this->container));
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
                 'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
                 'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
                 'pencarianLanjutan' => $pencarianLanjutan, 'searchkey' => $searchkey,
+                'summaryform' => $summaryform->createView(),
         );
     }
 
@@ -533,7 +539,11 @@ class SiswaApplicantReportController extends Controller
                                                 )));
                 if ($ziparchive->close() === TRUE) {
                     $return = array(
-                        "redirectUrl" => $documenttarget, "filename" => $filetarget,
+                            "redirectUrl" => $this
+                                    ->generateUrl("laporan-pendaftaran_download",
+                                            array(
+                                                'filename' => $filetarget
+                                            )), "filename" => $filetarget,
                     );
 
                     $return = json_encode($return);
@@ -549,26 +559,23 @@ class SiswaApplicantReportController extends Controller
     /**
      * download the generated file report
      *
-     * @Route("/download/{file}.{type}", name="laporan-pendaftaran_download")
+     * @Route("/download/{filename}", name="laporan-pendaftaran_download")
+     * @Method("GET")
      */
-    public function downloadReportFileAction($file, $type) {
-        $filetarget = $file . '.' . $type;
+    public function downloadReportFileAction($filename) {
+        $sekolah = $this->isRegisteredToSchool();
+        $panitiaAktif = $this->getPanitiaAktif();
 
-        $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
-                . self::DOCUMENTS_OUTPUTDIR . $filetarget;
+        $filetarget = $filename;
+        $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $panitiaAktif[3] . '/'
+                . $filetarget;
 
         $response = new Response(file_get_contents($documenttarget), 200);
-        $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
-        $response->headers->set('Content-Disposition', $d);
+        $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
+        $response->headers->set('Content-Disposition', $doc);
         $response->headers->set('Content-Description', 'File Transfer');
 
-        if ($type == 'xls') {
-            $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-        } else if ($type == 'ods') {
-            $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
-        } else {
-            $response->headers->set('Content-Type', 'application');
-        }
+        $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
 
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Expires', '0');
@@ -577,6 +584,19 @@ class SiswaApplicantReportController extends Controller
         $response->headers->set('Content-Length', filesize($documenttarget));
 
         return $response;
+    }
+
+    /**
+     * download the generated file report
+     *
+     * @Route("/ringkasan", name="laporan-pendaftaran_summary")
+     * @Method("POST")
+     */
+    public function summaryAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $panitiaAktif = $this->getPanitiaAktif();
+
+
     }
 
     /**

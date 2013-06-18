@@ -680,7 +680,7 @@ class SiswaApplicantController extends Controller
      *
      * @return array panitiaaktif
      */
-    private function getPanitiaAktif() {
+    public function getPanitiaAktif() {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();

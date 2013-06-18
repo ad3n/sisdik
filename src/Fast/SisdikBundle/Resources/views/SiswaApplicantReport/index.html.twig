@@ -38,7 +38,7 @@ form .clearfix {
 #cari-lanjutan {
     display: none;
 }
-#anchor {
+#anchor-lanjutan {
     outline: none;
     text-decoration: none;
 }
@@ -95,10 +95,72 @@ form .clearfix {
     {% endimage %}
 }
 #filename {
-    display: inline-block;
     line-height: 1.5em;
-    min-width: 10em;
+    min-width: 5em;
 }
+/* ringkasan */
+#ringkasan {
+    display: none;
+}
+#ringkasan .control-group {
+    display: block;
+}
+#anchor-ringkasan {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-ringkasan {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-ringkasan-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-ringkasan, .anchor-ringkasan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-ringkasan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-ringkasan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-ringkasan-sel:hover {
+    color: #222;
+}
+#ringkasan .control-group {
+    margin-right: 0.4em;
+}
+.label-ringkasan-teks {
+    float: left;
+}
+#pemilih-ringkasan {
+    margin-left: 15px;
+    margin-right: 7px;
+}
+#pemilih-ringkasan:focus {
+    outline: none;
+}
+#penanda-template {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background-color: #CCCCCC;
+	display: inline-block;
+	vertical-align: middle;
+}
+/* end of ringkasan */
 </style>
 {% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -111,7 +173,7 @@ form .clearfix {
             {{ form_row(searchform.dariTanggal) }}
             {{ form_row(searchform.hinggaTanggal) }}
             {{ form_row(searchform.searchkey) }}
-            <a href="" id="anchor" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
+            <a href="" id="anchor-lanjutan" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
         </div>
         <div class="clearfix"></div>
         <div id="cari-lanjutan">
@@ -186,11 +248,36 @@ form .clearfix {
 </table>
 {{ knp_pagination_render(pagination) }}
 
-<div class="export-section">
+<div class="row-fluid">
+<div class="span6 export-section pull-left">
     <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
-        <button type="submit" class="btn success">{{ 'label.ekspor'|trans }}</button>
+        <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
         <div id="filename"></div>
     </form>
+</div>
+
+<div class="span6 ringkasan-section">
+    <div>
+        <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        <div class="clearfix" style="margin-top: 1em;"></div>
+        <div id="ringkasan">
+            <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
+                {{ form_label(summaryform.teks) }}
+                {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
+                	<a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
+                {% endimage %}
+                <div class="clearfix" style="margin-bottom: 0;"></div>
+                {{ form_widget(summaryform.teks) }}
+
+                {{ form_rest(summaryform) }}
+                <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button>
+                <div class="clearfix"></div>
+                <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
+                <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
+            </form>
+        </div>
+    </div>
+</div>
 </div>
 
 <div class="clearfix"></div>
@@ -312,6 +399,20 @@ $(document).ready(function() {
 		}
 	});
 
+	$(".anchor-ringkasan").click(function(){
+		if ($("#ringkasan").is(":visible")) {
+			$("#ringkasan").hide(duration);
+			$(this).removeClass("anchor-ringkasan-sel");
+			$(this).addClass("anchor-ringkasan");
+		} else {
+			$("#ringkasan").show(duration, function() {
+				$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+			});
+			$(this).addClass("anchor-ringkasan-sel");
+			$(this).removeClass("anchor-ringkasan");
+		}
+	});
+
 	$('.date').datepicker({
 	    dateFormat: 'dd/mm/yy',
         changeYear: false,
@@ -336,13 +437,70 @@ $(document).ready(function() {
         $("#filename").html("&nbsp;&nbsp;&nbsp;&nbsp;");
         $.post(url, $("#search-form").serialize(), function(response) {
             if (response.redirectUrl) {
-            	window.location.href = "/" + response.redirectUrl;
-            	$("#filename").html('<a href="/' + response.redirectUrl + '">' + response.filename + '</a> ({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	window.location.href = response.redirectUrl;
+            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
             	$("#filename").removeClass("loading");
             }
         });
         return false;
     });
+
+    $("#report-preview").click(function() {
+        // generate summary preview
+        return false;
+    });
+
+    $("#pemilih-ringkasan").click(function() {
+        $(".ringkasan-teks").val(gantiTemplate());
+        console.log(templateAktif);
+        $("#penanda-template").css("background-color", gantiPenanda());
+    });
 });
+
+var templateAktif = 0;
+function gantiTemplate() {
+	var string;
+
+	templateAktif++;
+	if (templateAktif == 0) {
+		string = "";
+	} else if (templateAktif == 1) {
+		string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
+	} else if (templateAktif == 2) {
+		string = "Jumlah pendaftar berjenis kelamin %jenis-kelamin% adalah %jumlah-pencarian% dari %jumlah-total% siswa";
+	} else if (templateAktif == 3) {
+		string = "Jumlah pendaftar dari %asal-sekolah% sebanyak %jumlah-pencarian% dari total %jumlah-total%";
+	} else if (templateAktif == 4) {
+		string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-pencarian%";
+	} else if (templateAktif == 5) {
+		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-pencarian% siswa";
+	} else if (templateAktif == 6) {
+		templateAktif = -1;
+		string = "Pendaftar %jenis-kelamin% pada %gelombang% dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
+            		"yang berasal dari %asal-sekolah% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar% " +
+            		"yang dirujuk oleh Bpk %perujuk% berjumlah %jumlah-pencarian% orang (total pendaftar %jumlah-total% orang)";
+	}
+
+	return string;
+}
+
+function gantiPenanda() {
+	if (templateAktif == 0) {
+		return "#CCCCCC";
+	} else if (templateAktif == 1) {
+		return "#DD5500";
+	} else if (templateAktif == 2) {
+	    return "#289312";
+	} else if (templateAktif == 3) {
+	    return "#DAD25A";
+	} else if (templateAktif == 4) {
+	    return "#2B50C4";
+	} else if (templateAktif == 5) {
+	    return "#43B7B9";
+	} else if (templateAktif == -1) {
+	    return "#DD52DF";
+	}
+}
 </script>
 {% endblock content %}

@@ -2,12 +2,7 @@
 
 namespace Fast\SisdikBundle\Form;
 use Fast\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;

@@ -5,7 +5,12 @@ paidoff: lunas
 untuk: Untuk
 
 label:
-    klik.jika.tak.otomatis: Klik nama file jika tak terbuka otomatis
+    teks.ringkasan: Teks Ringkasan
+    kirim.sms: Kirim SMS
+    cetak.pdf: Cetak PDF
+    pratinjau: Pratinjau
+    ringkasan.laporan: Ringkasan Laporan
+    klik.jika.tak.otomatis: klik jika tak terbuka otomatis
     gelombang: Gelombang
     nomor.pendaftaran: Nomor Pendaftaran
     nama.lengkap: Nama Lengkap
@@ -26,7 +31,7 @@ label:
     tinggi.badan: Tinggi Badan
     golongan.darah: Golongan Darah
     jumlah.bayar: Jumlah Bayar
-    ekspor: Ekspor
+    ekspor.ke.spreadsheet: Ekspor ke Spreadsheet
     dari.tanggal: Dari Tanggal
     hingga.tanggal: Hingga Tanggal
     hingga.tanggal.singkat: Hingga Tgl
