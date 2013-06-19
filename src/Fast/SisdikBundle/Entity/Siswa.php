@@ -280,9 +280,9 @@ class Siswa
     /**
      * @var boolean
      *
-     * @ORM\Column(name="lunas_biaya_pendaftaran", type="boolean", nullable=true, options={"default" = 0})
+     * @ORM\Column(name="lunas_biaya_pendaftaran", type="boolean", nullable=false, options={"default" = 0})
      */
-    private $lunasBiayaPendaftaran = 0;
+    private $lunasBiayaPendaftaran = false;
 
     /**
      * @var string
