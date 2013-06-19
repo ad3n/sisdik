@@ -10,6 +10,7 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
     || isset($_SERVER['HTTP_X_FORWARDED_FOR'])
     || !in_array(@$_SERVER['REMOTE_ADDR'], array(
         '192.168.1.10',
+        '192.168.1.90',
         '127.0.0.1',
         '::1',
     ))
