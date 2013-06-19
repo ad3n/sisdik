@@ -69,28 +69,29 @@ class SiswaApplicantReportController extends Controller
         }
 
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 't2')
+                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
-                ->setParameter('tahunaktif', $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+                ->leftJoin('t.tahun', 'tahun')->leftJoin('t.gelombang', 'gelombang')
+                ->leftJoin('t.sekolahAsal', 'sekolahasal')->leftJoin('t.orangtuaWali', 'orangtua')
+                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
+                ->andWhere('orangtua.aktif = :ortuaktif')->setParameter('ortuaktif', true)
+                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2])
+                ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
+                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 't2')
-                ->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
+                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
+                ->leftJoin('t.gelombang', 'gelombang')->leftJoin('t.sekolahAsal', 'sekolahasal')
                 ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
                 ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('tahun.id = :tahunaktif')
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
         $qbAdvsearchnum = $em->createQueryBuilder()->select('COUNT(tcount.id)')
@@ -199,10 +200,10 @@ class SiswaApplicantReportController extends Controller
             }
 
             if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
-                $querybuilder->andWhere('t4.id = :sekolahasal');
+                $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
                 $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
-                $qbsearchnum->andWhere('t4.id = :sekolahasal');
+                $qbsearchnum->andWhere('sekolahasal.id = :sekolahasal');
                 $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
                 $qbAdvsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
@@ -232,16 +233,16 @@ class SiswaApplicantReportController extends Controller
 
                     if ($searchdata['jumlahBayar'] == 100 && $pembandingBayar != '<'
                             && $pembandingBayar != '<=') {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 't5');
+                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
                         $querybuilder->andWhere('t.lunasBiayaPendaftaran = :lunas');
                         $querybuilder->setParameter('lunas', true);
 
                         $qbAdvsearchnum->setParameter('lunas', true);
                     } else {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 't5');
+                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
                         $querybuilder->groupBy('t.id')
                                 ->having(
-                                        "SUM(t5.nominalTotal) + SUM(t5.nominalPotongan) + SUM(t5.persenPotonganDinominalkan) $pembandingBayar :jumlahbayar");
+                                        "SUM(pembayaran.nominalTotal) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar :jumlahbayar");
                         $querybuilder->setParameter('jumlahbayar', $biaya * $searchdata['jumlahBayar'] / 100);
 
                         $qbAdvsearchnum
@@ -250,9 +251,9 @@ class SiswaApplicantReportController extends Controller
 
                 } else {
 
-                    $querybuilder->leftJoin('t.pembayaranPendaftaran', 't5');
+                    $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
                     $querybuilder->groupBy('t.id')
-                            ->having("SUM(t5.nominalTotal) $pembandingBayar :jumlahbayar");
+                            ->having("SUM(pembayaran.nominalTotal) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
                     $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
@@ -317,28 +318,29 @@ class SiswaApplicantReportController extends Controller
         }
 
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 't2')
+                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
                 ->where('t.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
-                ->setParameter('tahunaktif', $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+                ->leftJoin('t.tahun', 'tahun')->leftJoin('t.gelombang', 'gelombang')
+                ->leftJoin('t.sekolahAsal', 'sekolahasal')->leftJoin('t.orangtuaWali', 'orangtua')
+                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
+                ->andWhere('orangtua.aktif = :ortuaktif')->setParameter('ortuaktif', true)
+                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2])
+                ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
+                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
 
         $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 't2')
-                ->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
+                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
+                ->leftJoin('t.gelombang', 'gelombang')->leftJoin('t.sekolahAsal', 'sekolahasal')
                 ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
                 ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = :tahunaktif')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('tahun.id = :tahunaktif')
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
         $qbAdvsearchnum = $em->createQueryBuilder()->select('COUNT(tcount.id)')
@@ -436,10 +438,10 @@ class SiswaApplicantReportController extends Controller
             }
 
             if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
-                $querybuilder->andWhere('t4.id = :sekolahasal');
+                $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
                 $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
-                $qbsearchnum->andWhere('t4.id = :sekolahasal');
+                $qbsearchnum->andWhere('sekolahasal.id = :sekolahasal');
                 $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
                 $qbAdvsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
@@ -463,16 +465,16 @@ class SiswaApplicantReportController extends Controller
 
                     if ($searchdata['jumlahBayar'] == 100 && $pembandingBayar != '<'
                             && $pembandingBayar != '<=') {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 't5');
+                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
                         $querybuilder->andWhere('t.lunasBiayaPendaftaran = :lunas');
                         $querybuilder->setParameter('lunas', true);
 
                         $qbAdvsearchnum->setParameter('lunas', true);
                     } else {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 't5');
+                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
                         $querybuilder->groupBy('t.id')
                                 ->having(
-                                        "SUM(t5.nominalTotal) + SUM(t5.nominalPotongan) + SUM(t5.persenPotonganDinominalkan) $pembandingBayar :jumlahbayar");
+                                        "SUM(pembayaran.nominalTotal) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar :jumlahbayar");
                         $querybuilder->setParameter('jumlahbayar', $biaya * $searchdata['jumlahBayar'] / 100);
 
                         $qbAdvsearchnum
@@ -481,9 +483,9 @@ class SiswaApplicantReportController extends Controller
 
                 } else {
 
-                    $querybuilder->leftJoin('t.pembayaranPendaftaran', 't5');
+                    $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
                     $querybuilder->groupBy('t.id')
-                            ->having("SUM(t5.nominalTotal) $pembandingBayar :jumlahbayar");
+                            ->having("SUM(pembayaran.nominalTotal) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
                     $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
@@ -781,9 +783,11 @@ class SiswaApplicantReportController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $qb0 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
-                ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
+        $qb0 = $em->createQueryBuilder()->select('panitia')
+                ->from('FastSisdikBundle:PanitiaPendaftaran', 'panitia')->leftJoin('panitia.tahun', 'tahun')
+                ->where('panitia.sekolah = :sekolah')->andWhere('panitia.aktif = 1')
+                ->orderBy('tahun.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())
+                ->setMaxResults(1);
         $results = $qb0->getQuery()->getResult();
         $panitiaaktif = array();
         foreach ($results as $entity) {
