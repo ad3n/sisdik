@@ -209,13 +209,13 @@ form .clearfix {
 
 <div class="clearfix"></div>
 
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}
+</div>
+
 <div class="pull-right">
     {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
     <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
-</div>
-
-<div class="pull-left info-jumlah">
-    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}
 </div>
 
 <div class="clearfix">&nbsp;</div>
