@@ -404,6 +404,7 @@ $(document).ready(function() {
 			$(this).addClass("anchor-cari-lanjutan-sel");
 			$(this).removeClass("anchor-cari-lanjutan");
 		}
+		return false;
 	});
 
 	$(".anchor-ringkasan").click(function(){
@@ -418,6 +419,7 @@ $(document).ready(function() {
 			$(this).addClass("anchor-ringkasan-sel");
 			$(this).removeClass("anchor-ringkasan");
 		}
+		return false;
 	});
 
 	$('.date').datepicker({
@@ -487,6 +489,7 @@ $(document).ready(function() {
         $(".ringkasan-teks").val(gantiTemplate());
         console.log(templateAktif);
         $("#penanda-template").css("background-color", gantiPenanda());
+        return false;
     });
 
     $("#report-sms").click(function() {
