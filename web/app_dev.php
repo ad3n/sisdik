@@ -20,6 +20,9 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 }
 
 require_once __DIR__.'/../app/bootstrap.php.cache';
+use Symfony\Component\Debug\Debug;
+Debug::enable();
+
 require_once __DIR__.'/../app/AppKernel.php';
 
 use Symfony\Component\HttpFoundation\Request;
