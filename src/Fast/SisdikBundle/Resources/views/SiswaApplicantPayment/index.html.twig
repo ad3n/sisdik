@@ -24,8 +24,6 @@
     <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
 </div>
 
-<div class="clearfix" style="margin-top: 18px;">&nbsp;</div>
-
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
@@ -75,10 +73,6 @@
     {% endfor %}
     </tbody>
 </table>
-
-<div class="pull-right">
-    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
-</div>
 
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}
