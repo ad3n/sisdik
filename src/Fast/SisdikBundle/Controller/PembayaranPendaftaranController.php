@@ -743,7 +743,7 @@ class PembayaranPendaftaranController extends Controller
                 $transaksi->setDibuatOleh($this->getUser());
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
             }
-            $entity->setNominalTotal($currentPaymentAmount);
+            $entity->setNominalTotal($entity->getNominalTotal() + $currentPaymentAmount);
 
             $totalPayment = $totalPayment + $currentPaymentAmount;
             $payableAmount = $this
