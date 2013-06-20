@@ -24,7 +24,7 @@ class TransaksiPembayaranPendaftaran
     /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
      */
     private $nominalPembayaran;

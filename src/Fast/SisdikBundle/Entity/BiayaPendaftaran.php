@@ -26,7 +26,7 @@ class BiayaPendaftaran
     /**
      * @var integer
      *
-     * @ORM\Column(name="nominal", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
      * @Assert\Length(min=5)
      */

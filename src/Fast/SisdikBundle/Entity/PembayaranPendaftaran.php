@@ -23,13 +23,6 @@ class PembayaranPendaftaran
     private $id;
 
     /**
-     * @var array
-     *
-     * @ORM\Column(name="daftar_biaya_pendaftaran", type="array", nullable=true)
-     */
-    private $daftarBiayaPendaftaran;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
@@ -53,21 +46,21 @@ class PembayaranPendaftaran
     /**
      * @var integer
      *
-     * @ORM\Column(name="persen_potongan", type="smallint", nullable=true, options={"default" = 0})
+     * @ORM\Column(name="persen_potongan", type="smallint", nullable=false, options={"default" = 0})
      */
     private $persenPotongan = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=true, options={"default" = 0})
+     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=false, options={"default" = 0})
      */
     private $persenPotonganDinominalkan = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=true, options={"default" = 0})
+     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=false, options={"default" = 0})
      */
     private $nominalPotongan = 0;
 
@@ -112,11 +105,21 @@ class PembayaranPendaftaran
     private $transaksiPembayaranPendaftaran;
 
     /**
+     * @var \DaftarBiayaPendaftaran
+     *
+     * @ORM\OneToMany(targetEntity="DaftarBiayaPendaftaran", mappedBy="pembayaranPendaftaran", cascade={"persist"})
+     * @ORM\OrderBy({"nama" = "ASC"})
+     * @Assert\Valid
+     */
+    private $daftarBiayaPendaftaran;
+
+    /**
      * constructor
      *
      */
     public function __construct() {
         $this->transaksiPembayaranPendaftaran = new ArrayCollection();
+        $this->daftarBiayaPendaftaran = new ArrayCollection();
     }
 
     /**
@@ -126,27 +129,6 @@ class PembayaranPendaftaran
      */
     public function getId() {
         return $this->id;
-    }
-
-    /**
-     * Set daftarBiayaPendaftaran
-     *
-     * @param string $daftarBiayaPendaftaran
-     * @return PembayaranPendaftaran
-     */
-    public function setDaftarBiayaPendaftaran($daftarBiayaPendaftaran) {
-        $this->daftarBiayaPendaftaran = $daftarBiayaPendaftaran;
-
-        return $this;
-    }
-
-    /**
-     * Get daftarBiayaPendaftaran
-     *
-     * @return array
-     */
-    public function getDaftarBiayaPendaftaran() {
-        return $this->daftarBiayaPendaftaran;
     }
 
     /**
@@ -380,6 +362,29 @@ class PembayaranPendaftaran
      */
     public function getTransaksiPembayaranPendaftaran() {
         return $this->transaksiPembayaranPendaftaran;
+    }
+
+    /**
+     * Set daftarBiayaPendaftaran
+     * parameter type array collection is removed to allow editing
+     *
+     * @param ArrayCollection $daftarBiayaPendaftaran
+     */
+    public function setDaftarBiayaPendaftaran($daftarBiayaPendaftaran) {
+        foreach ($daftarBiayaPendaftaran as $transaksi) {
+            $transaksi->setPembayaranPendaftaran($this);
+        }
+
+        $this->daftarBiayaPendaftaran = $daftarBiayaPendaftaran;
+    }
+
+    /**
+     * Get daftarBiayaPendaftaran
+     *
+     * @return \Fast\SisdikBundle\DaftarBiayaPendaftaran
+     */
+    public function getDaftarBiayaPendaftaran() {
+        return $this->daftarBiayaPendaftaran;
     }
 
     /**

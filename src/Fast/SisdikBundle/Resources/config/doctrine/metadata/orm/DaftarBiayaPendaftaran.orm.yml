@@ -1,0 +1,39 @@
+DaftarBiayaPendaftaran:
+    type: entity
+    table: daftar_biaya_pendaftaran
+    fields:
+        id:
+            id: true
+            type: integer
+            unsigned: false
+            nullable: false
+            generator:
+                strategy: IDENTITY
+        nama:
+            type: string
+            length: 300
+            fixed: false
+            nullable: true
+        nominal:
+            type: bigint
+            nullable: false
+    manyToOne:
+        pembayaranPendaftaran:
+            targetEntity: PembayaranPendaftaran
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pembayaran_pendaftaran_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        biayaPendaftaran:
+            targetEntity: BiayaPendaftaran
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                biaya_pendaftaran_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

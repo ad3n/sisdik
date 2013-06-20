@@ -285,6 +285,13 @@ class Siswa
     private $lunasBiayaPendaftaran = false;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="sisa_biaya_pendaftaran", type="bigint", nullable=false, options={"default" = -999})
+     */
+    private $sisaBiayaPendaftaran = -999;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="keterangan", type="text", nullable=true)
@@ -1130,6 +1137,27 @@ class Siswa
      */
     public function getLunasBiayaPendaftaran() {
         return $this->lunasBiayaPendaftaran;
+    }
+
+    /**
+     * Set sisaBiayaPendaftaran
+     *
+     * @param boolean $sisaBiayaPendaftaran
+     * @return Siswa
+     */
+    public function setSisaBiayaPendaftaran($sisaBiayaPendaftaran) {
+        $this->sisaBiayaPendaftaran = $sisaBiayaPendaftaran;
+
+        return $this;
+    }
+
+    /**
+     * Get sisaBiayaPendaftaran
+     *
+     * @return integer
+     */
+    public function getSisaBiayaPendaftaran() {
+        return $this->sisaBiayaPendaftaran;
     }
 
     /**
