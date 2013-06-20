@@ -39,7 +39,12 @@ class SiswaApplicantType extends AbstractType
                                         'required' => true, 'class' => 'FastSisdikBundle:Tahun',
                                         'data' => $this->tahunAktif,
                                 ));
+            }
+        }
 
+        if ($this->mode == 'new') {
+
+            if (is_object($sekolah) && $sekolah instanceof Sekolah) {
                 $querybuilder2 = $em->createQueryBuilder()->select('t')
                         ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
                         ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
@@ -55,9 +60,7 @@ class SiswaApplicantType extends AbstractType
                                         ),
                                 ));
             }
-        }
 
-        if ($this->mode == 'new') {
             $builder
                     ->add('namaLengkap', null,
                             array(
@@ -108,6 +111,23 @@ class SiswaApplicantType extends AbstractType
                                     )
                             ));
         } else {
+            if ($this->container->get('security.context')->isGranted('ROLE_KETUA_PANITIA_PSB')) {
+                $querybuilder2 = $em->createQueryBuilder()->select('t')
+                        ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
+                        ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
+                $builder
+                        ->add('gelombang', 'entity',
+                                array(
+                                        'class' => 'FastSisdikBundle:Gelombang',
+                                        'label' => 'label.admissiongroup.entry', 'multiple' => false,
+                                        'expanded' => false, 'property' => 'nama', 'empty_value' => false,
+                                        'required' => true, 'query_builder' => $querybuilder2,
+                                        'attr' => array(
+                                            'class' => 'medium'
+                                        ),
+                                ));
+            }
+
             $builder
                     ->add('namaLengkap', null,
                             array(

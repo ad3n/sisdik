@@ -77,7 +77,14 @@
 }
 </style>
 <form action="{{ path('applicant_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-    {{ form_row(edit_form.gelombang) }}
+    {% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
+        {{ form_row(edit_form.gelombang) }}
+    {% else %}
+        <div class="control-group">
+            <label class=" control-label required">{{ 'label.admissiongroup.entry'|trans }}</label>
+            <div class="controls" style="vertical-align: baseline; padding-top: 2px;">{{ entity.gelombang.nama }}</div>
+        </div>
+    {% endif %}
     {{ form_row(edit_form.namaLengkap) }}
     {{ form_row(edit_form.namaReferensi) }}
     {{ form_row(edit_form.namaSekolahAsal) }}
