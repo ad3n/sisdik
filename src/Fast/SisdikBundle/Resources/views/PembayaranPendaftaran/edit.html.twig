@@ -71,10 +71,10 @@
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
-<h4>{{ 'payment.registrationfee.entry'|trans({}, 'headings') }}</h4>
+{# <h4>{{ 'payment.registrationfee.entry'|trans({}, 'headings') }}</h4>#}
 <form id="pay-form" action="{{ path('payment_registrationfee_update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
-    {{ form_widget(edit_form.daftarBiayaPendaftaran) }}
     <div id="payment-info" style="margin-bottom: 18px; margin-top: 0.5em;">
+    <h4>{{ entity.daftarBiayaPendaftaran[0].nama }}</h4>
     {% if adaPotongan == 1 %}
         {% if jenisPotongan == 'nominal' %}
             {{ 'label.discount.amount'|trans }} {{ currencySymbol(locale) }}. {{ nominalPotongan|number_format(0, ',', '.') }}<br />

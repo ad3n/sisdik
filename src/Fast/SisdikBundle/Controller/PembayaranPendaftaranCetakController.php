@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+
 use Symfony\Component\Filesystem\Exception\IOException;
 use Fast\SisdikBundle\Util\EscapeCommand;
 use Symfony\Component\Filesystem\Filesystem;
@@ -84,9 +86,8 @@ class PembayaranPendaftaranCetakController extends Controller
 
                 $hargaItem = 0;
                 foreach ($daftarBiayaPendaftaran as $biaya) {
-                    $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
-                    if ($biayaPendaftaran instanceof BiayaPendaftaran) {
-                        $hargaItem = $biayaPendaftaran->getNominal();
+                    if ($biaya instanceof DaftarBiayaPendaftaran) {
+                        $hargaItem = $biaya->getNominal();
                     }
                 }
 
@@ -219,10 +220,9 @@ class PembayaranPendaftaranCetakController extends Controller
                 $namaItemPembayaran = "";
                 $nominalHargaItemPembayaran = 0;
                 foreach ($daftarBiayaPendaftaran as $biaya) {
-                    $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
-                    if ($biayaPendaftaran instanceof BiayaPendaftaran) {
-                        $namaItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
-                        $nominalHargaItemPembayaran = $biayaPendaftaran->getNominal();
+                    if ($biaya instanceof DaftarBiayaPendaftaran) {
+                        $namaItemPembayaran = $biaya->getNama();
+                        $nominalHargaItemPembayaran = $biaya->getNominal();
                     }
                 }
 
@@ -390,9 +390,8 @@ class PembayaranPendaftaranCetakController extends Controller
                 $totalNominalTransaksi = 0;
 
                 foreach ($daftarBiayaPendaftaran as $biaya) {
-                    $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
-                    if ($biayaPendaftaran instanceof BiayaPendaftaran) {
-                        $totalNominalTransaksi += $biayaPendaftaran->getNominal();
+                    if ($biaya instanceof DaftarBiayaPendaftaran) {
+                        $totalNominalTransaksi += $biaya->getNominal();
 
                         if ($twoPageFormat == 1 && $num == $maxitemPageone) {
                             $commands->addContent(str_repeat(" ", $marginBadan) . $barisGarisTabel . "\r\n");
@@ -483,13 +482,13 @@ class PembayaranPendaftaranCetakController extends Controller
                             $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
                                     . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
 
-                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
+                            $kolomItemPembayaran = $biaya->getNama();
                             $spasiKolomItemPembayaran = $lebarKolom2
                                     - (strlen($kolomItemPembayaran) + $marginKiriKolom);
                             $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
                                     . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
 
-                            $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0, ',',
+                            $kolomHargaPembayaran = number_format($biaya->getNominal(), 0, ',',
                                     '.');
                             $spasiKolomHargaPembayaran = $lebarKolom3
                                     - (strlen($kolomHargaPembayaran) + $marginKananKolom);
@@ -579,13 +578,13 @@ class PembayaranPendaftaranCetakController extends Controller
                             $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
                                     . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
 
-                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
+                            $kolomItemPembayaran = $biaya->getNama();
                             $spasiKolomItemPembayaran = $lebarKolom2
                                     - (strlen($kolomItemPembayaran) + $marginKiriKolom);
                             $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
                                     . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
 
-                            $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0, ',',
+                            $kolomHargaPembayaran = number_format($biaya->getNominal(), 0, ',',
                                     '.');
                             $spasiKolomHargaPembayaran = $lebarKolom3
                                     - (strlen($kolomHargaPembayaran) + $marginKananKolom);
@@ -601,13 +600,13 @@ class PembayaranPendaftaranCetakController extends Controller
                             $barisPembayaran = "|" . str_repeat(" ", $spasiKolomNomorPembayaran)
                                     . $kolomNomorPembayaran . str_repeat(" ", $marginKananKolom);
 
-                            $kolomItemPembayaran = $biayaPendaftaran->getJenisbiaya()->getNama();
+                            $kolomItemPembayaran = $biaya->getNama();
                             $spasiKolomItemPembayaran = $lebarKolom2
                                     - (strlen($kolomItemPembayaran) + $marginKiriKolom);
                             $barisPembayaran .= "|" . str_repeat(" ", $marginKiriKolom)
                                     . $kolomItemPembayaran . str_repeat(" ", $spasiKolomItemPembayaran);
 
-                            $kolomHargaPembayaran = number_format($biayaPendaftaran->getNominal(), 0, ',',
+                            $kolomHargaPembayaran = number_format($biaya->getNominal(), 0, ',',
                                     '.');
                             $spasiKolomHargaPembayaran = $lebarKolom3
                                     - (strlen($kolomHargaPembayaran) + $marginKananKolom);
@@ -813,10 +812,9 @@ class PembayaranPendaftaranCetakController extends Controller
 
             $totalHarga = 0;
             foreach ($daftarBiayaPendaftaran as $biaya) {
-                $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($biaya);
-                if ($biayaPendaftaran instanceof BiayaPendaftaran) {
-                    $namaItemPembayaranCicilan = $biayaPendaftaran->getJenisbiaya()->getNama();
-                    $totalHarga += $biayaPendaftaran->getNominal();
+                if ($biaya instanceof DaftarBiayaPendaftaran) {
+                    $namaItemPembayaranCicilan = $biaya->getNama();
+                    $totalHarga += $biaya->getNominal();
                 }
             }
 

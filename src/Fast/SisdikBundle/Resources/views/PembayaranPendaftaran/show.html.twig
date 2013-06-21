@@ -33,7 +33,8 @@
         {% for biaya in entity.daftarBiayaPendaftaran %}
         	<li>
                 {% if biaya != '' %}
-                    {% render url('fee_registration_info', {'id': biaya}) %}
+                    salah nih, seharusnya mengambil dari data di biaya pendaftaran
+                    {% render url('fee_registration_info', {'id': biaya.biayaPendaftaran.id}) %}
                 {% endif %}
             </li>
         {% endfor %}

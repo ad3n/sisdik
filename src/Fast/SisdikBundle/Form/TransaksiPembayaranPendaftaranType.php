@@ -25,6 +25,10 @@ class TransaksiPembayaranPendaftaranType extends AbstractType
                                 'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
                                 'data' => $sekolah->getId(),
                         ))
+                ->add('dibuatOleh', new EntityHiddenType($em),
+                        array(
+                            'required' => true, 'class' => 'FastSisdikBundle:User', 'data' => $user->getId(),
+                        ))
                 ->add('nominalPembayaran', 'money',
                         array(
                                 'currency' => 'IDR', 'required' => true, 'precision' => 0, 'grouping' => 3,

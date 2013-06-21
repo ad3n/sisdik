@@ -786,7 +786,7 @@ shortinfo:
     pay.notbiggerthan.fee: Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih
     pay.notbiggerthan.fee.discounted: Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih dan terdiskon
     pay.lessthan.fee.oneitem: Mencicil (jumlah bayar lebih kecil dari jumlah biaya) hanya bisa untuk satu item biaya
-    pay.nozero: Tidak bisa membayar 0 rupiah
+    pay.nozero: Tidak bisa membayar 0 rupiah atau minus
     discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
 
 alert:

@@ -120,10 +120,20 @@
             {% if biaya != '' %}
             <tr>
                 <td padding="3px 5px" text-align="right">{{ loop.index }}</td>
-                <td padding="3px 5px">{% render url('fee_registration_info', {'id': biaya, 'type': 2}) %}</td>
-                <td padding="3px 5px" text-align="right">{% render url('fee_registration_info', {'id': biaya, 'type': 3}) %}</td>
+                <td padding="3px 5px">{{ biaya.nama }}</td>
+                <td padding="3px 5px" text-align="right">{{ biaya.nominal|number_format(0, ',', '.') }}</td>
                 <td border-type="none"></td>
             </tr>
+
+{#         {% for biaya in entity.daftarBiayaPendaftaran %}#}
+{#         	<li>#}
+{#                 {% if biaya != '' %}#}
+{#                     salah nih, seharusnya mengambil dari data di biaya pendaftaran#}
+{#                     {% render url('fee_registration_info', {'id': biaya.biayaPendaftaran.id}) %}#}
+{#                 {% endif %}#}
+{#             </li>#}
+{#         {% endfor %}#}
+
             {% endif %}
         {% endfor %}
         </table>

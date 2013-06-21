@@ -47,20 +47,46 @@
     		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
     		<td data-title="{{ 'label.paid.amount'|trans }}">
     		    {% set totalBayar = 0 %}
-    		    {% set totalBayar = data.totalNominalPembayaranPendaftaran %}
+    		    {% set totalBiayaMasuk = 0 %}
+    		    {% set totalPotongan = 0 %}
+    		    {% set totalBiayaSisa = 0 %}
+    		    {% set totalBiaya = 0 %}
+    		    {% set biayaTersimpan = '' %}
+
+    		    {% for pembayaran in data.pembayaranPendaftaran %}
+    		        {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+    		        {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+                        {% set biayaTersimpan = biaya.biayaPendaftaran.id ~ ',' ~ biayaTersimpan %}
+    		        {% endfor %}
+    		        {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+    		            {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+    		        {% endfor %}
+    		    {% endfor %}
+
+                {% if biayaTersimpan != '' %}
+        		    {% set remainInfo %}
+        		        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+        		    {% endset %}
+        		    {% set remainInfo = remainInfo|json_decode %}
+        		    {% set totalBiayaSisa = remainInfo.biaya %}
+    		    {% else %}
+    		        {% set remainInfo %}
+                        {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                    {% endset %}
+        		    {% set remainInfo = remainInfo|json_decode %}
+        		    {% set totalBiayaSisa = remainInfo.biaya %}
+    		    {% endif %}
+    		    {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+
     		    {{ totalBayar|number_format(0, ',', '.') }} &rarr;
-    		    {% set totalInfo %}
-                    {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1, 'potongan': data.totalPotonganPembayaranPendaftaran}) %}
-                {% endset %}
-                {% set totalInfo = totalInfo|json_decode %}
-                {% set totalBiaya = totalInfo.biaya %}
-                {% if data.totalPotonganPembayaranPendaftaran > 0 %}
+                {% if totalPotongan > 0 %}
                 <span class="icon-gift" style="margin: 0;"></span>
                 {% endif %}
-                {{ totalBiaya|number_format(0, ',', '.') }}
+    		    {{ totalBiaya|number_format(0, ',', '.') }}
 		    </td>
     		<td data-title="{{ 'label.payment.remains'|trans }}">
-    		    {% if data.lunasBiayaPendaftaran == 1 and (totalBiaya - totalBayar) == 0 %}
+    		    {% if data.lunasBiayaPendaftaran == 1 or (totalBiaya - totalBayar) == 0 %}
     		        ({{ 'paidoff'|trans }})
     		    {% else %}
     		        {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}

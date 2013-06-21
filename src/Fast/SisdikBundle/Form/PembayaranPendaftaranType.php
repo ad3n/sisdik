@@ -5,20 +5,14 @@ use Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
 
 class PembayaranPendaftaranType extends AbstractType
 {
     private $container;
-    private $siswaId;
-    private $biayaTerbayar;
 
-    public function __construct(ContainerInterface $container, $siswaId, $biayaTerbayar) {
+    public function __construct(ContainerInterface $container) {
         $this->container = $container;
-        $this->siswaId = $siswaId;
-        $this->biayaTerbayar = $biayaTerbayar;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
@@ -27,38 +21,19 @@ class PembayaranPendaftaranType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($this->siswaId);
-
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:BiayaPendaftaran', 't')->leftJoin('t.jenisbiaya', 't2')
-                ->where('t.tahun = :tahun')->setParameter('tahun', $siswa->getTahun()->getId())
-                ->andWhere('t.gelombang = :gelombang')
-                ->setParameter('gelombang', $siswa->getGelombang()->getId())->orderBy('t.urutan', 'ASC')
-                ->addOrderBy('t2.nama', 'ASC');
-
-        if (count($this->biayaTerbayar) > 0) {
-            $querybuilder->andWhere('t.id NOT IN (?1)')->setParameter(1, $this->biayaTerbayar);
-        }
-
-        $results = $querybuilder->getQuery()->getResult();
-        $availableFees = array();
-        foreach ($results as $entity) {
-            if (is_object($entity) && $entity instanceof BiayaPendaftaran) {
-                $availableFees[$entity->getId()] = (strlen($entity->getJenisBiaya()->getNama()) > 25 ? substr(
-                                $entity->getJenisbiaya()->getNama(), 0, 22) . '...'
-                        : $entity->getJenisbiaya()->getNama()) . ', '
-                        . number_format($entity->getNominal(), 0, ',', '.');
-            }
-        }
-
         $builder
-                ->add('daftarBiayaPendaftaran', 'choice',
+                ->add('siswa', new EntityHiddenType($em),
                         array(
-                                'choices' => $availableFees, 'expanded' => true, 'multiple' => true,
-                                'attr' => array(
-                                    'class' => 'fee-item'
-                                ), 'label_render' => true, 'label' => 'label.fee.registration.entry',
-                                'required' => true,
+                            'required' => true, 'class' => 'FastSisdikBundle:Siswa',
+                        ))
+                ->add('daftarBiayaPendaftaran', 'collection',
+                        array(
+                                'type' => new DaftarBiayaPendaftaranType($this->container),
+                                'required' => true, 'allow_add' => true, 'allow_delete' => true,
+                                'by_reference' => false,
+                                'options' => array(
+                                    'widget_control_group' => false, 'label_render' => false,
+                                ), 'label_render' => false, 'widget_control_group' => false,
                         ))
                 ->add('adaPotongan', 'checkbox',
                         array(

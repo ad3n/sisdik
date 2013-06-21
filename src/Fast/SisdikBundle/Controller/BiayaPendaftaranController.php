@@ -310,9 +310,9 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds total payables registration fee info
      *
-     * @Route("/totalinfo/{tahun}/{gelombang}/{potongan}/{json}", name="fee_registration_totalinfo", defaults={"potongan"=0, "json"=0})
+     * @Route("/totalinfo/{tahun}/{gelombang}/{json}", name="fee_registration_totalinfo", defaults={"json"=0})
      */
-    public function getTotalFeeInfoAction($tahun, $gelombang, $potongan, $json) {
+    public function getFeeInfoTotalAction($tahun, $gelombang, $json) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
@@ -331,40 +331,53 @@ class BiayaPendaftaranController extends Controller
 
         if ($json == 1) {
             $string = json_encode(array(
-                "biaya" => $total - $potongan
+                "biaya" => $total
             ));
             return new Response($string, 200,
                     array(
                         'Content-Type' => 'application/json'
                     ));
         } else {
-            return new Response(number_format($total - $potongan, 0, ',', '.'));
+            return new Response(number_format($total, 0, ',', '.'));
         }
     }
 
     /**
      * Finds total payment remains registration fee info
      *
-     * @Route("/remains/{tahun}/{gelombang}/{paid}/{potongan}", name="fee_registration_remains", defaults={"potongan"=0})
+     * @Route("/remains/{tahun}/{gelombang}/{usedfee}/{json}", name="fee_registration_remains")
      */
-    public function getRemainsPaymentInfoAction($tahun, $gelombang, $paid, $potongan) {
+    public function getFeeInfoRemainAction($tahun, $gelombang, $usedfee, $json = 0) {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
-                ->findBy(
-                        array(
-                            'tahun' => $tahun, 'gelombang' => $gelombang
-                        ));
+        $usedfee = preg_replace('/,$/', '', $usedfee);
+        $querybuilder = $em->createQueryBuilder()->select('biaya')
+                ->from('FastSisdikBundle:BiayaPendaftaran', 'biaya')->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')->setParameter("tahun", $tahun)
+                ->setParameter("gelombang", $gelombang)->andWhere('biaya.id NOT IN (:usedfee)')
+                ->setParameter("usedfee", preg_split('/,/', $usedfee));
+        $entities = $querybuilder->getQuery()->getResult();
 
-        $total = 0;
+        $feeamount = 0;
+        $counter = 1;
         foreach ($entities as $entity) {
             if ($entity instanceof BiayaPendaftaran) {
-                $total += $entity->getNominal();
+                $feeamount += $entity->getNominal();
             }
         }
 
-        return new Response(number_format(($total - $paid - $potongan), 0, ',', '.'));
+        if ($json == 1) {
+            $string = json_encode(array(
+                "biaya" => $feeamount
+            ));
+            return new Response($string, 200,
+                    array(
+                        'Content-Type' => 'application/json'
+                    ));
+        } else {
+            return new Response(number_format($feeamount, 0, ',', '.'));
+        }
     }
 
     /**
