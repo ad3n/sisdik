@@ -44,7 +44,7 @@ class ProfileController extends FOSProfileController
     /**
      * Edit the user
      */
-    public function editAction(Request $request) {
+    public function editAction() {
         $user = $this->container->get('security.context')->getToken()->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
@@ -55,8 +55,10 @@ class ProfileController extends FOSProfileController
         $form = $this->container->get('fos_user.profile.form');
         $form->setData($user);
 
-        if ('POST' === $request->getMethod()) {
-            $form->submit($request);
+        $formHandler = $this->container->get('fos_user.profile.form.handler');
+
+        if ('POST' === $this->container->get('request')->getMethod()) {
+            $form->submit($this->container->get('request'));
 
             if ($form->isValid()) {
                 $data = $form->getData();
