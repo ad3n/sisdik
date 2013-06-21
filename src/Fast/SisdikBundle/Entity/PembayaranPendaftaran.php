@@ -358,7 +358,7 @@ class PembayaranPendaftaran
     /**
      * Get transaksiPembayaranPendaftaran
      *
-     * @return \Fast\SisdikBundle\TransaksiPembayaranPendaftaran
+     * @return ArrayCollection \Fast\SisdikBundle\TransaksiPembayaranPendaftaran
      */
     public function getTransaksiPembayaranPendaftaran() {
         return $this->transaksiPembayaranPendaftaran;
@@ -381,7 +381,7 @@ class PembayaranPendaftaran
     /**
      * Get daftarBiayaPendaftaran
      *
-     * @return \Fast\SisdikBundle\DaftarBiayaPendaftaran
+     * @return ArrayCollection \Fast\SisdikBundle\DaftarBiayaPendaftaran
      */
     public function getDaftarBiayaPendaftaran() {
         return $this->daftarBiayaPendaftaran;

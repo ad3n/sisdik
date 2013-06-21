@@ -30,6 +30,11 @@ class DaftarBiayaPendaftaran
     private $nama;
 
     /**
+     * @var boolean
+     */
+    private $terpilih;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="nominal", type="bigint", nullable=false, options={"default" = 0})
@@ -85,6 +90,27 @@ class DaftarBiayaPendaftaran
      */
     public function getNama() {
         return $this->nama;
+    }
+
+    /**
+     * Set terpilih
+     *
+     * @param boolean $terpilih
+     * @return DaftarBiayaPendaftaran
+     */
+    public function setTerpilih($terpilih) {
+        $this->terpilih = $terpilih;
+
+        return $this;
+    }
+
+    /**
+     * Get terpilih
+     *
+     * @return boolean
+     */
+    public function isTerpilih() {
+        return $this->terpilih;
     }
 
     /**

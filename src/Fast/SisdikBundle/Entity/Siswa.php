@@ -1449,7 +1449,7 @@ class Siswa
     /**
      * Get orangtuaWali
      *
-     * @return \Fast\SisdikBundle\OrangtuaWali
+     * @return \Fast\SisdikBundle\Entity\OrangtuaWali
      */
     public function getOrangtuaWali() {
         return $this->orangtuaWali;
@@ -1458,10 +1458,59 @@ class Siswa
     /**
      * Get pembayaranPendaftaran
      *
-     * @return \Fast\SisdikBundle\PembayaranPendaftaran
+     * @return \Fast\SisdikBundle\Entity\PembayaranPendaftaran
      */
     public function getPembayaranPendaftaran() {
         return $this->pembayaranPendaftaran;
+    }
+
+    /**
+     * Get daftar biaya pendaftaran
+     *
+     * @return \Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran
+     * array of DaftarBiayaPendaftaran
+     */
+    public function getDaftarBiayaPendaftaran() {
+        $daftar = array();
+
+        foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
+            $daftar[] = $pembayaran->getDaftarBiayaPendaftaran();
+        }
+
+        return $daftar;
+    }
+
+    /**
+     * Get transaksi pembayaran pendaftaran
+     *
+     * @return \Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran
+     * array of TransaksiPembayaranPendaftaran
+     */
+    public function getTransaksiPembayaranPendaftaran() {
+        $daftar = array();
+
+        foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
+            $daftar[] = $pembayaran->getTransaksiPembayaranPendaftaran();
+        }
+
+        return $daftar;
+    }
+
+    /**
+     * Get total nominal biaya pendaftaran
+     *
+     * @return integer
+     */
+    public function getTotalNominalBiayaPendaftaran() {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
+            foreach ($pembayaran->getDaftarBiayaPendaftaran() as $daftar) {
+                $jumlah += $daftar->getNominal();
+            }
+        }
+
+        return $jumlah;
     }
 
     /**
