@@ -25,9 +25,16 @@ class PembayaranPendaftaran
     /**
      * @var integer
      *
-     * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_total_transaksi", type="bigint", nullable=false, options={"default" = 0})
      */
-    private $nominalTotal;
+    private $nominalTotalTransaksi;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nominal_total_biaya", type="bigint", nullable=false, options={"default" = 0})
+     */
+    private $nominalTotalBiaya;
 
     /**
      * @var boolean
@@ -132,24 +139,45 @@ class PembayaranPendaftaran
     }
 
     /**
-     * Set nominalTotal
+     * Set nominalTotalTransaksi
      *
-     * @param integer $nominalTotal
+     * @param integer $nominalTotalTransaksi
      * @return PembayaranPendaftaran
      */
-    public function setNominalTotal($nominalTotal) {
-        $this->nominalTotal = $nominalTotal;
+    public function setNominalTotalTransaksi($nominalTotalTransaksi) {
+        $this->nominalTotalTransaksi = $nominalTotalTransaksi;
 
         return $this;
     }
 
     /**
-     * Get nominalTotal
+     * Get nominalTotalTransaksi
      *
      * @return integer
      */
-    public function getNominalTotal() {
-        return $this->nominalTotal;
+    public function getNominalTotalTransaksi() {
+        return $this->nominalTotalTransaksi;
+    }
+
+    /**
+     * Set nominalTotalBiaya
+     *
+     * @param integer $nominalTotalBiaya
+     * @return PembayaranPendaftaran
+     */
+    public function setNominalTotalBiaya($nominalTotalBiaya) {
+        $this->nominalTotalBiaya = $nominalTotalBiaya;
+
+        return $this;
+    }
+
+    /**
+     * Get nominalTotalBiaya
+     *
+     * @return integer
+     */
+    public function getNominalTotalBiaya() {
+        return $this->nominalTotalBiaya;
     }
 
     /**
