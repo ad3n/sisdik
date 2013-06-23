@@ -101,6 +101,11 @@ class SiswaApplicantType extends AbstractType
                                             'class' => 'xlarge nama-referensi ketik-pilih-tambah',
                                             'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
                                     ), 'label' => 'label.perujuk'
+                            ))
+                    ->add('dibuatOleh', new EntityHiddenType($em),
+                            array(
+                                    'required' => true, 'class' => 'FastSisdikBundle:User',
+                                    'data' => $user->getId(),
                             ));
         } elseif ($this->mode == 'editregphoto') {
             $builder
@@ -109,6 +114,11 @@ class SiswaApplicantType extends AbstractType
                                     'attr' => array(
                                         'class' => 'foto-pendaftaran'
                                     )
+                            ))
+                    ->add('diubahOleh', new EntityHiddenType($em),
+                            array(
+                                    'required' => true, 'class' => 'FastSisdikBundle:User',
+                                    'data' => $user->getId(),
                             ));
         } else {
             if ($this->container->get('security.context')->isGranted('ROLE_KETUA_PANITIA_PSB')) {
@@ -339,6 +349,11 @@ class SiswaApplicantType extends AbstractType
                                     'attr' => array(
                                         'class' => 'mini'
                                     ),
+                            ))
+                    ->add('diubahOleh', new EntityHiddenType($em),
+                            array(
+                                    'required' => true, 'class' => 'FastSisdikBundle:User',
+                                    'data' => $user->getId(),
                             ));
         }
     }

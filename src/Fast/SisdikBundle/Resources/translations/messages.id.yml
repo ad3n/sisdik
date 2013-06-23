@@ -713,6 +713,7 @@ alt:
     student.generate.username: buat username
 
 exception:
+    tidak.ada.panitia.pendaftaran: Tidak ada panitia pendaftaran yang aktif
     larangan.hapus.ortuwali: Orang Tua Wali siswa aktif tidak bisa dihapus
     delete.restrict.oncefee: Data pembayaran telah dipakai; tidak bisa dihapus.
     unik.smspendaftaran: Jenis Layanan yang dipilih sudah digunakan

@@ -43,6 +43,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -151,6 +156,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -164,8 +174,16 @@ class SiswaApplicantController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            $entity->setDibuatOleh($this->getUser());
             $entity->setCalonSiswa(true);
+
+            $qbmaxnum = $em->createQueryBuilder()->select('MAX(siswa.nomorUrutPendaftaran)')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where("siswa.tahun = :tahun")
+                    ->setParameter('tahun', $entity->getTahun())->andWhere('siswa.sekolah = :sekolah')
+                    ->setParameter('sekolah', $entity->getSekolah());
+            $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+            $nomormax++;
+            $entity->setNomorUrutPendaftaran($nomormax);
+            $entity->setNomorPendaftaran($entity->getTahun()->getTahun() . $nomormax);
 
             if ($form['adaReferensi']->getData() === true && $form['referensi']->getData() === null
                     && $form['namaReferensi']->getData() != "") {
@@ -276,6 +294,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -305,6 +328,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -338,6 +366,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -376,6 +409,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -463,6 +501,11 @@ class SiswaApplicantController extends Controller
         $sekolah = $this->isRegisteredToSchool();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -506,6 +549,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -543,6 +591,11 @@ class SiswaApplicantController extends Controller
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -607,6 +660,11 @@ class SiswaApplicantController extends Controller
         $this->isRegisteredToSchool();
 
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
                 || $panitiaAktif[1] == $this->getUser()->getId())) {
             throw new AccessDeniedException(
@@ -695,6 +753,11 @@ class SiswaApplicantController extends Controller
 
     private function verifyTahun($tahun) {
         $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
+
         if ($panitiaAktif[3] != $tahun) {
             throw new AccessDeniedException(
                     $this->get('translator')->trans('cannot.alter.applicant.inactive.year'));

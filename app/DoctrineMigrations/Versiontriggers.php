@@ -13,12 +13,7 @@ class Versiontriggers extends AbstractMigration
 BEFORE INSERT ON `siswa`
 FOR EACH ROW
 BEGIN
-    DECLARE nomorurutpendaftaran INT;
     DECLARE nomorurutpersekolah INT;
-
-    SET nomorurutpendaftaran = (SELECT MAX(nomor_urut_pendaftaran) FROM siswa WHERE tahun_id = NEW.tahun_id);
-    SET NEW.nomor_urut_pendaftaran = IFNULL(nomorurutpendaftaran, 0) + 1;
-    SET NEW.nomor_pendaftaran =  CONCAT(CAST((SELECT tahun FROM tahun WHERE id = NEW.tahun_id) AS CHAR(4)), NEW.nomor_urut_pendaftaran);
 
     IF (NEW.calon_siswa = 0) THEN
         SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
