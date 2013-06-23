@@ -37,88 +37,6 @@ BEGIN
     SET NEW.waktu_ubah = NOW();
 END";
 
-    private $beforeInsertPembayaranPendaftaran = "CREATE TRIGGER `befin_pp`
-BEFORE INSERT ON `pembayaran_pendaftaran`
-FOR EACH ROW
-BEGIN
-    SET NEW.waktu_simpan = NOW();
-    SET NEW.waktu_ubah = NOW();
-END";
-
-    private $beforeInsertPembayaranSekali = "CREATE TRIGGER `befin_ps`
-BEFORE INSERT ON `pembayaran_sekali`
-FOR EACH ROW
-BEGIN
-    SET NEW.waktu_simpan = NOW();
-    SET NEW.waktu_ubah = NOW();
-END";
-
-    private $beforeInsertPembayaranRutin = "CREATE TRIGGER `befin_pr`
-BEFORE INSERT ON `pembayaran_rutin`
-FOR EACH ROW
-BEGIN
-    SET NEW.waktu_simpan = NOW();
-    SET NEW.waktu_ubah = NOW();
-END";
-
-    //     private $beforeInsertTransaksiPembayaranPendaftaran = "CREATE TRIGGER `befin_tpp`
-    // BEFORE INSERT ON transaksi_pembayaran_pendaftaran
-    // FOR EACH ROW
-    // BEGIN
-    //     SET NEW.waktu_simpan = NOW();
-    // END";
-
-    private $beforeUpdateTransaksiPembayaranPendaftaran = "CREATE TRIGGER `befup_tpp`
-BEFORE UPDATE ON transaksi_pembayaran_pendaftaran
-FOR EACH ROW
-BEGIN
-    SET NEW.nominal_pembayaran = OLD.nominal_pembayaran;
-    SET NEW.keterangan = OLD.keterangan;
-END";
-
-    private $beforeInsertTransaksiPembayaranSekali = "CREATE TRIGGER `befin_tps`
-BEFORE INSERT ON `transaksi_pembayaran_sekali`
-FOR EACH ROW
-BEGIN
-	DECLARE nomorurutperbulan INT;
-
-	SET NEW.waktu_simpan = NOW();
-
-    SET nomorurutperbulan = (
-		SELECT MAX(nomor_urut_transaksi_perbulan)
-			FROM transaksi_pembayaran_sekali
-			WHERE DATE_FORMAT(waktu_simpan, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m')
-	);
-    SET NEW.nomor_urut_transaksi_perbulan = IFNULL(nomorurutperbulan, 0) + 1;
-    SET NEW.nomor_transaksi = CONCAT(
-        'L', CAST((DATE_FORMAT(NEW.waktu_simpan, '%Y%m')) AS CHAR(6)),
-		NEW.nomor_urut_transaksi_perbulan
-	);
-END";
-
-    private $beforeUpdateTransaksiPembayaranSekali = "CREATE TRIGGER `befup_tps`
-BEFORE UPDATE ON `transaksi_pembayaran_sekali`
-FOR EACH ROW
-BEGIN
-	SET NEW.nominal_pembayaran = OLD.nominal_pembayaran;
-	SET NEW.keterangan = OLD.keterangan;
-END";
-
-    private $beforeInsertTransaksiPembayaranRutin = "CREATE TRIGGER `befin_tpr`
-BEFORE INSERT ON `transaksi_pembayaran_rutin`
-FOR EACH ROW
-BEGIN
-	SET NEW.waktu_simpan = NOW();
-END";
-
-    private $beforeUpdateTransaksiPembayaranRutin = "CREATE TRIGGER `befup_tpr`
-BEFORE UPDATE ON `transaksi_pembayaran_rutin`
-FOR EACH ROW
-BEGIN
-	SET NEW.nominal_pembayaran = OLD.nominal_pembayaran;
-	SET NEW.keterangan = OLD.keterangan;
-END";
-
     private $beforeInsertKelas = "CREATE TRIGGER `befin_kelas`
 BEFORE INSERT ON `kelas`
 FOR EACH ROW
@@ -138,55 +56,19 @@ BEGIN
     SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
 END";
 
-    //     private $beforeUpdateBiayaPendaftaran = "CREATE TRIGGER `befup_bp`
-    // BEFORE UPDATE ON biaya_pendaftaran
-    // FOR EACH ROW
-    // BEGIN
-    //     IF (OLD.terpakai = 1) THEN
-    //         SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
-    //         SET NEW.tahun_id = OLD.tahun_id;
-    //         SET NEW.gelombang_id = OLD.gelombang_id;
-    //         SET NEW.nominal = OLD.nominal;
-    //     END IF;
-    // END";
-
-    //     private $beforeUpdateBiayaSekali = "CREATE TRIGGER `befup_bs`
-    // BEFORE UPDATE ON biaya_sekali
-    // FOR EACH ROW
-    // BEGIN
-    //     SET NEW.jenisbiaya_id = OLD.jenisbiaya_id;
-    //     SET NEW.tahun_id = OLD.tahun_id;
-    //     SET NEW.nominal = OLD.nominal;
-    // END";
-
     public function up(Schema $schema) {
         $this->addSql($this->beforeInsertSiswa);
         $this->addSql($this->beforeUpdateSiswa);
 
-        $this->addSql($this->beforeInsertPembayaranSekali);
-        $this->addSql($this->beforeInsertPembayaranRutin);
-
-        //         $this->addSql($this->beforeInsertTransaksiPembayaranPendaftaran);
-        $this->addSql($this->beforeUpdateTransaksiPembayaranPendaftaran);
-
-        $this->addSql($this->beforeInsertTransaksiPembayaranSekali);
-        $this->addSql($this->beforeUpdateTransaksiPembayaranSekali);
-
-        $this->addSql($this->beforeInsertTransaksiPembayaranRutin);
-        $this->addSql($this->beforeUpdateTransaksiPembayaranRutin);
-
         $this->addSql($this->beforeInsertKelas);
         $this->addSql($this->beforeUpdateKelas);
-
-        //         $this->addSql($this->beforeUpdateBiayaPendaftaran);
-
-        //         $this->addSql($this->beforeUpdateBiayaSekali);
     }
 
     public function down(Schema $schema) {
         $this->addSql("DROP TRIGGER IF EXISTS `befin_siswa`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befup_siswa`;");
 
+        $this->addSql("DROP TRIGGER IF EXISTS `befin_pp`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befin_pr`;");
         $this->addSql("DROP TRIGGER IF EXISTS `befin_ps`;");
 
