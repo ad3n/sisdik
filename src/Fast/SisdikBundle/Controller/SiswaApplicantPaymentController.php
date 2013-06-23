@@ -34,12 +34,12 @@ class SiswaApplicantPaymentController extends Controller
 
         $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->leftJoin('t.pembayaranPendaftaran', 't5')
-                ->leftJoin('t5.transaksiPembayaranPendaftaran', 't6')->where('t.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC')
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+                ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
+                ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->where('siswa.calonSiswa = :calon')
+                ->setParameter('calon', true)->andWhere('tahun.sekolah = :sekolah')
+                ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
+                ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
                 ->setParameter('sekolah', $sekolah->getId());
 
         $searchform->submit($this->getRequest());
@@ -47,18 +47,18 @@ class SiswaApplicantPaymentController extends Controller
             $searchdata = $searchform->getData();
 
             if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
+                $querybuilder->andWhere('tahun.id = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
             }
 
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
                         ->andWhere(
-                                't.namaLengkap LIKE :namalengkap '
-                                        . ' OR t.nomorPendaftaran = :nomorpendaftaran '
-                                        . ' OR t.keterangan LIKE :keterangan '
-                                        . ' OR t4.nama LIKE :sekolahasal '
-                                        . ' OR t6.nomorTransaksi = :nomortransaksi ');
+                                'siswa.namaLengkap LIKE :namalengkap '
+                                        . ' OR siswa.nomorPendaftaran = :nomorpendaftaran '
+                                        . ' OR siswa.keterangan LIKE :keterangan '
+                                        . ' OR sekolahasal.nama LIKE :sekolahasal '
+                                        . ' OR transaksi.nomorTransaksi = :nomortransaksi ');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('nomorpendaftaran', $searchdata['searchkey']);
                 $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
@@ -67,21 +67,22 @@ class SiswaApplicantPaymentController extends Controller
             }
 
             if ($searchdata['nopayment'] == true) {
-                $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pp');
-                $querybuilder->leftJoin('pp.transaksiPembayaranPendaftaran', 'tpp');
-                $querybuilder->andWhere("tpp.nominalPembayaran IS NULL");
+                $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
+                $querybuilder->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
+                $querybuilder->andWhere("transaksi.nominalPembayaran IS NULL");
             }
 
             if ($searchdata['todayinput'] == true) {
-                $querybuilder->andWhere("t.waktuSimpan BETWEEN :datefrom AND :dateto");
+                $querybuilder->andWhere("siswa.waktuSimpan BETWEEN :datefrom AND :dateto");
                 $currentdate = new \DateTime();
                 $querybuilder->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00');
                 $querybuilder->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59');
             }
 
+            // the following lines are wrong, due to database refactoring
             if ($searchdata['notsettled'] == true) {
-                $querybuilder->andWhere("t.lunasBiayaPendaftaran = :lunas");
-                $querybuilder->setParameter('lunas', false);
+                $querybuilder
+                        ->andWhere('siswa.sisaBiayaPendaftaran = -999 OR siswa.sisaBiayaPendaftaran != 0');
             }
         }
 
