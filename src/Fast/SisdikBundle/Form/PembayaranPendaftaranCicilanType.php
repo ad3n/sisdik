@@ -20,13 +20,6 @@ class PembayaranPendaftaranCicilanType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $builder
-        //                 ->add('daftarBiayaPendaftaran', 'choice',
-        //                         array(
-        //                                 'choices' => $availableFees, 'expanded' => false, 'multiple' => false,
-        //                                 'attr' => array(
-        //                                     'class' => 'xlarge'
-        //                                 ), 'label_render' => true, 'label' => 'label.fee.registration.entry'
-        //                         ))
                 ->add('transaksiPembayaranPendaftaran', 'collection',
                         array(
                                 'type' => new TransaksiPembayaranPendaftaranType($this->container),
