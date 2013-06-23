@@ -3,7 +3,14 @@
 {% block page_heading %}{% trans from "headings" %}fee.registration.edit{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('fee_registration_update', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<style type="text/css">
+.captcha_reload {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+}
+</style>
+
+<form action="{{ path('fee_registration_update', { 'id': entity.id, 'sessiondata': sessiondata }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>

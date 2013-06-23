@@ -52,7 +52,7 @@
     		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('fee_registration_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('fee_registration_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
+        		<a href="{{ path('fee_registration_edit_confirm', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
     		</td>
     	</tr>
     {% endfor %}
