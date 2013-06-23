@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\File;
 use Fast\SisdikBundle\Util\FileSizeFormatter;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Siswa
@@ -302,6 +303,7 @@ class Siswa
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $waktuSimpan;
 
@@ -309,6 +311,7 @@ class Siswa
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $waktuUbah;
 

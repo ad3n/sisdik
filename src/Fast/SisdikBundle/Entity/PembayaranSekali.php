@@ -4,6 +4,7 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * PembayaranSekali
@@ -47,6 +48,7 @@ class PembayaranSekali
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $waktuSimpan;
 
@@ -54,6 +56,7 @@ class PembayaranSekali
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $waktuUbah;
 

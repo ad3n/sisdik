@@ -3,6 +3,7 @@
 namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * TransaksiPembayaranRutin
@@ -48,6 +49,7 @@ class TransaksiPembayaranRutin
      * @var \DateTime
      *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="create")
      */
     private $waktuSimpan;
 
