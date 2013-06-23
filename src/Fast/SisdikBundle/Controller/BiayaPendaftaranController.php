@@ -183,12 +183,6 @@ class BiayaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
-        if ($entity->isTerpakai() === true) {
-            $this->get('session')->getFlashBag()
-                    ->add('info',
-                            $this->get('translator')->trans('flash.fee.registration.update.restriction'));
-        }
-
         $editForm = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
