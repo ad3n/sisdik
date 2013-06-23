@@ -56,41 +56,36 @@ class SiswaApplicantReportController extends Controller
         $pendaftarTercari = 0;
         $tampilkanTercari = false;
         $pencarianLanjutan = false;
+        $pencarianJumlahBayar = false;
         $searchkey = '';
 
         $searchform = $this->createForm(new SiswaApplicantReportSearchType($this->container));
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true
-                && !($searchdata['gelombang'] instanceof Gelombang)) {
-            $message = $this->get('translator')->trans('errorinfo.persentase.harus.dengan.gelombang');
-            $searchform->get('jumlahBayar')->addError(new FormError($message));
-        }
-
-        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 'tahun')->leftJoin('t.gelombang', 'gelombang')
-                ->leftJoin('t.sekolahAsal', 'sekolahasal')->leftJoin('t.orangtuaWali', 'orangtua')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+                ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
+                ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->leftJoin('siswa.orangtuaWali', 'orangtua')
+                ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('orangtua.aktif = :ortuaktif')->setParameter('ortuaktif', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2])
                 ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
-                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+                ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC');
 
-        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
-                ->leftJoin('t.gelombang', 'gelombang')->leftJoin('t.sekolahAsal', 'sekolahasal')
-                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->leftJoin('siswa.gelombang', 'gelombang')->leftJoin('siswa.sekolahAsal', 'sekolahasal')
+                ->leftJoin('siswa.orangtuaWali', 'orangtua')->where('siswa.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('ortuaktif', true)->andWhere('siswa.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId())->andWhere('tahun.id = :tahunaktif')
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
@@ -99,24 +94,16 @@ class SiswaApplicantReportController extends Controller
                 ->setParameter('ortuaktif', true)->setParameter('sekolah', $sekolah->getId())
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
-        $qbBiaya = $em->createQueryBuilder()->select('SUM(t.nominal)')
-                ->from('FastSisdikBundle:BiayaPendaftaran', 't');
-        $biaya = 0;
-
         if ($searchform->isValid()) {
 
             if ($searchdata['gelombang'] instanceof Gelombang) {
-                $querybuilder->andWhere('t.gelombang = :gelombang');
+                $querybuilder->andWhere('siswa.gelombang = :gelombang');
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
 
-                $qbsearchnum->andWhere('t.gelombang = :gelombang');
+                $qbsearchnum->andWhere('siswa.gelombang = :gelombang');
                 $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
 
                 $qbAdvsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
-
-                $qbBiaya->andWhere('t.gelombang = :gelombang');
-                $qbBiaya->setParameter('gelombang', $searchdata['gelombang']->getId());
-                $biaya = $qbBiaya->getQuery()->getSingleScalarResult();
 
                 $tampilkanTercari = true;
             }
@@ -126,8 +113,8 @@ class SiswaApplicantReportController extends Controller
 
                 $querybuilder
                         ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
-                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
+                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
                                         . ' OR orangtua.nama LIKE :namaortu '
                                         . ' OR orangtua.ponsel LIKE :ponselortu ');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
@@ -139,8 +126,8 @@ class SiswaApplicantReportController extends Controller
 
                 $qbsearchnum
                         ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
-                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
+                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
                                         . ' OR orangtua.nama LIKE :namaortu '
                                         . ' OR orangtua.ponsel LIKE :ponselortu ');
                 $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
@@ -162,10 +149,10 @@ class SiswaApplicantReportController extends Controller
 
             $dariTanggal = $searchdata['dariTanggal'];
             if ($dariTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('t.waktuSimpan >= :daritanggal');
+                $querybuilder->andWhere('siswa.waktuSimpan >= :daritanggal');
                 $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
 
-                $qbsearchnum->andWhere('t.waktuSimpan >= :daritanggal');
+                $qbsearchnum->andWhere('siswa.waktuSimpan >= :daritanggal');
                 $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
 
                 $qbAdvsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
@@ -175,10 +162,10 @@ class SiswaApplicantReportController extends Controller
 
             $hinggaTanggal = $searchdata['hinggaTanggal'];
             if ($hinggaTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('t.waktuSimpan <= :hinggatanggal');
+                $querybuilder->andWhere('siswa.waktuSimpan <= :hinggatanggal');
                 $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
 
-                $qbsearchnum->andWhere('t.waktuSimpan <= :hinggatanggal');
+                $qbsearchnum->andWhere('siswa.waktuSimpan <= :hinggatanggal');
                 $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
 
                 $qbAdvsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
@@ -187,10 +174,10 @@ class SiswaApplicantReportController extends Controller
             }
 
             if ($searchdata['jenisKelamin'] != '') {
-                $querybuilder->andWhere('t.jenisKelamin = :jeniskelamin');
+                $querybuilder->andWhere('siswa.jenisKelamin = :jeniskelamin');
                 $querybuilder->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
 
-                $qbsearchnum->andWhere('t.jenisKelamin = :jeniskelamin');
+                $qbsearchnum->andWhere('siswa.jenisKelamin = :jeniskelamin');
                 $qbsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
 
                 $qbAdvsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
@@ -213,11 +200,11 @@ class SiswaApplicantReportController extends Controller
             }
 
             if ($searchdata['referensi'] instanceof Referensi) {
-                $querybuilder->leftJoin('t.referensi', 'ref');
+                $querybuilder->leftJoin('siswa.referensi', 'ref');
                 $querybuilder->andWhere('ref.id = :referensi');
                 $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
 
-                $qbsearchnum->leftJoin('t.referensi', 'ref');
+                $qbsearchnum->leftJoin('siswa.referensi', 'ref');
                 $qbsearchnum->andWhere('ref.id = :referensi');
                 $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
 
@@ -231,29 +218,18 @@ class SiswaApplicantReportController extends Controller
             if ($searchdata['jumlahBayar'] != "") {
                 if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
 
-                    if ($searchdata['jumlahBayar'] == 100 && $pembandingBayar != '<'
-                            && $pembandingBayar != '<=') {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
-                        $querybuilder->andWhere('t.lunasBiayaPendaftaran = :lunas');
-                        $querybuilder->setParameter('lunas', true);
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
+                            ->having(
+                                    "SUM(pembayaran.nominalTotalTransaksi) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar "
+                                            . " (SUM(siswa.sisaBiayaPendaftaran) + SUM(pembayaran.nominalTotalBiaya)) * :jumlahbayar");
+                    $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
-                        $qbAdvsearchnum->setParameter('lunas', true);
-                    } else {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
-                        $querybuilder->groupBy('t.id')
-                                ->having(
-                                        "SUM(pembayaran.nominalTotal) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar :jumlahbayar");
-                        $querybuilder->setParameter('jumlahbayar', $biaya * $searchdata['jumlahBayar'] / 100);
-
-                        $qbAdvsearchnum
-                                ->setParameter('jumlahbayar', $biaya * $searchdata['jumlahBayar'] / 100);
-                    }
+                    $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
                 } else {
 
-                    $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
-                    $querybuilder->groupBy('t.id')
-                            ->having("SUM(pembayaran.nominalTotal) $pembandingBayar :jumlahbayar");
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
                     $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
@@ -261,10 +237,11 @@ class SiswaApplicantReportController extends Controller
                 }
 
                 $qbAdvsearchnum->where($qbe->expr()->in('tcount.id', $querybuilder->getDQL()));
-                $pendaftarTercari = $qbAdvsearchnum->getQuery()->getSingleScalarResult();
+                $pendaftarTercari = intval($qbAdvsearchnum->getQuery()->getSingleScalarResult());
 
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;
+                $pencarianJumlahBayar = true;
             }
             if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                 $tampilkanTercari = true;
@@ -274,7 +251,7 @@ class SiswaApplicantReportController extends Controller
             $pencarianLanjutan = true;
         }
 
-        $pendaftarTercari = $pendaftarTercari != 0 ? $pendaftarTercari
+        $pendaftarTercari = $pencarianJumlahBayar === true ? $pendaftarTercari
                 : $qbsearchnum->getQuery()->getSingleScalarResult();
 
         $paginator = $this->get('knp_paginator');
@@ -307,39 +284,36 @@ class SiswaApplicantReportController extends Controller
         $em = $this->getDoctrine()->getManager();
         $qbe = $em->createQueryBuilder();
 
+        $pendaftarTercari = 0;
+        $pencarianJumlahBayar = false;
+
         $searchform = $this->createForm(new SiswaApplicantReportSearchType($this->container));
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true
-                && !($searchdata['gelombang'] instanceof Gelombang)) {
-            $message = $this->get('translator')->trans('errorinfo.persentase.harus.dengan.gelombang');
-            $searchform->get('jumlahBayar')->addError(new FormError($message));
-        }
-
-        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 'tahun')->leftJoin('t.gelombang', 'gelombang')
-                ->leftJoin('t.sekolahAsal', 'sekolahasal')->leftJoin('t.orangtuaWali', 'orangtua')
-                ->where('t.calonSiswa = :calon')->setParameter('calon', true)
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+                ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
+                ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->leftJoin('siswa.orangtuaWali', 'orangtua')
+                ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('orangtua.aktif = :ortuaktif')->setParameter('ortuaktif', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2])
                 ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
-                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+                ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC');
 
-        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('t.id'))
-                ->from('FastSisdikBundle:Siswa', 't')->leftJoin('t.tahun', 'tahun')
-                ->leftJoin('t.gelombang', 'gelombang')->leftJoin('t.sekolahAsal', 'sekolahasal')
-                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
+        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->leftJoin('siswa.gelombang', 'gelombang')->leftJoin('siswa.sekolahAsal', 'sekolahasal')
+                ->leftJoin('siswa.orangtuaWali', 'orangtua')->where('siswa.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
+                ->setParameter('ortuaktif', true)->andWhere('siswa.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId())->andWhere('tahun.id = :tahunaktif')
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
@@ -348,22 +322,22 @@ class SiswaApplicantReportController extends Controller
                 ->setParameter('ortuaktif', true)->setParameter('sekolah', $sekolah->getId())
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
-        $qbBiaya = $em->createQueryBuilder()->select('SUM(t.nominal)')
-                ->from('FastSisdikBundle:BiayaPendaftaran', 't');
+        $qbBiaya = $em->createQueryBuilder()->select('SUM(biaya.nominal)')
+                ->from('FastSisdikBundle:BiayaPendaftaran', 'biaya');
         $biaya = 0;
 
         if ($searchform->isValid()) {
 
             if ($searchdata['gelombang'] instanceof Gelombang) {
-                $querybuilder->andWhere('t.gelombang = :gelombang');
+                $querybuilder->andWhere('siswa.gelombang = :gelombang');
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
 
-                $qbsearchnum->andWhere('t.gelombang = :gelombang');
+                $qbsearchnum->andWhere('siswa.gelombang = :gelombang');
                 $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
 
                 $qbAdvsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
 
-                $qbBiaya->andWhere('t.gelombang = :gelombang');
+                $qbBiaya->andWhere('biaya.gelombang = :gelombang');
                 $qbBiaya->setParameter('gelombang', $searchdata['gelombang']->getId());
                 $biaya = $qbBiaya->getQuery()->getSingleScalarResult();
             }
@@ -373,8 +347,8 @@ class SiswaApplicantReportController extends Controller
 
                 $querybuilder
                         ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
-                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
+                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
                                         . ' OR orangtua.nama LIKE :namaortu '
                                         . ' OR orangtua.ponsel LIKE :ponselortu ');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
@@ -386,8 +360,8 @@ class SiswaApplicantReportController extends Controller
 
                 $qbsearchnum
                         ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
-                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
+                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
+                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
                                         . ' OR orangtua.nama LIKE :namaortu '
                                         . ' OR orangtua.ponsel LIKE :ponselortu ');
                 $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
@@ -407,10 +381,10 @@ class SiswaApplicantReportController extends Controller
 
             $dariTanggal = $searchdata['dariTanggal'];
             if ($dariTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('t.waktuSimpan >= :daritanggal');
+                $querybuilder->andWhere('siswa.waktuSimpan >= :daritanggal');
                 $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
 
-                $qbsearchnum->andWhere('t.waktuSimpan >= :daritanggal');
+                $qbsearchnum->andWhere('siswa.waktuSimpan >= :daritanggal');
                 $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
 
                 $qbAdvsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
@@ -418,20 +392,20 @@ class SiswaApplicantReportController extends Controller
 
             $hinggaTanggal = $searchdata['hinggaTanggal'];
             if ($hinggaTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('t.waktuSimpan <= :hinggatanggal');
+                $querybuilder->andWhere('siswa.waktuSimpan <= :hinggatanggal');
                 $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
 
-                $qbsearchnum->andWhere('t.waktuSimpan <= :hinggatanggal');
+                $qbsearchnum->andWhere('siswa.waktuSimpan <= :hinggatanggal');
                 $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
 
                 $qbAdvsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
             }
 
             if ($searchdata['jenisKelamin'] != '') {
-                $querybuilder->andWhere('t.jenisKelamin = :jeniskelamin');
+                $querybuilder->andWhere('siswa.jenisKelamin = :jeniskelamin');
                 $querybuilder->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
 
-                $qbsearchnum->andWhere('t.jenisKelamin = :jeniskelamin');
+                $qbsearchnum->andWhere('siswa.jenisKelamin = :jeniskelamin');
                 $qbsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
 
                 $qbAdvsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
@@ -448,11 +422,11 @@ class SiswaApplicantReportController extends Controller
             }
 
             if ($searchdata['referensi'] instanceof Referensi) {
-                $querybuilder->leftJoin('t.referensi', 'ref');
+                $querybuilder->leftJoin('siswa.referensi', 'ref');
                 $querybuilder->andWhere('ref.id = :referensi');
                 $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
 
-                $qbsearchnum->leftJoin('t.referensi', 'ref');
+                $qbsearchnum->leftJoin('siswa.referensi', 'ref');
                 $qbsearchnum->andWhere('ref.id = :referensi');
                 $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
 
@@ -463,29 +437,20 @@ class SiswaApplicantReportController extends Controller
             if ($searchdata['jumlahBayar'] != "") {
                 if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
 
-                    if ($searchdata['jumlahBayar'] == 100 && $pembandingBayar != '<'
-                            && $pembandingBayar != '<=') {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
-                        $querybuilder->andWhere('t.lunasBiayaPendaftaran = :lunas');
-                        $querybuilder->setParameter('lunas', true);
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
+                            ->having(
+                                    "SUM(pembayaran.nominalTotalTransaksi) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar "
+                                            . " (SUM(siswa.sisaBiayaPendaftaran) + SUM(pembayaran.nominalTotalBiaya)) * :jumlahbayar");
+                    $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
-                        $qbAdvsearchnum->setParameter('lunas', true);
-                    } else {
-                        $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
-                        $querybuilder->groupBy('t.id')
-                                ->having(
-                                        "SUM(pembayaran.nominalTotal) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar :jumlahbayar");
-                        $querybuilder->setParameter('jumlahbayar', $biaya * $searchdata['jumlahBayar'] / 100);
-
-                        $qbAdvsearchnum
-                                ->setParameter('jumlahbayar', $biaya * $searchdata['jumlahBayar'] / 100);
-                    }
+                    $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
                 } else {
 
-                    $querybuilder->leftJoin('t.pembayaranPendaftaran', 'pembayaran');
-                    $querybuilder->groupBy('t.id')
-                            ->having("SUM(pembayaran.nominalTotal) $pembandingBayar :jumlahbayar");
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
+                    $querybuilder->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
+                    $querybuilder->groupBy('siswa.id')
+                            ->having("SUM(transaksi.nominalPembayaran) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
                     $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
@@ -494,12 +459,14 @@ class SiswaApplicantReportController extends Controller
 
                 $qbAdvsearchnum->where($qbe->expr()->in('tcount.id', $querybuilder->getDQL()));
                 $pendaftarTercari = $qbAdvsearchnum->getQuery()->getSingleScalarResult();
+
+                $pencarianJumlahBayar = true;
             }
         } else {
             // TODO: display error response
         }
 
-        $pendaftarTercari = $pendaftarTercari != "" ? $pendaftarTercari
+        $pendaftarTercari = $pencarianJumlahBayar === true ? $pendaftarTercari
                 : $qbsearchnum->getQuery()->getSingleScalarResult();
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
