@@ -30,13 +30,6 @@ BEGIN
     SET NEW.waktu_ubah = NOW();
 END";
 
-    private $beforeUpdateSiswa = "CREATE TRIGGER `befup_siswa`
-BEFORE UPDATE ON `siswa`
-FOR EACH ROW
-BEGIN
-    SET NEW.waktu_ubah = NOW();
-END";
-
     private $beforeInsertKelas = "CREATE TRIGGER `befin_kelas`
 BEFORE INSERT ON `kelas`
 FOR EACH ROW
@@ -58,7 +51,6 @@ END";
 
     public function up(Schema $schema) {
         $this->addSql($this->beforeInsertSiswa);
-        $this->addSql($this->beforeUpdateSiswa);
 
         $this->addSql($this->beforeInsertKelas);
         $this->addSql($this->beforeUpdateKelas);
