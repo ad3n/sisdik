@@ -55,14 +55,21 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
-        # gedmo/tree
-        mappings:
-            gedmo_tree:
-                type: annotation
-                prefix: Gedmo\Tree\Entity
-                dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
-                alias: GedmoTree # this one is optional and will default to the name set for the mapping
+        entity_managers:
+            default:
+                auto_mapping: true
+                # beberlei/DoctrineExtensions
+                dql:
+                    datetime_functions:
+                        MONTH: DoctrineExtensions\Query\Mysql\Month
+                        YEAR: DoctrineExtensions\Query\Mysql\Year
+                # gedmo/tree
+                mappings:
+                    gedmo_tree:
+                        type: annotation
+                        prefix: Gedmo\Tree\Entity
+                        dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
+                        alias: GedmoTree # optional and will default to the name set for the mapping
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -28,6 +28,7 @@
         "knplabs/knp-components": "*",
         "knplabs/knp-paginator-bundle": "*",
         "gedmo/doctrine-extensions": "master-dev",
+        "beberlei/DoctrineExtensions": "dev-master",
         "bcc/extra-tools-bundle": "dev-master",
         "mopa/bootstrap-bundle": "dev-master",
         "twitter/bootstrap": "dev-master",

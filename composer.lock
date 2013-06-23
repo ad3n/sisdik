@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b504aa0553730a374d0fdfa71fed0e9d",
+    "hash": "ebc0521a73f2a9df301aa864517f42ad",
     "packages": [
         {
             "name": "bcc/extra-tools-bundle",
@@ -44,6 +44,32 @@
                 "datetime unit converter formatter parser"
             ],
             "time": "2012-11-21 15:10:33"
+        },
+        {
+            "name": "beberlei/DoctrineExtensions",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beberlei/DoctrineExtensions.git",
+                "reference": "v0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/v0.1",
+                "reference": "v0.1",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "DoctrineExtensions": "lib/"
+                }
+            },
+            "notification-url": "http://packagist.org/downloads/",
+            "time": "2012-05-16 07:04:34"
         },
         {
             "name": "doctrine/common",
@@ -2760,6 +2786,7 @@
         "jms/security-extra-bundle": 20,
         "jms/di-extra-bundle": 20,
         "gedmo/doctrine-extensions": 20,
+        "beberlei/doctrineextensions": 20,
         "bcc/extra-tools-bundle": 20,
         "mopa/bootstrap-bundle": 20,
         "twitter/bootstrap": 20,
