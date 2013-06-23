@@ -10,18 +10,14 @@
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('fee_registration_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('fee_registration_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
 <ul class="pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('fee_registration', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('fee_registration', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('fee_registration') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">
