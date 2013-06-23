@@ -61,25 +61,12 @@ BEGIN
     SET NEW.waktu_ubah = NOW();
 END";
 
-    private $beforeInsertTransaksiPembayaranPendaftaran = "CREATE TRIGGER `befin_tpp`
-BEFORE INSERT ON transaksi_pembayaran_pendaftaran
-FOR EACH ROW
-BEGIN
-    DECLARE nomorurutperbulan INT;
-
-    SET NEW.waktu_simpan = NOW();
-
-    SET nomorurutperbulan = (
-        SELECT MAX(nomor_urut_transaksi_perbulan)
-            FROM transaksi_pembayaran_pendaftaran
-            WHERE DATE_FORMAT(waktu_simpan, '%Y%m') = DATE_FORMAT(CURDATE(), '%Y%m') AND sekolah_id = NEW.sekolah_id
-    );
-    SET NEW.nomor_urut_transaksi_perbulan = IFNULL(nomorurutperbulan, 0) + 1;
-    SET NEW.nomor_transaksi = CONCAT(
-        'D', CAST((DATE_FORMAT(NEW.waktu_simpan, '%Y%m')) AS CHAR(6)),
-        NEW.nomor_urut_transaksi_perbulan
-    );
-END";
+    //     private $beforeInsertTransaksiPembayaranPendaftaran = "CREATE TRIGGER `befin_tpp`
+    // BEFORE INSERT ON transaksi_pembayaran_pendaftaran
+    // FOR EACH ROW
+    // BEGIN
+    //     SET NEW.waktu_simpan = NOW();
+    // END";
 
     private $beforeUpdateTransaksiPembayaranPendaftaran = "CREATE TRIGGER `befup_tpp`
 BEFORE UPDATE ON transaksi_pembayaran_pendaftaran
@@ -179,7 +166,7 @@ END";
         $this->addSql($this->beforeInsertPembayaranSekali);
         $this->addSql($this->beforeInsertPembayaranRutin);
 
-        $this->addSql($this->beforeInsertTransaksiPembayaranPendaftaran);
+        //         $this->addSql($this->beforeInsertTransaksiPembayaranPendaftaran);
         $this->addSql($this->beforeUpdateTransaksiPembayaranPendaftaran);
 
         $this->addSql($this->beforeInsertTransaksiPembayaranSekali);

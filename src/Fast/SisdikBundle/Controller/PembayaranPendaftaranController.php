@@ -53,21 +53,20 @@ class PembayaranPendaftaranController extends Controller
                     'siswa' => $siswa
                 ));
 
-        $daftarItemBiaya = $this->getBiayaProperties($siswa);
+        $itemBiaya = $this->getBiayaProperties($siswa);
 
-        if (count($daftarItemBiaya['semua']) == count($daftarItemBiaya['tersimpan'])
-                && count($daftarItemBiaya['tersimpan']) > 0) {
+        if (count($itemBiaya['semua']) == count($itemBiaya['tersimpan'])
+                && count($itemBiaya['tersimpan']) > 0) {
             return array(
-                    'entities' => $entities, 'siswa' => $siswa,
-                    'itemBiayaSemua' => $daftarItemBiaya['semua'],
-                    'itemBiayaTersimpan' => $daftarItemBiaya['tersimpan'],
-                    'itemBiayaTersisa' => $daftarItemBiaya['tersisa'],
+                    'entities' => $entities, 'siswa' => $siswa, 'itemBiayaSemua' => $itemBiaya['semua'],
+                    'itemBiayaTersimpan' => $itemBiaya['tersimpan'],
+                    'itemBiayaTersisa' => $itemBiaya['tersisa'],
             );
         } else {
             $entity = new PembayaranPendaftaran();
             $entity->setJenisPotongan("nominal");
 
-            foreach ($daftarItemBiaya['tersisa'] as $id) {
+            foreach ($itemBiaya['tersisa'] as $id) {
                 $biaya = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
 
                 $daftarBiaya = new DaftarBiayaPendaftaran();
@@ -85,10 +84,9 @@ class PembayaranPendaftaranController extends Controller
             $form = $this->createForm(new PembayaranPendaftaranType($this->container), $entity);
 
             return array(
-                    'entities' => $entities, 'siswa' => $siswa,
-                    'itemBiayaSemua' => $daftarItemBiaya['semua'],
-                    'itemBiayaTersimpan' => $daftarItemBiaya['tersimpan'],
-                    'itemBiayaTersisa' => $daftarItemBiaya['tersisa'], 'form' => $form->createView(),
+                    'entities' => $entities, 'siswa' => $siswa, 'itemBiayaSemua' => $itemBiaya['semua'],
+                    'itemBiayaTersimpan' => $itemBiaya['tersimpan'],
+                    'itemBiayaTersisa' => $itemBiaya['tersisa'], 'form' => $form->createView(),
             );
         }
     }
@@ -116,51 +114,7 @@ class PembayaranPendaftaranController extends Controller
                     'siswa' => $siswa
                 ));
 
-        $daftarItemBiaya = $this->getBiayaProperties($siswa);
-
-        $totalBiaya = array();
-        $totalPotongan = 0;
-        $adaPotongan = array();
-        $totalAdaPotongan = false;
-        $editLink = array();
-        foreach ($entities as $pembayaran) {
-            if (is_object($pembayaran) && $pembayaran instanceof PembayaranPendaftaran) {
-                $nominalBiaya = 0;
-                foreach ($pembayaran->getDaftarBiayaPendaftaran() as $daftar) {
-                    $nominalBiaya += $daftar->getNominal();
-                }
-
-                $adaPotongan[] = $pembayaran->getAdaPotongan();
-                if ($pembayaran->getAdaPotongan()) {
-                    $totalAdaPotongan = true;
-                    $jenisPotongan = $pembayaran->getJenisPotongan();
-                    if ($jenisPotongan == 'nominal') {
-                        $nominalBiayaTerpotong = $nominalBiaya - $pembayaran->getNominalPotongan();
-                        $totalPotongan += $pembayaran->getNominalPotongan();
-                    } elseif ($jenisPotongan == 'persentase') {
-                        $nominalBiayaTerpotong = $nominalBiaya
-                                - ($nominalBiaya * ($pembayaran->getPersenPotongan() / 100));
-                        $totalPotongan += $nominalBiaya * ($pembayaran->getPersenPotongan() / 100);
-                    }
-                    $totalBiaya[] = $nominalBiayaTerpotong;
-
-                    if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
-                            == $nominalBiayaTerpotong) {
-                        $editLink[] = false;
-                    } else {
-                        $editLink[] = true;
-                    }
-                } else {
-                    $totalBiaya[] = $nominalBiaya;
-                    if ($pembayaran->getTotalNominalTransaksiPembayaranPendaftaran() == $nominalBiaya
-                            && $nominalBiaya != 0) {
-                        $editLink[] = false;
-                    } else {
-                        $editLink[] = true;
-                    }
-                }
-            }
-        }
+        $itemBiaya = $this->getBiayaProperties($siswa);
 
         $entity = new PembayaranPendaftaran();
         $form = $this->createForm(new PembayaranPendaftaranType($this->container), $entity);
@@ -176,10 +130,28 @@ class PembayaranPendaftaranController extends Controller
 
         if ($form->isValid()) {
 
+            $now = new \DateTime();
+            $qbmaxnum = $em->createQueryBuilder()->select('MAX(transaksi.nomorUrutTransaksiPerbulan)')
+                    ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                    ->where("YEAR(transaksi.waktuSimpan) = :tahunsimpan")
+                    ->setParameter('tahunsimpan', $now->format('Y'))
+                    ->andWhere("MONTH(transaksi.waktuSimpan) = :bulansimpan")
+                    ->setParameter('bulansimpan', $now->format('m'))
+                    ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
+            $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+
+            $currentPaymentAmount = 0;
             foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
-                $currentPaymentAmount = $transaksi->getNominalPembayaran();
+                if ($transaksi instanceof TransaksiPembayaranPendaftaran) {
+                    $currentPaymentAmount = $transaksi->getNominalPembayaran();
+                    $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
+                    $transaksi
+                            ->setNomorTransaksi(
+                                    TransaksiPembayaranPendaftaran::tandakwitansi . $now->format('Y')
+                                            . $now->format('m') . ($nomormax + 1));
+                }
             }
-            $entity->setNominalTotal($entity->getNominalTotal() + $currentPaymentAmount);
+            $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
 
             $nominalBiaya = 0;
             $itemBiayaTerproses = array();
@@ -199,6 +171,7 @@ class PembayaranPendaftaranController extends Controller
                     $em->persist($biayaPendaftaranTmp);
                 }
             }
+            $entity->setNominalTotalBiaya($nominalBiaya);
 
             if ($entity->getAdaPotongan() === false) {
                 $entity->setJenisPotongan(null);
@@ -220,7 +193,7 @@ class PembayaranPendaftaranController extends Controller
             $payableAmountDue = $siswa->getTotalNominalBiayaPendaftaran();
             $payableAmountRemain = $this
                     ->getPayableFeesRemain($siswa->getTahun()->getId(), $siswa->getGelombang()->getId(),
-                            array_diff($daftarItemBiaya['tersisa'], $itemBiayaTerproses));
+                            array_diff($itemBiaya['tersisa'], $itemBiayaTerproses));
 
             $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran() + $currentPaymentAmount;
             $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran() + $currentDiscount;
@@ -228,6 +201,7 @@ class PembayaranPendaftaranController extends Controller
             if (($payableAmountRemain + $payableAmountDue) == ($totalPayment + $totalDiscount)) {
                 $siswa->setLunasBiayaPendaftaran(true);
             }
+            $siswa->setSisaBiayaPendaftaran($payableAmountRemain);
 
             // print("\$totalPayment: $totalPayment<br />");
             // print("\$totalDiscount: $totalDiscount<br />");
@@ -240,7 +214,7 @@ class PembayaranPendaftaranController extends Controller
 
             $em->flush();
 
-            if (count($daftarItemBiaya['tersimpan']) == 0) {
+            if (count($itemBiaya['tersimpan']) == 0) {
                 $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
@@ -461,12 +435,9 @@ class PembayaranPendaftaranController extends Controller
                 ->add('error', $this->get('translator')->trans('flash.payment.registration.fail.insert'));
 
         return array(
-                'entities' => $entities, 'siswa' => $siswa,
-                'jumlahItemBiayaSemua' => count($daftarItemBiaya['semua']),
-                'jumlahItemBiayaTersimpan' => count($daftarItemBiaya['tersimpan']),
-                'form' => $form->createView(), 'totalBiaya' => $totalBiaya, 'editLink' => $editLink,
-                'adaPotongan' => $adaPotongan, 'totalPotongan' => $totalPotongan,
-                'totalAdaPotongan' => $totalAdaPotongan,
+                'entities' => $entities, 'siswa' => $siswa, 'itemBiayaSemua' => $itemBiaya['semua'],
+                'itemBiayaTersimpan' => $itemBiaya['tersimpan'], 'itemBiayaTersisa' => $itemBiaya['tersisa'],
+                'form' => $form->createView(),
         );
     }
 
@@ -623,7 +594,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
 
-        $daftarItemBiaya = $this->getBiayaProperties($siswa);
+        $itemBiaya = $this->getBiayaProperties($siswa);
 
         $daftarBiayaPendaftaran = $entity->getDaftarBiayaPendaftaran();
         $totalNominalTransaksiSebelumnya = $entity->getTotalNominalTransaksiPembayaranPendaftaran();
@@ -659,17 +630,32 @@ class PembayaranPendaftaranController extends Controller
 
         if ($editForm->isValid()) {
 
+            $now = new \DateTime();
+            $qbmaxnum = $em->createQueryBuilder()->select('MAX(transaksi.nomorUrutTransaksiPerbulan)')
+                    ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                    ->where("YEAR(transaksi.waktuSimpan) = :tahunsimpan")
+                    ->setParameter('tahunsimpan', $now->format('Y'))
+                    ->andWhere("MONTH(transaksi.waktuSimpan) = :bulansimpan")
+                    ->setParameter('bulansimpan', $now->format('m'))
+                    ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
+            $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+
             $currentPaymentAmount = 0;
-            foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
-                $transaksi->setDibuatOleh($this->getUser());
+            $transaksi = $entity->getTransaksiPembayaranPendaftaran()->last();
+            if ($transaksi instanceof TransaksiPembayaranPendaftaran) {
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
+                $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
+                $transaksi
+                        ->setNomorTransaksi(
+                                TransaksiPembayaranPendaftaran::tandakwitansi . $now->format('Y')
+                                        . $now->format('m') . ($nomormax + 1));
             }
-            $entity->setNominalTotal($entity->getNominalTotal() + $currentPaymentAmount);
+            $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
 
             $payableAmountDue = $siswa->getTotalNominalBiayaPendaftaran();
             $payableAmountRemain = $this
                     ->getPayableFeesRemain($siswa->getTahun()->getId(), $siswa->getGelombang()->getId(),
-                            $daftarItemBiaya['tersisa']);
+                            $itemBiaya['tersisa']);
 
             $totalPayment = $totalPayment + $currentPaymentAmount;
             $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran();
@@ -881,13 +867,12 @@ class PembayaranPendaftaranController extends Controller
             }
         }
 
-        $querybuilder = $em->createQueryBuilder()->select('daftar')
+        $querybuilder1 = $em->createQueryBuilder()->select('daftar')
                 ->from('FastSisdikBundle:DaftarBiayaPendaftaran', 'daftar')
                 ->leftJoin('daftar.biayaPendaftaran', 'biaya')
                 ->leftJoin('daftar.pembayaranPendaftaran', 'pembayaran')->where('pembayaran.siswa = :siswa')
-                ->setParameter('siswa', $siswa)->orderBy('biaya.urutan', 'ASC');
-        $daftarBiaya = $querybuilder->getQuery()->getResult();
-
+                ->setParameter('siswa', $siswa->getId())->orderBy('biaya.urutan', 'ASC');
+        $daftarBiaya = $querybuilder1->getQuery()->getResult();
         $idBiayaTersimpan = array();
         foreach ($daftarBiaya as $daftar) {
             if ($daftar instanceof DaftarBiayaPendaftaran) {
@@ -898,7 +883,7 @@ class PembayaranPendaftaranController extends Controller
         $idBiayaSisa = array_diff($idBiayaSemua, $idBiayaTersimpan);
 
         return array(
-            'semua' => $idBiayaSemua, 'tersimpan' => $idBiayaTersimpan, 'tersisa' => $idBiayaSisa
+            'semua' => $idBiayaSemua, 'tersimpan' => $idBiayaTersimpan, 'tersisa' => $idBiayaSisa,
         );
     }
 
