@@ -252,7 +252,7 @@ class SiswaApplicantReportController extends Controller
         }
 
         $pendaftarTercari = $pencarianJumlahBayar === true ? $pendaftarTercari
-                : $qbsearchnum->getQuery()->getSingleScalarResult();
+                : intval($qbsearchnum->getQuery()->getSingleScalarResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -458,7 +458,7 @@ class SiswaApplicantReportController extends Controller
                 }
 
                 $qbAdvsearchnum->where($qbe->expr()->in('tcount.id', $querybuilder->getDQL()));
-                $pendaftarTercari = $qbAdvsearchnum->getQuery()->getSingleScalarResult();
+                $pendaftarTercari = intval($qbAdvsearchnum->getQuery()->getSingleScalarResult());
 
                 $pencarianJumlahBayar = true;
             }
@@ -467,7 +467,7 @@ class SiswaApplicantReportController extends Controller
         }
 
         $pendaftarTercari = $pencarianJumlahBayar === true ? $pendaftarTercari
-                : $qbsearchnum->getQuery()->getSingleScalarResult();
+                : intval($qbsearchnum->getQuery()->getSingleScalarResult());
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
