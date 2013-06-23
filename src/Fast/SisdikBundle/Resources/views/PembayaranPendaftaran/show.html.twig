@@ -32,10 +32,7 @@
         <ul>
         {% for biaya in entity.daftarBiayaPendaftaran %}
         	<li>
-                {% if biaya != '' %}
-                    salah nih, seharusnya mengambil dari data di biaya pendaftaran
-                    {% render url('fee_registration_info', {'id': biaya.biayaPendaftaran.id}) %}
-                {% endif %}
+                {{ biaya.nama }}, {{ currencySymbol(locale) }}. {% if biaya %}{{ biaya.nominal|number_format(0, ',', '.') }}{% endif %}
             </li>
         {% endfor %}
         </ul>
