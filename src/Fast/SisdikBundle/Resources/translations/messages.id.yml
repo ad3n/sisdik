@@ -5,6 +5,8 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    jumlah.siswa.total: ∑ siswa total
+    jumlah.siswa.tercari: ∑ siswa tercari
     saya.mengerti: Ya, saya mengerti
     perlu.untuk.sms: Perlu untuk kirim SMS
     teks.ringkasan: Teks Ringkasan
@@ -647,6 +649,7 @@ flash:
             mortgage.fail.insert: Data cicilan Pembayaran Pendaftaran gagal ditambah. Perbaiki input form.
 
 tip:
+    lihat.pembayaran.pendaftaran: Lihat Rincian Pembayaran Biaya Pendaftaran
     lihat.data.pendaftar: Lihat Data Pendaftar
     edit: Ubah
     delete: Hapus

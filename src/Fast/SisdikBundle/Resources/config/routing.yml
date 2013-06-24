@@ -256,6 +256,11 @@ laporanpendaftaran:
     type:     annotation
     prefix:   /
 
+laporankeuanganpendaftaran:
+    resource: "@FastSisdikBundle/Controller/SiswaApplicantPaymentReportController.php"
+    type:     annotation
+    prefix:   /
+
 tahkik:
     resource: "@FastSisdikBundle/Controller/SiswaTahkikController.php"
     type:     annotation

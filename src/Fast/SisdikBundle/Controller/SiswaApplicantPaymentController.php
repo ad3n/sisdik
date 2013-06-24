@@ -80,12 +80,12 @@ class SiswaApplicantPaymentController extends Controller
                 $querybuilder
                         ->andWhere(
                                 'siswa.namaLengkap LIKE :namalengkap '
-                                        . ' OR siswa.nomorPendaftaran = :nomorpendaftaran '
+                                        . ' OR siswa.nomorPendaftaran LIKE :nomorpendaftaran '
                                         . ' OR siswa.keterangan LIKE :keterangan '
                                         . ' OR sekolahasal.nama LIKE :sekolahasal '
                                         . ' OR transaksi.nomorTransaksi = :nomortransaksi ');
                 $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('nomorpendaftaran', $searchdata['searchkey']);
+                $querybuilder->setParameter('nomorpendaftaran', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('nomortransaksi', $searchdata['searchkey']);
@@ -98,7 +98,7 @@ class SiswaApplicantPaymentController extends Controller
                                         . ' OR sekolahasal.nama LIKE :sekolahasal '
                                         . ' OR transaksi.nomorTransaksi = :nomortransaksi ');
                 $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('nomorpendaftaran', $searchdata['searchkey']);
+                $qbsearchnum->setParameter('nomorpendaftaran', "%{$searchdata['searchkey']}%");
                 $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
                 $qbsearchnum->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
                 $qbsearchnum->setParameter('nomortransaksi', $searchdata['searchkey']);

@@ -1,0 +1,635 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}laporan.keuangan.pendaftaran.daftar{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
+#sign-percent {
+    cursor: pointer;
+    text-shadow: none;
+}
+#persen-bayar {
+    padding-left: 7px;
+}
+form .clearfix {
+    margin-bottom: 5px;
+}
+.arrow-down-lanjut {
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #555;
+	display: inline-block;
+	margin-left: 0.3em;
+	vertical-align: middle;
+}
+#cari-lanjutan {
+    display: none;
+}
+#anchor-lanjutan {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-cari-lanjutan {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-cari-lanjutan-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-cari-lanjutan, .anchor-cari-lanjutan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel:hover {
+    color: #222;
+}
+#cari-lanjutan .control-group {
+    margin-right: 0.4em;
+}
+.ui-autocomplete-loading {
+{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+	background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
+#cari-error {
+    margin-bottom: 5px;
+    color: #ff0000;
+}
+#cari-error .help-inline {
+    color: inherit;
+    margin-left: 0;
+    padding-left: 0;
+}
+.loading {
+    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
+#filename {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
+/* ringkasan */
+#ringkasan {
+    display: none;
+}
+#ringkasan .control-group {
+    display: block;
+}
+#anchor-ringkasan {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-ringkasan {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-ringkasan-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-ringkasan, .anchor-ringkasan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-ringkasan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-ringkasan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-ringkasan-sel:hover {
+    color: #222;
+}
+#ringkasan .control-group {
+    margin-right: 0.4em;
+}
+.label-ringkasan-teks {
+    float: left;
+}
+#pemilih-ringkasan {
+    margin-left: 15px;
+    margin-right: 7px;
+}
+#pemilih-ringkasan:focus {
+    outline: none;
+}
+#penanda-template {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background-color: #CCCCCC;
+	display: inline-block;
+	vertical-align: middle;
+}
+.pratinjau-loader {
+    min-width: 15px;
+    margin-left: 8px;
+}
+/* end of ringkasan */
+</style>
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('laporan-keuangan-pendaftaran') }}" class="form-search form-inline" id="search-form">
+        <div id="cari-standar">
+            {{ form_row(searchform.dariTanggal) }}
+            {{ form_row(searchform.hinggaTanggal) }}
+            {{ form_row(searchform.searchkey) }}
+            <a href="" id="anchor-lanjutan" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        </div>
+        <div class="clearfix"></div>
+        <div id="cari-lanjutan">
+            {{ form_row(searchform.tahun) }}
+            {{ form_row(searchform.gelombang) }}
+            {{ form_row(searchform.sekolahAsal) }}
+            {{ form_row(searchform.namaSekolahAsal) }}
+            <div class="control-group">
+                {% spaceless %}
+                <div class="controls">
+                    <div class="input-prepend input-append">
+                        {{ form_widget(searchform.pembandingBayar) }}
+                        {{ form_widget(searchform.jumlahBayar) }}
+                        <label class="add-on checkbox" id="persen-bayar">%{{ form_widget(searchform.persenBayar) }}
+                    </div>
+                </div>
+                {% endspaceless %}
+            </div>
+            {{ form_rest(searchform) }}
+        </div>
+        {% if form_errors(searchform) %}
+        <div id="cari-error">
+            {{ form_errors(searchform) }}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('laporan-keuangan-pendaftaran') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ pendaftarTotal }}
+</div>
+
+<div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.nomorUrutPendaftaran') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorUrutPendaftaran') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+            </th>
+            <th>{{ 'label.paid.amount'|trans }}</th>
+            <th>{{ 'label.payment.remains'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.application.number'|trans }}">{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.paid.amount'|trans }}">
+                {% set totalBayar = 0 %}
+                {% set totalBiayaMasuk = 0 %}
+                {% set totalPotongan = 0 %}
+                {% set totalBiayaSisa = 0 %}
+                {% set totalBiaya = 0 %}
+                {% set biayaTersimpan = '' %}
+
+                {% for pembayaran in data.pembayaranPendaftaran %}
+                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+                        {% set biayaTersimpan = biaya.biayaPendaftaran.id ~ ',' ~ biayaTersimpan %}
+                    {% endfor %}
+                    {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% if biayaTersimpan != '' %}
+                    {% set remainInfo %}
+                        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% else %}
+                    {% set remainInfo %}
+                        {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% endif %}
+                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+
+                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {% if totalPotongan > 0 %}
+                <span class="icon-gift" style="margin: 0;"></span>
+                {% endif %}
+                {{ totalBiaya|number_format(0, ',', '.') }}
+            </td>
+            <td data-title="{{ 'label.payment.remains'|trans }}">
+                {% if data.sisaBiayaPendaftaran == 0 %}
+                    ({{ 'paidoff'|trans }})
+                {% else %}
+                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+            {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.pembayaran.pendaftaran'|trans }}" style="margin: 0 8px;" target="_blank">
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
+        	    </a>
+	        {% endimage %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(pagination) }}
+
+<div class="row-fluid">
+<div class="span6 export-section pull-left">
+    <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
+        <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
+        <div id="filename"></div>
+    </form>
+</div>
+
+<div class="span6 ringkasan-section">
+    <div>
+        <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        <div class="clearfix" style="margin-top: 1em;"></div>
+        <div id="ringkasan">
+            <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
+                {{ form_label(summaryform.teks) }}
+                {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
+                	<a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
+                {% endimage %}
+                <div class="clearfix" style="margin-bottom: 0;"></div>
+                {{ form_widget(summaryform.teks) }}
+                {{ form_help(summaryform.teks) }}
+
+                {{ form_rest(summaryform) }}
+                <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button><span class="pratinjau-loader">&nbsp;&nbsp;&nbsp;</span>
+                <div class="clearfix"></div>
+                <span id="teks-terformat"></span>
+                <div class="clearfix"></div>
+                <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
+                <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="clearfix"></div>
+<script language="javascript" type="text/javascript">
+var duration = 300;
+var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
+
+function bersihkanKetikPilih() {
+	if ($(".nama-sekolah-asal").val() == "") {
+        $(".id-sekolah-asal").val("");
+    }
+    if ($(".nama-referensi").val() == "") {
+        $(".id-referensi").val("");
+    }
+}
+
+$(document).ready(function() {
+	var options1 = {
+    	minLength: 2,
+    	delay: 1000,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+    			data: {filter: request.term},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+            			}
+    			    }));
+				}
+			});
+		},
+		open: function(event, ui) {},
+		search: function(event, ui) {
+			$(".id-sekolah-asal").val("");
+		},
+    	select: function(event, ui) {
+      		$(".id-sekolah-asal").val(ui.item.id);
+    	}
+	};
+
+	var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+            	url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+                		}
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+        	$(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+        	$(".id-referensi").val(ui.item.id);
+        }
+	};
+
+	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options1);
+    });
+
+    $(".nama-referensi").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options2);
+    });
+
+	$(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
+	if ($(".id-sekolah-asal").val() != "") {
+		$.ajax({
+			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+			data: {id: $(".id-sekolah-asal").val()},
+			success: function(data) {
+				$(".nama-sekolah-asal").val(data[0].value);
+	      		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+			}
+		});
+	} else {
+		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+	}
+
+    $(".nama-referensi").addClass("ui-autocomplete-loading");
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+                $(".nama-referensi").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+    	$(".nama-referensi").removeClass("ui-autocomplete-loading");
+    }
+
+	$(".pembanding-bayar").dropkick();
+
+	$(".anchor-cari-lanjutan").click(function(){
+		if ($("#cari-lanjutan").is(":visible")) {
+			$("#cari-lanjutan").hide(duration);
+			$(this).removeClass("anchor-cari-lanjutan-sel");
+			$(this).addClass("anchor-cari-lanjutan");
+		} else {
+			$("#cari-lanjutan").show(duration);
+			$(this).addClass("anchor-cari-lanjutan-sel");
+			$(this).removeClass("anchor-cari-lanjutan");
+		}
+		return false;
+	});
+
+	$(".anchor-ringkasan").click(function(){
+		if ($("#ringkasan").is(":visible")) {
+			$("#ringkasan").hide(duration);
+			$(this).removeClass("anchor-ringkasan-sel");
+			$(this).addClass("anchor-ringkasan");
+		} else {
+			$("#ringkasan").show(duration, function() {
+				$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+			});
+			$(this).addClass("anchor-ringkasan-sel");
+			$(this).removeClass("anchor-ringkasan");
+		}
+		return false;
+	});
+
+	$('.date').datepicker({
+	    dateFormat: 'dd/mm/yy',
+        changeYear: false,
+        maxDate: 0
+    });
+
+    if (pencarianLanjutan != 0) {
+		$("#cari-lanjutan").css("display", "block");
+		$(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
+		$(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
+    }
+
+    $("#search-form").submit(function() {
+    	bersihkanKetikPilih();
+        return true;
+    });
+
+    $("#export-form").submit(function() {
+        var url = $(this).attr("action");
+        bersihkanKetikPilih();
+        $("#filename").addClass("loading");
+        $.post(url, $("#search-form").serialize(), function(response) {
+            if (response.redirectUrl) {
+            	window.location.href = response.redirectUrl;
+            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	$("#filename").removeClass("loading");
+            }
+        });
+        return false;
+    });
+
+    $("#report-preview").click(function() {
+        var url = "{{ path('laporan-pendaftaran_format') }}";
+        $(".pratinjau-loader").addClass("loading");
+        $.get(url, {
+                gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
+                dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
+                hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
+                sekolahAsal: "{% if searchdata.sekolahAsal is not null %}{{ searchdata.sekolahAsal.nama }}{% endif %}",
+                pembandingBayar: "{{ searchdata.pembandingBayar|raw }}",
+                jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
+                persenBayar: "{% if searchdata.persenBayar is not null %}{{ searchdata.persenBayar }}{% endif %}",
+                referensi: "{% if searchdata.referensi is not null %}{{ searchdata.referensi.nama }}{% endif %}",
+                pendaftarTotal: "{{ pendaftarTotal }}",
+                pendaftarTercari: "{{ pendaftarTercari }}",
+                tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
+                teks: $(".ringkasan-teks").val()
+            }, function(response) {
+                if (response.teksterformat) {
+                	$("#teks-terformat").html(response.teksterformat);
+                	$(".teks-terformat").val(response.teksterformat);
+                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+                } else {
+                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                }
+            	$(".pratinjau-loader").removeClass("loading");
+            }
+        );
+        return false;
+    });
+
+    $("#pemilih-ringkasan").click(function() {
+        $(".ringkasan-teks").val(gantiTemplate());
+        console.log(templateAktif);
+        $("#penanda-template").css("background-color", gantiPenanda());
+        return false;
+    });
+
+    $("#report-sms").click(function() {
+        $(".output-ringkasan").val("sms");
+        if ($(".nomor-ponsel").val() == "") {
+            $(".nomor-ponsel").focus();
+            return false;
+        }
+    });
+
+    $("#report-pdf").click(function() {
+        $(".output-ringkasan").val("pdf");
+    });
+
+    var summaryform = $("#summary-form");
+    summaryform.submit(function() {
+    	var url = "{{ path('laporan-pendaftaran_format') }}";
+        $(".pratinjau-loader").addClass("loading");
+        $.get(url, {
+                gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
+                dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
+                hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
+                sekolahAsal: "{% if searchdata.sekolahAsal is not null %}{{ searchdata.sekolahAsal.nama }}{% endif %}",
+                pembandingBayar: "{{ searchdata.pembandingBayar|raw }}",
+                jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
+                persenBayar: "{% if searchdata.persenBayar is not null %}{{ searchdata.persenBayar }}{% endif %}",
+                referensi: "{% if searchdata.referensi is not null %}{{ searchdata.referensi.nama }}{% endif %}",
+                pendaftarTotal: "{{ pendaftarTotal }}",
+                pendaftarTercari: "{{ pendaftarTercari }}",
+                tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
+                teks: $(".ringkasan-teks").val()
+            }, function(response) {
+            	$(".pratinjau-loader").removeClass("loading");
+                if (response.teksterformat) {
+                	$("#teks-terformat").html(response.teksterformat);
+                	$(".teks-terformat").val(response.teksterformat);
+                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+            	    summaryform[0].submit();
+                } else {
+                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                }
+            }
+        );
+        return false;
+    });
+});
+
+var templateAktif = 0;
+function gantiTemplate() {
+	var string;
+
+	templateAktif++;
+	if (templateAktif == 0) {
+		string = "";
+	} else if (templateAktif == 1) {
+		string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
+	} else if (templateAktif == 2) {
+		string = "Jumlah pendaftar adalah %jumlah-tercari% dari %jumlah-total% siswa";
+	} else if (templateAktif == 3) {
+		string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
+	} else if (templateAktif == 4) {
+		string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
+	} else if (templateAktif == 5) {
+		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
+	} else if (templateAktif == 6) {
+		templateAktif = -1;
+		string = "Pendaftar pada %gelombang% dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
+            		"yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
+            		"yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
+	}
+
+	return string;
+}
+
+function gantiPenanda() {
+	if (templateAktif == 0) {
+		return "#CCCCCC";
+	} else if (templateAktif == 1) {
+		return "#DD5500";
+	} else if (templateAktif == 2) {
+	    return "#289312";
+	} else if (templateAktif == 3) {
+	    return "#DAD25A";
+	} else if (templateAktif == 4) {
+	    return "#2B50C4";
+	} else if (templateAktif == 5) {
+	    return "#43B7B9";
+	} else if (templateAktif == -1) {
+	    return "#DD52DF";
+	}
+}
+</script>
+{% endblock content %}

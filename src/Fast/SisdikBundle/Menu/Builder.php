@@ -296,6 +296,18 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'applicant_payment'
                             ));
 
+            if ($securityContext
+                    ->isGranted(
+                            array(
+                                    new Expression("hasAnyRole('ROLE_BENDAHARA')")
+                            ))) {
+                $payments
+                        ->addChild('links.laporan.keuangan.pendaftaran',
+                                array(
+                                    'route' => 'laporan-keuangan-pendaftaran'
+                                ));
+            }
+
             $payments
                     ->addChild('links.printreceiptsoption',
                             array(
