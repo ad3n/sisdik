@@ -326,21 +326,23 @@ class BiayaPendaftaranController extends Controller
             $result = $qbsiswa->getQuery()->getScalarResult();
             $siswaPemakaiBiaya = array_map('current', $result);
 
-            $qbsisabiaya = $em->createQueryBuilder()->update('FastSisdikBundle:Siswa', 'siswa')
-                    ->where('siswa.tahun = :tahun')->andWhere('siswa.gelombang = :gelombang')
-                    ->andWhere('siswa.sisaBiayaPendaftaran >= 0')->andWhere('siswa.id NOT IN (:pemakai)')
-                    ->setParameter('tahun', $entity->getTahun()->getId())
-                    ->setParameter('gelombang', $entity->getGelombang()->getId())
-                    ->setParameter('pemakai', $siswaPemakaiBiaya);
+            if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0) {
+                $qbsisabiaya = $em->createQueryBuilder()->update('FastSisdikBundle:Siswa', 'siswa')
+                        ->where('siswa.tahun = :tahun')->andWhere('siswa.gelombang = :gelombang')
+                        ->andWhere('siswa.sisaBiayaPendaftaran >= 0')->andWhere('siswa.id NOT IN (:pemakai)')
+                        ->setParameter('tahun', $entity->getTahun()->getId())
+                        ->setParameter('gelombang', $entity->getGelombang()->getId())
+                        ->setParameter('pemakai', $siswaPemakaiBiaya);
 
-            if ($entity->getNominalSebelumnya() > $entity->getNominal()) {
-                $qbsisabiaya
-                        ->set('siswa.sisaBiayaPendaftaran',
-                                'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal());
-            } elseif ($entity->getNominalSebelumnya() < $entity->getNominal()) {
-                $qbsisabiaya
-                        ->set('siswa.sisaBiayaPendaftaran',
-                                'siswa.sisaBiayaPendaftaran - ' . $entity->getNominal());
+                if ($entity->getNominalSebelumnya() > $entity->getNominal()) {
+                    $qbsisabiaya
+                            ->set('siswa.sisaBiayaPendaftaran',
+                                    'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal());
+                } elseif ($entity->getNominalSebelumnya() < $entity->getNominal()) {
+                    $qbsisabiaya
+                            ->set('siswa.sisaBiayaPendaftaran',
+                                    'siswa.sisaBiayaPendaftaran - ' . $entity->getNominal());
+                }
             }
 
             try {
@@ -348,7 +350,9 @@ class BiayaPendaftaranController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $qbsisabiaya->getQuery()->execute();
+                if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0) {
+                    $qbsisabiaya->getQuery()->execute();
+                }
 
                 $this->get('session')->getFlashBag()
                         ->add('success', $this->get('translator')->trans('flash.fee.registration.updated'));
@@ -357,7 +361,7 @@ class BiayaPendaftaranController extends Controller
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.registration');
-                throw new DBALException($message);
+                throw new DBALException($message . $e);
             }
 
             return $this
