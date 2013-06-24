@@ -35,6 +35,12 @@ class BiayaPendaftaran
     /**
      * @var integer
      *
+     */
+    private $nominalSebelumnya;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
      */
     private $urutan;
@@ -104,6 +110,27 @@ class BiayaPendaftaran
      */
     public function getNominal() {
         return $this->nominal;
+    }
+
+    /**
+     * Set nominalSebelumnya
+     *
+     * @param integer $nominalSebelumnya
+     * @return BiayaPendaftaran
+     */
+    public function setNominalSebelumnya($nominalSebelumnya) {
+        $this->nominalSebelumnya = $nominalSebelumnya;
+
+        return $this;
+    }
+
+    /**
+     * Get nominalSebelumnya
+     *
+     * @return integer
+     */
+    public function getNominalSebelumnya() {
+        return $this->nominalSebelumnya;
     }
 
     /**

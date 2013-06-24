@@ -1,0 +1,29 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}biaya.pendaftaran.konfirmasi.ubah{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.captcha_reload {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+}
+#peringatan {
+    color: #ff0000;
+    font-size: 1.1em;
+}
+</style>
+
+<p id="peringatan">
+{{ 'alert.biaya.pendaftaran.peringatan.ubah'|trans|raw }}
+</p>
+<form id="generateform" action="{{ path('fee_registration_edit_confirm', {'id': entity.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
+        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('fee_registration') }}'">{{ 'label.cancel'|trans }}</button>
+    </div>
+</form>
+
+{% endblock content %}

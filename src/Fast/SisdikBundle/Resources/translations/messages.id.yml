@@ -5,6 +5,7 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    saya.mengerti: Ya, saya mengerti
     perlu.untuk.sms: Perlu untuk kirim SMS
     teks.ringkasan: Teks Ringkasan
     kirim.sms: Kirim SMS
@@ -791,6 +792,10 @@ shortinfo:
     discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
 
 alert:
+    biaya.pendaftaran.peringatan.ubah: >
+        PERHATIAN!<br>
+        Mengubah biaya pendaftaran berpotensi mengacaukan data pembayaran pendaftaran yang telah digunakan.<br>
+        Perubahan sebaiknya hanya dilakukan jika telah mengerti resikonya dengan baik.
     username.fully.generated: Seluruh siswa di tahun %year% sudah dibuat username nya. Penyaringan bisa digunakan untuk membuat ulang username siswa.
     username.partially.generated: >
         Sebanyak <a href="">%num%</a> dari <a href="">%total%</a> siswa di tahun %year% belum dibuat username nya.<br>
@@ -851,6 +856,8 @@ title:
 app.title: SisDik
 
 help:
+    captcha.penjelasan.ubah.biaya: Captcha berguna untuk mencegah pengubahan tanpa sengaja
+    konfirmasi.saya.mengerti: Cek jika mengerti resiko pengubahan data biaya
     tag.standar.laporan.psb: tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%
     logo.sekolah: Maksimum file 300kB
     regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.

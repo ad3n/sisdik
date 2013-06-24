@@ -1,6 +1,9 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+biaya.pendaftaran:
+    konfirmasi.ubah: Konfirmasi Pengubahan Biaya Pendaftaran
+
 laporan.pendaftaran:
     daftar: Laporan Pendaftaran
     rincian: Detail Pendaftar

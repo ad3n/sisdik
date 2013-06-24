@@ -1,9 +1,10 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Fast\SisdikBundle\Form\BiayaConfirmType;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -33,6 +34,8 @@ class BiayaPendaftaranController extends Controller
      * @Secure(roles="ROLE_BENDAHARA")
      */
     public function indexAction() {
+        $this->get('session')->remove('biaya_confirm');
+
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -112,7 +115,7 @@ class BiayaPendaftaranController extends Controller
         $this->setCurrentMenu();
 
         $entity = new BiayaPendaftaran();
-        $form = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
+        $form = $this->createForm(new BiayaPendaftaranType($this->container, 'new', null), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView(),
@@ -132,15 +135,27 @@ class BiayaPendaftaranController extends Controller
         $this->setCurrentMenu();
 
         $entity = new BiayaPendaftaran();
-        $form = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
+        $form = $this->createForm(new BiayaPendaftaranType($this->container, 'new', null), $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
+            $qbsisabiaya = $em->createQueryBuilder()->update('FastSisdikBundle:Siswa', 'siswa')
+                    ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
+                    ->leftJoin('pembayaran.daftarBiayaPendaftaran', 'daftar')
+                    ->set('siswa.sisaBiayaPendaftaran',
+                            'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal())
+                    ->where('siswa.tahun = :tahun')->andWhere('siswa.gelombang = :gelombang')
+                    ->andWhere('siswa.sisaBiayaPendaftaran >= 0')
+                    ->setParameter('tahun', $entity->getTahun()->getId())
+                    ->setParameter('gelombang', $entity->getGelombang()->getId());
+
             try {
                 $em->persist($entity);
                 $em->flush();
+
+                $qbsisabiaya->getQuery()->execute();
 
                 $this->get('session')->getFlashBag()
                         ->add('success', $this->get('translator')->trans('flash.fee.registration.inserted'));
@@ -167,64 +182,178 @@ class BiayaPendaftaranController extends Controller
     /**
      * Displays a form to edit an existing BiayaPendaftaran entity.
      *
-     * @Route("/{id}/edit", name="fee_registration_edit")
+     * @Route("/{id}/confirm", name="fee_registration_edit_confirm")
+     * @Template("FastSisdikBundle:BiayaPendaftaran:edit.confirm.html.twig")
+     * @Secure(roles="ROLE_BENDAHARA")
+     */
+    public function editConfirmAction($id) {
+        $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+        if (!$entity && !($entity instanceof BiayaPendaftaran)) {
+            throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
+        }
+
+        $form = $this->createForm(new BiayaConfirmType($this->container, uniqid()));
+
+        $request = $this->getRequest();
+        if ($request->getMethod() == "POST") {
+            $form->submit($request);
+            if ($form->isValid()) {
+
+                $sessiondata = $form['sessiondata']->getData();
+                $this->get('session')->set('biaya_confirm', $sessiondata);
+
+                return $this
+                        ->redirect(
+                                $this
+                                        ->generateUrl('fee_registration_edit',
+                                                array(
+                                                    'id' => $entity->getId(), 'sessiondata' => $sessiondata
+                                                )));
+            } else {
+                $this->get('session')->getFlashBag()
+                        ->add('error', $this->get('translator')->trans('flash.konfirmasi.edit.gagal'));
+
+            }
+        }
+
+        return array(
+            'entity' => $entity, 'form' => $form->createView(),
+        );
+    }
+
+    /**
+     * Displays a form to edit an existing BiayaPendaftaran entity.
+     *
+     * @Route("/{id}/edit/{sessiondata}", name="fee_registration_edit")
      * @Template()
      * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function editAction($id) {
+    public function editAction($id, $sessiondata) {
+        if ($this->get('session')->get('biaya_confirm') != $sessiondata) {
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.konfirmasi.edit.gagal'));
+
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('fee_registration_edit_confirm',
+                                            array(
+                                                'id' => $id
+                                            )));
+        }
+
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
-
-        if (!$entity) {
+        if (!$entity && !($entity instanceof BiayaPendaftaran)) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
+        $editForm = $this
+                ->createForm(new BiayaPendaftaranType($this->container, 'edit', $entity->getNominal()),
+                        $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
+                'delete_form' => $deleteForm->createView(), 'sessiondata' => $sessiondata
         );
     }
 
     /**
      * Edits an existing BiayaPendaftaran entity.
      *
-     * @Route("/{id}/update", name="fee_registration_update")
+     * @Route("/{id}/update/{sessiondata}", name="fee_registration_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:BiayaPendaftaran:edit.html.twig")
      * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id, $sessiondata) {
+        if ($this->get('session')->get('biaya_confirm') != $sessiondata) {
+            $this->get('session')->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.konfirmasi.edit.gagal'));
+
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('fee_registration_edit_confirm',
+                                            array(
+                                                'id' => $id
+                                            )));
+        }
+
+        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
-
-        if (!$entity) {
+        if (!(is_object($entity) && $entity instanceof BiayaPendaftaran)) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new BiayaPendaftaranType($this->container), $entity);
+        $editForm = $this
+                ->createForm(new BiayaPendaftaranType($this->container, 'edit', $entity->getNominal()),
+                        $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
+
+            // penentuan ketika edit, tahun dan gelombang tidak bisa diubah hanya nominal yang bisa berubah
+            //     nominal bertambah
+            //         siswa sudah menggunakan -> sisa biaya tetap
+            //         siswa belum menggunakan -> sisa biaya ditambah
+            //     nominal berkurang
+            //         siswa sudah menggunakan -> sisa biaya tetap
+            //         siswa belum menggunakan -> sisa biaya dikurang
+            $qbsiswa = $em->createQueryBuilder()->select('DISTINCT(siswa.id)')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')
+                    ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
+                    ->leftJoin('pembayaran.daftarBiayaPendaftaran', 'daftar')->where('siswa.tahun = :tahun')
+                    ->andWhere('siswa.gelombang = :gelombang')->andWhere('daftar.biayaPendaftaran = :biaya')
+                    ->setParameter('tahun', $entity->getTahun()->getId())
+                    ->setParameter('gelombang', $entity->getGelombang()->getId())
+                    ->setParameter('biaya', $entity->getId());
+            $result = $qbsiswa->getQuery()->getScalarResult();
+            $siswaPemakaiBiaya = array_map('current', $result);
+
+            $qbsisabiaya = $em->createQueryBuilder()->update('FastSisdikBundle:Siswa', 'siswa')
+                    ->where('siswa.tahun = :tahun')->andWhere('siswa.gelombang = :gelombang')
+                    ->andWhere('siswa.sisaBiayaPendaftaran >= 0')->andWhere('siswa.id NOT IN (:pemakai)')
+                    ->setParameter('tahun', $entity->getTahun()->getId())
+                    ->setParameter('gelombang', $entity->getGelombang()->getId())
+                    ->setParameter('pemakai', $siswaPemakaiBiaya);
+
+            if ($entity->getNominalSebelumnya() > $entity->getNominal()) {
+                $qbsisabiaya
+                        ->set('siswa.sisaBiayaPendaftaran',
+                                'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal());
+            } elseif ($entity->getNominalSebelumnya() < $entity->getNominal()) {
+                $qbsisabiaya
+                        ->set('siswa.sisaBiayaPendaftaran',
+                                'siswa.sisaBiayaPendaftaran - ' . $entity->getNominal());
+            }
 
             try {
 
                 $em->persist($entity);
                 $em->flush();
 
+                $qbsisabiaya->getQuery()->execute();
+
                 $this->get('session')->getFlashBag()
                         ->add('success', $this->get('translator')->trans('flash.fee.registration.updated'));
+
+                $this->get('session')->remove('biaya_confirm');
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.registration');
@@ -234,15 +363,15 @@ class BiayaPendaftaranController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('fee_registration_edit',
+                                    ->generateUrl('fee_registration_show',
                                             array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
+                                                'id' => $id
                                             )));
         }
 
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
+                'delete_form' => $deleteForm->createView(), 'sessiondata' => $sessiondata
         );
     }
 
@@ -327,6 +456,7 @@ class BiayaPendaftaranController extends Controller
             $string = json_encode(array(
                 "biaya" => $total
             ));
+
             return new Response($string, 200,
                     array(
                         'Content-Type' => 'application/json'
@@ -365,6 +495,7 @@ class BiayaPendaftaranController extends Controller
             $string = json_encode(array(
                 "biaya" => $feeamount
             ));
+
             return new Response($string, 200,
                     array(
                         'Content-Type' => 'application/json'
@@ -389,9 +520,9 @@ class BiayaPendaftaranController extends Controller
             if ($type == 1) {
                 $info = $entity->getJenisbiaya()->getNama() . " ("
                         . number_format($entity->getNominal(), 0, ',', '.') . ")";
-            } else if ($type == 2) {
+            } elseif ($type == 2) {
                 $info = $entity->getJenisbiaya()->getNama();
-            } else if ($type == 3) {
+            } elseif ($type == 3) {
                 $info = number_format($entity->getNominal(), 0, ',', '.');
             }
         } else {
@@ -418,7 +549,7 @@ class BiayaPendaftaranController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
