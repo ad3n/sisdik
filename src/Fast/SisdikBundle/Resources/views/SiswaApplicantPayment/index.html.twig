@@ -20,82 +20,90 @@
 
 <div class="clearfix"></div>
 
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ pendaftarTotal }}
+</div>
+
 <div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
     <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
 </div>
 
+<div class="clearfix">&nbsp;</div>
+
+
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.nomorUrutPendaftaran') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.nomorUrutPendaftaran') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorUrutPendaftaran') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
-    	    </th>
-    		<th>{{ 'label.paid.amount'|trans }}</th>
-    		<th>{{ 'label.payment.remains'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.paid.amount'|trans }}</th>
+            <th>{{ 'label.payment.remains'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.application.number'|trans }}">{{ data.nomorPendaftaran }}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
-    		<td data-title="{{ 'label.paid.amount'|trans }}">
-    		    {% set totalBayar = 0 %}
-    		    {% set totalBiayaMasuk = 0 %}
-    		    {% set totalPotongan = 0 %}
-    		    {% set totalBiayaSisa = 0 %}
-    		    {% set totalBiaya = 0 %}
-    		    {% set biayaTersimpan = '' %}
+            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.application.number'|trans }}">{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.paid.amount'|trans }}">
+                {% set totalBayar = 0 %}
+                {% set totalBiayaMasuk = 0 %}
+                {% set totalPotongan = 0 %}
+                {% set totalBiayaSisa = 0 %}
+                {% set totalBiaya = 0 %}
+                {% set biayaTersimpan = '' %}
 
-    		    {% for pembayaran in data.pembayaranPendaftaran %}
-    		        {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
-    		        {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                {% for pembayaran in data.pembayaranPendaftaran %}
+                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
                         {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
                         {% set biayaTersimpan = biaya.biayaPendaftaran.id ~ ',' ~ biayaTersimpan %}
-    		        {% endfor %}
-    		        {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-    		            {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
-    		        {% endfor %}
-    		    {% endfor %}
+                    {% endfor %}
+                    {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+                    {% endfor %}
+                {% endfor %}
 
                 {% if biayaTersimpan != '' %}
-        		    {% set remainInfo %}
-        		        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
-        		    {% endset %}
-        		    {% set remainInfo = remainInfo|json_decode %}
-        		    {% set totalBiayaSisa = remainInfo.biaya %}
-    		    {% else %}
-    		        {% set remainInfo %}
+                    {% set remainInfo %}
+                        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% else %}
+                    {% set remainInfo %}
                         {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
                     {% endset %}
-        		    {% set remainInfo = remainInfo|json_decode %}
-        		    {% set totalBiayaSisa = remainInfo.biaya %}
-    		    {% endif %}
-    		    {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% endif %}
+                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
 
-    		    {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
                 {% if totalPotongan > 0 %}
                 <span class="icon-gift" style="margin: 0;"></span>
                 {% endif %}
-    		    {{ totalBiaya|number_format(0, ',', '.') }}
-		    </td>
-    		<td data-title="{{ 'label.payment.remains'|trans }}">
-    		    {% if (totalBiaya - totalBayar) == 0 %}
-    		        ({{ 'paidoff'|trans }})
-    		    {% else %}
-    		        {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
-    		    {% endif %}
-		    </td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
-    		</td>
-    	</tr>
+                {{ totalBiaya|number_format(0, ',', '.') }}
+            </td>
+            <td data-title="{{ 'label.payment.remains'|trans }}">
+                {% if data.sisaBiayaPendaftaran == 0 %}
+                    ({{ 'paidoff'|trans }})
+                {% else %}
+                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>

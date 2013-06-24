@@ -32,12 +32,24 @@ class SiswaApplicantPaymentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $searchkey = '';
+        $tampilkanTercari = false;
+
         $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
+
+        $qbtotal = $em->createQueryBuilder()->select('COUNT(siswa.id)')
+                ->from('FastSisdikBundle:Siswa', 'siswa')->andWhere('siswa.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId());
+        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
+
+        $qbsearchnum = $em->createQueryBuilder()->select('COUNT(DISTINCT siswa.id)')
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->leftJoin('siswa.gelombang', 'gelombang')->leftJoin('siswa.sekolahAsal', 'sekolahasal')
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
 
         $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
-                ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->where('siswa.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('tahun.sekolah = :sekolah')
+                ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->andWhere('siswa.sekolah = :sekolah')
                 ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
                 ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
                 ->setParameter('sekolah', $sekolah->getId());
@@ -49,12 +61,22 @@ class SiswaApplicantPaymentController extends Controller
             $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
             $querybuilder->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
 
+            $qbsearchnum->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
+            $qbsearchnum->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
+
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('tahun.id = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+
+                $qbsearchnum->andWhere('tahun.id = :tahun');
+                $qbsearchnum->setParameter('tahun', $searchdata['tahun']->getId());
+
+                $tampilkanTercari = true;
             }
 
             if ($searchdata['searchkey'] != '') {
+                $searchkey = $searchdata['searchkey'];
+
                 $querybuilder
                         ->andWhere(
                                 'siswa.namaLengkap LIKE :namalengkap '
@@ -67,31 +89,65 @@ class SiswaApplicantPaymentController extends Controller
                 $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('nomortransaksi', $searchdata['searchkey']);
+
+                $qbsearchnum
+                        ->andWhere(
+                                'siswa.namaLengkap LIKE :namalengkap '
+                                        . ' OR siswa.nomorPendaftaran = :nomorpendaftaran '
+                                        . ' OR siswa.keterangan LIKE :keterangan '
+                                        . ' OR sekolahasal.nama LIKE :sekolahasal '
+                                        . ' OR transaksi.nomorTransaksi = :nomortransaksi ');
+                $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('nomorpendaftaran', $searchdata['searchkey']);
+                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('sekolahasal', "%{$searchdata['searchkey']}%");
+                $qbsearchnum->setParameter('nomortransaksi', $searchdata['searchkey']);
+
+                $tampilkanTercari = true;
             }
 
             if ($searchdata['nopayment'] == true) {
                 $querybuilder->andWhere("transaksi.nominalPembayaran IS NULL");
+
+                $qbsearchnum->andWhere("transaksi.nominalPembayaran IS NULL");
+
+                $tampilkanTercari = true;
             }
 
             if ($searchdata['todayinput'] == true) {
-                $querybuilder->andWhere("siswa.waktuSimpan BETWEEN :datefrom AND :dateto");
                 $currentdate = new \DateTime();
+
+                $querybuilder->andWhere("siswa.waktuSimpan BETWEEN :datefrom AND :dateto");
                 $querybuilder->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00');
                 $querybuilder->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59');
+
+                $qbsearchnum->andWhere("siswa.waktuSimpan BETWEEN :datefrom AND :dateto");
+                $qbsearchnum->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00');
+                $qbsearchnum->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59');
+
+                $tampilkanTercari = true;
             }
 
-            // the following lines are wrong, due to database refactoring
             if ($searchdata['notsettled'] == true) {
                 $querybuilder
                         ->andWhere('siswa.sisaBiayaPendaftaran = -999 OR siswa.sisaBiayaPendaftaran != 0');
+
+                $qbsearchnum
+                        ->andWhere('siswa.sisaBiayaPendaftaran = -999 OR siswa.sisaBiayaPendaftaran != 0');
+
+                $tampilkanTercari = true;
             }
         }
+
+        $pendaftarTercari = $qbsearchnum->getQuery()->getSingleScalarResult();
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
 
         return array(
-            'pagination' => $pagination, 'searchform' => $searchform->createView(),
+                'pagination' => $pagination, 'searchform' => $searchform->createView(),
+                'pendaftarTotal' => $pendaftarTotal, 'pendaftarTercari' => $pendaftarTercari,
+                'tampilkanTercari' => $tampilkanTercari, 'searchkey' => $searchkey,
         );
     }
 
