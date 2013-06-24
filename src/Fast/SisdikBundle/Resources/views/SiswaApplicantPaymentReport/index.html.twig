@@ -181,8 +181,6 @@ form .clearfix {
         </div>
         <div class="clearfix"></div>
         <div id="cari-lanjutan">
-            {{ form_row(searchform.tahun) }}
-            {{ form_row(searchform.gelombang) }}
             {{ form_row(searchform.sekolahAsal) }}
             {{ form_row(searchform.namaSekolahAsal) }}
             <div class="control-group">
@@ -196,6 +194,7 @@ form .clearfix {
                 </div>
                 {% endspaceless %}
             </div>
+            {{ form_row(searchform.namaReferensi) }}
             {{ form_rest(searchform) }}
         </div>
         {% if form_errors(searchform) %}
@@ -211,11 +210,11 @@ form .clearfix {
 <div class="clearfix"></div>
 
 <div class="pull-left info-jumlah">
-    {{ 'label.jumlah.siswa.total'|trans }}: {{ pendaftarTotal }}
+    {{ 'label.jumlah.transaksi.total'|trans }}: {{ transaksiTotal }}
 </div>
 
 <div class="pull-right">
-    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.transaksi.tercari'|trans }}: {{ transaksiTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
     <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
 </div>
 
@@ -224,75 +223,34 @@ form .clearfix {
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.nomorUrutPendaftaran') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorUrutPendaftaran') }}
+            <th class="{% if pagination.isSorted('transaksi.waktuSimpan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.waktu.transaksi'|trans, 'transaksi.waktuSimpan') }}
             </th>
-            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+            <th class="{% if pagination.isSorted('transaksi.nomorTransaksi') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nomor.transaksi'|trans, 'transaksi.nomorTransaksi') }}
             </th>
-            <th>{{ 'label.paid.amount'|trans }}</th>
-            <th>{{ 'label.payment.remains'|trans }}</th>
+            <th class="{% if pagination.isSorted('transaksi.nominalPembayaran') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nominal.bayar'|trans, 'transaksi.nominalPembayaran') }}
+            </th>
+            <th>{{ 'label.item.biaya'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
     </thead>
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
-            <td data-title="{{ 'label.application.number'|trans }}">{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
-            <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
-            <td data-title="{{ 'label.paid.amount'|trans }}">
-                {% set totalBayar = 0 %}
-                {% set totalBiayaMasuk = 0 %}
-                {% set totalPotongan = 0 %}
-                {% set totalBiayaSisa = 0 %}
-                {% set totalBiaya = 0 %}
-                {% set biayaTersimpan = '' %}
-
-                {% for pembayaran in data.pembayaranPendaftaran %}
-                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
-                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
-                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
-                        {% set biayaTersimpan = biaya.biayaPendaftaran.id ~ ',' ~ biayaTersimpan %}
-                    {% endfor %}
-                    {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
-                    {% endfor %}
-                {% endfor %}
-
-                {% if biayaTersimpan != '' %}
-                    {% set remainInfo %}
-                        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
-                    {% endset %}
-                    {% set remainInfo = remainInfo|json_decode %}
-                    {% set totalBiayaSisa = remainInfo.biaya %}
-                {% else %}
-                    {% set remainInfo %}
-                        {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
-                    {% endset %}
-                    {% set remainInfo = remainInfo|json_decode %}
-                    {% set totalBiayaSisa = remainInfo.biaya %}
-                {% endif %}
-                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
-
-                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
-                {% if totalPotongan > 0 %}
-                <span class="icon-gift" style="margin: 0;"></span>
-                {% endif %}
-                {{ totalBiaya|number_format(0, ',', '.') }}
-            </td>
-            <td data-title="{{ 'label.payment.remains'|trans }}">
-                {% if data.sisaBiayaPendaftaran == 0 %}
-                    ({{ 'paidoff'|trans }})
-                {% else %}
-                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
-                {% endif %}
+            <td data-title="{{ 'label.waktu.transaksi'|trans }}">{{ data.waktuSimpan|date("d/m/Y H:i:s") }}</td>
+            <td data-title="{{ 'label.nomor.transaksi'|trans }}">{{ highlightResult(data.nomorTransaksi, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.nominal.bayar'|trans }}">{{ data.nominalPembayaran|number_format(0, ',', '.') }}</td>
+            <td data-title="{{ 'label.item.biaya'|trans }}">
+            {% for biaya in data.pembayaranPendaftaran.daftarBiayaPendaftaran %}
+                {{ biaya.nama }}{% if not loop.last %}, {% endif %}
+            {% endfor %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
             {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.pembayaran.pendaftaran'|trans }}" style="margin: 0 8px;" target="_blank">
-            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
+                <a href="{{ path('payment_registrationfee_show', {'sid': data.pembayaranPendaftaran.siswa.id, 'id': data.pembayaranPendaftaran.id}) }}" title="{{ 'tip.lihat.transaksi.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.transaksi.pembayaran'|trans }}" border="0" style="vertical-align: baseline;" />
         	    </a>
 	        {% endimage %}
             </td>
@@ -305,7 +263,7 @@ form .clearfix {
 
 <div class="row-fluid">
 <div class="span6 export-section pull-left">
-    <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
+    <form method="GET" action="{{ path("laporan-keuangan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
         <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
         <div id="filename"></div>
     </form>
@@ -509,7 +467,6 @@ $(document).ready(function() {
         var url = "{{ path('laporan-pendaftaran_format') }}";
         $(".pratinjau-loader").addClass("loading");
         $.get(url, {
-                gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
                 dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
                 hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
                 sekolahAsal: "{% if searchdata.sekolahAsal is not null %}{{ searchdata.sekolahAsal.nama }}{% endif %}",
@@ -517,8 +474,8 @@ $(document).ready(function() {
                 jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
                 persenBayar: "{% if searchdata.persenBayar is not null %}{{ searchdata.persenBayar }}{% endif %}",
                 referensi: "{% if searchdata.referensi is not null %}{{ searchdata.referensi.nama }}{% endif %}",
-                pendaftarTotal: "{{ pendaftarTotal }}",
-                pendaftarTercari: "{{ pendaftarTercari }}",
+                transaksiTotal: "{{ transaksiTotal }}",
+                transaksiTercari: "{{ transaksiTercari }}",
                 tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
                 teks: $(".ringkasan-teks").val()
             }, function(response) {
@@ -559,7 +516,6 @@ $(document).ready(function() {
     	var url = "{{ path('laporan-pendaftaran_format') }}";
         $(".pratinjau-loader").addClass("loading");
         $.get(url, {
-                gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
                 dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
                 hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
                 sekolahAsal: "{% if searchdata.sekolahAsal is not null %}{{ searchdata.sekolahAsal.nama }}{% endif %}",
@@ -567,8 +523,8 @@ $(document).ready(function() {
                 jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
                 persenBayar: "{% if searchdata.persenBayar is not null %}{{ searchdata.persenBayar }}{% endif %}",
                 referensi: "{% if searchdata.referensi is not null %}{{ searchdata.referensi.nama }}{% endif %}",
-                pendaftarTotal: "{{ pendaftarTotal }}",
-                pendaftarTercari: "{{ pendaftarTercari }}",
+                transaksiTotal: "{{ transaksiTotal }}",
+                transaksiTercari: "{{ transaksiTercari }}",
                 tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
                 teks: $(".ringkasan-teks").val()
             }, function(response) {
@@ -606,7 +562,7 @@ function gantiTemplate() {
 		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
 	} else if (templateAktif == 6) {
 		templateAktif = -1;
-		string = "Pendaftar pada %gelombang% dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
+		string = "Transaksi dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
             		"yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
             		"yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
 	}

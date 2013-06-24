@@ -24,207 +24,63 @@
             <table:table table:name="Sheet1" table:style-name="ta1">
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.gelombang'|trans }}</text:p>
+                        <text:p>{{ 'label.waktu.transaksi'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.nomor.pendaftaran'|trans }}</text:p>
+                        <text:p>{{ 'label.nomor.transaksi'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.nama.lengkap'|trans }}</text:p>
+                        <text:p>{{ 'label.nominal.bayar'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.nama.ortuwali'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.mobilephone.parent'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.sekolah.asal'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.gender'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.agama'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.alamat'|trans }}</text:p>
+                        <text:p>{{ 'label.item.biaya'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.keterangan'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.tempat.lahir'|trans }}</text:p>
+                        <text:p>{{ 'label.atas.nama'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.tanggal.lahir'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.email'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.nama.panggilan'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.kewarganegaraan'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.anak.ke'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.saudara.kandung'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.saudara.tiri'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.status.yatimpiatu'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.bahasa.seharihari'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.kodepos'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.telepon'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.nomor.ponsel.siswa'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.sekolah.tinggal.di'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jarak.ke.sekolah'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.ke.sekolah.menggunakan'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.berat.badan'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.tinggi.badan'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.golongan.darah'|trans }}</text:p>
+                        <text:p>{{ 'label.nomor.pendaftaran'|trans }}</text:p>
                     </table:table-cell>
                 </table:table-row>
             {% for entity in entities %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.gelombang.nama }}</text:p>
+                        <text:p>{{ entity.waktuSimpan|date("d/m/Y H:i:s") }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.nomorPendaftaran }}</text:p>
+                        <text:p>{{ entity.nomorTransaksi }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.namaLengkap }}</text:p>
+                        <text:p>{{ entity.nominalPembayaran }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.orangtuaWali[0].nama }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.orangtuaWali[0].ponsel }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{% if entity.sekolahAsal is not null %}{{ entity.sekolahAsal.nama }}{% endif %}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.jenisKelamin }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.agama }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.alamat }}</text:p>
+                        <text:p>{% for biaya in entity.pembayaranPendaftaran.daftarBiayaPendaftaran %}{{ biaya.nama }}{% if not loop.last %}, {% endif %}{% endfor %}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.keterangan }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.tempatLahir }}</text:p>
+                        <text:p>{{ entity.pembayaranPendaftaran.siswa.namaLengkap }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.tanggalLahir|localeDate('long') }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.email }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.namaPanggilan }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.kewarganegaraan }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.anakKe }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.jumlahSaudarakandung }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.jumlahSaudaratiri }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.statusOrphan }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.bahasaSeharihari }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.kodepos }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.telepon }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.ponselSiswa }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.sekolahTinggaldi }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.jarakTempat }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.caraKesekolah }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.beratbadan }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.tinggibadan }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.golongandarah }}</text:p>
+                        <text:p>{{ entity.pembayaranPendaftaran.siswa.nomorPendaftaran }}</text:p>
                     </table:table-cell>
                 </table:table-row>
             {% endfor %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}</text:p>
+                        <text:p>{{ 'label.jumlah.transaksi.total'|trans }}: {{ transaksiTotal }}</text:p>
                     </table:table-cell>
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</text:p>
+                        <text:p>{{ 'label.jumlah.transaksi.tercari'|trans }}: {{ transaksiTercari }}</text:p>
                     </table:table-cell>
                 </table:table-row>
             </table:table>
-{#             <table:table table:name="Sheet2" table:style-name="ta1">#}
-{#                 <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>#}
-{#                 <table:table-row table:style-name="ro1">#}
-{#                     <table:table-cell/>#}
-{#                 </table:table-row>#}
-{#             </table:table>#}
-{#             <table:table table:name="Sheet3" table:style-name="ta1">#}
-{#                 <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>#}
-{#                 <table:table-row table:style-name="ro1">#}
-{#                     <table:table-cell/>#}
-{#                 </table:table-row>#}
-{#             </table:table>#}
         </office:spreadsheet>
     </office:body>
 </office:document-content>

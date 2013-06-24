@@ -17,40 +17,7 @@ class SiswaApplicantPaymentReportSearchType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
         $em = $this->container->get('doctrine')->getManager();
-
-        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
-                ->setParameter('sekolah', $sekolah->getId());
-        $builder
-                ->add('tahun', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
-                                'multiple' => false, 'expanded' => false, 'property' => 'tahun',
-                                'empty_value' => 'label.selectyear', 'required' => false,
-                                'query_builder' => $querybuilder1,
-                                'attr' => array(
-                                    'class' => 'small'
-                                ), 'label_render' => false,
-                        ));
-
-        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Gelombang', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
-                ->setParameter('sekolah', $sekolah->getId());
-        $builder
-                ->add('gelombang', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:Gelombang', 'multiple' => false,
-                                'expanded' => false, 'property' => 'nama',
-                                'empty_value' => 'label.selectadmissiongroup',
-                                'query_builder' => $querybuilder2,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'required' => false, 'label_render' => false,
-                        ));
 
         $builder
                 ->add('dariTanggal', 'date',
