@@ -92,16 +92,6 @@ class SiswaApplicantReportSearchType extends AbstractType
                                         'class' => 'xlarge nama-referensi ketik-pilih-tambah',
                                         'placeholder' => 'label.perujuk',
                                 ), 'required' => false, 'label_render' => false,
-                        ))
-                ->add('pembandingBayar', 'choice',
-                        array(
-                                'required' => true,
-                                'choices' => array(
-                                    '=' => '=', '>' => '>', '<' => '<', '>=' => '≥', '<=' => '≤'
-                                ),
-                                'attr' => array(
-                                    'class' => 'mini pembanding-bayar'
-                                ), 'label_render' => false
                         ));
 
         $builder->addEventSubscriber(new JumlahBayarSubscriber($this->container->get('translator')));

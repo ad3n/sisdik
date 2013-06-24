@@ -63,6 +63,16 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
 
         }
         $form
+                ->add('pembandingBayar', 'choice',
+                        array(
+                                'required' => true,
+                                'choices' => array(
+                                    '=' => '=', '>' => '>', '<' => '<', '>=' => '≥', '<=' => '≤'
+                                ),
+                                'attr' => array(
+                                    'class' => 'mini pembanding-bayar'
+                                ), 'label_render' => false
+                        ))
                 ->add('persenBayar', 'checkbox',
                         array(
                             'required' => false, 'label_render' => false,
