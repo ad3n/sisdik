@@ -335,10 +335,6 @@ class SiswaApplicantReportController extends Controller
                 ->setParameter('ortuaktif', true)->setParameter('sekolah', $sekolah->getId())
                 ->setParameter('tahunaktif', $panitiaAktif[2]);
 
-        $qbBiaya = $em->createQueryBuilder()->select('SUM(biaya.nominal)')
-                ->from('FastSisdikBundle:BiayaPendaftaran', 'biaya');
-        $biaya = 0;
-
         if ($searchform->isValid()) {
 
             if ($searchdata['gelombang'] instanceof Gelombang) {
@@ -349,10 +345,6 @@ class SiswaApplicantReportController extends Controller
                 $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
 
                 $qbAdvsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
-
-                $qbBiaya->andWhere('biaya.gelombang = :gelombang');
-                $qbBiaya->setParameter('gelombang', $searchdata['gelombang']->getId());
-                $biaya = $qbBiaya->getQuery()->getSingleScalarResult();
             }
 
             if ($searchdata['searchkey'] != '') {
