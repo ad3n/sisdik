@@ -218,10 +218,23 @@ class SiswaApplicantReportController extends Controller
             if ($searchdata['jumlahBayar'] != "") {
                 if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
 
-                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
-                            ->having(
-                                    "SUM(pembayaran.nominalTotalTransaksi) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar "
-                                            . " (SUM(siswa.sisaBiayaPendaftaran) + SUM(pembayaran.nominalTotalBiaya)) * :jumlahbayar");
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id');
+
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<='
+                            || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
+                        // masukkan pencarian untuk yg belum melakukan transaksi
+                        $querybuilder
+                                ->having(
+                                        "(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan)) * :jumlahbayar) "
+                                                . " OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0");
+                    } else {
+                        $querybuilder
+                                ->having(
+                                        "SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan)) * :jumlahbayar");
+                    }
+
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
                     $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
