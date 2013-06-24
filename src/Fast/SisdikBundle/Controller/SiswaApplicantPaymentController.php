@@ -46,6 +46,9 @@ class SiswaApplicantPaymentController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
+            $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
+            $querybuilder->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
+
             if ($searchdata['tahun'] != '') {
                 $querybuilder->andWhere('tahun.id = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
@@ -67,8 +70,6 @@ class SiswaApplicantPaymentController extends Controller
             }
 
             if ($searchdata['nopayment'] == true) {
-                $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
-                $querybuilder->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
                 $querybuilder->andWhere("transaksi.nominalPembayaran IS NULL");
             }
 
