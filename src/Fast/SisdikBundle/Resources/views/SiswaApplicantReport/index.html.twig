@@ -225,8 +225,8 @@ form .clearfix {
     <thead>
     	<tr>
     		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+    		<th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
     	    </th>
     		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
     		<th>{{ 'label.mobilephone.parent'|trans }}</th>

@@ -36,11 +36,11 @@
     <thead>
         <tr>
             <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.nomorUrutPendaftaran') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 't.nomorUrutPendaftaran') }}
+            <th class="{% if pagination.isSorted('siswa.nomorUrutPendaftaran') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.application.number'|trans, 'siswa.nomorUrutPendaftaran') }}
             </th>
-            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
             </th>
             <th>{{ 'label.paid.amount'|trans }}</th>
             <th>{{ 'label.payment.remains'|trans }}</th>
