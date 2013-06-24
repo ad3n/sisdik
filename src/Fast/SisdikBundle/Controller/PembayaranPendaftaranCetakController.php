@@ -797,6 +797,8 @@ class PembayaranPendaftaranCetakController extends Controller
             }
 
             $response = new Response(file_get_contents($documenttarget), 200);
+            $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filetarget);
+            $response->headers->set('Content-Disposition', $d);
             $response->headers->set('Content-Description', 'Dokumen kwitansi');
             $response->headers->set('Content-Type', 'application/vnd.sisdik.directprint');
             $response->headers->set('Content-Transfer-Encoding', 'binary');
