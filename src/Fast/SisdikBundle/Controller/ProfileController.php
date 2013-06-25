@@ -73,11 +73,11 @@ class ProfileController extends FOSProfileController
                 $userManager->updateUser($user);
 
                 $this->setFlash('fos_user_success', 'profile.flash.updated');
+
+                $userManager->reloadUser($user);
+
+                return new RedirectResponse($this->getRedirectionUrl($user));
             }
-
-            $userManager->reloadUser($user);
-
-            return new RedirectResponse($this->getRedirectionUrl($user));
         }
 
         return $this->container->get('templating')

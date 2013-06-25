@@ -2,7 +2,7 @@
 
 {% block page_heading %}{% trans from "headings" %}profile.edit{% endtrans %}{% endblock %}
 {% block content %}
-<h3>{{ app.user.username }}</h3>
+<h3 style="margin-bottom: 20px;">{{ app.user.username }}</h3>
 <form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
 	{{ form_widget(form) }}
     <div class="form-actions">
