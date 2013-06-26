@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Siswa laporan-pendaftaran controller.
@@ -564,10 +565,11 @@ class SiswaApplicantReportController extends Controller
     }
 
     /**
-     * download the generated file report
+     * pembuat ringkasan
      *
      * @Route("/ringkasan", name="laporan-pendaftaran_summary")
      * @Method("POST")
+     * @Secure(roles="ROLE_KETUA_PANITIA_PSB")
      */
     public function summaryAction() {
         $sekolah = $this->isRegisteredToSchool();

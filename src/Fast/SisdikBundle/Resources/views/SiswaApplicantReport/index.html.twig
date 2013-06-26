@@ -261,6 +261,7 @@ form .clearfix {
     </form>
 </div>
 
+{% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
 <div class="span6 ringkasan-section">
     <div>
         <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
@@ -286,7 +287,7 @@ form .clearfix {
         </div>
     </div>
 </div>
-</div>
+{% endif %}
 
 <div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
@@ -443,6 +444,7 @@ $(document).ready(function() {
     $("#export-form").submit(function() {
         var url = $(this).attr("action");
         bersihkanKetikPilih();
+        $("#filename").html("");
         $("#filename").addClass("loading");
         $.post(url, $("#search-form").serialize(), function(response) {
             if (response.redirectUrl) {
