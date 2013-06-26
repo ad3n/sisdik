@@ -302,9 +302,9 @@ class Builder extends AbstractNavbarMenuBuilder
                                     new Expression("hasAnyRole('ROLE_BENDAHARA')")
                             ))) {
                 $payments
-                        ->addChild('links.laporan.keuangan.pendaftaran',
+                        ->addChild('links.laporan.transaksi.keuangan',
                                 array(
-                                    'route' => 'laporan-keuangan-pendaftaran'
+                                    'route' => 'laporan-transaksi-keuangan'
                                 ));
             }
 

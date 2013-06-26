@@ -18,6 +18,7 @@
         <style:style style:name="ta1" style:family="table" style:master-page-name="Default">
             <style:table-properties table:display="true" style:writing-mode="lr-tb"/>
         </style:style>
+        <style:style style:name="ce3" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N15106"/>
     </office:automatic-styles>
     <office:body>
         <office:spreadsheet>
@@ -47,14 +48,14 @@
                 </table:table-row>
             {% for entity in entities %}
                 <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell table:style-name="waktu" office:value-type="date" office:date-value="{{ entity.waktuSimpan|date("Y-m-d") ~ 'T' ~ entity.waktuSimpan|date('H:i:s') }}">
                         <text:p>{{ entity.waktuSimpan|date("d/m/Y H:i:s") }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.nomorTransaksi }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.nominalPembayaran }}</text:p>
+                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ entity.nominalPembayaran }}">
+                        <text:p>{{ entity.nominalPembayaran|number_format(0, ',', '.') }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{% for biaya in entity.pembayaranPendaftaran.daftarBiayaPendaftaran %}{{ biaya.nama }}{% if not loop.last %}, {% endif %}{% endfor %}</text:p>

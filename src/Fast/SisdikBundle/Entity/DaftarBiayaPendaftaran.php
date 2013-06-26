@@ -93,6 +93,15 @@ class DaftarBiayaPendaftaran
     }
 
     /**
+     * Get nama (for screen display)
+     *
+     * @return string
+     */
+    public function getNamaDisplay() {
+        return strlen($this->nama) > 20 ? substr($this->nama, 0, 17) . '...' : $this->nama;
+    }
+
+    /**
      * Set terpilih
      *
      * @param boolean $terpilih

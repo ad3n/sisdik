@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Symfony\Component\Translation\IdentityTranslator;
 use Fast\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,36 +41,25 @@ class SiswaApplicantPaymentReportSearchType extends AbstractType
                                     'class' => 'medium search-query', 'placeholder' => 'label.searchkey'
                                 ), 'required' => false, 'label_render' => false,
                         ))
-                ->add('sekolahAsal', new EntityHiddenType($em),
+                ->add('pembandingBayar', 'choice',
                         array(
-                                'class' => 'FastSisdikBundle:SekolahAsal',
+                                'required' => true,
+                                'choices' => array(
+                                    '=' => '=', '>' => '>', '<' => '<', '>=' => '≥', '<=' => '≤'
+                                ),
                                 'attr' => array(
-                                    'class' => 'id-sekolah-asal'
-                                ), 'required' => false, 'label_render' => false,
+                                    'class' => 'mini pembanding-bayar'
+                                ), 'label_render' => false
                         ))
-                ->add('namaSekolahAsal', 'text',
+                ->add('jumlahBayar', 'number',
                         array(
+                                'precision' => 0, 'grouping' => 3,
                                 'attr' => array(
-                                        'class' => 'xlarge nama-sekolah-asal ketik-pilih-tambah',
-                                        'placeholder' => 'label.sekolah.asal',
-                                ), 'required' => false, 'label_render' => false,
-                        ))
-                ->add('referensi', new EntityHiddenType($em),
-                        array(
-                                'class' => 'FastSisdikBundle:Referensi',
-                                'attr' => array(
-                                    'class' => 'large id-referensi'
-                                ), 'required' => false, 'label_render' => false,
-                        ))
-                ->add('namaReferensi', 'text',
-                        array(
-                                'attr' => array(
-                                        'class' => 'xlarge nama-referensi ketik-pilih-tambah',
-                                        'placeholder' => 'label.perujuk',
-                                ), 'required' => false, 'label_render' => false,
+                                    'class' => 'small', 'placeholder' => 'label.jumlah.bayar'
+                                ), 'label_render' => false, 'required' => false, 'error_bubbling' => true,
+                                'invalid_message' => $this->container->get('translator')
+                                        ->trans('pencarian.nominal.tidak.sah', array(), 'validators'),
                         ));
-
-        $builder->addEventSubscriber(new JumlahBayarSubscriber($this->container->get('translator')));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

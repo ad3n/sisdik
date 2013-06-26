@@ -13,7 +13,6 @@ use Fast\SisdikBundle\Entity\Referensi;
 use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Entity\Gelombang;
 use Fast\SisdikBundle\Form\SiswaApplicantPaymentReportSearchType;
-use Fast\SisdikBundle\Entity\SekolahAsal;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -24,23 +23,24 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Siswa laporan-keuangan-pendaftaran controller.
+ * Siswa laporan-transaksi-keuangan controller.
  *
- * @Route("/laporan-keuangan-pendaftaran")
+ * @Route("/laporan-transaksi-keuangan")
  * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
-class SiswaApplicantPaymentReportController extends Controller
+class LaporanTransaksiKeuanganController extends Controller
 {
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
-    const OUTPUTFILE = "laporan-keuangan-pendaftaran.";
-    const OUTPUTSUMMARYFILE = "ringkasan-keuangan-pendaftaran.";
-    const DOCUMENTS_OUTPUTDIR = "uploads/sekolah/laporan-keuangan-psb/";
+    const STYLEFILE = "styles.xml";
+    const OUTPUTFILE = "laporan-transaksi-keuangan.";
+    const OUTPUTSUMMARYFILE = "ringkasan-laporan-transaksi-keuangan.";
+    const DOCUMENTS_OUTPUTDIR = "uploads/sekolah/laporan-transaksi-keuangan/";
 
     /**
-     * Laporan keuangan pendaftaran siswa baru
+     * Laporan transaksi keuangan
      *
-     * @Route("/", name="laporan-keuangan-pendaftaran")
+     * @Route("/", name="laporan-transaksi-keuangan")
      * @Method("GET")
      * @Template()
      */
@@ -76,7 +76,7 @@ class SiswaApplicantPaymentReportController extends Controller
                 ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa')->orderBy('transaksi.waktuSimpan', 'DESC');
+                ->leftJoin('pembayaran.siswa', 'siswa');
 
         if ($searchform->isValid()) {
 
@@ -122,32 +122,6 @@ class SiswaApplicantPaymentReportController extends Controller
                 $tampilkanTercari = true;
             }
 
-            if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
-                $querybuilder->leftJoin('siswa.sekolahAsal', 'sekolahasal');
-                $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
-                $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
-                $qbsearchnum->leftJoin('siswa.sekolahAsal', 'sekolahasal');
-                $qbsearchnum->andWhere('sekolahasal.id = :sekolahasal');
-                $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
-                $tampilkanTercari = true;
-                $pencarianLanjutan = true;
-            }
-
-            if ($searchdata['referensi'] instanceof Referensi) {
-                $querybuilder->leftJoin('siswa.referensi', 'referensi');
-                $querybuilder->andWhere('referensi.id = :referensi');
-                $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $qbsearchnum->leftJoin('siswa.referensi', 'referensi');
-                $qbsearchnum->andWhere('referensi.id = :referensi');
-                $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $tampilkanTercari = true;
-                $pencarianLanjutan = true;
-            }
-
             $pembandingBayar = $searchdata['pembandingBayar'];
             if ($searchdata['jumlahBayar'] != "") {
                 $querybuilder->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
@@ -158,7 +132,6 @@ class SiswaApplicantPaymentReportController extends Controller
 
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;
-                $pencarianJumlahBayar = true;
             }
 
         } else {
@@ -167,6 +140,9 @@ class SiswaApplicantPaymentReportController extends Controller
 
         $transaksiTercari = $pencarianJumlahBayar === true ? $transaksiTercari
                 : intval($qbsearchnum->getQuery()->getSingleScalarResult());
+
+        //$querybuilder->orderBy('siswa.nomorUrutPendaftaran', 'ASC');
+        $querybuilder->addOrderBy('transaksi.waktuSimpan', 'DESC');
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -183,9 +159,9 @@ class SiswaApplicantPaymentReportController extends Controller
     }
 
     /**
-     * ekspor data laporan keuangan pendaftaran siswa baru
+     * ekspor data laporan transaksi keuangan
      *
-     * @Route("/export", name="laporan-keuangan-pendaftaran_export")
+     * @Route("/export", name="laporan-transaksi-keuangan_export")
      * @Method("POST")
      */
     public function exportAction() {
@@ -257,26 +233,6 @@ class SiswaApplicantPaymentReportController extends Controller
                 $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
             }
 
-            if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
-                $querybuilder->leftJoin('siswa.sekolahAsal', 'sekolahasal');
-                $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
-                $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
-                $qbsearchnum->leftJoin('siswa.sekolahAsal', 'sekolahasal');
-                $qbsearchnum->andWhere('sekolahasal.id = :sekolahasal');
-                $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-            }
-
-            if ($searchdata['referensi'] instanceof Referensi) {
-                $querybuilder->leftJoin('siswa.referensi', 'referensi');
-                $querybuilder->andWhere('referensi.id = :referensi');
-                $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $qbsearchnum->leftJoin('siswa.referensi', 'referensi');
-                $qbsearchnum->andWhere('referensi.id = :referensi');
-                $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
-            }
-
             $pembandingBayar = $searchdata['pembandingBayar'];
             if ($searchdata['jumlahBayar'] != "") {
                 $querybuilder->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
@@ -296,9 +252,10 @@ class SiswaApplicantPaymentReportController extends Controller
                 : intval($qbsearchnum->getQuery()->getSingleScalarResult());
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+        $stylebase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::STYLEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-        $filenameoutput = self::OUTPUTFILE . '-' . date("m-d-h-i") . ".sisdik";
+        $filenameoutput = self::OUTPUTFILE . date("Y-m-d-h-i") . ".sisdik";
 
         $outputfiletype = "ods";
         $extensiontarget = $extensionsource = ".$outputfiletype";
@@ -320,6 +277,11 @@ class SiswaApplicantPaymentReportController extends Controller
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
                 $ziparchive
+                        ->addFromString('styles.xml',
+                                $this
+                                        ->renderView(
+                                                "FastSisdikBundle:SiswaApplicantPaymentReport:styles.xml.twig"));
+                $ziparchive
                         ->addFromString('content.xml',
                                 $this
                                         ->renderView(
@@ -332,7 +294,7 @@ class SiswaApplicantPaymentReportController extends Controller
                 if ($ziparchive->close() === TRUE) {
                     $return = array(
                             "redirectUrl" => $this
-                                    ->generateUrl("laporan-keuangan-pendaftaran_download",
+                                    ->generateUrl("laporan-transaksi-keuangan_download",
                                             array(
                                                 'filename' => $filetarget
                                             )), "filename" => $filetarget,
@@ -352,7 +314,7 @@ class SiswaApplicantPaymentReportController extends Controller
     /**
      * download the generated file report
      *
-     * @Route("/download/{filename}/{type}", name="laporan-keuangan-pendaftaran_download")
+     * @Route("/download/{filename}/{type}", name="laporan-transaksi-keuangan_download")
      * @Method("GET")
      */
     public function downloadReportFileAction($filename, $type = 'ods') {
@@ -384,7 +346,7 @@ class SiswaApplicantPaymentReportController extends Controller
     /**
      * download the generated file report
      *
-     * @Route("/ringkasan", name="laporan-keuangan-pendaftaran_summary")
+     * @Route("/ringkasan", name="laporan-transaksi-keuangan_summary")
      * @Method("POST")
      */
     public function summaryAction() {
@@ -436,7 +398,7 @@ class SiswaApplicantPaymentReportController extends Controller
                 return $this
                         ->redirect(
                                 $this
-                                        ->generateUrl('laporan-keuangan-pendaftaran_download',
+                                        ->generateUrl('laporan-transaksi-keuangan_download',
                                                 array(
                                                     'filename' => $filename, 'type' => 'pdf',
                                                 )));
@@ -466,7 +428,7 @@ class SiswaApplicantPaymentReportController extends Controller
                 $this->get('session')->getFlashBag()
                         ->add('success',
                                 $this->get('translator')
-                                        ->trans('flash.ringkasan.laporan.pendaftaran.sms.berhasil.dikirim'));
+                                        ->trans('flash.ringkasan.laporan.transaksi.sms.berhasil.dikirim'));
             }
         } elseif ($summarydata['output'] == 'sms' && $summarydata['nomorPonsel'] === null) {
             $this->get('session')->getFlashBag()
@@ -474,17 +436,16 @@ class SiswaApplicantPaymentReportController extends Controller
         } else {
             $this->get('session')->getFlashBag()
                     ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.ringkasan.laporan.pendaftaran.gagal.dibuat'));
+                            $this->get('translator')->trans('flash.ringkasan.laporan.transaksi.gagal.dibuat'));
         }
 
-        return $this->redirect($this->generateUrl('laporan-keuangan-pendaftaran'));
+        return $this->redirect($this->generateUrl('laporan-transaksi-keuangan'));
     }
 
     /**
      * format template
      *
-     * @Route("/format", name="laporan-keuangan-pendaftaran_format")
+     * @Route("/format", name="laporan-transaksi-keuangan_format")
      * @Method("GET")
      */
     public function formatTemplateAction() {
@@ -498,7 +459,6 @@ class SiswaApplicantPaymentReportController extends Controller
                         $this->getRequest()->query->get('sekolahAsal'),
                         $this->getRequest()->query->get('pembandingBayar'),
                         $this->getRequest()->query->get('jumlahBayar'),
-                        $this->getRequest()->query->get('persenBayar'),
                         $this->getRequest()->query->get('referensi'),
                         $this->getRequest()->query->get('transaksiTotal'),
                         $this->getRequest()->query->get('transaksiTercari'),
@@ -525,7 +485,6 @@ class SiswaApplicantPaymentReportController extends Controller
      * @param  string $sekolahAsal
      * @param  string $pembandingBayar
      * @param  string $jumlahBayar
-     * @param  string $persenBayar
      * @param  string $referensi
      * @param  string $transaksiTotal
      * @param  string $transaksiTercari
@@ -533,7 +492,7 @@ class SiswaApplicantPaymentReportController extends Controller
      * @return string $teks
      */
     private function formatTemplate($teks, $gelombang = '', $dariTanggal = '', $hinggaTanggal = '',
-            $sekolahAsal = '', $pembandingBayar = '', $jumlahBayar = '', $persenBayar = '', $referensi = '',
+            $sekolahAsal = '', $pembandingBayar = '', $jumlahBayar = '', $referensi = '',
             $transaksiTotal = '', $transaksiTercari = '', $tanggalSekarang = '') {
         $teks = str_replace("%gelombang%", $gelombang, $teks);
         $teks = str_replace("%dari-tanggal%", $dariTanggal, $teks);
@@ -542,7 +501,6 @@ class SiswaApplicantPaymentReportController extends Controller
 
         $teks = str_replace("%pembanding-bayar%", $pembandingBayar, $teks);
         $teks = str_replace("%jumlah-bayar%", $jumlahBayar, $teks);
-        $teks = str_replace("%persen-bayar%", ($persenBayar == '1') ? '%' : '', $teks);
 
         $teks = str_replace("%perujuk%", $referensi, $teks);
         $teks = str_replace("%jumlah-total%", $transaksiTotal, $teks);
@@ -554,7 +512,7 @@ class SiswaApplicantPaymentReportController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.payments']['links.laporan.keuangan.pendaftaran']->setCurrent(true);
+        $menu['headings.payments']['links.laporan.transaksi.keuangan']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {
