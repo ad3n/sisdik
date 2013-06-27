@@ -29,13 +29,22 @@ class PembayaranPendaftaranControllerTest extends WebTestCase
 
         $this->assertTrue(200 === $client->getResponse()->getStatusCode());
 
-        $jumlahbayar = '10.000';
+        $firstitem = $crawler->filter('#pay-form .fee-item')->parents()->text();
+        $firstitem = str_replace('.', '', trim($firstitem));
+        preg_match('/\d+$/', $firstitem, $values);
+        $potongan = 50000;
+        $jumlahcicilan = 2;
+        $jumlahbayar = number_format(($values[0] - $potongan) / $jumlahcicilan, 0, ',', '.');
+
         $form = $crawler->filter('#pay-form')
                 ->form(
                         array(
                                 'fast_sisdikbundle_pembayaranpendaftarantype[daftarBiayaPendaftaran][0][terpilih]' => 1,
                                 'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][nominalPembayaran]' => $jumlahbayar,
                                 'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][keterangan]' => 'cicilan pertama',
+                                'fast_sisdikbundle_pembayaranpendaftarantype[adaPotongan]' => 1,
+                                'fast_sisdikbundle_pembayaranpendaftarantype[jenisPotongan]' => 'nominal',
+                                'fast_sisdikbundle_pembayaranpendaftarantype[nominalPotongan]' => $potongan,
                         ));
 
         $client->submit($form);
