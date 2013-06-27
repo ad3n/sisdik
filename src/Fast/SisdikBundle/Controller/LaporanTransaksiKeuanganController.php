@@ -209,7 +209,7 @@ class LaporanTransaksiKeuanganController extends Controller
 
                 $tampilkanTercari = true;
                 $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " "
-                        . $hinggaTanggal->format("Y-m-d 00:00:00");
+                        . $hinggaTanggal->format("Y-m-d 24:00:00");
             } else {
                 $sekarang = new \DateTime();
                 $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " "
