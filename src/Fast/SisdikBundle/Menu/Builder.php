@@ -299,7 +299,7 @@ class Builder extends AbstractNavbarMenuBuilder
             if ($securityContext
                     ->isGranted(
                             array(
-                                    new Expression("hasAnyRole('ROLE_BENDAHARA')")
+                                new Expression("hasAnyRole('ROLE_BENDAHARA')")
                             ))) {
                 $payments
                         ->addChild('links.laporan.transaksi.keuangan',
@@ -307,6 +307,12 @@ class Builder extends AbstractNavbarMenuBuilder
                                     'route' => 'laporan-transaksi-keuangan'
                                 ));
             }
+
+            $payments
+                    ->addChild('links.laporan.pembayaran.pendaftaran',
+                            array(
+                                'route' => 'laporan-pembayaran-pendaftaran'
+                            ));
 
             $payments
                     ->addChild('links.printreceiptsoption',

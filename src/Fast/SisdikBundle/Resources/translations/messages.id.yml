@@ -9,6 +9,8 @@ paidoff: lunas
 untuk: Untuk
 
 label:
+    jumlah.siswa.tercari: ∑ siswa tercari
+    jumlah.siswa.total: ∑ siswa total
     atas.nama: Nama Siswa Pendaftar
     item.biaya: Item Biaya
     waktu.transaksi: Waktu Transaksi
@@ -844,6 +846,7 @@ male: Laki-laki
 female: Perempuan
 
 heading:
+    laporan.pembayaran.pendaftaran: Laporan Pembayaran Pendaftaran
     laporan.transaksi.keuangan: Laporan Transaksi Keuangan
     info.pendukung: Info Pendukung
     academicinfo: Info Akademik
