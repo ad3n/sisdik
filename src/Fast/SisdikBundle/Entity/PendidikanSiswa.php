@@ -525,8 +525,8 @@ class PendidikanSiswa
     }
 
     public function getRelativePathIjazahFileDisk() {
-        return null === $this->ijazahFileDisk ? null
-                : $this->getUploadRootDir() . '/' . $this->ijazahFileDisk;
+        return null === $this->ijazahFileDisk ? null : $this->getUploadRootDir() . '/'
+                . $this->ijazahFileDisk;
     }
 
     public function getRelativePathIjazahFileDiskSebelumnya() {
@@ -568,7 +568,6 @@ class PendidikanSiswa
             $this->ijazahFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
                     . $this->fileUploadIjazah->getClientOriginalName();
             $this->ijazahFile = $this->fileUploadIjazah->getClientOriginalName();
-
         }
 
         if (null !== $this->fileUploadSttb) {
@@ -585,18 +584,17 @@ class PendidikanSiswa
      * @ORM\PostUpdate()
      */
     public function postPersist() {
-        if ($this->fileUploadIjazah === null || $this->fileUploadSttb === null) {
-            return;
+        if ($this->fileUploadIjazah !== null) {
+            $this->fileUploadIjazah->move($this->getUploadRootDir(), $this->ijazahFileDisk);
+            $this->removeIjazahFileSebelumnya();
+            unset($this->fileUploadIjazah);
         }
 
-        $this->fileUploadIjazah->move($this->getUploadRootDir(), $this->ijazahFileDisk);
-        $this->fileUploadSttb->move($this->getUploadRootDir(), $this->sttbFileDisk);
-
-        $this->removeIjazahFileSebelumnya();
-        $this->removeSttbFileSebelumnya();
-
-        unset($this->fileUploadIjazah);
-        unset($this->fileUploadSttb);
+        if ($this->fileUploadSttb !== null) {
+            $this->fileUploadSttb->move($this->getUploadRootDir(), $this->sttbFileDisk);
+            $this->removeSttbFileSebelumnya();
+            unset($this->fileUploadSttb);
+        }
     }
 
     private function removeIjazahFileSebelumnya() {
