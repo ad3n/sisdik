@@ -60,13 +60,15 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.namaLengkap }}</text:p>
                     </table:table-cell>
+                {% set idBiayaTersimpanLunas = [] %}
                 {% set biayaTersimpanLunas = [] %}
                 {% set biayaTersimpan = [] %}
                 {% set idBiayaTersimpan = [] %}
                 {% for pembayaran in entity.pembayaranPendaftaran %}
                     {% if pembayaran.daftarBiayaPendaftaran|length > 1 %}
                         {% for biaya in pembayaran.daftarBiayaPendaftaran %}
-                            {% set biayaTersimpanLunas = biayaTersimpanLunas|merge([biaya.biayaPendaftaran.id]) %}
+                            {% set idBiayaTersimpanLunas = idBiayaTersimpanLunas|merge([biaya.biayaPendaftaran.id]) %}
+                            {% set biayaTersimpanLunas = biayaTersimpanLunas|merge([biaya.nominal]) %}
                         {% endfor %}
                     {% else %}
                         {% set idnya = pembayaran.daftarBiayaPendaftaran[0].biayaPendaftaran.id %}
@@ -77,17 +79,26 @@
                 {% endfor %}
 
                 {% for biaya in biayaPendaftaran %}
-                    <table:table-cell office:value-type="string">
-                        {% if biaya.id in biayaTersimpanLunas %}
-                            <text:p>{{ biaya.nominal }}</text:p>
+                        {% if biaya.id in idBiayaTersimpanLunas %}
+                            {% for id in idBiayaTersimpanLunas %}
+                                {% if biayaTersimpanLunas[loop.index0] and id == biaya.id %}
+                                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biayaTersimpanLunas[loop.index0] }}">
+                                        <text:p>{{ biayaTersimpanLunas[loop.index0] }}</text:p>
+                                    </table:table-cell>
+                                {% endif %}
+                            {% endfor %}
+{#                             <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biaya.nominal }}">#}
+{#                                 <text:p>{{ biaya.nominal }}</text:p>#}
+{#                             </table:table-cell>#}
                         {% elseif biaya.id in idBiayaTersimpan %}
                             {% for id in idBiayaTersimpan %}
                                 {% if biayaTersimpan[loop.index0] and id == biaya.id %}
-                                    <text:p>{{ biayaTersimpan[loop.index0] }}</text:p>
+                                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biayaTersimpan[loop.index0] }}">
+                                        <text:p>{{ biayaTersimpan[loop.index0] }}</text:p>
+                                    </table:table-cell>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
-                    </table:table-cell>
                 {% endfor %}
                 </table:table-row>
             {% endfor %}
@@ -102,18 +113,6 @@
                     </table:table-cell>
                 </table:table-row>
             </table:table>
-{#             <table:table table:name="Sheet2" table:style-name="ta1">#}
-{#                 <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>#}
-{#                 <table:table-row table:style-name="ro1">#}
-{#                     <table:table-cell/>#}
-{#                 </table:table-row>#}
-{#             </table:table>#}
-{#             <table:table table:name="Sheet3" table:style-name="ta1">#}
-{#                 <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>#}
-{#                 <table:table-row table:style-name="ro1">#}
-{#                     <table:table-cell/>#}
-{#                 </table:table-row>#}
-{#             </table:table>#}
         </office:spreadsheet>
     </office:body>
 </office:document-content>
