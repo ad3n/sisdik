@@ -391,6 +391,8 @@ $(document).ready(function() {
     // end of find and display discounted fee
 
     $("#pay-form").submit(function() {
+    	$(this).find(':submit').attr('disabled','disabled');
+
         var payamount = parseInt($(".pay-amount").val().split('.').join(''));
 
         total = 0;
@@ -418,23 +420,29 @@ $(document).ready(function() {
         if (withdiscount) {
             if (payamount > feeamountdiscounted) {
                 alert("{{ 'shortinfo.pay.notbiggerthan.fee.discounted'|trans }}");
+                $(this).find(':submit').removeAttr('disabled');
                 return false;
             } else if ((feeamount - feeamountdiscounted) <= 0) {
                 alert("{{ 'shortinfo.discountamount.nozero'|trans }}");
+                $(this).find(':submit').removeAttr('disabled');
                 return false;
             } else if (payamount < feeamountdiscounted && $("form .fee-item:checked").length > 1) {
                 alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
+                $(this).find(':submit').removeAttr('disabled');
                 return false;
             }
         } else {
             if (payamount > feeamount) {
                 alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
+                $(this).find(':submit').removeAttr('disabled');
                 return false;
             } else if (payamount < feeamount && $("form .fee-item:checked").size() > 1) {
                 alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
+                $(this).find(':submit').removeAttr('disabled');
                 return false;
             } else if (payamount <= 0 || $("form .fee-item:checked").length < 1) {
             	alert("{{ 'shortinfo.pay.nozero'|trans }}");
+            	$(this).find(':submit').removeAttr('disabled');
             	return false;
             }
         }

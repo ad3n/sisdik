@@ -150,6 +150,8 @@ $(document).ready(function() {
     });
 
 	$("#pay-form").submit(function() {
+		$(this).find(':submit').attr('disabled','disabled');
+
         var payamount = 0;
         var feeamount = parseInt($.trim($("#payable-amount").text().split('.').join('')));
 
@@ -167,9 +169,11 @@ $(document).ready(function() {
 
         if (payamount > feeamount) {
             alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
+            $(this).find(':submit').removeAttr('disabled');
             return false;
         } else if (payamount == paidamount) {
         	alert("{{ 'shortinfo.pay.nozero'|trans }}");
+        	$(this).find(':submit').removeAttr('disabled');
         	return false;
         }
 
