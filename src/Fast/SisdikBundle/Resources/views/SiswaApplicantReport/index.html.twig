@@ -254,40 +254,41 @@ form .clearfix {
 {{ knp_pagination_render(pagination) }}
 
 <div class="row-fluid">
-<div class="span6 export-section pull-left">
-    <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
-        <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
-        <div id="filename"></div>
-    </form>
-</div>
+    <div class="span6 export-section pull-left">
+        <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
+            <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
+            <div id="filename"></div>
+        </form>
+    </div>
 
-{% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
-<div class="span6 ringkasan-section">
-    <div>
-        <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
-        <div class="clearfix" style="margin-top: 1em;"></div>
-        <div id="ringkasan">
-            <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
-                {{ form_label(summaryform.teks) }}
-                {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
-                	<a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
-                {% endimage %}
-                <div class="clearfix" style="margin-bottom: 0;"></div>
-                {{ form_widget(summaryform.teks) }}
-                {{ form_help(summaryform.teks) }}
+    {% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
+    <div class="span6 ringkasan-section">
+        <div>
+            <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
+            <div class="clearfix" style="margin-top: 1em;"></div>
+            <div id="ringkasan">
+                <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
+                    {{ form_label(summaryform.teks) }}
+                    {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
+                    	<a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
+                    {% endimage %}
+                    <div class="clearfix" style="margin-bottom: 0;"></div>
+                    {{ form_widget(summaryform.teks) }}
+                    {{ form_help(summaryform.teks) }}
 
-                {{ form_rest(summaryform) }}
-                <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button><span class="pratinjau-loader">&nbsp;&nbsp;&nbsp;</span>
-                <div class="clearfix"></div>
-                <span id="teks-terformat"></span>
-                <div class="clearfix"></div>
-                <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
-                <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
-            </form>
+                    {{ form_rest(summaryform) }}
+                    <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button><span class="pratinjau-loader">&nbsp;&nbsp;&nbsp;</span>
+                    <div class="clearfix"></div>
+                    <span id="teks-terformat"></span>
+                    <div class="clearfix"></div>
+                    <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
+                    <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
+                </form>
+            </div>
         </div>
     </div>
+    {% endif %}
 </div>
-{% endif %}
 
 <div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
