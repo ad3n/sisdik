@@ -60,53 +60,35 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.namaLengkap }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                {% set biayaTersimpanLunas = [] %}
+                {% set biayaTersimpan = [] %}
+                {% set idBiayaTersimpan = [] %}
                 {% for pembayaran in entity.pembayaranPendaftaran %}
-                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
-                        {% if biaya|length > 1 %}
-                            {% if biaya.id in biayaPendaftaran|keys %}
-                                <text:p>{{ biayaPendaftaran[biaya.id] }}</text:p>
-                            {% endif %}
-                        {% else %}
-                        {% endif %}
-                    {% endfor %}
-            if ($transaksiPembayaran[0]->getNominalPembayaran()
-                    == $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()
-                    && count($transaksiPembayaran) == 1) {
-
-                $hargaItem = 0;
-                foreach ($daftarBiayaPendaftaran as $biaya) {
-                    if ($biaya instanceof DaftarBiayaPendaftaran) {
-                        $hargaItem = $biaya->getNominal();
-                    }
-                }
-
-                if ($pembayaran->getAdaPotongan()) {
-                    $hargaItem = $hargaItem
-                            - ($pembayaran->getNominalPotongan()
-                                    + $pembayaran->getPersenPotonganDinominalkan());
-                }
-
-                if ($hargaItem > $pembayaran->getTotalNominalTransaksiPembayaranPendaftaran()) {
-                    $adaCicilan = true;
-                } else {
-                    $adaCicilan = false;
-                }
-
-            } else {
-                $adaCicilan = true;
-            }
-
-                            transaksi dengan biaya pendaftaran == 1 bisa tunai atau cicil
-                            {% if pembayaran.transaksiPembayaranPendaftaran|length > 1 %}
-                            {% else %}
-                            {% endif %}
-                            tampilkan pembayaran untuk transaksi ini
-                            {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-                                {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
-                            {% endfor %}
+                    {% if pembayaran.daftarBiayaPendaftaran|length > 1 %}
+                        {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                            {% set biayaTersimpanLunas = biayaTersimpanLunas|merge([biaya.biayaPendaftaran.id]) %}
+                        {% endfor %}
+                    {% else %}
+                        {% set idnya = pembayaran.daftarBiayaPendaftaran[0].biayaPendaftaran.id %}
+                        {% set biayanya = pembayaran.totalNominalTransaksiPembayaranPendaftaran %}
+                        {% set idBiayaTersimpan = idBiayaTersimpan|merge([idnya]) %}
+                        {% set biayaTersimpan = biayaTersimpan|merge([biayanya]) %}
+                    {% endif %}
                 {% endfor %}
+
+                {% for biaya in biayaPendaftaran %}
+                    <table:table-cell office:value-type="string">
+                        {% if biaya.id in biayaTersimpanLunas %}
+                            <text:p>{{ biaya.nominal }}</text:p>
+                        {% elseif biaya.id in idBiayaTersimpan %}
+                            {% for id in idBiayaTersimpan %}
+                                {% if biayaTersimpan[loop.index0] and id == biaya.id %}
+                                    <text:p>{{ biayaTersimpan[loop.index0] }}</text:p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </table:table-cell>
+                {% endfor %}
                 </table:table-row>
             {% endfor %}
                 <table:table-row table:style-name="ro1">
