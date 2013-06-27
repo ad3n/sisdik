@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\Tahun;
 use Fast\SisdikBundle\Util\Messenger;
 use Fast\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -12,7 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Fast\SisdikBundle\Entity\Referensi;
 use Symfony\Component\Form\FormError;
 use Fast\SisdikBundle\Entity\Gelombang;
-use Fast\SisdikBundle\Form\SiswaApplicantPaymentReportSearchType;
+use Fast\SisdikBundle\Form\TransaksiKeuanganSearchType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -53,11 +52,10 @@ class LaporanTransaksiKeuanganController extends Controller
 
         $transaksiTercari = 0;
         $tampilkanTercari = false;
-        $pencarianLanjutan = false;
         $pencarianJumlahBayar = false;
         $searchkey = '';
 
-        $searchform = $this->createForm(new SiswaApplicantPaymentReportSearchType($this->container));
+        $searchform = $this->createForm(new TransaksiKeuanganSearchType($this->container));
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
@@ -76,7 +74,7 @@ class LaporanTransaksiKeuanganController extends Controller
                 ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa');
+                ->leftJoin('pembayaran.siswa', 'siswa')->addOrderBy('transaksi.waktuSimpan', 'DESC');
 
         if ($searchform->isValid()) {
 
@@ -101,23 +99,22 @@ class LaporanTransaksiKeuanganController extends Controller
             }
 
             $dariTanggal = $searchdata['dariTanggal'];
+            $hinggaTanggal = $searchdata['hinggaTanggal'];
             if ($dariTanggal instanceof \DateTime) {
                 $querybuilder->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
+                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
                 $qbsearchnum->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
+                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
                 $tampilkanTercari = true;
             }
-
-            $hinggaTanggal = $searchdata['hinggaTanggal'];
             if ($hinggaTanggal instanceof \DateTime) {
                 $querybuilder->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
+                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
                 $qbsearchnum->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
+                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
                 $tampilkanTercari = true;
             }
@@ -131,29 +128,19 @@ class LaporanTransaksiKeuanganController extends Controller
                 $qbsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
                 $tampilkanTercari = true;
-                $pencarianLanjutan = true;
             }
 
-        } else {
-            $pencarianLanjutan = true;
         }
 
-        $transaksiTercari = $pencarianJumlahBayar === true ? $transaksiTercari
-                : intval($qbsearchnum->getQuery()->getSingleScalarResult());
-
-        //$querybuilder->orderBy('siswa.nomorUrutPendaftaran', 'ASC');
-        $querybuilder->addOrderBy('transaksi.waktuSimpan', 'DESC');
+        $transaksiTercari = intval($qbsearchnum->getQuery()->getSingleScalarResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        $summaryform = $this->createForm(new ReportSummaryType());
-
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
                 'transaksiTotal' => $transaksiTotal, 'transaksiTercari' => $transaksiTercari,
-                'tampilkanTercari' => $tampilkanTercari, 'pencarianLanjutan' => $pencarianLanjutan,
-                'searchkey' => $searchkey, 'summaryform' => $summaryform->createView(),
+                'tampilkanTercari' => $tampilkanTercari, 'searchkey' => $searchkey,
                 'searchdata' => $searchdata, 'tanggalSekarang' => new \DateTime(),
         );
     }
@@ -172,9 +159,12 @@ class LaporanTransaksiKeuanganController extends Controller
         $qbe = $em->createQueryBuilder();
 
         $transaksiTercari = 0;
+        $tampilkanTercari = false;
         $pencarianJumlahBayar = false;
+        $searchkey = '';
+        $judulLaporan = $this->get('translator')->trans('heading.laporan.transaksi.keuangan');
 
-        $searchform = $this->createForm(new SiswaApplicantPaymentReportSearchType($this->container));
+        $searchform = $this->createForm(new TransaksiKeuanganSearchType($this->container));
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
@@ -193,9 +183,38 @@ class LaporanTransaksiKeuanganController extends Controller
                 ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa')->orderBy('transaksi.waktuSimpan', 'DESC');
+                ->leftJoin('pembayaran.siswa', 'siswa')->addOrderBy('transaksi.waktuSimpan', 'DESC');
 
         if ($searchform->isValid()) {
+
+            $dariTanggal = $searchdata['dariTanggal'];
+            $hinggaTanggal = $searchdata['hinggaTanggal'];
+            if ($dariTanggal instanceof \DateTime) {
+                $querybuilder->andWhere('transaksi.waktuSimpan >= :daritanggal');
+                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+
+                $qbsearchnum->andWhere('transaksi.waktuSimpan >= :daritanggal');
+                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+
+                $tampilkanTercari = true;
+                $judulLaporan .= " " . $this->get('translator')->trans('dari.tanggal') . " "
+                        . $dariTanggal->format("Y-m-d 00:00:00");
+            }
+            if ($hinggaTanggal instanceof \DateTime) {
+                $querybuilder->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
+                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
+
+                $qbsearchnum->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
+                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
+
+                $tampilkanTercari = true;
+                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " "
+                        . $hinggaTanggal->format("Y-m-d 00:00:00");
+            } else {
+                $sekarang = new \DateTime();
+                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " "
+                        . $sekarang->format("Y-m-d H:i:s");
+            }
 
             if ($searchdata['searchkey'] != '') {
                 $searchkey = $searchdata['searchkey'];
@@ -213,24 +232,9 @@ class LaporanTransaksiKeuanganController extends Controller
                                         . ' OR transaksi.keterangan LIKE :keterangan ');
                 $qbsearchnum->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%");
                 $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-            }
 
-            $dariTanggal = $searchdata['dariTanggal'];
-            if ($dariTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
-
-                $qbsearchnum->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
-            }
-
-            $hinggaTanggal = $searchdata['hinggaTanggal'];
-            if ($hinggaTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
-
-                $qbsearchnum->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
+                $tampilkanTercari = true;
+                $judulLaporan .= ", " . $this->get('translator')->trans('kata.pencarian') . " " . $searchkey;
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
@@ -241,15 +245,16 @@ class LaporanTransaksiKeuanganController extends Controller
                 $qbsearchnum->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
                 $qbsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
-                $pencarianJumlahBayar = true;
+                $tampilkanTercari = true;
+                $judulLaporan .= ", " . $this->get('translator')->trans('jumlah.pembayaran')
+                        . " $pembandingBayar " . number_format($searchdata['jumlahBayar'], 0, ',', '.');
             }
 
         } else {
             // TODO error response
         }
 
-        $transaksiTercari = $pencarianJumlahBayar === true ? $transaksiTercari
-                : intval($qbsearchnum->getQuery()->getSingleScalarResult());
+        $transaksiTercari = intval($qbsearchnum->getQuery()->getSingleScalarResult());
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
         $stylebase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::STYLEFILE;
@@ -280,16 +285,17 @@ class LaporanTransaksiKeuanganController extends Controller
                         ->addFromString('styles.xml',
                                 $this
                                         ->renderView(
-                                                "FastSisdikBundle:SiswaApplicantPaymentReport:styles.xml.twig"));
+                                                "FastSisdikBundle:LaporanTransaksiKeuangan:styles.xml.twig"));
                 $ziparchive
                         ->addFromString('content.xml',
                                 $this
                                         ->renderView(
-                                                "FastSisdikBundle:SiswaApplicantPaymentReport:report.xml.twig",
+                                                "FastSisdikBundle:LaporanTransaksiKeuangan:report.xml.twig",
                                                 array(
                                                         'entities' => $entities,
                                                         'transaksiTercari' => $transaksiTercari,
                                                         'transaksiTotal' => $transaksiTotal,
+                                                        'judulLaporan' => $judulLaporan,
                                                 )));
                 if ($ziparchive->close() === TRUE) {
                     $return = array(

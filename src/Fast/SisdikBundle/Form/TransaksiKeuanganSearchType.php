@@ -1,15 +1,12 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Symfony\Component\Translation\IdentityTranslator;
-use Fast\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class SiswaApplicantPaymentReportSearchType extends AbstractType
+class TransaksiKeuanganSearchType extends AbstractType
 {
     private $container;
 

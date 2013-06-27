@@ -1,3 +1,7 @@
+dari.tanggal: Dari Tanggal
+hingga.tanggal: Hingga Tanggal
+kata.pencarian: Kata Pencarian
+jumlah.pembayaran: Jumlah Pembayaran
 dll: dll
 member: Anggota
 leader: Ketua
@@ -840,6 +844,7 @@ male: Laki-laki
 female: Perempuan
 
 heading:
+    laporan.transaksi.keuangan: Laporan Transaksi Keuangan
     info.pendukung: Info Pendukung
     academicinfo: Info Akademik
     download.selection: Pilihan mengunduh berkas data
