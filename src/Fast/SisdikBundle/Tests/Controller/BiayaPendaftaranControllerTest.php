@@ -18,7 +18,7 @@ class BiayaPendaftaranControllerTest extends WebTestCase
         // dummy call to bypass the hasPreviousSession check
         $crawler = $client->request('GET', '/');
 
-        $em = $client->getContainer()->get('doctrine')->getEntityManager();
+        $em = $client->getContainer()->get('doctrine')->getManager();
         $user = $em->getRepository('FastSisdikBundle:User')->findOneByUsername('bendahara');
 
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main_firewall', $user->getRoles());
@@ -40,17 +40,17 @@ class BiayaPendaftaranControllerTest extends WebTestCase
                 ->form(
                         array(
                             'fast_sisdikbundle_biayapendaftarantype[tahun]' => '11',
-                            'fast_sisdikbundle_biayapendaftarantype[gelombang]' => '3',
-                            'fast_sisdikbundle_biayapendaftarantype[jenisbiaya]' => '9',
+                            'fast_sisdikbundle_biayapendaftarantype[gelombang]' => '1',
+                            'fast_sisdikbundle_biayapendaftarantype[jenisbiaya]' => '11',
                             'fast_sisdikbundle_biayapendaftarantype[nominal]' => '150.000',
                         // ... other fields to fill
                         ));
 
         $client->submit($form);
-//         $crawler = $client->followRedirect();
+        $crawler = $client->followRedirect();
 
         // Check data in the show view
-        $this->assertTrue($crawler->filter('html:contains("Detail")')->count() > 0);
+        $this->assertTrue($crawler->filter('.page-title:contains("Detail")')->count() > 0);
 
         /*
         // Edit the entity

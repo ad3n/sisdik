@@ -22,7 +22,7 @@ class AppKernel extends Kernel
                 new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
                 new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
                 new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-                new Fast\SisdikBundle\FastSisdikBundle(),
+                new Fast\SisdikBundle\FastSisdikBundle($this),
                 // new Acme\DemoBundle\AcmeDemoBundle(),
                 new Ps\PdfBundle\PsPdfBundle(),
                 new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
