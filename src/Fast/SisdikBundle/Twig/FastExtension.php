@@ -29,8 +29,9 @@ class FastExtension extends \Twig_Extension
     }
 
     public function highlightResultFunction($subject, $search) {
-        return preg_replace("/" . preg_quote($search, "/") . "/i", "<mark>$0</mark>",
-                htmlspecialchars($subject));
+        return trim($search) == "" ? $subject
+                : preg_replace("/" . preg_quote($search, "/") . "/i", "<mark>$0</mark>",
+                        htmlspecialchars($subject));
     }
 
     public function getName() {
