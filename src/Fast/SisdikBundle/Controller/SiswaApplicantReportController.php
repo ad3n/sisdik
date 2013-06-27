@@ -151,12 +151,12 @@ class SiswaApplicantReportController extends Controller
             $dariTanggal = $searchdata['dariTanggal'];
             if ($dariTanggal instanceof \DateTime) {
                 $querybuilder->andWhere('siswa.waktuSimpan >= :daritanggal');
-                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
+                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
                 $qbsearchnum->andWhere('siswa.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
+                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
-                $qbAdvsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d"));
+                $qbAdvsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
                 $tampilkanTercari = true;
             }
@@ -164,12 +164,12 @@ class SiswaApplicantReportController extends Controller
             $hinggaTanggal = $searchdata['hinggaTanggal'];
             if ($hinggaTanggal instanceof \DateTime) {
                 $querybuilder->andWhere('siswa.waktuSimpan <= :hinggatanggal');
-                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
+                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
                 $qbsearchnum->andWhere('siswa.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
+                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
-                $qbAdvsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d"));
+                $qbAdvsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
                 $tampilkanTercari = true;
             }
