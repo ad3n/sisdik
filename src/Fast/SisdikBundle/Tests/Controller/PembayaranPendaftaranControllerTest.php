@@ -25,57 +25,46 @@ class PembayaranPendaftaranControllerTest extends WebTestCase
         $session->set('_security_' . 'main_firewall', serialize($token));
         $session->save();
 
-        $crawler = $client->request('GET', '/payment/registrationfee/812/');
+        $crawler = $client->request('GET', '/payment/registrationfee/813/');
 
         $this->assertTrue(200 === $client->getResponse()->getStatusCode());
 
-        //$translator = $client->getContainer()->get('translator');
-
+        $jumlahbayar = '10.000';
         $form = $crawler->filter('#pay-form')
                 ->form(
                         array(
                                 'fast_sisdikbundle_pembayaranpendaftarantype[daftarBiayaPendaftaran][0][terpilih]' => 1,
-                                'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][nominalPembayaran]' => '150.000',
-                                'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][keterangan]' => 'lunas formulir',
+                                'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][nominalPembayaran]' => $jumlahbayar,
+                                'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][keterangan]' => 'cicilan pertama',
                         ));
 
         $client->submit($form);
-        $client->submit($form);
-
         $crawler = $client->followRedirect();
-
         $this
                 ->assertTrue(
-                        $crawler->filter('#no-more-tables tr:last-child td:contains("150.000")')->count() > 0);
+                        $crawler->filter("#no-more-tables tr:last-child td:contains('$jumlahbayar')")
+                                ->count() > 0);
 
-        /*
-        $crawler = $client->followRedirect();
-
-        // Check data in the show view
-        $this->assertTrue($crawler->filter('td:contains("Test")')->count() > 0);
-
-        // Edit the entity
-        $crawler = $client->click($crawler->selectLink('Edit')->link());
-
-        $form = $crawler->selectButton('Edit')
-                ->form(
-                        array(
-                            'fast_sisdikbundle_pembayaranpendaftarantype[field_name]' => 'Foo',
-                        // ... other fields to fill
-                        ));
-
+        // multiple form submit with the same object should raise error
         $client->submit($form);
         $crawler = $client->followRedirect();
+        $this
+                ->assertTrue(
+                        $crawler->filter('.alert-block:contains("alert.registrationfee.is.inserted")')
+                                ->count() > 0);
 
-        // Check the element contains an attribute with value equals "Foo"
-        $this->assertTrue($crawler->filter('[value="Foo"]')->count() > 0);
-
-        // Delete the entity
-        $client->submit($crawler->selectButton('Delete')->form());
+        // tes tambah cicilan
+        $link = $crawler->filter('#no-more-tables tr:last-child td.row-actions a.icon-shopping-cart')->link();
+        $crawler = $client->click($link);
+        $keterangan = "cicilan yang kedua";
+        $form = $crawler->filter('#pay-form')
+                ->form(
+                        array(
+                                'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][1][nominalPembayaran]' => $jumlahbayar,
+                                'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][1][keterangan]' => $keterangan,
+                        ));
+        $client->submit($form);
         $crawler = $client->followRedirect();
-
-        // Check the entity has been delete on the list
-        $this->assertNotRegExp('/Foo/', $client->getResponse()->getContent());
-         */
+        $this->assertTrue($crawler->filter("dl:contains('$keterangan')")->count() > 0);
     }
 }

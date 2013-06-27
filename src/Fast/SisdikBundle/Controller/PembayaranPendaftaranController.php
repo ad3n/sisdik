@@ -120,13 +120,25 @@ class PembayaranPendaftaranController extends Controller
         $form = $this->createForm(new PembayaranPendaftaranType($this->container), $entity);
         $form->submit($request);
 
-        // periksa jika item pembayaran sudah digunakan sebelumnya
-        // tak tahu apakah ini bisa dilakukan setelah database refactoring biaya pendaftaran dan pembayaran biaya pendaftaran
-        // $formdata = $form->getData();
-        // if (count($formdata->getDaftarBiayaPendaftaran()) <= 0) {
-        //     $message = $this->get('translator')->trans('alert.registrationfee.is.inserted');
-        //     $form->get('daftarBiayaPendaftaran')->addError(new FormError($message));
-        // }
+        // periksa apakah item pembayaran yang akan dimasukkan telah ada di database
+        // ini untuk mencegah input ganda
+        $formDaftarBiayaPendaftaran = $form->get('daftarBiayaPendaftaran')->getData();
+        foreach ($formDaftarBiayaPendaftaran as $item) {
+            if ($item instanceof DaftarBiayaPendaftaran) {
+                if (in_array($item->getBiayaPendaftaran()->getId(), $itemBiaya['tersimpan'])) {
+                    $this->get('session')->getFlashBag()
+                            ->add('error',
+                                    $this->get('translator')->trans('alert.registrationfee.is.inserted'));
+                    return $this
+                            ->redirect(
+                                    $this
+                                            ->generateUrl('payment_registrationfee',
+                                                    array(
+                                                        'sid' => $sid,
+                                                    )));
+                }
+            }
+        }
 
         if ($form->isValid()) {
 
