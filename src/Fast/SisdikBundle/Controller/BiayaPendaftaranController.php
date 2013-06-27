@@ -2,7 +2,7 @@
 
 namespace Fast\SisdikBundle\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Fast\SisdikBundle\Form\BiayaConfirmType;
+use Fast\SisdikBundle\Form\ConfirmationType;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -197,7 +197,7 @@ class BiayaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
-        $form = $this->createForm(new BiayaConfirmType($this->container, uniqid()));
+        $form = $this->createForm(new ConfirmationType($this->container, uniqid()));
 
         $request = $this->getRequest();
         if ($request->getMethod() == "POST") {

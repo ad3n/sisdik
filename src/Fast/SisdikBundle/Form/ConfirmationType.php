@@ -5,7 +5,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class BiayaConfirmType extends AbstractType
+class ConfirmationType extends AbstractType
 {
     private $container;
     private $data;
@@ -35,11 +35,11 @@ class BiayaConfirmType extends AbstractType
                                         'class' => 'medium', 'placeholder' => 'help.type.captcha',
                                         'autocomplete' => 'off'
                                 ), 'as_url' => true, 'reload' => true,
-                                'help_block' => 'help.captcha.penjelasan.ubah.biaya',
+                                'help_block' => 'help.captcha.penjelasan.ubah.hapus',
                         ));
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_biayaconfirmtype';
+        return 'fast_sisdikbundle_confirmtype';
     }
 }

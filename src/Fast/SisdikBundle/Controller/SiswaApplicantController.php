@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\ConfirmationType;
+
 use Fast\SisdikBundle\Form\SiswaApplicantSearchType;
 use Fast\SisdikBundle\Entity\SekolahAsal;
 use Fast\SisdikBundle\Entity\Referensi;
@@ -22,6 +24,7 @@ use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Form\SiswaApplicantType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * Siswa applicant controller.
@@ -651,13 +654,16 @@ class SiswaApplicantController extends Controller
     }
 
     /**
-     * Deletes a Siswa applicant entity.
+     * Displays a confirmation form to delete a applicant
+     * menghapus hanya bisa dilakukan terhadap data yang belum memiliki data pembayaran
      *
-     * @Route("/{id}/delete", name="applicant_delete")
-     * @Method("POST")
+     * @Route("/{id}/remove", name="applicant_delete_confirm")
+     * @Template("FastSisdikBundle:SiswaApplicant:delete.confirm.html.twig")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KETUA_PANITIA_PSB")
      */
-    public function deleteAction(Request $request, $id) {
+    public function deleteConfirmAction($id) {
         $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
@@ -671,46 +677,66 @@ class SiswaApplicantController extends Controller
                     $this->get('translator')->trans('exception.register.as.committee'));
         }
 
-        $form = $this->createDeleteForm($id);
-        $form->submit($request);
+        $em = $this->getDoctrine()->getManager();
 
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        if (!$entity && !$entity instanceof Siswa) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
 
-            $this->verifyTahun($entity->getTahun()->getTahun());
+        if (count($entity->getPembayaranPendaftaran()) > 0) {
+            $this->get('session')->getFlashBag()
+                    ->add('error',
+                            $this->get('translator')->trans('alert.pendaftar.sudah.melakukan.pembayaran'));
+            return $this
+                    ->redirect(
+                            $this
+                                    ->generateUrl('applicant_show',
+                                            array(
+                                                'id' => $id,
+                                            )));
+        }
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
-            }
+        $form = $this->createForm(new ConfirmationType($this->container, uniqid()));
 
-            try {
-                $em->remove($entity);
-                $em->flush();
+        $request = $this->getRequest();
+        if ($request->getMethod() == "POST") {
+            $form->submit($request);
+            if ($form->isValid()) {
 
+                try {
+                    $em->remove($entity);
+                    $em->flush();
+
+                    $this->get('session')->getFlashBag()
+                            ->add('success',
+                                    $this->get('translator')
+                                            ->trans('flash.applicant.deleted',
+                                                    array(
+                                                        '%name%' => $entity->getNamaLengkap(),
+                                                    )));
+
+                } catch (DBALException $e) {
+                    $message = $this->get('translator')->trans('exception.delete.restrict');
+                    throw new DBALException($message);
+                }
+
+                return $this->redirect($this->generateUrl('applicant'));
+            } else {
                 $this->get('session')->getFlashBag()
-                        ->add('success',
+                        ->add('error',
                                 $this->get('translator')
-                                        ->trans('flash.applicant.deleted',
+                                        ->trans('flash.applicant.fail.delete',
                                                 array(
                                                     '%name%' => $entity->getNamaLengkap(),
                                                 )));
 
-            } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.delete.restrict');
-                throw new DBALException($message);
             }
-        } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.applicant.fail.delete',
-                                            array(
-                                                '%name%' => $entity->getNamaLengkap(),
-                                            )));
         }
 
-        return $this->redirect($this->generateUrl('applicant'));
+        return array(
+            'entity' => $entity, 'form' => $form->createView(),
+        );
     }
 
     private function createDeleteForm($id) {

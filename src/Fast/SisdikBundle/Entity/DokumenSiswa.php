@@ -64,7 +64,7 @@ class DokumenSiswa
     /**
      * @var \Siswa
      *
-     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="dokumenSiswa")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })

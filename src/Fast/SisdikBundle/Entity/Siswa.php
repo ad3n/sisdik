@@ -403,10 +403,31 @@ class Siswa
     /**
      * @var \OrangtuaWali
      *
-     * @ORM\OneToMany(targetEntity="OrangtuaWali", mappedBy="siswa", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OrangtuaWali", mappedBy="siswa", cascade={"persist", "remove"})
      * @ORM\OrderBy({"aktif" = "DESC"})
      */
     private $orangtuaWali;
+
+    /**
+     * @var \DokumenSiswa
+     *
+     * @ORM\OneToMany(targetEntity="DokumenSiswa", mappedBy="siswa", cascade={"persist", "remove"})
+     */
+    private $dokumenSiswa;
+
+    /**
+     * @var \PendidikanSiswa
+     *
+     * @ORM\OneToMany(targetEntity="PendidikanSiswa", mappedBy="siswa", cascade={"persist", "remove"})
+     */
+    private $pendidikanSiswa;
+
+    /**
+     * @var \PenyakitSiswa
+     *
+     * @ORM\OneToMany(targetEntity="PenyakitSiswa", mappedBy="siswa", cascade={"persist", "remove"})
+     */
+    private $penyakitSiswa;
 
     /**
      * @var \PembayaranPendaftaran

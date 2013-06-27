@@ -809,6 +809,11 @@ shortinfo:
     discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
 
 alert:
+    pendaftar.peringatan.hapus: >
+        PERHATIAN!<br>
+        Menghapus pendaftar akan menghapus semua data yang terkait seperti orang tua wali,<br>
+        dokumen siswa, riwayat penyakit, pendidikan sebelumnya, dll.<br>
+        Hapus jika telah mengerti resikonya.
     biaya.pendaftaran.peringatan.ubah: >
         PERHATIAN!<br>
         Mengubah biaya pendaftaran berpotensi mengacaukan data pembayaran pendaftaran yang telah digunakan.<br>
@@ -875,8 +880,8 @@ title:
 app.title: SisDik
 
 help:
-    captcha.penjelasan.ubah.biaya: Captcha berguna untuk mencegah pengubahan tanpa sengaja
-    konfirmasi.saya.mengerti: Cek jika mengerti resiko pengubahan data biaya
+    captcha.penjelasan.ubah.hapus: Captcha berguna untuk mencegah pengubahan/penghapusan data tanpa sengaja
+    konfirmasi.saya.mengerti: Cek jika telah mengerti resiko yang akan terjadi
     tag.standar.laporan.psb: tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%
     logo.sekolah: Maksimum file 300kB
     regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.

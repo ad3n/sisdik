@@ -1,0 +1,39 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}pendaftar.konfirmasi.hapus{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.captcha_reload {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+}
+#peringatan {
+    color: #ff0000;
+    font-size: 1.1em;
+}
+</style>
+
+<p id="peringatan">
+{{ 'alert.pendaftar.peringatan.hapus'|trans|raw }}
+<br>
+</p>
+<dl>
+    <dt>{{ 'label.nama.lengkap'|trans }}</dt>
+    <dd>{{ entity.namaLengkap }}</dd>
+    <dt>{{ 'label.nomor.pendaftaran'|trans }}</dt>
+    <dd>{{ entity.nomorPendaftaran }}</dd>
+</dl>
+
+<div class="clearfix"><br><br><br></div>
+
+<form id="generateform" action="{{ path('applicant_delete_confirm', {'id': entity.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn alternative icon danger remove" id="submit-button">{{ 'label.continue'|trans }}</button>
+        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('applicant_show', {'id': entity.id}) }}'">{{ 'label.cancel'|trans }}</button>
+    </div>
+</form>
+
+{% endblock content %}
