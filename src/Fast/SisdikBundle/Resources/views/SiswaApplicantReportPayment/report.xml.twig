@@ -12,6 +12,9 @@
         <style:style style:name="co1" style:family="table-column">
             <style:table-column-properties fo:break-before="auto" style:column-width="0.8925in"/>
         </style:style>
+        <style:style style:name="co2" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="2in"/>
+        </style:style>
         <style:style style:name="ro1" style:family="table-row">
             <style:table-row-properties style:row-height="0.178in" fo:break-before="auto" style:use-optimal-row-height="true"/>
         </style:style>
@@ -22,6 +25,10 @@
     <office:body>
         <office:spreadsheet>
             <table:table table:name="Sheet1" table:style-name="ta1">
+                <table:table-column table:style-name="co1"/>
+                <table:table-column table:style-name="co1"/>
+                <table:table-column table:style-name="co1"/>
+                <table:table-column table:style-name="co2"/>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
                         <text:p>{{ judulLaporan }}</text:p>
@@ -46,7 +53,9 @@
                     </table:table-cell>
                 {% endfor %}
                 </table:table-row>
+            {% set baris = 2 %}
             {% for entity in entities %}
+                {% set baris = baris + 1 %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.tahun.tahun }}</text:p>
@@ -62,13 +71,17 @@
                     </table:table-cell>
                 {% set idBiayaTersimpanLunas = [] %}
                 {% set biayaTersimpanLunas = [] %}
-                {% set biayaTersimpan = [] %}
+                {% set jumlahPotonganLunas = [] %}
+                {% set jumlahBiayaLunas = [] %}
                 {% set idBiayaTersimpan = [] %}
+                {% set biayaTersimpan = [] %}
                 {% for pembayaran in entity.pembayaranPendaftaran %}
                     {% if pembayaran.daftarBiayaPendaftaran|length > 1 %}
                         {% for biaya in pembayaran.daftarBiayaPendaftaran %}
                             {% set idBiayaTersimpanLunas = idBiayaTersimpanLunas|merge([biaya.biayaPendaftaran.id]) %}
                             {% set biayaTersimpanLunas = biayaTersimpanLunas|merge([biaya.nominal]) %}
+                            {% set jumlahPotonganLunas = jumlahPotonganLunas|merge([pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan]) %}
+                            {% set jumlahBiayaLunas = jumlahBiayaLunas|merge([pembayaran.nominalTotalBiaya]) %}
                         {% endfor %}
                     {% else %}
                         {% set idnya = pembayaran.daftarBiayaPendaftaran[0].biayaPendaftaran.id %}
@@ -78,26 +91,41 @@
                     {% endif %}
                 {% endfor %}
 
+                {% set jumlahBiaya = 0 %}
                 {% for biaya in biayaPendaftaran %}
                         {% if biaya.id in idBiayaTersimpanLunas %}
                             {% for id in idBiayaTersimpanLunas %}
-                                {% if biayaTersimpanLunas[loop.index0] and id == biaya.id %}
-                                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biayaTersimpanLunas[loop.index0] }}">
-                                        <text:p>{{ biayaTersimpanLunas[loop.index0] }}</text:p>
-                                    </table:table-cell>
+                                {% if id == biaya.id %}
+                                    {% set jumlahBiaya = jumlahBiaya + biayaTersimpanLunas[loop.index0] %}
+                                    {% if jumlahPotonganLunas[loop.index0] != 0 and jumlahBiayaLunas[loop.index0] != 0 %}
+                                        <table:table-cell table:style-name="ribuan" table:formula="of:={{ biayaTersimpanLunas[loop.index0] }}-({{ biayaTersimpanLunas[loop.index0] }}/{{ jumlahBiayaLunas[loop.index0] }}*{{ jumlahPotonganLunas[loop.index0] }})" office:value-type="float" office:value="{{ biayaTersimpanLunas[loop.index0] - ( biayaTersimpanLunas[loop.index0] / jumlahBiayaLunas[loop.index0] * jumlahPotonganLunas[loop.index0] ) }}">
+                                            <text:p>{{ biayaTersimpanLunas[loop.index0] }}</text:p>
+                                        </table:table-cell>
+                                    {% else %}
+                                        <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biayaTersimpanLunas[loop.index0] }}">
+                                            <text:p>{{ biayaTersimpanLunas[loop.index0] }}</text:p>
+                                        </table:table-cell>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
-{#                             <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biaya.nominal }}">#}
-{#                                 <text:p>{{ biaya.nominal }}</text:p>#}
-{#                             </table:table-cell>#}
                         {% elseif biaya.id in idBiayaTersimpan %}
                             {% for id in idBiayaTersimpan %}
-                                {% if biayaTersimpan[loop.index0] and id == biaya.id %}
+                                {% if id == biaya.id %}
+                                    {% set jumlahBiaya = jumlahBiaya + biayaTersimpan[loop.index0] %}
                                     <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ biayaTersimpan[loop.index0] }}">
                                         <text:p>{{ biayaTersimpan[loop.index0] }}</text:p>
                                     </table:table-cell>
                                 {% endif %}
                             {% endfor %}
+                        {% else %}
+                            <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="0">
+                                <text:p>0</text:p>
+                            </table:table-cell>
+                        {% endif %}
+                        {% if loop.last %}
+                            <table:table-cell table:style-name="ribuan" table:formula="of:=SUM([.E{{ baris }}:.{{ akhirKolomBiaya }}{{ baris }}])" office:value-type="float" office:value="{{ jumlahBiaya }}">
+                                <text:p>{{ jumlahBiaya }}</text:p>
+                            </table:table-cell>
                         {% endif %}
                 {% endfor %}
                 </table:table-row>

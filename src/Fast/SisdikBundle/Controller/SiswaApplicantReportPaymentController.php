@@ -564,6 +564,8 @@ class SiswaApplicantReportPaymentController extends Controller
                                                         'pendaftarTotal' => $pendaftarTotal,
                                                         'judulLaporan' => $judulLaporan,
                                                         'biayaPendaftaran' => $biayaPendaftaran,
+                                                        'akhirKolomBiaya' => $this
+                                                                ->num2alpha(count($biayaPendaftaran) + 3),
                                                 )));
                 if ($ziparchive->close() === TRUE) {
                     $return = array(
@@ -838,6 +840,23 @@ class SiswaApplicantReportPaymentController extends Controller
         $teks = str_replace("%tanggal-sekarang%", $tanggalSekarang, $teks);
 
         return $teks;
+    }
+
+    /**
+     * Converts an integer into the alphabet base (A-Z).
+     *
+     * @param int $n This is the number to convert.
+     * @return string The converted number.
+     * @author Theriault
+     *
+     */
+    private function num2alpha($n) {
+        $r = '';
+        for ($i = 1; $n >= 0 && $i < 10; $i++) {
+            $r = chr(0x41 + ($n % pow(26, $i) / pow(26, $i - 1))) . $r;
+            $n -= pow(26, $i);
+        }
+        return $r;
     }
 
     private function setCurrentMenu() {
