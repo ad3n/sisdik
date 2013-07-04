@@ -61,17 +61,11 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'layanansms'
                             ));
 
-            $supersettings
-                    ->addChild('links.presencestatus',
-                            array(
-                                'route' => 'presence_status'
-                            ));
-
-            $supersettings
-                    ->addChild('links.presenceschedule',
-                            array(
-                                'route' => 'presence_schedule'
-                            ));
+            // $supersettings
+            //         ->addChild('links.presenceschedule',
+            //                 array(
+            //                     'route' => 'presence_schedule'
+            //                 ));
         }
 
         if ($securityContext

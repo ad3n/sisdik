@@ -171,11 +171,6 @@ sms:
         detail: Detail Template SMS
 
 presence:
-    status:
-        list: Daftar Status Kehadiran/Kepulangan
-        edit: Mengubah Status Kehadiran/Kepulangan
-        creation: Membuat Status Kehadiran/Kepulangan
-        detail: Detail Status Kehadiran/Kepulangan
     schedule:
         list: Daftar Jadwal Kehadiran/Kepulangan
         edit: Mengubah Jadwal Kehadiran/Kepulangan

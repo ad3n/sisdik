@@ -18,8 +18,6 @@ layanan.sms:
     laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
 
 label:
-    nama.status: Nama Status
-    semua.status: ~ Semua Status ~
     jumlah.siswa.tercari: ∑ siswa tercari
     jumlah.siswa.total: ∑ siswa total
     atas.nama: Nama Siswa Pendaftar
@@ -169,7 +167,6 @@ label:
     search.notpaid: belum bayar
     search.paymentnotcomplete: belum lunas
     searchkey.name: Nama
-    searchkey.statusname: Nama Status
     name.parent.or.guardian: Nama Orang Tua/Wali
     application.number: "#Pendaftaran"
     username.undefined: pengguna tak terdefinisi
@@ -388,10 +385,6 @@ label:
         add: Tambah Template SMS
         name: Nama Template
         entry: Template SMS
-    presence.status:
-        add: Tambah Status Kehadiran
-        name: Nama Status Kehadiran
-        entry: Status
     presence.schedule:
         add: Tambah Jadwal Kehadiran/Kepulangan
         name: Nama Jadwal Kehadiran/Kepulangan
