@@ -38,7 +38,7 @@ class PilihanLayananSmsController extends Controller
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('FastSisdikBundle:PilihanLayananSms', 't')->leftJoin('t.sekolah', 't2')
-                ->orderBy('t2.nama', 'ASC');
+                ->orderBy('t2.nama', 'ASC')->addOrderBy('t.jenisLayanan', 'ASC');
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {

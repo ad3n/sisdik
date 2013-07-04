@@ -62,10 +62,10 @@ class PilihanLayananSms
      */
     public static function getDaftarLayananPendaftaran() {
         return array(
-                'a-pendaftaran-tercatat' => 'Pendaftar tercatat di database',
-                'b-pendaftaran-bayar-pertama' => 'Pertama kali membayar biaya pendaftaran',
-                'c-pendaftaran-bayar' => 'Membayar biaya pendaftaran',
-                'd-pendaftaran-bayar-lunas' => 'Lunas biaya pendaftaran',
+                'a-pendaftaran-tercatat' => 'layanan.sms.pendaftar.tercatat',
+                'b-pendaftaran-bayar-pertama' => 'layanan.sms.pendaftar.bayar.pertama',
+                'c-pendaftaran-bayar' => 'layanan.sms.pendaftar.bayar.biaya',
+                'd-pendaftaran-bayar-lunas' => 'layanan.sms.pendaftar.bayar.lunas',
         );
     }
 
@@ -76,7 +76,7 @@ class PilihanLayananSms
      */
     public static function getDaftarLayananLaporan() {
         return array(
-            'e-laporan-ringkasan' => 'Ringkasan laporan pendaftaran',
+            'e-laporan-ringkasan' => 'layanan.sms.laporan.ringkasan.pendaftaran',
         );
     }
 

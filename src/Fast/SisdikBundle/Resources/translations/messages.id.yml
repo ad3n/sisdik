@@ -10,7 +10,16 @@ leader: Ketua
 paidoff: lunas
 untuk: Untuk
 
+layanan.sms:
+    pendaftar.tercatat: Pendaftar tercatat di database
+    pendaftar.bayar.pertama: Pertama kali membayar biaya pendaftaran
+    pendaftar.bayar.biaya: Membayar biaya pendaftaran
+    pendaftar.bayar.lunas: Lunas biaya pendaftaran
+    laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
+
 label:
+    nama.status: Nama Status
+    semua.status: ~ Semua Status ~
     jumlah.siswa.tercari: ∑ siswa tercari
     jumlah.siswa.total: ∑ siswa total
     atas.nama: Nama Siswa Pendaftar
@@ -115,9 +124,9 @@ label:
     status: Status
     aktif: Aktif
     pilih.sekolah: Pilih Sekolah
-    semua.layanan: Semua Layanan
+    semua.layanan: ~ Semua Layanan ~
     # ^^^ id
-    allschool: Semua Sekolah
+    allschool: ~ Semua Sekolah ~
     unregistered.school: Tak Teregister
     applicant.recorded: Pendaftar Tercatat
     registrationfee.firstpay: Pertama Kali Bayar Biaya Pendaftaran
@@ -201,7 +210,7 @@ label:
     select.parentnode: "- Pilih Node Induk -"
     duplicate: Salin
     updatecommand: Update Command
-    attendance: Kehadiran/Kepulangan
+    attendance: Kehadiran
     parameter: Parameter
     sms.massive: SMS Massal
     sms.realtime: SMS Realtime
@@ -380,8 +389,8 @@ label:
         name: Nama Template
         entry: Template SMS
     presence.status:
-        add: Tambah Status Kehadiran/Kepulangan
-        name: Nama Status Kehadiran/Kepulangan
+        add: Tambah Status Kehadiran
+        name: Nama Status Kehadiran
         entry: Status
     presence.schedule:
         add: Tambah Jadwal Kehadiran/Kepulangan
