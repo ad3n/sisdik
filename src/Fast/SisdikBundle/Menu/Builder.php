@@ -338,7 +338,7 @@ class Builder extends AbstractNavbarMenuBuilder
                 $presence
                         ->addChild('links.presenceschedule',
                                 array(
-                                    'route' => 'presence_schedule_single'
+                                    'route' => 'presence_schedule'
                                 ));
 
                 //                 $presence

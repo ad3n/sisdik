@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -8,7 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class JadwalKehadiranKepulanganSingleSearchType extends AbstractType
+class JadwalKehadiranSearchType extends AbstractType
 {
     private $container;
     private $sekolah;
@@ -22,6 +23,16 @@ class JadwalKehadiranKepulanganSingleSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $em = $this->container->get('doctrine')->getManager();
+
+        // $builder
+        //         ->add('sekolah', 'choice',
+        //                 array(
+        //                         'choices' => $this->buildChoices(), 'multiple' => false, 'expanded' => false,
+        //                         'required' => false,
+        //                         'attr' => array(
+        //                             'class' => 'large'
+        //                         ), 'label_render' => false,
+        //                 ));
 
         $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
@@ -102,6 +113,24 @@ class JadwalKehadiranKepulanganSingleSearchType extends AbstractType
 
     public function getName() {
         return 'searchform';
+    }
+
+    private function buildChoices() {
+        $em = $this->container->get('doctrine')->getManager();
+        $entities = $em->getRepository('FastSisdikBundle:Sekolah')
+                ->findBy(array(), array(
+                    'nama' => 'ASC'
+                ));
+        $choices = array(
+            '' => 'label.pilih.sekolah'
+        );
+        foreach ($entities as $entity) {
+            if ($entity instanceof Sekolah) {
+                $choices[$entity->getId()] = $entity->getNama();
+            }
+        }
+
+        return $choices;
     }
 
     public function buildDayNames() {

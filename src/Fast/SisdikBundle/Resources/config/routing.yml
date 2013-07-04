@@ -126,15 +126,10 @@ academiccalendar:
     type:     annotation
     prefix:   /
 
-presence_schedule_single:
-    resource: "@FastSisdikBundle/Controller/JadwalKehadiranKepulanganSingleController.php"
+presence_schedule:
+    resource: "@FastSisdikBundle/Controller/JadwalKehadiranController.php"
     type:     annotation
     prefix:   /
-
-# presence_schedule:
-#     resource: "@FastSisdikBundle/Controller/JadwalKehadiranKepulanganController.php"
-#     type:     annotation
-#     prefix:   /
 
 tingkatkelas:
     resource: "@FastSisdikBundle/Controller/TingkatController.php"

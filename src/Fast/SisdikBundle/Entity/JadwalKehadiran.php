@@ -4,12 +4,12 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JadwalKehadiranKepulangan
+ * JadwalKehadiran
  *
- * @ORM\Table(name="jadwal_kehadiran_kepulangan")
+ * @ORM\Table(name="jadwal_kehadiran")
  * @ORM\Entity
  */
-class JadwalKehadiranKepulangan
+class JadwalKehadiran
 {
     /**
      * @var integer
@@ -19,6 +19,13 @@ class JadwalKehadiranKepulangan
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status_kehadiran", type="string", length=100, nullable=false)
+     */
+    private $statusKehadiran;
 
     /**
      * @var string
@@ -126,14 +133,14 @@ class JadwalKehadiranKepulangan
     private $commandJadwal;
 
     /**
-     * @var \StatusKehadiranKepulangan
+     * @var \Sekolah
      *
-     * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
+     * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
-    private $statusKehadiranKepulangan;
+    private $sekolah;
 
     /**
      * @var \Kelas
@@ -168,17 +175,38 @@ class JadwalKehadiranKepulangan
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
     }
 
     /**
+     * Set statusKehadiran
+     *
+     * @param string $statusKehadiran
+     * @return KehadiranSiswa
+     */
+    public function setStatusKehadiran($statusKehadiran) {
+        $this->statusKehadiran = $statusKehadiran;
+
+        return $this;
+    }
+
+    /**
+     * Get statusKehadiran
+     *
+     * @return string
+     */
+    public function getStatusKehadiran() {
+        return $this->statusKehadiran;
+    }
+
+    /**
      * Set perulangan
      *
      * @param string $perulangan
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setPerulangan($perulangan) {
         $this->perulangan = $perulangan;
@@ -189,7 +217,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get perulangan
      *
-     * @return string 
+     * @return string
      */
     public function getPerulangan() {
         return $this->perulangan;
@@ -199,7 +227,7 @@ class JadwalKehadiranKepulangan
      * Set mingguanHariKe
      *
      * @param integer $mingguanHariKe
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setMingguanHariKe($mingguanHariKe) {
         $this->mingguanHariKe = $mingguanHariKe;
@@ -210,7 +238,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get mingguanHariKe
      *
-     * @return integer 
+     * @return integer
      */
     public function getMingguanHariKe() {
         return $this->mingguanHariKe;
@@ -220,7 +248,7 @@ class JadwalKehadiranKepulangan
      * Set bulananHariKe
      *
      * @param integer $bulananHariKe
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setBulananHariKe($bulananHariKe) {
         $this->bulananHariKe = $bulananHariKe;
@@ -231,7 +259,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get bulananHariKe
      *
-     * @return integer 
+     * @return integer
      */
     public function getBulananHariKe() {
         return $this->bulananHariKe;
@@ -241,7 +269,7 @@ class JadwalKehadiranKepulangan
      * Set paramstatusDariJam
      *
      * @param string $paramstatusDariJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setParamstatusDariJam($paramstatusDariJam) {
         $this->paramstatusDariJam = $paramstatusDariJam;
@@ -251,8 +279,8 @@ class JadwalKehadiranKepulangan
 
     /**
      * Get paramstatusDariJam
-     * 
-     * @param boolean $withsecond 
+     *
+     * @param boolean $withsecond
      * @return string
      */
     public function getParamstatusDariJam($withsecond = FALSE) {
@@ -267,7 +295,7 @@ class JadwalKehadiranKepulangan
      * Set paramstatusHinggaJam
      *
      * @param string $paramstatusHinggaJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setParamstatusHinggaJam($paramstatusHinggaJam) {
         $this->paramstatusHinggaJam = $paramstatusHinggaJam;
@@ -278,7 +306,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get paramstatusHinggaJam
      *
-     * @return string 
+     * @return string
      */
     public function getParamstatusHinggaJam($withsecond = FALSE) {
         if (!$withsecond) {
@@ -292,7 +320,7 @@ class JadwalKehadiranKepulangan
      * Set smsRealtimeDariJam
      *
      * @param string $smsRealtimeDariJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setSmsRealtimeDariJam($smsRealtimeDariJam) {
         $this->smsRealtimeDariJam = $smsRealtimeDariJam;
@@ -303,7 +331,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get smsRealtimeDariJam
      *
-     * @return string 
+     * @return string
      */
     public function getSmsRealtimeDariJam($withsecond = FALSE) {
         if (!$withsecond) {
@@ -317,7 +345,7 @@ class JadwalKehadiranKepulangan
      * Set smsRealtimeHinggaJam
      *
      * @param string $smsRealtimeHinggaJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setSmsRealtimeHinggaJam($smsRealtimeHinggaJam) {
         $this->smsRealtimeHinggaJam = $smsRealtimeHinggaJam;
@@ -328,7 +356,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get smsRealtimeHinggaJam
      *
-     * @return string 
+     * @return string
      */
     public function getSmsRealtimeHinggaJam($withsecond = FALSE) {
         if (!$withsecond) {
@@ -342,7 +370,7 @@ class JadwalKehadiranKepulangan
      * Set kirimSmsRealtime
      *
      * @param boolean $kirimSmsRealtime
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setKirimSmsRealtime($kirimSmsRealtime) {
         $this->kirimSmsRealtime = $kirimSmsRealtime;
@@ -353,7 +381,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get kirimSmsRealtime
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getKirimSmsRealtime() {
         return $this->kirimSmsRealtime;
@@ -363,7 +391,7 @@ class JadwalKehadiranKepulangan
      * Set commandRealtime
      *
      * @param string $commandRealtime
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setCommandRealtime($commandRealtime) {
         $this->commandRealtime = $commandRealtime;
@@ -374,7 +402,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get commandRealtime
      *
-     * @return string 
+     * @return string
      */
     public function getCommandRealtime() {
         return $this->commandRealtime;
@@ -384,7 +412,7 @@ class JadwalKehadiranKepulangan
      * Set smsMassalJam
      *
      * @param string $smsMassalJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setSmsMassalJam($smsMassalJam) {
         $this->smsMassalJam = $smsMassalJam;
@@ -395,7 +423,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get smsMassalJam
      *
-     * @return string 
+     * @return string
      */
     public function getSmsMassalJam($withsecond = FALSE) {
         if (!$withsecond) {
@@ -409,7 +437,7 @@ class JadwalKehadiranKepulangan
      * Set kirimSmsMassal
      *
      * @param boolean $kirimSmsMassal
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setKirimSmsMassal($kirimSmsMassal) {
         $this->kirimSmsMassal = $kirimSmsMassal;
@@ -420,7 +448,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get kirimSmsMassal
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getKirimSmsMassal() {
         return $this->kirimSmsMassal;
@@ -430,7 +458,7 @@ class JadwalKehadiranKepulangan
      * Set commandMassal
      *
      * @param string $commandMassal
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setCommandMassal($commandMassal) {
         $this->commandMassal = $commandMassal;
@@ -441,7 +469,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get commandMassal
      *
-     * @return string 
+     * @return string
      */
     public function getCommandMassal() {
         return $this->commandMassal;
@@ -451,7 +479,7 @@ class JadwalKehadiranKepulangan
      * Set dariJam
      *
      * @param string $dariJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setDariJam($dariJam) {
         $this->dariJam = $dariJam;
@@ -462,7 +490,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get dariJam
      *
-     * @return string 
+     * @return string
      */
     public function getDariJam($withsecond = FALSE) {
         if (!$withsecond) {
@@ -476,7 +504,7 @@ class JadwalKehadiranKepulangan
      * Set hinggaJam
      *
      * @param string $hinggaJam
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setHinggaJam($hinggaJam) {
         $this->hinggaJam = $hinggaJam;
@@ -487,7 +515,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get hinggaJam
      *
-     * @return string 
+     * @return string
      */
     public function getHinggaJam($withsecond = FALSE) {
         if (!$withsecond) {
@@ -501,7 +529,7 @@ class JadwalKehadiranKepulangan
      * Set commandJadwal
      *
      * @param string $commandJadwal
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setCommandJadwal($commandJadwal) {
         $this->commandJadwal = $commandJadwal;
@@ -512,39 +540,38 @@ class JadwalKehadiranKepulangan
     /**
      * Get commandJadwal
      *
-     * @return string 
+     * @return string
      */
     public function getCommandJadwal() {
         return $this->commandJadwal;
     }
 
     /**
-     * Set statusKehadiranKepulangan
+     * Set sekolah
      *
-     * @param \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan
-     * @return JadwalKehadiranKepulangan
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return JadwalKehadiran
      */
-    public function setStatusKehadiranKepulangan(
-            \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan = null) {
-        $this->statusKehadiranKepulangan = $statusKehadiranKepulangan;
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
 
         return $this;
     }
 
     /**
-     * Get statusKehadiranKepulangan
+     * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
-    public function getStatusKehadiranKepulangan() {
-        return $this->statusKehadiranKepulangan;
+    public function getSekolah() {
+        return $this->sekolah;
     }
 
     /**
      * Set kelas
      *
      * @param \Fast\SisdikBundle\Entity\Kelas $kelas
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
         $this->kelas = $kelas;
@@ -555,7 +582,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get kelas
      *
-     * @return \Fast\SisdikBundle\Entity\Kelas 
+     * @return \Fast\SisdikBundle\Entity\Kelas
      */
     public function getKelas() {
         return $this->kelas;
@@ -565,7 +592,7 @@ class JadwalKehadiranKepulangan
      * Set tahunAkademik
      *
      * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
         $this->tahunAkademik = $tahunAkademik;
@@ -576,7 +603,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get tahunAkademik
      *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return \Fast\SisdikBundle\Entity\TahunAkademik
      */
     public function getTahunAkademik() {
         return $this->tahunAkademik;
@@ -586,7 +613,7 @@ class JadwalKehadiranKepulangan
      * Set templatesms
      *
      * @param \Fast\SisdikBundle\Entity\Templatesms $templatesms
-     * @return JadwalKehadiranKepulangan
+     * @return JadwalKehadiran
      */
     public function setTemplatesms(\Fast\SisdikBundle\Entity\Templatesms $templatesms = null) {
         $this->templatesms = $templatesms;
@@ -597,7 +624,7 @@ class JadwalKehadiranKepulangan
     /**
      * Get templatesms
      *
-     * @return \Fast\SisdikBundle\Entity\Templatesms 
+     * @return \Fast\SisdikBundle\Entity\Templatesms
      */
     public function getTemplatesms() {
         return $this->templatesms;

@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class JadwalKehadiranKepulanganDuplicateType extends AbstractType
+class JadwalKehadiranDuplicateType extends AbstractType
 {
     private $container;
     private $sekolahSrc;
@@ -130,10 +130,6 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
                         ));
     }
 
-    public function getName() {
-        return 'fast_sisdikbundle_jadwalkehadirankepulanganduplicatetype';
-    }
-
     public function buildDayNames() {
         return array(
                 0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday', 'label.thursday',
@@ -143,5 +139,9 @@ class JadwalKehadiranKepulanganDuplicateType extends AbstractType
 
     public function buildDays() {
         return array_combine(range(1, 31), range(1, 31));
+    }
+
+    public function getName() {
+        return 'fast_sisdikbundle_jadwalkehadiranduplicatetype';
     }
 }

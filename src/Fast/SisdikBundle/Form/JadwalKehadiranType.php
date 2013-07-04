@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
-class JadwalKehadiranKepulanganType extends AbstractType
+class JadwalKehadiranType extends AbstractType
 {
     private $container;
     private $sekolah;
@@ -212,12 +212,8 @@ class JadwalKehadiranKepulanganType extends AbstractType
         $resolver
                 ->setDefaults(
                         array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\JadwalKehadiranKepulangan'
+                            'data_class' => 'Fast\SisdikBundle\Entity\JadwalKehadiran'
                         ));
-    }
-
-    public function getName() {
-        return 'fast_sisdikbundle_jadwalkehadirankepulangantype';
     }
 
     public function buildDayNames() {
@@ -229,5 +225,9 @@ class JadwalKehadiranKepulanganType extends AbstractType
 
     public function buildDays() {
         return array_combine(range(1, 31), range(1, 31));
+    }
+
+    public function getName() {
+        return 'fast_sisdikbundle_jadwalkehadirantype';
     }
 }

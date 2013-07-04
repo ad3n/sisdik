@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -22,6 +21,13 @@ class KehadiranSiswa
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status_kehadiran", type="string", length=100, nullable=false)
+     */
+    private $statusKehadiran;
 
     /**
      * @var integer
@@ -93,25 +99,33 @@ class KehadiranSiswa
     private $siswa;
 
     /**
-     * @var \StatusKehadiranKepulangan
-     *
-     * @ORM\ManyToOne(targetEntity="StatusKehadiranKepulangan")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="status_kehadiran_kepulangan_id", referencedColumnName="id", nullable=false)
-     * })
-     */
-    private $statusKehadiranKepulangan;
-
-
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
+    }
+
+    /**
+     * Set statusKehadiran
+     *
+     * @param string $statusKehadiran
+     * @return KehadiranSiswa
+     */
+    public function setStatusKehadiran($statusKehadiran) {
+        $this->statusKehadiran = $statusKehadiran;
+
+        return $this;
+    }
+
+    /**
+     * Get statusKehadiran
+     *
+     * @return string
+     */
+    public function getStatusKehadiran() {
+        return $this->statusKehadiran;
     }
 
     /**
@@ -120,20 +134,18 @@ class KehadiranSiswa
      * @param integer $prioritasPembaruan
      * @return KehadiranSiswa
      */
-    public function setPrioritasPembaruan($prioritasPembaruan)
-    {
+    public function setPrioritasPembaruan($prioritasPembaruan) {
         $this->prioritasPembaruan = $prioritasPembaruan;
-    
+
         return $this;
     }
 
     /**
      * Get prioritasPembaruan
      *
-     * @return integer 
+     * @return integer
      */
-    public function getPrioritasPembaruan()
-    {
+    public function getPrioritasPembaruan() {
         return $this->prioritasPembaruan;
     }
 
@@ -143,20 +155,18 @@ class KehadiranSiswa
      * @param \DateTime $tanggal
      * @return KehadiranSiswa
      */
-    public function setTanggal($tanggal)
-    {
+    public function setTanggal($tanggal) {
         $this->tanggal = $tanggal;
-    
+
         return $this;
     }
 
     /**
      * Get tanggal
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getTanggal()
-    {
+    public function getTanggal() {
         return $this->tanggal;
     }
 
@@ -166,20 +176,18 @@ class KehadiranSiswa
      * @param string $jam
      * @return KehadiranSiswa
      */
-    public function setJam($jam)
-    {
+    public function setJam($jam) {
         $this->jam = $jam;
-    
+
         return $this;
     }
 
     /**
      * Get jam
      *
-     * @return string 
+     * @return string
      */
-    public function getJam()
-    {
+    public function getJam() {
         return $this->jam;
     }
 
@@ -189,20 +197,18 @@ class KehadiranSiswa
      * @param integer $smsDlr
      * @return KehadiranSiswa
      */
-    public function setSmsDlr($smsDlr)
-    {
+    public function setSmsDlr($smsDlr) {
         $this->smsDlr = $smsDlr;
-    
+
         return $this;
     }
 
     /**
      * Get smsDlr
      *
-     * @return integer 
+     * @return integer
      */
-    public function getSmsDlr()
-    {
+    public function getSmsDlr() {
         return $this->smsDlr;
     }
 
@@ -212,20 +218,18 @@ class KehadiranSiswa
      * @param \DateTime $smsDlrtime
      * @return KehadiranSiswa
      */
-    public function setSmsDlrtime($smsDlrtime)
-    {
+    public function setSmsDlrtime($smsDlrtime) {
         $this->smsDlrtime = $smsDlrtime;
-    
+
         return $this;
     }
 
     /**
      * Get smsDlrtime
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
-    public function getSmsDlrtime()
-    {
+    public function getSmsDlrtime() {
         return $this->smsDlrtime;
     }
 
@@ -235,20 +239,18 @@ class KehadiranSiswa
      * @param boolean $smsTerproses
      * @return KehadiranSiswa
      */
-    public function setSmsTerproses($smsTerproses)
-    {
+    public function setSmsTerproses($smsTerproses) {
         $this->smsTerproses = $smsTerproses;
-    
+
         return $this;
     }
 
     /**
      * Get smsTerproses
      *
-     * @return boolean 
+     * @return boolean
      */
-    public function getSmsTerproses()
-    {
+    public function getSmsTerproses() {
         return $this->smsTerproses;
     }
 
@@ -258,20 +260,18 @@ class KehadiranSiswa
      * @param string $keteranganStatus
      * @return KehadiranSiswa
      */
-    public function setKeteranganStatus($keteranganStatus)
-    {
+    public function setKeteranganStatus($keteranganStatus) {
         $this->keteranganStatus = $keteranganStatus;
-    
+
         return $this;
     }
 
     /**
      * Get keteranganStatus
      *
-     * @return string 
+     * @return string
      */
-    public function getKeteranganStatus()
-    {
+    public function getKeteranganStatus() {
         return $this->keteranganStatus;
     }
 
@@ -281,20 +281,18 @@ class KehadiranSiswa
      * @param \Fast\SisdikBundle\Entity\Kelas $kelas
      * @return KehadiranSiswa
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
-    {
+    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
         $this->kelas = $kelas;
-    
+
         return $this;
     }
 
     /**
      * Get kelas
      *
-     * @return \Fast\SisdikBundle\Entity\Kelas 
+     * @return \Fast\SisdikBundle\Entity\Kelas
      */
-    public function getKelas()
-    {
+    public function getKelas() {
         return $this->kelas;
     }
 
@@ -304,43 +302,18 @@ class KehadiranSiswa
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return KehadiranSiswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
-    }
-
-    /**
-     * Set statusKehadiranKepulangan
-     *
-     * @param \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan
-     * @return KehadiranSiswa
-     */
-    public function setStatusKehadiranKepulangan(\Fast\SisdikBundle\Entity\StatusKehadiranKepulangan $statusKehadiranKepulangan = null)
-    {
-        $this->statusKehadiranKepulangan = $statusKehadiranKepulangan;
-    
-        return $this;
-    }
-
-    /**
-     * Get statusKehadiranKepulangan
-     *
-     * @return \Fast\SisdikBundle\Entity\StatusKehadiranKepulangan 
-     */
-    public function getStatusKehadiranKepulangan()
-    {
-        return $this->statusKehadiranKepulangan;
     }
 }

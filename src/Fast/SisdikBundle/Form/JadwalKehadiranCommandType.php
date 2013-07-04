@@ -5,7 +5,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class JadwalKehadiranKepulanganCommandType extends AbstractType
+class JadwalKehadiranCommandType extends AbstractType
 {
     private $requestUri = NULL;
 
@@ -25,6 +25,6 @@ class JadwalKehadiranKepulanganCommandType extends AbstractType
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_jadwalkehadirankepulangancommandtype';
+        return 'fast_sisdikbundle_jadwalkehadirancommandtype';
     }
 }
