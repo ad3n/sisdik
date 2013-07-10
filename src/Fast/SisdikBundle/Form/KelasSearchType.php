@@ -23,22 +23,21 @@ class KelasSearchType extends AbstractType
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tahunAkademik', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:TahunAkademik',
-                                    'label' => 'label.year.entry', 'multiple' => false, 'expanded' => false,
-                                    'property' => 'nama', 'empty_value' => 'label.selectacademicyear',
-                                    'required' => false, 'query_builder' => $querybuilder1,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), 'label_render' => false,
-                            ));
-        }
+        $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                ->setParameter('sekolah', $sekolah->getId());
+        $builder
+                ->add('tahunAkademik', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:TahunAkademik', 'label' => 'label.year.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                'empty_value' => 'label.selectacademicyear', 'required' => false,
+                                'query_builder' => $querybuilder1,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                ), 'label_render' => false,
+                        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
