@@ -57,7 +57,6 @@ class SiswaApplicantReportPaymentController extends Controller
         $pendaftarTercari = 0;
         $tampilkanTercari = false;
         $pencarianLanjutan = false;
-        $pencarianJumlahBayar = false;
         $searchkey = '';
 
         $searchform = $this->createForm(new SiswaApplicantReportPaymentSearchType($this->container));
@@ -79,28 +78,11 @@ class SiswaApplicantReportPaymentController extends Controller
                 ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
                 ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC');
 
-        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
-                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
-                ->leftJoin('siswa.gelombang', 'gelombang')->leftJoin('siswa.sekolahAsal', 'sekolahasal')
-                ->leftJoin('siswa.orangtuaWali', 'orangtua')->where('siswa.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('siswa.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId());
-
-        $qbAdvsearchnum = $em->createQueryBuilder()->select('COUNT(tcount.id)')
-                ->from('FastSisdikBundle:Siswa', 'tcount')->setParameter('calon', true)
-                ->setParameter('ortuaktif', true)->setParameter('sekolah', $sekolah->getId());
-
         if ($searchform->isValid()) {
 
             if ($searchdata['tahun'] instanceof Tahun) {
                 $querybuilder->andWhere('siswa.tahun = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
-
-                $qbsearchnum->andWhere('siswa.tahun = :tahun');
-                $qbsearchnum->setParameter('tahun', $searchdata['tahun']->getId());
-
-                $qbAdvsearchnum->setParameter('tahun', $searchdata['tahun']->getId());
 
                 $tampilkanTercari = true;
             }
@@ -108,11 +90,6 @@ class SiswaApplicantReportPaymentController extends Controller
             if ($searchdata['gelombang'] instanceof Gelombang) {
                 $querybuilder->andWhere('siswa.gelombang = :gelombang');
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
-
-                $qbsearchnum->andWhere('siswa.gelombang = :gelombang');
-                $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
-
-                $qbAdvsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
 
                 $tampilkanTercari = true;
             }
@@ -133,26 +110,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                $qbsearchnum
-                        ->andWhere(
-                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
-                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
-                                        . ' OR orangtua.nama LIKE :namaortu '
-                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
-                $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
-
-                $qbAdvsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
-
                 $tampilkanTercari = true;
             }
 
@@ -160,11 +117,6 @@ class SiswaApplicantReportPaymentController extends Controller
             if ($dariTanggal instanceof \DateTime) {
                 $querybuilder->andWhere('siswa.waktuSimpan >= :daritanggal');
                 $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
-
-                $qbsearchnum->andWhere('siswa.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
-
-                $qbAdvsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
                 $tampilkanTercari = true;
             }
@@ -174,22 +126,12 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->andWhere('siswa.waktuSimpan <= :hinggatanggal');
                 $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
-                $qbsearchnum->andWhere('siswa.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
-
-                $qbAdvsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
-
                 $tampilkanTercari = true;
             }
 
             if ($searchdata['jenisKelamin'] != '') {
                 $querybuilder->andWhere('siswa.jenisKelamin = :jeniskelamin');
                 $querybuilder->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
-
-                $qbsearchnum->andWhere('siswa.jenisKelamin = :jeniskelamin');
-                $qbsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
-
-                $qbAdvsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
 
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;
@@ -199,11 +141,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
                 $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
-                $qbsearchnum->andWhere('sekolahasal.id = :sekolahasal');
-                $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
-                $qbAdvsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;
             }
@@ -212,12 +149,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->leftJoin('siswa.referensi', 'ref');
                 $querybuilder->andWhere('ref.id = :referensi');
                 $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $qbsearchnum->leftJoin('siswa.referensi', 'ref');
-                $qbsearchnum->andWhere('ref.id = :referensi');
-                $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $qbAdvsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
 
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;
@@ -235,18 +166,16 @@ class SiswaApplicantReportPaymentController extends Controller
                         $querybuilder
                                 ->having(
                                         "(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
-                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan)) * :jumlahbayar) "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
                                                 . " OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0");
                     } else {
                         $querybuilder
                                 ->having(
                                         "SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
-                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan)) * :jumlahbayar");
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar");
                     }
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
-
-                    $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
                 } else {
 
@@ -254,16 +183,10 @@ class SiswaApplicantReportPaymentController extends Controller
                             ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
-                    $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
-
                 }
-
-                $qbAdvsearchnum->where($qbe->expr()->in('tcount.id', $querybuilder->getDQL()));
-                $pendaftarTercari = intval($qbAdvsearchnum->getQuery()->getSingleScalarResult());
 
                 $tampilkanTercari = true;
                 $pencarianLanjutan = true;
-                $pencarianJumlahBayar = true;
             }
             if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                 $tampilkanTercari = true;
@@ -273,8 +196,7 @@ class SiswaApplicantReportPaymentController extends Controller
             $pencarianLanjutan = true;
         }
 
-        $pendaftarTercari = $pencarianJumlahBayar === true ? $pendaftarTercari
-                : intval($qbsearchnum->getQuery()->getSingleScalarResult());
+        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
@@ -304,7 +226,6 @@ class SiswaApplicantReportPaymentController extends Controller
         $qbe = $em->createQueryBuilder();
 
         $pendaftarTercari = 0;
-        $pencarianJumlahBayar = false;
         $judulLaporan = $this->get('translator')->trans('heading.laporan.pembayaran.pendaftaran');
 
         $searchform = $this->createForm(new SiswaApplicantReportPaymentSearchType($this->container));
@@ -326,28 +247,11 @@ class SiswaApplicantReportPaymentController extends Controller
                 ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
                 ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC');
 
-        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
-                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
-                ->leftJoin('siswa.gelombang', 'gelombang')->leftJoin('siswa.sekolahAsal', 'sekolahasal')
-                ->leftJoin('siswa.orangtuaWali', 'orangtua')->where('siswa.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('siswa.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId());
-
-        $qbAdvsearchnum = $em->createQueryBuilder()->select('COUNT(tcount.id)')
-                ->from('FastSisdikBundle:Siswa', 'tcount')->setParameter('calon', true)
-                ->setParameter('ortuaktif', true)->setParameter('sekolah', $sekolah->getId());
-
         if ($searchform->isValid()) {
 
             if ($searchdata['tahun'] instanceof Tahun) {
                 $querybuilder->andWhere('siswa.tahun = :tahun');
                 $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
-
-                $qbsearchnum->andWhere('siswa.tahun = :tahun');
-                $qbsearchnum->setParameter('tahun', $searchdata['tahun']->getId());
-
-                $qbAdvsearchnum->setParameter('tahun', $searchdata['tahun']->getId());
 
                 $judulLaporan .= " " . $this->get('translator')->trans('tahun') . " "
                         . $searchdata['tahun']->getTahun();
@@ -356,11 +260,6 @@ class SiswaApplicantReportPaymentController extends Controller
             if ($searchdata['gelombang'] instanceof Gelombang) {
                 $querybuilder->andWhere('siswa.gelombang = :gelombang');
                 $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
-
-                $qbsearchnum->andWhere('siswa.gelombang = :gelombang');
-                $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
-
-                $qbAdvsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
 
                 $judulLaporan .= " " . $searchdata['gelombang']->getNama();
             }
@@ -381,26 +280,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
 
-                $qbsearchnum
-                        ->andWhere(
-                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
-                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
-                                        . ' OR orangtua.nama LIKE :namaortu '
-                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
-                $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
-
-                $qbAdvsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
-                $qbAdvsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
-
                 $judulLaporan .= ", " . $this->get('translator')->trans('kata.pencarian') . " " . $searchkey;
             }
 
@@ -408,11 +287,6 @@ class SiswaApplicantReportPaymentController extends Controller
             if ($dariTanggal instanceof \DateTime) {
                 $querybuilder->andWhere('siswa.waktuSimpan >= :daritanggal');
                 $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
-
-                $qbsearchnum->andWhere('siswa.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
-
-                $qbAdvsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
 
                 $judulLaporan .= ", " . $this->get('translator')->trans('dari.tanggal') . " "
                         . $dariTanggal->format("Y-m-d 00:00:00");
@@ -423,11 +297,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->andWhere('siswa.waktuSimpan <= :hinggatanggal');
                 $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
-                $qbsearchnum->andWhere('siswa.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
-
-                $qbAdvsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
-
                 $judulLaporan .= ", " . $this->get('translator')->trans('hingga.tanggal') . " "
                         . $hinggaTanggal->format("Y-m-d 24:00:00");
             }
@@ -435,11 +304,6 @@ class SiswaApplicantReportPaymentController extends Controller
             if ($searchdata['jenisKelamin'] != '') {
                 $querybuilder->andWhere('siswa.jenisKelamin = :jeniskelamin');
                 $querybuilder->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
-
-                $qbsearchnum->andWhere('siswa.jenisKelamin = :jeniskelamin');
-                $qbsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
-
-                $qbAdvsearchnum->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
 
                 $judulLaporan .= ", " . $this->get('translator')->trans('jenis.kelamin') . " "
                         . ($searchdata['jenisKelamin'] == 'L' ? 'Laki-laki' : 'Perempuan');
@@ -449,11 +313,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
                 $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
 
-                $qbsearchnum->andWhere('sekolahasal.id = :sekolahasal');
-                $qbsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
-                $qbAdvsearchnum->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
-
                 $judulLaporan .= ", " . $this->get('translator')->trans('sekolah.asal') . " "
                         . $searchdata['sekolahAsal']->getNama();
             }
@@ -462,12 +321,6 @@ class SiswaApplicantReportPaymentController extends Controller
                 $querybuilder->leftJoin('siswa.referensi', 'ref');
                 $querybuilder->andWhere('ref.id = :referensi');
                 $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $qbsearchnum->leftJoin('siswa.referensi', 'ref');
-                $qbsearchnum->andWhere('ref.id = :referensi');
-                $qbsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
-
-                $qbAdvsearchnum->setParameter('referensi', $searchdata['referensi']->getId());
 
                 $judulLaporan .= ", " . $this->get('translator')->trans('referensi') . " "
                         . $searchdata['referensi']->getNama();
@@ -483,8 +336,6 @@ class SiswaApplicantReportPaymentController extends Controller
                                             . " (SUM(siswa.sisaBiayaPendaftaran) + SUM(pembayaran.nominalTotalBiaya)) * :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
-                    $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
-
                     $judulLaporan .= ", " . $this->get('translator')->trans('jumlah.pembayaran')
                             . " $pembandingBayar " . $searchdata['jumlahBayar'] . "%";
 
@@ -496,24 +347,18 @@ class SiswaApplicantReportPaymentController extends Controller
                             ->having("SUM(transaksi.nominalPembayaran) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
 
-                    $qbAdvsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
-
                     $judulLaporan .= ", " . $this->get('translator')->trans('jumlah.pembayaran')
                             . " $pembandingBayar " . $searchdata['jumlahBayar'];
 
                 }
 
-                $qbAdvsearchnum->where($qbe->expr()->in('tcount.id', $querybuilder->getDQL()));
-                $pendaftarTercari = intval($qbAdvsearchnum->getQuery()->getSingleScalarResult());
-
-                $pencarianJumlahBayar = true;
             }
         } else {
             // TODO: display error response
         }
 
-        $pendaftarTercari = $pencarianJumlahBayar === true ? $pendaftarTercari
-                : intval($qbsearchnum->getQuery()->getSingleScalarResult());
+        $entities = $querybuilder->getQuery()->getResult();
+        $pendaftarTercari = count($entities);
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
@@ -532,8 +377,6 @@ class SiswaApplicantReportPaymentController extends Controller
 
         $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
         $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
-
-        $entities = $querybuilder->getQuery()->getResult();
 
         $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
                 ->findBy(
