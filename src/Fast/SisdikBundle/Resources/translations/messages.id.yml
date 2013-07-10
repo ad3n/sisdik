@@ -1,30 +1,6 @@
-sekolah.asal: Sekolah Asal
-jenis.kelamin: Jenis Kelamin
-dari.tanggal: Dari Tanggal
-hingga.tanggal: Hingga Tanggal
-kata.pencarian: Kata Pencarian
-jumlah.pembayaran: Jumlah Pembayaran
-dll: dll
-member: Anggota
-leader: Ketua
-paidoff: lunas
-untuk: Untuk
-
-status.kehadiran:
-    hadir.tepat: Tepat Waktu
-    hadir.telat: Terlambat
-    alpa: Alpa
-    izin: Izin
-    sakit: Sakit
-
-layanan.sms:
-    pendaftar.tercatat: Pendaftar tercatat di database
-    pendaftar.bayar.pertama: Pertama kali membayar biaya pendaftaran
-    pendaftar.bayar.biaya: Membayar biaya pendaftaran
-    pendaftar.bayar.lunas: Lunas biaya pendaftaran
-    laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
-
 label:
+    jumlah.pendaftar.tertahkik: ∑ pendaftar tertahkik
+    tahkikkan: Tahkikkan Siswa Terpilih
     awal.kehadiran: Awal Status Kehadiran
     jadwal: Jadwal
     kirim.sms: Kirim SMS
@@ -473,6 +449,7 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    penahkikan.terbarui: Pendaftar terpilih berhasil diubah menjadi siswa
     ringkasan.laporan.pendaftaran:
         gagal.dibuat: Ringkasan laporan pendaftaran gagal dibuat
         sms.berhasil.dikirim: SMS ringkasan laporan pendaftaran berhasil diterima untuk dikirim
@@ -911,3 +888,28 @@ help:
     captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
     confirm.generated.username: Centang untuk menandai bahwa data valid dan boleh disimpan ke database
 
+sekolah.asal: Sekolah Asal
+jenis.kelamin: Jenis Kelamin
+dari.tanggal: Dari Tanggal
+hingga.tanggal: Hingga Tanggal
+kata.pencarian: Kata Pencarian
+jumlah.pembayaran: Jumlah Pembayaran
+dll: dll
+member: Anggota
+leader: Ketua
+paidoff: lunas
+untuk: Untuk
+
+status.kehadiran:
+    hadir.tepat: Tepat Waktu
+    hadir.telat: Terlambat
+    alpa: Alpa
+    izin: Izin
+    sakit: Sakit
+
+layanan.sms:
+    pendaftar.tercatat: Pendaftar tercatat di database
+    pendaftar.bayar.pertama: Pertama kali membayar biaya pendaftaran
+    pendaftar.bayar.biaya: Membayar biaya pendaftaran
+    pendaftar.bayar.lunas: Lunas biaya pendaftaran
+    laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran

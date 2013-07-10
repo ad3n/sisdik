@@ -1,12 +1,19 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}applicant.list{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}penahkikan.siswa{% endtrans %} {{ 'tahun'|trans }} {{ panitiaAktif[3] }}{% endblock %}
 
 {% block content %}
 <style type="text/css">
 .control-group {
     display: inline-block;
     margin-right: 0.4em;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
 }
 #sign-percent {
     cursor: pointer;
@@ -16,7 +23,7 @@
     padding-left: 7px;
 }
 form .clearfix {
-    margin-bottom: 9px;
+    margin-bottom: 5px;
 }
 .arrow-down-lanjut {
 	width: 0;
@@ -81,6 +88,11 @@ form .clearfix {
 }
 #slider .ui-slider-range { background: #729fcf; }
 #blue .ui-slider-handle { border-color: #729fcf; }
+.ui-autocomplete-loading {
+{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+	background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
 </style>
 
 {% javascripts
@@ -90,14 +102,21 @@ form .clearfix {
 {% endjavascripts %}
 
 <div class="filter-section">
-    <form method="GET" action="{{ path('tahkik') }}" class="form-search form-inline">
+    <form method="GET" action="{{ path('tahkik') }}" class="form-search form-inline" id="search-form">
         <div id="cari-standar">
             {{ form_row(searchform.gelombang) }}
+            {{ form_row(searchform.dariTanggal) }}
+            {{ form_row(searchform.hinggaTanggal) }}
             {{ form_row(searchform.searchkey) }}
             <a href="" id="anchor" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
         </div>
         <div class="clearfix"></div>
         <div id="cari-lanjutan">
+            {{ form_row(searchform.sekolahAsal) }}
+            {{ form_row(searchform.namaSekolahAsal) }}
+            {{ form_row(searchform.referensi) }}
+            {{ form_row(searchform.namaReferensi) }}
+            <br>
             <div class="control-group">
                 {% spaceless %}
                 <div class="controls">
@@ -111,9 +130,9 @@ form .clearfix {
             </div>
             {{ form_row(searchform.jenisKelamin) }}
             {{ form_row(searchform.tertahkik) }}
-            <br>
-            {{ 'label.kelengkapan.dokumen'|trans }}{{ form_row(searchform.kelengkapanDokumen) }}
-            <div id="slider"></div>
+{#             <br>#}
+{#             {{ 'label.kelengkapan.dokumen'|trans }}{{ form_row(searchform.kelengkapanDokumen) }}#}
+{#             <div id="slider"></div>#}
             {{ form_rest(searchform) }}
         </div>
         <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
@@ -121,56 +140,210 @@ form .clearfix {
     </form>
 </div>
 
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('applicant_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.applicant.add'|trans }}
-	</a>
-{% endimage %}
-</div>
-
 <div class="clearfix"></div>
 
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}<br>
+    {{ 'label.jumlah.pendaftar.tertahkik'|trans }}: {{ pendaftarTertahkik }}
+</div>
+
+<div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+<form method="POST" action="{{ path('tahkik_update', {'idsiswa': idsiswa}) }}" class="form-inline" id="form-tahkik">
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+    		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
     		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
     	    </th>
-    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
-    		<th>{{ 'label.mobilephone.parent'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
+    		<th>{{ 'label.ortuwali.entri'|trans }}</th>
+            <th>{{ 'label.paid.amount'|trans }}</th>
+    		<th>
+    		    <input type="checkbox" value="-" id="checkbox-selector" />
+    		</th>
     	</tr>
 	</thead>
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
-    		{% if data.orangtuaWali %}
-    		    {% for orangtua in data.orangtuaWali %}
-    		        {% if orangtua %}
-    		            {% if orangtua.aktif == 1 %}
-        		            <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ orangtua.nama }}</td>
-        		            <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ orangtua.ponsel }}</td>
-        		        {% endif %}
-    		        {% endif %}
-    		    {% endfor %}
-    		{% endif %}
+    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">
+    		    {{ highlightResult(data.namaLengkap, searchkey)|raw }}
+                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
+        	    </a>
+                {% endimage %}
+		    </td>
+            <td data-title="{{ 'label.ortuwali.entri'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}, {{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.paid.amount'|trans }}">
+                {% set totalBayar = 0 %}
+                {% set totalBiayaMasuk = 0 %}
+                {% set totalPotongan = 0 %}
+                {% set totalBiayaSisa = 0 %}
+                {% set totalBiaya = 0 %}
+                {% set biayaTersimpan = '' %}
+
+                {% for pembayaran in data.pembayaranPendaftaran %}
+                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+                        {% set biayaTersimpan = biaya.biayaPendaftaran.id ~ ',' ~ biayaTersimpan %}
+                    {% endfor %}
+                    {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% if biayaTersimpan != '' %}
+                    {% set remainInfo %}
+                        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% else %}
+                    {% set remainInfo %}
+                        {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% endif %}
+                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+
+                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {% if totalPotongan > 0 %}
+                <span class="icon-gift" style="margin: 0;"></span>
+                {% endif %}
+                {{ totalBiaya|number_format(0, ',', '.') }}
+                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
+        	    </a>
+                {% endimage %}
+            </td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+    		    {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
     		</td>
     	</tr>
     {% endfor %}
     </tbody>
 </table>
+
+{{ form_rest(tahkikform) }}
+<button type="submit" class="pull-right btn primary">{{ 'label.tahkikkan'|trans }}</button>
+</form>
+
 {{ knp_pagination_render(pagination) }}
 <script language="javascript" type="text/javascript">
 var duration = 300;
+var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
+
+function bersihkanKetikPilih() {
+	if ($(".nama-sekolah-asal").val() == "") {
+        $(".id-sekolah-asal").val("");
+    }
+    if ($(".nama-referensi").val() == "") {
+        $(".id-referensi").val("");
+    }
+}
 
 $(document).ready(function() {
+	var options1 = {
+    	minLength: 2,
+    	delay: 1000,
+    	source: function(request, response) {
+    		$.ajax({
+    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+    			data: {filter: request.term},
+    			success: function(data) {
+        			response( $.map(data, function(item) {
+            			return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+            			}
+    			    }));
+				}
+			});
+		},
+		open: function(event, ui) {},
+		search: function(event, ui) {
+			$(".id-sekolah-asal").val("");
+		},
+    	select: function(event, ui) {
+      		$(".id-sekolah-asal").val(ui.item.id);
+    	}
+	};
+
+	var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+            	url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                			label: item.label,
+                			value: item.value,
+                			id: item.id
+                		}
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+        	$(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+        	$(".id-referensi").val(ui.item.id);
+        }
+	};
+
+	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options1);
+    });
+
+    $(".nama-referensi").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options2);
+    });
+
+	$(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
+	if ($(".id-sekolah-asal").val() != "") {
+		$.ajax({
+			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+			data: {id: $(".id-sekolah-asal").val()},
+			success: function(data) {
+				$(".nama-sekolah-asal").val(data[0].value);
+	      		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+			}
+		});
+	} else {
+		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+	}
+
+    $(".nama-referensi").addClass("ui-autocomplete-loading");
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+                $(".nama-referensi").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+    	$(".nama-referensi").removeClass("ui-autocomplete-loading");
+    }
+
 	$(".pembanding-bayar").dropkick();
 
 	$(".anchor-cari-lanjutan").click(function(){
@@ -185,7 +358,18 @@ $(document).ready(function() {
 		}
 	});
 
-    $("#slider").slider({
+    if (pencarianLanjutan != 0) {
+		$("#cari-lanjutan").css("display", "block");
+		$(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
+		$(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
+    }
+
+    $("#search-form").submit(function() {
+    	bersihkanKetikPilih();
+        return true;
+    });
+
+	$("#slider").slider({
     	range: "min",
         value: 0,
         min: 0,
@@ -196,6 +380,14 @@ $(document).ready(function() {
         }
     });
     $(".kelengkapan-dokumen").val($("#slider").slider("value") + "%");
+
+    $("#checkbox-selector").change(function(){
+        if ($(this).is(":checked")) {
+        	$('#no-more-tables').find(':checkbox').attr('checked', $(this).is(":checked"));
+        } else {
+        	$('#no-more-tables').find(':checkbox').attr('checked', false);
+        }
+    });
 });
 </script>
 {% endblock content %}

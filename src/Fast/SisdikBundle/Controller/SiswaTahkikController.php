@@ -1,6 +1,9 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\SiswaTahkikType;
+use Fast\SisdikBundle\Entity\SekolahAsal;
+use Fast\SisdikBundle\Entity\Gelombang;
 use Fast\SisdikBundle\Form\SiswaTahkikSearchType;
 use Fast\SisdikBundle\Entity\Referensi;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
@@ -35,26 +38,50 @@ class SiswaTahkikController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $em = $this->getDoctrine()->getManager();
-
         $panitiaAktif = $this->getPanitiaAktif();
-        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
-        }
+
+        $em = $this->getDoctrine()->getManager();
+        $qbe = $em->createQueryBuilder();
+
+        $pendaftarTercari = 0;
+        $tampilkanTercari = false;
+        $pencarianLanjutan = false;
+        $searchkey = '';
 
         $searchform = $this->createForm(new SiswaTahkikSearchType($this->container));
+        $searchform->submit($this->getRequest());
+        $searchdata = $searchform->getData();
+
+        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
+        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
+
+        $qbtertahkik = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
+                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->andWhere('siswa.calonSiswa = :calon')->setParameter('calon', false)
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2]);
+        $pendaftarTertahkik = $qbtertahkik->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
-                ->leftJoin('siswa.orangtuaWali', 'orangtua')->where('siswa.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('tahun.id = ?1')
-                ->setParameter(1, $panitiaAktif[2])->addOrderBy('gelombang.urutan', 'DESC')
+                ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->leftJoin('siswa.orangtuaWali', 'orangtua')
+                ->andWhere('orangtua.aktif = :ortuaktif')->setParameter('ortuaktif', true)
+                ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
+                ->andWhere('tahun.id = :tahunaktif')->setParameter('tahunaktif', $panitiaAktif[2])
+                ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
                 ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC');
 
-        $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
-            $searchdata = $searchform->getData();
+
+            if ($searchdata['gelombang'] instanceof Gelombang) {
+                $querybuilder->andWhere('siswa.gelombang = :gelombang');
+                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
+
+                $tampilkanTercari = true;
+            }
 
             if ($searchdata['searchkey'] != '') {
                 $searchkey = $searchdata['searchkey'];
@@ -71,122 +98,165 @@ class SiswaTahkikController extends Controller
                 $querybuilder->setParameter('alamat', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
+
+                $tampilkanTercari = true;
             }
+
+            $dariTanggal = $searchdata['dariTanggal'];
+            if ($dariTanggal instanceof \DateTime) {
+                $querybuilder->andWhere('siswa.waktuSimpan >= :daritanggal');
+                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+
+                $tampilkanTercari = true;
+            }
+
+            $hinggaTanggal = $searchdata['hinggaTanggal'];
+            if ($hinggaTanggal instanceof \DateTime) {
+                $querybuilder->andWhere('siswa.waktuSimpan <= :hinggatanggal');
+                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
+
+                $tampilkanTercari = true;
+            }
+
+            if ($searchdata['jenisKelamin'] != '') {
+                $querybuilder->andWhere('siswa.jenisKelamin = :jeniskelamin');
+                $querybuilder->setParameter('jeniskelamin', $searchdata['jenisKelamin']);
+
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            }
+
+            if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
+                $querybuilder->andWhere('sekolahasal.id = :sekolahasal');
+                $querybuilder->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId());
+
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            }
+
+            if ($searchdata['referensi'] instanceof Referensi) {
+                $querybuilder->leftJoin('siswa.referensi', 'ref');
+                $querybuilder->andWhere('ref.id = :referensi');
+                $querybuilder->setParameter('referensi', $searchdata['referensi']->getId());
+
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            }
+
+            if ($searchdata['tertahkik'] === true) {
+                $querybuilder->andWhere('siswa.calonSiswa = :calonSiswa');
+                $querybuilder->setParameter('calonSiswa', !$searchdata['tertahkik']);
+
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            } else {
+                $querybuilder->andWhere('siswa.calonSiswa = :calon')->setParameter('calon', true);
+            }
+
+            $pembandingBayar = $searchdata['pembandingBayar'];
+            if ($searchdata['jumlahBayar'] != "") {
+                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
+
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id');
+
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<='
+                            || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
+                        // masukkan pencarian untuk yg belum melakukan transaksi
+                        $querybuilder
+                                ->having(
+                                        "(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
+                                                . " OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0");
+                    } else {
+                        $querybuilder
+                                ->having(
+                                        "SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar");
+                    }
+
+                    $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
+
+                } else {
+
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar");
+                    $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
+
+                }
+
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            }
+            if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
+            }
+        } else {
+            $pencarianLanjutan = true;
         }
 
+        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
+
+        $idsiswa = '';
+        foreach ($pagination->getItems() as $item) {
+            $idsiswa .= $item->getId() . ':';
+        }
+
+        $tahkikform = $this->createForm(new SiswaTahkikType($this->container, $idsiswa));
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'panitiaAktif' => $panitiaAktif,
-        );
-    }
-
-    /**
-     * Finds and displays a Siswa tahkik entity.
-     *
-     * @Route("/{id}", name="tahkik_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'tahunaktif' => $this->getTahunPanitiaAktif(),
+                'tahkikform' => $tahkikform->createView(), 'panitiaAktif' => $panitiaAktif,
+                'pendaftarTotal' => $pendaftarTotal, 'pendaftarTertahkik' => $pendaftarTertahkik,
+                'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
+                'pencarianLanjutan' => $pencarianLanjutan, 'searchkey' => $searchkey, 'idsiswa' => $idsiswa,
         );
     }
 
     /**
      * Edits an existing Siswa tahkik entity.
      *
-     * @Route("/{id}", name="tahkik_update")
+     * @Route("/{idsiswa}", name="tahkik_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:SiswaTahkik:edit.html.twig")
+     * @Template("FastSisdikBundle:SiswaTahkik:index.html.twig")
      */
-    public function updateAction(Request $request, $id) {
+    public function updateAction(Request $request, $idsiswa = '') {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $tahkikform = $this->createForm(new SiswaTahkikType($this->container, $idsiswa));
+        $tahkikform->submit($request);
 
-        $this->verifyTahun($entity->getTahun()->getTahun());
+        if ($tahkikform->isValid()) {
+            $data = $tahkikform->getData();
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new SiswaApplicantType($this->container, 'edit'), $entity);
-        $editForm->submit($request);
-
-        if ($editForm->isValid()) {
-
-            try {
-
-                if ($editForm['referensi']->getData() === null && $editForm['namaReferensi']->getData() != "") {
-                    $referensi = new Referensi();
-                    $referensi->setNama($editForm['namaReferensi']->getData());
-                    $referensi->setSekolah($sekolah);
-                    $entity->setReferensi($referensi);
+            $entities = $em->getRepository('FastSisdikBundle:Siswa')
+                    ->findBy(
+                            array(
+                                'id' => preg_split('/:/', $idsiswa)
+                            ));
+            foreach ($entities as $entity) {
+                if (is_object($entity) && $entity instanceof Siswa) {
+                    if (array_key_exists('siswa_' . $entity->getId(), $data) === true) {
+                        if ($data['siswa_' . $entity->getId()] === true) {
+                            $entity->setCalonSiswa(false);
+                            $em->persist($entity);
+                        }
+                    }
                 }
-
-                // force unit of work detect entity 'changes'
-                // possible problem source: too many objects handled by doctrine
-                $entity->setWaktuUbah(new \DateTime());
-
-                $entity->setDiubahOleh($this->getUser());
-
-                $em->persist($entity);
-                $em->flush();
-
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.tahkik.updated',
-                                                array(
-                                                    '%name%' => $entity->getNamaLengkap(),
-                                                )));
-
-            } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.unique.tahkik');
-                throw new DBALException($message);
             }
+            $em->flush();
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('tahkik_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            $this->get('session')->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.penahkikan.terbarui'));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+        return $this->redirect($this->generateUrl('tahkik'));
     }
 
     /**
@@ -223,16 +293,9 @@ class SiswaTahkikController extends Controller
         return $panitiaaktif;
     }
 
-    private function verifyTahun($tahun) {
-        if ($this->getTahunPanitiaAktif() != $tahun) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('cannot.alter.tahkik.inactive.year'));
-        }
-    }
-
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        // $menu['headings.pendaftaran']['links.tahkik']->setCurrent(true);
+        $menu['headings.pendaftaran']['links.tahkik']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

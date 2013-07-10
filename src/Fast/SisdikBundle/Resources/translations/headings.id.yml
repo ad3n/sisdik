@@ -1,6 +1,8 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+penahkikan.siswa: Penahkikan Siswa
+
 jadwal.kehadiran:
     daftar: Daftar Jadwal Kehadiran
     edit: Mengubah Jadwal Kehadiran
