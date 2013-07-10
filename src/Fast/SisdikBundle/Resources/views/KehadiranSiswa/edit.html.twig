@@ -96,10 +96,11 @@ $(document).ready(function() {
     });
 
     $(".pilih-tingkat").change(function() {
-        $.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(this).val(), kelas: $(".pilih-kelas").val()}, function(data) {
-            $(".pilih-kelas").empty();
-            $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+        var kelasval = $(".pilih-kelas").val();
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
+        $.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
