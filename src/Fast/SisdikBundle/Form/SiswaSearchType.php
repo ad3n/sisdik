@@ -23,29 +23,26 @@ class SiswaSearchType extends AbstractType
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tahun', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun',
-                                    'empty_value' => 'label.selectyear', 'required' => false,
-                                    'query_builder' => $querybuilder1,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), 'label_render' => false,
-                            ));
-        }
+        $querybuilder1 = $em->createQueryBuilder()->select('tahun')->from('FastSisdikBundle:Tahun', 'tahun')
+                ->where('tahun.sekolah = :sekolah')->orderBy('tahun.tahun', 'DESC')
+                ->setParameter('sekolah', $sekolah);
+        $builder
+                ->add('tahun', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'tahun',
+                                'empty_value' => 'label.selectyear', 'required' => false,
+                                'query_builder' => $querybuilder1,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                ), 'label_render' => false,
+                        ));
         $builder
                 ->add('searchkey', null,
                         array(
                                 'required' => false,
                                 'attr' => array(
-                                    'class' => 'small search-query'
+                                    'class' => 'medium search-query', 'placeholder' => 'label.searchkey'
                                 ), 'label_render' => false,
                         ));
     }

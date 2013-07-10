@@ -1,0 +1,63 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}penempatan.siswa.kelas{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('penempatan-siswa-kelas') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('penempatan-siswa-kelas') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+    	<tr>
+    		<th>{{ 'label.year.entry'|trans }}</th>
+    		<th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
+    	    </th>
+    		<th class="{% if pagination.isSorted('siswa.jenisKelamin') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 'siswa.jenisKelamin') }}
+    	    </th>
+    		<th>{{ 'label.ortuwali.entri'|trans }}</th>
+    		<th>{{ 'label.actions'|trans }}</th>
+    	</tr>
+	</thead>
+	<tbody>
+    {% for data in pagination %}
+        <tr>
+    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+    		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+    		<td data-title="{{ 'label.idnumber'|trans }}">{{ highlightResult(data.nomorInduk, searchkey)|raw }}</td>
+    		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
+            <td data-title="{{ 'label.ortuwali.entri'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}, {{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
+    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                <a href="{{ path('data_student_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" style="margin: 0 8px;" target="_blank">
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.detail'|trans }}" border="0" style="vertical-align: baseline;" />
+        	    </a>
+                {% endimage %}
+    		</td>
+    	</tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+
+<div class="clearfix"></div>
+
+{% endblock content %}

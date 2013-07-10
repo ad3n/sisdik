@@ -261,6 +261,11 @@ tahkik:
     type:     annotation
     prefix:   /
 
+penempatansiswakelas:
+    resource: "@FastSisdikBundle/Controller/PenempatanSiswaKelasController.php"
+    type:     annotation
+    prefix:   /
+
 
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:
