@@ -72,7 +72,7 @@ class JadwalKehadiran
     /**
      * @var string
      *
-     * @ORM\Column(name="sms_jam", type="string", length=50, nullable=false)
+     * @ORM\Column(name="sms_jam", type="string", length=50, nullable=true)
      */
     private $smsJam;
 
