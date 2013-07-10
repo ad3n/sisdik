@@ -20,35 +20,22 @@ class SiswaTahkikSearchType extends AbstractType
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
-                ->setParameter('sekolah', $sekolah);
-        $builder
-                ->add('tahun', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:Tahun', 'label_render' => false,
-                                'multiple' => false, 'expanded' => false, 'property' => 'tahun',
-                                'empty_value' => false, 'required' => true,
-                                'query_builder' => $querybuilder1,
-                                'attr' => array(
-                                    'class' => 'small'
-                                ),
-                        ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Gelombang', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
-                ->setParameter('sekolah', $sekolah);
+        $querybuilder1 = $em->createQueryBuilder()->select('gelombang')
+                ->from('FastSisdikBundle:Gelombang', 'gelombang')->where('gelombang.sekolah = :sekolah')
+                ->orderBy('gelombang.urutan', 'ASC')->setParameter('sekolah', $sekolah->getId());
         $builder
                 ->add('gelombang', 'entity',
                         array(
-                                'class' => 'FastSisdikBundle:Gelombang', 'label_render' => false,
-                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
-                                'empty_value' => false, 'required' => true,
-                                'query_builder' => $querybuilder2,
+                                'class' => 'FastSisdikBundle:Gelombang', 'multiple' => false,
+                                'expanded' => false, 'property' => 'nama',
+                                'empty_value' => 'label.selectadmissiongroup', 'required' => false,
+                                'query_builder' => $querybuilder1,
                                 'attr' => array(
                                     'class' => 'medium'
-                                ),
+                                ), 'label_render' => false,
                         ));
+
         $builder
                 ->add('pembandingBayar', 'choice',
                         array(
@@ -95,9 +82,10 @@ class SiswaTahkikSearchType extends AbstractType
                         ))
                 ->add('kelengkapanDokumen', 'text',
                         array(
-                            'required' => false, 'label_render' => false, 'attr' => array(
-                                'class' => 'mini kelengkapan-dokumen'
-                            ),
+                                'required' => false, 'label_render' => false,
+                                'attr' => array(
+                                    'class' => 'mini kelengkapan-dokumen'
+                                ),
                         ));
     }
 

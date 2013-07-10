@@ -203,19 +203,6 @@ class Builder extends AbstractNavbarMenuBuilder
                                 'route' => 'applicant'
                             ));
 
-            if ($securityContext
-                    ->isGranted(
-                            array(
-                                    new Expression(
-                                            'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")')
-                            ))) {
-                // $pendaftaran
-                //         ->addChild('links.tahkik',
-                //                 array(
-                //                     'route' => 'tahkik'
-                //                 ));
-            }
-
             $pendaftaran
                     ->addChild('links.laporan.pendaftaran',
                             array(
@@ -233,6 +220,19 @@ class Builder extends AbstractNavbarMenuBuilder
                             array(
                                 'route' => 'referensi'
                             ));
+
+            if ($securityContext
+                    ->isGranted(
+                            array(
+                                    new Expression(
+                                            'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")')
+                            ))) {
+                $pendaftaran
+                        ->addChild('links.tahkik',
+                                array(
+                                    'route' => 'tahkik'
+                                ));
+            }
 
         }
 

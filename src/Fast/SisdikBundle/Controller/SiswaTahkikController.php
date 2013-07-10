@@ -37,52 +37,49 @@ class SiswaTahkikController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = $this->getUser();
+        $panitiaAktif = $this->getPanitiaAktif();
+        if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
+            throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+        }
 
         $searchform = $this->createForm(new SiswaTahkikSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->addOrderBy('t3.urutan', 'DESC')
-                ->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+                ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
+                ->leftJoin('siswa.orangtuaWali', 'orangtua')->where('siswa.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId())->andWhere('tahun.id = ?1')
+                ->setParameter(1, $panitiaAktif[2])->addOrderBy('gelombang.urutan', 'DESC')
+                ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC');
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            $searchparam = '';
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
-
-                $searchparam = " tahun = '{$searchdata['tahun']->getId()}' ";
-            }
-
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere('t.namaLengkap LIKE :namalengkap');
-                $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $searchkey = $searchdata['searchkey'];
 
-                if (is_numeric($searchdata['searchkey'])) {
-                    $dql = "SELECT t FROM FastSisdikBundle:Siswa t "
-                            . " LEFT JOIN t.pembayaranPendaftaran t2 "
-                            . " WHERE t.nomorPendaftaran = CASE WHEN t2.siswa IS NOT NULL THEN '{$searchdata['searchkey']}' ELSE '0' END"
-                            . ($searchparam != '' ? " AND t.$searchparam" : "");
-                    $query = $em->createQuery($dql);
-                }
+                $querybuilder
+                        ->andWhere(
+                                'siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
+                                        . ' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
+                                        . ' OR orangtua.nama LIKE :namaortu '
+                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
+                $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('nomor', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('alamat', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
             }
         }
 
         $paginator = $this->get('knp_paginator');
-        if (is_numeric($searchdata['searchkey'])) {
-            $pagination = $paginator
-                    ->paginate($query->getResult(), $this->getRequest()->query->get('page', 1));
-        } else {
-            $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
-        }
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'tahunaktif' => $this->getTahunPanitiaAktif(),
+                'panitiaAktif' => $panitiaAktif,
         );
     }
 
@@ -192,22 +189,38 @@ class SiswaTahkikController extends Controller
                 ))->add('id', 'hidden')->getForm();
     }
 
-    private function getTahunPanitiaAktif() {
+    /**
+     * Mencari panitia pendaftaran aktif
+     * Fungsi ini mengembalikan array berisi
+     * index 0: daftar id panitia aktif
+     * index 1: id ketua panitia aktif
+     * index 2: id tahun panitia aktif
+     * index 3: string tahun panitia aktif
+     *
+     * @return array panitiaaktif
+     */
+    public function getPanitiaAktif() {
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
 
-        $qb0 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
-                ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
+        $qb0 = $em->createQueryBuilder()->select('panitia')
+                ->from('FastSisdikBundle:PanitiaPendaftaran', 'panitia')->leftJoin('panitia.tahun', 'tahun')
+                ->where('panitia.sekolah = :sekolah')->andWhere('panitia.aktif = 1')
+                ->orderBy('tahun.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())
+                ->setMaxResults(1);
         $results = $qb0->getQuery()->getResult();
+        $panitiaaktif = array();
         foreach ($results as $entity) {
             if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                $tahunaktif = $entity->getTahun()->getTahun();
+                $panitiaaktif[0] = $entity->getPanitia();
+                $panitiaaktif[1] = $entity->getKetuaPanitia()->getId();
+                $panitiaaktif[2] = $entity->getTahun()->getId();
+                $panitiaaktif[3] = $entity->getTahun()->getTahun();
             }
         }
 
-        return $tahunaktif;
+        return $panitiaaktif;
     }
 
     private function verifyTahun($tahun) {

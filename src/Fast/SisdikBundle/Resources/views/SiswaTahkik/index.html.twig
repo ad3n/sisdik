@@ -92,7 +92,6 @@ form .clearfix {
 <div class="filter-section">
     <form method="GET" action="{{ path('tahkik') }}" class="form-search form-inline">
         <div id="cari-standar">
-            {{ form_row(searchform.tahun) }}
             {{ form_row(searchform.gelombang) }}
             {{ form_row(searchform.searchkey) }}
             <a href="" id="anchor" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
@@ -162,10 +161,6 @@ form .clearfix {
     		{% endif %}
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-    		{% if tahunaktif == data.tahun.tahun %}
-        		<a href="{{ path('applicant_editregphoto', {'id': data.id}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
-        		<a href="{{ path('applicant_edit', {'id': data.id}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>
-    		{% endif %}
     		</td>
     	</tr>
     {% endfor %}
