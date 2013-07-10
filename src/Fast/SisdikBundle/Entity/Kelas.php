@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Kelas
  *
- * @ORM\Table(name="kelas", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="kelas_unique1", columns={"sekolah_id", "kode"})
- * })
+ * @ORM\Table(name="kelas")
  * @ORM\Entity
  */
 class Kelas
@@ -32,7 +30,7 @@ class Kelas
     /**
      * @var string
      *
-     * @ORM\Column(name="kode", type="string", length=50, nullable=false)
+     * @ORM\Column(name="kode", type="string", length=50, nullable=true)
      */
     private $kode;
 

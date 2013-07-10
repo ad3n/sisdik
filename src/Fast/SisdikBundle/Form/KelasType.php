@@ -17,26 +17,65 @@ class KelasType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+
+        $em = $this->container->get('doctrine')->getManager();
+
+        $querybuilder = $em->createQueryBuilder()->select('tingkat')
+                ->from('FastSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah);
         $builder
-                ->add('nama', null,
+                ->add('tingkat', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.tingkat',
+                                'multiple' => false, 'expanded' => false, 'property' => 'optionLabel',
+                                'empty_value' => false, 'required' => true, 'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                )
+                        ));
+
+        $querybuilder = $em->createQueryBuilder()->select('tahunAkademik')
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                ->setParameter('sekolah', $sekolah);
+        $builder
+                ->add('tahunAkademik', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:TahunAkademik', 'label' => 'label.year.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                'empty_value' => false, 'required' => true, 'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                )
+                        ));
+
+        $builder
+                ->add('sekolah', new EntityHiddenType($em),
+                        array(
+                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                'data' => $sekolah->getId(),
+                        ))
+                ->add('nama', 'text',
                         array(
                                 'required' => true,
                                 'attr' => array(
                                     'class' => 'large'
                                 )
                         ))
-                ->add('kode', null,
+                ->add('kode', 'text',
                         array(
-                                'required' => true,
+                                'required' => false,
                                 'attr' => array(
                                     'class' => 'medium'
                                 )
                         ))
-                ->add('keterangan', null,
+                ->add('keterangan', 'textarea',
                         array(
                                 'attr' => array(
                                     'class' => 'xlarge'
-                                )
+                                ), 'required' => false,
                         ))
                 ->add('urutan', 'choice',
                         array(
@@ -46,53 +85,6 @@ class KelasType extends AbstractType
                                     'class' => 'small'
                                 )
                         ));
-
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
-                    ->where('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tingkat', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.tingkat',
-                                    'multiple' => false, 'expanded' => false, 'property' => 'optionLabel',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    )
-                            ));
-
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tahunAkademik', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:TahunAkademik',
-                                    'label' => 'label.year.entry', 'multiple' => false, 'expanded' => false,
-                                    'property' => 'nama', 'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    )
-                            ));
-
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
-                    ->where('t.id = :sekolah')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('sekolah', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
-                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder,
-                            ));
-        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

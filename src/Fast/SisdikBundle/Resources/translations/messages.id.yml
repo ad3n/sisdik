@@ -242,7 +242,7 @@ label:
     inactive: Tidak aktif
     active: Aktif
     detailinfo: Info Detail
-    selectacademicyear: Pilih Tahun Akademik
+    selectacademicyear: "~ Tahun Akademik ~"
     enabled: Aktif
     gender: Jenis Kelamin
     gender.empty.select: "~ Jenis Kelamin ~"
