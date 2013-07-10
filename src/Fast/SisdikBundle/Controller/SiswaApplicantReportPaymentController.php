@@ -330,28 +330,35 @@ class SiswaApplicantReportPaymentController extends Controller
             if ($searchdata['jumlahBayar'] != "") {
                 if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
 
-                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
-                            ->having(
-                                    "SUM(pembayaran.nominalTotalTransaksi) + SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan) $pembandingBayar "
-                                            . " (SUM(siswa.sisaBiayaPendaftaran) + SUM(pembayaran.nominalTotalBiaya)) * :jumlahbayar");
-                    $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id');
 
-                    $judulLaporan .= ", " . $this->get('translator')->trans('jumlah.pembayaran')
-                            . " $pembandingBayar " . $searchdata['jumlahBayar'] . "%";
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<='
+                            || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
+                        // masukkan pencarian untuk yg belum melakukan transaksi
+                        $querybuilder
+                                ->having(
+                                        "(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
+                                                . " OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0");
+                    } else {
+                        $querybuilder
+                                ->having(
+                                        "SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar");
+                    }
+
+                    $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
 
                 } else {
 
-                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran');
-                    $querybuilder->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi');
-                    $querybuilder->groupBy('siswa.id')
-                            ->having("SUM(transaksi.nominalPembayaran) $pembandingBayar :jumlahbayar");
+                    $querybuilder->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')->groupBy('siswa.id')
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar");
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
-
-                    $judulLaporan .= ", " . $this->get('translator')->trans('jumlah.pembayaran')
-                            . " $pembandingBayar " . $searchdata['jumlahBayar'];
 
                 }
 
+                $tampilkanTercari = true;
+                $pencarianLanjutan = true;
             }
         } else {
             // TODO: display error response

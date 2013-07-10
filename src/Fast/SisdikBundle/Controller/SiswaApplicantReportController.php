@@ -161,13 +161,13 @@ class SiswaApplicantReportController extends Controller
                         $querybuilder
                                 ->having(
                                         "(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
-                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan)) * :jumlahbayar) "
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
                                                 . " OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0");
                     } else {
                         $querybuilder
                                 ->having(
                                         "SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
-                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan)) * :jumlahbayar");
+                                                . " (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar");
                     }
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
