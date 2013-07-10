@@ -84,6 +84,13 @@ class JadwalKehadiran
     private $otomatisTerhubungMesin = false;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="permulaan", type="boolean", nullable=false, options={"default"=0})
+     */
+    private $permulaan = false;
+
+    /**
      * @var \Sekolah
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
@@ -181,7 +188,7 @@ class JadwalKehadiran
      * Set statusKehadiran
      *
      * @param string $statusKehadiran
-     * @return KehadiranSiswa
+     * @return JadwalKehadiran
      */
     public function setStatusKehadiran($statusKehadiran) {
         $this->statusKehadiran = $statusKehadiran;
@@ -377,6 +384,27 @@ class JadwalKehadiran
      */
     public function isOtomatisTerhubungMesin() {
         return $this->otomatisTerhubungMesin;
+    }
+
+    /**
+     * Set permulaan
+     *
+     * @param boolean $permulaan
+     * @return JadwalKehadiran
+     */
+    public function setPermulaan($permulaan) {
+        $this->permulaan = $permulaan;
+
+        return $this;
+    }
+
+    /**
+     * Is permulaan
+     *
+     * @return boolean
+     */
+    public function isPermulaan() {
+        return $this->permulaan;
     }
 
     /**

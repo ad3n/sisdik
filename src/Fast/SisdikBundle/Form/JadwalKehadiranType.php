@@ -151,6 +151,12 @@ class JadwalKehadiranType extends AbstractType
                         array(
                                 'label' => 'label.otomatis.terhubung.mesin.kehadiran', 'required' => false,
                                 'label_render' => true, 'widget_checkbox_label' => 'widget',
+                        ))
+                ->add('permulaan', 'checkbox',
+                        array(
+                                'label' => 'label.awal.kehadiran', 'required' => false,
+                                'help_block' => 'help.awal.kehadiran',
+                                'label_render' => true, 'widget_checkbox_label' => 'widget',
                         ));
     }
 

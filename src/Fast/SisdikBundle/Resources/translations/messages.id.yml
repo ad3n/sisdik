@@ -25,6 +25,7 @@ layanan.sms:
     laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
 
 label:
+    awal.kehadiran: Awal Status Kehadiran
     jadwal: Jadwal
     kirim.sms: Kirim SMS
     kirim.sms.jam: Jam Kirim SMS
@@ -895,6 +896,11 @@ title:
 app.title: SisDik
 
 help:
+    awal.kehadiran: >
+        Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.
+        Status bisa diperbarui oleh guru piket.
+        Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.
+        Kolom selain "Parameter Dari Jam" tidak akan terpakai jika checkbox ini dicentang.
     captcha.penjelasan.ubah.hapus: Captcha berguna untuk mencegah pengubahan/penghapusan data tanpa sengaja
     konfirmasi.saya.mengerti: Cek jika telah mengerti resiko yang akan terjadi
     tag.standar.laporan.psb: tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%

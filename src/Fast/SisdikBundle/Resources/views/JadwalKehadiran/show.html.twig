@@ -49,6 +49,18 @@
 	        {% endimage %}
         {% endif %}
     </dd>
+    <dt>{{ 'label.awal.kehadiran'|trans }}</dt>
+    <dd>
+        {% if entity.permulaan == 1 %}
+	        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+	        {% endimage %}
+        {% else %}
+            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+	        {% endimage %}
+        {% endif %}
+    </dd>
 </dl>
 
 <div class="clearfix"></div>

@@ -53,7 +53,9 @@ class JadwalKehadiranController extends Controller
                 ->leftJoin('jadwalKehadiran.kelas', 'kelas')
                 ->leftJoin('jadwalKehadiran.templatesms', 'templatesms')
                 ->where('jadwalKehadiran.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->addOrderBy('jadwalKehadiran.statusKehadiran', 'ASC');
+                ->addOrderBy('jadwalKehadiran.permulaan', 'DESC')
+                ->addOrderBy('jadwalKehadiran.statusKehadiran', 'ASC')
+                ->addOrderBy('jadwalKehadiran.paramstatusDariJam', 'ASC');
 
         $searchform->submit($this->getRequest());
 
