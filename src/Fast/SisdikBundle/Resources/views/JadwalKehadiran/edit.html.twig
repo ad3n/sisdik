@@ -3,14 +3,14 @@
 {% block page_heading %}{% trans from "headings" %}jadwal.kehadiran.edit{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('jadwal_kehadiran_update', {'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('jadwal_kehadiran_update', {'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('jadwal_kehadiran_delete', {'id': entity.id, 'page': app.request.get('page')}) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('jadwal_kehadiran_delete', {'id': entity.id}) }}" method="post" class="form-inline">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
