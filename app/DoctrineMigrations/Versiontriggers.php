@@ -8,28 +8,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
  */
 class Versiontriggers extends AbstractMigration
 {
-    private $beforeInsertKelas = "CREATE TRIGGER `befin_kelas`
-BEFORE INSERT ON `kelas`
-FOR EACH ROW
-BEGIN
-    SET NEW.kode = CONCAT((SELECT kode FROM tahun_akademik WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_akademik_id), NEW.kode);
-END";
-
-    private $beforeUpdateKelas = "CREATE TRIGGER `befup_kelas`
-BEFORE UPDATE ON `kelas`
-FOR EACH ROW
-BEGIN
-    DECLARE kodetahun VARCHAR(45);
-    DECLARE kodekelas VARCHAR(50);
-
-    SET kodetahun = (SELECT kode FROM tahun_akademik WHERE sekolah_id = NEW.sekolah_id AND id = NEW.tahun_akademik_id);
-    SET kodekelas = NEW.kode;
-    SET NEW.kode = IF(LEFT(kodekelas, LENGTH(kodetahun)) = kodetahun, kodekelas, CONCAT(kodetahun, NEW.kode));
-END";
-
     public function up(Schema $schema) {
-        $this->addSql($this->beforeInsertKelas);
-        $this->addSql($this->beforeUpdateKelas);
     }
 
     public function down(Schema $schema) {
