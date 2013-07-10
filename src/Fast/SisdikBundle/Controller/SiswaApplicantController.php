@@ -760,9 +760,11 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $qb0 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PanitiaPendaftaran', 't')
-                ->leftJoin('t.tahun', 't2')->where('t.sekolah = :sekolah')->andWhere('t.aktif = 1')
-                ->orderBy('t2.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
+        $qb0 = $em->createQueryBuilder()->select('panitia')
+                ->from('FastSisdikBundle:PanitiaPendaftaran', 'panitia')->leftJoin('panitia.tahun', 'tahun')
+                ->where('panitia.sekolah = :sekolah')->andWhere('panitia.aktif = 1')
+                ->orderBy('tahun.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())
+                ->setMaxResults(1);
         $results = $qb0->getQuery()->getResult();
         $panitiaaktif = array();
         foreach ($results as $entity) {
