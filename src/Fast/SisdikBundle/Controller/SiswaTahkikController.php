@@ -235,6 +235,14 @@ class SiswaTahkikController extends Controller
         if ($tahkikform->isValid()) {
             $data = $tahkikform->getData();
 
+            $qbe = $em->createQueryBuilder();
+            $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
+                    ->setParameter('sekolah', $sekolah->getId());
+
+            $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
+            $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
+
             $entities = $em->getRepository('FastSisdikBundle:Siswa')
                     ->findBy(
                             array(
@@ -244,6 +252,9 @@ class SiswaTahkikController extends Controller
                 if (is_object($entity) && $entity instanceof Siswa) {
                     if (array_key_exists('siswa_' . $entity->getId(), $data) === true) {
                         if ($data['siswa_' . $entity->getId()] === true) {
+                            $nomorUrutPersekolah++;
+                            $entity->setNomorUrutPersekolah($nomorUrutPersekolah);
+                            $entity->setNomorIndukSistem($nomorUrutPersekolah . $sekolah->getId());
                             $entity->setCalonSiswa(false);
                             $em->persist($entity);
                         }
