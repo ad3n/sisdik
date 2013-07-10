@@ -1,7 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Fast\SisdikBundle\Entity\StatusKehadiranKepulangan;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\KehadiranSiswa;
 use Symfony\Component\Form\AbstractType;
@@ -23,60 +23,45 @@ class KehadiranSiswaType extends AbstractType
         $sekolah = $user->getSekolah();
         $em = $this->container->get('doctrine')->getManager();
 
-        // status
-        $status = array();
-        foreach (StatusKehadiranKepulanganType::buildNamaStatusKehadiranSaja() as $key => $value) {
-            $status[] = $value;
-        }
-        $querybuilder_status = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->where('t.sekolah = :sekolah')
-                ->andWhere("t.nama IN (?1)")->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah)
-                ->setParameter(1, $status);
-        $results = $querybuilder_status->getQuery()->getResult();
-        foreach ($results as $result) {
-            $choices[$result->getId()] = $result->getNama();
-        }
-
         // students
-        $querybuilder = $em->createQueryBuilder()->select('t, t3')
-                ->from('FastSisdikBundle:KehadiranSiswa', 't')->leftJoin('t.kelas', 't2')
-                ->leftJoin('t.siswa', 't3')->where('t2.sekolah = :sekolah')->orderBy('t2.kode')
-                ->addOrderBy('t3.namaLengkap')->setParameter('sekolah', $sekolah);
+        $querybuilder = $em->createQueryBuilder()->select('kehadiran, siswa')
+                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')->leftJoin('kehadiran.kelas', 'kelas')
+                ->leftJoin('kehadiran.siswa', 'siswa')->where('kelas.sekolah = :sekolah')
+                ->orderBy('kelas.kode')->addOrderBy('siswa.namaLengkap')
+                ->setParameter('sekolah', $sekolah->getId());
 
         if ($this->buildparam['tanggal'] != '') {
-            $querybuilder->andWhere('t.tanggal = :tanggal');
+            $querybuilder->andWhere('kehadiran.tanggal = :tanggal');
             $querybuilder->setParameter('tanggal', $this->buildparam['tanggal']);
         }
         if ($this->buildparam['searchkey'] != '') {
-            $querybuilder->andWhere("t3.namaLengkap LIKE :searchkey OR t3.nomorInduk LIKE :searchkey");
+            $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey");
             $querybuilder->setParameter('searchkey', '%' . $this->buildparam['searchkey'] . '%');
         }
         if ($this->buildparam['tingkat'] != '') {
-            $querybuilder->andWhere("t2.tingkat = :tingkat");
+            $querybuilder->andWhere("kelas.tingkat = :tingkat");
             $querybuilder->setParameter('tingkat', $this->buildparam['tingkat']);
         }
         if ($this->buildparam['kelas'] != '') {
-            $querybuilder->andWhere("t2.id = :kelas");
+            $querybuilder->andWhere("kelas.id = :kelas");
             $querybuilder->setParameter('kelas', $this->buildparam['kelas']);
         }
-        if ($this->buildparam['statuskehadirankepulangan'] != '') {
-            $querybuilder->andWhere("t.statusKehadiranKepulangan = :statuskehadirankepulangan");
-            $querybuilder
-                    ->setParameter('statuskehadirankepulangan',
-                            $this->buildparam['statuskehadirankepulangan']);
+        if ($this->buildparam['statusKehadiran'] != '') {
+            $querybuilder->andWhere("kehadiran.statusKehadiran = :statusKehadiran");
+            $querybuilder->setParameter('statusKehadiran', $this->buildparam['statusKehadiran']);
         }
         $entities = $querybuilder->getQuery()->getResult();
 
-        foreach ($entities as $student) {
-            if (is_object($student) && $student instanceof KehadiranSiswa) {
+        foreach ($entities as $entity) {
+            if (is_object($entity) && $entity instanceof KehadiranSiswa) {
                 $builder
-                        ->add('kehadirankepulangan_' . $student->getId(), 'choice',
+                        ->add('kehadiran_' . $entity->getId(), 'choice',
                                 array(
                                         'required' => true, 'expanded' => true, 'multiple' => false,
-                                        'choices' => $choices,
+                                        'choices' => JadwalKehadiran::getDaftarStatusKehadiran(),
                                         'attr' => array(
                                             'class' => 'medium'
-                                        ), 'data' => $student->getStatusKehadiranKepulangan()->getId()
+                                        ), 'data' => $entity->getStatusKehadiran()
                                 ));
 
             }

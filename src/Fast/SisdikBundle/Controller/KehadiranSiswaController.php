@@ -32,10 +32,16 @@ class KehadiranSiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $em = $this->getDoctrine()->getManager();
+
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
 
         return array(
-            'searchform' => $searchform->createView()
+                'searchform' => $searchform->createView(),
+                'tahunAkademik' => $em->getRepository('FastSisdikBundle:TahunAkademik')
+                        ->findBy(array(
+                            'aktif' => true
+                        ))
         );
     }
 
@@ -54,15 +60,17 @@ class KehadiranSiswaController extends Controller
 
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t, t3')
-                ->from('FastSisdikBundle:KehadiranSiswa', 't')->leftJoin('t.kelas', 't2')
-                ->leftJoin('t.siswa', 't3')->where('t2.sekolah = :sekolah')->orderBy('t2.kode')
-                ->addOrderBy('t3.namaLengkap')->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()->select('kehadiran, siswa')
+                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')->leftJoin('kehadiran.kelas', 'kelas')
+                ->leftJoin('kehadiran.siswa', 'siswa')->where('kelas.sekolah = :sekolah')
+                ->orderBy('kelas.kode')->addOrderBy('siswa.namaLengkap')
+                ->setParameter('sekolah', $sekolah->getId());
 
-        $querybuilder_class = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tahunAkademik', 't2')->where('t.sekolah = :sekolah')
-                ->andWhere('t2.aktif = :aktif')->orderBy('t.kode')
-                ->setParameter('sekolah', $sekolah->getId())->setParameter('aktif', TRUE);
+        $querybuilder_class = $em->createQueryBuilder()->select('kelas')
+                ->from('FastSisdikBundle:Kelas', 'kelas')->leftJoin('kelas.tahunAkademik', 'tahunAkademik')
+                ->where('kelas.sekolah = :sekolah')->andWhere('tahunAkademik.aktif = :aktif')
+                ->orderBy('kelas.kode')->setParameter('sekolah', $sekolah->getId())
+                ->setParameter('aktif', TRUE);
 
         $searchform->submit($this->getRequest());
         $buildparam = NULL;
@@ -70,7 +78,7 @@ class KehadiranSiswaController extends Controller
             $searchdata = $searchform->getData();
 
             if ($searchdata['tanggal'] != '') {
-                $querybuilder->andWhere('t.tanggal = :tanggal');
+                $querybuilder->andWhere('kehadiran.tanggal = :tanggal');
                 $querybuilder->setParameter('tanggal', $searchdata['tanggal']);
 
                 $buildparam['tanggal'] = $searchdata['tanggal']->format('Y-m-d');
@@ -78,7 +86,8 @@ class KehadiranSiswaController extends Controller
                 $buildparam['tanggal'] = '';
             }
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere("t3.namaLengkap LIKE :searchkey OR t3.nomorInduk LIKE :searchkey");
+                $querybuilder
+                        ->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey");
                 $querybuilder->setParameter('searchkey', "%{$searchdata['searchkey']}%");
 
                 $buildparam['searchkey'] = $searchdata['searchkey'];
@@ -86,10 +95,10 @@ class KehadiranSiswaController extends Controller
                 $buildparam['searchkey'] = '';
             }
             if ($searchdata['tingkat'] != '') {
-                $querybuilder->andWhere("t2.tingkat = :tingkat");
+                $querybuilder->andWhere("kelas.tingkat = :tingkat");
                 $querybuilder->setParameter('tingkat', $searchdata['tingkat']->getId());
 
-                $querybuilder_class->andWhere("t.tingkat = :tingkat");
+                $querybuilder_class->andWhere("kelas.tingkat = :tingkat");
                 $querybuilder_class->setParameter('tingkat', $searchdata['tingkat']->getId());
 
                 $buildparam['tingkat'] = $searchdata['tingkat']->getId();
@@ -97,25 +106,23 @@ class KehadiranSiswaController extends Controller
                 $buildparam['tingkat'] = '';
             }
             if ($searchdata['kelas'] != '') {
-                $querybuilder->andWhere("t2.id = :kelas");
+                $querybuilder->andWhere("kelas.id = :kelas");
                 $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
 
-                $querybuilder_class->andWhere("t.id = :kelas");
+                $querybuilder_class->andWhere("kelas.id = :kelas");
                 $querybuilder_class->setParameter('kelas', $searchdata['kelas']->getId());
 
                 $buildparam['kelas'] = $searchdata['kelas']->getId();
             } else {
                 $buildparam['kelas'] = '';
             }
-            if ($searchdata['statuskehadirankepulangan'] != '') {
-                $querybuilder->andWhere("t.statusKehadiranKepulangan = :statuskehadirankepulangan");
-                $querybuilder
-                        ->setParameter('statuskehadirankepulangan',
-                                $searchdata['statuskehadirankepulangan']->getId());
+            if ($searchdata['statusKehadiran'] != '') {
+                $querybuilder->andWhere("kehadiran.statusKehadiran = :statusKehadiran");
+                $querybuilder->setParameter('statusKehadiran', $searchdata['statusKehadiran']);
 
-                $buildparam['statuskehadirankepulangan'] = $searchdata['statuskehadirankepulangan']->getId();
+                $buildparam['statusKehadiran'] = $searchdata['statusKehadiran'];
             } else {
-                $buildparam['statuskehadirankepulangan'] = '';
+                $buildparam['statusKehadiran'] = '';
             }
         }
 
@@ -126,7 +133,11 @@ class KehadiranSiswaController extends Controller
 
         return array(
                 'entities' => $entities, 'class_entities' => $classes, 'form' => $students->createView(),
-                'searchform' => $searchform->createView(), 'buildparam' => $buildparam
+                'searchform' => $searchform->createView(), 'buildparam' => $buildparam,
+                'tahunAkademik' => $em->getRepository('FastSisdikBundle:TahunAkademik')
+                        ->findBy(array(
+                            'aktif' => true
+                        ))
         );
     }
 

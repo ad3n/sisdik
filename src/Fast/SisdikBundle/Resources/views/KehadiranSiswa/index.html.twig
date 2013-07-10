@@ -28,13 +28,42 @@
         <button class="btn" type="reset" onclick="window.location.href='{{ path('studentspresence') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
-
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$('.date').datepicker({
 	    dateFormat: 'dd/mm/yy',
     	changeMonth: true,
         changeYear: true
+    });
+
+	var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+
+	$.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".pilih-kelas").html(options);
+    });
+
+    $(".pilih-tingkat").change(function() {
+        $.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(this).val(), kelas: $(".pilih-kelas").val()}, function(data) {
+            $(".pilih-kelas").empty();
+            $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
     });
 });
 </script>

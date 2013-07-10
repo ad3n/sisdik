@@ -391,6 +391,46 @@ class KelasController extends Controller
     }
 
     /**
+     * Update class select box based on tingkat
+     *
+     * @Route("/ajax/updateclass-bylevel", name="data_class_ajax_updateclass_bylevel")
+     */
+    public function ajaxUpdateclassByLevelAction(Request $request) {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
+        $tingkat = $this->getRequest()->query->get('tingkat');
+        $kelas = $this->getRequest()->query->get('kelas');
+
+        $querybuilder = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+                ->leftJoin('kelas.tingkat', 'tingkat')->where('kelas.sekolah = :sekolah')
+                ->andWhere('kelas.tahunAkademik = :tahunAkademik')
+                ->setParameter('tahunAkademik', $tahunAkademik)->andWhere('tingkat.id = :tingkat')
+                ->setParameter('tingkat', $tingkat)->orderBy('tingkat.urutan', 'ASC')
+                ->addOrderBy('kelas.urutan')->setParameter('sekolah', $sekolah->getId());
+        $entities = $querybuilder->getQuery()->getResult();
+
+        $retval = array();
+        $retval[] = array(
+            'optionValue' => '', 'optionDisplay' => $this->get('translator')->trans('label.allclass')
+        );
+        foreach ($entities as $entity) {
+            $retval[] = array(
+                    'optionValue' => $entity->getId(), 'optionDisplay' => $entity->getNama(),
+                    'optionSelected' => $kelas == $entity->getId() ? 'selected' : ''
+            );
+        }
+
+        $return = json_encode($retval);
+        return new Response($return, 200,
+                array(
+                    'Content-Type' => 'application/json'
+                ));
+    }
+
+    /**
      * Update class select box for predefined school
      *
      * @Route("/ajax/updateclass/schooldefined/{sekolah}", name="data_class_ajax_updateclass_schooldefined")

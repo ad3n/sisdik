@@ -30,11 +30,11 @@ class KehadiranSiswa
     private $statusKehadiran;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="prioritas_pembaruan", type="smallint", nullable=false, options={"default"=0})
+     * @ORM\Column(name="permulaan", type="boolean", nullable=false, options={"default"=1})
      */
-    private $prioritasPembaruan;
+    private $permulaan = true;
 
     /**
      * @var \DateTime
@@ -129,24 +129,24 @@ class KehadiranSiswa
     }
 
     /**
-     * Set prioritasPembaruan
+     * Set permulaan
      *
-     * @param integer $prioritasPembaruan
+     * @param boolean $permulaan
      * @return KehadiranSiswa
      */
-    public function setPrioritasPembaruan($prioritasPembaruan) {
-        $this->prioritasPembaruan = $prioritasPembaruan;
+    public function setPermulaan($permulaan) {
+        $this->permulaan = $permulaan;
 
         return $this;
     }
 
     /**
-     * Get prioritasPembaruan
+     * Is permulaan
      *
-     * @return integer
+     * @return boolean
      */
-    public function getPrioritasPembaruan() {
-        return $this->prioritasPembaruan;
+    public function isPermulaan() {
+        return $this->permulaan;
     }
 
     /**

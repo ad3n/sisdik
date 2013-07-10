@@ -1,7 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Fast\SisdikBundle\Entity\StatusKehadiranKepulangan;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
+
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
@@ -40,64 +41,49 @@ class KehadiranSiswaSearchType extends AbstractType
                                 ), 'label_render' => false,
                         ));
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.kode')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tingkat', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.class.entry',
-                                    'multiple' => false, 'expanded' => false, 'required' => true,
-                                    'property' => 'optionLabel', 'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), 'label_render' => false
-                            ));
+        $querybuilder = $em->createQueryBuilder()->select('tingkat')
+                ->from('FastSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
+                ->orderBy('tingkat.kode')->setParameter('sekolah', $sekolah);
+        $builder
+                ->add('tingkat', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.class.entry',
+                                'multiple' => false, 'expanded' => false, 'required' => true,
+                                'property' => 'optionLabel', 'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'medium pilih-tingkat'
+                                ), 'label_render' => false
+                        ));
 
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                    ->leftJoin('t.tingkat', 't2')->leftJoin('t.tahunAkademik', 't3')
-                    ->where('t.sekolah = :sekolah')->andWhere('t3.aktif = :aktif')
-                    ->orderBy('t2.urutan', 'ASC')->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                    ->setParameter('aktif', true);
-            $builder
-                    ->add('kelas', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
-                                    'multiple' => false, 'expanded' => false, 'property' => 'nama',
-                                    'required' => false, 'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), 'label_render' => false, 'empty_value' => 'label.allclass'
-                            ));
+        $querybuilder = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+                ->leftJoin('kelas.tingkat', 'tingkat')->leftJoin('kelas.tahunAkademik', 'tahunAkademik')
+                ->where('kelas.sekolah = :sekolah')->andWhere('tahunAkademik.aktif = :aktif')
+                ->orderBy('tingkat.urutan', 'ASC')->addOrderBy('kelas.urutan')
+                ->setParameter('sekolah', $sekolah)->setParameter('aktif', true);
+        $builder
+                ->add('kelas', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                'required' => false, 'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'medium pilih-kelas'
+                                ), 'label_render' => false, 'empty_value' => 'label.allclass'
+                        ));
 
-            $status = array();
-            foreach (StatusKehadiranKepulanganType::buildNamaStatusKehadiranSaja() as $key => $value) {
-                $status[] = $value;
-            }
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->where('t.sekolah = :sekolah')
-                    ->andWhere("t.nama IN (?1)")->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah)
-                    ->setParameter(1, $status);
-            $alpa = $em->getRepository('FastSisdikBundle:StatusKehadiranKepulangan')
-                    ->findBy(
-                            array(
-                                    'nama' => current(
-                                            StatusKehadiranKepulanganType::buildNamaStatusKehadiranSaja()),
-                                    'sekolah' => $sekolah->getId()
-                            ));
-            $builder
-                    ->add('statuskehadirankepulangan', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:StatusKehadiranKepulangan',
-                                    'label' => 'label.presence.status.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama', 'required' => false,
-                                    'query_builder' => $querybuilder, 'label_render' => false,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), 'preferred_choices' => $alpa // hardcoded because it's not easy to refactor/normalize the database
-                                    , 'empty_value' => 'label.presencestatus'
-                            ));
-        }
+        $builder
+                ->add('statusKehadiran', 'choice',
+                        array(
+                                'choices' => JadwalKehadiran::getDaftarStatusKehadiran(),
+                                'label' => 'label.presence.status.entry', 'multiple' => false,
+                                'expanded' => false, 'required' => false, 'label_render' => false,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                ),
+                                'preferred_choices' => array(
+                                    'c-alpa'
+                                ), 'empty_value' => 'label.presencestatus'
+                        ));
     }
 
     public function getName() {

@@ -80,19 +80,49 @@ $(document).ready(function() {
         changeYear: true
     });
 
+	var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+
+	$.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".pilih-kelas").html(options);
+    });
+
+    $(".pilih-tingkat").change(function() {
+        $.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(this).val(), kelas: $(".pilih-kelas").val()}, function(data) {
+            $(".pilih-kelas").empty();
+            $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
+    });
+
     $("#presenceform").submit(function() {
         var url = $("#presenceform").attr("action");
         pingurl = "{{ path("_index") }}";
         // pingurl = "http://www.google.com/action";
-        
+
         $returnvalue = $.get(pingurl);
-        
+
         // alert($("#presenceform").serialize());
-        
+
         {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#output').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
-        
+
         setTimeout(function() {
         	if ($returnvalue.statusText == "OK") {
                 $.post(url, {data: $("#presenceform").serialize()},
@@ -101,9 +131,9 @@ $(document).ready(function() {
                             $('#output').html(data.responseText);
                         } else {
                             // if we got to this point we know that the controller
-                            // did not return a json_encoded array. We can assume that           
+                            // did not return a json_encoded array. We can assume that
                             // an unexpected PHP error occured
-                            alert("An unexpected error occured.");                            
+                            alert("An unexpected error occured.");
                             // $('#output').html(data);
                         }
                     }
