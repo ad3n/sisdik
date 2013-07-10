@@ -336,12 +336,6 @@ class Builder extends AbstractNavbarMenuBuilder
                                 ));
 
                 $presence
-                        ->addChild('links.permulaan.kehadiran',
-                                array(
-                                    'uri' => '#no'
-                                ));
-
-                $presence
                         ->addChild('links.jadwal.kehadiran',
                                 array(
                                     'route' => 'jadwal_kehadiran'
