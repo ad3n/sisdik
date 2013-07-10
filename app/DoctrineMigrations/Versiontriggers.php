@@ -8,20 +8,6 @@ use Doctrine\DBAL\Migrations\AbstractMigration, Doctrine\DBAL\Schema\Schema;
  */
 class Versiontriggers extends AbstractMigration
 {
-
-    private $beforeInsertSiswa = "CREATE TRIGGER `befin_siswa`
-BEFORE INSERT ON `siswa`
-FOR EACH ROW
-BEGIN
-    DECLARE nomorurutpersekolah INT;
-
-    IF (NEW.calon_siswa = 0) THEN
-        SET nomorurutpersekolah = (SELECT MAX(nomor_urut_persekolah) FROM siswa WHERE sekolah_id = NEW.sekolah_id);
-        SET NEW.nomor_urut_persekolah = IFNULL(nomorurutpersekolah,100000) + 1;
-        SET NEW.nomor_induk_sistem = CONCAT(CAST(NEW.nomor_urut_persekolah AS CHAR(6)), NEW.sekolah_id);
-    END IF;
-END";
-
     private $beforeInsertKelas = "CREATE TRIGGER `befin_kelas`
 BEFORE INSERT ON `kelas`
 FOR EACH ROW
@@ -42,8 +28,6 @@ BEGIN
 END";
 
     public function up(Schema $schema) {
-        $this->addSql($this->beforeInsertSiswa);
-
         $this->addSql($this->beforeInsertKelas);
         $this->addSql($this->beforeUpdateKelas);
     }
