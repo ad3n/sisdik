@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -95,9 +96,8 @@ class JadwalKehadiranDuplicateType extends AbstractType
         $builder
                 ->add('perulangan', 'choice',
                         array(
-                                'choices' => array(
-                                    'harian' => 'harian', 'mingguan' => 'mingguan', 'bulanan' => 'bulanan'
-                                ), 'label' => 'label.selectrepetition', 'multiple' => false,
+                                'choices' => JadwalKehadiran::getDaftarPerulangan(),
+                                'label' => 'label.selectrepetition', 'multiple' => false,
                                 'expanded' => false, 'required' => true,
                                 'attr' => array(
                                     'class' => 'small'
@@ -105,7 +105,7 @@ class JadwalKehadiranDuplicateType extends AbstractType
                         ))
                 ->add('mingguanHariKe', 'choice',
                         array(
-                                'choices' => $this->buildDayNames(), 'multiple' => false,
+                                'choices' => JadwalKehadiran::getNamaHari(), 'multiple' => false,
                                 'expanded' => false, 'required' => false,
                                 'empty_value' => 'label.selectweekday',
                                 'attr' => array(
@@ -114,8 +114,9 @@ class JadwalKehadiranDuplicateType extends AbstractType
                         ))
                 ->add('bulananHariKe', 'choice',
                         array(
-                                'choices' => $this->buildDays(), 'multiple' => false, 'expanded' => false,
-                                'required' => false, 'empty_value' => 'label.selectmonthday',
+                                'choices' => JadwalKehadiran::getAngkaHariSebulan(), 'multiple' => false,
+                                'expanded' => false, 'required' => false,
+                                'empty_value' => 'label.selectmonthday',
                                 'attr' => array(
                                     'class' => 'medium'
                                 ), 'label_render' => false
@@ -128,17 +129,6 @@ class JadwalKehadiranDuplicateType extends AbstractType
                         array(
                             'csrf_protection' => false,
                         ));
-    }
-
-    public function buildDayNames() {
-        return array(
-                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday', 'label.thursday',
-                'label.friday', 'label.saturday',
-        );
-    }
-
-    public function buildDays() {
-        return array_combine(range(1, 31), range(1, 31));
     }
 
     public function getName() {

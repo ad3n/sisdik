@@ -1,6 +1,12 @@
 welcome: Selamat Datang
 dashboard: Dasbor
 
+jadwal.kehadiran:
+    daftar: Daftar Jadwal Kehadiran
+    edit: Mengubah Jadwal Kehadiran
+    pembuatan: Membuat Jadwal Kehadiran
+    rincian: Rincian Jadwal Kehadiran
+
 pendaftar.konfirmasi.hapus: Konfirmasi Penghapusan Data Pendaftar
 laporan.pembayaran.pendaftaran: Laporan Pembayaran Pendaftaran
 laporan.transaksi.keuangan: Laporan Transaksi Keuangan
@@ -171,11 +177,6 @@ sms:
         detail: Detail Template SMS
 
 presence:
-    schedule:
-        list: Daftar Jadwal Kehadiran/Kepulangan
-        edit: Mengubah Jadwal Kehadiran/Kepulangan
-        creation: Membuat Jadwal Kehadiran/Kepulangan
-        detail: Detail Jadwal Kehadiran/Kepulangan
     student:
         list: Kehadiran Siswa
 

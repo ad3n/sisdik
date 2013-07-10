@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Fast\SisdikBundle\Form\EventListener\JadwalKehadiranSearchSubscriber;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
@@ -12,31 +13,23 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class JadwalKehadiranSearchType extends AbstractType
 {
     private $container;
-    private $sekolah;
     private $repetition = 'harian';
 
-    public function __construct(ContainerInterface $container, $sekolah, $repetition = 'harian') {
+    public function __construct(ContainerInterface $container, $repetition = 'harian') {
         $this->container = $container;
-        $this->sekolah = $sekolah;
         $this->repetition = $repetition;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+
         $em = $this->container->get('doctrine')->getManager();
 
-        // $builder
-        //         ->add('sekolah', 'choice',
-        //                 array(
-        //                         'choices' => $this->buildChoices(), 'multiple' => false, 'expanded' => false,
-        //                         'required' => false,
-        //                         'attr' => array(
-        //                             'class' => 'large'
-        //                         ), 'label_render' => false,
-        //                 ));
-
-        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
-                ->setParameter('sekolah', $this->sekolah);
+        $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                ->setParameter('sekolah', $sekolah);
         $builder
                 ->add('tahunAkademik', 'entity',
                         array(
@@ -48,9 +41,10 @@ class JadwalKehadiranSearchType extends AbstractType
                                 ), 'label_render' => false,
                         ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolah);
+        $querybuilder2 = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+                ->leftJoin('kelas.tingkat', 'tingkat')->where('kelas.sekolah = :sekolah')
+                ->orderBy('tingkat.urutan', 'ASC')->addOrderBy('kelas.urutan')
+                ->setParameter('sekolah', $sekolah);
         $builder
                 ->add('kelas', 'entity',
                         array(
@@ -62,45 +56,7 @@ class JadwalKehadiranSearchType extends AbstractType
                                 ), 'label_render' => false
                         ));
 
-        $builder
-                ->add('perulangan', 'choice',
-                        array(
-                                'choices' => array(
-                                    'harian' => 'harian', 'mingguan' => 'mingguan', 'bulanan' => 'bulanan'
-                                ), 'label' => 'label.selectrepetition', 'multiple' => false,
-                                'expanded' => false, 'required' => true,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'label_render' => false
-                        ));
-
-        if ($this->repetition == 'harian') {
-            // no additional select box
-        } else if ($this->repetition == 'mingguan') {
-            // display additional select box showing day names
-            $builder
-                    ->add('mingguanHariKe', 'choice',
-                            array(
-                                    'choices' => $this->buildDayNames(), 'multiple' => false,
-                                    'expanded' => false, 'required' => true,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), /* 'empty_value' => 'label.selectweekday', */
-                                    'label_render' => false
-                            ));
-        } else if ($this->repetition == 'bulanan') {
-            // display additional select box showing day in a month
-            $builder
-                    ->add('bulananHariKe', 'choice',
-                            array(
-                                    'choices' => $this->buildDays(), 'multiple' => false,
-                                    'expanded' => false, 'required' => true,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), /* 'empty_value' => 'label.selectmonthday', */
-                                    'label_render' => false
-                            ));
-        }
+        $builder->addEventSubscriber(new JadwalKehadiranSearchSubscriber($em));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
@@ -113,34 +69,5 @@ class JadwalKehadiranSearchType extends AbstractType
 
     public function getName() {
         return 'searchform';
-    }
-
-    private function buildChoices() {
-        $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:Sekolah')
-                ->findBy(array(), array(
-                    'nama' => 'ASC'
-                ));
-        $choices = array(
-            '' => 'label.pilih.sekolah'
-        );
-        foreach ($entities as $entity) {
-            if ($entity instanceof Sekolah) {
-                $choices[$entity->getId()] = $entity->getNama();
-            }
-        }
-
-        return $choices;
-    }
-
-    public function buildDayNames() {
-        return array(
-                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday', 'label.thursday',
-                'label.friday', 'label.saturday',
-        );
-    }
-
-    public function buildDays() {
-        return array_combine(range(1, 31), range(1, 31));
     }
 }

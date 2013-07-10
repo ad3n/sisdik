@@ -336,9 +336,15 @@ class Builder extends AbstractNavbarMenuBuilder
                                 ));
 
                 $presence
-                        ->addChild('links.presenceschedule',
+                        ->addChild('links.permulaan.kehadiran',
                                 array(
-                                    'route' => 'presence_schedule'
+                                    'uri' => '#no'
+                                ));
+
+                $presence
+                        ->addChild('links.jadwal.kehadiran',
+                                array(
+                                    'route' => 'jadwal_kehadiran'
                                 ));
 
                 //                 $presence

@@ -1,0 +1,48 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}jadwal.kehadiran.pembuatan{% endtrans %}{% endblock %}
+
+{% block content %}
+<form action="{{ path('jadwal_kehadiran_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    </div>
+</form>
+<ul class="pills">
+    <li>
+        <a href="{{ path('jadwal_kehadiran_list') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	var url = "{{ path('data_class_ajax_updateclass') }}";
+	$.get(url, {tahunAkademik: $(".selectyear").val()}, function(data) {
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".selectclass").html(options);
+    });
+
+    $(".selectyear").change(function() {
+        // clear class select box content
+        $(".selectclass").empty();
+        $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".selectclass").html(options);
+        });
+    });
+});
+</script>
+{% endblock content %}

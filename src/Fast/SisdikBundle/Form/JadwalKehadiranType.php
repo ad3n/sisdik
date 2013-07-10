@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityRepository;
@@ -13,20 +14,28 @@ use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 class JadwalKehadiranType extends AbstractType
 {
     private $container;
-    private $sekolah;
 
-    public function __construct(ContainerInterface $container, $sekolah) {
+    public function __construct(ContainerInterface $container) {
         $this->container = $container;
-        $this->sekolah = $sekolah;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $em = $this->container->get('doctrine')->getManager();
-        $securityContext = $this->container->get('security.context');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
 
-        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
-                ->setParameter('sekolah', $this->sekolah);
+        $em = $this->container->get('doctrine')->getManager();
+
+        $builder
+                ->add('sekolah', new EntityHiddenType($em),
+                        array(
+                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                'data' => $sekolah->getId(),
+                        ));
+
+        $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                ->setParameter('sekolah', $sekolah);
         $builder
                 ->add('tahunAkademik', 'entity',
                         array(
@@ -34,13 +43,14 @@ class JadwalKehadiranType extends AbstractType
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                 'required' => true, 'query_builder' => $querybuilder1,
                                 'attr' => array(
-                                    'class' => 'medium'
+                                    'class' => 'medium selectyear'
                                 )
                         ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $this->sekolah);
+        $querybuilder2 = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+                ->leftJoin('kelas.tingkat', 'tingkat')->where('kelas.sekolah = :sekolah')
+                ->orderBy('tingkat.urutan', 'ASC')->addOrderBy('kelas.urutan')
+                ->setParameter('sekolah', $sekolah);
         $builder
                 ->add('kelas', 'entity',
                         array(
@@ -48,26 +58,32 @@ class JadwalKehadiranType extends AbstractType
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                 'required' => true, 'query_builder' => $querybuilder2,
                                 'attr' => array(
-                                    'class' => 'large'
+                                    'class' => 'large selectclass'
                                 )
                         ));
 
         $builder
+                ->add('statusKehadiran', 'choice',
+                        array(
+                                'choices' => JadwalKehadiran::getDaftarStatusKehadiran(),
+                                'label' => 'label.status.kehadiran', 'multiple' => false,
+                                'expanded' => false, 'required' => true,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                )
+                        ))
                 ->add('perulangan', 'choice',
                         array(
-                                'choices' => array(
-                                    'harian' => 'harian', 'mingguan' => 'mingguan', 'bulanan' => 'bulanan'
-                                ), 'label' => 'label.repetition', 'multiple' => false, 'expanded' => false,
+                                'choices' => JadwalKehadiran::getDaftarPerulangan(),
+                                'label' => 'label.perulangan', 'multiple' => false, 'expanded' => false,
                                 'required' => true,
                                 'attr' => array(
                                     'class' => 'small'
                                 )
-                        ));
-
-        $builder
+                        ))
                 ->add('mingguanHariKe', 'choice',
                         array(
-                                'label' => 'label.day', 'choices' => $this->buildDayNames(),
+                                'label' => 'label.day', 'choices' => JadwalKehadiran::getNamaHari(),
                                 'multiple' => false, 'expanded' => false, 'required' => false,
                                 'empty_value' => 'label.selectweekday',
                                 'attr' => array(
@@ -76,33 +92,17 @@ class JadwalKehadiranType extends AbstractType
                         ))
                 ->add('bulananHariKe', 'choice',
                         array(
-                                'label' => 'label.monthday', 'choices' => $this->buildDays(),
-                                'multiple' => false, 'expanded' => false, 'required' => false,
+                                'label' => 'label.monthday',
+                                'choices' => JadwalKehadiran::getAngkaHariSebulan(), 'multiple' => false,
+                                'expanded' => false, 'required' => false,
                                 'empty_value' => 'label.selectmonthday',
                                 'attr' => array(
                                     'class' => 'medium'
                                 )
-                        ));
-
-        $querybuilder3 = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:StatusKehadiranKepulangan', 't')->where('t.sekolah = :sekolah')
-                ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $this->sekolah);
-        $builder
-                ->add('statusKehadiranKepulangan', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:StatusKehadiranKepulangan',
-                                'label' => 'label.presence.status.entry', 'multiple' => false,
-                                'expanded' => false, 'property' => 'nama', 'required' => true,
-                                'query_builder' => $querybuilder3,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                )
-                        ));
-
-        $builder
+                        ))
                 ->add('paramstatusDariJam', 'time',
                         array(
-                                'label' => 'label.paramstatusfrom', 'required' => false, 'input' => 'string',
+                                'label' => 'label.paramstatusfrom', 'required' => true, 'input' => 'string',
                                 'widget' => 'single_text', 'with_seconds' => false,
                                 'attr' => array(
                                     'class' => 'mini'
@@ -110,90 +110,29 @@ class JadwalKehadiranType extends AbstractType
                         ))
                 ->add('paramstatusHinggaJam', 'time',
                         array(
-                                'label' => 'label.paramstatusto', 'required' => false, 'input' => 'string',
+                                'label' => 'label.paramstatusto', 'required' => true, 'input' => 'string',
                                 'widget' => 'single_text', 'with_seconds' => false,
                                 'attr' => array(
                                     'class' => 'mini'
                                 )
                         ))
-                ->add('smsRealtimeDariJam', 'time',
+                ->add('kirimSms', 'checkbox',
                         array(
-                                'label' => 'label.realtimesms.hourfrom', 'required' => false,
-                                'input' => 'string', 'widget' => 'single_text', 'with_seconds' => false,
-                                'attr' => array(
-                                    'class' => 'mini'
-                                )
+                                'label' => 'label.kirim.sms', 'required' => false, 'label_render' => true,
+                                'widget_checkbox_label' => 'widget',
                         ))
-                ->add('smsRealtimeHinggaJam', 'time',
+                ->add('smsJam', 'time',
                         array(
-                                'label' => 'label.realtimesms.hourto', 'required' => false,
-                                'input' => 'string', 'widget' => 'single_text', 'with_seconds' => false,
-                                'attr' => array(
-                                    'class' => 'mini'
-                                )
-                        ))
-                ->add('smsMassalJam', 'time',
-                        array(
-                                'label' => 'label.massivesms.hour', 'required' => false, 'input' => 'string',
-                                'widget' => 'single_text', 'with_seconds' => false,
-                                'attr' => array(
-                                    'class' => 'mini'
-                                )
-                        ))
-                ->add('dariJam', 'time',
-                        array(
-                                'label' => 'label.presencefrom', 'required' => false, 'input' => 'string',
+                                'label' => 'label.kirim.sms.jam', 'required' => false, 'input' => 'string',
                                 'widget' => 'single_text', 'with_seconds' => false,
                                 'attr' => array(
                                     'class' => 'mini'
                                 )
                         ));
-        //                 ->add('hinggaJam', 'time',
-        //                         array(
-        //                                 'label' => 'label.presenceto', 'required' => false,
-        //                                 'input' => 'string', 'widget' => 'single_text',
-        //                                 'with_seconds' => false,
-        //                                 'attr' => array(
-        //                                     'class' => 'mini'
-        //                                 )
-        //                         ))
 
-        $builder
-                ->add('kirimSmsRealtime', 'checkbox',
-                        array(
-                                'label' => 'label.sendsms.realtime', 'required' => false,
-                                'label_render' => true, 'widget_checkbox_label' => 'widget',
-                        ))
-                ->add('commandRealtime', null,
-                        array(
-                                'label' => 'label.command.realtime',
-                                'attr' => array(
-                                    'class' => 'large'
-                                )
-                        ))
-                ->add('kirimSmsMassal', 'checkbox',
-                        array(
-                                'label' => 'label.sendsms.massive', 'required' => false,
-                                'label_render' => true, 'widget_checkbox_label' => 'widget',
-                        ))
-                ->add('commandMassal', null,
-                        array(
-                                'label' => 'label.command.massive',
-                                'attr' => array(
-                                    'class' => 'large'
-                                )
-                        ))
-                ->add('commandJadwal', null,
-                        array(
-                                'label' => 'label.presencecommand',
-                                'attr' => array(
-                                    'class' => 'large'
-                                )
-                        ));
-
-        $querybuilder4 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Templatesms', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
-                ->setParameter('sekolah', $this->sekolah);
+        $querybuilder4 = $em->createQueryBuilder()->select('template')
+                ->from('FastSisdikBundle:Templatesms', 'template')->where('template.sekolah = :sekolah')
+                ->orderBy('template.nama', 'ASC')->setParameter('sekolah', $sekolah);
 
         $builder
                 ->add('templatesms', 'entity',
@@ -206,6 +145,13 @@ class JadwalKehadiranType extends AbstractType
                                     'class' => 'xlarge'
                                 )
                         ));
+
+        $builder
+                ->add('otomatisTerhubungMesin', 'checkbox',
+                        array(
+                                'label' => 'label.otomatis.terhubung.mesin.kehadiran', 'required' => false,
+                                'label_render' => true, 'widget_checkbox_label' => 'widget',
+                        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
@@ -214,17 +160,6 @@ class JadwalKehadiranType extends AbstractType
                         array(
                             'data_class' => 'Fast\SisdikBundle\Entity\JadwalKehadiran'
                         ));
-    }
-
-    public function buildDayNames() {
-        return array(
-                0 => 'label.sunday', 'label.monday', 'label.tuesday', 'label.wednesday', 'label.thursday',
-                'label.friday', 'label.saturday',
-        );
-    }
-
-    public function buildDays() {
-        return array_combine(range(1, 31), range(1, 31));
     }
 
     public function getName() {

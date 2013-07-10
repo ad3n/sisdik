@@ -126,7 +126,7 @@ academiccalendar:
     type:     annotation
     prefix:   /
 
-presence_schedule:
+jadwal_kehadiran:
     resource: "@FastSisdikBundle/Controller/JadwalKehadiranController.php"
     type:     annotation
     prefix:   /

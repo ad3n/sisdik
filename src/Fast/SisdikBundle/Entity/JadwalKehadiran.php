@@ -30,7 +30,7 @@ class JadwalKehadiran
     /**
      * @var string
      *
-     * @ORM\Column(name="perulangan", type="string", nullable=true)
+     * @ORM\Column(name="perulangan", type="string", length=100, nullable=false)
      */
     private $perulangan;
 
@@ -63,74 +63,25 @@ class JadwalKehadiran
     private $paramstatusHinggaJam;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="sms_realtime_dari_jam", type="string", length=50, nullable=false)
+     * @ORM\Column(name="kirim_sms", type="boolean", nullable=false, options={"default"=0})
      */
-    private $smsRealtimeDariJam;
+    private $kirimSms = false;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="sms_realtime_hingga_jam", type="string", length=50, nullable=false)
+     * @ORM\Column(name="sms_jam", type="string", length=50, nullable=false)
      */
-    private $smsRealtimeHinggaJam;
+    private $smsJam;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="kirim_sms_realtime", type="boolean", nullable=false, options={"default"=0})
+     * @ORM\Column(name="otomatis_terhubung_mesin", type="boolean", nullable=false, options={"default"=0})
      */
-    private $kirimSmsRealtime;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="command_realtime", type="string", length=100, nullable=true)
-     */
-    private $commandRealtime;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="sms_massal_jam", type="string", length=50, nullable=false)
-     */
-    private $smsMassalJam;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="kirim_sms_massal", type="boolean", nullable=false, options={"default"=0})
-     */
-    private $kirimSmsMassal;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="command_massal", type="string", length=100, nullable=true)
-     */
-    private $commandMassal;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="dari_jam", type="string", length=50, nullable=false)
-     */
-    private $dariJam;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="hingga_jam", type="string", length=50, nullable=true)
-     */
-    private $hinggaJam;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="command_jadwal", type="string", length=100, nullable=true)
-     */
-    private $commandJadwal;
+    private $otomatisTerhubungMesin = false;
 
     /**
      * @var \Sekolah
@@ -171,6 +122,51 @@ class JadwalKehadiran
      * })
      */
     private $templatesms;
+
+    /**
+     * Daftar status kehadiran yang bisa ada di database
+     *
+     * @return array
+     */
+    public static function getDaftarStatusKehadiran() {
+        return array(
+                'a-hadir-tepat' => 'status.kehadiran.hadir.tepat',
+                'b-hadir-telat' => 'status.kehadiran.hadir.telat', 'c-alpa' => 'status.kehadiran.alpa',
+                'd-izin' => 'status.kehadiran.izin', 'e-sakit' => 'status.kehadiran.sakit'
+        );
+    }
+
+    /**
+     * Daftar perulangan
+     *
+     * @return array
+     */
+    public static function getDaftarPerulangan() {
+        return array(
+            'a-harian' => 'Harian', 'b-mingguan' => 'Mingguan', 'c-bulanan' => 'Bulanan',
+        );
+    }
+
+    /**
+     * nama hari dalam satu minggu, dimulai dari senin
+     *
+     * @return array
+     */
+    public static function getNamaHari() {
+        return array(
+                0 => 'label.senin', 'label.selasa', 'label.rabu', 'label.kamis', 'label.jumat',
+                'label.sabtu', 'label.minggu',
+        );
+    }
+
+    /**
+     * angka-angka hari dalam satu bulan, dari 1
+     *
+     * @return array
+     */
+    public static function getAngkaHariSebulan() {
+        return array_combine(range(1, 31), range(1, 31));
+    }
 
     /**
      * Get id
@@ -283,7 +279,7 @@ class JadwalKehadiran
      * @param boolean $withsecond
      * @return string
      */
-    public function getParamstatusDariJam($withsecond = FALSE) {
+    public function getParamstatusDariJam($withsecond = TRUE) {
         if (!$withsecond) {
             return substr($this->paramstatusDariJam, 0, 5);
         } else {
@@ -308,7 +304,7 @@ class JadwalKehadiran
      *
      * @return string
      */
-    public function getParamstatusHinggaJam($withsecond = FALSE) {
+    public function getParamstatusHinggaJam($withsecond = TRUE) {
         if (!$withsecond) {
             return substr($this->paramstatusHinggaJam, 0, 5);
         } else {
@@ -317,233 +313,70 @@ class JadwalKehadiran
     }
 
     /**
-     * Set smsRealtimeDariJam
+     * Set kirimSms
      *
-     * @param string $smsRealtimeDariJam
+     * @param boolean $kirimSms
      * @return JadwalKehadiran
      */
-    public function setSmsRealtimeDariJam($smsRealtimeDariJam) {
-        $this->smsRealtimeDariJam = $smsRealtimeDariJam;
+    public function setKirimSms($kirimSms) {
+        $this->kirimSms = $kirimSms;
 
         return $this;
     }
 
     /**
-     * Get smsRealtimeDariJam
-     *
-     * @return string
-     */
-    public function getSmsRealtimeDariJam($withsecond = FALSE) {
-        if (!$withsecond) {
-            return substr($this->smsRealtimeDariJam, 0, 5);
-        } else {
-            return $this->smsRealtimeDariJam;
-        }
-    }
-
-    /**
-     * Set smsRealtimeHinggaJam
-     *
-     * @param string $smsRealtimeHinggaJam
-     * @return JadwalKehadiran
-     */
-    public function setSmsRealtimeHinggaJam($smsRealtimeHinggaJam) {
-        $this->smsRealtimeHinggaJam = $smsRealtimeHinggaJam;
-
-        return $this;
-    }
-
-    /**
-     * Get smsRealtimeHinggaJam
-     *
-     * @return string
-     */
-    public function getSmsRealtimeHinggaJam($withsecond = FALSE) {
-        if (!$withsecond) {
-            return substr($this->smsRealtimeHinggaJam, 0, 5);
-        } else {
-            return $this->smsRealtimeHinggaJam;
-        }
-    }
-
-    /**
-     * Set kirimSmsRealtime
-     *
-     * @param boolean $kirimSmsRealtime
-     * @return JadwalKehadiran
-     */
-    public function setKirimSmsRealtime($kirimSmsRealtime) {
-        $this->kirimSmsRealtime = $kirimSmsRealtime;
-
-        return $this;
-    }
-
-    /**
-     * Get kirimSmsRealtime
+     * Get kirimSms
      *
      * @return boolean
      */
-    public function getKirimSmsRealtime() {
-        return $this->kirimSmsRealtime;
+    public function isKirimSms() {
+        return $this->kirimSms;
     }
 
     /**
-     * Set commandRealtime
+     * Set smsJam
      *
-     * @param string $commandRealtime
+     * @param string $smsJam
      * @return JadwalKehadiran
      */
-    public function setCommandRealtime($commandRealtime) {
-        $this->commandRealtime = $commandRealtime;
+    public function setSmsJam($smsJam) {
+        $this->smsJam = $smsJam;
 
         return $this;
     }
 
     /**
-     * Get commandRealtime
+     * Get smsJam
      *
      * @return string
      */
-    public function getCommandRealtime() {
-        return $this->commandRealtime;
-    }
-
-    /**
-     * Set smsMassalJam
-     *
-     * @param string $smsMassalJam
-     * @return JadwalKehadiran
-     */
-    public function setSmsMassalJam($smsMassalJam) {
-        $this->smsMassalJam = $smsMassalJam;
-
-        return $this;
-    }
-
-    /**
-     * Get smsMassalJam
-     *
-     * @return string
-     */
-    public function getSmsMassalJam($withsecond = FALSE) {
+    public function getSmsJam($withsecond = TRUE) {
         if (!$withsecond) {
-            return substr($this->smsMassalJam, 0, 5);
+            return substr($this->smsJam, 0, 5);
         } else {
-            return $this->smsMassalJam;
+            return $this->smsJam;
         }
     }
 
     /**
-     * Set kirimSmsMassal
+     * Set otomatisTerhubungMesin
      *
-     * @param boolean $kirimSmsMassal
+     * @param boolean $otomatisTerhubungMesin
      * @return JadwalKehadiran
      */
-    public function setKirimSmsMassal($kirimSmsMassal) {
-        $this->kirimSmsMassal = $kirimSmsMassal;
+    public function setOtomatisTerhubungMesin($otomatisTerhubungMesin) {
+        $this->otomatisTerhubungMesin = $otomatisTerhubungMesin;
 
         return $this;
     }
 
     /**
-     * Get kirimSmsMassal
+     * Get otomatisTerhubungMesin
      *
      * @return boolean
      */
-    public function getKirimSmsMassal() {
-        return $this->kirimSmsMassal;
-    }
-
-    /**
-     * Set commandMassal
-     *
-     * @param string $commandMassal
-     * @return JadwalKehadiran
-     */
-    public function setCommandMassal($commandMassal) {
-        $this->commandMassal = $commandMassal;
-
-        return $this;
-    }
-
-    /**
-     * Get commandMassal
-     *
-     * @return string
-     */
-    public function getCommandMassal() {
-        return $this->commandMassal;
-    }
-
-    /**
-     * Set dariJam
-     *
-     * @param string $dariJam
-     * @return JadwalKehadiran
-     */
-    public function setDariJam($dariJam) {
-        $this->dariJam = $dariJam;
-
-        return $this;
-    }
-
-    /**
-     * Get dariJam
-     *
-     * @return string
-     */
-    public function getDariJam($withsecond = FALSE) {
-        if (!$withsecond) {
-            return substr($this->dariJam, 0, 5);
-        } else {
-            return $this->dariJam;
-        }
-    }
-
-    /**
-     * Set hinggaJam
-     *
-     * @param string $hinggaJam
-     * @return JadwalKehadiran
-     */
-    public function setHinggaJam($hinggaJam) {
-        $this->hinggaJam = $hinggaJam;
-
-        return $this;
-    }
-
-    /**
-     * Get hinggaJam
-     *
-     * @return string
-     */
-    public function getHinggaJam($withsecond = FALSE) {
-        if (!$withsecond) {
-            return substr($this->hinggaJam, 0, 5);
-        } else {
-            return $this->hinggaJam;
-        }
-    }
-
-    /**
-     * Set commandJadwal
-     *
-     * @param string $commandJadwal
-     * @return JadwalKehadiran
-     */
-    public function setCommandJadwal($commandJadwal) {
-        $this->commandJadwal = $commandJadwal;
-
-        return $this;
-    }
-
-    /**
-     * Get commandJadwal
-     *
-     * @return string
-     */
-    public function getCommandJadwal() {
-        return $this->commandJadwal;
+    public function isOtomatisTerhubungMesin() {
+        return $this->otomatisTerhubungMesin;
     }
 
     /**

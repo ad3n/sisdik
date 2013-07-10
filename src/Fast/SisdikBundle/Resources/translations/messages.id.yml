@@ -10,6 +10,13 @@ leader: Ketua
 paidoff: lunas
 untuk: Untuk
 
+status.kehadiran:
+    hadir.tepat: Tepat Waktu
+    hadir.telat: Terlambat
+    alpa: Alpa
+    izin: Izin
+    sakit: Sakit
+
 layanan.sms:
     pendaftar.tercatat: Pendaftar tercatat di database
     pendaftar.bayar.pertama: Pertama kali membayar biaya pendaftaran
@@ -18,6 +25,18 @@ layanan.sms:
     laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
 
 label:
+    jadwal: Jadwal
+    kirim.sms: Kirim SMS
+    kirim.sms.jam: Jam Kirim SMS
+    terhubung: Terhubung
+    terhubung.mesin: Terhubung Mesin
+    terhubung.mesin.kehadiran: Terhubung Mesin Kehadiran
+    otomatis.terhubung.mesin.kehadiran: Otomatis Terhubung Mesin Kehadiran
+    status.kehadiran: Status Kehadiran
+    jadwal.kehadiran:
+        tambah: Tambah Jadwal Kehadiran
+        nama: Nama Jadwal Kehadiran
+        entri: Jadwal Kehadiran
     jumlah.siswa.tercari: ∑ siswa tercari
     jumlah.siswa.total: ∑ siswa total
     atas.nama: Nama Siswa Pendaftar
@@ -220,20 +239,20 @@ label:
     realtimesms.hourfrom: SMS Realtime Dari Jam
     realtimesms.hourto: SMS Realtime Hingga Jam
     command.massive: Command untuk SMS Massal
-    presencefrom: Sistem Kehadiran/Kepulangan Jam
+    presencefrom: Sistem Kehadiran Jam
     presenceto: Sistem Kehadiran Hingga Jam
-    presencecommand: Command Kehadiran/Kepulangan
+    presencecommand: Command Kehadiran
     monthday: Tanggal Ke
     day: Hari
-    selectmonthday: "- Pilih Tanggal Ke -"
-    selectweekday: "- Pilih Hari -"
-    sunday: Minggu
-    monday: Senin
-    tuesday: Selasa
-    wednesday: Rabu
-    thursday: Kamis
-    friday: Jumat
-    saturday: Sabtu
+    selectmonthday: "~ Tanggal Ke ~"
+    selectweekday: "~ Hari ~"
+    minggu: Minggu
+    senin: Senin
+    selasa: Selasa
+    rabu: Rabu
+    kamis: Kamis
+    jumat: Jumat
+    sabtu: Sabtu
     selectrepetition: "- Pilih Perulangan -"
     selectclass: Pilih Kelas
     save: Simpan
@@ -276,7 +295,7 @@ label:
     weekly: Minggu
     monthly: Bulan
     annually: Tahun
-    repetition: Perulangan
+    perulangan: Perulangan
     nominal: Nominal
     description: Keterangan
     order: Urutan
@@ -385,10 +404,6 @@ label:
         add: Tambah Template SMS
         name: Nama Template
         entry: Template SMS
-    presence.schedule:
-        add: Tambah Jadwal Kehadiran/Kepulangan
-        name: Nama Jadwal Kehadiran/Kepulangan
-        entry: Jadwal Kehadiran/Kepulangan
     placement:
         add: Tambah Node Penjurusan
         name: Nama Penjurusan
@@ -608,19 +623,17 @@ flash:
             fail.delete: Template SMS '%name%' gagal dihapus
     presence:
         status:
-            inserted: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' berhasil dibuat
-            updated: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' berhasil diperbarui
-            deleted: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' berhasil dihapus
-            fail.delete: Status Kehadiran/Kepulangan '%name%' di sekolah '%school%' gagal dihapus
+            inserted: Status Kehadiran '%name%' di sekolah '%school%' berhasil dibuat
+            updated: Status Kehadiran '%name%' di sekolah '%school%' berhasil diperbarui
+            deleted: Status Kehadiran '%name%' di sekolah '%school%' berhasil dihapus
+            fail.delete: Status Kehadiran '%name%' di sekolah '%school%' gagal dihapus
         schedule:
-            inserted: Jadwal Kehadiran/Kepulangan berhasil dibuat
-            updated: Jadwal Kehadiran/Kepulangan berhasil diperbarui
-            deleted: Jadwal Kehadiran/Kepulangan berhasil dihapus
-            fail.delete: Jadwal Kehadiran/Kepulangan gagal dihapus
-            commandupdate.success: Command Jadwal Kehadiran/Kepulangan berhasil diperbarui
-            commandupdate.fail: Command Jadwal Kehadiran/Kepulangan gagal diperbarui
-            duplicate.success: Jadwal Kehadiran/Kepulangan berhasil disalin
-            duplicate.fail: Jadwal Kehadiran/Kepulangan gagal disalin
+            inserted: Jadwal Kehadiran berhasil dibuat
+            updated: Jadwal Kehadiran berhasil diperbarui
+            deleted: Jadwal Kehadiran berhasil dihapus
+            fail.delete: Jadwal Kehadiran gagal dihapus
+            duplicate.success: Jadwal Kehadiran berhasil disalin
+            duplicate.fail: Jadwal Kehadiran gagal disalin
         student:
             updated: Kehadiran siswa yang terpilih berhasil diperbarui
     attendancemachine:
@@ -709,8 +722,8 @@ confirm.drop:
     admissiongroup: Hapus Gelombang Penerimaan '%admission%' (%code%)?
     year: Hapus Tahun '%year%'?
     sms.template: Hapus Template SMS '%name%'?
-    presence.status: Hapus Status Kehadiran/Kepulangan '%name%' sekolah '%school%'?
-    presence.schedule: Hapus Jadwal Kehadiran/Kepulangan?
+    presence.status: Hapus Status Kehadiran '%name%' sekolah '%school%'?
+    presence.schedule: Hapus Jadwal Kehadiran?
     placement: Hapus Node Penjurusan '%node%'?
     student: Hapus siswa '%student%'?
     attendancemachine: Hapus Mesin Kehadiran '%ip%'?
