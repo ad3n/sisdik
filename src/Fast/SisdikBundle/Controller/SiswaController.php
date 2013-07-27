@@ -722,11 +722,11 @@ class SiswaController extends Controller
 
             $tahun = $form->get('tahun')->getData()->getId();
 
-            // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahun = :tahun')->andWhere('t.sekolah = :sekolah');
-            $querybuilder->setParameter('tahun', $tahun);
-            $querybuilder->setParameter('sekolah', $sekolah->getId());
+            // ambil data siswa berdasarkan tahun masuk yang dipilih
+            $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+                    ->where('siswa.tahun = :tahun')->andWhere('siswa.sekolah = :sekolah')
+                    ->andWhere('siswa.calonSiswa = :calon')->setParameter('tahun', $tahun)
+                    ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
 
             $results = $querybuilder->getQuery()->getResult();
 
@@ -737,7 +737,15 @@ class SiswaController extends Controller
                 $fieldName = $property->getName();
                 if (preg_match('/^id/', $fieldName) || $fieldName === 'file' || $fieldName === 'foto'
                         || $fieldName === 'nomorPendaftaran' || $fieldName === 'nomorUrutPersekolah'
-                        || $fieldName === 'gelombang' || $fieldName === 'tahun' || $fieldName === 'sekolah')
+                        || $fieldName === 'gelombang' || $fieldName === 'tahun' || $fieldName === 'sekolah'
+                        || $fieldName === 'sekolahAsal' || $fieldName === 'referensi'
+                        || $fieldName === 'calonSiswa' || $fieldName === 'fotoDiskSebelumnya'
+                        || $fieldName === 'adaReferensi' || $fieldName === 'dokumenSiswa'
+                        || $fieldName === 'pendidikanSiswa' || $fieldName === 'penyakitSiswa'
+                        || $fieldName === 'waktuSimpan' || $fieldName === 'waktuUbah'
+                        || $fieldName === 'pembayaranSekali' || $fieldName === 'pembayaranPendaftaran'
+                        || $fieldName === 'pembayaranRutin' || $fieldName === 'orangtuaWali'
+                        || $fieldName === 'nomorUrutPendaftaran' || $fieldName === 'tanggalLahir')
                     continue;
                 $fields[] = $fieldName;
             }
