@@ -9,10 +9,16 @@
         {{ tahunAkademikAktif }}</p>
     {% endif %}
 
-    {% if panitiaPendaftaranAktif != '' or ketuaPanitiaPendaftaranAktif != '' %}
-        <p><b>{{ 'label.active.regcommittee'|trans }}</b><br />
-        {{ 'leader'|trans }}: {{ ketuaPanitiaPendaftaranAktif }}<br />
-        {{ 'member'|trans }}: {{ panitiaPendaftaranAktif }}</p>
+    {% if is_expr_granted("hasRole('ROLE_SISWA')") %}
+{#         info untuk siswa#}
+    {% elseif is_expr_granted("hasAnyRole('ROLE_PENGAWAS', 'ROLE_PEMBINA')") %}
+{#         info untuk pengawas dan pembina#}
+    {% else %}
+        {% if panitiaPendaftaranAktif != '' or ketuaPanitiaPendaftaranAktif != '' %}
+            <p><b>{{ 'label.active.regcommittee'|trans }}</b><br />
+            {{ 'leader'|trans }}: {{ ketuaPanitiaPendaftaranAktif }}<br />
+            {{ 'member'|trans }}: {{ panitiaPendaftaranAktif }}</p>
+        {% endif %}
     {% endif %}
 
 {#     <ul>#}
