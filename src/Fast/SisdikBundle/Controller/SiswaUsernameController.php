@@ -27,7 +27,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * SiswaUsername controller. Manage students' username.
  *
- * @Route("/data/student/username")
+ * @Route("/siswa-username")
  * @PreAuthorize("hasRole('ROLE_ADMIN')")
  */
 class SiswaUsernameController extends Controller
@@ -42,7 +42,7 @@ class SiswaUsernameController extends Controller
     /**
      * Generate student usernames
      *
-     * @Route("/", name="data_student_generate_username")
+     * @Route("/", name="siswa_generate_username")
      * @Template("FastSisdikBundle:Siswa:generate.username.html.twig")
      */
     public function generateUsernameAction() {
@@ -71,7 +71,7 @@ class SiswaUsernameController extends Controller
                     return $this
                             ->redirect(
                                     $this
-                                            ->generateUrl('data_student_generate_username_confirm',
+                                            ->generateUrl('siswa_generate_username_confirm',
                                                     array(
                                                             'file' => $retval['sessiondata'],
                                                             'type' => $retval['filetype'],
@@ -89,10 +89,10 @@ class SiswaUsernameController extends Controller
     /**
      * confirm student usernames creation
      *
-     * @Route("/confirm/{file}.{type}/{regenerate}", name="data_student_generate_username_confirm")
+     * @Route("/confirm/{file}.{type}/{regenerate}", name="siswa_generate_username_confirm")
      * @Template("FastSisdikBundle:Siswa:generate.username.confirm.html.twig")
      */
-    public function generateUsernameConfirmAction($file, $type, $regenerate = 0) {
+    public function generateUsernameConfirmAction($file, $type, $regenerate = '') {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -110,7 +110,7 @@ class SiswaUsernameController extends Controller
                     $this->get('session')->getFlashBag()
                             ->add('success',
                                     $this->get('translator')->trans('flash.student.username.populated'));
-                    return $this->redirect($this->generateUrl('data_student_generate_username'));
+                    return $this->redirect($this->generateUrl('siswa_generate_username'));
                 }
             }
         }
@@ -124,7 +124,7 @@ class SiswaUsernameController extends Controller
     /**
      * download the generated file contains username-password list
      *
-     * @Route("/download/{file}.{type}", name="data_student_generate_username_download")
+     * @Route("/download/{file}.{type}", name="siswa_generate_username_download")
      */
     public function downloadGeneratedFileAction($file, $type) {
         $filetarget = $file . '.' . $type;
@@ -157,7 +157,7 @@ class SiswaUsernameController extends Controller
     /**
      * Check if students username and password has already generated
      *
-     * @Route("/ajax/checkgeneratedusername", name="data_student_ajax_generated_username")
+     * @Route("/ajax/checkgeneratedusername", name="siswa_ajax_generated_username")
      */
     public function ajaxCheckGeneratedUsernameAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -171,7 +171,7 @@ class SiswaUsernameController extends Controller
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')
                 ->findOneBy(
                         array(
-                            'nomorIndukSistem' => $nomorIndukSistem,
+                            'nomorIndukSistem' => $nomorIndukSistem, 'calonSiswa' => false
                         ));
 
         $retval = array();
@@ -187,7 +187,7 @@ class SiswaUsernameController extends Controller
 
             if (is_object($user) && $user instanceof User) {
                 $linkstudent = $this
-                        ->generateUrl("data_student_show",
+                        ->generateUrl("siswa_show",
                                 array(
                                     'id' => $siswa->getId()
                                 ));
@@ -213,7 +213,7 @@ class SiswaUsernameController extends Controller
                 );
             } else {
                 $linkstudent = $this
-                        ->generateUrl("data_student_show",
+                        ->generateUrl("siswa_show",
                                 array(
                                     'id' => $siswa->getId()
                                 ));
@@ -244,7 +244,7 @@ class SiswaUsernameController extends Controller
             $entities = $em->getRepository('FastSisdikBundle:Siswa')
                     ->findBy(
                             array(
-                                'tahun' => $tahun
+                                'tahun' => $tahun, 'calonSiswa' => false,
                             ));
 
             $siswa_num = count($entities);
@@ -281,8 +281,8 @@ class SiswaUsernameController extends Controller
                     );
                 } elseif ($siswa_num > $username_num && $username_num == 0) {
                     $searchtype = new SiswaSearchType($this->container);
-                    $linktotal = $this->generateUrl("data_student")
-                            . "?{$searchtype->getName()}[tahun]=" . $tahun->getId();
+                    $linktotal = $this->generateUrl("siswa") . "?{$searchtype->getName()}[tahun]="
+                            . $tahun->getId();
 
                     $info = $this->get('translator')
                             ->trans('shortinfo.username.not.generated',
@@ -344,7 +344,7 @@ class SiswaUsernameController extends Controller
     /**
      * get student name and nomorinduksistem through ajax
      *
-     * @Route("/ajax/filterstudent", name="data_student_ajax_filter_student")
+     * @Route("/ajax/filterstudent", name="siswa_ajax_filter_student")
      */
     public function ajaxFilterStudentAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -357,11 +357,12 @@ class SiswaUsernameController extends Controller
 
         $query = $em
                 ->createQuery(
-                        "SELECT t FROM FastSisdikBundle:Siswa t " . " WHERE t.tahun = :tahun "
-                                . " AND t.sekolah = :sekolah "
-                                . " AND (t.nomorIndukSistem LIKE :filter OR t.namaLengkap LIKE :filter) ");
+                        "SELECT siswa FROM FastSisdikBundle:Siswa siswa WHERE siswa.tahun = :tahun "
+                                . " AND siswa.sekolah = :sekolah AND siswa.calonSiswa = :calon "
+                                . " AND (siswa.nomorIndukSistem LIKE :filter OR siswa.namaLengkap LIKE :filter) ");
         $query->setParameter("tahun", $tahun);
         $query->setParameter("sekolah", $sekolah->getId());
+        $query->setParameter("calon", false);
         $query->setParameter('filter', "%$filter%");
         $results = $query->getResult();
 
@@ -399,16 +400,19 @@ class SiswaUsernameController extends Controller
 
         if ($penyaring != '') {
             // get filtered student
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahun = :tahun')->andWhere('t.nomorIndukSistem = :nomorsistem')
+            $querybuilder = $em->createQueryBuilder()->select('siswa')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
                     ->setParameter('tahun', $tahun->getId())
-                    ->setParameter('nomorsistem', $penyaring);
+                    ->andWhere('siswa.nomorIndukSistem = :nomorsistem')
+                    ->setParameter('nomorsistem', $penyaring)->andWhere('siswa.calonSiswa = :calon')
+                    ->setParameter('calon', false);
             $results = $querybuilder->getQuery()->getResult();
         } else {
             // get students in a year
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahun = :tahun')->orderBy('t.nomorIndukSistem', 'ASC')
-                    ->setParameter('tahun', $tahun->getId());
+            $querybuilder = $em->createQueryBuilder()->select('siswa')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
+                    ->setParameter('tahun', $tahun->getId())->andWhere('siswa.calonSiswa = :calon')
+                    ->setParameter('calon', false)->orderBy('siswa.nomorIndukSistem', 'ASC');
             $results = $querybuilder->getQuery()->getResult();
         }
 
@@ -538,8 +542,24 @@ class SiswaUsernameController extends Controller
                     $userManager->updateUser($user);
                 } else {
                     $user = $userManager->findUserByUsername($siswa->getNomorIndukSistem());
-                    $user->setPlainPassword($value['password']);
-                    $userManager->updateUser($user);
+                    if ($user instanceof User) {
+                        $user->setPlainPassword($value['password']);
+                        $userManager->updateUser($user);
+                    } else {
+                        $user = $userManager->createUser();
+                        $user->setUsername($siswa->getNomorIndukSistem());
+                        $user->setPlainPassword($value['password']);
+
+                        $user->setEmail($siswa->getNomorIndukSistem() . '-' . $siswa->getEmail());
+                        $user->setName($siswa->getNamaLengkap());
+                        $user->addRole('ROLE_SISWA');
+                        $user->setSiswa($siswa);
+                        $user->setSekolah($siswa->getSekolah());
+                        $user->setConfirmationToken(null);
+                        $user->setEnabled(true);
+
+                        $userManager->updateUser($user);
+                    }
                 }
             }
         }
@@ -549,7 +569,7 @@ class SiswaUsernameController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.data.student']->setCurrent(true);
+        $menu['headings.academic']['links.siswa']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

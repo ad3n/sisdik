@@ -18,15 +18,15 @@
 
 <p>
 {{ 'shortinfo.username.generated.file.confirmation'|trans(
-        {'%path%': path('data_student_generate_username_download', {'file': file, 'type': type}),
+        {'%path%': path('siswa_generate_username_download', {'file': file, 'type': type}),
         '%filename%': file ~ '.' ~ type})|raw }}
 </p>
-<form id="generateform" action="{{ path('data_student_generate_username_confirm', {'file': file, 'type': type, 'regenerate': regenerate}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form id="generateform" action="{{ path('siswa_generate_username_confirm', {'file': file, 'type': type, 'regenerate': regenerate}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
-        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('data_student_generate_username') }}'">{{ 'label.cancel'|trans }}</button>
+        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('siswa_generate_username') }}'">{{ 'label.cancel'|trans }}</button>
     </div>
 </form>
 
@@ -44,7 +44,7 @@
 <div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-    
+
 });
 </script>
 {% endblock content %}

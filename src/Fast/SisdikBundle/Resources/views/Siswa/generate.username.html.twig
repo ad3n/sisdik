@@ -38,7 +38,7 @@
 </style>
 
 <div id="username-info">&nbsp;</div>
-<form id="generateform" action="{{ path('data_student_generate_username') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form id="generateform" action="{{ path('siswa_generate_username') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
 	<div class="form-actions">
@@ -62,13 +62,13 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
+        <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-    var checkurl = "{{ path("data_student_ajax_generated_username") }}";
-    var posturl = "{{ path('data_student_generate_username') }}";
+    var checkurl = "{{ path("siswa_ajax_generated_username") }}";
+    var posturl = "{{ path('siswa_generate_username') }}";
 
 	if ($(".selectyear").val() != '') {
 		$("#username-info").html("&nbsp;");
@@ -78,7 +78,7 @@ $(document).ready(function() {
             $('#process-output').html("");
         });
     }
-    
+
     $(".selectyear").change(function() {
         $("#username-info").html("&nbsp;");
         $('#process-output').html("");
@@ -95,7 +95,7 @@ $(document).ready(function() {
     	minLength: 3,
     	source: function(request, response) {
     		$.ajax({
-    			url: "{{ path("data_student_ajax_filter_student") }}",
+    			url: "{{ path("siswa_ajax_filter_student") }}",
     			data: {tahun: $(".selectyear").val(), filter: $(".studentfilter").val()},
     			success: function(data) {
         			response( $.map(data, function(item) {
@@ -128,7 +128,7 @@ $(document).ready(function() {
     });
 
 	$("#generateform").submit(function() {
-		
+
         {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#process-output').html('<img src="{{ asset_url }}" />');
         {% endimage %}
@@ -140,7 +140,7 @@ $(document).ready(function() {
         if ($(".regenerate-username").is(":checked") == true && $(".studentfilter").val() == '') {
         	$('#process-output').html("{{ 'alert.student.nofilter'|trans }}");
         } else {
-            // last check to make sure student is available 
+            // last check to make sure student is available
         	$.get(checkurl, {
             	    tahun: $(".selectyear").val(),
             	    siswa: $(".studentfilter").val(),
@@ -151,7 +151,7 @@ $(document).ready(function() {
                     	$("#generateform").data("valid", true).submit();
                         // $.post(posturl, $("#generateform").serialize(), function(data) {
                             // console.log(data);
-                        // }); 
+                        // });
                     } else {
                     	$("#generateform").data("valid", false);
                         $("#username-info").html(data.info);
@@ -159,7 +159,7 @@ $(document).ready(function() {
                     }
             });
         }
-        
+
 		return false;
 	});
 });
