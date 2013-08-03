@@ -9,6 +9,7 @@ headings:
     pendaftaran: Pendaftaran
 
 links:
+    siswa: Siswa
     penempatan.siswa.kelas: Penempatan Siswa → Kelas
     status.kehadiran: Status Kehadiran
     laporan.pembayaran.pendaftaran: Laporan Pendaftaran
@@ -48,7 +49,6 @@ links:
         once: Biaya Sekali Bayar
         recur: Biaya Berulang
     data:
-        student: Siswa
         class: Kelas
         classguardian: Wali Kelas
         academiccalendar: Kalender Pendidikan

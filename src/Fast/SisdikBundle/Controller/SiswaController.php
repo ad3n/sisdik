@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +37,11 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  */
 class SiswaController extends Controller
 {
+    const DOCUMENTS_BASEDIR = "/documents/base/";
+    const BASEFILE = "base.ods";
+    const OUTPUTFILE = "datasiswa.";
+    const DOCUMENTS_OUTPUTDIR = "uploads/data-siswa/";
+
     private $importStudentCount = 0;
     private $importStudentClassCount = 0;
     private $mergeStudentCount = 0;
@@ -42,7 +49,7 @@ class SiswaController extends Controller
     /**
      * Lists all Siswa entities.
      *
-     * @Route("/", name="data_student")
+     * @Route("/", name="siswa")
      * @Template()
      */
     public function indexAction() {
@@ -88,7 +95,7 @@ class SiswaController extends Controller
     /**
      * Finds and displays a Siswa entity.
      *
-     * @Route("/{id}/show", name="data_student_show")
+     * @Route("/{id}/show", name="siswa_show")
      * @Template()
      */
     public function showAction($id) {
@@ -113,7 +120,7 @@ class SiswaController extends Controller
     /**
      * Displays a form to create a new Siswa entity.
      *
-     * @Route("/new", name="data_student_new")
+     * @Route("/new", name="siswa_new")
      * @Template()
      */
     public function newAction() {
@@ -131,7 +138,7 @@ class SiswaController extends Controller
     /**
      * Creates a new Siswa entity.
      *
-     * @Route("/create", name="data_student_create")
+     * @Route("/create", name="siswa_create")
      * @Method("post")
      * @Template("FastSisdikBundle:Siswa:new.html.twig")
      */
@@ -169,7 +176,7 @@ class SiswaController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('data_student_show',
+                                    ->generateUrl('siswa_show',
                                             array(
                                                 'id' => $entity->getId()
                                             )));
@@ -184,7 +191,7 @@ class SiswaController extends Controller
     /**
      * Displays a form to edit an existing Siswa entity.
      *
-     * @Route("/{id}/edit", name="data_student_edit")
+     * @Route("/{id}/edit", name="siswa_edit")
      * @Template()
      */
     public function editAction($id) {
@@ -211,7 +218,7 @@ class SiswaController extends Controller
     /**
      * Edits an existing Siswa entity.
      *
-     * @Route("/{id}/update", name="data_student_update")
+     * @Route("/{id}/update", name="siswa_update")
      * @Method("post")
      * @Template("FastSisdikBundle:Siswa:edit.html.twig")
      */
@@ -256,7 +263,7 @@ class SiswaController extends Controller
             return $this
                     ->redirect(
                             $this
-                                    ->generateUrl('data_student_edit',
+                                    ->generateUrl('siswa_edit',
                                             array(
                                                 'id' => $id
                                             )));
@@ -272,7 +279,7 @@ class SiswaController extends Controller
      * Confirm before really deletes a Siswa entity.
      * Display warning here..
      *
-     * @Route("/{id}/deleteconfirm", name="data_student_deleteconfirm")
+     * @Route("/{id}/deleteconfirm", name="siswa_deleteconfirm")
      * @Method("post")
      * @Template("FastSisdikBundle:Siswa:deleteconfirm.html.twig")
      */
@@ -298,7 +305,7 @@ class SiswaController extends Controller
     /**
      * Deletes a Siswa entity.
      *
-     * @Route("/{id}/delete", name="data_student_delete")
+     * @Route("/{id}/delete", name="siswa_delete")
      * @Method("post")
      */
     public function deleteAction($id) {
@@ -338,13 +345,13 @@ class SiswaController extends Controller
                     ->add('error', $this->get('translator')->trans('flash.data.student.fail.delete'));
         }
 
-        return $this->redirect($this->generateUrl('data_student'));
+        return $this->redirect($this->generateUrl('siswa'));
     }
 
     /**
      * Displays a form to import Siswa entities.
      *
-     * @Route("/import/student", name="data_student_import_student")
+     * @Route("/import/student", name="siswa_import_student")
      * @Template()
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -392,7 +399,7 @@ class SiswaController extends Controller
                                                         '%admission%' => $gelombang->getNama()
                                                 )));
 
-                return $this->redirect($this->generateUrl('data_student'));
+                return $this->redirect($this->generateUrl('siswa'));
             }
         }
 
@@ -404,7 +411,7 @@ class SiswaController extends Controller
     /**
      * Download a csv format file template to import Siswa entities
      *
-     * @Route("/download/studenttemplate", name="data_student_student_template")
+     * @Route("/download/studenttemplate", name="siswa_student_template")
      */
     public function downloadStudentTemplateAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -439,7 +446,7 @@ class SiswaController extends Controller
     /**
      * Displays a form to import/map Siswa with SiswaKelas entities.
      *
-     * @Route("/import/studentclass", name="data_student_import_studentclass")
+     * @Route("/import/studentclass", name="siswa_import_studentclass")
      * @Template()
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -489,7 +496,7 @@ class SiswaController extends Controller
                                                         '%class%' => $kelas->getNama()
                                                 )));
 
-                return $this->redirect($this->generateUrl('data_student'));
+                return $this->redirect($this->generateUrl('siswa'));
             }
         }
 
@@ -509,7 +516,7 @@ class SiswaController extends Controller
     /**
      * Download a csv format file template to initialize map Siswa with SiswaKelas entities
      *
-     * @Route("/download/studentclasstemplateinit", name="data_student_studentclass_templateinit")
+     * @Route("/download/studentclasstemplateinit", name="siswa_studentclass_templateinit")
      * @Method("post")
      */
     public function downloadStudentClassTemplateInitAction() {
@@ -571,7 +578,7 @@ class SiswaController extends Controller
     /**
      * Download a csv format file template to import/map Siswa with SiswaKelas entities
      *
-     * @Route("/download/studentclasstemplatemap", name="data_student_studentclass_templatemap")
+     * @Route("/download/studentclasstemplatemap", name="siswa_studentclass_templatemap")
      */
     public function downloadStudentClassTemplateMapAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -647,7 +654,7 @@ class SiswaController extends Controller
     /**
      * Displays a form to import and merge Siswa entities.
      *
-     * @Route("/merge/student", name="data_student_merge_student")
+     * @Route("/merge/student", name="siswa_merge_student")
      * @Template()
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -690,7 +697,7 @@ class SiswaController extends Controller
                                                     '%count%' => $this->mergeStudentCount,
                                                 )));
 
-                return $this->redirect($this->generateUrl('data_student'));
+                return $this->redirect($this->generateUrl('siswa'));
             }
         }
 
@@ -704,10 +711,10 @@ class SiswaController extends Controller
     /**
      * Download a csv format file template to merge Siswa entities
      *
-     * @Route("/download/basicdata", name="data_student_download_basicdata")
+     * @Route("/ekspor", name="siswa_export")
      * @Method("POST")
      */
-    public function downloadBasicStudentDataAction() {
+    public function exportAction() {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -716,65 +723,103 @@ class SiswaController extends Controller
         $form->submit($this->getRequest());
 
         if ($form->isValid()) {
+            $formdata = $form->getData();
             $em = $this->getDoctrine()->getManager();
 
-            $filename = "data_siswa_pertahun.csv";
-
-            $tahun = $form->get('tahun')->getData()->getId();
-
             // ambil data siswa berdasarkan tahun masuk yang dipilih
-            $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
-                    ->where('siswa.tahun = :tahun')->andWhere('siswa.sekolah = :sekolah')
-                    ->andWhere('siswa.calonSiswa = :calon')->setParameter('tahun', $tahun)
+            $querybuilder = $em->createQueryBuilder()->select('siswa')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
+                    ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
+                    ->setParameter('tahun', $formdata['tahun']->getId())
                     ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
+            $entities = $querybuilder->getQuery()->getResult();
 
-            $results = $querybuilder->getQuery()->getResult();
+            $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+            $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-            $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
-            $properties = $reflectionClass->getProperties();
+            $filenameoutput = self::OUTPUTFILE . $formdata['tahun']->getTahun() . ".sisdik";
 
-            foreach ($properties as $property) {
-                $fieldName = $property->getName();
-                if (preg_match('/^id/', $fieldName) || $fieldName === 'file' || $fieldName === 'foto'
-                        || $fieldName === 'nomorPendaftaran' || $fieldName === 'nomorUrutPersekolah'
-                        || $fieldName === 'gelombang' || $fieldName === 'tahun' || $fieldName === 'sekolah'
-                        || $fieldName === 'sekolahAsal' || $fieldName === 'referensi'
-                        || $fieldName === 'calonSiswa' || $fieldName === 'fotoDiskSebelumnya'
-                        || $fieldName === 'adaReferensi' || $fieldName === 'dokumenSiswa'
-                        || $fieldName === 'pendidikanSiswa' || $fieldName === 'penyakitSiswa'
-                        || $fieldName === 'waktuSimpan' || $fieldName === 'waktuUbah'
-                        || $fieldName === 'pembayaranSekali' || $fieldName === 'pembayaranPendaftaran'
-                        || $fieldName === 'pembayaranRutin' || $fieldName === 'orangtuaWali'
-                        || $fieldName === 'nomorUrutPendaftaran' || $fieldName === 'tanggalLahir')
-                    continue;
-                $fields[] = $fieldName;
+            $outputfiletype = "ods";
+            $extensiontarget = $extensionsource = ".$outputfiletype";
+            $filesource = $filenameoutput . $extensionsource;
+            $filetarget = $filenameoutput . $extensiontarget;
+
+            $fs = new Filesystem();
+            if (!$fs->exists($outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun())) {
+                $fs->mkdir($outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun());
             }
 
-            $students = array();
-            foreach ($results as $result) {
-                reset($fields);
-                unset($tmpdata);
-                foreach ($fields as $field) {
-                    if ($field == 'gelombang') {
-                        $tmpdata[] = $result->{'get' . ucfirst($field)}()->getNama();
-                    } else {
-                        $tmpdata[] = $result->{'get' . ucfirst($field)}();
+            $documentsource = $outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun() . '/'
+                    . $filesource;
+            $documenttarget = $outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun() . '/'
+                    . $filetarget;
+
+            if ($outputfiletype == 'ods') {
+                if (copy($documentbase, $documenttarget) === TRUE) {
+                    $ziparchive = new \ZipArchive();
+                    $ziparchive->open($documenttarget);
+                    $ziparchive
+                            ->addFromString('content.xml',
+                                    $this
+                                            ->renderView(
+                                                    "FastSisdikBundle:Siswa:datasiswa-pertahun.xml.twig",
+                                                    array(
+                                                            'entities' => $entities,
+                                                            'jumlahSiswa' => count($entities)
+                                                    )));
+                    if ($ziparchive->close() === TRUE) {
+                        $return = array(
+                                "redirectUrl" => $this
+                                        ->generateUrl("siswa_downloadfile",
+                                                array(
+                                                        'tahun' => $formdata['tahun']->getTahun(),
+                                                        'filename' => $filetarget
+                                                )), "tahun" => $formdata['tahun']->getTahun(),
+                                "filename" => $filetarget,
+                        );
+
+                        $return = json_encode($return);
+
+                        return new Response($return, 200,
+                                array(
+                                    'Content-Type' => 'application/json'
+                                ));
                     }
                 }
-                $students[] = $tmpdata;
             }
-
-            $response = $this
-                    ->render("FastSisdikBundle:Siswa:$filename.twig",
-                            array(
-                                'fields' => $fields, 'students' => $students,
-                            ));
-
-            $response->headers->set('Content-Type', 'text/csv');
-            $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
-
-            return $response;
         }
+    }
+
+    /**
+     * download the generated file
+     *
+     * @Route("/download/{tahun}/{filename}/{type}", name="siswa_downloadfile")
+     * @Method("GET")
+     */
+    public function downloadFileAction($tahun, $filename, $type = 'ods') {
+        $sekolah = $this->isRegisteredToSchool();
+
+        $filetarget = $filename;
+        $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $tahun . '/' . $filetarget;
+
+        $response = new Response(file_get_contents($documenttarget), 200);
+        $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
+        $response->headers->set('Content-Disposition', $doc);
+        $response->headers->set('Content-Description', 'Data Siswa');
+
+        if ($type == 'ods') {
+            $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
+        } elseif ($type == 'pdf') {
+            $response->headers->set('Content-Type', 'application/pdf');
+        }
+
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Expires', '0');
+        $response->headers->set('Cache-Control', 'must-revalidate');
+        $response->headers->set('Pragma', 'public');
+        $response->headers->set('Content-Length', filesize($documenttarget));
+
+        return $response;
     }
 
     private function mergeStudent($row, $headers, $andFlush = false) {
@@ -971,7 +1016,7 @@ class SiswaController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.data.student']->setCurrent(true);
+        $menu['headings.academic']['links.siswa']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

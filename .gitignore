@@ -3,6 +3,7 @@ web/css/
 web/images/
 web/js/
 web/_controller/
+web/uploads/
 app/bootstrap.php.cache
 app/cache/*
 app/logs/*

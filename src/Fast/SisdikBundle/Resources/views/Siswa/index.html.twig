@@ -8,20 +8,30 @@
     display: inline-block;
     margin-right: 0.4em;
 }
+#filename {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
+.loading {
+    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
 </style>
 
 <div class="filter-section">
-    <form method="GET" action="{{ path('data_student') }}" class="form-search form-inline">
+    <form method="GET" action="{{ path('siswa') }}" class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('data_student') }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('siswa') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 
 <div class="row-fluid">
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    	<a href="{{ path('data_student_new') }}" class="add-link-a">
+    	<a href="{{ path('siswa_new') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.student.add'|trans }}
     	</a>
@@ -30,7 +40,7 @@
     {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/icon_import.png' %}
-    	<a href="{{ path('data_student_import_student') }}" class="add-link-a">
+    	<a href="{{ path('siswa_import_student') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.import'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.student.import'|trans }}
     	</a>
@@ -38,7 +48,7 @@
     </div>
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/merge.png' %}
-    	<a href="{{ path('data_student_merge_student') }}" class="add-link-a">
+    	<a href="{{ path('siswa_merge_student') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.merge'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.student.merge'|trans }}
     	</a>
@@ -87,8 +97,8 @@
     		{% endif %}
     		</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('data_student_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('data_student_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
+        		<a href="{{ path('siswa_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('siswa_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
     		</td>
     	</tr>
     {% endfor %}
@@ -102,7 +112,7 @@
 <div class="row-fluid">
     <div class="span4">
     {% image '@FastSisdikBundle/Resources/public/images/chair.png' %}
-    	<a href="{{ path('data_student_import_studentclass') }}" class="add-link-a">
+    	<a href="{{ path('siswa_import_studentclass') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.importclassmap'|trans }}" border="0" width="25" style="vertical-align: middle;" />
     	    {{ 'label.student.importclassmap'|trans }}
     	</a>
@@ -110,7 +120,7 @@
     </div>
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/user-gear.png' %}
-    	<a href="{{ path('data_student_generate_username') }}" class="add-link-a">
+    	<a href="{{ path('siswa_generate_username') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.student.generate.username'|trans }}" border="0" height="25" style="vertical-align: middle;" />
     	    {{ 'label.student.generate.username'|trans }}
     	</a>
@@ -123,11 +133,28 @@
 
 <div class="filter-section">
     <h4>{{ 'heading.download.studentdata'|trans }}:</h4>
-    <form method="post" action="{{ path('data_student_download_basicdata') }}" class="form-search form-inline">
+    <form method="post" action="{{ path('siswa_export') }}" id="export-form" class="form-search form-inline">
         {{ form_widget(dlform) }}
         <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+        <div id="filename"></div>
     </form>
 </div>
-
-
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $("#export-form").submit(function() {
+        var url = $(this).attr("action");
+        $("#filename").html("&nbsp;");
+        $("#filename").addClass("loading");
+        $.post(url, $(this).serialize(), function(response) {
+            if (response.redirectUrl) {
+            	window.location.href = response.redirectUrl;
+            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	$("#filename").removeClass("loading");
+            }
+        });
+        return false;
+    });
+});
+</script>
 {% endblock content %}

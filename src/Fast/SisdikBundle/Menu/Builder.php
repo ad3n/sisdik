@@ -276,9 +276,9 @@ class Builder extends AbstractNavbarMenuBuilder
                             ));
 
             $academic
-                    ->addChild('links.data.student',
+                    ->addChild('links.siswa',
                             array(
-                                'route' => 'data_student'
+                                'route' => 'siswa'
                             ));
         }
 
