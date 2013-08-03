@@ -319,15 +319,12 @@ class KelasController extends Controller
                             ));
 
             foreach ($entities as $entity) {
-                // remove year code identity from class code
-                $kode = substr($entity->getKode(), strlen($entity->getTahunAkademik()->getKode()));
-
                 $kelas = new Kelas();
                 $kelas->setTingkat($entity->getTingkat());
                 $kelas->setSekolah($entity->getSekolah());
                 $kelas->setTahunAkademik($tahunAkademikTarget);
                 $kelas->setKeterangan($entity->getKeterangan());
-                $kelas->setKode($kode);
+                $kelas->setKode($entity->getKode());
                 $kelas->setNama($entity->getNama());
                 $kelas->setUrutan($entity->getUrutan());
                 try {
