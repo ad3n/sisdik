@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="form-container" id="div-siswakelas">
-    <form action="{{ path('data_studentclass_create', {'siswa': siswa.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('siswa-kelas_create', {'siswa': siswa.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -15,7 +15,7 @@
 </form>
 <ul class="pills">
     <li>
-        <a href="{{ path('data_studentclass', {'siswa': siswa.id}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('siswa-kelas', {'siswa': siswa.id}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 
@@ -29,7 +29,7 @@ $(document).ready(function() {
         }
         $(".selectclass").html(options);
     });
-    
+
     $(".selectyear").change(function() {
         // clear class select box content
         $(".selectclass").empty();

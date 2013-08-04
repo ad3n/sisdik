@@ -270,15 +270,15 @@ class Builder extends AbstractNavbarMenuBuilder
                             ));
 
             $academic
-                    ->addChild('links.penempatan.siswa.kelas',
-                            array(
-                                'route' => 'penempatan-siswa-kelas'
-                            ));
-
-            $academic
                     ->addChild('links.siswa',
                             array(
                                 'route' => 'siswa'
+                            ));
+
+            $academic
+                    ->addChild('links.penempatan.siswa.kelas',
+                            array(
+                                'route' => 'penempatan-siswa-kelas'
                             ));
         }
 

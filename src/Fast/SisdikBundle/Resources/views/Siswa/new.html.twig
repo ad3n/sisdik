@@ -8,7 +8,7 @@
     font-size: 0.9em;
 }
 </style>
-<form action="{{ path('data_student_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<form action="{{ path('siswa_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
 	<div class="form-actions">
 	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
@@ -16,7 +16,7 @@
 </form>
 <ul class="pills">
     <li>
-        <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">

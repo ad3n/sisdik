@@ -8,7 +8,7 @@
 {% block content %}
 <ul class="pills">
     <li>
-        <a href="{{ path('data_student_show', {'id': siswa.id}) }}">{{ 'link.backtostudentinfo'|trans }}</a>
+        <a href="{{ path('siswa_show', {'id': siswa.id}) }}">{{ 'link.backtostudentinfo'|trans }}</a>
     </li>
 </ul>
 
@@ -16,7 +16,7 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('data_studentclass_new', {'siswa': siswa.id}) }}" class="add-link-a">
+	<a href="{{ path('siswa-kelas_new', {'siswa': siswa.id}) }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
 	    {{ 'label.studentclass.add'|trans }}
 	</a>
@@ -52,7 +52,7 @@
         		<dd>{{ data.keterangan }}</dd>
         		<dt>{{ 'label.actions'|trans }}</dt>
         		<dd>
-            		<a href="{{ path('data_studentclass_edit', {'siswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit info-tooltip"></a>
+            		<a href="{{ path('siswa-kelas_edit', {'siswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit info-tooltip"></a>
             	</dd>
     		</dl>
 		</td>

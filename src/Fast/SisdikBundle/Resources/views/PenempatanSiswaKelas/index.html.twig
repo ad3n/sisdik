@@ -47,7 +47,7 @@
             <td data-title="{{ 'label.ortuwali.entri'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}, {{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                <a href="{{ path('data_student_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" style="margin: 0 8px;" target="_blank">
+                <a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" style="margin: 0 8px;" target="_blank">
             	    <img src="{{ asset_url }}" alt="{{ 'alt.detail'|trans }}" border="0" style="vertical-align: baseline;" />
         	    </a>
                 {% endimage %}

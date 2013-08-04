@@ -132,7 +132,7 @@ class PenempatanSiswaKelasController extends Controller
                                                         '%admission%' => $gelombang->getNama()
                                                 )));
 
-                return $this->redirect($this->generateUrl('data_student'));
+                return $this->redirect($this->generateUrl('siswa'));
             }
         }
 

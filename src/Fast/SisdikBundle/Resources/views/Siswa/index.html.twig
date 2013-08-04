@@ -97,8 +97,8 @@
     		{% endif %}
     		</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('siswa_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('siswa_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
+        		<a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+        		<a href="{{ path('siswa_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
     		</td>
     	</tr>
     {% endfor %}

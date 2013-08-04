@@ -60,7 +60,7 @@
     {% if ruteasal == 'pendaftar' %}
         <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.pendaftar'|trans }}</a>
     {% else %}
-        <a href="{{ path('data_student_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.siswa'|trans }}</a>
+        <a href="{{ path('siswa_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.siswa'|trans }}</a>
     {% endif %}
     </li>
 </ul>

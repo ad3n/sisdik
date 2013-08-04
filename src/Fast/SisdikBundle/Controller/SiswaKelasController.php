@@ -16,7 +16,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 /**
  * SiswaKelas controller.
  *
- * @Route("/data/student/{siswa}/class", requirements={"siswa"="\d+"})
+ * @Route("/siswa-kelas/{siswa}", requirements={"siswa"="\d+"})
  * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
  */
 class SiswaKelasController extends Controller
@@ -24,7 +24,7 @@ class SiswaKelasController extends Controller
     /**
      * Lists all SiswaKelas entities.
      *
-     * @Route("/", name="data_studentclass")
+     * @Route("/", name="siswa-kelas")
      * @Template()
      */
     public function indexAction($siswa) {
@@ -48,7 +48,7 @@ class SiswaKelasController extends Controller
     /**
      * Displays a form to create a new SiswaKelas entity.
      *
-     * @Route("/new", name="data_studentclass_new")
+     * @Route("/new", name="siswa-kelas_new")
      * @Template()
      */
     public function newAction($siswa) {
@@ -68,7 +68,7 @@ class SiswaKelasController extends Controller
     /**
      * Creates a new SiswaKelas entity.
      *
-     * @Route("/create", name="data_studentclass_create")
+     * @Route("/create", name="siswa-kelas_create")
      * @Method("POST")
      * @Template("FastSisdikBundle:SiswaKelas:new.html.twig")
      */
@@ -116,7 +116,7 @@ class SiswaKelasController extends Controller
                 return $this
                         ->redirect(
                                 $this
-                                        ->generateUrl('data_studentclass',
+                                        ->generateUrl('siswa-kelas',
                                                 array(
                                                     'siswa' => $siswa
                                                 )));
@@ -136,7 +136,7 @@ class SiswaKelasController extends Controller
     /**
      * Displays a form to edit an existing SiswaKelas entity.
      *
-     * @Route("/{id}/edit", name="data_studentclass_edit")
+     * @Route("/{id}/edit", name="siswa-kelas_edit")
      * @Template()
      */
     public function editAction($siswa, $id) {
@@ -165,7 +165,7 @@ class SiswaKelasController extends Controller
     /**
      * Edits an existing SiswaKelas entity.
      *
-     * @Route("/{id}/update", name="data_studentclass_update")
+     * @Route("/{id}/update", name="siswa-kelas_update")
      * @Method("POST")
      * @Template("FastSisdikBundle:SiswaKelas:edit.html.twig")
      */
@@ -220,7 +220,7 @@ class SiswaKelasController extends Controller
                 return $this
                         ->redirect(
                                 $this
-                                        ->generateUrl('data_studentclass',
+                                        ->generateUrl('siswa-kelas',
                                                 array(
                                                     'siswa' => $siswa
                                                 )));
@@ -242,7 +242,7 @@ class SiswaKelasController extends Controller
     /**
      * Deletes a SiswaKelas entity.
      *
-     * @Route("/{id}/delete", name="data_studentclass_delete")
+     * @Route("/{id}/delete", name="siswa-kelas_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $siswa, $id) {
@@ -286,7 +286,7 @@ class SiswaKelasController extends Controller
         return $this
                 ->redirect(
                         $this
-                                ->generateUrl('data_studentclass',
+                                ->generateUrl('siswa-kelas',
                                         array(
                                             'siswa' => $siswa
                                         )));
@@ -300,7 +300,7 @@ class SiswaKelasController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.data.student']->setCurrent(true);
+        $menu['headings.academic']['links.siswa']->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

@@ -68,7 +68,7 @@
 
     <div class="clearfix"></div>
 
-    <form id="delete-form" action="{{ path('data_student_deleteconfirm', { 'id': entity.id }) }}" method="post" class="form-inline">
+    <form id="delete-form" action="{{ path('siswa_deleteconfirm', { 'id': entity.id }) }}" method="post" class="form-inline">
         {{ form_widget(delete_form) }}
         <div class="form-actions">
             <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -79,7 +79,7 @@
 <div class="span3">
     <div class="add-link pull-right">
     {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    	<a href="{{ path('data_student_new') }}" class="add-link-a">
+    	<a href="{{ path('siswa_new') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.student.add'|trans }}
     	</a>
@@ -91,7 +91,7 @@
 	<h4 style="margin-top: 1em;">{{ 'heading.academicinfo'|trans }}</h4>
 	{{ 'text.academicinfo'|trans }}<br />
     <ul class="pills">
-        <li><a href="{{ path('data_studentclass', { 'siswa': entity.id }) }}">{{ 'link.classhistory'|trans }}</a></li>
+        <li><a href="{{ path('siswa-kelas', { 'siswa': entity.id }) }}">{{ 'link.classhistory'|trans }}</a></li>
     </ul>
 
 	<h4>{{ 'heading.info.pendukung'|trans }}</h4>
@@ -116,10 +116,10 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('data_student') }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('data_student_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('siswa_edit', { 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 <script language="javascript" type="text/javascript">
