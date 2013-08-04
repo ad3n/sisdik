@@ -70,7 +70,7 @@ class TahunAkademik
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId() {
         return $this->id;
@@ -91,7 +91,7 @@ class TahunAkademik
     /**
      * Get nama
      *
-     * @return string 
+     * @return string
      */
     public function getNama() {
         return $this->nama;
@@ -112,7 +112,7 @@ class TahunAkademik
     /**
      * Get kode
      *
-     * @return string 
+     * @return string
      */
     public function getKode() {
         return $this->kode;
@@ -133,7 +133,7 @@ class TahunAkademik
     /**
      * Get urutan
      *
-     * @return integer 
+     * @return integer
      */
     public function getUrutan() {
         return $this->urutan;
@@ -154,7 +154,7 @@ class TahunAkademik
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
     public function getKeterangan() {
         return $this->keterangan;
@@ -175,7 +175,7 @@ class TahunAkademik
     /**
      * Get aktif
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getAktif() {
         return $this->aktif;
@@ -196,7 +196,7 @@ class TahunAkademik
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah() {
         return $this->sekolah;

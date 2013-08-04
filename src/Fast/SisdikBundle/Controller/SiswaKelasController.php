@@ -16,7 +16,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 /**
  * SiswaKelas controller.
  *
- * @Route("/siswa-kelas/{siswa}", requirements={"siswa"="\d+"})
+ * @Route("/siswa-kelas/{idsiswa}", requirements={"idsiswa"="\d+"})
  * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
  */
 class SiswaKelasController extends Controller
@@ -27,7 +27,7 @@ class SiswaKelasController extends Controller
      * @Route("/", name="siswa-kelas")
      * @Template()
      */
-    public function indexAction($siswa) {
+    public function indexAction($idsiswa) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -36,12 +36,12 @@ class SiswaKelasController extends Controller
         $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SiswaKelas', 't')
                 ->leftJoin('t.tahunAkademik', 't2')->leftJoin('t.kelas', 't3')->where('t.siswa = :siswa')
                 ->orderBy('t2.urutan', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.aktif', 'ASC')
-                ->setParameter('siswa', $siswa)->getQuery();
+                ->setParameter('siswa', $idsiswa)->getQuery();
 
         $results = $querybuilder->getResult();
 
         return array(
-            'results' => $results, 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($siswa)
+            'results' => $results, 'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($idsiswa)
         );
     }
 
@@ -51,17 +51,19 @@ class SiswaKelasController extends Controller
      * @Route("/new", name="siswa-kelas_new")
      * @Template()
      */
-    public function newAction($siswa) {
+    public function newAction($idsiswa) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
+        $em = $this->getDoctrine()->getManager();
+
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($idsiswa);
 
         $entity = new SiswaKelas();
-        $form = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
+        $entity->setSiswa($siswa);
+        $form = $this->createForm(new SiswaKelasType($this->container), $entity);
 
         return array(
-                'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                        ->find($siswa)
+            'entity' => $entity, 'form' => $form->createView(), 'siswa' => $siswa,
         );
     }
 
@@ -72,15 +74,17 @@ class SiswaKelasController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:SiswaKelas:new.html.twig")
      */
-    public function createAction(Request $request, $siswa) {
+    public function createAction(Request $request, $idsiswa) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $entity = new SiswaKelas();
-        $form = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
-        $form->submit($request);
+        $em = $this->getDoctrine()->getManager();
 
-        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($idsiswa);
+
+        $entity = new SiswaKelas();
+        $form = $this->createForm(new SiswaKelasType($this->container), $entity);
+        $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -91,7 +95,7 @@ class SiswaKelasController extends Controller
                 $obj = $em->getRepository('FastSisdikBundle:SiswaKelas')
                         ->findOneBy(
                                 array(
-                                        'siswa' => $siswa,
+                                        'siswa' => $siswa->getId(),
                                         'tahunAkademik' => $form->get('tahunAkademik')->getData()->getId(),
                                         'aktif' => $aktif
                                 ));
@@ -118,7 +122,7 @@ class SiswaKelasController extends Controller
                                 $this
                                         ->generateUrl('siswa-kelas',
                                                 array(
-                                                    'siswa' => $siswa
+                                                    'idsiswa' => $idsiswa
                                                 )));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.studentclass');
@@ -129,7 +133,7 @@ class SiswaKelasController extends Controller
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
                 'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                        ->find($siswa)
+                        ->find($idsiswa)
         );
     }
 
@@ -139,26 +143,25 @@ class SiswaKelasController extends Controller
      * @Route("/{id}/edit", name="siswa-kelas_edit")
      * @Template()
      */
-    public function editAction($siswa, $id) {
+    public function editAction($idsiswa, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:SiswaKelas')->find($id);
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($idsiswa);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SiswaKelas tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
+        $editForm = $this->createForm(new SiswaKelasType($this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                        ->find($siswa)
+                'delete_form' => $deleteForm->createView(), 'siswa' => $siswa,
         );
     }
 
@@ -169,22 +172,21 @@ class SiswaKelasController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:SiswaKelas:edit.html.twig")
      */
-    public function updateAction(Request $request, $siswa, $id) {
+    public function updateAction(Request $request, $idsiswa, $id) {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('FastSisdikBundle:SiswaKelas')->find($id);
-        $siswa_entity = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                ->find($siswa);
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($idsiswa);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SiswaKelas tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new SiswaKelasType($this->container, $siswa), $entity);
+        $editForm = $this->createForm(new SiswaKelasType($this->container), $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
@@ -195,9 +197,9 @@ class SiswaKelasController extends Controller
                 $obj = $em->getRepository('FastSisdikBundle:SiswaKelas')
                         ->findOneBy(
                                 array(
-                                        'siswa' => $siswa,
-                                        'tahunAkademik' => $editForm->get('tahunAkademik')->getData()->getId(),
-                                        'aktif' => $aktif
+                                        'siswa' => $siswa->getId(),
+                                        'tahunAkademik' => $editForm->get('tahunAkademik')->getData()
+                                                ->getId(), 'aktif' => $aktif
                                 ));
                 if (is_object($obj) && $obj instanceof SiswaKelas && ($obj->getId() != $entity->getId())) {
                     $exception = $this->get('translator')->trans('exception.unique.studentclass.active');
@@ -214,7 +216,7 @@ class SiswaKelasController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.studentclass.updated',
                                                 array(
-                                                    '%student%' => $siswa_entity->getNamaLengkap()
+                                                    '%student%' => $siswa->getNamaLengkap()
                                                 )));
 
                 return $this
@@ -222,7 +224,7 @@ class SiswaKelasController extends Controller
                                 $this
                                         ->generateUrl('siswa-kelas',
                                                 array(
-                                                    'siswa' => $siswa
+                                                    'idsiswa' => $idsiswa
                                                 )));
 
             } catch (DBALException $e) {
@@ -233,9 +235,7 @@ class SiswaKelasController extends Controller
 
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-                'siswa' => $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')
-                        ->find($siswa)
+                'delete_form' => $deleteForm->createView(), 'siswa' => $siswa,
         );
     }
 
@@ -245,16 +245,17 @@ class SiswaKelasController extends Controller
      * @Route("/{id}/delete", name="siswa-kelas_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $siswa, $id) {
+    public function deleteAction(Request $request, $idsiswa, $id) {
         $this->isRegisteredToSchool();
 
-        $siswa = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Siswa')->find($siswa);
+        $em = $this->getDoctrine()->getManager();
+
+        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($idsiswa);
 
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('FastSisdikBundle:SiswaKelas')->find($id);
 
             if (!$entity) {
@@ -288,7 +289,7 @@ class SiswaKelasController extends Controller
                         $this
                                 ->generateUrl('siswa-kelas',
                                         array(
-                                            'siswa' => $siswa
+                                            'idsiswa' => $idsiswa
                                         )));
     }
 

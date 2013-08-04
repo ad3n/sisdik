@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -60,7 +59,7 @@ class SiswaKelas
     /**
      * @var \Siswa
      *
-     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="siswaKelas")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
@@ -77,15 +76,12 @@ class SiswaKelas
      */
     private $tahunAkademik;
 
-
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -95,20 +91,18 @@ class SiswaKelas
      * @param boolean $aktif
      * @return SiswaKelas
      */
-    public function setAktif($aktif)
-    {
+    public function setAktif($aktif) {
         $this->aktif = $aktif;
-    
+
         return $this;
     }
 
     /**
      * Get aktif
      *
-     * @return boolean 
+     * @return boolean
      */
-    public function getAktif()
-    {
+    public function getAktif() {
         return $this->aktif;
     }
 
@@ -118,20 +112,18 @@ class SiswaKelas
      * @param string $keterangan
      * @return SiswaKelas
      */
-    public function setKeterangan($keterangan)
-    {
+    public function setKeterangan($keterangan) {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
-    public function getKeterangan()
-    {
+    public function getKeterangan() {
         return $this->keterangan;
     }
 
@@ -141,20 +133,18 @@ class SiswaKelas
      * @param \Fast\SisdikBundle\Entity\Kelas $kelas
      * @return SiswaKelas
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
-    {
+    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
         $this->kelas = $kelas;
-    
+
         return $this;
     }
 
     /**
      * Get kelas
      *
-     * @return \Fast\SisdikBundle\Entity\Kelas 
+     * @return \Fast\SisdikBundle\Entity\Kelas
      */
-    public function getKelas()
-    {
+    public function getKelas() {
         return $this->kelas;
     }
 
@@ -164,20 +154,18 @@ class SiswaKelas
      * @param \Fast\SisdikBundle\Entity\Penjurusan $penjurusan
      * @return SiswaKelas
      */
-    public function setPenjurusan(\Fast\SisdikBundle\Entity\Penjurusan $penjurusan = null)
-    {
+    public function setPenjurusan(\Fast\SisdikBundle\Entity\Penjurusan $penjurusan = null) {
         $this->penjurusan = $penjurusan;
-    
+
         return $this;
     }
 
     /**
      * Get penjurusan
      *
-     * @return \Fast\SisdikBundle\Entity\Penjurusan 
+     * @return \Fast\SisdikBundle\Entity\Penjurusan
      */
-    public function getPenjurusan()
-    {
+    public function getPenjurusan() {
         return $this->penjurusan;
     }
 
@@ -187,20 +175,18 @@ class SiswaKelas
      * @param \Fast\SisdikBundle\Entity\Siswa $siswa
      * @return SiswaKelas
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
-    {
+    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
         $this->siswa = $siswa;
-    
+
         return $this;
     }
 
     /**
      * Get siswa
      *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return \Fast\SisdikBundle\Entity\Siswa
      */
-    public function getSiswa()
-    {
+    public function getSiswa() {
         return $this->siswa;
     }
 
@@ -210,20 +196,18 @@ class SiswaKelas
      * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
      * @return SiswaKelas
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
-    {
+    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
         $this->tahunAkademik = $tahunAkademik;
-    
+
         return $this;
     }
 
     /**
      * Get tahunAkademik
      *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return \Fast\SisdikBundle\Entity\TahunAkademik
      */
-    public function getTahunAkademik()
-    {
+    public function getTahunAkademik() {
         return $this->tahunAkademik;
     }
 }

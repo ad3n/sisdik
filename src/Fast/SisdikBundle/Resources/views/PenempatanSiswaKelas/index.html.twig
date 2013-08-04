@@ -33,7 +33,7 @@
     		<th class="{% if pagination.isSorted('siswa.jenisKelamin') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 'siswa.jenisKelamin') }}
     	    </th>
-    		<th>{{ 'label.ortuwali.entri'|trans }}</th>
+    		<th>{{ 'label.kelas.aktif.saat.ini'|trans }}</th>
     		<th>{{ 'label.actions'|trans }}</th>
     	</tr>
 	</thead>
@@ -44,7 +44,7 @@
     		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
     		<td data-title="{{ 'label.idnumber'|trans }}">{{ highlightResult(data.nomorInduk, searchkey)|raw }}</td>
     		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
-            <td data-title="{{ 'label.ortuwali.entri'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}, {{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.kelas.aktif.saat.ini'|trans }}">{% if data.siswaKelasAktif is not null %}{{ data.siswaKelasAktif.tahunAkademik.nama ~ ', ' ~ data.siswaKelasAktif.kelas.nama }}{% endif %}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" style="margin: 0 8px;" target="_blank">

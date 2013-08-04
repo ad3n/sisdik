@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\PenempatanSiswaKelasSearchType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -10,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\User;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Form\SiswaSearchType;
 use Fast\SisdikBundle\Form\SiswaImportType;
 use Fast\SisdikBundle\Form\SiswaExportType;
 use Fast\SisdikBundle\Util\EasyCSV\Reader;
@@ -37,7 +37,7 @@ class PenempatanSiswaKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SiswaSearchType($this->container));
+        $searchform = $this->createForm(new PenempatanSiswaKelasSearchType($this->container));
         $searchkey = '';
 
         $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')

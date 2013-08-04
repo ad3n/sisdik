@@ -451,6 +451,13 @@ class Siswa
     private $pembayaranRutin;
 
     /**
+     * @var \SiswaKelas
+     *
+     * @ORM\OneToMany(targetEntity="SiswaKelas", mappedBy="siswa")
+     */
+    private $siswaKelas;
+
+    /**
      * constructor
      *
      */
@@ -459,6 +466,7 @@ class Siswa
         $this->pembayaranPendaftaran = new ArrayCollection();
         $this->pembayaranSekali = new ArrayCollection();
         $this->pembayaranRutin = new ArrayCollection();
+        $this->siswaKelas = new ArrayCollection();
     }
 
     /**
@@ -1477,6 +1485,43 @@ class Siswa
      */
     public function getOrangtuaWali() {
         return $this->orangtuaWali;
+    }
+
+    /**
+     * Set siswaKelas
+     *
+     * @param ArrayCollection $siswaKelas
+     */
+    public function setSiswaKelas(ArrayCollection $siswaKelas) {
+        foreach ($siswaKelas as $data) {
+            $data->setSiswa($this);
+        }
+
+        $this->siswaKelas = $siswaKelas;
+    }
+
+    /**
+     * Get siswaKelas
+     *
+     * @return \Fast\SisdikBundle\Entity\SiswaKelas
+     */
+    public function getSiswaKelas() {
+        return $this->siswaKelas;
+    }
+
+    /**
+     * Get siswaKelas aktif
+     *
+     * @return array
+     */
+    public function getSiswaKelasAktif() {
+        foreach ($this->getSiswaKelas() as $siswakelas) {
+            if ($siswakelas->getTahunAkademik()->getAktif() === true) {
+                return $siswakelas;
+            }
+        }
+
+        return null;
     }
 
     /**
