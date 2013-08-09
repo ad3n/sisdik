@@ -254,7 +254,7 @@ class SiswaTahkikController extends Controller
                         if ($data['siswa_' . $entity->getId()] === true) {
                             $nomorUrutPersekolah++;
                             $entity->setNomorUrutPersekolah($nomorUrutPersekolah);
-                            $entity->setNomorIndukSistem($nomorUrutPersekolah . $sekolah->getId());
+                            $entity->setNomorIndukSistem($nomorUrutPersekolah . $sekolah->getNomorUrut());
                             $entity->setCalonSiswa(false);
                             $em->persist($entity);
                         }

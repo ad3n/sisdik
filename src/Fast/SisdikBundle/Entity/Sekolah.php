@@ -130,6 +130,13 @@ class Sekolah
     private $fileDiskSebelumnya;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="nomor_urut", type="integer", nullable=true, options={"unsigned"=true})
+     */
+    private $nomorUrut;
+
+    /**
      * Get id
      *
      * @return integer
@@ -388,6 +395,27 @@ class Sekolah
      */
     public function getLogoDisk() {
         return $this->logoDisk;
+    }
+
+    /**
+     * Set nomorUrut
+     *
+     * @param integer $nomorUrut
+     * @return Siswa
+     */
+    public function setNomorUrut($nomorUrut) {
+        $this->nomorUrut = $nomorUrut;
+
+        return $this;
+    }
+
+    /**
+     * Get nomorUrut
+     *
+     * @return integer
+     */
+    public function getNomorUrut() {
+        return $this->nomorUrut;
     }
 
     public function getFileUpload() {

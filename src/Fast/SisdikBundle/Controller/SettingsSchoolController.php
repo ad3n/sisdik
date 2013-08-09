@@ -63,17 +63,27 @@ class SettingsSchoolController extends Controller
     public function addAction(Request $request) {
         $this->setCurrentMenu();
 
-        $school = new Sekolah();
-        $form = $this->createForm(new SekolahFormType(), $school);
+        $sekolah = new Sekolah();
+        $form = $this->createForm(new SekolahFormType(), $sekolah);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $school = $form->getData();
+                // $sekolah = $form->getData();
 
                 $em = $this->getDoctrine()->getManager();
-                $em->persist($school);
+
+                $qbe = $em->createQueryBuilder();
+                $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('sekolah.nomorUrut'))
+                        ->from('FastSisdikBundle:Sekolah', 'sekolah');
+
+                $nomorUrut = $querynomor->getQuery()->getSingleScalarResult();
+                $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
+                $nomorUrut++;
+                $sekolah->setNomorUrut($nomorUrut);
+
+                $em->persist($sekolah);
                 $em->flush();
 
                 $this->get('session')->getFlashBag()
@@ -81,7 +91,7 @@ class SettingsSchoolController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.settings.school.inserted',
                                                 array(
-                                                    '%schoolname%' => $school->getNama()
+                                                    '%schoolname%' => $sekolah->getNama()
                                                 )));
 
                 return $this->redirect($this->generateUrl('settings_school_list'));
