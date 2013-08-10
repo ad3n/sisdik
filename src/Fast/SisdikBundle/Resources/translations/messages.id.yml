@@ -1,4 +1,5 @@
 label:
+    tempatkan: Tempatkan
     kelas.aktif.saat.ini: Kelas Aktif Saat Ini
     belum.ditempatkan: Belum Ditempatkan
     jumlah.siswa: Jumlah Siswa
@@ -594,7 +595,7 @@ flash:
             updated: Riwayat Kelas Siswa '%student%' berhasil diperbarui
             deleted: Riwayat Kelas Siswa '%student%' di kelas '%class%' tahun '%year%' berhasil dihapus
             fail.delete: Riwayat Kelas Siswa '%student%' gagal dihapus
-            imported: Berhasil mengimpor/memetakan %count% siswa-kelas untuk tahun akademik %year% ke kelas %class%
+            imported: Berhasil menempatkan %count% siswa-kelas untuk tahun akademik %year% ke kelas %class%
         academic.calendar:
             updated: Kalender Pendidikan tahun '%year%' bulan '%month%' berhasil diperbarui
     sms:
@@ -778,9 +779,9 @@ shortinfo:
     duplicate.schedule: Salin jadwal ke
     duplicate.classes: Salin kelas
     onlyforactiveyear: hanya untuk tahun aktif
-    using.year: menggunakan tahun
-    using.year.and.level: menggunakan tahun akademik dan tingkat kelas
-    no.student.data: Tidak ada data siswa
+    menggunakan.tahun: menggunakan tahun
+    menggunakan.tahun.akademik.dan.tingkat: menggunakan tahun akademik dan tingkat kelas
+    tidak.ada.data.kehadiran.siswa: Tidak ada data kehadiran siswa
     no.class.data: Tidak ada data kelas
     username.generated: Username siswa untuk tahun akademik dan kelas terpilih telah dibuat sebelumnya
     regenerate.fillcaptcha: Isi captcha untuk membuat ulang username
@@ -855,8 +856,8 @@ heading:
     info.pendukung: Info Pendukung
     academicinfo: Info Akademik
     download.selection: Pilihan mengunduh berkas data
-    classmapping.initialization: Untuk Inisialisasi
-    classmapping.nextgrade: Untuk Kenaikan Kelas
+    inisialisasi.penempatan.siswa.kelas: Untuk Inisialisasi
+    penempatan.siswa.kelas.kenaikan.kelas: Untuk Kenaikan Kelas
     download.studentdata: Unduh data siswa
     download.data.formerge: Unduh berkas data yang akan diimpor-gabungkan
 

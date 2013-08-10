@@ -4,60 +4,115 @@
 
 {% block content %}
 <style type="text/css">
-.control-group {
+.filter-section .control-group {
     display: inline-block;
     margin-right: 0.4em;
 }
+.loading {
+    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
 </style>
 
-<div class="filter-section">
-    <form method="GET" action="{{ path('penempatan-siswa-kelas') }}" class="form-search form-inline">
-        {{ form_widget(searchform) }}
-        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('penempatan-siswa-kelas') }}'">{{ 'label.reset'|trans }}</button>
-    </form>
+<form action="{{ path('penempatan-siswa-kelas_menempatkan') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.tempatkan'|trans }}</button>
+    </div>
+</form>
+
+<div class="clearfix"></div>
+
+<div class="knowledgebase">
+{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
+    <a href="{{ path('_index') }}" class="a-kb">
+        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
+        {{ 'link.penempatan.siswa.kelas'|trans({}, 'kb') }}
+    </a>
+{% endimage %}
 </div>
 
 <div class="clearfix"></div>
 
-<table class="table zebra-striped bordered-table" id="no-more-tables">
-    <thead>
-    	<tr>
-    		<th>{{ 'label.year.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('siswa.jenisKelamin') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 'siswa.jenisKelamin') }}
-    	    </th>
-    		<th>{{ 'label.kelas.aktif.saat.ini'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
-    {% for data in pagination %}
-        <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.idnumber'|trans }}">{{ highlightResult(data.nomorInduk, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
-            <td data-title="{{ 'label.kelas.aktif.saat.ini'|trans }}">{% if data.siswaKelasAktif is not null %}{{ data.siswaKelasAktif.tahunAkademik.nama ~ ', ' ~ data.siswaKelasAktif.kelas.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                <a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" style="margin: 0 8px;" target="_blank">
-            	    <img src="{{ asset_url }}" alt="{{ 'alt.detail'|trans }}" border="0" style="vertical-align: baseline;" />
-        	    </a>
-                {% endimage %}
-    		</td>
-    	</tr>
-    {% endfor %}
-    </tbody>
-</table>
-{{ knp_pagination_render(pagination) }}
+<h3 style="margin-top: 1.4em;">{{ 'heading.download.selection'|trans }}</h3>
+<div class="filter-section">
+    <div class="searchform-container">
+        <h4>{{ 'heading.inisialisasi.penempatan.siswa.kelas'|trans }}:</h4>
+        ({{ 'shortinfo.menggunakan.tahun'|trans }})
+        <form method="post" action="{{ path('penempatan-siswa-kelas_templateinit') }}" id="dl-init" class="form-search form-inline">
+            {{ form_widget(dlform_initialization) }}
+            <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+            <div id="filename-init"></div>
+        </form>
+
+        <h4>{{ 'heading.penempatan.siswa.kelas.kenaikan.kelas'|trans }}:</h4>
+        ({{ 'shortinfo.menggunakan.tahun.akademik.dan.tingkat'|trans }})
+        <form method="post" action="{{ path('penempatan-siswa-kelas_templatemap') }}" id="dl-map" class="form-search form-inline">
+            {{ form_widget(dlform_classmap) }}
+            <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+            <div id="filename-map"></div>
+        </form>
+    </div>
+</div>
 
 <div class="clearfix"></div>
 
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	var url = "{{ path('data_class_ajax_updateclass') }}";
+    $.get(url, {tahunAkademik: $(".selectyear").val()}, function(data) {
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
+        }
+        $(".selectclass").html(options);
+    });
+
+    $(".selectyear").change(function() {
+        // clear class select box content
+        $(".selectclass").empty();
+        $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
+            }
+            $(".selectclass").html(options);
+        });
+    });
+
+    $("#dl-init").submit(function() {
+        var url = $(this).attr("action");
+        $("#filename-init").html("&nbsp;");
+        $("#filename-init").addClass("loading");
+        $.post(url, $(this).serialize(), function(response) {
+            if (response.redirectUrl) {
+            	window.location.href = response.redirectUrl;
+            	$("#filename-init").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	$("#filename-init").removeClass("loading");
+            }
+        });
+        return false;
+    });
+
+    $("#dl-map").submit(function() {
+        var url = $(this).attr("action");
+        $("#filename-map").html("&nbsp;");
+        $("#filename-map").addClass("loading");
+        $.post(url, $(this).serialize(), function(response) {
+            if (response.redirectUrl) {
+            	window.location.href = response.redirectUrl;
+            	$("#filename-map").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	$("#filename-map").removeClass("loading");
+            }
+        });
+        return false;
+    });
+});
+</script>
 {% endblock content %}

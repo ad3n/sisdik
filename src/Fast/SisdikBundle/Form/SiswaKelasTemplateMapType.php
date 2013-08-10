@@ -1,9 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
@@ -23,35 +20,34 @@ class SiswaKelasTemplateMapType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tahunAkademik', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:TahunAkademik',
-                                    'label' => 'label.year.entry', 'multiple' => false, 'expanded' => false,
-                                    'property' => 'nama', 'required' => true,
-                                    'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'medium'
-                                    ), 'label_render' => false
-                            ));
+        $querybuilder = $em->createQueryBuilder()->select('tahunAkademik')
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                ->setParameter('sekolah', $sekolah);
+        $builder
+                ->add('tahunAkademik', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:TahunAkademik', 'label' => 'label.year.entry',
+                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
+                                'required' => true, 'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'medium'
+                                ), 'label_render' => false
+                        ));
 
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.kode')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('tingkat', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.class.entry',
-                                    'multiple' => false, 'expanded' => false, 'required' => true,
-                                    'property' => 'optionLabel', 'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'large'
-                                    ), 'label_render' => false
-                            ));
-        }
+        $querybuilder = $em->createQueryBuilder()->select('tingkat')
+                ->from('FastSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
+                ->orderBy('tingkat.kode')->setParameter('sekolah', $sekolah);
+        $builder
+                ->add('tingkat', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:Tingkat', 'label' => 'label.class.entry',
+                                'multiple' => false, 'expanded' => false, 'required' => true,
+                                'property' => 'optionLabel', 'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'large'
+                                ), 'label_render' => false
+                        ));
     }
 
     public function getName() {

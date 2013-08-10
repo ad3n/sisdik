@@ -108,13 +108,13 @@
 
 <div class="clearfix"></div>
 
-{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
+{% if is_expr_granted("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')") %}
 <div class="row-fluid">
     <div class="span4">
     {% image '@FastSisdikBundle/Resources/public/images/chair.png' %}
-    	<a href="{{ path('siswa_import_studentclass') }}" class="add-link-a">
+    	<a href="{{ path('penempatan-siswa-kelas') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.importclassmap'|trans }}" border="0" width="25" style="vertical-align: middle;" />
-    	    {{ 'label.student.importclassmap'|trans }}
+    	    {{ 'links.penempatan.siswa.kelas'|trans({}, 'navigations') }}
     	</a>
     {% endimage %}
     </div>

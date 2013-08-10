@@ -15,14 +15,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\User;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\SiswaKelas;
-use Fast\SisdikBundle\Entity\Penjurusan;
 use Fast\SisdikBundle\Form\SiswaType;
 use Fast\SisdikBundle\Form\SiswaSearchType;
 use Fast\SisdikBundle\Form\SiswaImportType;
-use Fast\SisdikBundle\Form\SiswaKelasImportType;
-use Fast\SisdikBundle\Form\SiswaKelasTemplateInitType;
-use Fast\SisdikBundle\Form\SiswaKelasTemplateMapType;
 use Fast\SisdikBundle\Form\SiswaMergeType;
 use Fast\SisdikBundle\Form\SiswaExportType;
 use Fast\SisdikBundle\Util\EasyCSV\Reader;
@@ -43,7 +38,6 @@ class SiswaController extends Controller
     const DOCUMENTS_OUTPUTDIR = "uploads/data-siswa/";
 
     private $importStudentCount = 0;
-    private $importStudentClassCount = 0;
     private $mergeStudentCount = 0;
 
     /**
@@ -139,7 +133,7 @@ class SiswaController extends Controller
      * Creates a new Siswa entity.
      *
      * @Route("/create", name="siswa_create")
-     * @Method("post")
+     * @Method("POST")
      * @Template("FastSisdikBundle:Siswa:new.html.twig")
      */
     public function createAction() {
@@ -219,7 +213,7 @@ class SiswaController extends Controller
      * Edits an existing Siswa entity.
      *
      * @Route("/{id}/update", name="siswa_update")
-     * @Method("post")
+     * @Method("POST")
      * @Template("FastSisdikBundle:Siswa:edit.html.twig")
      */
     public function updateAction($id) {
@@ -280,7 +274,7 @@ class SiswaController extends Controller
      * Display warning here..
      *
      * @Route("/{id}/deleteconfirm", name="siswa_deleteconfirm")
-     * @Method("post")
+     * @Method("POST")
      * @Template("FastSisdikBundle:Siswa:deleteconfirm.html.twig")
      */
     public function deleteConfirmAction($id) {
@@ -306,7 +300,7 @@ class SiswaController extends Controller
      * Deletes a Siswa entity.
      *
      * @Route("/{id}/delete", name="siswa_delete")
-     * @Method("post")
+     * @Method("POST")
      */
     public function deleteAction($id) {
         $this->isRegisteredToSchool();
@@ -444,214 +438,6 @@ class SiswaController extends Controller
     }
 
     /**
-     * Displays a form to import/map Siswa with SiswaKelas entities.
-     *
-     * @Route("/import/studentclass", name="siswa_import_studentclass")
-     * @Template()
-     * @Secure(roles="ROLE_ADMIN")
-     */
-    public function importStudentClassAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $em = $this->getDoctrine()->getManager();
-
-        $form = $this->createForm(new SiswaKelasImportType($this->container));
-
-        if ('POST' == $this->getRequest()->getMethod()) {
-            $form->submit($this->getRequest());
-
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-
-                $file = $form['file']->getData();
-                $delimiter = $form['delimiter']->getData();
-
-                $tahunAkademik = $form['tahunAkademik']->getData();
-                $kelas = $form['kelas']->getData();
-
-                $reader = new Reader($file->getPathName(), "r+", $delimiter);
-
-                while ($row = $reader->getRow()) {
-                    $this->importStudentClass($row, $reader->getHeaders(), $sekolah, $tahunAkademik, $kelas);
-                }
-
-                try {
-                    $em->flush();
-                } catch (DBALException $e) {
-                    $message = $this->get('translator')->trans('exception.studentclass.unique');
-                    throw new DBALException($message);
-                } catch (Exception $e) {
-                    $message = $this->get('translator')->trans('exception.import.error');
-                    throw new \Exception($message);
-                }
-
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.studentclass.imported',
-                                                array(
-                                                        '%count%' => $this->importStudentClassCount,
-                                                        '%year%' => $tahunAkademik->getNama(),
-                                                        '%class%' => $kelas->getNama()
-                                                )));
-
-                return $this->redirect($this->generateUrl('siswa'));
-            }
-        }
-
-        // form to download template class-student mapping initialization
-        $dlform_initialization = $this->createForm(new SiswaKelasTemplateInitType($this->container));
-
-        // form to download template adding class-student mapping
-        $dlform_classmap = $this->createForm(new SiswaKelasTemplateMapType($this->container));
-
-        return array(
-                'form' => $form->createView(),
-                'dlform_initialization' => $dlform_initialization->createView(),
-                'dlform_classmap' => $dlform_classmap->createView(),
-        );
-    }
-
-    /**
-     * Download a csv format file template to initialize map Siswa with SiswaKelas entities
-     *
-     * @Route("/download/studentclasstemplateinit", name="siswa_studentclass_templateinit")
-     * @Method("post")
-     */
-    public function downloadStudentClassTemplateInitAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $form = $this->createForm(new SiswaKelasTemplateInitType($this->container));
-
-        $filename = "template_kelas_siswa_init.csv";
-
-        $form->submit($this->getRequest());
-
-        if ($form->isValid()) {
-
-            $em = $this->getDoctrine()->getManager();
-
-            $tahun = $form->get('tahun')->getData()->getId();
-
-            // ambil data seluruh siswa berdasarkan tahun masuk yang dipilih
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
-                    ->where('t.tahun = :tahun')->andWhere('t.sekolah = :sekolah');
-            $querybuilder->setParameter('tahun', $tahun);
-            $querybuilder->setParameter('sekolah', $sekolah->getId());
-
-            $results = $querybuilder->getQuery()->getResult();
-
-            $students = array();
-            foreach ($results as $result) {
-                $students[] = array(
-                        $result->getNomorIndukSistem(), $result->getNomorInduk(), $result->getNamaLengkap(),
-                        $result->getJenisKelamin(), '', 1
-                );
-            }
-
-            $fields = array(
-                    'nomorIndukSistem', 'nomorInduk', 'namaLengkap', 'jenisKelamin', 'kodeJurusan', 'aktif',
-                    'keterangan'
-            );
-
-            // ambil data kode jurusan
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.root ASC, t.lft', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
-            $placements = $querybuilder->getQuery()->getResult();
-
-            $response = $this
-                    ->render("FastSisdikBundle:Siswa:$filename.twig",
-                            array(
-                                'fields' => $fields, 'students' => $students, 'placements' => $placements
-                            ));
-
-            $response->headers->set('Content-Type', 'text/csv');
-            $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
-
-            return $response;
-        }
-    }
-
-    /**
-     * Download a csv format file template to import/map Siswa with SiswaKelas entities
-     *
-     * @Route("/download/studentclasstemplatemap", name="siswa_studentclass_templatemap")
-     */
-    public function downloadStudentClassTemplateMapAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $form = $this->createForm(new SiswaKelasTemplateMapType($this->container));
-
-        $filename = "template_kelas_siswa_pertingkat.csv";
-
-        $form->submit($this->getRequest());
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
-            $tahunAkademik = $form->get('tahunAkademik')->getData()->getId();
-
-            // ambil data seluruh siswa berdasarkan tahunAkademik yang dipilih
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SiswaKelas', 't')
-                    ->leftJoin('t.siswa', 't2')->leftJoin('t.kelas', 't3')
-                    ->where('t.tahunAkademik = :tahunAkademik')->andWhere('t2.sekolah = :sekolah')
-                    ->orderBy('t3.kode, t2.nomorInduk');
-            $querybuilder->setParameter('tahunAkademik', $tahunAkademik);
-            $querybuilder->setParameter('sekolah', $sekolah->getId());
-
-            $results = $querybuilder->getQuery()->getResult();
-
-            $students = array();
-            foreach ($results as $result) {
-                $penjurusan = $result->getPenjurusan();
-                $kodepenjurusan = (is_object($penjurusan) && $penjurusan instanceof Penjurusan) ? $penjurusan
-                                ->getKode() : '';
-                $students[] = array(
-                        $result->getSiswa()->getNomorIndukSistem(), $result->getSiswa()->getNomorInduk(),
-                        $result->getSiswa()->getNamaLengkap(), $result->getSiswa()->getJenisKelamin(),
-                        $result->getKelas()->getKode(), $kodepenjurusan, $result->getAktif(),
-                        $result->getKeterangan(),
-                );
-            }
-
-            $fields = array(
-                    'nomorIndukSistem', 'nomorInduk', 'namaLengkap', 'jenisKelamin', 'kodeKelas',
-                    'kodeJurusan', 'aktif', 'keterangan'
-            );
-
-            // data kodeKelas
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                    ->leftJoin('t.tahunAkademik', 't2')->leftJoin('t.tingkat', 't3')
-                    ->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'DESC')
-                    ->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.urutan', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
-            $classes = $querybuilder->getQuery()->getResult();
-
-            // data kodeJurusan
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.root ASC, t.lft', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
-            $placements = $querybuilder->getQuery()->getResult();
-
-            $response = $this
-                    ->render("FastSisdikBundle:Siswa:$filename.twig",
-                            array(
-                                    'fields' => $fields, 'students' => $students, 'classes' => $classes,
-                                    'placements' => $placements
-                            ));
-
-            $response->headers->set('Content-Type', 'text/csv');
-            $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
-
-            return $response;
-        }
-    }
-
-    /**
      * Displays a form to import and merge Siswa entities.
      *
      * @Route("/merge/student", name="siswa_merge_student")
@@ -709,7 +495,7 @@ class SiswaController extends Controller
     }
 
     /**
-     * Download a csv format file template to merge Siswa entities
+     * Ekspor data siswa per tahun
      *
      * @Route("/ekspor", name="siswa_export")
      * @Method("POST")
@@ -726,7 +512,6 @@ class SiswaController extends Controller
             $formdata = $form->getData();
             $em = $this->getDoctrine()->getManager();
 
-            // ambil data siswa berdasarkan tahun masuk yang dipilih
             $querybuilder = $em->createQueryBuilder()->select('siswa')
                     ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
                     ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
@@ -921,84 +706,6 @@ class SiswaController extends Controller
         if ($andFlush) {
             $em->flush();
             $em->clear($entity);
-        }
-    }
-
-    private function importStudentClass($row, $headers, $sekolah, $tahun, $kelas, $andFlush = false) {
-        $em = $this->getDoctrine()->getManager();
-
-        // Create new siswakelas entity
-        $siswakelas = new SiswaKelas();
-
-        $key = array_search('NomorIndukSistem', $headers);
-        if (is_int($key)) {
-            $student = $em->getRepository('FastSisdikBundle:Siswa')
-                    ->findOneBy(
-                            array(
-                                'nomorIndukSistem' => $row[$headers[$key]], 'sekolah' => $sekolah
-                            ));
-
-            if (!$student) {
-                throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
-            }
-
-            $siswakelas->setSiswa($student);
-        }
-
-        $siswakelas->setTahun($tahun);
-        $siswakelas->setKelas($kelas);
-
-        $key = array_search('KodeJurusan', $headers);
-        if (is_int($key)) {
-            $placement = $em->getRepository('FastSisdikBundle:Penjurusan')
-                    ->findOneBy(
-                            array(
-                                'kode' => $row[$headers[$key]], 'sekolah' => $sekolah
-                            ));
-
-            if (!$placement) {
-                // allow null
-                // throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
-            } else {
-                $siswakelas->setPenjurusan($placement);
-            }
-        }
-
-        $key = array_search('Aktif', $headers);
-        if (is_int($key)) {
-            $siswakelas->setAktif($row[$headers[$key]]);
-
-            if ($student) {
-                // permit student to only one active status in a year
-                $aktif = $row[$headers[$key]];
-                if ($aktif == 1) {
-                    $obj = $em->getRepository('FastSisdikBundle:SiswaKelas')
-                            ->findOneBy(
-                                    array(
-                                            'siswa' => $student->getId(), 'tahun' => $tahun->getId(),
-                                            'aktif' => $aktif
-                                    ));
-                    if ($obj) {
-                        $exception = $this->get('translator')->trans('exception.unique.studentclass.active');
-                        throw new \Exception($exception);
-                    }
-                }
-            }
-        } else {
-            throw $this->createNotFoundException('Status aktif/non-aktif harus ditentukan.');
-        }
-        $key = array_search('Keterangan', $headers);
-        if (is_int($key)) {
-            $siswakelas->setKeterangan($row[$headers[$key]]);
-        }
-
-        $em->persist($siswakelas);
-
-        $this->importStudentClassCount++;
-
-        if ($andFlush) {
-            $em->flush();
-            $em->clear($siswakelas);
         }
     }
 
