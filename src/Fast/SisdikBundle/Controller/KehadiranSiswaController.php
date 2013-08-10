@@ -36,12 +36,14 @@ class KehadiranSiswaController extends Controller
 
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
 
+        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+                ->findBy(
+                        array(
+                            'aktif' => true, 'sekolah' => $sekolah->getId(),
+                        ));
+
         return array(
-                'searchform' => $searchform->createView(),
-                'tahunAkademik' => $em->getRepository('FastSisdikBundle:TahunAkademik')
-                        ->findBy(array(
-                            'aktif' => true
-                        ))
+            'searchform' => $searchform->createView(), 'tahunAkademik' => $tahunAkademik
         );
     }
 
@@ -131,13 +133,16 @@ class KehadiranSiswaController extends Controller
 
         $students = $this->createForm(new KehadiranSiswaType($this->container, $buildparam));
 
+        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+                ->findBy(
+                        array(
+                            'aktif' => true, 'sekolah' => $sekolah->getId(),
+                        ));
+
         return array(
                 'entities' => $entities, 'class_entities' => $classes, 'form' => $students->createView(),
                 'searchform' => $searchform->createView(), 'buildparam' => $buildparam,
-                'tahunAkademik' => $em->getRepository('FastSisdikBundle:TahunAkademik')
-                        ->findBy(array(
-                            'aktif' => true
-                        ))
+                'tahunAkademik' => $tahunAkademik,
         );
     }
 
