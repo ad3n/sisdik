@@ -8,6 +8,11 @@
     display: inline-block;
     margin-right: 0.4em;
 }
+#filename-init, #filename-map {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
 .loading {
     {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
     background: white url('{{ asset_url }}') left center no-repeat;
@@ -58,7 +63,6 @@
 </div>
 
 <div class="clearfix"></div>
-
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	var url = "{{ path('data_class_ajax_updateclass') }}";

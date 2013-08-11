@@ -1,0 +1,78 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}data.student.import{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.download-section .control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+#filename {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
+.loading {
+    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
+</style>
+<form action="{{ path('siswa_imporbaru') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.import'|trans }}</button>
+    </div>
+</form>
+
+<div class="clearfix"></div>
+
+<div class="download-section">
+    <h4>{{ 'download.file.template'|trans({}, 'headings') }}:</h4>
+    <form method="get" action="{{ path('siswa_file_template') }}" id="dl-template" class="form-inline">
+        <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
+        <div id="filename"></div>
+    </form>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="knowledgebase">
+{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
+    <a href="{{ path('_index') }}" class="a-kb">
+        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
+        {{ 'link.student.import'|trans({}, 'kb') }}
+    </a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+
+<ul class="pills">
+    <li>
+        <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $("#dl-template").submit(function() {
+    	var url = $(this).attr("action");
+        $("#filename").html("&nbsp;");
+        $("#filename").addClass("loading");
+        $.get(url, function(response) {
+            if (response.redirectUrl) {
+            	window.location.href = response.redirectUrl;
+            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            	$("#filename").removeClass("loading");
+            }
+        });
+        return false;
+    });
+});
+</script>
+{% endblock content %}

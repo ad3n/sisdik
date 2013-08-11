@@ -12,8 +12,8 @@ class SiswaMergeType extends AbstractType
                         array(
                                 'label' => 'label.fielddelimiter',
                                 'choices' => array(
-                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]',
-                                        '|' => 'pipe [ | ]', ':' => 'colon [ : ]'
+                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]', '|' => 'pipe [ | ]',
+                                        ':' => 'colon [ : ]'
                                 ),
                                 'attr' => array(
                                     'class' => 'medium'
@@ -21,10 +21,7 @@ class SiswaMergeType extends AbstractType
                         ))
                 ->add('file', 'file',
                         array(
-                                'required' => true,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
+                            'required' => true,
                         ));
     }
 

@@ -2,9 +2,6 @@
 
 namespace Fast\SisdikBundle\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
@@ -56,8 +53,6 @@ class SiswaSearchType extends AbstractType
     }
 
     public function getName() {
-        // return '';
-        // return 'fast_sisdikbundle_siswasearchtype';
         return 'searchform';
     }
 }

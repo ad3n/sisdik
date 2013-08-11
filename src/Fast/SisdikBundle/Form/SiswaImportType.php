@@ -1,9 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Form;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
@@ -23,24 +20,23 @@ class SiswaImportType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Tahun', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.tahun', 'DESC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahun', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:Tahun',
-                                    'label' => 'label.year.entry', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'tahun', 'required' => true,
-                                    'query_builder' => $querybuilder1,
+                                    'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                                    'multiple' => false, 'expanded' => false, 'property' => 'tahun',
+                                    'required' => true, 'query_builder' => $querybuilder1,
                                     'attr' => array(
                                         'class' => 'medium'
                                     ),
                             ));
 
-            $querybuilder2 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Gelombang', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'ASC')->setParameter('sekolah', $sekolah);
+            $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Gelombang', 't')
+                    ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
+                    ->setParameter('sekolah', $sekolah);
             $builder
                     ->add('gelombang', 'entity',
                             array(
@@ -59,8 +55,8 @@ class SiswaImportType extends AbstractType
                         array(
                                 'label' => 'label.fielddelimiter',
                                 'choices' => array(
-                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]',
-                                        '|' => 'pipe [ | ]', ':' => 'colon [ : ]'
+                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]', '|' => 'pipe [ | ]',
+                                        ':' => 'colon [ : ]'
                                 ),
                                 'attr' => array(
                                     'class' => 'medium'
@@ -68,20 +64,9 @@ class SiswaImportType extends AbstractType
                         ))
                 ->add('file', 'file',
                         array(
-                                'required' => true,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
+                            'required' => true,
                         ));
     }
-
-    //     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-    //         $resolver
-    //                 ->setDefaults(
-    //                         array(
-    //                             'data_class' => 'Fast\SisdikBundle\Entity\Tahun'
-    //                         ));
-    //     }
 
     public function getName() {
         return 'fast_sisdikbundle_siswaimporttype';

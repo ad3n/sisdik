@@ -37,10 +37,10 @@
     	</a>
     {% endimage %}
     </div>
-    {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
+{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/icon_import.png' %}
-    	<a href="{{ path('siswa_import_student') }}" class="add-link-a">
+    	<a href="{{ path('siswa_imporbaru') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.import'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.student.import'|trans }}
     	</a>
@@ -48,12 +48,12 @@
     </div>
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/merge.png' %}
-    	<a href="{{ path('siswa_merge_student') }}" class="add-link-a">
+    	<a href="{{ path('siswa_imporgabung') }}" class="add-link-a">
     	    <img src="{{ asset_url }}" alt="{{ 'alt.merge'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
     	    {{ 'label.student.merge'|trans }}
     	</a>
     {% endimage %}
-    {% endif %}
+{% endif %}
     </div>
 </div>
 
@@ -108,7 +108,6 @@
 
 <div class="clearfix"></div>
 
-{% if is_expr_granted("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')") %}
 <div class="row-fluid">
     <div class="span4">
     {% image '@FastSisdikBundle/Resources/public/images/chair.png' %}
@@ -118,6 +117,7 @@
     	</a>
     {% endimage %}
     </div>
+{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
     <div class="span3">
     {% image '@FastSisdikBundle/Resources/public/images/user-gear.png' %}
     	<a href="{{ path('siswa_generate_username') }}" class="add-link-a">
@@ -126,16 +126,17 @@
     	</a>
     {% endimage %}
     </div>
-</div>
 {% endif %}
+</div>
+
 
 <div class="clearfix" style="margin-top: 3em;"></div>
 
-<div class="filter-section">
+<div class="download-section">
     <h4>{{ 'heading.download.studentdata'|trans }}:</h4>
     <form method="post" action="{{ path('siswa_export') }}" id="export-form" class="form-search form-inline">
         {{ form_widget(dlform) }}
-        <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+        <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
         <div id="filename"></div>
     </form>
 </div>

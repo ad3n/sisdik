@@ -34,7 +34,8 @@ class SiswaController extends Controller
 {
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
-    const OUTPUTFILE = "datasiswa.";
+    const DATASISWA_OUTPUTFILE = "datasiswa.";
+    const TEMPLATE_OUTPUTFILE = "template-file.";
     const DOCUMENTS_OUTPUTDIR = "uploads/data-siswa/";
 
     private $importStudentCount = 0;
@@ -345,11 +346,11 @@ class SiswaController extends Controller
     /**
      * Displays a form to import Siswa entities.
      *
-     * @Route("/import/student", name="siswa_import_student")
-     * @Template()
+     * @Route("/impor-baru", name="siswa_imporbaru")
+     * @Template("FastSisdikBundle:Siswa:impor-baru.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function importStudentAction() {
+    public function imporBaruAction() {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -403,48 +404,13 @@ class SiswaController extends Controller
     }
 
     /**
-     * Download a csv format file template to import Siswa entities
-     *
-     * @Route("/download/studenttemplate", name="siswa_student_template")
-     */
-    public function downloadStudentTemplateAction() {
-        $sekolah = $this->isRegisteredToSchool();
-        $this->setCurrentMenu();
-
-        $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
-        $properties = $reflectionClass->getProperties();
-
-        $filename = "template_data_siswa.csv";
-
-        foreach ($properties as $property) {
-            $fieldName = $property->getName();
-            if (preg_match('/^id/', $fieldName) || $fieldName === 'file' || $fieldName === 'foto'
-                    || $fieldName === 'nomorPendaftaran' || $fieldName === 'nomorIndukSistem'
-                    || $fieldName === 'nomorUrutPersekolah')
-                continue;
-            $fields[] = $fieldName;
-        }
-
-        $response = $this
-                ->render("FastSisdikBundle:Siswa:$filename.twig",
-                        array(
-                            'fields' => $fields
-                        ));
-
-        $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $filename);
-
-        return $response;
-    }
-
-    /**
      * Displays a form to import and merge Siswa entities.
      *
-     * @Route("/merge/student", name="siswa_merge_student")
-     * @Template()
+     * @Route("/impor-gabung", name="siswa_imporgabung")
+     * @Template("FastSisdikBundle:Siswa:impor-gabung.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function mergeStudentAction() {
+    public function imporGabungAction() {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -495,6 +461,67 @@ class SiswaController extends Controller
     }
 
     /**
+     * Unduh file template untuk mengimpor-baru data siswa
+     *
+     * @Route("/file-template", name="siswa_file_template")
+     * @Method("GET")
+     */
+    public function fileTemplateAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
+
+        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+        $outputdir = self::DOCUMENTS_OUTPUTDIR;
+
+        $filenameoutput = self::TEMPLATE_OUTPUTFILE . "sisdik";
+
+        $outputfiletype = "ods";
+        $extensiontarget = $extensionsource = ".$outputfiletype";
+        $filesource = $filenameoutput . $extensionsource;
+        $filetarget = $filenameoutput . $extensiontarget;
+
+        $fs = new Filesystem();
+        if (!$fs->exists($outputdir . $sekolah->getId())) {
+            $fs->mkdir($outputdir . $sekolah->getId());
+        }
+
+        $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
+        $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
+
+        if ($outputfiletype == 'ods') {
+            if (copy($documentbase, $documenttarget) === TRUE) {
+                $ziparchive = new \ZipArchive();
+                $ziparchive->open($documenttarget);
+                $ziparchive
+                        ->addFromString('styles.xml',
+                                $this->renderView("FastSisdikBundle:Siswa:styles.xml.twig"));
+                $ziparchive
+                        ->addFromString('settings.xml',
+                                $this->renderView("FastSisdikBundle:Siswa:settings.xml.twig"));
+                $ziparchive
+                        ->addFromString('content.xml',
+                                $this->renderView("FastSisdikBundle:Siswa:template-file.xml.twig"));
+                if ($ziparchive->close() === TRUE) {
+                    $return = array(
+                            "redirectUrl" => $this
+                                    ->generateUrl("siswa_downloadfile",
+                                            array(
+                                                'filename' => $filetarget
+                                            )), "filename" => $filetarget,
+                    );
+
+                    $return = json_encode($return);
+
+                    return new Response($return, 200,
+                            array(
+                                'Content-Type' => 'application/json'
+                            ));
+                }
+            }
+        }
+    }
+
+    /**
      * Ekspor data siswa per tahun
      *
      * @Route("/ekspor", name="siswa_export")
@@ -522,7 +549,7 @@ class SiswaController extends Controller
             $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-            $filenameoutput = self::OUTPUTFILE . $formdata['tahun']->getTahun() . ".sisdik";
+            $filenameoutput = self::DATASISWA_OUTPUTFILE . $formdata['tahun']->getTahun() . ".sisdik";
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";
@@ -544,6 +571,12 @@ class SiswaController extends Controller
                     $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
                     $ziparchive
+                            ->addFromString('styles.xml',
+                                    $this->renderView("FastSisdikBundle:Siswa:styles.xml.twig"));
+                    $ziparchive
+                            ->addFromString('settings.xml',
+                                    $this->renderView("FastSisdikBundle:Siswa:settings.xml.twig"));
+                    $ziparchive
                             ->addFromString('content.xml',
                                     $this
                                             ->renderView(
@@ -557,10 +590,9 @@ class SiswaController extends Controller
                                 "redirectUrl" => $this
                                         ->generateUrl("siswa_downloadfile",
                                                 array(
+                                                        'filename' => $filetarget,
                                                         'tahun' => $formdata['tahun']->getTahun(),
-                                                        'filename' => $filetarget
-                                                )), "tahun" => $formdata['tahun']->getTahun(),
-                                "filename" => $filetarget,
+                                                )), "filename" => $filetarget,
                         );
 
                         $return = json_encode($return);
@@ -578,14 +610,15 @@ class SiswaController extends Controller
     /**
      * download the generated file
      *
-     * @Route("/download/{tahun}/{filename}/{type}", name="siswa_downloadfile")
+     * @Route("/download/{filename}/{type}/{tahun}", name="siswa_downloadfile")
      * @Method("GET")
      */
-    public function downloadFileAction($tahun, $filename, $type = 'ods') {
+    public function downloadFileAction($filename, $type = 'ods', $tahun = '') {
         $sekolah = $this->isRegisteredToSchool();
 
         $filetarget = $filename;
-        $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $tahun . '/' . $filetarget;
+        $documenttarget = $tahun != '' ? self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $tahun . '/'
+                        . $filetarget : self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
 
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
@@ -610,7 +643,6 @@ class SiswaController extends Controller
     private function mergeStudent($row, $headers, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
-        // find an entity
         $entity = $em->getRepository('FastSisdikBundle:Siswa')
                 ->findOneBy(
                         array(
@@ -663,7 +695,6 @@ class SiswaController extends Controller
     private function importStudent($row, $headers, $sekolah, $tahun, $gelombang, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
-        // Create new entity
         $entity = new Siswa();
 
         $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
