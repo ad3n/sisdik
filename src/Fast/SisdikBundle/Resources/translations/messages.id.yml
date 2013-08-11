@@ -880,6 +880,7 @@ title:
     register: Registrasi
 
 app.title: SisDik
+app.keterangan: mempermudah administrasi sekolah
 
 help:
     awal.kehadiran: >
