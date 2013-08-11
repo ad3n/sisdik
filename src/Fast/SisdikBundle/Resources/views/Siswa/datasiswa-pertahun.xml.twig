@@ -14,6 +14,9 @@
             <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
         </style:style>
         <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
             <style:table-column-properties fo:break-before="auto" style:column-width="2in"/>
         </style:style>
         <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
@@ -133,10 +136,14 @@
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-row table:style-name="ro1">
                     {% set fieldnum = 0 %}
                     <table:table-cell table:style-name="nama-kolom" office:value-type="string">
                         <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:nomorIndukSistem</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:nomorInduk</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom" office:value-type="string">
                         <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:namaLengkap</text:p>
@@ -225,6 +232,9 @@
                         <text:p>{{ 'label.nomor.identifikasi.sisdik'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.nomor.induk'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
                         <text:p>{{ 'label.nama.lengkap'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
@@ -310,6 +320,9 @@
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="float" office:value="{{ entity.nomorIndukSistem }}">
                         <text:p>{{ entity.nomorIndukSistem }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ entity.nomorInduk }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.namaLengkap }}</text:p>
