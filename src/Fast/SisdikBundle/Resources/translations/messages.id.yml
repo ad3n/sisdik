@@ -1,4 +1,7 @@
 label:
+    kode.jurusan: Kode Jurusan
+    jenis.kelamin: Jenis Kelamin
+    nomor.induk: Nomor Induk
     tempatkan: Tempatkan
     kelas.aktif.saat.ini: Kelas Aktif Saat Ini
     belum.ditempatkan: Belum Ditempatkan
@@ -769,6 +772,7 @@ exception:
     open.file.pdf: Error ketika membuat file pdf
 
 shortinfo:
+    tiada.data.siswakelas.awal: Tidak ada data siswa yang belum ditempatkan di suatu kelas
     ortuwali.hanya.satu.aktif: hanya satu orang tua/wali yang bisa aktif dalam satu waktu
     password.mustequal: password harus sama
     username: username

@@ -143,8 +143,9 @@ class PenempatanSiswaKelasController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
-                    ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.siswaKelas', 'siswakelas')
+                    ->where('siswa.tahun = :tahun')->andWhere('siswa.sekolah = :sekolah')
+                    ->andWhere('siswa.calonSiswa = :calon')->andWhere('siswakelas.id IS NULL')
                     ->setParameter('tahun', $formdata['tahun']->getId())
                     ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
             $entities = $querybuilder->getQuery()->getResult();
@@ -176,6 +177,16 @@ class PenempatanSiswaKelasController extends Controller
                 if (copy($documentbase, $documenttarget) === TRUE) {
                     $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
+                    $ziparchive
+                            ->addFromString('styles.xml',
+                                    $this
+                                            ->renderView(
+                                                    "FastSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
+                    $ziparchive
+                            ->addFromString('settings.xml',
+                                    $this
+                                            ->renderView(
+                                                    "FastSisdikBundle:PenempatanSiswaKelas:settings.xml.twig"));
                     $ziparchive
                             ->addFromString('content.xml',
                                     $this
@@ -277,6 +288,19 @@ class PenempatanSiswaKelasController extends Controller
                 if (copy($documentbase, $documenttarget) === TRUE) {
                     $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
+                    $ziparchive
+                            ->addFromString('styles.xml',
+                                    $this
+                                            ->renderView(
+                                                    "FastSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
+                    $ziparchive
+                            ->addFromString('settings.xml',
+                                    $this
+                                            ->renderView(
+                                                    "FastSisdikBundle:PenempatanSiswaKelas:settings.multipage.xml.twig",
+                                                    array(
+                                                        'kelas' => $kelas
+                                                    )));
                     $ziparchive
                             ->addFromString('content.xml',
                                     $this

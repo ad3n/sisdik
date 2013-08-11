@@ -9,8 +9,27 @@
         <style:font-face style:name="Lohit Hindi" svg:font-family="&apos;Lohit Hindi&apos;" style:font-family-generic="system" style:font-pitch="variable"/>
     </office:font-face-decls>
     <office:automatic-styles>
-        <style:style style:name="co1" style:family="table-column">
-            <style:table-column-properties fo:break-before="auto" style:column-width="0.8925in"/>
+        {% set fieldnum = 0 %}
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="2in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.2in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.2in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.8in"/>
         </style:style>
         <style:style style:name="ro1" style:family="table-row">
             <style:table-row-properties style:row-height="0.178in" fo:break-before="auto" style:use-optimal-row-height="true"/>
@@ -23,33 +42,65 @@
         <office:spreadsheet>
         {% for datakelas in kelas %}
             <table:table table:name="{{ datakelas.tahunAkademik.nama }}, {{ datakelas.nama }}" table:style-name="ta1">
+                {% set fieldnum = 0 %}
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
-                        <text:p>nomorIndukSistem</text:p>
+                    {% set fieldnum = 0 %}
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:nomorIndukSistem</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>nomorInduk</text:p>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:nomorInduk</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>namaLengkap</text:p>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:namaLengkap</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>jenisKelamin</text:p>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:jenisKelamin</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>kodeJurusan</text:p>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:kodeJurusan</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>aktif</text:p>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:aktif</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>keterangan</text:p>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:keterangan</text:p>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.nomor.identifikasi.sisdik'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.nomor.induk'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.nama.lengkap'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.jenis.kelamin'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.kode.jurusan'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.aktif'|trans }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>{{ 'label.keterangan'|trans }}</text:p>
                     </table:table-cell>
                 </table:table-row>
                 {% set key = loop.index0 %}
             {% for entity in entities[key] %}
                 <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="float" office:value="{{ entity.siswa.nomorIndukSistem }}">
                         <text:p>{{ entity.siswa.nomorIndukSistem }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
