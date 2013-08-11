@@ -48,7 +48,7 @@
         ({{ 'shortinfo.menggunakan.tahun'|trans }})
         <form method="post" action="{{ path('penempatan-siswa-kelas_templateinit') }}" id="dl-init" class="form-search form-inline">
             {{ form_widget(dlform_initialization) }}
-            <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+            <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
             <div id="filename-init"></div>
         </form>
 
@@ -56,7 +56,7 @@
         ({{ 'shortinfo.menggunakan.tahun.akademik.dan.tingkat'|trans }})
         <form method="post" action="{{ path('penempatan-siswa-kelas_templatemap') }}" id="dl-map" class="form-search form-inline">
             {{ form_widget(dlform_classmap) }}
-            <button type="submit" class="btn success alternative icon printer">{{ 'label.download'|trans }}</button>
+            <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
             <div id="filename-map"></div>
         </form>
     </div>
