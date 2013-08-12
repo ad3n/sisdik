@@ -1679,17 +1679,17 @@ class Siswa
         $fs = new Filesystem();
         if (!$fs
                 ->exists(
-                        self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/'
+                        self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
                                 . $this->getTahun()->getTahun())) {
             $fs
                     ->mkdir(
-                            self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/'
+                            self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
                                     . $this->getTahun()->getTahun());
         }
 
         return null === $this->fotoPendaftaran ? null
-                : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun()
-                        . '/' . $this->fotoPendaftaran;
+                : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
+                        . $this->getTahun()->getTahun() . DIRECTORY_SEPARATOR . $this->fotoPendaftaran;
     }
 
     public function getFile() {
@@ -1703,21 +1703,24 @@ class Siswa
     }
 
     public function getWebPathFotoDisk() {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . '/' . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR
+                . $this->fotoDisk;
     }
 
     public function getRelativePathFotoDisk() {
-        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . '/' . $this->fotoDisk;
+        return null === $this->fotoDisk ? null
+                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
     }
 
     public function getRelativePathFotoDiskSebelumnya() {
         return null === $this->fotoDiskSebelumnya ? null
-                : $this->getUploadRootDir() . '/' . $this->fotoDiskSebelumnya;
+                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDiskSebelumnya;
     }
 
     public function getRelativePathFotoDiskThumbSebelumnya() {
         return null === $this->fotoDiskSebelumnya ? null
-                : $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->fotoDiskSebelumnya;
+                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX
+                        . $this->fotoDiskSebelumnya;
     }
 
     public function getFilesizeFotoDisk($type = 'KB') {
@@ -1753,7 +1756,8 @@ class Siswa
         if ($this->file->move($this->getUploadRootDir(), $this->fotoDisk)) {
 
             $targetfile = $this->getAbsolutePath();
-            $thumbnailfile = $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->fotoDisk;
+            $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX
+                    . $this->fotoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
             if (is_numeric($type)) {
@@ -1836,16 +1840,18 @@ class Siswa
     }
 
     public function getAbsolutePath() {
-        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . '/' . $this->fotoDisk;
+        return null === $this->fotoDisk ? null
+                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
     }
 
     public function getWebPath() {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . '/' . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR
+                . $this->fotoDisk;
     }
 
     public function getWebPathThumbnail() {
         return null === $this->fotoDisk ? null
-                : $this->getUploadDir() . '/' . self::THUMBNAIL_PREFIX . $this->fotoDisk;
+                : $this->getUploadDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDisk;
     }
 
     protected function getUploadRootDir() {
@@ -1857,12 +1863,15 @@ class Siswa
         // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
         $fs = new Filesystem();
         if (!$fs
-                ->exists(self::PHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun())) {
+                ->exists(
+                        self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
+                                . $this->getTahun()->getTahun())) {
             $fs
                     ->mkdir(
-                            self::PHOTO_DIR . $this->getSekolah()->getId() . '/'
+                            self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
                                     . $this->getTahun()->getTahun());
         }
-        return self::PHOTO_DIR . $this->getSekolah()->getId() . '/' . $this->getTahun()->getTahun();
+        return self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
+                . $this->getTahun()->getTahun();
     }
 }
