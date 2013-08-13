@@ -884,6 +884,7 @@ app.title: SisDik
 app.keterangan: mempermudah administrasi sekolah
 
 help:
+    captcha.penjelasan.unggah.impor.gabung: Captcha berguna untuk mencegah pengimpor-gabungan data tanpa sengaja
     captcha.penjelasan.unggah.impor.baru: Captcha berguna untuk mencegah pengimporan data tanpa sengaja
     awal.kehadiran: >
         Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.

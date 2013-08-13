@@ -8,20 +8,17 @@ class SiswaMergeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-                ->add('delimiter', 'choice',
-                        array(
-                                'label' => 'label.fielddelimiter',
-                                'choices' => array(
-                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]', '|' => 'pipe [ | ]',
-                                        ':' => 'colon [ : ]'
-                                ),
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
-                        ))
                 ->add('file', 'file',
                         array(
                             'required' => true,
+                        ))
+                ->add('captcha', 'captcha',
+                        array(
+                                'attr' => array(
+                                        'class' => 'medium', 'placeholder' => 'help.type.captcha',
+                                        'autocomplete' => 'off'
+                                ), 'as_url' => true, 'reload' => true,
+                                'help_block' => 'help.captcha.penjelasan.unggah.impor.gabung',
                         ));
     }
 
