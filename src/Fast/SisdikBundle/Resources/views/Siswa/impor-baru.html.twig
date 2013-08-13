@@ -18,6 +18,10 @@
     background: white url('{{ asset_url }}') left center no-repeat;
     {% endimage %}
 }
+.captcha_reload {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
 </style>
 <form action="{{ path('siswa_mengimporbaru') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}

@@ -37,6 +37,14 @@ class SiswaImportType extends AbstractType
                 ->add('file', 'file',
                         array(
                             'required' => true,
+                        ))
+                ->add('captcha', 'captcha',
+                        array(
+                                'attr' => array(
+                                        'class' => 'medium', 'placeholder' => 'help.type.captcha',
+                                        'autocomplete' => 'off'
+                                ), 'as_url' => true, 'reload' => true,
+                                'help_block' => 'help.captcha.penjelasan.unggah.impor.baru',
                         ));
     }
 
