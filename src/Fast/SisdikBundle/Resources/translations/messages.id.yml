@@ -574,7 +574,7 @@ flash:
             updated: Siswa '%student%' berhasil diperbarui
             deleted: Siswa '%student%' berhasil dihapus
             fail.delete: Siswa '%student%' gagal dihapus
-            imported: Berhasil mengimpor %count% data siswa untuk tahun %year% %admission%
+            imported: Berhasil mengimpor %count% data siswa untuk tahun %year%
             merged: Berhasil mengimpor-gabungkan %count% data siswa
         class:
             inserted: Kelas '%class%' tahun '%year%' berhasil ditambah
@@ -811,6 +811,7 @@ shortinfo:
     discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
 
 alert:
+    hanya.boleh.satu.lembar.kerja: Hanya boleh ada satu lembar kerja dalam file yang diunggah
     pendaftar.peringatan.hapus: >
         PERHATIAN!<br>
         Menghapus pendaftar akan menghapus semua data yang terkait seperti orang tua wali,<br>

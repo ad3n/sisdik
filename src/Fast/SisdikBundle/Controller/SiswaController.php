@@ -1,6 +1,12 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\SekolahAsal;
+use Fast\SisdikBundle\Entity\OrangtuaWali;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\FormError;
+use Fast\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -38,8 +44,9 @@ class SiswaController extends Controller
     const TEMPLATE_OUTPUTFILE = "template-file.";
     const DOCUMENTS_OUTPUTDIR = "uploads/data-siswa/";
 
-    private $importStudentCount = 0;
+    private $imporSiswaJumlah = 0;
     private $mergeStudentCount = 0;
+    private $nomorUrutPersekolah = 0;
 
     /**
      * Lists all Siswa entities.
@@ -348,6 +355,7 @@ class SiswaController extends Controller
      *
      * @Route("/impor-baru", name="siswa_imporbaru")
      * @Template("FastSisdikBundle:Siswa:impor-baru.html.twig")
+     * @Method("GET")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function imporBaruAction() {
@@ -356,22 +364,78 @@ class SiswaController extends Controller
 
         $form = $this->createForm(new SiswaImportType($this->container));
 
-        if ('POST' == $this->getRequest()->getMethod()) {
-            $form->submit($this->getRequest());
+        return array(
+            'form' => $form->createView()
+        );
+    }
 
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
+    /**
+     * Mengimpor data siswa baru
+     *
+     * @Route("/mengimpor-baru", name="siswa_mengimporbaru")
+     * @Template("FastSisdikBundle:Siswa:impor-baru.html.twig")
+     * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function mengimporBaruAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
 
-                $file = $form['file']->getData();
-                $delimiter = $form['delimiter']->getData();
+        $form = $this->createForm(new SiswaImportType($this->container));
 
-                $tahun = $form['tahun']->getData();
-                $gelombang = $form['gelombang']->getData();
+        $form->submit($this->getRequest());
 
-                $reader = new Reader($file->getPathName(), "r+", $delimiter);
+        $filedata = $form['file']->getData();
+        if ($filedata instanceof UploadedFile) {
 
-                while ($row = $reader->getRow()) {
-                    $this->importStudent($row, $reader->getHeaders(), $sekolah, $tahun, $gelombang);
+            $reader = new SpreadsheetReader($filedata->getPathname(), false, $filedata->getClientMimeType());
+            $sheets = $reader->Sheets();
+            if (count($sheets) > 1) {
+                $message = $this->get('translator')->trans('alert.hanya.boleh.satu.lembar.kerja');
+                $form->get('file')->addError(new FormError($message));
+            }
+            unset($reader);
+
+        }
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $file = $form['file']->getData();
+            $tahun = $form['tahun']->getData();
+
+            $targetfilename = $file->getClientOriginalName();
+            if ($file->move(self::DOCUMENTS_OUTPUTDIR, $targetfilename)) {
+
+                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
+
+                $fieldnames = array();
+                $content = array();
+                foreach ($reader as $row) {
+                    $cellContent = array();
+                    foreach ($row as $cell) {
+                        if (array_key_exists('table:style-name', $cell['attributes'])
+                                && $cell['attributes']['table:style-name'] == 'nama-kolom') {
+                            $fieldnames[] = $cell['data'];
+                        } elseif (array_key_exists('table:style-name', $cell['attributes'])
+                                && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
+                            // baris yang tak perlu dibaca
+                        } else {
+                            $cellContent[] = $cell['data'];
+                        }
+                    }
+                    if (count($cellContent) > 0) {
+                        $content[] = $cellContent;
+                    }
+                }
+
+                array_walk($fieldnames,
+                        array(
+                            &$this, "formatNamaField"
+                        ));
+
+                foreach ($content as $value) {
+                    $this->imporSiswaBaru($value, $fieldnames, $sekolah, $tahun);
                 }
 
                 try {
@@ -389,18 +453,23 @@ class SiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.student.imported',
                                                 array(
-                                                        '%count%' => $this->importStudentCount,
+                                                        '%count%' => $this->imporSiswaJumlah,
                                                         '%year%' => $tahun->getTahun(),
-                                                        '%admission%' => $gelombang->getNama()
                                                 )));
 
-                return $this->redirect($this->generateUrl('siswa'));
+                return $this->redirect($this->generateUrl('siswa_imporbaru'));
+
             }
         }
 
         return array(
             'form' => $form->createView()
         );
+    }
+
+    private function formatNamaField(&$item, $key) {
+        preg_match("/(\d+:)(.+)/", $item, $matches);
+        $item = $matches[2];
     }
 
     /**
@@ -485,8 +554,8 @@ class SiswaController extends Controller
             $fs->mkdir($outputdir . $sekolah->getId());
         }
 
-        $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
-        $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
+        $documentsource = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $filesource;
+        $documenttarget = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $filetarget;
 
         if ($outputfiletype == 'ods') {
             if (copy($documentbase, $documenttarget) === TRUE) {
@@ -557,14 +626,20 @@ class SiswaController extends Controller
             $filetarget = $filenameoutput . $extensiontarget;
 
             $fs = new Filesystem();
-            if (!$fs->exists($outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun())) {
-                $fs->mkdir($outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun());
+            if (!$fs
+                    ->exists(
+                            $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
+                                    . $formdata['tahun']->getTahun())) {
+                $fs
+                        ->mkdir(
+                                $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
+                                        . $formdata['tahun']->getTahun());
             }
 
-            $documentsource = $outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun() . '/'
-                    . $filesource;
-            $documenttarget = $outputdir . $sekolah->getId() . '/' . $formdata['tahun']->getTahun() . '/'
-                    . $filetarget;
+            $documentsource = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
+                    . $formdata['tahun']->getTahun() . DIRECTORY_SEPARATOR . $filesource;
+            $documenttarget = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
+                    . $formdata['tahun']->getTahun() . DIRECTORY_SEPARATOR . $filetarget;
 
             if ($outputfiletype == 'ods') {
                 if (copy($documentbase, $documenttarget) === TRUE) {
@@ -617,8 +692,9 @@ class SiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
 
         $filetarget = $filename;
-        $documenttarget = $tahun != '' ? self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $tahun . '/'
-                        . $filetarget : self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
+        $documenttarget = $tahun != '' ? self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR
+                        . $tahun . DIRECTORY_SEPARATOR . $filetarget
+                : self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR . $filetarget;
 
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
@@ -692,47 +768,111 @@ class SiswaController extends Controller
 
     }
 
-    private function importStudent($row, $headers, $sekolah, $tahun, $gelombang, $andFlush = false) {
+    /**
+     * mengimpor data siswa baru
+     *
+     * @param array                             $row
+     * @param array                             $fieldnames
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @param \Fast\SisdikBundle\Entity\Tahun   $tahun
+     * @param boolean                           $andFlush
+     */
+    private function imporSiswaBaru($content, $fieldnames, $sekolah, $tahun, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
+
+        $atleastone = false;
+        foreach ($content as $key => $val) {
+            if ($val != "") {
+                $atleastone = true;
+            }
+        }
+        if (!$atleastone)
+            return;
 
         $entity = new Siswa();
 
         $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
-        $properties = $reflectionClass->getProperties();
+        $entityFields = array();
+        foreach ($reflectionClass->getProperties() as $property) {
+            $entityFields[] = $property->getName();
+        }
 
-        foreach ($properties as $property) {
-            $fieldName = $property->getName();
+        $matchcountOrtuwali = 0;
+        $orangtuaWali = new ArrayCollection();
+        $ortu = new OrangtuaWali();
+        $sekolahAsal = null;
 
-            if ($fieldName === 'id') {
-                continue;
+        foreach ($fieldnames as $keyfield => $valuefield) {
+
+            // periksa jika field berisi titik
+            if (preg_match("/(.+)\.(.+)/", $valuefield, $matches)) {
+                $valuefield = $matches[1];
+                $childfield = $matches[2];
             }
 
-            $key = array_search(ucfirst($fieldName), $headers);
+            $key = array_search($valuefield, $entityFields);
             if (is_int($key)) {
-                if (array_key_exists($headers[$key], $row)) {
+                if (array_key_exists($keyfield, $content)) {
 
-                    $value = $row[$headers[$key]];
-                    if ($value == "0")
+                    $value = $content[$keyfield];
+                    if ($value == "0" || $value == "")
                         $value = null;
 
-                    if ($fieldName == 'tanggalLahir') {
+                    if ($valuefield == 'orangtuaWali') {
+                        $ortu->setAktif(true);
+                        $ortu->{'set' . ucfirst($childfield)}(trim($value));
+                    } elseif ($valuefield == 'sekolahAsal') {
+                        $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
+                                ->from('FastSisdikBundle:SekolahAsal', 'sekolahasal')
+                                ->where('sekolahasal.nama LIKE :nama')->setParameter('nama', "%$value%");
+                        $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
+                        if (count($resultSekolahAsal) >= 1) {
+                            $sekolahAsal = $resultSekolahAsal[0];
+                        } else {
+                            $sekolahAsal = new SekolahAsal();
+                            $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                        }
+
+                    } elseif ($valuefield == 'tanggalLahir') {
                         if ($value) {
-                            $entity->{'set' . ucfirst($fieldName)}(new \DateTime($value));
+                            $entity->{'set' . ucfirst($valuefield)}(new \DateTime($value));
                         }
                     } else {
-                        $entity->{'set' . ucfirst($fieldName)}(trim($value));
+                        $entity->{'set' . ucfirst($valuefield)}(trim($value));
                     }
-                    $entity->setSekolah($sekolah);
-                    $entity->setTahun($tahun);
-                    $entity->setGelombang($gelombang);
-                    // print '$entity->set' . ucfirst($fieldName) . '(' . trim($value) . ")\n";
                 }
             }
         }
 
+        if ($this->nomorUrutPersekolah == 0) {
+            $qbe = $em->createQueryBuilder();
+            $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
+                    ->setParameter('sekolah', $sekolah->getId());
+            $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
+            $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
+            $nomorUrutPersekolah++;
+            $this->nomorUrutPersekolah = $nomorUrutPersekolah;
+        } else {
+            $this->nomorUrutPersekolah++;
+        }
+
+        $entity->setNomorUrutPersekolah($this->nomorUrutPersekolah);
+        $entity->setNomorIndukSistem($this->nomorUrutPersekolah . $sekolah->getNomorUrut());
+        $entity->setCalonSiswa(false);
+        $entity->setSekolah($sekolah);
+        $entity->setTahun($tahun);
+        $entity->setGelombang(null);
+
+        $orangtuaWali->add($ortu);
+        $entity->setOrangtuaWali($orangtuaWali);
+
+        $entity->setSekolahAsal($sekolahAsal);
+        $entity->setDibuatOleh($this->getUser());
+
         $em->persist($entity);
 
-        $this->importStudentCount++;
+        $this->imporSiswaJumlah++;
 
         if ($andFlush) {
             $em->flush();
