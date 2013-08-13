@@ -320,7 +320,7 @@ class Siswa
      *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $gelombang;
