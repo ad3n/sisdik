@@ -112,6 +112,7 @@ class SpreadsheetReader_ODS implements \Iterator, \Countable
                 $this->SheetReader->close();
             }
         }
+
         return $this->Sheets;
     }
 
@@ -167,6 +168,7 @@ class SpreadsheetReader_ODS implements \Iterator, \Countable
             $this->next();
             $this->Index--;
         }
+
         return $this->CurrentRow;
     }
 
@@ -239,21 +241,23 @@ class SpreadsheetReader_ODS implements \Iterator, \Countable
                             if ($this->Content->hasAttributes) {
                                 while ($this->Content->moveToNextAttribute()) {
                                     $attributes[$this->Content->name] = $this->Content->value;
+
+                                    if ($this->Content->name == 'table:number-columns-repeated') {
+                                        $RepeatedColumnCount = $this->Content->value;
+                                        // Checking if larger than one because the value is already added to the row once before
+                                        if ($RepeatedColumnCount > 1) {
+                                            $this->CurrentRow = array_pad($this->CurrentRow,
+                                                    count($this->CurrentRow) + $RepeatedColumnCount - 1,
+                                                    array(
+                                                        'attributes' => array(), 'data' => null
+                                                    ));
+                                        }
+                                    }
                                 }
                             }
                             $this->CurrentRow[] = array(
                                 'attributes' => $attributes, 'data' => $LastCellContent
                             );
-
-                            if ($this->Content->getAttribute('table:number-columns-repeated') !== null) {
-                                $RepeatedColumnCount = $this->Content
-                                        ->getAttribute('table:number-columns-repeated');
-                                // Checking if larger than one because the value is already added to the row once before
-                                if ($RepeatedColumnCount > 1) {
-                                    $this->CurrentRow = array_pad($this->CurrentRow,
-                                            count($this->CurrentRow) + $RepeatedColumnCount - 1, '');
-                                }
-                            }
                         } else {
                             $LastCellContent = '';
                         }
@@ -303,6 +307,5 @@ class SpreadsheetReader_ODS implements \Iterator, \Countable
     }
 
     public function isFieldName() {
-
     }
 }

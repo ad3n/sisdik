@@ -45,7 +45,7 @@ class SiswaController extends Controller
     const DOCUMENTS_OUTPUTDIR = "uploads/data-siswa/";
 
     private $imporSiswaJumlah = 0;
-    private $mergeStudentCount = 0;
+    private $gabungSiswaJumlah = 0;
     private $nomorUrutPersekolah = 0;
 
     /**
@@ -467,16 +467,12 @@ class SiswaController extends Controller
         );
     }
 
-    private function formatNamaField(&$item, $key) {
-        preg_match("/(\d+:)(.+)/", $item, $matches);
-        $item = $matches[2];
-    }
-
     /**
      * Displays a form to import and merge Siswa entities.
      *
      * @Route("/impor-gabung", name="siswa_imporgabung")
      * @Template("FastSisdikBundle:Siswa:impor-gabung.html.twig")
+     * @Method("GET")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function imporGabungAction() {
@@ -485,19 +481,79 @@ class SiswaController extends Controller
 
         $form = $this->createForm(new SiswaMergeType());
 
-        if ('POST' == $this->getRequest()->getMethod()) {
-            $form->submit($this->getRequest());
+        $dlform = $this->createForm(new SiswaExportType($this->container));
 
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
+        return array(
+            'form' => $form->createView(), 'dlform' => $dlform->createView()
+        );
+    }
 
-                $file = $form['file']->getData();
-                $delimiter = $form['delimiter']->getData();
+    /**
+     * Displays a form to import and merge Siswa entities.
+     *
+     * @Route("/mengimpor-gabung", name="siswa_mengimporgabung")
+     * @Template("FastSisdikBundle:Siswa:impor-gabung.html.twig")
+     * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function mengimporGabungAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $this->setCurrentMenu();
 
-                $reader = new Reader($file->getPathName(), "r+", $delimiter);
+        $form = $this->createForm(new SiswaMergeType());
 
-                while ($row = $reader->getRow()) {
-                    $this->mergeStudent($row, $reader->getHeaders());
+        $form->submit($this->getRequest());
+
+        $filedata = $form['file']->getData();
+        if ($filedata instanceof UploadedFile) {
+
+            $reader = new SpreadsheetReader($filedata->getPathname(), false, $filedata->getClientMimeType());
+            $sheets = $reader->Sheets();
+            if (count($sheets) > 1) {
+                $message = $this->get('translator')->trans('alert.hanya.boleh.satu.lembar.kerja');
+                $form->get('file')->addError(new FormError($message));
+            }
+            unset($reader);
+
+        }
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            $file = $form['file']->getData();
+
+            $targetfilename = $file->getClientOriginalName();
+            if ($file->move(self::DOCUMENTS_OUTPUTDIR, $targetfilename)) {
+
+                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
+
+                $fieldnames = array();
+                $content = array();
+                foreach ($reader as $row) {
+                    $cellContent = array();
+                    foreach ($row as $cell) {
+                        if (array_key_exists('table:style-name', $cell['attributes'])
+                                && $cell['attributes']['table:style-name'] == 'nama-kolom') {
+                            $fieldnames[] = $cell['data'];
+                        } elseif (array_key_exists('table:style-name', $cell['attributes'])
+                                && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
+                            // baris yang tak perlu dibaca
+                        } else {
+                            $cellContent[] = $cell['data'];
+                        }
+                    }
+                    if (count($cellContent) > 0) {
+                        $content[] = $cellContent;
+                    }
+                }
+
+                array_walk($fieldnames,
+                        array(
+                            &$this, "formatNamaField"
+                        ));
+
+                foreach ($content as $value) {
+                    $this->gabungSiswa($value, $fieldnames, $sekolah);
                 }
 
                 try {
@@ -515,10 +571,10 @@ class SiswaController extends Controller
                                 $this->get('translator')
                                         ->trans('flash.data.student.merged',
                                                 array(
-                                                    '%count%' => $this->mergeStudentCount,
+                                                    '%count%' => $this->gabungSiswaJumlah,
                                                 )));
 
-                return $this->redirect($this->generateUrl('siswa'));
+                return $this->redirect($this->generateUrl('siswa_imporgabung'));
             }
         }
 
@@ -716,62 +772,15 @@ class SiswaController extends Controller
         return $response;
     }
 
-    private function mergeStudent($row, $headers, $andFlush = false) {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')
-                ->findOneBy(
-                        array(
-                            'nomorIndukSistem' => $row['NomorIndukSistem']
-                        ));
-        if (!$entity) {
-            return true;
-        }
-
-        $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
-        $properties = $reflectionClass->getProperties();
-
-        foreach ($properties as $property) {
-            $fieldName = $property->getName();
-
-            if ($fieldName === 'id' || $fieldName == 'nomorIndukSistem') {
-                continue;
-            }
-
-            $key = array_search(ucfirst($fieldName), $headers);
-            if (is_int($key)) {
-                if (array_key_exists($headers[$key], $row)) {
-
-                    $value = $row[$headers[$key]];
-                    if ($value == "0")
-                        $value = null;
-
-                    if ($fieldName == 'tanggalLahir') {
-                        if ($value) {
-                            $entity->{'set' . ucfirst($fieldName)}(new \DateTime($value));
-                        }
-                    } else {
-                        $entity->{'set' . ucfirst($fieldName)}(trim($value));
-                    }
-                }
-            }
-        }
-
-        $em->persist($entity);
-
-        $this->mergeStudentCount++;
-
-        if ($andFlush) {
-            $em->flush();
-            $em->clear($entity);
-        }
-
+    private function formatNamaField(&$item, $key) {
+        preg_match("/(\d+:)(.+)/", $item, $matches);
+        $item = $matches[2];
     }
 
     /**
      * mengimpor data siswa baru
      *
-     * @param array                             $row
+     * @param array                             $content
      * @param array                             $fieldnames
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @param \Fast\SisdikBundle\Entity\Tahun   $tahun
@@ -797,14 +806,12 @@ class SiswaController extends Controller
             $entityFields[] = $property->getName();
         }
 
-        $matchcountOrtuwali = 0;
         $orangtuaWali = new ArrayCollection();
         $ortu = new OrangtuaWali();
         $sekolahAsal = null;
 
         foreach ($fieldnames as $keyfield => $valuefield) {
 
-            // periksa jika field berisi titik
             if (preg_match("/(.+)\.(.+)/", $valuefield, $matches)) {
                 $valuefield = $matches[1];
                 $childfield = $matches[2];
@@ -815,8 +822,9 @@ class SiswaController extends Controller
                 if (array_key_exists($keyfield, $content)) {
 
                     $value = $content[$keyfield];
-                    if ($value == "0" || $value == "")
+                    if ($value == "0" || $value == "") {
                         $value = null;
+                    }
 
                     if ($valuefield == 'orangtuaWali') {
                         $ortu->setAktif(true);
@@ -838,7 +846,8 @@ class SiswaController extends Controller
                             $entity->{'set' . ucfirst($valuefield)}(new \DateTime($value));
                         }
                     } else {
-                        $entity->{'set' . ucfirst($valuefield)}(trim($value));
+                        $value = $value !== null ? trim($value) : $value;
+                        $entity->{'set' . ucfirst($valuefield)}($value);
                     }
                 }
             }
@@ -877,6 +886,120 @@ class SiswaController extends Controller
         if ($andFlush) {
             $em->flush();
             $em->clear($entity);
+            $em->clear($ortu);
+            $em->clear($sekolahAsal);
+        }
+    }
+
+    /**
+     *
+     * @param array   $content
+     * @param array   $fieldnames
+     * @param boolean $andFlush
+     */
+    private function gabungSiswa($content, $fieldnames, $andFlush = false) {
+        $em = $this->getDoctrine()->getManager();
+
+        // cari kolom yang berisi nomor induk sistem
+        $keyNomorIndukSistem = array_search('nomorIndukSistem', $fieldnames);
+        if (is_int($keyNomorIndukSistem)) {
+            if (array_key_exists($keyNomorIndukSistem, $content)) {
+                $entity = $em->getRepository('FastSisdikBundle:Siswa')
+                        ->findOneBy(
+                                array(
+                                    'nomorIndukSistem' => $content[$keyNomorIndukSistem]
+                                ));
+                if (!$entity && !($entity instanceof Siswa)) {
+                    return;
+                }
+
+                $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+                $entityFields = array();
+                foreach ($reflectionClass->getProperties() as $property) {
+                    $entityFields[] = $property->getName();
+                }
+
+                $ortu = null;
+                $sekolahAsal = null;
+
+                foreach ($fieldnames as $keyfield => $valuefield) {
+
+                    if (preg_match("/(.+)\.(.+)/", $valuefield, $matches)) {
+                        $valuefield = $matches[1];
+                        $childfield = $matches[2];
+                    }
+
+                    $key = array_search($valuefield, $entityFields);
+                    if (is_int($key)) {
+                        if (array_key_exists($keyfield, $content)) {
+
+                            $value = $content[$keyfield];
+                            if ($value == "0" || $value == "") {
+                                $value = null;
+                            }
+
+                            if ($valuefield != 'nomorIndukSistem') {
+                                if ($valuefield == 'orangtuaWali') {
+                                    if ($ortu === null) {
+                                        $ortu = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                                                ->findOneBy(
+                                                        array(
+                                                            'aktif' => true, 'siswa' => $entity->getId()
+                                                        ));
+                                        if (is_object($ortu) && $ortu instanceof OrangtuaWali) {
+                                            $ortu->{'set' . ucfirst($childfield)}(trim($value));
+                                        }
+                                    } elseif ($ortu instanceof OrangtuaWali) {
+                                        $ortu->{'set' . ucfirst($childfield)}(trim($value));
+                                    }
+                                } elseif ($valuefield == 'sekolahAsal') {
+                                    if ($sekolahAsal === null) {
+                                        $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
+                                                ->from('FastSisdikBundle:SekolahAsal', 'sekolahasal')
+                                                ->where('sekolahasal.nama LIKE :nama')
+                                                ->setParameter('nama', "%$value%");
+                                        $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
+                                        if (count($resultSekolahAsal) >= 1) {
+                                            $sekolahAsal = $resultSekolahAsal[0];
+                                        } else {
+                                            $sekolahAsal = new SekolahAsal();
+                                            $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                                        }
+                                    } elseif (is_object($sekolahAsal) && $sekolahAsal instanceof SekolahAsal) {
+                                        $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                                    }
+                                } elseif ($valuefield == 'tanggalLahir') {
+                                    if ($value) {
+                                        $entity->{'set' . ucfirst($valuefield)}(new \DateTime($value));
+                                    }
+                                } else {
+                                    $value = $value !== null ? trim($value) : $value;
+                                    $entity->{'set' . ucfirst($valuefield)}($value);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $entity->setGelombang(null);
+                $entity->setSekolahAsal($sekolahAsal);
+                $entity->setDiubahOleh($this->getUser());
+
+                $em->persist($entity);
+
+                if (is_object($ortu) && $ortu instanceof OrangtuaWali) {
+                    $em->persist($ortu);
+                }
+
+                $this->gabungSiswaJumlah++;
+
+                if ($andFlush) {
+                    $em->flush();
+                    $em->clear($entity);
+                    $em->clear($ortu);
+                    $em->clear($sekolahAsal);
+                }
+            }
         }
     }
 
