@@ -1,7 +1,6 @@
 <?php
 
 namespace Fast\SisdikBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -40,7 +39,7 @@ class MesinKehadiran
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
      */
-    private $aktif = 1;
+    private $aktif = true;
 
     /**
      * @var \Sekolah
@@ -52,15 +51,12 @@ class MesinKehadiran
      */
     private $sekolah;
 
-
-
     /**
      * Get id
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -70,8 +66,7 @@ class MesinKehadiran
      * @param string $alamatIp
      * @return MesinKehadiran
      */
-    public function setAlamatIp($alamatIp)
-    {
+    public function setAlamatIp($alamatIp) {
         $this->alamatIp = $alamatIp;
 
         return $this;
@@ -82,8 +77,7 @@ class MesinKehadiran
      *
      * @return string
      */
-    public function getAlamatIp()
-    {
+    public function getAlamatIp() {
         return $this->alamatIp;
     }
 
@@ -93,8 +87,7 @@ class MesinKehadiran
      * @param string $commkey
      * @return MesinKehadiran
      */
-    public function setCommkey($commkey)
-    {
+    public function setCommkey($commkey) {
         $this->commkey = $commkey;
 
         return $this;
@@ -105,8 +98,7 @@ class MesinKehadiran
      *
      * @return string
      */
-    public function getCommkey()
-    {
+    public function getCommkey() {
         return $this->commkey;
     }
 
@@ -116,8 +108,7 @@ class MesinKehadiran
      * @param boolean $aktif
      * @return MesinKehadiran
      */
-    public function setAktif($aktif)
-    {
+    public function setAktif($aktif) {
         $this->aktif = $aktif;
 
         return $this;
@@ -128,8 +119,7 @@ class MesinKehadiran
      *
      * @return boolean
      */
-    public function getAktif()
-    {
+    public function getAktif() {
         return $this->aktif;
     }
 
@@ -139,8 +129,7 @@ class MesinKehadiran
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return MesinKehadiran
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
-    {
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
         $this->sekolah = $sekolah;
 
         return $this;
@@ -151,8 +140,7 @@ class MesinKehadiran
      *
      * @return \Fast\SisdikBundle\Entity\Sekolah
      */
-    public function getSekolah()
-    {
+    public function getSekolah() {
         return $this->sekolah;
     }
 }
