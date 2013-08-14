@@ -443,7 +443,7 @@ class SiswaController extends Controller
                 } catch (DBALException $e) {
                     $message = $this->get('translator')->trans('exception.studentid.unique');
                     throw new DBALException($message);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $message = $this->get('translator')->trans('exception.import.error');
                     throw new \Exception($message);
                 }
@@ -561,7 +561,7 @@ class SiswaController extends Controller
                 } catch (DBALException $e) {
                     $message = $this->get('translator')->trans('exception.studentid.unique');
                     throw new DBALException($message);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $message = $this->get('translator')->trans('exception.import.error');
                     throw new \Exception($message);
                 }
