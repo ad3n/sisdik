@@ -258,16 +258,16 @@ class Siswa
     private $caraKesekolah;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="beratbadan", type="smallint", nullable=true)
+     * @ORM\Column(name="beratbadan", type="string", length=50, nullable=true)
      */
     private $beratbadan;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="tinggibadan", type="smallint", nullable=true)
+     * @ORM\Column(name="tinggibadan", type="string", length=50, nullable=true)
      */
     private $tinggibadan;
 
@@ -1090,7 +1090,7 @@ class Siswa
     /**
      * Set beratbadan
      *
-     * @param integer $beratbadan
+     * @param string $beratbadan
      * @return Siswa
      */
     public function setBeratbadan($beratbadan) {
@@ -1102,7 +1102,7 @@ class Siswa
     /**
      * Get beratbadan
      *
-     * @return integer
+     * @return string
      */
     public function getBeratbadan() {
         return $this->beratbadan;
@@ -1111,7 +1111,7 @@ class Siswa
     /**
      * Set tinggibadan
      *
-     * @param integer $tinggibadan
+     * @param string $tinggibadan
      * @return Siswa
      */
     public function setTinggibadan($tinggibadan) {
@@ -1123,7 +1123,7 @@ class Siswa
     /**
      * Get tinggibadan
      *
-     * @return integer
+     * @return string
      */
     public function getTinggibadan() {
         return $this->tinggibadan;
