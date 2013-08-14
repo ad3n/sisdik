@@ -118,7 +118,20 @@ class TahunAkademikController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new TahunAkademik();
+
+        $qbe = $em->createQueryBuilder();
+        $queryUrutan = $em->createQueryBuilder()->select($qbe->expr()->max('tahunAkademik.urutan'))
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
+        $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
+        $nomorUrut = $nomorUrut === null ? 1 : $nomorUrut;
+        $nomorUrut++;
+
+        $entity->setUrutan($nomorUrut);
+
         $form = $this->createForm(new TahunAkademikType($this->container), $entity);
 
         return array(
@@ -323,7 +336,7 @@ class TahunAkademikController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
