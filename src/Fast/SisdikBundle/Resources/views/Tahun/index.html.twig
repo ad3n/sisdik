@@ -17,9 +17,6 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
     	<tr>
-    		<th>
-    		    {{ 'label.number'|trans }}
-    	    </th>
     		<th class="{% if pagination.isSorted('t.tahun') %}sorted{% endif %}">
     		    {{ knp_pagination_sortable(pagination, 'label.year.entry'|trans, 't.tahun') }}
     	    </th>
@@ -29,7 +26,6 @@
 	<tbody>
 {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
     		<td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahun }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('settings_year_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
@@ -44,4 +40,3 @@
 </table>
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}
-
