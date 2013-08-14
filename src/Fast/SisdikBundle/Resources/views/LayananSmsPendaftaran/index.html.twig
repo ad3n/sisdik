@@ -27,7 +27,7 @@
 	<tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.layanansms.jenis'|trans }}">{{ daftarJenisLayanan[data.jenisLayanan] }}</td>
+    		<td data-title="{{ 'label.layanansms.jenis'|trans }}">{{ daftarJenisLayanan[data.jenisLayanan]|trans }}</td>
     		<td data-title="{{ 'label.sms.template.entry'|trans }}">{{ data.templatesms.nama }} &raquo; {{ data.templatesms.teks }}</td>
     		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
         		<a href="{{ path('smspendaftaran_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
