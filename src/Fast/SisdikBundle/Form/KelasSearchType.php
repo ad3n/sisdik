@@ -26,7 +26,7 @@ class KelasSearchType extends AbstractType
         $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
                 ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
                 ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
-                ->setParameter('sekolah', $sekolah->getId());
+                ->addOrderBy('tahunAkademik.nama', 'DESC')->setParameter('sekolah', $sekolah->getId());
         $builder
                 ->add('tahunAkademik', 'entity',
                         array(

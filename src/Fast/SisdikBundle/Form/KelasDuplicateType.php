@@ -23,9 +23,10 @@ class KelasDuplicateType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah);
+            $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
+                    ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                    ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                    ->addOrderBy('tahunAkademik.nama', 'DESC')->setParameter('sekolah', $sekolah);
             $builder
                     ->add('tahunAkademikSource', 'entity',
                             array(
