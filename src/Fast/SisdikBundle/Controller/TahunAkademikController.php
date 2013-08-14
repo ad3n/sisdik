@@ -34,9 +34,10 @@ class TahunAkademikController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:TahunAkademik', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.urutan', 'DESC')->setParameter('sekolah', $sekolah->getId());
+            $querybuilder = $em->createQueryBuilder()->select('tahunakademik')
+                    ->from('FastSisdikBundle:TahunAkademik', 'tahunakademik')
+                    ->where('tahunakademik.sekolah = :sekolah')->orderBy('tahunakademik.urutan', 'DESC')
+                    ->addOrderBy('tahunakademik.nama', 'DESC')->setParameter('sekolah', $sekolah->getId());
         }
 
         $paginator = $this->get('knp_paginator');
