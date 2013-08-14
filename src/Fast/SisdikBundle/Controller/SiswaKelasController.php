@@ -33,9 +33,12 @@ class SiswaKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SiswaKelas', 't')
-                ->leftJoin('t.tahunAkademik', 't2')->leftJoin('t.kelas', 't3')->where('t.siswa = :siswa')
-                ->orderBy('t2.urutan', 'DESC')->addOrderBy('t3.urutan', 'ASC')->addOrderBy('t.aktif', 'ASC')
+        $querybuilder = $em->createQueryBuilder()->select('siswakelas')
+                ->from('FastSisdikBundle:SiswaKelas', 'siswakelas')
+                ->leftJoin('siswakelas.tahunAkademik', 'tahunAkademik')
+                ->leftJoin('siswakelas.kelas', 'kelas')->where('siswakelas.siswa = :siswa')
+                ->orderBy('tahunAkademik.urutan', 'DESC')->addOrderBy('tahunAkademik.nama', 'DESC')
+                ->addOrderBy('kelas.urutan', 'ASC')->addOrderBy('siswakelas.aktif', 'ASC')
                 ->setParameter('siswa', $idsiswa)->getQuery();
 
         $results = $querybuilder->getResult();
