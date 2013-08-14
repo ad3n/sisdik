@@ -17,7 +17,17 @@ class PenjurusanType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+
+        $em = $this->container->get('doctrine')->getManager();
+
         $builder
+                ->add('sekolah', new EntityHiddenType($em),
+                        array(
+                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                'data' => $sekolah->getId(),
+                        ))
                 ->add('nama', null,
                         array(
                                 'required' => true,
@@ -39,44 +49,20 @@ class PenjurusanType extends AbstractType
                                 )
                         ));
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Penjurusan', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.sekolah ASC, t.root, t.lft', 'ASC')->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('parent', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Penjurusan',
-                                    'label' => 'label.parentnode', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'optionLabel',
-                                    'empty_value' => 'label.select.parentnode',
-                                    'required' => false, 'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'xlarge'
-                                    )
-                            ));
-
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('sekolah', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder,
-                                    'attr' => array(
-                                        'class' => 'large'
-                                    )
-                            ));
-        }
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
+                ->where('t.sekolah = :sekolah')->orderBy('t.sekolah ASC, t.root, t.lft', 'ASC')
+                ->setParameter('sekolah', $sekolah);
+        $builder
+                ->add('parent', 'entity',
+                        array(
+                                'class' => 'FastSisdikBundle:Penjurusan', 'label' => 'label.parentnode',
+                                'multiple' => false, 'expanded' => false, 'property' => 'optionLabel',
+                                'empty_value' => 'label.select.parentnode', 'required' => false,
+                                'query_builder' => $querybuilder,
+                                'attr' => array(
+                                    'class' => 'xlarge'
+                                )
+                        ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {

@@ -3,7 +3,6 @@
 namespace Fast\SisdikBundle\Form;
 use Fast\SisdikBundle\Entity\PilihanLayananSms;
 use Fast\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,17 +21,12 @@ class LayananSmsPendaftaranType extends AbstractType
 
         $em = $this->container->get('doctrine')->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Sekolah', 't')
-                ->where('t.id = :sekolah')->setParameter('sekolah', $sekolah);
         $builder
-                ->add('sekolah', 'entity',
+                ->add('sekolah', new EntityHiddenType($em),
                         array(
-                                'class' => 'FastSisdikBundle:Sekolah', 'label' => 'label.school',
-                                'multiple' => false, 'expanded' => false, 'property' => 'nama',
-                                'empty_value' => false, 'required' => true, 'query_builder' => $querybuilder,
-                        ));
-
-        $builder
+                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                'data' => $sekolah->getId(),
+                        ))
                 ->add('jenisLayanan', 'choice',
                         array(
                                 'choices' => PilihanLayananSms::getDaftarLayananPendaftaran(),

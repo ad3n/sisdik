@@ -2,7 +2,6 @@
 
 namespace Fast\SisdikBundle\Form;
 use Fast\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +15,17 @@ class GelombangType extends AbstractType
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $sekolah = $user->getSekolah();
+
+        $em = $this->container->get('doctrine')->getManager();
+
         $builder
+                ->add('sekolah', new EntityHiddenType($em),
+                        array(
+                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
+                                'data' => $sekolah->getId(),
+                        ))
                 ->add('nama', null,
                         array(
                                 'required' => true,
@@ -45,25 +54,6 @@ class GelombangType extends AbstractType
                                     'class' => 'small'
                                 )
                         ));
-
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:Sekolah', 't')->where('t.id = :sekolah')
-                    ->setParameter('sekolah', $sekolah);
-            $builder
-                    ->add('sekolah', 'entity',
-                            array(
-                                    'class' => 'FastSisdikBundle:Sekolah',
-                                    'label' => 'label.school', 'multiple' => false,
-                                    'expanded' => false, 'property' => 'nama',
-                                    'empty_value' => false, 'required' => true,
-                                    'query_builder' => $querybuilder,
-                            ));
-        }
     }
 
     public function buildOrderChoices() {
