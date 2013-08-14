@@ -1,0 +1,69 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}penempatan.siswa.kelas.banyak.lembar.kerja{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.form-horizontal .control-label {
+    width: 22em;
+}
+.form-horizontal .controls {
+    margin-left: 23em;
+}
+</style>
+
+<form action="{{ path('penempatan-siswa-kelas_menempatkan-kelompok') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+	<div class="form-actions">
+	    <button type="submit" class="btn primary">{{ 'label.tempatkan'|trans }}</button>
+	    <button type="reset" class="btn" id="tombol-batal">{{ 'label.batal'|trans }}</button>
+    </div>
+</form>
+
+<div class="clearfix"></div>
+
+<div class="knowledgebase">
+{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
+    <a href="{{ path('_index') }}" class="a-kb">
+        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
+        {{ 'link.penempatan.siswa.kelas'|trans({}, 'kb') }}
+    </a>
+{% endimage %}
+</div>
+
+<div class="clearfix"></div>
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+	var url = "{{ path('data_class_ajax_updateclass') }}";
+
+{% for sheet in sheetCollection %}
+    $.get(url, {tahunAkademik: $(".selectyear{{ sheet.index }}").val()}, function(data) {
+    	var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
+        }
+        $(".selectclass{{ sheet.index }}").html(options);
+    });
+
+    $(".selectyear{{ sheet.index }}").change(function() {
+        // clear class select box content
+        $(".selectclass{{ sheet.index }}").empty();
+        $(".selectclass{{ sheet.index }}").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
+        	var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
+            }
+            $(".selectclass{{ sheet.index }}").html(options);
+        });
+    });
+{% endfor %}
+
+    $("#tombol-batal").click(function() {
+        window.location.href = "{{ path('penempatan-siswa-kelas') }}";
+    });
+});
+</script>
+{% endblock content %}

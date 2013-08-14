@@ -1,4 +1,6 @@
 label:
+    batal: Batal
+    lembar.kerja: Sheet
     kode.jurusan: Kode Jurusan
     jenis.kelamin: Jenis Kelamin
     nomor.induk: Nomor Induk
@@ -599,6 +601,7 @@ flash:
             deleted: Riwayat Kelas Siswa '%student%' di kelas '%class%' tahun '%year%' berhasil dihapus
             fail.delete: Riwayat Kelas Siswa '%student%' gagal dihapus
             imported: Berhasil menempatkan %count% siswa-kelas untuk tahun akademik %year% ke kelas %class%
+            imported.group: Berhasil menempatkan %count% siswa
         academic.calendar:
             updated: Kalender Pendidikan tahun '%year%' bulan '%month%' berhasil diperbarui
     sms:
@@ -772,6 +775,7 @@ exception:
     open.file.pdf: Error ketika membuat file pdf
 
 shortinfo:
+    tiada.data.siswakelas.tahun.akademik: Tidak ada data siswa-kelas di tahun akademik yang dipilih
     tiada.data.siswakelas.awal: Tidak ada data siswa yang belum ditempatkan di suatu kelas
     ortuwali.hanya.satu.aktif: hanya satu orang tua/wali yang bisa aktif dalam satu waktu
     password.mustequal: password harus sama
@@ -884,6 +888,7 @@ app.title: SisDik
 app.keterangan: mempermudah administrasi sekolah
 
 help:
+    captcha.penjelasan.unggah.siswa.kelas: Captcha berguna untuk mencegah penempatan siswa di suatu kelas tanpa sengaja
     captcha.penjelasan.unggah.impor.gabung: Captcha berguna untuk mencegah pengimpor-gabungan data tanpa sengaja
     captcha.penjelasan.unggah.impor.baru: Captcha berguna untuk mencegah pengimporan data tanpa sengaja
     awal.kehadiran: >

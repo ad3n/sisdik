@@ -3,6 +3,9 @@ dashboard: Dasbor
 
 download.file.template: Unduh File Template
 
+penempatan.siswa.kelas.banyak.lembar.kerja: >
+    Penempatan Siswa → Kelas,<br>
+    Lembar Kerja Spreadsheet Lebih Dari Satu
 penempatan.siswa.kelas: Penempatan Siswa → Kelas
 
 penahkikan.siswa: Penahkikan Siswa

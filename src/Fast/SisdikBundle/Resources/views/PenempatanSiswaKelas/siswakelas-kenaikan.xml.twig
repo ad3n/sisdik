@@ -40,6 +40,7 @@
     </office:automatic-styles>
     <office:body>
         <office:spreadsheet>
+    {% if kelas %}
         {% for datakelas in kelas %}
             <table:table table:name="{{ datakelas.tahunAkademik.nama }}, {{ datakelas.nama }}" table:style-name="ta1">
                 {% set fieldnum = 0 %}
@@ -152,6 +153,15 @@
                 </table:table-row>
             </table:table>
         {% endfor %}
+    {% else %}
+            <table:table table:name="Sheet1" table:style-name="ta1">
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ 'shortinfo.tiada.data.siswakelas.tahun.akademik'|trans }}</text:p>
+                    </table:table-cell>
+                </table:table-row>
+            </table:table>
+    {% endif %}
         </office:spreadsheet>
     </office:body>
 </office:document-content>

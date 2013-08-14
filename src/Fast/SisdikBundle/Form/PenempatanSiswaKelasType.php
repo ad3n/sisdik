@@ -19,9 +19,10 @@ class PenempatanSiswaKelasType extends AbstractType
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        $querybuilder1 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:TahunAkademik', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'DESC')
-                ->setParameter('sekolah', $sekolah);
+        $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
+                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->where('tahunAkademik.sekolah = :sekolah')->orderBy('tahunAkademik.urutan', 'DESC')
+                ->addOrderBy('tahunAkademik.nama', 'DESC')->setParameter('sekolah', $sekolah);
         $builder
                 ->add('tahunAkademik', 'entity',
                         array(
@@ -33,9 +34,10 @@ class PenempatanSiswaKelasType extends AbstractType
                                 ),
                         ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah);
+        $querybuilder2 = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+                ->leftJoin('kelas.tingkat', 'tingkat')->where('kelas.sekolah = :sekolah')
+                ->orderBy('tingkat.urutan', 'ASC')->addOrderBy('kelas.urutan')
+                ->setParameter('sekolah', $sekolah);
         $builder
                 ->add('kelas', 'entity',
                         array(
@@ -48,32 +50,21 @@ class PenempatanSiswaKelasType extends AbstractType
                         ));
 
         $builder
-                ->add('delimiter', 'choice',
-                        array(
-                                'label' => 'label.fielddelimiter',
-                                'choices' => array(
-                                        ';' => 'semicolon [ ; ]', ',' => 'comma [ , ]', '|' => 'pipe [ | ]',
-                                        ':' => 'colon [ : ]'
-                                ),
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
-                        ))
                 ->add('file', 'file',
                         array(
                             'required' => true,
+                        ))
+                ->add('captcha', 'captcha',
+                        array(
+                                'attr' => array(
+                                        'class' => 'medium', 'placeholder' => 'help.type.captcha',
+                                        'autocomplete' => 'off'
+                                ), 'as_url' => true, 'reload' => true,
+                                'help_block' => 'help.captcha.penjelasan.unggah.siswa.kelas',
                         ));
     }
 
-    //     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-    //         $resolver
-    //                 ->setDefaults(
-    //                         array(
-    //                             'data_class' => 'Fast\SisdikBundle\Entity\TahunAkademik'
-    //                         ));
-    //     }
-
     public function getName() {
-        return 'fast_sisdikbundle_siswakelasimporttype';
+        return 'fast_sisdikbundle_penempatansiswakelastype';
     }
 }
