@@ -347,7 +347,7 @@ class OrangtuaWaliController extends Controller
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
             $menu['headings.pendaftaran']['links.registration']->setCurrent(true);
         } else {
-            $menu['headings.academic']['links.data.student']->setCurrent(true);
+            $menu['headings.academic']['links.siswa']->setCurrent(true);
         }
     }
 
