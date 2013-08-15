@@ -12,18 +12,58 @@
         <dd>{% if entity.sekolah is not null %}{{ entity.sekolah.nama }}{% endif %}</dd>
         <dt>{{ 'label.year.entry'|trans }}</dt>
         <dd>{% if entity.tahun is not null %}{{ entity.tahun.tahun }}{% endif %}</dd>
+    {% if entity.gelombang is not null %}
         <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
-        <dd>{% if entity.gelombang is not null %}{{ entity.gelombang.nama }}{% endif %}</dd>
+        <dd>{{ entity.gelombang.nama }}</dd>
+    {% endif %}
         <dt>{{ 'label.name.full'|trans }}</dt>
         <dd>{{ entity.namaLengkap }}</dd>
         <dt>{{ 'label.idnumber'|trans }}</dt>
         <dd>{{ entity.nomorInduk }}</dd>
+    {% if entity.orangtuaWali %}
+        {% for orangtua in entity.orangtuaWali %}
+            {% if orangtua %}
+                {% if orangtua.aktif == 1 %}
+    	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+    	            <dd>{{ orangtua.nama }}</dd>
+    	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+    	            <dd>{{ orangtua.ponsel }}</dd>
+    	        {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if entity.referensi is not null %}
+        <dt>{{ 'label.perujuk'|trans }}</dt>
+        <dd>
+            <a href="{{ path('referensi_show', { 'id': entity.referensi.id }) }}" target="_blank">
+                {{ entity.referensi.nama }}
+                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.referensi'|trans }}" border="0" style="vertical-align: baseline;" />
+                {% endimage %}
+            </a>
+        </dd>
+    {% endif %}
+        <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+    {% if entity.sekolahAsal is not null %}
+        <dd>
+            <a href="{{ path('sekolahasal_show', { 'id': entity.sekolahAsal.id }) }}" target="_blank">
+                {{ entity.sekolahAsal.nama }}
+                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+            	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
+                {% endimage %}
+            </a>
+        </dd>
+    {% else %}
+        <dd>&nbsp;</dd>
+    {% endif %}
         <dt>{{ 'label.gender'|trans }}</dt>
         <dd>{% if entity.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif entity.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
         <dt>{{ 'label.photo'|trans }}</dt>
         <dd><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathThumbnail }}" style="vertical-align: middle; padding: 8px 0;" /></dd>
         <dt>{{ 'label.religion'|trans }}</dt>
         <dd>{{ entity.agama|title }}</dd>
+        <dt>{{ 'label.address'|trans }}</dt>
+        <dd>{{ entity.alamat }}</dd>
         <dt>{{ 'label.birthplace'|trans }}</dt>
         <dd>{{ entity.tempatLahir }}</dd>
         <dt>{{ 'label.birthday'|trans }}</dt>
@@ -44,8 +84,6 @@
         <dd>{{ entity.statusOrphan }}</dd>
         <dt>{{ 'label.dailylanguage'|trans }}</dt>
         <dd>{{ entity.bahasaSeharihari }}</dd>
-        <dt>{{ 'label.address'|trans }}</dt>
-        <dd>{{ entity.alamat }}</dd>
         <dt>{{ 'label.postalcode'|trans }}</dt>
         <dd>{{ entity.kodepos }}</dd>
         <dt>{{ 'label.phone'|trans }}</dt>
@@ -64,6 +102,8 @@
         <dd>{{ entity.tinggibadan }}</dd>
         <dt>{{ 'label.bloodtype'|trans }}</dt>
         <dd>{{ entity.golongandarah }}</dd>
+        <dt>{{ 'label.keterangan'|trans }}</dt>
+        <dd>{{ entity.keterangan }}</dd>
     </dl>
 
     <div class="clearfix"></div>

@@ -130,7 +130,10 @@ class SiswaController extends Controller
         $this->setCurrentMenu();
 
         $entity = new Siswa();
-        $form = $this->createForm(new SiswaType($this->container), $entity);
+        $orangtuaWali = new OrangtuaWali();
+        $entity->getOrangtuaWali()->add($orangtuaWali);
+
+        $form = $this->createForm(new SiswaType($this->container, "new"), $entity);
 
         return array(
             'entity' => $entity, 'form' => $form->createView()
@@ -153,11 +156,25 @@ class SiswaController extends Controller
 
         $entity = new Siswa();
         $request = $this->getRequest();
-        $form = $this->createForm(new SiswaType($this->container), $entity);
+        $form = $this->createForm(new SiswaType($this->container, "new"), $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            $qbe = $em->createQueryBuilder();
+            $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
+                    ->setParameter('sekolah', $sekolah->getId());
+
+            $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
+            $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
+            $nomorUrutPersekolah++;
+
+            $entity->setNomorUrutPersekolah($nomorUrutPersekolah);
+            $entity->setNomorIndukSistem($nomorUrutPersekolah . $sekolah->getNomorUrut());
+            $entity->setCalonSiswa(false);
+            $entity->setGelombang(null);
 
             try {
                 $em->persist($entity);
@@ -208,7 +225,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaType($this->container), $entity);
+        $editForm = $this->createForm(new SiswaType($this->container, "edit"), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -238,7 +255,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaType($this->container), $entity);
+        $editForm = $this->createForm(new SiswaType($this->container, "edit"), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();

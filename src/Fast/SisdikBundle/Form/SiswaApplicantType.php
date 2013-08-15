@@ -211,10 +211,7 @@ class SiswaApplicantType extends AbstractType
                             ))
                     ->add('file', 'file',
                             array(
-                                    'required' => false, 'label' => 'label.photo',
-                                    'attr' => array(
-                                        'class' => 'small'
-                                    ),
+                                'required' => false, 'label' => 'label.photo',
                             ))
                     ->add('tempatLahir', null,
                             array(

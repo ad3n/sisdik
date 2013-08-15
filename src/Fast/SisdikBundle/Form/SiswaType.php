@@ -10,9 +10,11 @@ use Symfony\Component\Form\AbstractType;
 class SiswaType extends AbstractType
 {
     private $container;
+    private $mode;
 
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container, $mode = "new") {
         $this->container = $container;
+        $this->mode = $mode;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
@@ -36,21 +38,6 @@ class SiswaType extends AbstractType
                                 ),
                         ));
 
-        $querybuilder2 = $em->createQueryBuilder()->select('gelombang')
-                ->from('FastSisdikBundle:Gelombang', 'gelombang')->where('gelombang.sekolah = :sekolah')
-                ->orderBy('gelombang.urutan', 'ASC')->setParameter('sekolah', $sekolah);
-        $builder
-                ->add('gelombang', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:Gelombang',
-                                'label' => 'label.admissiongroup.entry', 'multiple' => false,
-                                'expanded' => false, 'property' => 'nama', 'empty_value' => false,
-                                'required' => true, 'query_builder' => $querybuilder2,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
-                        ));
-
         $builder
                 ->add('sekolah', new EntityHiddenType($em),
                         array(
@@ -66,10 +53,42 @@ class SiswaType extends AbstractType
                         ))
                 ->add('nomorInduk', null,
                         array(
-                                'label' => 'label.number',
+                                'label' => 'label.nomor.induk',
                                 'attr' => array(
                                     'class' => 'medium'
                                 ),
+                        ))
+                ->add('referensi', new EntityHiddenType($em),
+                        array(
+                                'class' => 'FastSisdikBundle:Referensi', 'label_render' => false,
+                                'required' => false,
+                                'attr' => array(
+                                    'class' => 'id-referensi'
+                                ),
+                        ))
+                ->add('namaReferensi', 'text',
+                        array(
+                                'required' => false,
+                                'attr' => array(
+                                        'class' => 'xlarge nama-referensi ketik-pilih-tambah',
+                                        'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
+                                ), 'label' => 'label.perujuk'
+                        ))
+                ->add('sekolahAsal', new EntityHiddenType($em),
+                        array(
+                                'class' => 'FastSisdikBundle:SekolahAsal', 'label_render' => false,
+                                'required' => false,
+                                'attr' => array(
+                                    'class' => 'id-sekolah-asal'
+                                ),
+                        ))
+                ->add('namaSekolahAsal', 'text',
+                        array(
+                                'required' => false,
+                                'attr' => array(
+                                        'class' => 'xlarge nama-sekolah-asal ketik-pilih-tambah',
+                                        'placeholder' => 'label.ketik-pilih.atau.ketik-tambah',
+                                ), 'label' => 'label.sekolah.asal'
                         ))
                 ->add('jenisKelamin', 'choice',
                         array(
@@ -83,10 +102,7 @@ class SiswaType extends AbstractType
                         ))
                 ->add('file', 'file',
                         array(
-                                'required' => false, 'label' => 'label.photo',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
+                            'required' => false, 'label' => 'label.photo',
                         ))
                 ->add('agama', null,
                         array(
@@ -241,8 +257,34 @@ class SiswaType extends AbstractType
                                 'label' => 'label.keterangan',
                                 'attr' => array(
                                     'class' => 'xlarge'
-                                ), 'required' => true,
+                                ), 'required' => false
                         ));
+
+        if ($this->mode == "new") {
+            $builder
+                    ->add('orangtuaWali', 'collection',
+                            array(
+                                    'type' => new OrangtuaWaliInitType(), 'by_reference' => false,
+                                    'attr' => array(
+                                        'class' => 'large'
+                                    ), 'label' => 'label.name.parent.or.guardian',
+                                    'options' => array(
+                                        'widget_control_group' => false, 'label_render' => false,
+                                    ), 'label_render' => false, 'allow_add' => true,
+                            ))
+                    ->add('dibuatOleh', new EntityHiddenType($em),
+                            array(
+                                    'required' => true, 'class' => 'FastSisdikBundle:User',
+                                    'data' => $user->getId(),
+                            ));
+        } elseif ($this->mode == "edit") {
+            $builder
+                    ->add('diubahOleh', new EntityHiddenType($em),
+                            array(
+                                    'required' => true, 'class' => 'FastSisdikBundle:User',
+                                    'data' => $user->getId(),
+                            ));
+        }
 
     }
 

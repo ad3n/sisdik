@@ -18,6 +18,18 @@
 {#             {% endif %}#}
                 <dt>{{ 'label.name.full'|trans }}</dt>
                 <dd>{{ entity.namaLengkap }}</dd>
+            {% if entity.orangtuaWali %}
+                {% for orangtua in entity.orangtuaWali %}
+                    {% if orangtua %}
+                        {% if orangtua.aktif == 1 %}
+            	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+            	            <dd>{{ orangtua.nama }}</dd>
+            	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+            	            <dd>{{ orangtua.ponsel }}</dd>
+            	        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
             {% if entity.referensi is not null %}
                 <dt>{{ 'label.perujuk'|trans }}</dt>
                 <dd>
@@ -60,18 +72,6 @@
                 <dd>{{ entity.email }}</dd>
                 <dt>{{ 'label.nickname'|trans }}</dt>
                 <dd>{{ entity.namaPanggilan }}</dd>
-                {% if entity.orangtuaWali %}
-                    {% for orangtua in entity.orangtuaWali %}
-                        {% if orangtua %}
-                            {% if orangtua.aktif == 1 %}
-                	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-                	            <dd>{{ orangtua.nama }}</dd>
-                	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-                	            <dd>{{ orangtua.ponsel }}</dd>
-                	        {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
                 <dt>{{ 'label.nationality'|trans }}</dt>
                 <dd>{{ entity.kewarganegaraan }}</dd>
                 <dt>{{ 'label.childno'|trans }}</dt>
