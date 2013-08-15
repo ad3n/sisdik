@@ -12,7 +12,7 @@
     <dt>{{ 'label.perulangan'|trans }}</dt>
     <dd>{{ entity.DaftarPerulangan[entity.perulangan] }}</dd>
     <dt>{{ 'label.day'|trans }}</dt>
-    <dd>{% if entity.mingguanHariKe is empty %}&mdash;{% else %}{{ entity.namaHari[entity.mingguanHariKe] }}{% endif %}</dd>
+    <dd>{% if entity.mingguanHariKe is empty %}&mdash;{% else %}{{ entity.namaHari[entity.mingguanHariKe]|trans }}{% endif %}</dd>
     <dt>{{ 'label.monthday'|trans }}</dt>
     <dd>{% if entity.bulananHariKe is empty %}&mdash;{% else %}{{ entity.bulananHariKe }}{% endif %}</dd>
     <dt>{{ 'label.status.kehadiran'|trans }}</dt>
@@ -36,7 +36,7 @@
     <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
     <dd>{% if entity.smsJam is empty %}&mdash;{% else %}{{ entity.smsJam(false) }}{% endif %}</dd>
     <dt>{{ 'label.sms.template.entry'|trans }}</dt>
-    <dd>{{ entity.templatesms.nama }} » {{ entity.templatesms.teks }}</dd>
+    <dd>{% if entity.templatesms is not null %}{{ entity.templatesms.nama }} » {{ entity.templatesms.teks }}{% endif %}</dd>
     <dt>{{ 'label.terhubung.mesin.kehadiran'|trans }}</dt>
     <dd>
         {% if entity.otomatisTerhubungMesin is empty %}
@@ -87,7 +87,7 @@
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
 	<a href="{{ path('jadwal_kehadiran_new') }}" class="add-link-a">
 	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.presence.schedule.add'|trans }}
+	    {{ 'label.jadwal.kehadiran.tambah'|trans }}
 	</a>
 {% endimage %}
 </div>

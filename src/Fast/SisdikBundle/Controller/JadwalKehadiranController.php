@@ -186,11 +186,11 @@ class JadwalKehadiranController extends Controller
                 $querybuilder->andWhere("(jadwalKehadiran.perulangan = :perulangan)");
                 $querybuilder->setParameter('perulangan', $perulanganSrc);
             }
-            if ($perulanganSrc == 'mingguan' && array_key_exists('mingguanHariKe', $data)) {
+            if ($perulanganSrc == 'b-mingguan' && array_key_exists('mingguanHariKe', $data)) {
                 $querybuilder->andWhere("(jadwalKehadiran.mingguanHariKe = :mingguanHariKe)");
                 $querybuilder->setParameter('mingguanHariKe', $mingguanHariKeSrc);
             }
-            if ($perulanganSrc == 'bulanan' && array_key_exists('bulananHariKe', $data)) {
+            if ($perulanganSrc == 'c-bulanan' && array_key_exists('bulananHariKe', $data)) {
                 $querybuilder->andWhere("(jadwalKehadiran.bulananHariKe = :bulananHariKe)");
                 $querybuilder->setParameter('bulananHariKe', $bulananHariKeSrc);
             }
@@ -208,9 +208,9 @@ class JadwalKehadiranController extends Controller
                 $entity->setStatusKehadiran($result->getStatusKehadiran());
 
                 $entity->setPerulangan($perulangan);
-                if ($perulangan == 'mingguan')
+                if ($perulangan == 'b-mingguan')
                     $entity->setMingguanHariKe($mingguanHariKe);
-                if ($perulangan == 'bulanan')
+                if ($perulangan == 'c-bulanan')
                     $entity->setBulananHariKe($bulananHariKe);
 
                 $entity->setParamstatusDariJam($result->getParamstatusDariJam());
