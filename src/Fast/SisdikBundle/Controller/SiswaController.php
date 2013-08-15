@@ -981,7 +981,6 @@ class SiswaController extends Controller
                     }
                 }
 
-                $entity->setGelombang(null);
                 $entity->setSekolahAsal($sekolahAsal);
                 $entity->setDiubahOleh($this->getUser());
 
