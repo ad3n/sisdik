@@ -50,7 +50,7 @@
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is not null %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is not null %}{{ data.gelombang.nama }}{% else %}({{ 'label.tanpa.proses.pendaftaran'|trans }}){% endif %}</td>
             <td data-title="{{ 'label.application.number'|trans }}">{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
             <td data-title="{{ 'label.paid.amount'|trans }}">
@@ -60,6 +60,8 @@
                 {% set totalBiayaSisa = 0 %}
                 {% set totalBiaya = 0 %}
                 {% set biayaTersimpan = '' %}
+
+            {% if data.gelombang is not null %}
 
                 {% for pembayaran in data.pembayaranPendaftaran %}
                     {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
@@ -92,6 +94,8 @@
                 <span class="icon-gift" style="margin: 0;"></span>
                 {% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
+
+            {% endif %}
             </td>
             <td data-title="{{ 'label.payment.remains'|trans }}">
                 {% if (totalBiaya - totalBayar) == 0 %}
@@ -101,7 +105,11 @@
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+            {% if data.gelombang is not null %}
                 <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
+            {% else %}
+                ({{ 'label.tanpa.proses.pendaftaran'|trans }})
+            {% endif %}
             </td>
         </tr>
     {% endfor %}
