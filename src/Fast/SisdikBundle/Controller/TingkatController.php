@@ -82,7 +82,20 @@ class TingkatController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        $em = $this->getDoctrine()->getManager();
+
         $entity = new Tingkat();
+
+        $qbe = $em->createQueryBuilder();
+        $queryUrutan = $em->createQueryBuilder()->select($qbe->expr()->max('tingkat.urutan'))
+                ->from('FastSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah->getId());
+        $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
+        $nomorUrut = $nomorUrut === null ? 1 : $nomorUrut;
+        $nomorUrut++;
+
+        $entity->setUrutan($nomorUrut);
+
         $form = $this->createForm(new TingkatType($this->container), $entity);
 
         return array(
