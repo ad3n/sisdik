@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\Gelombang;
 use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Fast\SisdikBundle\Util\Messenger;
 use Fast\SisdikBundle\Entity\OrangtuaWali;
@@ -44,8 +45,9 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
-        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
+            throw $this
+                    ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
         $entities = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')
@@ -105,8 +107,9 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
-        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
+            throw $this
+                    ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
         $entities = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')
@@ -466,8 +469,9 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
-        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
+            throw $this
+                    ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
@@ -527,8 +531,9 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
-        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
+            throw $this
+                    ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
         $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
@@ -595,8 +600,9 @@ class PembayaranPendaftaranController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
-        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
+            throw $this
+                    ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
         // total payment start here because of the unknown behavior during submitting request
         $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran();
