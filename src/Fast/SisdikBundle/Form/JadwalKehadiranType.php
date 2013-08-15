@@ -102,7 +102,7 @@ class JadwalKehadiranType extends AbstractType
                         ))
                 ->add('paramstatusDariJam', 'time',
                         array(
-                                'label' => 'label.paramstatusfrom', 'required' => true, 'input' => 'string',
+                                'label' => 'label.paramstatusfrom', 'required' => false, 'input' => 'string',
                                 'widget' => 'single_text', 'with_seconds' => false,
                                 'attr' => array(
                                     'class' => 'mini'
@@ -110,7 +110,7 @@ class JadwalKehadiranType extends AbstractType
                         ))
                 ->add('paramstatusHinggaJam', 'time',
                         array(
-                                'label' => 'label.paramstatusto', 'required' => true, 'input' => 'string',
+                                'label' => 'label.paramstatusto', 'required' => false, 'input' => 'string',
                                 'widget' => 'single_text', 'with_seconds' => false,
                                 'attr' => array(
                                     'class' => 'mini'
@@ -139,11 +139,11 @@ class JadwalKehadiranType extends AbstractType
                         array(
                                 'class' => 'FastSisdikBundle:Templatesms',
                                 'label' => 'label.sms.template.entry', 'multiple' => false,
-                                'expanded' => false, 'required' => true, 'property' => 'optionLabel',
+                                'expanded' => false, 'required' => false, 'property' => 'optionLabel',
                                 'query_builder' => $querybuilder4,
                                 'attr' => array(
                                     'class' => 'xlarge'
-                                )
+                                ), 'empty_value' => 'label.pilih.template.sms'
                         ));
 
         $builder
@@ -155,8 +155,8 @@ class JadwalKehadiranType extends AbstractType
                 ->add('permulaan', 'checkbox',
                         array(
                                 'label' => 'label.awal.kehadiran', 'required' => false,
-                                'help_block' => 'help.awal.kehadiran',
-                                'label_render' => true, 'widget_checkbox_label' => 'widget',
+                                'help_block' => 'help.awal.kehadiran', 'label_render' => true,
+                                'widget_checkbox_label' => 'widget',
                         ));
     }
 

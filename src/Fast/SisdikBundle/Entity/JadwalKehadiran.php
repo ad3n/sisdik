@@ -125,7 +125,7 @@ class JadwalKehadiran
      *
      * @ORM\ManyToOne(targetEntity="Templatesms")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="templatesms_id", referencedColumnName="id", nullable=false)
+     *   @ORM\JoinColumn(name="templatesms_id", referencedColumnName="id", nullable=true)
      * })
      */
     private $templatesms;
