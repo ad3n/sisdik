@@ -69,7 +69,7 @@ class KehadiranSiswa
      *
      * @ORM\Column(name="sms_terproses", type="boolean", nullable=false, options={"default"=0})
      */
-    private $smsTerproses;
+    private $smsTerproses = false;
 
     /**
      * @var string
@@ -77,6 +77,26 @@ class KehadiranSiswa
      * @ORM\Column(name="keterangan_status", type="string", length=45, nullable=true)
      */
     private $keteranganStatus;
+
+    /**
+     * @var \Sekolah
+     *
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $sekolah;
+
+    /**
+     * @var \TahunAkademik
+     *
+     * @ORM\ManyToOne(targetEntity="TahunAkademik")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     * })
+     */
+    private $tahunAkademik;
 
     /**
      * @var \Kelas
@@ -250,7 +270,7 @@ class KehadiranSiswa
      *
      * @return boolean
      */
-    public function getSmsTerproses() {
+    public function isSmsTerproses() {
         return $this->smsTerproses;
     }
 
@@ -273,6 +293,48 @@ class KehadiranSiswa
      */
     public function getKeteranganStatus() {
         return $this->keteranganStatus;
+    }
+
+    /**
+     * Set sekolah
+     *
+     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @return KehadiranSiswa
+     */
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+        $this->sekolah = $sekolah;
+
+        return $this;
+    }
+
+    /**
+     * Get sekolah
+     *
+     * @return \Fast\SisdikBundle\Entity\Sekolah
+     */
+    public function getSekolah() {
+        return $this->sekolah;
+    }
+
+    /**
+     * Set tahunAkademik
+     *
+     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
+     * @return KehadiranSiswa
+     */
+    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
+        $this->tahunAkademik = $tahunAkademik;
+
+        return $this;
+    }
+
+    /**
+     * Get tahunAkademik
+     *
+     * @return \Fast\SisdikBundle\Entity\TahunAkademik
+     */
+    public function getTahunAkademik() {
+        return $this->tahunAkademik;
     }
 
     /**
