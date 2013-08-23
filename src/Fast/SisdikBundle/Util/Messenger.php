@@ -119,14 +119,20 @@ class Messenger
     /**
      * Send message
      *
+     * @param  boolean $fromConsole
+     * @param  \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return integer
      */
-    public function sendMessage() {
+    public function sendMessage($fromConsole = false, $sekolah = null) {
         if ($this->logid == 0) {
-            $user = $this->container->get('security.context')->getToken()->getUser();
-            $sekolah = $user->getSekolah();
+            if (!$fromConsole) {
+                $user = $this->container->get('security.context')->getToken()->getUser();
+                $sekolah = $user->getSekolah();
 
-            $this->setLogEntry($sekolah);
+                $this->setLogEntry($sekolah);
+            } else {
+                $this->setLogEntry($sekolah);
+            }
         }
 
         $ch = curl_init();
