@@ -89,7 +89,6 @@ class JadwalKehadiranController extends Controller
                 if ($searchdata['mingguanHariKe'] === null) {
                     $searchdata['mingguanHariKe'] = 0;
                 }
-                var_dump($searchdata['mingguanHariKe']);
                 $querybuilder->setParameter('mingguanHariKe', $searchdata['mingguanHariKe']);
                 $data['mingguanHariKe'] = $searchdata['mingguanHariKe'];
                 $displayresult = true;
@@ -218,9 +217,9 @@ class JadwalKehadiranController extends Controller
                 $entity->setKirimSms($result->isKirimSms());
                 $entity->setSmsJam($result->getSmsJam());
                 $entity->setOtomatisTerhubungMesin($result->isOtomatisTerhubungMesin());
+                $entity->setPermulaan($result->isPermulaan());
 
                 $em->persist($entity);
-
             }
 
             $this->get('session')->getFlashBag()

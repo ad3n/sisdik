@@ -132,7 +132,7 @@
 $(document).ready(function() {
 	var url = "{{ path('data_class_ajax_updateclass') }}";
 
-	$.get(url, {tahunAkademik: $(".selectyear").val()}, function(data) {
+	$.get(url, {tahunAkademik: $(".selectyear").val(){% if searchdata.kelas is not null %}, kelas: {{ searchdata.kelas.id }}{% endif %}}, function(data) {
     	var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
