@@ -81,6 +81,19 @@ class PilihanLayananSms
     }
 
     /**
+     * Daftar layanan sms kehadiran
+     */
+    public static function getDaftarLayananKehadiran() {
+        return array(
+                'k-kehadiran-alpa' => 'layanan.sms.kehadiran.alpa',
+                'l-kehadiran-tepat' => 'layanan.sms.kehadiran.tepat',
+                'm-kehadiran-telat' => 'layanan.sms.kehadiran.telat',
+                'n-kehadiran-izin' => 'layanan.sms.kehadiran.izin',
+                'o-kehadiran-sakit' => 'layanan.sms.kehadiran.sakit',
+        );
+    }
+
+    /**
      * Set jenisLayanan
      *
      * @param string $jenisLayanan
