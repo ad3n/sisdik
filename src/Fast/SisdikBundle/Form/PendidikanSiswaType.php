@@ -49,10 +49,7 @@ class PendidikanSiswaType extends AbstractType
                         ))
                 ->add('fileUploadIjazah', 'file',
                         array(
-                                'label' => 'label.file.ijazah',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'required' => false,
+                            'label' => 'label.file.ijazah', 'required' => false,
                         ))
                 ->add('tahunmasuk', 'text',
                         array(
@@ -68,27 +65,24 @@ class PendidikanSiswaType extends AbstractType
                                     'class' => 'tahunkeluar small'
                                 ), 'required' => false,
                         ))
-                ->add('sttbTanggal', 'date',
+                ->add('kelulusanTanggal', 'date',
                         array(
-                                'widget' => 'single_text', 'label' => 'label.tanggal.sttb',
+                                'widget' => 'single_text', 'label' => 'label.tanggal.kelulusan',
                                 'format' => 'dd/MM/yyyy',
                                 'attr' => array(
-                                    'class' => 'date-sttb small'
+                                    'class' => 'date-kelulusan small'
                                 ), 'required' => false,
                         ))
-                ->add('sttbNomor', 'text',
+                ->add('kelulusanNomor', 'text',
                         array(
-                                'label' => 'label.nomor.sttb',
+                                'label' => 'label.nomor.kelulusan',
                                 'attr' => array(
                                     'class' => 'large'
                                 ), 'required' => false,
                         ))
-                ->add('fileUploadSttb', 'file',
+                ->add('fileUploadKelulusan', 'file',
                         array(
-                                'label' => 'label.file.sttb',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'required' => false,
+                            'label' => 'label.file.kelulusan', 'required' => false,
                         ))
                 ->add('keterangan', 'text',
                         array(

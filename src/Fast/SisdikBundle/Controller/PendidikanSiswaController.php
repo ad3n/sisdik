@@ -216,8 +216,8 @@ class PendidikanSiswaController extends Controller
             if ($editForm->get('fileUploadIjazah')->getData() !== null) {
                 $entity->setIjazahFile(uniqid());
             }
-            if ($editForm->get('fileUploadSttb')->getData() !== null) {
-                $entity->setSttbFile(uniqid());
+            if ($editForm->get('fileUploadKelulusan')->getData() !== null) {
+                $entity->setKelulusanFile(uniqid());
             }
 
             $em->persist($entity);

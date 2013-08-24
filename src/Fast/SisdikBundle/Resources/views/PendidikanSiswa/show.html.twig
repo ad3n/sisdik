@@ -31,13 +31,13 @@
     <dd>{{ entity.tahunmasuk }}</dd>
     <dt>{{ 'label.tahun.keluar'|trans }}</dt>
     <dd>{{ entity.tahunkeluar }}</dd>
-    <dt>{{ 'label.tanggal.sttb'|trans }}</dt>
-    <dd>{{ entity.sttbTanggal|localeDate('long') }}</dd>
-    <dt>{{ 'label.nomor.sttb'|trans }}</dt>
-    <dd>{{ entity.sttbNomor }}</dd>
-    {% if entity.sttbFile != '' %}
-    <dt>{{ 'label.file.sttb'|trans }}</dt>
-    <dd><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathSttbFileDisk }}">{{ entity.sttbFile }}</a> ({{ entity.filesizeSttbFileDisk }})</dd>
+    <dt>{{ 'label.tanggal.kelulusan'|trans }}</dt>
+    <dd>{{ entity.kelulusanTanggal|localeDate('long') }}</dd>
+    <dt>{{ 'label.nomor.kelulusan'|trans }}</dt>
+    <dd>{{ entity.kelulusanNomor }}</dd>
+    {% if entity.kelulusanFile != '' %}
+    <dt>{{ 'label.file.kelulusan'|trans }}</dt>
+    <dd><a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webPathKelulusanFileDisk }}">{{ entity.kelulusanFile }}</a> ({{ entity.filesizeKelulusanFileDisk }})</dd>
     {% endif %}
     <dt>{{ 'label.keterangan'|trans }}</dt>
     <dd>{{ entity.keterangan }}</dd>

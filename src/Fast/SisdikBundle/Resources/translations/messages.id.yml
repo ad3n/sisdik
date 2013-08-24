@@ -105,9 +105,9 @@ label:
     file.ijazah: File Ijazah
     tahun.masuk: Tahun Masuk
     tahun.keluar: Tahun Keluar
-    tanggal.sttb: Tanggal STTB
-    nomor.sttb: Nomor STTB
-    file.sttb: File STTB
+    tanggal.kelulusan: Tanggal Kelulusan
+    nomor.kelulusan: Nomor Kelulusan
+    file.kelulusan: File Kelulusan
     tingkat: Tingkat Kelas
     terjadi.di.kelas: Terjadi di Kelas
     tahun.sakit: Tahun Sakit
@@ -933,3 +933,8 @@ layanan.sms:
     pendaftar.bayar.biaya: Membayar biaya pendaftaran
     pendaftar.bayar.lunas: Lunas biaya pendaftaran
     laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
+    kehadiran.alpa: Siswa alpa
+    kehadiran.tepat: Siswa datang tepat waktu
+    kehadiran.telat: Siswa datang terlambat
+    kehadiran.izin: Siswa izin tidak masuk sekolah
+    kehadiran.sakit: Siswa tidak masuk sekolah karena sakit

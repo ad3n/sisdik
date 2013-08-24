@@ -109,42 +109,42 @@ class PendidikanSiswa
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="sttb_tanggal", type="date", nullable=true)
+     * @ORM\Column(name="kelulusan_tanggal", type="date", nullable=true)
      */
-    private $sttbTanggal;
+    private $kelulusanTanggal;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="sttb_nomor", type="string", length=100, nullable=true)
+     * @ORM\Column(name="kelulusan_nomor", type="string", length=100, nullable=true)
      */
-    private $sttbNomor;
+    private $kelulusanNomor;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="sttb_file", type="string", length=300, nullable=true)
+     * @ORM\Column(name="kelulusan_file", type="string", length=300, nullable=true)
      */
-    private $sttbFile;
+    private $kelulusanFile;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="sttb_file_disk", type="string", length=300, nullable=true)
+     * @ORM\Column(name="kelulusan_file_disk", type="string", length=300, nullable=true)
      */
-    private $sttbFileDisk;
+    private $kelulusanFileDisk;
 
     /**
      * @var string
      */
-    private $sttbFileDiskSebelumnya;
+    private $kelulusanFileDiskSebelumnya;
 
     /**
      * @var UploadedFile
      *
      * @Assert\File(maxSize="5M")
      */
-    private $fileUploadSttb;
+    private $fileUploadKelulusan;
 
     /**
      * @var string
@@ -372,90 +372,90 @@ class PendidikanSiswa
     }
 
     /**
-     * Set sttbTanggal
+     * Set kelulusanTanggal
      *
-     * @param \DateTime $sttbTanggal
+     * @param \DateTime $kelulusanTanggal
      * @return PendidikanSiswa
      */
-    public function setSttbTanggal($sttbTanggal) {
-        $this->sttbTanggal = $sttbTanggal;
+    public function setKelulusanTanggal($kelulusanTanggal) {
+        $this->kelulusanTanggal = $kelulusanTanggal;
 
         return $this;
     }
 
     /**
-     * Get sttbTanggal
+     * Get kelulusanTanggal
      *
      * @return \DateTime
      */
-    public function getSttbTanggal() {
-        return $this->sttbTanggal;
+    public function getKelulusanTanggal() {
+        return $this->kelulusanTanggal;
     }
 
     /**
-     * Set sttbNomor
+     * Set kelulusanNomor
      *
-     * @param string $sttbNomor
+     * @param string $kelulusanNomor
      * @return PendidikanSiswa
      */
-    public function setSttbNomor($sttbNomor) {
-        $this->sttbNomor = $sttbNomor;
+    public function setKelulusanNomor($kelulusanNomor) {
+        $this->kelulusanNomor = $kelulusanNomor;
 
         return $this;
     }
 
     /**
-     * Get sttbNomor
+     * Get kelulusanNomor
      *
      * @return string
      */
-    public function getSttbNomor() {
-        return $this->sttbNomor;
+    public function getKelulusanNomor() {
+        return $this->kelulusanNomor;
     }
 
     /**
-     * Set sttbFile
+     * Set kelulusanFile
      *
-     * @param string $sttbFile
+     * @param string $kelulusanFile
      * @return PendidikanSiswa
      */
-    public function setSttbFile($sttbFile) {
-        $this->sttbFile = $sttbFile;
+    public function setKelulusanFile($kelulusanFile) {
+        $this->kelulusanFile = $kelulusanFile;
 
         return $this;
     }
 
     /**
-     * Get sttbFile
+     * Get kelulusanFile
      *
      * @return string
      */
-    public function getSttbFile() {
-        if (strlen($this->sttbFile) > 20) {
-            return '...' . substr($this->sttbFile, -17);
+    public function getKelulusanFile() {
+        if (strlen($this->kelulusanFile) > 20) {
+            return '...' . substr($this->kelulusanFile, -17);
         }
-        return $this->sttbFile;
+        return $this->kelulusanFile;
     }
 
     /**
-     * Set sttbFileDisk
+     * Set kelulusanFileDisk
      *
-     * @param string $sttbFileDisk
+     * @param string $kelulusanFileDisk
      * @return DokumenSiswa
      */
-    public function setSttbFileDisk($sttbFileDisk) {
-        $this->sttbFileDisk = $sttbFileDisk;
+    public function setKelulusanFileDisk($kelulusanFileDisk) {
+        $this->kelulusanFileDisk = $kelulusanFileDisk;
 
         return $this;
     }
 
     /**
-     * Get sttbFileDisk
+     * Get kelulusanFileDisk
      *
      * @return string
      */
-    public function getSttbFileDisk() {
-        return $this->sttbFileDisk;
+    public function getKelulusanFileDisk() {
+        return $this->kelulusanFileDisk;
     }
 
     /**
@@ -510,12 +510,12 @@ class PendidikanSiswa
         return $this;
     }
 
-    public function getFileUploadSttb() {
-        return $this->fileUploadSttb;
+    public function getFileUploadKelulusan() {
+        return $this->fileUploadKelulusan;
     }
 
-    public function setFileUploadSttb(UploadedFile $file) {
-        $this->fileUploadSttb = $file;
+    public function setFileUploadKelulusan(UploadedFile $file) {
+        $this->fileUploadKelulusan = $file;
 
         return $this;
     }
@@ -525,8 +525,8 @@ class PendidikanSiswa
     }
 
     public function getRelativePathIjazahFileDisk() {
-        return null === $this->ijazahFileDisk ? null : $this->getUploadRootDir() . '/'
-                . $this->ijazahFileDisk;
+        return null === $this->ijazahFileDisk ? null
+                : $this->getUploadRootDir() . '/' . $this->ijazahFileDisk;
     }
 
     public function getRelativePathIjazahFileDiskSebelumnya() {
@@ -539,21 +539,23 @@ class PendidikanSiswa
         return FileSizeFormatter::formatBytes($file->getSize(), $type);
     }
 
-    public function getWebPathSttbFileDisk() {
-        return null === $this->sttbFileDisk ? null : $this->getUploadDir() . '/' . $this->sttbFileDisk;
+    public function getWebPathKelulusanFileDisk() {
+        return null === $this->kelulusanFileDisk ? null
+                : $this->getUploadDir() . '/' . $this->kelulusanFileDisk;
     }
 
-    public function getRelativePathSttbFileDisk() {
-        return null === $this->sttbFileDisk ? null : $this->getUploadRootDir() . '/' . $this->sttbFileDisk;
+    public function getRelativePathKelulusanFileDisk() {
+        return null === $this->kelulusanFileDisk ? null
+                : $this->getUploadRootDir() . '/' . $this->kelulusanFileDisk;
     }
 
-    public function getRelativePathSttbFileDiskSebelumnya() {
-        return null === $this->sttbFileDiskSebelumnya ? null
-                : $this->getUploadRootDir() . '/' . $this->sttbFileDiskSebelumnya;
+    public function getRelativePathKelulusanFileDiskSebelumnya() {
+        return null === $this->kelulusanFileDiskSebelumnya ? null
+                : $this->getUploadRootDir() . '/' . $this->kelulusanFileDiskSebelumnya;
     }
 
-    public function getFilesizeSttbFileDisk($type = 'KB') {
-        $file = new File($this->getRelativePathSttbFileDisk());
+    public function getFilesizeKelulusanFileDisk($type = 'KB') {
+        $file = new File($this->getRelativePathKelulusanFileDisk());
         return FileSizeFormatter::formatBytes($file->getSize(), $type);
     }
 
@@ -570,12 +572,12 @@ class PendidikanSiswa
             $this->ijazahFile = $this->fileUploadIjazah->getClientOriginalName();
         }
 
-        if (null !== $this->fileUploadSttb) {
-            $this->sttbFileDiskSebelumnya = $this->sttbFileDisk;
+        if (null !== $this->fileUploadKelulusan) {
+            $this->kelulusanFileDiskSebelumnya = $this->kelulusanFileDisk;
 
-            $this->sttbFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
-                    . $this->fileUploadSttb->getClientOriginalName();
-            $this->sttbFile = $this->fileUploadSttb->getClientOriginalName();
+            $this->kelulusanFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
+                    . $this->fileUploadKelulusan->getClientOriginalName();
+            $this->kelulusanFile = $this->fileUploadKelulusan->getClientOriginalName();
         }
     }
 
@@ -590,10 +592,10 @@ class PendidikanSiswa
             unset($this->fileUploadIjazah);
         }
 
-        if ($this->fileUploadSttb !== null) {
-            $this->fileUploadSttb->move($this->getUploadRootDir(), $this->sttbFileDisk);
-            $this->removeSttbFileSebelumnya();
-            unset($this->fileUploadSttb);
+        if ($this->fileUploadKelulusan !== null) {
+            $this->fileUploadKelulusan->move($this->getUploadRootDir(), $this->kelulusanFileDisk);
+            $this->removeKelulusanFileSebelumnya();
+            unset($this->fileUploadKelulusan);
         }
     }
 
@@ -603,8 +605,8 @@ class PendidikanSiswa
         }
     }
 
-    private function removeSttbFileSebelumnya() {
-        if ($file = $this->getRelativePathSttbFileDiskSebelumnya()) {
+    private function removeKelulusanFileSebelumnya() {
+        if ($file = $this->getRelativePathKelulusanFileDiskSebelumnya()) {
             @unlink($file);
         }
     }
