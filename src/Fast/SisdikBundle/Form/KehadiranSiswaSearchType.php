@@ -65,10 +65,10 @@ class KehadiranSiswaSearchType extends AbstractType
                         array(
                                 'class' => 'FastSisdikBundle:Kelas', 'label' => 'label.class.entry',
                                 'multiple' => false, 'expanded' => false, 'property' => 'nama',
-                                'required' => false, 'query_builder' => $querybuilder,
+                                'required' => true, 'query_builder' => $querybuilder,
                                 'attr' => array(
                                     'class' => 'medium pilih-kelas'
-                                ), 'label_render' => false, 'empty_value' => 'label.allclass'
+                                ), 'label_render' => false,
                         ));
 
         $builder

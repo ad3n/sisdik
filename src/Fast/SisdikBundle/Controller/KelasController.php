@@ -410,9 +410,6 @@ class KelasController extends Controller
         $entities = $querybuilder->getQuery()->getResult();
 
         $retval = array();
-        $retval[] = array(
-            'optionValue' => '', 'optionDisplay' => $this->get('translator')->trans('label.allclass')
-        );
         foreach ($entities as $entity) {
             $retval[] = array(
                     'optionValue' => $entity->getId(), 'optionDisplay' => $entity->getNama(),
