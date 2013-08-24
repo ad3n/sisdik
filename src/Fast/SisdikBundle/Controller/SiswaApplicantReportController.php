@@ -501,7 +501,7 @@ class SiswaApplicantReportController extends Controller
                                 if ($messenger instanceof Messenger) {
                                     $messenger->setPhoneNumber($ponsel);
                                     $messenger->setMessage($summarydata['teksTerformat']);
-                                    $messenger->sendMessage();
+                                    $messenger->sendMessage($sekolah);
                                 }
                             }
                         }

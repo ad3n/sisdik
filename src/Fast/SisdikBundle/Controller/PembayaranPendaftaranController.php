@@ -278,7 +278,7 @@ class PembayaranPendaftaranController extends Controller
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-                                                $messenger->sendMessage();
+                                                $messenger->sendMessage($sekolah);
                                             }
                                         }
                                     }
@@ -360,7 +360,7 @@ class PembayaranPendaftaranController extends Controller
                                         if ($messenger instanceof Messenger) {
                                             $messenger->setPhoneNumber($ponsel);
                                             $messenger->setMessage($tekstemplate);
-                                            $messenger->sendMessage();
+                                            $messenger->sendMessage($sekolah);
                                         }
                                     }
                                 }
@@ -423,7 +423,7 @@ class PembayaranPendaftaranController extends Controller
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-                                                $messenger->sendMessage();
+                                                $messenger->sendMessage($sekolah);
                                             }
                                         }
                                     }
@@ -758,7 +758,7 @@ class PembayaranPendaftaranController extends Controller
                                         if ($messenger instanceof Messenger) {
                                             $messenger->setPhoneNumber($ponsel);
                                             $messenger->setMessage($tekstemplate);
-                                            $messenger->sendMessage();
+                                            $messenger->sendMessage($sekolah);
                                         }
                                     }
                                 }
@@ -821,7 +821,7 @@ class PembayaranPendaftaranController extends Controller
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-                                                $messenger->sendMessage();
+                                                $messenger->sendMessage($sekolah);
                                             }
                                         }
                                     }

@@ -159,7 +159,7 @@ class KirimSmsKehadiranCommand extends ContainerAwareCommand
                                                 if ($messenger instanceof Messenger) {
                                                     $messenger->setPhoneNumber($ponsel);
                                                     $messenger->setMessage($tekstemplate);
-                                                    $messenger->sendMessage(true, $sekolah);
+                                                    $messenger->sendMessage($sekolah);
                                                 }
                                             }
                                         }

@@ -248,7 +248,7 @@ class SiswaApplicantController extends Controller
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-                                                $messenger->sendMessage();
+                                                $messenger->sendMessage($sekolah);
                                             }
                                         }
                                     }
