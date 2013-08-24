@@ -23,7 +23,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 class JadwalKehadiranController extends Controller
 {
     /**
-     * Lists all JadwalKehadiranKepulangan entities.
+     * Lists all JadwalKehadiran entities.
      *
      * @Route("/", name="jadwal_kehadiran")
      * @Method("GET")
