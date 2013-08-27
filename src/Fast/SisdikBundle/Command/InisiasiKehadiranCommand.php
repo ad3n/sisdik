@@ -1,6 +1,7 @@
 <?php
 
 namespace Fast\SisdikBundle\Command;
+use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\SiswaKelas;
 use Fast\SisdikBundle\Entity\KehadiranSiswa;
@@ -117,6 +118,28 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
 
                             $em->persist($kehadiran);
                         }
+
+                        $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                                ->findOneBy(
+                                        array(
+                                                'sekolah' => $jadwal->getSekolah()->getId(),
+                                                'tahunAkademik' => $jadwal->getTahunAkademik()->getId(),
+                                                'kelas' => $jadwal->getKelas()->getId(),
+                                                'tanggal' => $waktuSekarang,
+                                        ));
+                        if (is_object($prosesKehadiranSiswa)
+                                && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                            $prosesKehadiranSiswa->setBerhasilInisiasi(true);
+                        } else {
+                            $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
+                            $prosesKehadiranSiswa->setSekolah($jadwal->getSekolah());
+                            $prosesKehadiranSiswa->setTahunAkademik($jadwal->getTahunAkademik());
+                            $prosesKehadiranSiswa->setKelas($jadwal->getKelas());
+                            $prosesKehadiranSiswa->setTanggal($waktuSekarang);
+                            $prosesKehadiranSiswa->setBerhasilInisiasi(true);
+                        }
+                        $em->persist($prosesKehadiranSiswa);
+
                         $em->flush();
                     }
                 }
