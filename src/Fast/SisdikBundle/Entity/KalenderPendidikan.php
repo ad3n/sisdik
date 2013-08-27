@@ -38,9 +38,9 @@ class KalenderPendidikan
     /**
      * @var boolean
      *
-     * @ORM\Column(name="kbm", type="boolean", nullable=false)
+     * @ORM\Column(name="kbm", type="boolean", nullable=false, options={"default"=0})
      */
-    private $kbm;
+    private $kbm = false;
 
     /**
      * @var \Sekolah
@@ -57,7 +57,7 @@ class KalenderPendidikan
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -73,14 +73,14 @@ class KalenderPendidikan
     public function setTanggal($tanggal)
     {
         $this->tanggal = $tanggal;
-    
+
         return $this;
     }
 
     /**
      * Get tanggal
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTanggal()
     {
@@ -96,14 +96,14 @@ class KalenderPendidikan
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
+
         return $this;
     }
 
     /**
      * Get keterangan
      *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -119,14 +119,14 @@ class KalenderPendidikan
     public function setKbm($kbm)
     {
         $this->kbm = $kbm;
-    
+
         return $this;
     }
 
     /**
      * Get kbm
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getKbm()
     {
@@ -142,14 +142,14 @@ class KalenderPendidikan
     public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
     {
         $this->sekolah = $sekolah;
-    
+
         return $this;
     }
 
     /**
      * Get sekolah
      *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return \Fast\SisdikBundle\Entity\Sekolah
      */
     public function getSekolah()
     {

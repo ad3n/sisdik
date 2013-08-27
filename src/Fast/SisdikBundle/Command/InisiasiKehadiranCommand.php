@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Command;
+use Fast\SisdikBundle\Entity\KalenderPendidikan;
+
 use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\SiswaKelas;
@@ -51,6 +53,15 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
         $entitiesSekolah = $qbSekolah->getQuery()->getResult();
         foreach ($entitiesSekolah as $sekolah) {
             if (!(is_object($sekolah) && $sekolah instanceof Sekolah)) {
+                continue;
+            }
+
+            $kalenderPendidikan = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
+                    ->findOneBy(
+                            array(
+                                'sekolah' => $sekolah, 'tanggal' => $waktuSekarang, 'kbm' => true,
+                            ));
+            if (!(is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan)) {
                 continue;
             }
 
