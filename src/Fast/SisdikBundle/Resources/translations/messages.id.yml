@@ -1,4 +1,6 @@
 label:
+    inisiasi.ulang: Inisiasi Ulang
+    inisiasi: Inisiasi
     pilih.template.sms: ~ Template SMS ~
     tanpa.proses.pendaftaran: ⊄ pendaftaran
     batal: Batal
@@ -183,7 +185,6 @@ label:
     committee.list: Daftar Anggota Panitia
     generated.valid: Ya, data valid
     continue: Lanjutkan
-    class: Kelas
     cancel: Batal
     filter.student: Saring siswa
     regenerate: Membuat Ulang
@@ -437,6 +438,7 @@ label:
         tambah: Tambah Info Pendidikan Sebelumnya
 
 link:
+    rincian.proses.kehadiran: Rincian Proses Kehadiran
     referensi: Rujukan
     dokumen.siswa: Dokumen Siswa
     jenis.dokumen.siswa: Jenis Dokumen Siswa
@@ -461,6 +463,10 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    inisiasi.berhasil.dijalankan: Inisiasi Data Berhasil Dijalankan
+    kehadiran.siswa:
+        pencarian.gagal: Pencarian Kehadiran Siswa Tidak Berhasil
+        bukan.hari.kbm.aktif: Hari yang dipilih bukanlah hari KBM aktif
     penahkikan.terbarui: Pendaftar terpilih berhasil diubah menjadi siswa
     ringkasan.laporan.pendaftaran:
         gagal.dibuat: Ringkasan laporan pendaftaran gagal dibuat
@@ -791,7 +797,7 @@ shortinfo:
     onlyforactiveyear: hanya untuk tahun aktif
     menggunakan.tahun: menggunakan tahun
     menggunakan.tahun.akademik.dan.tingkat: menggunakan tahun akademik dan tingkat kelas
-    tidak.ada.data.kehadiran.siswa: Tidak ada data kehadiran siswa
+    tidak.ada.data.kehadiran.siswa: Tidak ada data kehadiran siswa. Kemungkinan proses inisiasi tidak berjalan atau tidak ada jadwal untuk tanggal %tanggal%
     no.class.data: Tidak ada data kelas
     username.generated: Username siswa untuk tahun akademik dan kelas terpilih telah dibuat sebelumnya
     regenerate.fillcaptcha: Isi captcha untuk membuat ulang username
@@ -841,7 +847,15 @@ alert:
     regcommittee.notempty: Harus ada setidaknya satu anggota panitia pendaftaran
 
 info:
+    pesan.piket.inisiasi.berhasil: Inisiasi kehadiran tanggal %tanggal% telah berhasil dijalankan, gunakan form jika perlu inisiasi lagi
+    pesan.piket.inisiasi.gagal: Inisiasi kehadiran tanggal %tanggal% gagal dijalankan, form inisiasi dapat digunakan untuk membuatnya
+    pesan.piket.inisiasi.lainnya: Inisiasi kehadiran gagal dijalankan atau tidak ada jadwal pada tanggal %tanggal%, form inisiasi dapat digunakan untuk membuatnya
     errormessage: Pesan Error
+    inisiasi.kehadiran: Inisiasi Data Kehadiran
+    pembaruan.dari.mesin.kehadiran: Pembaruan Data Dari Mesin Kehadiran
+    validasi.kehadiran: Validasi Data Kehadiran
+    sms.kehadiran.manual: SMS Kehadiran Manual
+    sms.kehadiran.otomatis: SMS Kehadiran Otomatis
 
 errorinfo:
     kesalahan.ketika.memformat.teks: Terjadi kesalahan ketika memformat teks
@@ -867,7 +881,7 @@ heading:
     info.pendukung: Info Pendukung
     academicinfo: Info Akademik
     download.selection: Pilihan mengunduh berkas data
-    inisialisasi.penempatan.siswa.kelas: Untuk Inisialisasi
+    inisialisasi.penempatan.siswa.kelas: Untuk Inisiasi
     penempatan.siswa.kelas.kenaikan.kelas: Untuk Kenaikan Kelas
     download.studentdata: Unduh data siswa
     download.data.formerge: Unduh berkas data yang akan diimpor-gabungkan
@@ -897,7 +911,6 @@ help:
         Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.
         Status bisa diperbarui oleh guru piket.
         Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.
-        Kolom selain "Parameter Dari Jam" tidak akan terpakai jika checkbox ini dicentang.
     captcha.penjelasan.ubah.hapus: Captcha berguna untuk mencegah pengubahan/penghapusan data tanpa sengaja
     konfirmasi.saya.mengerti: Cek jika telah mengerti resiko yang akan terjadi
     tag.standar.laporan.psb: tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%
@@ -908,6 +921,8 @@ help:
     captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
     confirm.generated.username: Centang untuk menandai bahwa data valid dan boleh disimpan ke database
 
+kehadiran: Kehadiran
+kelas: Kelas
 sekolah.asal: Sekolah Asal
 jenis.kelamin: Jenis Kelamin
 dari.tanggal: Dari Tanggal
@@ -919,6 +934,8 @@ member: Anggota
 leader: Ketua
 paidoff: lunas
 untuk: Untuk
+tanggal: Tanggal
+di: di
 
 status.kehadiran:
     hadir.tepat: Tepat Waktu

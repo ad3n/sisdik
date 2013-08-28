@@ -25,54 +25,219 @@
 .form-inline .checked label {
     color: #ff0000;
 }
+.accordion-toggle:hover {
+    text-decoration: none;
+}
+.arrow-down-lanjut {
+	width: 0;
+	height: 0;
+	border-left: 4px solid transparent;
+	border-right: 4px solid transparent;
+	border-top: 4px solid #555;
+	display: inline-block;
+	margin-left: 0.3em;
+	vertical-align: middle;
+}
+#proses-kehadiran {
+    display: none;
+}
+#anchor-proses-kehadiran {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-proses-kehadiran {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-proses-kehadiran-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-proses-kehadiran, .anchor-proses-kehadiran-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-proses-kehadiran:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-proses-kehadiran-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-proses-kehadiran-sel:hover {
+    color: #222;
+}
+.accordion a:focus {
+    outline: none;
+}
+#form-inisiasi {
+    margin-bottom: 0px;
+}
+.ajax-loader {
+    color: #003EB0;
+}
 </style>
 
 <div class="filter-section">
-    <form method="post" action="{{ path('studentspresence_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+    <form id="searchform" method="get" action="{{ path('studentspresence_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
         <button class="btn" type="reset" onclick="window.location.href='{{ path('studentspresence') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 
-<ul class="nav nav-tabs">
-{% for class in class_entities %}
-    <li class="{% if loop.first %}active{% endif %}"><a href="#tab{{ class.id }}" data-toggle="tab">{{ class.nama }}</a></li>
-{% endfor %}
-</ul>
-
 <div class="clearfix"></div>
 
-{% if class_entities %}
-    {% if entities %}
-<form method="post" action="{{ path('studentspresence_update') }}" class="form-inline" id="presenceform">
-<div class="tab-content">
-    {% for class in class_entities %}
-    <div id="tab{{ class.id }}" class="tab-pane {% if loop.first %}active{% endif %}">
-        <dl>
-        {% for data in entities if data.kelas.id == class.id %}
-            <dt>{{ data.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ data.siswa.nomorInduk }}</span></dt>
-            <dd>{{ form_widget(form['kehadirankepulangan_' ~ data.id]) }}</dd>
-        {% endfor %}
-        </dl>
+<h4>{{ 'kehadiran'|trans }} {{ 'di'|trans }} {{ 'kelas'|trans }} {{ kelas.nama }} {{ 'tanggal'|trans }} {{ tanggal|date('d/m/Y') }}</h4>
+
+<a href="" id="anchor-proses-kehadiran" class="anchor-proses-kehadiran" onclick="return false;">{{ 'link.rincian.proses.kehadiran'|trans }}<span class="arrow-down-lanjut"></span></a>
+
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
+<div id="proses-kehadiran">
+    <div class="accordion" id="proses-kehadiran-accordion">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseOne">
+                    <span class="badge {% spaceless %}
+                        {% if prosesKehadiranSiswa is not null %}
+                            {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}badge-success{% else %}badge-warning{% endif %}
+                        {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
+                    &nbsp; {{ 'info.inisiasi.kehadiran'|trans }}
+                </a>
+            </div>
+            <div id="collapseOne" class="accordion-body collapse">
+                <div class="accordion-inner">
+                {% if prosesKehadiranSiswa is not null %}
+                    {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}
+                        {{ 'info.pesan.piket.inisiasi.berhasil'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
+                    {% else %}
+                        {{ 'info.pesan.piket.inisiasi.gagal'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
+                    {% endif %}
+                {% else %}
+                    {{ 'info.pesan.piket.inisiasi.lainnya'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
+                {% endif %}
+                    <form id="form-inisiasi" method="post" action="{{ path('studentspresence_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }} class="form-horizontal">
+                        {{ form_widget(formInisiasi) }}
+                        <button type="submit" class="btn success alternative icon play">
+                    {% if prosesKehadiranSiswa is not null %}
+                        {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}
+                            {{ 'label.inisiasi.ulang'|trans }}
+                        {% else %}
+                            {{ 'label.inisiasi'|trans }}
+                        {% endif %}
+                    {% else %}
+                        {{ 'label.inisiasi'|trans }}
+                    {% endif %}
+                        </button>
+                        <div id="loader-inisiasi" class="ajax-loader"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseTwo">
+                    <span class="badge {% spaceless %}
+                    {% if prosesKehadiranSiswa is not null %}
+                        {% if prosesKehadiranSiswa.berhasilDiperbaruiMesin == 1 %}badge-success{% else %}badge-warning{% endif %}
+                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
+                    &nbsp; {{ 'info.pembaruan.dari.mesin.kehadiran'|trans }}
+                </a>
+            </div>
+            <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    Anim pariatur cliche...
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseThree">
+                    <span class="badge {% spaceless %}
+                    {% if prosesKehadiranSiswa is not null %}
+                        {% if prosesKehadiranSiswa.berhasilValidasi == 1 %}badge-success{% else %}badge-warning{% endif %}
+                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
+                    &nbsp; {{ 'info.validasi.kehadiran'|trans }}
+                </a>
+            </div>
+            <div id="collapseThree" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    Anim pariatur cliche...
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFour">
+                    <span class="badge {% spaceless %}
+                    {% if prosesKehadiranSiswa is not null %}
+                        {% if prosesKehadiranSiswa.berhasilKirimSmsManual == 1 %}badge-success{% else %}badge-warning{% endif %}
+                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
+                    &nbsp; {{ 'info.sms.kehadiran.manual'|trans }}
+                </a>
+            </div>
+            <div id="collapseFour" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    Anim pariatur cliche...
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFive">
+                    <span class="badge {% spaceless %}
+                    {% if prosesKehadiranSiswa is not null %}
+                        {% if prosesKehadiranSiswa.berhasilKirimSmsOtomatis == 1 %}badge-success{% else %}badge-warning{% endif %}
+                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
+                    &nbsp; {{ 'info.sms.kehadiran.otomatis'|trans }}
+                </a>
+            </div>
+            <div id="collapseFive" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    Anim pariatur cliche...
+                </div>
+            </div>
+        </div>
     </div>
-    {% endfor %}
 </div>
+
+{% if entities %}
+<form method="post" action="{{ path('studentspresence_update') }}" class="form-inline" id="presenceform">
+<dl>
+{% for kehadiran in entities %}
+    <dt>{{ kehadiran.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ kehadiran.siswa.nomorInduk }}</span></dt>
+    <dd>{{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}</dd>
+{% endfor %}
+</dl>
+
 <div class="clearfix"></div>
+
 <div class="form-actions">
     <button type="submit" class="btn primary alternative icon approve">{{ 'label.save'|trans }}</button>
-    <div id="output" style="color: #003EB0; "></div>
+    <div id="output" class="ajax-loader"></div>
 </div>
 </form>
-    {% else %}
-    <p class="shortinfo">{{ 'shortinfo.tidak.ada.data.kehadiran.siswa'|trans }}</p>
-    {% endif %}
 {% else %}
-<p class="shortinfo">{{ 'shortinfo.no.class.data'|trans }}</p>
+<p class="shortinfo">{{ 'shortinfo.tidak.ada.data.kehadiran.siswa'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}</p>
 {% endif %}
 
 <div class="clearfix"></div>
 <script language="javascript" type="text/javascript">
+var duration = 300;
+
 $(document).ready(function() {
 	$('.date').datepicker({
 	    dateFormat: 'dd/mm/yy',
@@ -80,9 +245,22 @@ $(document).ready(function() {
         changeYear: true
     });
 
+	$("#anchor-proses-kehadiran").click(function(){
+		if ($("#proses-kehadiran").is(":visible")) {
+			$("#proses-kehadiran").hide(duration);
+			$(this).removeClass("anchor-proses-kehadiran-sel");
+			$(this).addClass("anchor-proses-kehadiran");
+		} else {
+			$("#proses-kehadiran").show(duration);
+			$(this).addClass("anchor-proses-kehadiran-sel");
+			$(this).removeClass("anchor-proses-kehadiran");
+		}
+		return false;
+	});
+
 	var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
 
-	$.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+	$.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
         $(".pilih-kelas").empty();
         $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
@@ -100,7 +278,7 @@ $(document).ready(function() {
         $(".pilih-kelas").empty();
         $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
@@ -113,36 +291,46 @@ $(document).ready(function() {
 
     $("#presenceform").submit(function() {
         var url = $("#presenceform").attr("action");
-        pingurl = "{{ path("_index") }}";
-        // pingurl = "http://www.google.com/action";
-
-        $returnvalue = $.get(pingurl);
-
-        // alert($("#presenceform").serialize());
+        //alert($("#presenceform").serialize());
 
         {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#output').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 
-        setTimeout(function() {
-        	if ($returnvalue.statusText == "OK") {
-                $.post(url, {data: $("#presenceform").serialize()},
-                    function(data) {
-                        if (data.responseCode == 200) {
-                            $('#output').html(data.responseText);
-                        } else {
-                            // if we got to this point we know that the controller
-                            // did not return a json_encoded array. We can assume that
-                            // an unexpected PHP error occured
-                            alert("An unexpected error occured.");
-                            // $('#output').html(data);
-                        }
-                    }
-                );
-            } else {
-                alert('can not reach server (tried in 4 seconds)!');
+        $.post(url, $("#presenceform").serialize(),
+            function(data) {
+                if (data.responseCode == 200) {
+                    $('#output').html(data.responseText);
+                } else {
+                    // if we got to this point we know that the controller
+                    // did not return a json_encoded array. We can assume that
+                    // an unexpected PHP error occured
+                    // alert("An unexpected error occured.");
+                    // $('#output').html(data);
+                }
             }
-        }, 4000);
+        );
+
+        return false;
+    });
+
+    $("#form-inisiasi").submit(function() {
+    	var url = $(this).attr("action");
+
+    	{% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#loader-inisiasi').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
+        {% endimage %}
+
+        $.post(url, $(this).serialize(),
+                function(data) {
+                    if (data.responseCode == 200) {
+                        $('#loader-inisiasi').html(data.responseText);
+                        location.reload();
+                    } else {
+                        $('#loader-inisiasi').html("An unexpected error occured.");
+                    }
+                }
+            );
 
         return false;
     });

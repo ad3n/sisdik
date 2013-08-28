@@ -19,15 +19,23 @@
     text-decoration: none;
     background-color: yellow;
 }
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
 </style>
 
 <div class="filter-section">
-    <form method="post" action="{{ path('studentspresence_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+    <form method="get" action="{{ path('studentspresence_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
         <button class="btn" type="reset" onclick="window.location.href='{{ path('studentspresence') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
+
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
 	$('.date').datepicker({
