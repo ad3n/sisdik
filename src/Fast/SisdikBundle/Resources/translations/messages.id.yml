@@ -847,6 +847,7 @@ alert:
     regcommittee.notempty: Harus ada setidaknya satu anggota panitia pendaftaran
 
 info:
+    cara.validasi.kehadiran: Gunakan tombol radio yang tersedia untuk masing-masing siswa untuk memvalidasi kehadirannya
     pesan.piket.inisiasi.berhasil: Inisiasi kehadiran tanggal %tanggal% telah berhasil dijalankan, gunakan form jika perlu inisiasi lagi
     pesan.piket.inisiasi.gagal: Inisiasi kehadiran tanggal %tanggal% gagal dijalankan, form inisiasi dapat digunakan untuk membuatnya
     pesan.piket.inisiasi.lainnya: Inisiasi kehadiran gagal dijalankan atau tidak ada jadwal pada tanggal %tanggal%, form inisiasi dapat digunakan untuk membuatnya

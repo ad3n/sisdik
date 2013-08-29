@@ -200,6 +200,7 @@ class KehadiranSiswaController extends Controller
             }
         }
 
+        $return = array();
         if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
             $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
                     ->findOneBy(
@@ -220,15 +221,14 @@ class KehadiranSiswaController extends Controller
                 $prosesKehadiranSiswa->setBerhasilValidasi(true);
             }
             $em->persist($prosesKehadiranSiswa);
+            $return['berhasilValidasi'] = 1;
         }
-
         $em->flush();
 
-        $return = array(
-                "responseCode" => 200,
-                "responseText" => $this->get('translator')->trans('flash.presence.student.updated'),
-                "data" => $data, "matches" => $matches,
-        );
+        $return['responseCode'] = 200;
+        $return['responseText'] = $this->get('translator')->trans('flash.presence.student.updated');
+        $return['matches'] = $matches;
+        $return['data'] = $data;
 
         $return = json_encode($return);
         return new Response($return, 200,
@@ -252,7 +252,6 @@ class KehadiranSiswaController extends Controller
                         array(
                             'aktif' => true, 'sekolah' => $sekolah->getId(),
                         ));
-
 
         $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($kelas_id);
 
@@ -322,16 +321,16 @@ class KehadiranSiswaController extends Controller
                     $kehadiran->setSmsTerproses(false);
 
                     $em->persist($kehadiran);
-
-                    $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
-                    $prosesKehadiranSiswa->setSekolah($sekolah);
-                    $prosesKehadiranSiswa->setTahunAkademik($tahunAkademik);
-                    $prosesKehadiranSiswa->setKelas($kelas);
-                    $prosesKehadiranSiswa->setTanggal(new \DateTime($tanggal));
-                    $prosesKehadiranSiswa->setBerhasilInisiasi(true);
-
-                    $em->persist($prosesKehadiranSiswa);
                 }
+
+                $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
+                $prosesKehadiranSiswa->setSekolah($sekolah);
+                $prosesKehadiranSiswa->setTahunAkademik($tahunAkademik);
+                $prosesKehadiranSiswa->setKelas($kelas);
+                $prosesKehadiranSiswa->setTanggal(new \DateTime($tanggal));
+                $prosesKehadiranSiswa->setBerhasilInisiasi(true);
+
+                $em->persist($prosesKehadiranSiswa);
             }
 
             $em->flush();

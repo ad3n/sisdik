@@ -164,7 +164,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseThree">
-                    <span class="badge {% spaceless %}
+                    <span id="warna-validasi" class="badge {% spaceless %}
                     {% if prosesKehadiranSiswa is not null %}
                         {% if prosesKehadiranSiswa.berhasilValidasi == 1 %}badge-success{% else %}badge-warning{% endif %}
                     {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
@@ -173,7 +173,7 @@
             </div>
             <div id="collapseThree" class="accordion-body collapse">
                 <div class="accordion-inner">
-                    Anim pariatur cliche...
+                    {{ 'info.cara.validasi.kehadiran'|trans }}
                 </div>
             </div>
         </div>
@@ -301,12 +301,16 @@ $(document).ready(function() {
             function(data) {
                 if (data.responseCode == 200) {
                     $('#output').html(data.responseText);
+                    if (data.berhasilValidasi == 1) {
+                        $('#warna-validasi').removeClass('badge-warning');
+                        $('#warna-validasi').addClass('badge-success');
+                    }
                 } else {
                     // if we got to this point we know that the controller
                     // did not return a json_encoded array. We can assume that
                     // an unexpected PHP error occured
                     // alert("An unexpected error occured.");
-                    // $('#output').html(data);
+                    $('#output').html("An unexpected error occured");
                 }
             }
         );
