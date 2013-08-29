@@ -51,16 +51,9 @@ class ProsesKehadiranSiswa
     /**
      * @var boolean
      *
-     * @ORM\Column(name="berhasil_kirim_sms_manual", type="boolean", nullable=false, options={"default"=0})
+     * @ORM\Column(name="berhasil_kirim_sms", type="boolean", nullable=false, options={"default"=0})
      */
-    private $berhasilKirimSmsManual = false;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="berhasil_kirim_sms_otomatis", type="boolean", nullable=false, options={"default"=0})
-     */
-    private $berhasilKirimSmsOtomatis = false;
+    private $berhasilKirimSms = false;
 
     /**
      * @var \Sekolah
@@ -186,45 +179,24 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set berhasilKirimSmsManual
+     * Set berhasilKirimSms
      *
-     * @param boolean $berhasilKirimSmsManual
+     * @param boolean $berhasilKirimSms
      * @return ProsesKehadiranSiswa
      */
-    public function setBerhasilKirimSmsManual($berhasilKirimSmsManual) {
-        $this->berhasilKirimSmsManual = $berhasilKirimSmsManual;
+    public function setBerhasilKirimSms($berhasilKirimSms) {
+        $this->berhasilKirimSms = $berhasilKirimSms;
 
         return $this;
     }
 
     /**
-     * Get berhasilKirimSmsManual
+     * Get berhasilKirimSms
      *
      * @return boolean
      */
-    public function isBerhasilKirimSmsManual() {
-        return $this->berhasilKirimSmsManual;
-    }
-
-    /**
-     * Set berhasilKirimSmsOtomatis
-     *
-     * @param boolean $berhasilKirimSmsOtomatis
-     * @return ProsesKehadiranSiswa
-     */
-    public function setBerhasilKirimSmsOtomatis($berhasilKirimSmsOtomatis) {
-        $this->berhasilKirimSmsOtomatis = $berhasilKirimSmsOtomatis;
-
-        return $this;
-    }
-
-    /**
-     * Get berhasilKirimSmsOtomatis
-     *
-     * @return boolean
-     */
-    public function isBerhasilKirimSmsOtomatis() {
-        return $this->berhasilKirimSmsOtomatis;
+    public function isBerhasilKirimSms() {
+        return $this->berhasilKirimSms;
     }
 
     /**
