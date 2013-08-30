@@ -63,19 +63,22 @@ class KehadiranSiswaSmsType extends AbstractType
             }
         }
 
-        $querybuilder1 = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
-                ->where('siswa.id IN (:id)')->orderBy('siswa.namaLengkap', 'ASC')->setParameter('id', $siswa);
+        if (count($siswa) > 0) {
+            $querybuilder1 = $em->createQueryBuilder()->select('siswa')
+                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.id IN (:id)')
+                    ->orderBy('siswa.namaLengkap', 'ASC')->setParameter('id', $siswa);
 
-        $builder
-                ->add('siswa', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:Siswa', 'label' => 'label.student.entry',
-                                'multiple' => false, 'expanded' => false, 'required' => false,
-                                'property' => 'namaLengkap', 'query_builder' => $querybuilder1,
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                ), 'empty_value' => 'label.pilih.siswa'
-                        ));
+            $builder
+                    ->add('siswa', 'entity',
+                            array(
+                                    'class' => 'FastSisdikBundle:Siswa', 'label' => 'label.student.entry',
+                                    'multiple' => false, 'expanded' => false, 'required' => false,
+                                    'property' => 'namaLengkap', 'query_builder' => $querybuilder1,
+                                    'attr' => array(
+                                        'class' => 'xlarge'
+                                    ), 'empty_value' => 'label.pilih.siswa'
+                            ));
+        }
 
         $querybuilder4 = $em->createQueryBuilder()->select('template')
                 ->from('FastSisdikBundle:Templatesms', 'template')->where('template.sekolah = :sekolah')
