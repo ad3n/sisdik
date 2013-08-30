@@ -4,7 +4,7 @@
 
 {% block content %}
 <style type="text/css">
-.control-group {
+#searchform .control-group, #form-inisiasi .control-group {
     display: inline-block;
     margin-right: 0.4em;
 }
@@ -183,31 +183,37 @@
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFour">
                     <span class="badge {% spaceless %}
                     {% if prosesKehadiranSiswa is not null %}
-                        {% if prosesKehadiranSiswa.berhasilKirimSmsManual == 1 %}badge-success{% else %}badge-warning{% endif %}
+                        {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}badge-success{% else %}badge-warning{% endif %}
                     {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
-                    &nbsp; {{ 'info.sms.kehadiran.manual'|trans }}
+                    &nbsp; {{ 'info.sms.kehadiran'|trans }}
                 </a>
             </div>
             <div id="collapseFour" class="accordion-body collapse">
                 <div class="accordion-inner">
-                    Anim pariatur cliche...
-                </div>
-            </div>
-        </div>
+                    - Info SMS kehadiran telah berhasil diproses untuk dikirim. Laporannya bisa dilihat pada menu laporan kehadiran siswa<br>
+                    - Jika SMS belum diproses, info SMS kehadiran akan otomatis diproses pada pukul 08.30<br>
+                    - Gunakan tombol 'Kirim SMS' untuk mendahului pemrosesan atau untuk memproses ulang info sms kehadiran siswa secara manual<br>
+                    - Template SMS menggunakan format yang terpilih di jadwal kehadiran<br>
 
-        <div class="accordion-group">
-            <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFive">
-                    <span class="badge {% spaceless %}
-                    {% if prosesKehadiranSiswa is not null %}
-                        {% if prosesKehadiranSiswa.berhasilKirimSmsOtomatis == 1 %}badge-success{% else %}badge-warning{% endif %}
-                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
-                    &nbsp; {{ 'info.sms.kehadiran.otomatis'|trans }}
-                </a>
-            </div>
-            <div id="collapseFive" class="accordion-body collapse">
-                <div class="accordion-inner">
-                    Anim pariatur cliche...
+                    <div class="clearfix" style="margin-bottom: 2em;"></div>
+
+                    <form id="form-kirim-sms" method="post" action="{{ path('studentspresence_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }} class="form-horizontal">
+                        {{ form_widget(formSms) }}
+                    	<div class="controls">
+                            <button type="submit" class="btn success alternative icon play">
+                        {% if prosesKehadiranSiswa is not null %}
+                            {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
+                                {{ 'label.kirim.sms.ulang'|trans }}
+                            {% else %}
+                                {{ 'label.kirim.sms'|trans }}
+                            {% endif %}
+                        {% else %}
+                            {{ 'label.kirim.sms'|trans }}
+                        {% endif %}
+                            </button>
+                        </div>
+                        <div id="loader-kirim-sms" class="ajax-loader"></div>
+                    </form>
                 </div>
             </div>
         </div>

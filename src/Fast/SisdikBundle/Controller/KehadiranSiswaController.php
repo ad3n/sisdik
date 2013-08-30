@@ -1,6 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Form\KehadiranSiswaSmsType;
+
 use Fast\SisdikBundle\Entity\KalenderPendidikan;
 use Fast\SisdikBundle\Entity\SiswaKelas;
 use Fast\SisdikBundle\Entity\Kelas;
@@ -71,7 +73,7 @@ class KehadiranSiswaController extends Controller
 
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('kehadiran, siswa')
+        $querybuilder = $em->createQueryBuilder()->select('kehadiran')
                 ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')->leftJoin('kehadiran.kelas', 'kelas')
                 ->leftJoin('kehadiran.siswa', 'siswa')->where('kelas.sekolah = :sekolah')
                 ->orderBy('kelas.kode')->addOrderBy('siswa.namaLengkap')
@@ -165,11 +167,17 @@ class KehadiranSiswaController extends Controller
                             new KehadiranSiswaInisiasiType($this->container, $kelas,
                                     $searchdata['tanggal']->format('Y-m-d')));
 
+            $formSms = $this
+                    ->createForm(
+                            new KehadiranSiswaSmsType($this->container, $kelas,
+                                    $searchdata['tanggal']->format('Y-m-d'), $entities));
+
             return array(
                     'kelas' => $kelas, 'entities' => $entities, 'form' => $students->createView(),
                     'searchform' => $searchform->createView(), 'buildparam' => $buildparam,
                     'tahunAkademik' => $tahunAkademik, 'prosesKehadiranSiswa' => $prosesKehadiranSiswa,
                     'tanggal' => $searchdata['tanggal'], 'formInisiasi' => $formInisiasi->createView(),
+                    'formSms' => $formSms->createView(),
             );
         } else {
             $this->get('session')->getFlashBag()
@@ -238,7 +246,7 @@ class KehadiranSiswaController extends Controller
     }
 
     /**
-     * Edits KehadiranSiswa entities.
+     * Inisiasi kehadiran siswa
      *
      * @Route("/inisiasi/{kelas_id}/{tanggal}", name="studentspresence_inisiasi")
      * @Method("POST")
@@ -353,6 +361,25 @@ class KehadiranSiswaController extends Controller
                 array(
                     'Content-Type' => 'application/json'
                 ));
+    }
+
+    /**
+     * Kirim SMS
+     *
+     * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="studentspresence_kirimsms")
+     * @Method("POST")
+     */
+    public function kirimSmsAction() {
+        $sekolah = $this->isRegisteredToSchool();
+        $em = $this->getDoctrine()->getManager();
+
+        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+                ->findOneBy(
+                        array(
+                            'aktif' => true, 'sekolah' => $sekolah->getId(),
+                        ));
+
+        $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($kelas_id);
     }
 
     private function setCurrentMenu() {
