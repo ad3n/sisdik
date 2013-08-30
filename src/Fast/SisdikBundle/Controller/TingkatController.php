@@ -91,7 +91,7 @@ class TingkatController extends Controller
                 ->from('FastSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
         $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
-        $nomorUrut = $nomorUrut === null ? 1 : $nomorUrut;
+        $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
         $nomorUrut++;
 
         $entity->setUrutan($nomorUrut);

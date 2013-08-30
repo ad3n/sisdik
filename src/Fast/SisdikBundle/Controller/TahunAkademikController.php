@@ -127,7 +127,7 @@ class TahunAkademikController extends Controller
                 ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
                 ->where('tahunAkademik.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
         $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
-        $nomorUrut = $nomorUrut === null ? 1 : $nomorUrut;
+        $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
         $nomorUrut++;
 
         $entity->setUrutan($nomorUrut);
