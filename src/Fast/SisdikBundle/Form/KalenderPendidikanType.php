@@ -40,13 +40,13 @@ class KalenderPendidikanType extends AbstractType
                                             'required' => false,
                                             'attr' => array(
                                                 'checked' => 'checked'
-                                            )
+                                            ), 'label_render' => false,
                                     ));
                 } else {
                     $builder
                             ->add('kbm_' . $field['num'], 'checkbox',
                                     array(
-                                        'required' => false
+                                        'required' => false, 'label_render' => false,
                                     ));
                 }
             }
