@@ -1,8 +1,8 @@
 <?php
 
 namespace Fast\SisdikBundle\Controller;
+use Fast\SisdikBundle\Entity\TahunAkademik;
 use Fast\SisdikBundle\Form\KehadiranSiswaSmsType;
-
 use Fast\SisdikBundle\Entity\KalenderPendidikan;
 use Fast\SisdikBundle\Entity\SiswaKelas;
 use Fast\SisdikBundle\Entity\Kelas;
@@ -52,6 +52,11 @@ class KehadiranSiswaController extends Controller
                         array(
                             'aktif' => true, 'sekolah' => $sekolah->getId(),
                         ));
+        if (!(is_object($tahunAkademik) && $tahunAkademik instanceof TahunAkademik)) {
+            throw $this
+                    ->createNotFoundException(
+                            $this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
+        }
 
         return array(
             'searchform' => $searchform->createView(), 'tahunAkademik' => $tahunAkademik

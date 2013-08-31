@@ -2,7 +2,6 @@
 
 namespace Fast\SisdikBundle\Form;
 use Fast\SisdikBundle\Entity\KehadiranSiswa;
-
 use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Kelas;

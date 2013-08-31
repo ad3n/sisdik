@@ -466,6 +466,7 @@ fos_user:
         already_used: username sudah terpakai
 
 flash:
+    tahun.akademik.tidak.ada.yang.aktif: Tidak ada tahun akademik yang aktif. Kehadiran siswa bisa dikelola hanya pada tahun akademik aktif.
     inisiasi.berhasil.dijalankan: Inisiasi Data Berhasil Dijalankan
     kehadiran.siswa:
         pencarian.gagal: Pencarian Kehadiran Siswa Tidak Berhasil
@@ -826,6 +827,7 @@ shortinfo:
     discountamount.nozero: Besar potongan tidak boleh bernilai 0 atau negatif
 
 alert:
+    pendaftar.sudah.melakukan.pembayaran: Pendaftar yang sudah melakukan pembayaran tidak bisa dihapus
     hanya.boleh.satu.lembar.kerja: Hanya boleh ada satu lembar kerja dalam file yang diunggah
     pendaftar.peringatan.hapus: >
         PERHATIAN!<br>
