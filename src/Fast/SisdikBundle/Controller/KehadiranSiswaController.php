@@ -48,7 +48,7 @@ class KehadiranSiswaController extends Controller
         $searchform->get('tanggal')->setData($hariIni);
 
         $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
-                ->findBy(
+                ->findOneBy(
                         array(
                             'aktif' => true, 'sekolah' => $sekolah->getId(),
                         ));

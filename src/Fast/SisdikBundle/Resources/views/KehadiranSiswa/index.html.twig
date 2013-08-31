@@ -46,7 +46,7 @@ $(document).ready(function() {
 
 	var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
 
-	$.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+	$.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
         $(".pilih-kelas").empty();
         $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
@@ -64,7 +64,7 @@ $(document).ready(function() {
         $(".pilih-kelas").empty();
         $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-        $.get(url, {tahunAkademik: {{ tahunAkademik[0].id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
         	var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
