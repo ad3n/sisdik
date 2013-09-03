@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c6a28ac3c58d838ce041c17b1ab76c87",
+    "hash": "965f8ca7ae3f36f8d14b109c4d6b2012",
     "packages": [
         {
             "name": "bcc/extra-tools-bundle",
@@ -2354,16 +2354,16 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v2.3.0",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "8c7f9c66a7d12f47f50618ef420868fe836d0c33"
+                "reference": "b4c4072679943773a7582daa63f545ba818fa627"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/8c7f9c66a7d12f47f50618ef420868fe836d0c33",
-                "reference": "8c7f9c66a7d12f47f50618ef420868fe836d0c33",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/b4c4072679943773a7582daa63f545ba818fa627",
+                "reference": "b4c4072679943773a7582daa63f545ba818fa627",
                 "shasum": ""
             },
             "type": "library",
@@ -2372,12 +2372,12 @@
                 "Apache-2.0"
             ],
             "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
-            "homepage": "http://twitter.github.com/bootstrap/",
+            "homepage": "http://twbs.github.com/bootstrap/",
             "keywords": [
                 "bootstrap",
                 "css"
             ],
-            "time": "2013-02-08 06:13:13"
+            "time": "2013-07-27 06:36:38"
         },
         {
             "name": "twig/extensions",
