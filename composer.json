@@ -52,7 +52,7 @@
                     "reference": "master"
                 },
                 "dist": {
-                    "url": "https://github.com/twbs/bootstrap/zipball/master",
+                    "url": "https://github.com/twbs/bootstrap/archive/v2.3.2.zip",
                     "type": "zip"
                 }
             }
