@@ -31,7 +31,7 @@
         "beberlei/DoctrineExtensions": "dev-master",
         "bcc/extra-tools-bundle": "dev-master",
         "mopa/bootstrap-bundle": "dev-master",
-        "twbs/bootstrap": "2.3.0",
+        "twbs/bootstrap": "2.3.2",
         "gregwar/captcha-bundle": "dev-master",
         "doctrine/migrations": "dev-master",
         "doctrine/doctrine-migrations-bundle": "dev-master",
