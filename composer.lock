@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "95b3e32c2eac7b8d40d4794425a36c8a",
+    "hash": "c6a28ac3c58d838ce041c17b1ab76c87",
     "packages": [
         {
             "name": "bcc/extra-tools-bundle",
@@ -638,12 +638,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/l3pp4rd/DoctrineExtensions.git",
-                "reference": "e4829eee5d249250dabedbd4af1a7d5e1fa5d58e"
+                "reference": "524bdcb8003cdf47262e30ab53c7d5a6a595ea02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/e4829eee5d249250dabedbd4af1a7d5e1fa5d58e",
-                "reference": "e4829eee5d249250dabedbd4af1a7d5e1fa5d58e",
+                "url": "https://api.github.com/repos/l3pp4rd/DoctrineExtensions/zipball/524bdcb8003cdf47262e30ab53c7d5a6a595ea02",
+                "reference": "524bdcb8003cdf47262e30ab53c7d5a6a595ea02",
                 "shasum": ""
             },
             "require": {
@@ -710,7 +710,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2013-08-26 15:55:06"
+            "time": "2013-09-01 18:48:56"
         },
         {
             "name": "gregwar/captcha",
@@ -2354,19 +2354,30 @@
         },
         {
             "name": "twbs/bootstrap",
-            "version": "2.3.2",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "master"
+                "reference": "8c7f9c66a7d12f47f50618ef420868fe836d0c33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/twbs/bootstrap/zipball/master",
-                "reference": null,
-                "shasum": null
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/8c7f9c66a7d12f47f50618ef420868fe836d0c33",
+                "reference": "8c7f9c66a7d12f47f50618ef420868fe836d0c33",
+                "shasum": ""
             },
-            "type": "library"
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Sleek, intuitive, and powerful front-end framework for faster and easier web development.",
+            "homepage": "http://twitter.github.com/bootstrap/",
+            "keywords": [
+                "bootstrap",
+                "css"
+            ],
+            "time": "2013-02-08 06:13:13"
         },
         {
             "name": "twig/extensions",

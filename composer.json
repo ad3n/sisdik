@@ -31,7 +31,7 @@
         "beberlei/DoctrineExtensions": "dev-master",
         "bcc/extra-tools-bundle": "dev-master",
         "mopa/bootstrap-bundle": "dev-master",
-        "twbs/bootstrap": "2.3.2",
+        "twbs/bootstrap": "2.3.0",
         "gregwar/captcha-bundle": "dev-master",
         "doctrine/migrations": "dev-master",
         "doctrine/doctrine-migrations-bundle": "dev-master",
@@ -40,28 +40,6 @@
         "psliwa/pdf-bundle": "dev-master",
         "whiteoctober/breadcrumbs-bundle": "dev-master"
     },
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "version": "2.3.2",
-                "name": "twbs/bootstrap",
-                "source": {
-                    "url": "https://github.com/twbs/bootstrap.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "dist": {
-                    "url": "https://github.com/twbs/bootstrap/archive/v2.3.2.zip",
-                    "type": "zip"
-                }
-            }
-        },
-        {
-            "type": "composer",
-            "url": "http://packagist.org/"
-        }
-    ],
     "scripts":{
         "post-install-cmd":[
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
