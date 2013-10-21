@@ -1,22 +1,27 @@
 <?php
 namespace Fast\SisdikBundle\Controller;
-use Symfony\Bundle\DoctrineBundle\Registry;
 
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SekolahList
 {
+
     private $container;
 
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
-    private function getSekolah() {
+    private function getSekolah()
+    {
         $em = $this->container->get('doctrine')->getManager();
-        $sekolah = $em->getRepository('FastSisdikBundle:Sekolah')->createQueryBuilder('t')
-                ->orderBy('t.nama', 'ASC')->getQuery()->getResult();
+        $sekolah = $em->getRepository('FastSisdikBundle:Sekolah')
+            ->createQueryBuilder('t')
+            ->orderBy('t.nama', 'ASC')
+            ->getQuery()
+            ->getResult();
 
         return $sekolah;
     }
@@ -24,7 +29,8 @@ class SekolahList
     /**
      * build Sekolah for regular listing
      */
-    public function buildSekolahList() {
+    public function buildSekolahList()
+    {
         $choices = array();
 
         $sekolah = $this->getSekolah();
@@ -39,7 +45,8 @@ class SekolahList
     /**
      * build Sekolah for user listing
      */
-    public function buildSekolahUserList() {
+    public function buildSekolahUserList()
+    {
         $choices = array();
 
         $sekolah = $this->getSekolah();
@@ -58,7 +65,8 @@ class SekolahList
     /**
      * build Sekolah for statuskehadirankepulangan listing
      */
-    public function buildSekolahStatusKehadiranKepulanganList() {
+    public function buildSekolahStatusKehadiranKepulanganList()
+    {
         $choices = array();
 
         $sekolah = $this->getSekolah();

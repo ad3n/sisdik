@@ -1,8 +1,7 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
+
 use Fast\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,70 +9,76 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PenjurusanType extends AbstractType
 {
+
     private $container;
 
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $user = $this->container->get('security.context')
+            ->getToken()
+            ->getUser();
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
-        $builder
-                ->add('sekolah', new EntityHiddenType($em),
-                        array(
-                                'required' => true, 'class' => 'FastSisdikBundle:Sekolah',
-                                'data' => $sekolah->getId(),
-                        ))
-                ->add('nama', null,
-                        array(
-                                'required' => true,
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                )
-                        ))
-                ->add('kode', null,
-                        array(
-                                'required' => true,
-                                'attr' => array(
-                                    'class' => 'mini'
-                                )
-                        ))
-                ->add('kepala', null,
-                        array(
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                )
-                        ));
+        $builder->add('sekolah', new EntityHiddenType($em), array(
+            'required' => true,
+            'class' => 'FastSisdikBundle:Sekolah',
+            'data' => $sekolah->getId()
+        ))
+            ->add('nama', null, array(
+            'required' => true,
+            'attr' => array(
+                'class' => 'xlarge'
+            )
+        ))
+            ->add('kode', null, array(
+            'required' => true,
+            'attr' => array(
+                'class' => 'mini'
+            )
+        ))
+            ->add('kepala', null, array(
+            'attr' => array(
+                'class' => 'xlarge'
+            )
+        ));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.sekolah ASC, t.root, t.lft', 'ASC')
-                ->setParameter('sekolah', $sekolah);
-        $builder
-                ->add('parent', 'entity',
-                        array(
-                                'class' => 'FastSisdikBundle:Penjurusan', 'label' => 'label.parentnode',
-                                'multiple' => false, 'expanded' => false, 'property' => 'optionLabel',
-                                'empty_value' => 'label.select.parentnode', 'required' => false,
-                                'query_builder' => $querybuilder,
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                )
-                        ));
+        $querybuilder = $em->createQueryBuilder()
+            ->select('t')
+            ->from('FastSisdikBundle:Penjurusan', 't')
+            ->where('t.sekolah = :sekolah')
+            ->orderBy('t.sekolah ASC, t.root, t.lft', 'ASC')
+            ->setParameter('sekolah', $sekolah);
+        $builder->add('parent', 'entity', array(
+            'class' => 'FastSisdikBundle:Penjurusan',
+            'label' => 'label.parentnode',
+            'multiple' => false,
+            'expanded' => false,
+            'property' => 'optionLabel',
+            'empty_value' => 'label.select.parentnode',
+            'required' => false,
+            'query_builder' => $querybuilder,
+            'attr' => array(
+                'class' => 'xlarge'
+            )
+        ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver
-                ->setDefaults(
-                        array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\Penjurusan'
-                        ));
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'data_class' => 'Fast\SisdikBundle\Entity\Penjurusan'
+        ));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_penjurusantype';
     }
 }

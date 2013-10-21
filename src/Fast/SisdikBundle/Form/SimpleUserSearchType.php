@@ -1,7 +1,6 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
-use Symfony\Bundle\DoctrineBundle\Registry;
+
 use Doctrine\ORM\EntityRepository;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,40 +10,45 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class SimpleUserSearchType extends AbstractType
 {
+
     private $container;
 
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
-                ->add('searchoption', 'choice',
-                        array(
-                                'choices' => $this->buildChoices(), 'multiple' => false, 'expanded' => false,
-                                'required' => false,
-                                'attr' => array(
-                                    'class' => 'large'
-                                ), 'label_render' => false,
-                        ));
-        $builder
-                ->add('searchkey', null,
-                        array(
-                                'label' => 'label.searchkey', 'required' => false,
-                                'attr' => array(
-                                    'class' => 'medium search-query'
-                                ), 'label_render' => false,
-                        ));
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('searchoption', 'choice', array(
+            'choices' => $this->buildChoices(),
+            'multiple' => false,
+            'expanded' => false,
+            'required' => false,
+            'attr' => array(
+                'class' => 'large'
+            ),
+            'label_render' => false
+        ));
+        $builder->add('searchkey', null, array(
+            'label' => 'label.searchkey',
+            'required' => false,
+            'attr' => array(
+                'class' => 'medium search-query'
+            ),
+            'label_render' => false
+        ));
     }
 
-    private function buildChoices() {
+    private function buildChoices()
+    {
         $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:Sekolah')
-                ->findBy(array(), array(
-                    'nama' => 'ASC'
-                ));
+        $entities = $em->getRepository('FastSisdikBundle:Sekolah')->findBy(array(), array(
+            'nama' => 'ASC'
+        ));
         $choices = array(
-            '' => 'label.all', 'unset' => 'label.unregistered.school'
+            '' => 'label.all',
+            'unset' => 'label.unregistered.school'
         );
         foreach ($entities as $entity) {
             if ($entity instanceof Sekolah) {
@@ -55,15 +59,15 @@ class SimpleUserSearchType extends AbstractType
         return $choices;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver
-                ->setDefaults(
-                        array(
-                            'csrf_protection' => false,
-                        ));
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'csrf_protection' => false
+        ));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'searchform';
     }
 }

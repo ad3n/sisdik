@@ -3,7 +3,6 @@
 namespace Fast\SisdikBundle\Tests\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Client;
-use Pixellaneous\UserBundle\Entity\User;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
