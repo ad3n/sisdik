@@ -14,5 +14,7 @@ build/
 vendor
 phpunit.phar
 .settings
+.buildpath
+.project
 app/config/deploy.rb
 Capfile
