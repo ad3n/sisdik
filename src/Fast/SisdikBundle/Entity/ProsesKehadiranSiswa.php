@@ -1,6 +1,6 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProsesKehadiranSiswa
 {
+
     /**
      * @var integer
      *
@@ -60,7 +61,7 @@ class ProsesKehadiranSiswa
      *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $sekolah;
@@ -70,7 +71,7 @@ class ProsesKehadiranSiswa
      *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $tahunAkademik;
@@ -80,7 +81,7 @@ class ProsesKehadiranSiswa
      *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
      */
     private $kelas;
@@ -90,7 +91,8 @@ class ProsesKehadiranSiswa
      *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
@@ -100,9 +102,10 @@ class ProsesKehadiranSiswa
      * @param \DateTime $tanggal
      * @return ProsesKehadiranSiswa
      */
-    public function setTanggal($tanggal) {
+    public function setTanggal($tanggal)
+    {
         $this->tanggal = $tanggal;
-
+        
         return $this;
     }
 
@@ -111,7 +114,8 @@ class ProsesKehadiranSiswa
      *
      * @return \DateTime
      */
-    public function getTanggal() {
+    public function getTanggal()
+    {
         return $this->tanggal;
     }
 
@@ -121,9 +125,10 @@ class ProsesKehadiranSiswa
      * @param boolean $berhasilInisiasi
      * @return ProsesKehadiranSiswa
      */
-    public function setBerhasilInisiasi($berhasilInisiasi) {
+    public function setBerhasilInisiasi($berhasilInisiasi)
+    {
         $this->berhasilInisiasi = $berhasilInisiasi;
-
+        
         return $this;
     }
 
@@ -132,7 +137,8 @@ class ProsesKehadiranSiswa
      *
      * @return boolean
      */
-    public function isBerhasilInisiasi() {
+    public function isBerhasilInisiasi()
+    {
         return $this->berhasilInisiasi;
     }
 
@@ -142,9 +148,10 @@ class ProsesKehadiranSiswa
      * @param boolean $berhasilDiperbaruiMesin
      * @return ProsesKehadiranSiswa
      */
-    public function setBerhasilDiperbaruiMesin($berhasilDiperbaruiMesin) {
+    public function setBerhasilDiperbaruiMesin($berhasilDiperbaruiMesin)
+    {
         $this->berhasilDiperbaruiMesin = $berhasilDiperbaruiMesin;
-
+        
         return $this;
     }
 
@@ -153,7 +160,8 @@ class ProsesKehadiranSiswa
      *
      * @return boolean
      */
-    public function isBerhasilDiperbaruiMesin() {
+    public function isBerhasilDiperbaruiMesin()
+    {
         return $this->berhasilDiperbaruiMesin;
     }
 
@@ -163,9 +171,10 @@ class ProsesKehadiranSiswa
      * @param boolean $berhasilValidasi
      * @return ProsesKehadiranSiswa
      */
-    public function setBerhasilValidasi($berhasilValidasi) {
+    public function setBerhasilValidasi($berhasilValidasi)
+    {
         $this->berhasilValidasi = $berhasilValidasi;
-
+        
         return $this;
     }
 
@@ -174,7 +183,8 @@ class ProsesKehadiranSiswa
      *
      * @return boolean
      */
-    public function isBerhasilValidasi() {
+    public function isBerhasilValidasi()
+    {
         return $this->berhasilValidasi;
     }
 
@@ -184,9 +194,10 @@ class ProsesKehadiranSiswa
      * @param boolean $berhasilKirimSms
      * @return ProsesKehadiranSiswa
      */
-    public function setBerhasilKirimSms($berhasilKirimSms) {
+    public function setBerhasilKirimSms($berhasilKirimSms)
+    {
         $this->berhasilKirimSms = $berhasilKirimSms;
-
+        
         return $this;
     }
 
@@ -195,7 +206,8 @@ class ProsesKehadiranSiswa
      *
      * @return boolean
      */
-    public function isBerhasilKirimSms() {
+    public function isBerhasilKirimSms()
+    {
         return $this->berhasilKirimSms;
     }
 
@@ -205,9 +217,10 @@ class ProsesKehadiranSiswa
      * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
      * @return ProsesKehadiranSiswa
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
+        
         return $this;
     }
 
@@ -216,7 +229,8 @@ class ProsesKehadiranSiswa
      *
      * @return \Fast\SisdikBundle\Entity\Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
@@ -226,9 +240,10 @@ class ProsesKehadiranSiswa
      * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
      * @return ProsesKehadiranSiswa
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
+    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
+    {
         $this->tahunAkademik = $tahunAkademik;
-
+        
         return $this;
     }
 
@@ -237,7 +252,8 @@ class ProsesKehadiranSiswa
      *
      * @return \Fast\SisdikBundle\Entity\TahunAkademik
      */
-    public function getTahunAkademik() {
+    public function getTahunAkademik()
+    {
         return $this->tahunAkademik;
     }
 
@@ -247,9 +263,10 @@ class ProsesKehadiranSiswa
      * @param \Fast\SisdikBundle\Entity\Kelas $kelas
      * @return ProsesKehadiranSiswa
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
+    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
+    {
         $this->kelas = $kelas;
-
+        
         return $this;
     }
 
@@ -258,7 +275,8 @@ class ProsesKehadiranSiswa
      *
      * @return \Fast\SisdikBundle\Entity\Kelas
      */
-    public function getKelas() {
+    public function getKelas()
+    {
         return $this->kelas;
     }
 }
