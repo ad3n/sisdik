@@ -56,6 +56,7 @@ security:
         - { path: ^/resetting, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/_local, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
         - { path: ^/_local, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 192.168.1.11 }
+        - { path: ^/_api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
         #- { path: ^/, roles: ROLE_ADMIN }
         #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
