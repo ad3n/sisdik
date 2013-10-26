@@ -2,12 +2,17 @@
 
 namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * JadwalKehadiran
  *
  * @ORM\Table(name="jadwal_kehadiran")
  * @ORM\Entity
+ * 
+ * @ExclusionPolicy("all")
  */
 class JadwalKehadiran
 {
@@ -31,6 +36,7 @@ class JadwalKehadiran
      * @var string
      *
      * @ORM\Column(name="perulangan", type="string", length=100, nullable=false)
+     * @Expose
      */
     private $perulangan;
 
@@ -38,6 +44,8 @@ class JadwalKehadiran
      * @var integer
      *
      * @ORM\Column(name="mingguan_hari_ke", type="smallint", nullable=true)
+     * @Expose
+     * @SerializedName("hari")
      */
     private $mingguanHariKe;
 
@@ -45,6 +53,8 @@ class JadwalKehadiran
      * @var integer
      *
      * @ORM\Column(name="bulanan_hari_ke", type="smallint", nullable=true)
+     * @Expose
+     * @SerializedName("tanggal")
      */
     private $bulananHariKe;
 
@@ -52,6 +62,8 @@ class JadwalKehadiran
      * @var string
      *
      * @ORM\Column(name="paramstatus_dari_jam", type="string", length=50, nullable=false)
+     * @Expose
+     * @SerializedName("dari_jam")
      */
     private $paramstatusDariJam;
 
@@ -59,6 +71,8 @@ class JadwalKehadiran
      * @var string
      *
      * @ORM\Column(name="paramstatus_hingga_jam", type="string", length=50, nullable=false)
+     * @Expose
+     * @SerializedName("hingga_jam")
      */
     private $paramstatusHinggaJam;
 

@@ -2,12 +2,16 @@
 
 namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * MesinKehadiran
  *
  * @ORM\Table(name="mesin_kehadiran")
  * @ORM\Entity
+ * @ExclusionPolicy("all")
  */
 class MesinKehadiran
 {
@@ -24,6 +28,8 @@ class MesinKehadiran
      * @var string
      *
      * @ORM\Column(name="alamat_ip", type="string", length=45, nullable=false)
+     * @Expose
+     * @SerializedName("alamat_ip")
      */
     private $alamatIp;
 
@@ -31,6 +37,7 @@ class MesinKehadiran
      * @var string
      *
      * @ORM\Column(name="commkey", type="string", length=45, nullable=false)
+     * @Expose
      */
     private $commkey;
 
@@ -38,6 +45,8 @@ class MesinKehadiran
      * @var boolean
      *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
+     * @Expose
+     * @SerializedName("aktif")
      */
     private $aktif = true;
 
