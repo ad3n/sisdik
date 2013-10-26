@@ -26,6 +26,8 @@ class AppKernel extends Kernel
                 // new Acme\DemoBundle\AcmeDemoBundle(),
                 new Ps\PdfBundle\PsPdfBundle(),
                 new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
+                new JMS\SerializerBundle\JMSSerializerBundle(),
+                new FOS\RestBundle\FOSRestBundle(),
         );
 
         if (in_array($this->getEnvironment(), array(

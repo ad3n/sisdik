@@ -38,7 +38,9 @@
         "doctrine/data-fixtures": "dev-master",
         "doctrine/doctrine-fixtures-bundle": "dev-master",
         "psliwa/pdf-bundle": "dev-master",
-        "whiteoctober/breadcrumbs-bundle": "dev-master"
+        "whiteoctober/breadcrumbs-bundle": "dev-master",
+        "jms/serializer-bundle": "dev-master",
+        "friendsofsymfony/rest-bundle": "1.0.*"
     },
     "scripts":{
         "post-install-cmd":[
