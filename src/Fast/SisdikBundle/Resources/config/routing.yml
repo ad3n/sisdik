@@ -272,9 +272,15 @@ localapi_logsmskeluar:
     resource: "@FastSisdikBundle/Controller/LocalAPILogsmsKeluarController.php"
     type:     annotation
     prefix:   /
-
-
 # end of local APIs ---------------------------------------------------------------------------------- #
+
+
+# public API (REST) ---------------------------------------------------------------------------------- #
+#rest:
+#    type: rest
+#    resource: "routing_rest.yml"
+#    prefix: /_api
+# end of public APIs ---------------------------------------------------------------------------------- #
 
 
 # redirect all non-existent route

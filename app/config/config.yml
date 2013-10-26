@@ -5,30 +5,30 @@ imports:
 
 framework:
     #esi:             ~
-    translator:      { fallback: %locale% }
-    secret:          %secret%
+    translator:      { fallback: "%locale%" }
+    secret:          "%secret%"
     router:          { resource: "%kernel.root_dir%/config/routing.yml" }
     form:            true
     csrf_protection: true
     validation:      { enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
-    default_locale:  %locale%
+    default_locale:  "%locale%"
     session:
         save_path:   "%kernel.root_dir%/sessions/"
 
 # Twig Configuration
 twig:
-    debug:             %kernel.debug%
-    strict_variables:  %kernel.debug%
+    debug:             "%kernel.debug%"
+    strict_variables:  "%kernel.debug%"
     globals:
-        app_title:     %app_title%
-        locale:        %locale%
-        proxypass:     %proxypass%
-        proxypassname: %proxypassname%
+        app_title:     "%app_title%"
+        locale:        "%locale%"
+        proxypass:     "%proxypass%"
+        proxypassname: "%proxypassname%"
 
 # Assetic Configuration
 assetic:
-    debug:          %kernel.debug%
+    debug:          "%kernel.debug%"
     use_controller: false
     # java: /usr/bin/java
     filters:
@@ -38,23 +38,23 @@ assetic:
             node_paths: [/usr/lib/node, /usr/lib/node_modules]
             apply_to: "less$"
         # closure:
-        #     jar: %kernel.root_dir%/java/compiler.jar
+        #     jar: "%kernel.root_dir%/java/compiler.jar"
         # yui_css:
-        #     jar: %kernel.root_dir%/java/yuicompressor-2.4.2.jar
+        #     jar: "%kernel.root_dir%/java/yuicompressor-2.4.2.jar"
 
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   %database_driver%
-        host:     %database_host%
-        port:     %database_port%
-        dbname:   %database_name%
-        user:     %database_user%
-        password: %database_password%
+        driver:   "%database_driver%"
+        host:     "%database_host%"
+        port:     "%database_port%"
+        dbname:   "%database_name%"
+        user:     "%database_user%"
+        password: "%database_password%"
         charset:  UTF8
 
     orm:
-        auto_generate_proxy_classes: %kernel.debug%
+        auto_generate_proxy_classes: "%kernel.debug%"
         entity_managers:
             default:
                 auto_mapping: true
@@ -73,10 +73,10 @@ doctrine:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: %mailer_transport%
-    host:      %mailer_host%
-    username:  %mailer_user%
-    password:  %mailer_password%
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
 
 jms_security_extra:
     expressions: true
@@ -91,6 +91,28 @@ fos_user:
     profile:
         form:
             type: fast_sisdikbundle_profile
+
+fos_rest:
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: true
+    view:
+        view_response_listener: 'force'
+        formats:
+            xml: true
+            json : true
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        failed_validation: HTTP_BAD_REQUEST
+        default_engine: twig
+    routing_loader:
+        default_format: xml
+
+sensio_framework_extra:
+    view:
+        annotations: false
 
 knp_menu:
     twig:
