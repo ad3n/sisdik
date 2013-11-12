@@ -1,76 +1,79 @@
 {
-    "name": "symfony/framework-standard-edition",
-    "license": "MIT",
-    "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
-    "autoload":{
-        "psr-0":{
-            "": "src/"
-        }
-    },
-    "require":{
-        "php": ">=5.3.3",
-        "symfony/symfony": "2.3.*",
-        "doctrine/orm": ">=2.2.3,<2.4-dev",
-        "doctrine/doctrine-bundle": "1.2.*",
-        "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.3.*",
-        "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "2.3.*",
-        "sensio/distribution-bundle": "2.3.*",
-        "sensio/framework-extra-bundle": "2.3.*",
-        "sensio/generator-bundle": "2.3.*",
-        "jms/security-extra-bundle": "1.5.*",
-        "jms/di-extra-bundle": "1.4.*",
-        "friendsofsymfony/user-bundle": "*",
-        "knplabs/knp-menu": "*",
-        "knplabs/knp-menu-bundle": "*",
-        "knplabs/knp-components": "*",
-        "knplabs/knp-paginator-bundle": "*",
-        "gedmo/doctrine-extensions": "master-dev",
-        "beberlei/DoctrineExtensions": "dev-master",
-        "bcc/extra-tools-bundle": "dev-master",
-        "mopa/bootstrap-bundle": "dev-master",
-        "twbs/bootstrap": "2.3.2",
-        "gregwar/captcha-bundle": "dev-master",
-        "doctrine/migrations": "dev-master",
-        "doctrine/doctrine-migrations-bundle": "dev-master",
-        "doctrine/data-fixtures": "dev-master",
-        "doctrine/doctrine-fixtures-bundle": "dev-master",
-        "psliwa/pdf-bundle": "dev-master",
-        "whiteoctober/breadcrumbs-bundle": "dev-master",
-        "jms/serializer-bundle": "dev-master",
-        "friendsofsymfony/rest-bundle": "1.0.*"
-    },
-    "scripts":{
-        "post-install-cmd":[
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
-        ],
-        "post-update-cmd":[
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
-        ]
-    },
-    "minimum-stability": "stable",
-    "extra":{
-        "symfony-app-dir": "app",
-        "symfony-web-dir": "web",
-        "symfony-assets-install": "symlink",
-        "branch-alias": {
-            "dev-master": "2.3-dev"
-        }
-    },
-    "config":{
-        "process-timeout": "100000",
-        "github-protocols":[
-            "https"
-        ]
-    }
+	"name" : "symfony/framework-standard-edition",
+	"description" : "The \"Symfony Standard Edition\" distribution",
+	"type" : "project",
+	"license" : [
+		"MIT"
+	],
+	"require" : {
+		"doctrine/doctrine-fixtures-bundle" : "dev-master",
+		"gedmo/doctrine-extensions" : "master-dev",
+		"knplabs/knp-components" : "*",
+		"friendsofsymfony/user-bundle" : "*",
+		"symfony/swiftmailer-bundle" : "2.3.*",
+		"doctrine/orm" : ">=2.2.3,<2.4-dev",
+		"jms/security-extra-bundle" : "1.5.*",
+		"doctrine/data-fixtures" : "dev-master",
+		"doctrine/migrations" : "dev-master",
+		"jms/serializer-bundle" : "dev-master",
+		"friendsofsymfony/rest-bundle" : "1.0.*",
+		"beberlei/DoctrineExtensions" : "dev-master",
+		"knplabs/knp-menu-bundle" : "*",
+		"knplabs/knp-menu" : "*",
+		"twig/extensions" : "1.0.*",
+		"php" : ">=5.3.3",
+		"bcc/extra-tools-bundle" : "dev-master",
+		"gregwar/captcha-bundle" : "dev-master",
+		"knplabs/knp-paginator-bundle" : "*",
+		"symfony/monolog-bundle" : "2.3.*",
+		"sensio/distribution-bundle" : "2.3.*",
+		"whiteoctober/breadcrumbs-bundle" : "dev-master",
+		"symfony/symfony" : "2.3.*",
+		"doctrine/doctrine-migrations-bundle" : "dev-master",
+		"twbs/bootstrap" : "2.3.2",
+		"symfony/assetic-bundle" : "2.3.*",
+		"jms/translation-bundle" : "1.1.*",
+		"mopa/bootstrap-bundle" : "dev-master",
+		"jms/di-extra-bundle" : "1.4.*",
+		"sensio/generator-bundle" : "2.3.*",
+		"psliwa/pdf-bundle" : "dev-master",
+		"sensio/framework-extra-bundle" : "2.3.*",
+		"doctrine/doctrine-bundle" : "1.2.*"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"" : "src/"
+		}
+	},
+	"minimum-stability" : "stable",
+	"config" : {
+		"github-protocols" : [
+			"https"
+		],
+		"process-timeout" : "100000"
+	},
+	"scripts" : {
+		"post-update-cmd" : [
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+			"Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
+		],
+		"post-install-cmd" : [
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+			"Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
+		]
+	},
+	"extra" : {
+		"symfony-assets-install" : "symlink",
+		"branch-alias" : {
+			"dev-master" : "2.3-dev"
+		},
+		"symfony-web-dir" : "web",
+		"symfony-app-dir" : "app"
+	}
 }
