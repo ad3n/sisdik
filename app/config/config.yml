@@ -160,8 +160,9 @@ services:
 jms_translation:
     configs:
         sisdik:
-            dirs: ["%kernel.root_dir%", "%kernel.root_dir%/../src/Fast/SisdikBundle"]
+            dirs: ["%kernel.root_dir%/../src/Fast/SisdikBundle"]
             output_dir: "%kernel.root_dir%/../src/Fast/SisdikBundle/Resources/translations"
             ignored_domains: [routes]
             excluded_names: ["*TestCase.php", "*Test.php"]
             excluded_dirs: [cache, data, logs]
+            keep: true
