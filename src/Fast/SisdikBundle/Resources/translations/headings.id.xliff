@@ -1,0 +1,816 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
+  <file date="2013-11-14T08:56:45Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+    <header>
+      <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
+      <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
+    </header>
+    <body>
+      <trans-unit id="3b971bfa928d6f5a0e1e034f0978bac86f4c8ab4" resname="academic.calendar">
+        <jms:reference-file line="3">views/KalenderPendidikan/display.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/KalenderPendidikan/index.html.twig</jms:reference-file>
+        <source>academic.calendar</source>
+        <target>Kalender Akademik</target>
+      </trans-unit>
+      <trans-unit id="21c6dc59acd3fe08d7c4ec4a8b290c058a1618d1" resname="applicant.creation">
+        <jms:reference-file line="3">views/SiswaApplicant/new.html.twig</jms:reference-file>
+        <source>applicant.creation</source>
+        <target>Mendaftarkan Siswa</target>
+      </trans-unit>
+      <trans-unit id="27548c563a2497539437a12842f8ed8986249db7" resname="applicant.detail">
+        <jms:reference-file line="3">views/SiswaApplicant/show.html.twig</jms:reference-file>
+        <source>applicant.detail</source>
+        <target>Detail Pendaftar</target>
+      </trans-unit>
+      <trans-unit id="460a47aca735c9b78f615718045736cba37548ac" resname="applicant.edit">
+        <jms:reference-file line="3">views/SiswaApplicant/edit.html.twig</jms:reference-file>
+        <source>applicant.edit</source>
+        <target>Mengubah Pendaftar</target>
+      </trans-unit>
+      <trans-unit id="1450738ede8799985ecb3e6227815fc215c1192d" resname="applicant.edit.regphoto">
+        <jms:reference-file line="3">views/SiswaApplicant/editregphoto.html.twig</jms:reference-file>
+        <source>applicant.edit.regphoto</source>
+        <target>Mengubah Foto Pendaftar</target>
+      </trans-unit>
+      <trans-unit id="d447146117cb62c3e460345132a7d32dc1616b0e" resname="applicant.fee.once">
+        <jms:reference-file line="56">views/PembayaranSekali/new.html.twig</jms:reference-file>
+        <jms:reference-file line="60">views/PembayaranSekali/edit.html.twig</jms:reference-file>
+        <source>applicant.fee.once</source>
+        <target>applicant.fee.once</target>
+      </trans-unit>
+      <trans-unit id="eb7a6ce2a2b19093e84044f482b978a1003ba2ef" resname="applicant.list">
+        <jms:reference-file line="3">views/SiswaApplicant/index.html.twig</jms:reference-file>
+        <source>applicant.list</source>
+        <target>Pendaftar</target>
+      </trans-unit>
+      <trans-unit id="563e58b7a7a7cb97db71d7b63991b0e92f2767d7" resname="applicant.payment.list">
+        <jms:reference-file line="3">views/PembayaranSekali/index.html.twig</jms:reference-file>
+        <source>applicant.payment.list</source>
+        <target>applicant.payment.list</target>
+      </trans-unit>
+      <trans-unit id="34ff127bc878a287db69aed6d2dad5180557f38c" resname="applicant.payment.oncefee">
+        <jms:reference-file line="3">views/PembayaranSekali/new.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PembayaranSekali/edit.html.twig</jms:reference-file>
+        <source>applicant.payment.oncefee</source>
+        <target>applicant.payment.oncefee</target>
+      </trans-unit>
+      <trans-unit id="5d23dddc07e0ed5bc96f9068951f9c85f2e34bd2" resname="attendancemachine.creation">
+        <jms:reference-file line="3">views/MesinKehadiran/new.html.twig</jms:reference-file>
+        <source>attendancemachine.creation</source>
+        <target>Membuat Mesin Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="a4e7e683a5d8395876c7019dcc67730e50a82220" resname="attendancemachine.detail">
+        <jms:reference-file line="3">views/MesinKehadiran/show.html.twig</jms:reference-file>
+        <source>attendancemachine.detail</source>
+        <target>Detail Mesin Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="81623979fbe85abee5b06ca77e5d6ad8e9d32d04" resname="attendancemachine.edit">
+        <jms:reference-file line="3">views/MesinKehadiran/edit.html.twig</jms:reference-file>
+        <source>attendancemachine.edit</source>
+        <target>Mengubah Mesin Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="4e5552acc5f81aa9c1467fb49eb3c6a341378721" resname="attendancemachine.list">
+        <jms:reference-file line="3">views/MesinKehadiran/index.html.twig</jms:reference-file>
+        <source>attendancemachine.list</source>
+        <target>Daftar Mesin Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="040dc3d11e68187139b9b3dfac98579871057acb" resname="biaya.pendaftaran.konfirmasi.ubah">
+        <jms:reference-file line="3">views/BiayaPendaftaran/edit.confirm.html.twig</jms:reference-file>
+        <source>biaya.pendaftaran.konfirmasi.ubah</source>
+        <target>Konfirmasi Pengubahan Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="913ca911802c37caaf115966db6f2c8973703116" resname="data.academicyear.creation">
+        <jms:reference-file line="3">views/TahunAkademik/new.html.twig</jms:reference-file>
+        <source>data.academicyear.creation</source>
+        <target>Membuat Tahun Akademik</target>
+      </trans-unit>
+      <trans-unit id="890a6a0a627dfe56045c417876e5ea77e3c8f8f4" resname="data.academicyear.detail">
+        <jms:reference-file line="3">views/TahunAkademik/show.html.twig</jms:reference-file>
+        <source>data.academicyear.detail</source>
+        <target>Detail Tahun Akademik</target>
+      </trans-unit>
+      <trans-unit id="92244da0e7244a152ac0cb3f9ab6c11e23f3d016" resname="data.academicyear.edit">
+        <jms:reference-file line="3">views/TahunAkademik/edit.html.twig</jms:reference-file>
+        <source>data.academicyear.edit</source>
+        <target>Mengubah Tahun Akademik</target>
+      </trans-unit>
+      <trans-unit id="2d4f109db8e1a6a1ada7ead626b8c832f1c9c883" resname="data.academicyear.list">
+        <jms:reference-file line="3">views/TahunAkademik/index.html.twig</jms:reference-file>
+        <source>data.academicyear.list</source>
+        <target>Daftar Tahun Akademik</target>
+      </trans-unit>
+      <trans-unit id="df5dc8b993d9f68fd56381f9cabf0ba61b64fc38" resname="data.class.creation">
+        <jms:reference-file line="3">views/Kelas/new.html.twig</jms:reference-file>
+        <source>data.class.creation</source>
+        <target>Membuat Kelas</target>
+      </trans-unit>
+      <trans-unit id="9a8b809b0e44f711dbcd1a335c1bed7992b66ced" resname="data.class.detail">
+        <jms:reference-file line="3">views/Kelas/show.html.twig</jms:reference-file>
+        <source>data.class.detail</source>
+        <target>Detail Kelas</target>
+      </trans-unit>
+      <trans-unit id="2ff35bd13420f45f205c1ffe100c5ef8f6c8d08c" resname="data.class.edit">
+        <jms:reference-file line="3">views/Kelas/edit.html.twig</jms:reference-file>
+        <source>data.class.edit</source>
+        <target>Mengubah Kelas</target>
+      </trans-unit>
+      <trans-unit id="3e427f44e67c4204629055c8051c524b2932b3d5" resname="data.class.list">
+        <jms:reference-file line="3">views/Kelas/index.html.twig</jms:reference-file>
+        <source>data.class.list</source>
+        <target>Daftar Kelas</target>
+      </trans-unit>
+      <trans-unit id="b452787f8dd7294d9b2c879ea2f9a936de7313ac" resname="data.classguardian.creation">
+        <jms:reference-file line="3">views/WaliKelas/new.html.twig</jms:reference-file>
+        <source>data.classguardian.creation</source>
+        <target>Menentukan Wali Kelas</target>
+      </trans-unit>
+      <trans-unit id="3be7da31400a1b981eb654bff218f8a5c689cf9e" resname="data.classguardian.detail">
+        <jms:reference-file line="3">views/WaliKelas/show.html.twig</jms:reference-file>
+        <source>data.classguardian.detail</source>
+        <target>Detail Wali Kelas</target>
+      </trans-unit>
+      <trans-unit id="3ba49fbcfd098bb4069413453c01dce115ff943b" resname="data.classguardian.edit">
+        <jms:reference-file line="3">views/WaliKelas/edit.html.twig</jms:reference-file>
+        <source>data.classguardian.edit</source>
+        <target>Mengubah Wali Kelas</target>
+      </trans-unit>
+      <trans-unit id="9efe40203f476e83dd9c1db60315222562f6a8ac" resname="data.classguardian.list">
+        <jms:reference-file line="3">views/WaliKelas/index.html.twig</jms:reference-file>
+        <source>data.classguardian.list</source>
+        <target>Daftar Wali Kelas</target>
+      </trans-unit>
+      <trans-unit id="1ad69613d740f5e0437c7cc48cf30bb575510ef4" resname="data.student.creation">
+        <jms:reference-file line="3">views/Siswa/new.html.twig</jms:reference-file>
+        <source>data.student.creation</source>
+        <target>Membuat Data Siswa</target>
+      </trans-unit>
+      <trans-unit id="45fcbd1b426a07bb9917ee1d3c322100c9e1c997" resname="data.student.detail">
+        <jms:reference-file line="4">views/Siswa/show.html.twig</jms:reference-file>
+        <source>data.student.detail</source>
+        <target>Data Siswa</target>
+      </trans-unit>
+      <trans-unit id="3a4d73b5115108db148c2561563882dcfc413d79" resname="data.student.edit">
+        <jms:reference-file line="4">views/Siswa/edit.html.twig</jms:reference-file>
+        <source>data.student.edit</source>
+        <target>Mengubah Data Siswa</target>
+      </trans-unit>
+      <trans-unit id="8a615c60ccab5d4d677eb9e9f7729c97431c0a7d" resname="data.student.generate.username">
+        <jms:reference-file line="5">views/Siswa/generate.username.html.twig</jms:reference-file>
+        <source>data.student.generate.username</source>
+        <target>Membuat username siswa</target>
+      </trans-unit>
+      <trans-unit id="6647c6826e02057b01451d2180d19bea629b03bf" resname="data.student.generate.username.confirm">
+        <jms:reference-file line="5">views/Siswa/generate.username.confirm.html.twig</jms:reference-file>
+        <source>data.student.generate.username.confirm</source>
+        <target>Konfirmasi Pembuatan Username</target>
+      </trans-unit>
+      <trans-unit id="db03a29923dd9a8d844ce32028263e5940c58744" resname="data.student.import">
+        <jms:reference-file line="3">views/Siswa/impor-baru.html.twig</jms:reference-file>
+        <source>data.student.import</source>
+        <target>Impor Data Siswa</target>
+      </trans-unit>
+      <trans-unit id="040d49fe28d55212b50853800f5583a03c4b72a4" resname="data.student.list">
+        <jms:reference-file line="3">views/Siswa/index.html.twig</jms:reference-file>
+        <source>data.student.list</source>
+        <target>Daftar Siswa</target>
+      </trans-unit>
+      <trans-unit id="b91d6c26743e5b47d211f42af69e06fbf1646ff5" resname="data.student.merge">
+        <jms:reference-file line="3">views/Siswa/impor-gabung.html.twig</jms:reference-file>
+        <source>data.student.merge</source>
+        <target>Mengimpor-gabungkan Data Siswa</target>
+      </trans-unit>
+      <trans-unit id="70f8d4c213f9c891d648a53fae41fa13b49ffa70" resname="data.student.removal">
+        <jms:reference-file line="4">views/Siswa/deleteconfirm.html.twig</jms:reference-file>
+        <source>data.student.removal</source>
+        <target>Menghapus Data Siswa</target>
+      </trans-unit>
+      <trans-unit id="7f27be560f18b393358a04f161497c651acf8dee" resname="data.studentclass.creation">
+        <jms:reference-file line="4">views/SiswaKelas/new.html.twig</jms:reference-file>
+        <source>data.studentclass.creation</source>
+        <target>Menentukan Kelas Untuk Siswa</target>
+      </trans-unit>
+      <trans-unit id="2c86dbb04918e8edff70f294deddb82a60bfb828" resname="data.studentclass.edit">
+        <jms:reference-file line="4">views/SiswaKelas/edit.html.twig</jms:reference-file>
+        <source>data.studentclass.edit</source>
+        <target>Mengubah Kelas Siswa</target>
+      </trans-unit>
+      <trans-unit id="0b3ec5ee5154826b11a72a9504199234cf1c7c00" resname="data.studentclass.list">
+        <jms:reference-file line="4">views/SiswaKelas/index.html.twig</jms:reference-file>
+        <source>data.studentclass.list</source>
+        <target>Riwayat Kelas</target>
+      </trans-unit>
+      <trans-unit id="80d382e159da8ef94531afd52c37f8e41388c3c4" resname="dokumen.siswa.daftar">
+        <jms:reference-file line="3">views/DokumenSiswa/index.html.twig</jms:reference-file>
+        <source>dokumen.siswa.daftar</source>
+        <target>Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="cdc9d0c919712a6cfec1247e21d9cecb7a4f188d" resname="dokumen.siswa.detail">
+        <jms:reference-file line="3">views/DokumenSiswa/show.html.twig</jms:reference-file>
+        <source>dokumen.siswa.detail</source>
+        <target>Detail Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="e9d5de5391df58bc00352c4cf541b11593e36c86" resname="dokumen.siswa.edit">
+        <jms:reference-file line="3">views/DokumenSiswa/edit.html.twig</jms:reference-file>
+        <source>dokumen.siswa.edit</source>
+        <target>Mengubah Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="88a50b1cfaadddbd0a57bcd00c5aeae332575014" resname="download.file.template">
+        <jms:reference-file line="33">views/Siswa/impor-baru.html.twig</jms:reference-file>
+        <source>download.file.template</source>
+        <target>Unduh File Template</target>
+      </trans-unit>
+      <trans-unit id="5769f867306f8f929293eca4ea963c5e8140c681" resname="error.heading">
+        <jms:reference-file line="3">views/Exception/error.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/Exception/error404.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/Exception/error403.html.twig</jms:reference-file>
+        <source>error.heading</source>
+        <target>Error</target>
+      </trans-unit>
+      <trans-unit id="187bc4d32c778ef74c4f161566ef3a4ce11b7e51" resname="fee.once.creation">
+        <jms:reference-file line="3">views/BiayaSekali/new.html.twig</jms:reference-file>
+        <source>fee.once.creation</source>
+        <target>Membuat Biaya Sekali Bayar</target>
+      </trans-unit>
+      <trans-unit id="3cecf329665c0775e0cc87e2b2281985e828ebe3" resname="fee.once.detail">
+        <jms:reference-file line="3">views/BiayaSekali/show.html.twig</jms:reference-file>
+        <source>fee.once.detail</source>
+        <target>Detail Biaya Sekali Bayar</target>
+      </trans-unit>
+      <trans-unit id="423263a0089a40a10f56dcc65089abd57ff06932" resname="fee.once.edit">
+        <jms:reference-file line="3">views/BiayaSekali/edit.html.twig</jms:reference-file>
+        <source>fee.once.edit</source>
+        <target>Mengubah Biaya Sekali Bayar</target>
+      </trans-unit>
+      <trans-unit id="a0468625f4a3dabdf1c5e2008ec2ef33ed468c46" resname="fee.once.list">
+        <jms:reference-file line="3">views/BiayaSekali/index.html.twig</jms:reference-file>
+        <source>fee.once.list</source>
+        <target>Daftar Biaya Sekali Bayar</target>
+      </trans-unit>
+      <trans-unit id="8f26284a9225596d38657127138e2080ac026e85" resname="fee.recur.creation">
+        <jms:reference-file line="3">views/BiayaRutin/new.html.twig</jms:reference-file>
+        <source>fee.recur.creation</source>
+        <target>Membuat Biaya Berulang</target>
+      </trans-unit>
+      <trans-unit id="912609dcd0f5300ab0d092e8c799bc786c0c2273" resname="fee.recur.detail">
+        <jms:reference-file line="3">views/BiayaRutin/show.html.twig</jms:reference-file>
+        <source>fee.recur.detail</source>
+        <target>Detail Biaya Berulang</target>
+      </trans-unit>
+      <trans-unit id="76aeffe5684f5c8749a54332530add2afac41a02" resname="fee.recur.edit">
+        <jms:reference-file line="3">views/BiayaRutin/edit.html.twig</jms:reference-file>
+        <source>fee.recur.edit</source>
+        <target>Mengubah Biaya Berulang</target>
+      </trans-unit>
+      <trans-unit id="fa1ccb6030ee260afead34647d993a745718502e" resname="fee.recur.list">
+        <jms:reference-file line="3">views/BiayaRutin/index.html.twig</jms:reference-file>
+        <source>fee.recur.list</source>
+        <target>Daftar Biaya Berulang</target>
+      </trans-unit>
+      <trans-unit id="b7b9cf7b25f5266657acb06fc6d6ca2d68c7ef24" resname="fee.registration.creation">
+        <jms:reference-file line="3">views/BiayaPendaftaran/new.html.twig</jms:reference-file>
+        <source>fee.registration.creation</source>
+        <target>Membuat Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="54c4ba24652ec663674d111cf46c7fece245f2a3" resname="fee.registration.detail">
+        <jms:reference-file line="3">views/BiayaPendaftaran/show.html.twig</jms:reference-file>
+        <source>fee.registration.detail</source>
+        <target>Detail Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="6228e80adab4ff8ff16d32a4e413828b960ec952" resname="fee.registration.edit">
+        <jms:reference-file line="3">views/BiayaPendaftaran/edit.html.twig</jms:reference-file>
+        <source>fee.registration.edit</source>
+        <target>Mengubah Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="b0175d168a6e5bc2b63dd1643215321e21a64096" resname="fee.registration.list">
+        <jms:reference-file line="3">views/BiayaPendaftaran/index.html.twig</jms:reference-file>
+        <source>fee.registration.list</source>
+        <target>Daftar Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="4ceb035028ae811952f4b738a7bf5c4132bfe60b" resname="fee.type.creation">
+        <jms:reference-file line="3">views/Jenisbiaya/new.html.twig</jms:reference-file>
+        <source>fee.type.creation</source>
+        <target>Membuat Jenis Biaya</target>
+      </trans-unit>
+      <trans-unit id="9e73c65220980ee9a1493b9945bfc210f7e231a8" resname="fee.type.detail">
+        <jms:reference-file line="3">views/Jenisbiaya/show.html.twig</jms:reference-file>
+        <source>fee.type.detail</source>
+        <target>Detail Jenis Biaya</target>
+      </trans-unit>
+      <trans-unit id="59aa224f2f51d5b480d5cd628728aeb7e4e61b3b" resname="fee.type.edit">
+        <jms:reference-file line="3">views/Jenisbiaya/edit.html.twig</jms:reference-file>
+        <source>fee.type.edit</source>
+        <target>Mengubah Jenis Biaya</target>
+      </trans-unit>
+      <trans-unit id="26c3b25c7d8370306151e4432bb5d805e9f6bef4" resname="fee.type.list">
+        <jms:reference-file line="3">views/Jenisbiaya/index.html.twig</jms:reference-file>
+        <source>fee.type.list</source>
+        <target>Daftar Jenis Biaya</target>
+      </trans-unit>
+      <trans-unit id="f4d5656c7a911ffa8ffa90d091b72adb40657871" resname="jadwal.kehadiran.daftar">
+        <jms:reference-file line="3">views/JadwalKehadiran/index.html.twig</jms:reference-file>
+        <source>jadwal.kehadiran.daftar</source>
+        <target>Daftar Jadwal Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="0f5690fc37813be629d8fdfbae69d780cefcadf7" resname="jadwal.kehadiran.edit">
+        <jms:reference-file line="3">views/JadwalKehadiran/edit.html.twig</jms:reference-file>
+        <source>jadwal.kehadiran.edit</source>
+        <target>Mengubah Jadwal Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="8627f6ada4ba1a606ef573eafc45b4453c1e1a0d" resname="jadwal.kehadiran.pembuatan">
+        <jms:reference-file line="3">views/JadwalKehadiran/new.html.twig</jms:reference-file>
+        <source>jadwal.kehadiran.pembuatan</source>
+        <target>Membuat Jadwal Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="57f052fe57f3eedb566360cd699df357aa45025d" resname="jadwal.kehadiran.rincian">
+        <jms:reference-file line="3">views/JadwalKehadiran/show.html.twig</jms:reference-file>
+        <source>jadwal.kehadiran.rincian</source>
+        <target>Rincian Jadwal Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="1217b21fab326f066862de0511b373a033fb7307" resname="jenis.dokumen.siswa.daftar">
+        <jms:reference-file line="3">views/JenisDokumenSiswa/index.html.twig</jms:reference-file>
+        <source>jenis.dokumen.siswa.daftar</source>
+        <target>Daftar Jenis Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="9dad74a556ef2a054baf7409f2d93c413f062ae7" resname="jenis.dokumen.siswa.detail">
+        <jms:reference-file line="3">views/JenisDokumenSiswa/show.html.twig</jms:reference-file>
+        <source>jenis.dokumen.siswa.detail</source>
+        <target>Detail Jenis Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="22fd0c68a913d7c3576f37f5e0c9c6c1c1bf86e4" resname="jenis.dokumen.siswa.edit">
+        <jms:reference-file line="3">views/JenisDokumenSiswa/edit.html.twig</jms:reference-file>
+        <source>jenis.dokumen.siswa.edit</source>
+        <target>Mengubah Jenis Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="1846a16252d4f21652baf16e256abed7c1a7f147" resname="jenis.dokumen.siswa.pembuatan">
+        <jms:reference-file line="3">views/JenisDokumenSiswa/new.html.twig</jms:reference-file>
+        <source>jenis.dokumen.siswa.pembuatan</source>
+        <target>Menambah Jenis Dokumen Siswa</target>
+      </trans-unit>
+      <trans-unit id="a7531ee557989bea55af5cfbd8f4b652647f1e8e" resname="laporan.pembayaran.pendaftaran">
+        <jms:reference-file line="3">views/SiswaApplicantReportPayment/index.html.twig</jms:reference-file>
+        <source>laporan.pembayaran.pendaftaran</source>
+        <target>Laporan Pembayaran Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="27fea03f4d5e1c0410139e6fe23c0cae237cdd18" resname="laporan.pendaftaran.daftar">
+        <jms:reference-file line="3">views/SiswaApplicantReport/index.html.twig</jms:reference-file>
+        <source>laporan.pendaftaran.daftar</source>
+        <target>Laporan Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="ab4ab1dbf812f3cbf31a927b64a0f7c10268257f" resname="laporan.transaksi.keuangan">
+        <jms:reference-file line="3">views/LaporanTransaksiKeuangan/index.html.twig</jms:reference-file>
+        <source>laporan.transaksi.keuangan</source>
+        <target>Laporan Transaksi Keuangan</target>
+      </trans-unit>
+      <trans-unit id="4abba28df2ae03aaddce1288c49ef5db9ac2352a" resname="layanansms.daftar">
+        <jms:reference-file line="3">views/PilihanLayananSms/index.html.twig</jms:reference-file>
+        <source>layanansms.daftar</source>
+        <target>Daftar Pilihan Layanan SMS</target>
+      </trans-unit>
+      <trans-unit id="75dac8791fa1f3ac78752a1a29a01e70257ec94b" resname="layanansms.detail">
+        <jms:reference-file line="3">views/PilihanLayananSms/show.html.twig</jms:reference-file>
+        <source>layanansms.detail</source>
+        <target>Detail Pilihan Layanan SMS</target>
+      </trans-unit>
+      <trans-unit id="723a607a7412208f117e0c36911ee9c9ba9e7ec3" resname="layanansms.edit">
+        <jms:reference-file line="3">views/PilihanLayananSms/edit.html.twig</jms:reference-file>
+        <source>layanansms.edit</source>
+        <target>Mengubah Pilihan Layanan SMS</target>
+      </trans-unit>
+      <trans-unit id="74a6acf2efbdf6c432e3f942cfb2ea0998fc886b" resname="layanansms.pembuatan">
+        <jms:reference-file line="3">views/PilihanLayananSms/new.html.twig</jms:reference-file>
+        <source>layanansms.pembuatan</source>
+        <target>Membuat Pilihan Layanan SMS</target>
+      </trans-unit>
+      <trans-unit id="730ebadc12c807953ddf893669758186fe861bbc" resname="mesinproxy.daftar">
+        <jms:reference-file line="3">views/MesinProxy/index.html.twig</jms:reference-file>
+        <source>mesinproxy.daftar</source>
+        <target>Daftar Mesin Proxy</target>
+      </trans-unit>
+      <trans-unit id="0e84f46a24915e3ff0af1205a08edce6ddcbea09" resname="ortuwali.daftar">
+        <jms:reference-file line="3">views/OrangtuaWali/index.html.twig</jms:reference-file>
+        <source>ortuwali.daftar</source>
+        <target>Orang Tua/Wali</target>
+      </trans-unit>
+      <trans-unit id="1011297284902a85b7fc071c151fcfd1ba8b6809" resname="ortuwali.detail">
+        <jms:reference-file line="3">views/OrangtuaWali/show.html.twig</jms:reference-file>
+        <source>ortuwali.detail</source>
+        <target>Detail Data Orang Tua/Wali</target>
+      </trans-unit>
+      <trans-unit id="d77e46d4b104af0d6db76777bed61a765019ef4a" resname="ortuwali.edit">
+        <jms:reference-file line="3">views/OrangtuaWali/edit.html.twig</jms:reference-file>
+        <source>ortuwali.edit</source>
+        <target>Mengubah Data Orang Tua/Wali</target>
+      </trans-unit>
+      <trans-unit id="9cc72968b6202993e19f2d7a8080303f7dd78452" resname="ortuwali.pembuatan">
+        <jms:reference-file line="3">views/OrangtuaWali/new.html.twig</jms:reference-file>
+        <source>ortuwali.pembuatan</source>
+        <target>Menambah Data Orang Tua/Wali</target>
+      </trans-unit>
+      <trans-unit id="b513782a2b10409e682fa95381d2a3dfaa249062" resname="payment.registrationfee.entry">
+        <jms:reference-file line="3">views/PembayaranPendaftaran/index.html.twig</jms:reference-file>
+        <source>payment.registrationfee.entry</source>
+        <target>Pembayaran Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="0a154ce19a4aae546db5dd09a6c1e29be29128b0" resname="payment.registrationfee.list">
+        <jms:reference-file line="3">views/SiswaApplicantPayment/index.html.twig</jms:reference-file>
+        <source>payment.registrationfee.list</source>
+        <target>Daftar Pembayaran Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="db7eebf5ea5dc6ce6c52c367aa9b962a8706d527" resname="payment.registrationfee.mortgage">
+        <jms:reference-file line="3">views/PembayaranPendaftaran/edit.html.twig</jms:reference-file>
+        <source>payment.registrationfee.mortgage</source>
+        <target>Pembayaran Cicilan Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="0c94af38524adba17e08a8c024814a9b48290945" resname="payment.registrationfee.transaction">
+        <jms:reference-file line="3">views/PembayaranPendaftaran/show.html.twig</jms:reference-file>
+        <source>payment.registrationfee.transaction</source>
+        <target>Transaksi Pembayaran Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="f4ec79f83968c3157ea69561f63d2615b15927bc" resname="penahkikan.siswa">
+        <jms:reference-file line="3">views/SiswaTahkik/index.html.twig</jms:reference-file>
+        <source>penahkikan.siswa</source>
+        <target>Penahkikan Siswa</target>
+      </trans-unit>
+      <trans-unit id="5b491faf9ead01eee05d9c76192eada188f10976" resname="pendaftar.konfirmasi.hapus">
+        <jms:reference-file line="3">views/SiswaApplicant/delete.confirm.html.twig</jms:reference-file>
+        <source>pendaftar.konfirmasi.hapus</source>
+        <target>Konfirmasi Penghapusan Data Pendaftar</target>
+      </trans-unit>
+      <trans-unit id="fa021e93a6ab5b46b8bc57e24ea6e371750d9a53" resname="pendidikan.sebelumnya.daftar">
+        <jms:reference-file line="3">views/PendidikanSiswa/index.html.twig</jms:reference-file>
+        <source>pendidikan.sebelumnya.daftar</source>
+        <target>Pendidikan Sebelumnya</target>
+      </trans-unit>
+      <trans-unit id="e56e7fa94eb47c78492369fd10628aecd8bdcb25" resname="pendidikan.sebelumnya.detail">
+        <jms:reference-file line="3">views/PendidikanSiswa/show.html.twig</jms:reference-file>
+        <source>pendidikan.sebelumnya.detail</source>
+        <target>Detail Data Pendidikan Sebelumnya</target>
+      </trans-unit>
+      <trans-unit id="ac232130c983dfd07949bc68aa5ff22cf3b00b88" resname="pendidikan.sebelumnya.edit">
+        <jms:reference-file line="3">views/PendidikanSiswa/edit.html.twig</jms:reference-file>
+        <source>pendidikan.sebelumnya.edit</source>
+        <target>Mengubah Data Pendidikan Sebelumnya</target>
+      </trans-unit>
+      <trans-unit id="75ad8ae149df9209e798149854a86fab53e22ffc" resname="pendidikan.sebelumnya.pembuatan">
+        <jms:reference-file line="3">views/PendidikanSiswa/new.html.twig</jms:reference-file>
+        <source>pendidikan.sebelumnya.pembuatan</source>
+        <target>Menambah Data Pendidikan Sebelumnya</target>
+      </trans-unit>
+      <trans-unit id="30f1c2ea1cc94d90b817fc595867f5bf940e2363" resname="penempatan.siswa.kelas">
+        <jms:reference-file line="3">views/PenempatanSiswaKelas/index.html.twig</jms:reference-file>
+        <source>penempatan.siswa.kelas</source>
+        <target>Penempatan Siswa → Kelas</target>
+      </trans-unit>
+      <trans-unit id="fd72175d4ccc5e422125c8351952e3d0ec4afd86" resname="penempatan.siswa.kelas.banyak.lembar.kerja">
+        <jms:reference-file line="3">views/PenempatanSiswaKelas/tempatkan-kelompok.html.twig</jms:reference-file>
+        <source>penempatan.siswa.kelas.banyak.lembar.kerja</source>
+        <target><![CDATA[Penempatan Siswa → Kelas,<br> Lembar Kerja Spreadsheet Lebih Dari Satu
+]]></target>
+      </trans-unit>
+      <trans-unit id="4e3e08d91b80fa919c93f49747424ee0132ddf7b" resname="presence.schedule.creation">
+        <jms:reference-file line="3">views/JadwalKehadiranKepulanganSingle/new.html.twig</jms:reference-file>
+        <source>presence.schedule.creation</source>
+        <target>presence.schedule.creation</target>
+      </trans-unit>
+      <trans-unit id="b383a1dc3d502c792d65cd4c90242568651f4cfb" resname="presence.schedule.detail">
+        <jms:reference-file line="3">views/JadwalKehadiranKepulanganSingle/show.html.twig</jms:reference-file>
+        <source>presence.schedule.detail</source>
+        <target>presence.schedule.detail</target>
+      </trans-unit>
+      <trans-unit id="5253020ff400e821e3d31885ffeb7aa9cfc3435b" resname="presence.schedule.edit">
+        <jms:reference-file line="3">views/JadwalKehadiranKepulanganSingle/edit.html.twig</jms:reference-file>
+        <source>presence.schedule.edit</source>
+        <target>presence.schedule.edit</target>
+      </trans-unit>
+      <trans-unit id="de859aa11fcb5e4dc3c0e4191ded2d8affbe515e" resname="presence.schedule.list">
+        <jms:reference-file line="3">views/JadwalKehadiranKepulanganSingle/index.html.twig</jms:reference-file>
+        <source>presence.schedule.list</source>
+        <target>presence.schedule.list</target>
+      </trans-unit>
+      <trans-unit id="ac6b9afa8f295cf1f1255bc6cc04785fdda9631b" resname="presence.student.list">
+        <jms:reference-file line="3">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <source>presence.student.list</source>
+        <target>Kehadiran Siswa</target>
+      </trans-unit>
+      <trans-unit id="cf3b3ab995dd7fe2ffb53d97b8dc68bfac62c031" resname="printreceiptsoption">
+        <jms:reference-file line="3">views/PilihanCetakKwitansi/new.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PilihanCetakKwitansi/edit.html.twig</jms:reference-file>
+        <source>printreceiptsoption</source>
+        <target>Mengatur Pilihan Cetak Kwitansi</target>
+      </trans-unit>
+      <trans-unit id="fce2d69c4a35994f5008ff399fc4b68506372cb8" resname="profile.change.password">
+        <jms:reference-file line="3">views/ChangePassword/changePassword.html.twig</jms:reference-file>
+        <source>profile.change.password</source>
+        <target>Ubah Password</target>
+      </trans-unit>
+      <trans-unit id="13f2554b3973703925654801002d6a3b725e6d67" resname="profile.edit">
+        <jms:reference-file line="3">views/Profile/edit.html.twig</jms:reference-file>
+        <source>profile.edit</source>
+        <target>Edit Profil</target>
+      </trans-unit>
+      <trans-unit id="f729596bf4126f84220d22a09e44409299444d87" resname="profile.show">
+        <jms:reference-file line="3">views/Profile/show.html.twig</jms:reference-file>
+        <source>profile.show</source>
+        <target>Lihat Profil</target>
+      </trans-unit>
+      <trans-unit id="2fcee873b3daa2e138ee8c5d2d53e913109ec22b" resname="referensi.daftar">
+        <jms:reference-file line="3">views/Referensi/index.html.twig</jms:reference-file>
+        <source>referensi.daftar</source>
+        <target>Daftar Perujuk</target>
+      </trans-unit>
+      <trans-unit id="9f43ad76b633431cb16e84b0da5dd118ca37e198" resname="referensi.detail">
+        <jms:reference-file line="3">views/Referensi/show.html.twig</jms:reference-file>
+        <source>referensi.detail</source>
+        <target>Detail Perujuk</target>
+      </trans-unit>
+      <trans-unit id="287b2feba3043c19685ad168b7a2e3cecc4a995f" resname="referensi.edit">
+        <jms:reference-file line="3">views/Referensi/edit.html.twig</jms:reference-file>
+        <source>referensi.edit</source>
+        <target>Mengubah Data Perujuk</target>
+      </trans-unit>
+      <trans-unit id="df9655071b4778612903245b784f8360187e4785" resname="referensi.pembuatan">
+        <jms:reference-file line="3">views/Referensi/new.html.twig</jms:reference-file>
+        <source>referensi.pembuatan</source>
+        <target>Menambah Perujuk</target>
+      </trans-unit>
+      <trans-unit id="61981c3c66bbfb2351bcad3494f1c2f1d7825f7a" resname="registration.committee.creation">
+        <jms:reference-file line="3">views/PanitiaPendaftaran/new.html.twig</jms:reference-file>
+        <source>registration.committee.creation</source>
+        <target>Membuat Panitia Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="53c373f0392d5907213c52a5e05a9e886f5b39f7" resname="registration.committee.detail">
+        <jms:reference-file line="3">views/PanitiaPendaftaran/show.html.twig</jms:reference-file>
+        <source>registration.committee.detail</source>
+        <target>Detail Panitia Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="4a6b98a030aa18af7af572d7ea42434e51c4d3b2" resname="registration.committee.edit">
+        <jms:reference-file line="3">views/PanitiaPendaftaran/edit.html.twig</jms:reference-file>
+        <source>registration.committee.edit</source>
+        <target>Mengubah Panitia Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="e7db2e5d5f95b96790493386ea35276198300905" resname="registration.committee.list">
+        <jms:reference-file line="3">views/PanitiaPendaftaran/index.html.twig</jms:reference-file>
+        <source>registration.committee.list</source>
+        <target>Daftar Panitia Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="7ace7e6162c357711ada34f14080b2561dd79f1b" resname="reward.amount.creation">
+        <jms:reference-file line="3">views/ImbalanPendaftaran/new.html.twig</jms:reference-file>
+        <source>reward.amount.creation</source>
+        <target>Membuat Imbalan Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="3552b8f6b4560f47a71de83bd814c0743008acde" resname="reward.amount.detail">
+        <jms:reference-file line="3">views/ImbalanPendaftaran/show.html.twig</jms:reference-file>
+        <source>reward.amount.detail</source>
+        <target>Detail Imbalan Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="d8f4196e0f7c0d0ddf73ff7e93953828371be94f" resname="reward.amount.edit">
+        <jms:reference-file line="3">views/ImbalanPendaftaran/edit.html.twig</jms:reference-file>
+        <source>reward.amount.edit</source>
+        <target>Mengubah Imbalan Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="75fc48e4d48fdddf7e5cb6dad19e797f97c84b16" resname="reward.amount.list">
+        <jms:reference-file line="3">views/ImbalanPendaftaran/index.html.twig</jms:reference-file>
+        <source>reward.amount.list</source>
+        <target>Daftar Imbalan Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="2380f8640c4bc8161fba761f6e8920aca5516451" resname="reward.type.creation">
+        <jms:reference-file line="3">views/JenisImbalan/new.html.twig</jms:reference-file>
+        <source>reward.type.creation</source>
+        <target>Membuat Jenis Imbalan</target>
+      </trans-unit>
+      <trans-unit id="120d1446e774054e9a7f8b2a2cf75b62372f8b05" resname="reward.type.detail">
+        <jms:reference-file line="3">views/JenisImbalan/show.html.twig</jms:reference-file>
+        <source>reward.type.detail</source>
+        <target>Detail Jenis Imbalan</target>
+      </trans-unit>
+      <trans-unit id="7cad259cbcd25767726838782e5a802585441e44" resname="reward.type.edit">
+        <jms:reference-file line="3">views/JenisImbalan/edit.html.twig</jms:reference-file>
+        <source>reward.type.edit</source>
+        <target>Mengubah Jenis Imbalan</target>
+      </trans-unit>
+      <trans-unit id="2d3c3d3ec6088383cb7a8aff34be4c7ad4843396" resname="reward.type.list">
+        <jms:reference-file line="3">views/JenisImbalan/index.html.twig</jms:reference-file>
+        <source>reward.type.list</source>
+        <target>Daftar Jenis Imbalan</target>
+      </trans-unit>
+      <trans-unit id="f8b22c88638173d0d1e0d7acbe7dc0fc86ea8416" resname="riwayat.penyakit.daftar">
+        <jms:reference-file line="3">views/PenyakitSiswa/index.html.twig</jms:reference-file>
+        <source>riwayat.penyakit.daftar</source>
+        <target>Daftar Riwayat Penyakit</target>
+      </trans-unit>
+      <trans-unit id="ffbafd0b9aeabb064491ab14580bbdc5e53a4e12" resname="riwayat.penyakit.detail">
+        <jms:reference-file line="3">views/PenyakitSiswa/show.html.twig</jms:reference-file>
+        <source>riwayat.penyakit.detail</source>
+        <target>Detail Info Riwayat Penyakit</target>
+      </trans-unit>
+      <trans-unit id="94c5414ac67532c7a4e9d84ecbe8a56461fa2e4a" resname="riwayat.penyakit.edit">
+        <jms:reference-file line="3">views/PenyakitSiswa/edit.html.twig</jms:reference-file>
+        <source>riwayat.penyakit.edit</source>
+        <target>Mengubah Info Riwayat Penyakit</target>
+      </trans-unit>
+      <trans-unit id="3a4af07ac28dfd98e31449c0c7a353618b5e9799" resname="riwayat.penyakit.pembuatan">
+        <jms:reference-file line="3">views/PenyakitSiswa/new.html.twig</jms:reference-file>
+        <source>riwayat.penyakit.pembuatan</source>
+        <target>Menambah Info Riwayat Penyakit</target>
+      </trans-unit>
+      <trans-unit id="4a8e7cedbb7f9b4c28af902587e40eca457cf305" resname="sekolah.asal.daftar">
+        <jms:reference-file line="3">views/SekolahAsal/index.html.twig</jms:reference-file>
+        <source>sekolah.asal.daftar</source>
+        <target>Daftar Sekolah Asal</target>
+      </trans-unit>
+      <trans-unit id="7eee584b67ebe9903ed5ddb45135d28fcc0f1602" resname="sekolah.asal.pembuatan">
+        <jms:reference-file line="3">views/SekolahAsal/new.html.twig</jms:reference-file>
+        <source>sekolah.asal.pembuatan</source>
+        <target>Menambah Sekolah Asal</target>
+      </trans-unit>
+      <trans-unit id="898b6a4e38ad6e9058299e1f30ffb1b1f5dabe05" resname="sekolah.asal.rincian">
+        <jms:reference-file line="3">views/SekolahAsal/show.html.twig</jms:reference-file>
+        <source>sekolah.asal.rincian</source>
+        <target>Rincian Sekolah Asal</target>
+      </trans-unit>
+      <trans-unit id="6438c26486fc7287ab5a7392ea44cc4a24c161aa" resname="sekolah.asal.ubah">
+        <jms:reference-file line="3">views/SekolahAsal/edit.html.twig</jms:reference-file>
+        <source>sekolah.asal.ubah</source>
+        <target>Mengubah Data Sekolah Asal</target>
+      </trans-unit>
+      <trans-unit id="e36806e0e6a574ba45b7a5e08ae0c263c9fb0cff" resname="settings.admissiongroup.creation">
+        <jms:reference-file line="3">views/Gelombang/new.html.twig</jms:reference-file>
+        <source>settings.admissiongroup.creation</source>
+        <target>Membuat Gelombang Masuk</target>
+      </trans-unit>
+      <trans-unit id="d2e4848e367ec428915a0891395e5c3d397f8368" resname="settings.admissiongroup.detail">
+        <jms:reference-file line="3">views/Gelombang/show.html.twig</jms:reference-file>
+        <source>settings.admissiongroup.detail</source>
+        <target>Detail Gelombang Masuk</target>
+      </trans-unit>
+      <trans-unit id="d5233854795343acf4dcdb4b20fc2cc6a8aa48ec" resname="settings.admissiongroup.edit">
+        <jms:reference-file line="3">views/Gelombang/edit.html.twig</jms:reference-file>
+        <source>settings.admissiongroup.edit</source>
+        <target>Mengubah Gelombang Masuk</target>
+      </trans-unit>
+      <trans-unit id="334d4bb6a7b12859c975194760e3186da3a5ac0a" resname="settings.admissiongroup.list">
+        <jms:reference-file line="3">views/Gelombang/index.html.twig</jms:reference-file>
+        <source>settings.admissiongroup.list</source>
+        <target>Daftar Gelombang Masuk</target>
+      </trans-unit>
+      <trans-unit id="2e4a16025b91339cee7dec3a19c23eb955317b9f" resname="settings.placement.creation">
+        <jms:reference-file line="3">views/Penjurusan/new.html.twig</jms:reference-file>
+        <source>settings.placement.creation</source>
+        <target>Membuat Node Penjurusan</target>
+      </trans-unit>
+      <trans-unit id="0a550229bdce8b6e12b358352e736006b5b56462" resname="settings.placement.detail">
+        <jms:reference-file line="3">views/Penjurusan/show.html.twig</jms:reference-file>
+        <source>settings.placement.detail</source>
+        <target>Detail Node Penjurusan</target>
+      </trans-unit>
+      <trans-unit id="638b79aaae9b442260cdc3e9d0091c501e8b3e8e" resname="settings.placement.edit">
+        <jms:reference-file line="3">views/Penjurusan/edit.html.twig</jms:reference-file>
+        <source>settings.placement.edit</source>
+        <target>Ubah Node Penjurusan</target>
+      </trans-unit>
+      <trans-unit id="00de89ea94fc0bbad8915020f80d821524e97347" resname="settings.placement.list">
+        <jms:reference-file line="3">views/Penjurusan/index.html.twig</jms:reference-file>
+        <source>settings.placement.list</source>
+        <target>Info Penjurusan</target>
+      </trans-unit>
+      <trans-unit id="fb6b8a26013a47f185f6f002bec5bad84c1cc983" resname="settings.school.add">
+        <jms:reference-file line="3">views/SettingsSchool/add.html.twig</jms:reference-file>
+        <source>settings.school.add</source>
+        <target>Tambah Sekolah</target>
+      </trans-unit>
+      <trans-unit id="168b3073affd43f56f62750bdfd482c6e926a52a" resname="settings.school.edit">
+        <jms:reference-file line="3">views/Sekolah/edit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SettingsSchool/edit.html.twig</jms:reference-file>
+        <source>settings.school.edit</source>
+        <target>Ubah Sekolah</target>
+      </trans-unit>
+      <trans-unit id="ca1e1fc3d6c765225fc00c601620d712fda3045a" resname="settings.school.entry">
+        <jms:reference-file line="3">views/Sekolah/show.html.twig</jms:reference-file>
+        <source>settings.school.entry</source>
+        <target>Data Sekolah</target>
+      </trans-unit>
+      <trans-unit id="f19ffe9cc5fa6e718f781aaf9833d007550158d0" resname="settings.school.list">
+        <jms:reference-file line="3">views/SettingsSchool/list.html.twig</jms:reference-file>
+        <source>settings.school.list</source>
+        <target>Daftar Sekolah</target>
+      </trans-unit>
+      <trans-unit id="11c37489e0d3ce774e8ea9eca19fe52d4a3b0c04" resname="settings.user.add">
+        <jms:reference-file line="3">views/SettingsUser/register.ns.html.twig</jms:reference-file>
+        <source>settings.user.add</source>
+        <target>Tambah User</target>
+      </trans-unit>
+      <trans-unit id="a9c5fe72974eb8d1b28f276361a4cac97c7233d2" resname="settings.user.add.inschool">
+        <jms:reference-file line="5">views/SettingsUser/register.ws.html.twig</jms:reference-file>
+        <source>settings.user.add.inschool</source>
+        <target>Tambah User di Sekolah</target>
+      </trans-unit>
+      <trans-unit id="d28de797f133923b638ff52b594fd3f2410c38e3" resname="settings.user.edit">
+        <jms:reference-file line="3">views/SettingsUser/edit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SettingsUser/inschoolEdit.html.twig</jms:reference-file>
+        <source>settings.user.edit</source>
+        <target>Ubah User</target>
+      </trans-unit>
+      <trans-unit id="745a5d40f25ad1fec34d54b9f4d41a94cb62b5c0" resname="settings.user.list.main">
+        <jms:reference-file line="3">views/SettingsUser/index.html.twig</jms:reference-file>
+        <source>settings.user.list.main</source>
+        <target>Daftar User</target>
+      </trans-unit>
+      <trans-unit id="9e64e5fc712cc29e403974911971b77f9db0547b" resname="settings.user.list.modify">
+        <jms:reference-file line="3">views/SettingsUser/inschoolList.html.twig</jms:reference-file>
+        <source>settings.user.list.modify</source>
+        <target>Pengaturan User</target>
+      </trans-unit>
+      <trans-unit id="a6e472af6db8ee668b913d420404495d478c6ae4" resname="settings.year.creation">
+        <jms:reference-file line="3">views/Tahun/new.html.twig</jms:reference-file>
+        <source>settings.year.creation</source>
+        <target>Membuat Tahun</target>
+      </trans-unit>
+      <trans-unit id="01d4e735fe494428798e017faed280266078ee4a" resname="settings.year.detail">
+        <jms:reference-file line="3">views/Tahun/show.html.twig</jms:reference-file>
+        <source>settings.year.detail</source>
+        <target>Detail Tahun</target>
+      </trans-unit>
+      <trans-unit id="17238bd99c60c6ad2d01788c4b435d43c5f16c84" resname="settings.year.edit">
+        <jms:reference-file line="3">views/Tahun/edit.html.twig</jms:reference-file>
+        <source>settings.year.edit</source>
+        <target>Mengubah Tahun</target>
+      </trans-unit>
+      <trans-unit id="f9b7ceee57d56a51f368e17a7c670a1cd882225e" resname="settings.year.list">
+        <jms:reference-file line="3">views/Tahun/index.html.twig</jms:reference-file>
+        <source>settings.year.list</source>
+        <target>Daftar Tahun</target>
+      </trans-unit>
+      <trans-unit id="748becc5b26dca32aed944f516ff0f39dcbbcea0" resname="sms.template.creation">
+        <jms:reference-file line="3">views/Templatesms/new.html.twig</jms:reference-file>
+        <source>sms.template.creation</source>
+        <target>Membuat Template SMS</target>
+      </trans-unit>
+      <trans-unit id="c55010de19a429366e948078515709703e514f11" resname="sms.template.detail">
+        <jms:reference-file line="3">views/Templatesms/show.html.twig</jms:reference-file>
+        <source>sms.template.detail</source>
+        <target>Detail Template SMS</target>
+      </trans-unit>
+      <trans-unit id="3603cd74d239ffddd8d3a3264373bb1efc12f67a" resname="sms.template.edit">
+        <jms:reference-file line="3">views/Templatesms/edit.html.twig</jms:reference-file>
+        <source>sms.template.edit</source>
+        <target>Mengubah Template SMS</target>
+      </trans-unit>
+      <trans-unit id="2f6e222b7bdf283613750d6ca8187abbe11d2f97" resname="sms.template.list">
+        <jms:reference-file line="3">views/Templatesms/index.html.twig</jms:reference-file>
+        <source>sms.template.list</source>
+        <target>Daftar Template SMS</target>
+      </trans-unit>
+      <trans-unit id="c4a36c653ea80414a191ca39e17cb2f16cb7df74" resname="smspendaftaran.daftar">
+        <jms:reference-file line="3">views/LayananSmsPendaftaran/index.html.twig</jms:reference-file>
+        <source>smspendaftaran.daftar</source>
+        <target>Daftar SMS Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="aa5372b8d9a8fe70c79cc88dcce7fb3896e9cac8" resname="smspendaftaran.detail">
+        <jms:reference-file line="3">views/LayananSmsPendaftaran/show.html.twig</jms:reference-file>
+        <source>smspendaftaran.detail</source>
+        <target>Detail SMS Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="8445d5676bce2bf47b72a37479ebc83bfe53d638" resname="smspendaftaran.edit">
+        <jms:reference-file line="3">views/LayananSmsPendaftaran/edit.html.twig</jms:reference-file>
+        <source>smspendaftaran.edit</source>
+        <target>Mengubah SMS Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="93fdc755427cf6525aa54c608943a36760360a10" resname="smspendaftaran.pembuatan">
+        <jms:reference-file line="3">views/LayananSmsPendaftaran/new.html.twig</jms:reference-file>
+        <source>smspendaftaran.pembuatan</source>
+        <target>Menentukan SMS Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="aae634921eb9cbeda303e19b59d99a839c5aafd5" resname="tingkat.kelas.daftar">
+        <jms:reference-file line="3">views/Tingkat/index.html.twig</jms:reference-file>
+        <source>tingkat.kelas.daftar</source>
+        <target>Daftar Tingkat Kelas</target>
+      </trans-unit>
+      <trans-unit id="286a1d918541719f4e9659fca4e399c50d205205" resname="tingkat.kelas.detail">
+        <jms:reference-file line="3">views/Tingkat/show.html.twig</jms:reference-file>
+        <source>tingkat.kelas.detail</source>
+        <target>Detail Tingkat Kelas</target>
+      </trans-unit>
+      <trans-unit id="20d8c4b6106d4c719f9dac2fcba57a3201cc63fb" resname="tingkat.kelas.edit">
+        <jms:reference-file line="3">views/Tingkat/edit.html.twig</jms:reference-file>
+        <source>tingkat.kelas.edit</source>
+        <target>Mengubah Tingkat Kelas</target>
+      </trans-unit>
+      <trans-unit id="1874247bb31fa2bbb715e1128090f65aef32c224" resname="tingkat.kelas.pembuatan">
+        <jms:reference-file line="3">views/Tingkat/new.html.twig</jms:reference-file>
+        <source>tingkat.kelas.pembuatan</source>
+        <target>Membuat Tingkat Kelas</target>
+      </trans-unit>
+      <trans-unit id="e837c430c4a76d1526d0f367a5c68ff2ed5721af" resname="warning.removal">
+        <jms:reference-file line="10">views/Siswa/deleteconfirm.html.twig</jms:reference-file>
+        <source>warning.removal</source>
+        <target>Peringatan</target>
+      </trans-unit>
+      <trans-unit id="c0b137fe2d792459f26ff763cce44574a5b5ab03" resname="welcome">
+        <jms:reference-file line="3">views/Default/index.html.twig</jms:reference-file>
+        <source>welcome</source>
+        <target>Selamat Datang</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

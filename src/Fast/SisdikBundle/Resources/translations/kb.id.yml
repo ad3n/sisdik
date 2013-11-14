@@ -1,7 +1,0 @@
-link:
-    penempatan.siswa.kelas: menempatkan siswa ke kelas
-    student.import: mengimpor data siswa
-    studentclass.import: mengimpor data penempatan siswa-kelas
-    student.merge: mengimpor-gabungkan data siswa
-    student.manage.username: mengelola username siswa
-
