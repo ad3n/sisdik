@@ -318,7 +318,7 @@ class TahunController extends Controller
     private function setCurrentMenu()
     {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans($this->get('translator')->trans($this->get('translator')->trans('links.year', array(), 'navigations', array(), 'navigations', array(), 'navigations')))]->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.year', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool()
