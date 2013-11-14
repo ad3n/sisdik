@@ -31,7 +31,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
         $translator = $this->container->get('translator');
 
         if (is_array($data)) {
-            $label = $translator->trans('label.lembar.kerja') . ' ' . ($data['index'] + 1) . ': '
+            $label = $translator->transChoice('label.lembar.kerja') . ' ' . ($data['index'] + 1) . ': '
                     . $data['name'];
 
             $querybuilder1 = $em->createQueryBuilder()->select('tahunAkademik')
@@ -41,7 +41,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $form
                     ->add('tahunAkademik', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:TahunAkademik', 'label' => $label,
+                                    'class' => 'FastSisdikBundle:TahunAkademik', 'label' => /** @Ignore */ $label,
                                     'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'required' => true, 'query_builder' => $querybuilder1,
                                     'attr' => array(
@@ -92,7 +92,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $form
                     ->add('tahunAkademik', 'entity',
                             array(
-                                    'class' => 'FastSisdikBundle:TahunAkademik', 'label' => $label,
+                                    'class' => 'FastSisdikBundle:TahunAkademik', 'label' => /** @Ignore */ $label,
                                     'multiple' => false, 'expanded' => false, 'property' => 'nama',
                                     'required' => true, 'query_builder' => $querybuilder1,
                                     'attr' => array(

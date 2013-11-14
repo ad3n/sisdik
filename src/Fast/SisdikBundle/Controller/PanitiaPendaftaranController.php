@@ -492,7 +492,7 @@ class PanitiaPendaftaranController extends Controller
                         'source' => 'user', // user property of Personil
                         'target' => 'id', // id property of Personil
                         'id' => $result->getId(),
-                        'label' => $result->getName() . " ({$result->getUsername()})",
+                        'label' => /** @Ignore */ $result->getName() . " ({$result->getUsername()})",
                         'value' => $result->getName(), // . $result->getId() . ':' . $result->getUsername(),
                 );
             }
@@ -501,7 +501,7 @@ class PanitiaPendaftaranController extends Controller
         if (count($retval) == 0) {
             $label = $this->container->get('translator')->trans("label.username.undefined");
             $retval[] = array(
-                'source' => 'user', 'target' => 'id', 'id' => $id, 'label' => $label, 'value' => $label
+                'source' => 'user', 'target' => 'id', 'id' => $id, 'label' => /** @Ignore */ $label, 'value' => $label
             );
         }
 

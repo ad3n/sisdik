@@ -369,7 +369,7 @@ class SiswaUsernameController extends Controller
         $retval = array();
         foreach ($results as $result) {
             $retval[] = array(
-                    'label' => $result->getNamaLengkap() . " ({$result->getNomorIndukSistem()})",
+                    'label' => /** @Ignore */ $result->getNamaLengkap() . " ({$result->getNomorIndukSistem()})",
                     'value' => $result->getNomorIndukSistem(),
             );
         }

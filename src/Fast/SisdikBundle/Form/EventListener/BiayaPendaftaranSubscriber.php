@@ -56,7 +56,7 @@ class BiayaPendaftaranSubscriber implements EventSubscriberInterface
                             array(
                                     'attr' => array(
                                         'class' => 'fee-item'
-                                    ), 'label_render' => true, 'label' => $label,
+                                    ), 'label_render' => true, 'label' => /** @Ignore */ $label,
                                     'widget_checkbox_label' => 'widget', 'required' => false,
                             ));
         }
@@ -78,7 +78,7 @@ class BiayaPendaftaranSubscriber implements EventSubscriberInterface
                             array(
                                     'attr' => array(
                                         'class' => 'fee-item'
-                                    ), 'label_render' => true, 'label' => $label,
+                                    ), 'label_render' => true, 'label' => /** @Ignore */ $label,
                                     'widget_checkbox_label' => 'widget', 'required' => false,
                             ));
         }

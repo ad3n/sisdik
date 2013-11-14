@@ -54,7 +54,7 @@ class TransaksiKeuanganSearchType extends AbstractType
                                 'attr' => array(
                                     'class' => 'small', 'placeholder' => 'label.jumlah.bayar'
                                 ), 'label_render' => false, 'required' => false, 'error_bubbling' => true,
-                                'invalid_message' => $this->container->get('translator')
+                                'invalid_message' => /** @Ignore */ $this->container->get('translator')
                                         ->trans('pencarian.nominal.tidak.sah', array(), 'validators'),
                         ));
     }

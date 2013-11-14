@@ -143,7 +143,7 @@ class KirimSmsKehadiranCommand extends ContainerAwareCommand
                             $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(),
                                     $tekstemplate);
                             $tekstemplate = str_replace("%hari%",
-                                    $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                                    /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
                             $tekstemplate = str_replace("%tanggal%", $waktuSekarang->format('d/m/Y'),
                                     $tekstemplate);
                             $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);

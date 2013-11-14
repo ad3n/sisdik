@@ -45,7 +45,7 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                                         'class' => 'small', 'placeholder' => 'label.jumlah.bayar'
                                     ), 'label_render' => false, 'required' => false,
                                     'error_bubbling' => true,
-                                    'invalid_message' => $this->translator
+                                    'invalid_message' => /** @Ignore */ $this->translator
                                             ->trans('pencarian.persen.tidak.sah', array(), 'validators'),
                             ));
         } else {
@@ -57,7 +57,7 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                                         'class' => 'small', 'placeholder' => 'label.jumlah.bayar'
                                     ), 'label_render' => false, 'required' => false,
                                     'error_bubbling' => true,
-                                    'invalid_message' => $this->translator
+                                    'invalid_message' => /** @Ignore */ $this->translator
                                             ->trans('pencarian.nominal.tidak.sah', array(), 'validators'),
                             ));
 

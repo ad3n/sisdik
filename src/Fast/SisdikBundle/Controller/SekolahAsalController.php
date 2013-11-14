@@ -319,7 +319,7 @@ class SekolahAsalController extends Controller
         foreach ($results as $result) {
             if ($result instanceof SekolahAsal) {
                 $retval[] = array(
-                    'id' => $result->getId(), 'label' => $result->getNama(), 'value' => $result->getNama(),
+                    'id' => $result->getId(), 'label' => /** @Ignore */ $result->getNama(), 'value' => $result->getNama(),
                 );
             }
         }

@@ -31,7 +31,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
             $form
                     ->add('fileUpload', 'file',
                             array(
-                                'required' => false, 'label_render' => true, 'label' => $label
+                                'required' => false, 'label_render' => true, 'label' => /** @Ignore */ $label
                             ))
                     ->add('lengkap', 'choice',
                             array(
@@ -56,7 +56,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
             $form
                     ->add('fileUpload', 'file',
                             array(
-                                'required' => false, 'label_render' => true, 'label' => $label
+                                'required' => false, 'label_render' => true, 'label' => /** @Ignore */ $label
                             ))
                     ->add('lengkap', 'choice',
                             array(
