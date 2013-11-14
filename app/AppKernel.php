@@ -28,6 +28,7 @@ class AppKernel extends Kernel
                 new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
                 new JMS\SerializerBundle\JMSSerializerBundle(),
                 new FOS\RestBundle\FOSRestBundle(),
+                new JMS\TranslationBundle\JMSTranslationBundle(),
         );
 
         if (in_array($this->getEnvironment(), array(

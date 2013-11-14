@@ -150,3 +150,18 @@ ps_pdf:
     markdown_stylesheet_filepath: ~
     markdown_document_template_filepath: ~
     document_parser_type: ~
+
+services:
+    twig.text_extension:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - name: twig.extension
+
+jms_translation:
+    configs:
+        sisdik:
+            dirs: ["%kernel.root_dir%", "%kernel.root_dir%/../src/Fast/SisdikBundle"]
+            output_dir: "%kernel.root_dir%/../src/Fast/SisdikBundle/Resources/translations"
+            ignored_domains: [routes]
+            excluded_names: ["*TestCase.php", "*Test.php"]
+            excluded_dirs: [cache, data, logs]

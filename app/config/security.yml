@@ -50,7 +50,7 @@ security:
 
 
     access_control:
-        - { path: ^/(_(profiler|wdt)|css|images|js), roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/(_(profiler|wdt|trans)|css|images|js), roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, roles: IS_AUTHENTICATED_ANONYMOUSLY }
