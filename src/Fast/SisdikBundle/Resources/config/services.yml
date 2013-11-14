@@ -34,13 +34,13 @@ services:
 
     fast_sisdik.registration.form.type:
         class: Fast\SisdikBundle\Form\RegistrationFormType
-        arguments: [%fos_user.model.user.class%]
+        arguments: ["%fos_user.model.user.class%"]
         tags:
             - { name: form.type, alias: fast_sisdikbundle_registration }
 
     fast_sisdik.profile.form.type:
         class: Fast\SisdikBundle\Form\ProfileFormType
-        arguments: ["@service_container", %fos_user.model.user.class%]
+        arguments: ["@service_container", "%fos_user.model.user.class%"]
         tags:
             - { name: form.type, alias: fast_sisdikbundle_profile }
 
@@ -70,4 +70,3 @@ services:
         class:        Fast\SisdikBundle\Util\Messenger
         scope:        prototype
         arguments:    ["@service_container", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
-
