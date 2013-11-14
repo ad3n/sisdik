@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2013-11-14T08:56:45Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2013-11-14T10:05:23Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -218,13 +218,6 @@
         <jms:reference-file line="33">views/Siswa/impor-baru.html.twig</jms:reference-file>
         <source>download.file.template</source>
         <target>Unduh File Template</target>
-      </trans-unit>
-      <trans-unit id="5769f867306f8f929293eca4ea963c5e8140c681" resname="error.heading">
-        <jms:reference-file line="3">views/Exception/error.html.twig</jms:reference-file>
-        <jms:reference-file line="3">views/Exception/error404.html.twig</jms:reference-file>
-        <jms:reference-file line="3">views/Exception/error403.html.twig</jms:reference-file>
-        <source>error.heading</source>
-        <target>Error</target>
       </trans-unit>
       <trans-unit id="187bc4d32c778ef74c4f161566ef3a4ce11b7e51" resname="fee.once.creation">
         <jms:reference-file line="3">views/BiayaSekali/new.html.twig</jms:reference-file>
