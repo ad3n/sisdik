@@ -711,7 +711,7 @@ class SiswaApplicantReportPaymentController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.payments']['links.laporan.pembayaran.pendaftaran']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.laporan.pembayaran.pendaftaran', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

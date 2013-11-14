@@ -570,10 +570,10 @@ class SettingsUserController extends Controller
     private function setCurrentMenu($option = 1) {
         if ($option == 1) {
             $menu = $this->get('fast_sisdik.menu.main');
-            $menu['headings.pengaturan.sisdik']['links.alluser']->setCurrent(true);
+            $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', array(), 'navigations')][$this->get('translator')->trans('links.alluser', array(), 'navigations')]->setCurrent(true);
         } else if ($option == 2) {
             $menu = $this->get('fast_sisdik.menu.main');
-            $menu['headings.setting']['links.user']->setCurrent(true);
+            $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.user', array(), 'navigations')]->setCurrent(true);
         }
     }
 }

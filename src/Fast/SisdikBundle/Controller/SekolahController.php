@@ -1,6 +1,6 @@
 <?php
-
 namespace Fast\SisdikBundle\Controller;
+
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -19,13 +19,15 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  */
 class SekolahController extends Controller
 {
+
     /**
      * Lists all Sekolah entities.
      *
      * @Route("/", name="settings_specsch")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         return $this->redirect($this->generateUrl('settings_specsch_show'));
     }
 
@@ -35,7 +37,8 @@ class SekolahController extends Controller
      * @Route("/show", name="settings_specsch_show")
      * @Template()
      */
-    public function showAction() {
+    public function showAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -58,7 +61,8 @@ class SekolahController extends Controller
      * @Route("/new", name="settings_specsch_new")
      * @Template()
      */
-    public function newAction() {
+    public function newAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -66,7 +70,8 @@ class SekolahController extends Controller
         $form = $this->createForm(new SekolahType(), $entity);
 
         return array(
-            'entity' => $entity, 'form' => $form->createView(),
+            'entity' => $entity,
+            'form' => $form->createView()
         );
     }
 
@@ -76,7 +81,8 @@ class SekolahController extends Controller
      * @Route("/edit", name="settings_specsch_edit")
      * @Template()
      */
-    public function editAction() {
+    public function editAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -91,7 +97,8 @@ class SekolahController extends Controller
         $editForm = $this->createForm(new SekolahType(), $entity);
 
         return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView()
         );
     }
 
@@ -102,7 +109,9 @@ class SekolahController extends Controller
      * @Method("POST")
      * @Template("FastSisdikBundle:Sekolah:edit.html.twig")
      */
-    public function updateAction(Request $request) {
+    public function updateAction(
+        Request $request)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -125,37 +134,42 @@ class SekolahController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.settings.school.updated',
-                                            array(
-                                                '%schoolname%' => $entity->getNama()
-                                            )));
+            $this->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')
+                ->trans('flash.settings.school.updated', array(
+                '%schoolname%' => $entity->getNama()
+            )));
 
             return $this->redirect($this->generateUrl('settings_specsch_edit'));
         }
 
         return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView()
         );
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.school']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.school', array(), 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        } else
+            if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.useadmin'));
+            } else {
+                throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.registertoschool'));
+            }
     }
 }

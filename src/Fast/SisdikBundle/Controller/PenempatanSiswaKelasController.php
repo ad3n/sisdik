@@ -633,7 +633,7 @@ class PenempatanSiswaKelasController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.penempatan.siswa.kelas']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.penempatan.siswa.kelas', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

@@ -1,6 +1,6 @@
 <?php
-
 namespace Fast\SisdikBundle\Controller;
+
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -22,21 +22,27 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  */
 class TahunController extends Controller
 {
+
     /**
      * Lists all Tahun entities.
      *
      * @Route("/", name="settings_year")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tahun', 't')
-                ->leftJoin('t.panitiaPendaftaran', 't2')->where('t.sekolah = :sekolah')
-                ->orderBy('t.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('t')
+            ->from('FastSisdikBundle:Tahun', 't')
+            ->leftJoin('t.panitiaPendaftaran', 't2')
+            ->where('t.sekolah = :sekolah')
+            ->orderBy('t.tahun', 'DESC')
+            ->setParameter('sekolah', $sekolah->getId());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -52,7 +58,9 @@ class TahunController extends Controller
      * @Route("/{id}/show", name="settings_year_show")
      * @Template()
      */
-    public function showAction($id) {
+    public function showAction(
+        $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -67,7 +75,8 @@ class TahunController extends Controller
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView()
         );
     }
 
@@ -77,15 +86,18 @@ class TahunController extends Controller
      * @Route("/new", name="settings_year_new")
      * @Template()
      */
-    public function newAction() {
+    public function newAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Tahun();
-        $form = $this->createForm(new TahunType($this->container), $entity);
+        $form = $this->createForm(new TahunType(
+            $this->container), $entity);
 
         return array(
-            'entity' => $entity, 'form' => $form->createView()
+            'entity' => $entity,
+            'form' => $form->createView()
         );
     }
 
@@ -96,12 +108,15 @@ class TahunController extends Controller
      * @Method("post")
      * @Template("FastSisdikBundle:Tahun:new.html.twig")
      */
-    public function createAction(Request $request) {
+    public function createAction(
+        Request $request)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new Tahun();
-        $form = $this->createForm(new TahunType($this->container), $entity);
+        $form = $this->createForm(new TahunType(
+            $this->container), $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -110,30 +125,26 @@ class TahunController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.year.inserted',
-                                                array(
-                                                    '%year%' => $entity->getTahun()
-                                                )));
+                $this->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')
+                    ->trans('flash.settings.year.inserted', array(
+                    '%year%' => $entity->getTahun()
+                )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.year');
-                throw new DBALException($message);
+                throw new DBALException(
+                    $message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('settings_year_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
-
+            return $this->redirect($this->generateUrl('settings_year_show', array(
+                'id' => $entity->getId()
+            )));
         }
 
         return array(
-            'entity' => $entity, 'form' => $form->createView()
+            'entity' => $entity,
+            'form' => $form->createView()
         );
     }
 
@@ -143,7 +154,9 @@ class TahunController extends Controller
      * @Route("/{id}/edit", name="settings_year_edit")
      * @Template()
      */
-    public function editAction($id) {
+    public function editAction(
+        $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -152,7 +165,8 @@ class TahunController extends Controller
         // restrict modification if the current Tahun is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
             $message = $this->get('translator')->trans('exception.update.year.restrict');
-            throw new DBALException($message);
+            throw new DBALException(
+                $message);
         }
 
         $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
@@ -161,12 +175,14 @@ class TahunController extends Controller
             throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new TahunType($this->container), $entity);
+        $editForm = $this->createForm(new TahunType(
+            $this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView()
         );
     }
 
@@ -177,7 +193,10 @@ class TahunController extends Controller
      * @Method("post")
      * @Template("FastSisdikBundle:Tahun:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
+    public function updateAction(
+        Request $request,
+        $id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -186,7 +205,8 @@ class TahunController extends Controller
         // restrict modification if the current Tahun is already used elsewhere
         if ($this->isEntityUsedElsewhere($id)) {
             $message = $this->get('translator')->trans('exception.update.year.restrict');
-            throw new DBALException($message);
+            throw new DBALException(
+                $message);
         }
 
         $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
@@ -195,7 +215,8 @@ class TahunController extends Controller
             throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new TahunType($this->container), $entity);
+        $editForm = $this->createForm(new TahunType(
+            $this->container), $entity);
         $deleteForm = $this->createDeleteForm($id);
 
         $editForm->submit($request);
@@ -205,30 +226,29 @@ class TahunController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.year.updated',
-                                                array(
-                                                    '%year%' => $entity->getTahun()
-                                                )));
+                $this->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')
+                    ->trans('flash.settings.year.updated', array(
+                    '%year%' => $entity->getTahun()
+                )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.year');
-                throw new DBALException($message);
+                throw new DBALException(
+                    $message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('settings_year_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('settings_year_edit', array(
+                'id' => $id,
+                'page' => $this->getRequest()
+                    ->get('page')
+            )));
         }
 
         return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView()
         );
     }
 
@@ -238,7 +258,10 @@ class TahunController extends Controller
      * @Route("/{id}/delete", name="settings_year_delete")
      * @Method("post")
      */
-    public function deleteAction(Request $request, $id) {
+    public function deleteAction(
+        Request $request,
+        $id)
+    {
         $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -258,53 +281,61 @@ class TahunController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.year.deleted',
-                                                array(
-                                                    '%year%' => $entity->getTahun()
-                                                )));
+                $this->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')
+                    ->trans('flash.settings.year.deleted', array(
+                    '%year%' => $entity->getTahun()
+                )));
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
-                throw new DBALException($message);
+                throw new DBALException(
+                    $message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.settings.year.fail.delete'));
+            $this->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')
+                ->trans('flash.settings.year.fail.delete'));
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('settings_year',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('settings_year', array(
+            'page' => $this->getRequest()
+                ->get('page')
+        )));
     }
 
-    private function createDeleteForm($id) {
+    private function createDeleteForm(
+        $id)
+    {
         return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+            'id' => $id
+        ))
+            ->add('id', 'hidden')
+            ->getForm();
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.year']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans($this->get('translator')->trans($this->get('translator')->trans('links.year', array(), 'navigations', array(), 'navigations', array(), 'navigations')))]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        } else
+            if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.useadmin'));
+            } else {
+                throw new AccessDeniedException(
+                    $this->get('translator')->trans('exception.registertoschool'));
+            }
     }
 
     /**
@@ -312,31 +343,27 @@ class TahunController extends Controller
      *
      * @param $id
      */
-    private function isEntityUsedElsewhere($id) {
+    private function isEntityUsedElsewhere(
+        $id)
+    {
         $em = $this->getDoctrine()->getManager();
 
-        $biayaRutinEntity = $em->getRepository('FastSisdikBundle:BiayaRutin')
-                ->findOneBy(array(
-                    'tahun' => $id
-                ));
-        $biayaSekaliEntity = $em->getRepository('FastSisdikBundle:BiayaSekali')
-                ->findOneBy(array(
-                    'tahun' => $id
-                ));
-        $siswaEntity = $em->getRepository('FastSisdikBundle:Siswa')
-                ->findOneBy(array(
-                    'tahun' => $id
-                ));
-        $panitiaPendaftaranEntity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
-                ->findOneBy(array(
-                    'tahun' => $id
-                ));
-        $biayaPendaftaranEntity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
-                ->findOneBy(array(
-                    'tahun' => $id
-                ));
-        if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity || $panitiaPendaftaranEntity
-                || $biayaPendaftaranEntity) {
+        $biayaRutinEntity = $em->getRepository('FastSisdikBundle:BiayaRutin')->findOneBy(array(
+            'tahun' => $id
+        ));
+        $biayaSekaliEntity = $em->getRepository('FastSisdikBundle:BiayaSekali')->findOneBy(array(
+            'tahun' => $id
+        ));
+        $siswaEntity = $em->getRepository('FastSisdikBundle:Siswa')->findOneBy(array(
+            'tahun' => $id
+        ));
+        $panitiaPendaftaranEntity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->findOneBy(array(
+            'tahun' => $id
+        ));
+        $biayaPendaftaranEntity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->findOneBy(array(
+            'tahun' => $id
+        ));
+        if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity || $panitiaPendaftaranEntity || $biayaPendaftaranEntity) {
             return true;
         }
         return false;

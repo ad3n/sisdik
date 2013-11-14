@@ -285,7 +285,7 @@ class WaliKelasController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.data.classguardian']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.classguardian', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

@@ -565,7 +565,7 @@ class JadwalKehadiranController extends Controller
     private function setCurrentMenu()
     {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.presence']['links.jadwal.kehadiran']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.jadwal.kehadiran', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool()

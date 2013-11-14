@@ -935,7 +935,7 @@ class PembayaranPendaftaranController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.payments']['links.applicant.payment']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.applicant.payment', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

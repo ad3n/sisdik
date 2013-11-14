@@ -288,7 +288,7 @@ class JenisDokumenSiswaController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.jenisdokumensiswa']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.jenisdokumensiswa', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

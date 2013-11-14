@@ -260,7 +260,7 @@ class MesinKehadiranController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.presence']['links.attendancemachine']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.attendancemachine', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

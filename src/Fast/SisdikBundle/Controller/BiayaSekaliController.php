@@ -297,7 +297,7 @@ class BiayaSekaliController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.fee']['links.fee.once']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.once', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

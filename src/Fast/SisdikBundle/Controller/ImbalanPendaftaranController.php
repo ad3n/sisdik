@@ -276,7 +276,7 @@ class ImbalanPendaftaranController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.fee']['links.reward.amount']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.reward.amount', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

@@ -518,7 +518,7 @@ class LaporanTransaksiKeuanganController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.payments']['links.laporan.transaksi.keuangan']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.laporan.transaksi.keuangan', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

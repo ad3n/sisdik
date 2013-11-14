@@ -190,7 +190,7 @@ class PilihanCetakKwitansiController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.payments']['links.printreceiptsoption']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.printreceiptsoption', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

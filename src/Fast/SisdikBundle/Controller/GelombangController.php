@@ -279,7 +279,7 @@ class GelombangController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.setting']['links.admissiongroup']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.admissiongroup', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

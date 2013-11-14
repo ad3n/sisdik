@@ -279,7 +279,7 @@ class TingkatController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.academic']['links.tingkat']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.tingkat', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

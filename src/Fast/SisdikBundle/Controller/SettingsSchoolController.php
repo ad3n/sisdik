@@ -190,6 +190,6 @@ class SettingsSchoolController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->get('fast_sisdik.menu.main');
-        $menu['headings.pengaturan.sisdik']['links.schools']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', array(), 'navigations')][$this->get('translator')->trans('links.schools', array(), 'navigations')]->setCurrent(true);
     }
 }

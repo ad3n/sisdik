@@ -306,7 +306,7 @@ class SiswaTahkikController extends Controller
 
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu['headings.pendaftaran']['links.tahkik']->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.tahkik', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool() {

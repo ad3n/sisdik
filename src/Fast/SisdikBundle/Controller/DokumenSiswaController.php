@@ -416,9 +416,9 @@ class DokumenSiswaController extends Controller
     private function setCurrentMenu() {
         $menu = $this->container->get('fast_sisdik.menu.main');
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
-            $menu['headings.pendaftaran']['links.registration']->setCurrent(true);
+            $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
         } else {
-            $menu['headings.academic']['links.siswa']->setCurrent(true);
+            $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
         }
     }
 
