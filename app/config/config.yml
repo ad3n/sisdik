@@ -130,7 +130,7 @@ knp_paginator:
         sortable: FastSisdikBundle:Pagination:sortable_link.html.twig # sort link template
 
 mopa_bootstrap:
-    navbar: ~
+    menu: ~
     form:
         show_legend: false
         render_optional_text: false

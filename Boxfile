@@ -1,0 +1,71 @@
+web1:
+  name: sisdik
+  php_version: "5.4.14"
+
+  default_gateway: app.php
+  document_root: web
+  index_list:
+    - app.php
+  php_date_timezone: Asia/Jakarta
+  php_default_locale: en_US
+
+  php_extensions:
+    - intl
+    - apc
+    - curl
+    - mbstring
+    - mcrypt
+    - mysqli
+    - mysql
+    - pdo_mysql
+    - yaml
+    - zip
+    - memcached
+    - memcache
+    - xsl
+    - gd
+
+  shared_writable_dirs:
+    - app/cache
+    - app/logs
+    - app/sessions
+
+  after_build:
+    - "echo 'parameters:' > app/config/parameters.yml"
+    - "echo '  database_driver: pdo_mysql' >> app/config/parameters.yml"
+    - "echo '  database_host: %database.host%' >> app/config/parameters.yml"
+    - "echo '  database_port: 3306' >> app/config/parameters.yml"
+    - "echo '  database_name: %database.name%' >> app/config/parameters.yml"
+    - "echo '  database_user: %database.user%' >> app/config/parameters.yml"
+    - "echo '  database_password: %database.password%' >> app/config/parameters.yml"
+    - "echo '  mailer_transport: smtp' >> app/config/parameters.yml"
+    - "echo '  mailer_host: localhost' >> app/config/parameters.yml"
+    - "echo '  mailer_user: ~' >> app/config/parameters.yml"
+    - "echo '  mailer_password: ~' >> app/config/parameters.yml"
+    - "echo '  locale: en' >> app/config/parameters.yml"
+    - "echo '  secret: 9b57107d772167d4f19fe86baf7100c530' >> app/config/parameters.yml"
+    - "echo '  app_title: SisDik' >> app/config/parameters.yml"
+    - "echo '  proxypass: 0' >> app/config/parameters.yml"
+    - "echo '  proxypassname: sisdik' >> app/config/parameters.yml"
+    - "echo '  messenger_provider: zenziva' >> app/config/parameters.yml"
+    - "echo '  messenger_scheme: http' >> app/config/parameters.yml"
+    - "echo '  messenger_host: zenziva.com' >> app/config/parameters.yml"
+    - "echo '  messenger_port: ~' >> app/config/parameters.yml"
+    - "echo '  messenger_user: zqs2af' >> app/config/parameters.yml"
+    - "echo '  messenger_password: zmy5nxf9' >> app/config/parameters.yml"
+    - "echo '  messenger_resource: /apps/smsapi.php' >> app/config/parameters.yml"
+    - "echo '  messenger_apikey: ~' >> app/config/parameters.yml"
+    - "echo '  messenger_report: 0' >> app/config/parameters.yml"
+    - "rm -rf web/bundles web/app_dev.php web/css web/js app/cache/*"
+    - "if [ ! -f composer.phar ]; then curl -s http://getcomposer.org/installer | php; fi; php composer.phar install"
+    - "app/console --env=prod cache:clear"
+    - "app/console --env=prod assets:install"
+    - "app/console --env=prod assetic:dump"
+    - "echo 'RewriteEngine On' > web/.htaccess"
+    - "app/console --env=prod router:dump-apache >> web/.htaccess"
+    - "echo 'RewriteCond %{REQUEST_FILENAME} !-f' >> web/.htaccess"
+    - "echo 'RewriteRule .* app.php [QSA,L]' >> web/.htaccess"
+
+  after_deploy:
+    - "app/console --env=prod cache:clear"
+    - "app/console --env=prod cache:clear"

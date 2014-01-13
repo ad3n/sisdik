@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}{{ 'app.title'|trans }}{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
-        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         {% block javascripts_top %}{% endblock %}
         {% block additional_resources %}{% endblock %}
     </head>
 {% block custom_body_tag %}
-    <body data-spy="scroll">
+    <body>
 {% endblock %}
         {% block body %}{% endblock %}
         {% block javascripts_bottom %}{% endblock %}

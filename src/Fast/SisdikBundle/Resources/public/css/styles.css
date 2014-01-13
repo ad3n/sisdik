@@ -8,271 +8,271 @@
 
 /***** STRUCTURE *****/
 body { /* 	background: url('../images/bg.png') repeat-x; */
-	/* 	background-color: #fff; */
-
+  /* 	background-color: #fff; */
+    font-size: 13px;
 }
 
 h1,h2,h3,h4,h5,h6 {
-	text-shadow: white 0.02em 0.02em;
-	font-family: 'QlassikBold', sans-serif;
+  text-shadow: white 0.02em 0.02em;
+  font-family: 'QlassikBold', sans-serif;
 }
 
 h2 {
-	font-size: 1.8em;
+  font-size: 1.8em;
 }
 
 h3 {
-	font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 h4 {
-	font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 h4,h5,h6 {
-	line-height: 1.4em;
+  line-height: 1.4em;
 }
 
 .content {
-	padding-top: 50px;
-	font-size: 1em;
-	line-height: 1.8em;
+  padding-top: 50px;
+  font-size: 1em;
+  line-height: 1.8em;
 }
 
 .content p {
-	font-size: 1.0em;
-	line-height: 1.8em;
-	margin-bottom: 1.1em;
+  font-size: 1.0em;
+  line-height: 1.8em;
+  margin-bottom: 1.1em;
 }
 
 /***** BODY *****/
 #page-header {
-	margin: 0;
-	padding-bottom: 5px;
-	border-bottom: 1px solid #eee;
+  margin: 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
 }
 
 #school-name {
-	font-size: 1.4em;
-	clear: both;
-	line-height: 1.4em;
+  font-size: 1.4em;
+  clear: both;
+  line-height: 1.4em;
 }
 
 .page-title {
-	padding: 20px 0 5px 0;
+  padding: 20px 0 5px 0;
 }
 
 .arrow-top img {
-	margin: -7px 0 0 15px;
+  margin: -7px 0 0 15px;
 }
 
 /***** NAVIGATION BAR *****/
 .navbar .brand {
-	font-weight: bold;
-	color: black;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px
-		rgba(255, 255, 255, .125);
+  font-weight: bold;
+  color: black;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px
+    rgba(255, 255, 255, .125);
 }
 
 /***** HOMEPAGE *****/
 #details {
-	position: relative;
-	float: right;
-	width: 527px;
-	margin-top: 80px;
-	padding-left: 20px;
+  position: relative;
+  float: right;
+  width: 527px;
+  margin-top: 80px;
+  padding-left: 20px;
 }
 
 #icon {
-	position: relative;
-	float: left;
-	margin-right: 20px;
+  position: relative;
+  float: left;
+  margin-right: 20px;
 }
 
 #app-name {
-	position: relative;
-	float: left;
-	margin-top: 20px;
-	margin-right: 20px;
+  position: relative;
+  float: left;
+  margin-top: 20px;
+  margin-right: 20px;
 }
 
 #app-name h1 {
-	font-size: 5.5em;
-	font-size: 5.5em;
-	color: #ECECEC;
-	text-shadow: -1px 0 #B3B3B3, 0 1px #B3B3B3, 1px 0 #B3B3B3, 0 -1px
-		#B3B3B3, #020763 0.03em 0.03em;
+  font-size: 5.5em;
+  font-size: 5.5em;
+  color: #ECECEC;
+  text-shadow: -1px 0 #B3B3B3, 0 1px #B3B3B3, 1px 0 #B3B3B3, 0 -1px
+    #B3B3B3, #020763 0.03em 0.03em;
 }
 
 #version {
-	top: 30px;
-	position: relative;
-	float: left;
+  top: 30px;
+  position: relative;
+  float: left;
 }
 
 #tagline {
-	font-size: 1.1em;
-	margin-top: 6em;
-	clear: both;
+  font-size: 1.1em;
+  margin-top: 6em;
+  clear: both;
 }
 
 #log-info {
-	font-size: 0.9em;
-	line-height: 1.2em;
+  font-size: 0.9em;
+  line-height: 1.2em;
 }
 
 #description {
-	margin-top: 2em;
-	margin-bottom: 1.8em;
+  margin-top: 2em;
+  margin-bottom: 1.8em;
 }
 
 #features li {
-	background: url('../images/check.png') no-repeat left;
-	list-style: none;
-	padding-left: 25px;
-	margin-left: -23px;
-	line-height: 1.7em;
+  background: url('../images/check.png') no-repeat left;
+  list-style: none;
+  padding-left: 25px;
+  margin-left: -23px;
+  line-height: 1.7em;
 }
 
 .download-box {
-	width: 45%;
-	float: left;
-	padding-top: 20px;
-	padding-right: 5%;
-	font-size: 0.9em;
-	line-height: 1.3em;
+  width: 45%;
+  float: left;
+  padding-top: 20px;
+  padding-right: 5%;
+  font-size: 0.9em;
+  line-height: 1.3em;
 }
 
 /***** ABOUT PAGE *****/
 .updates ul {
-	list-style: none;
-	padding-top: 10px;
-	clear: both;
-	margin: 0 0 25px 0;
+  list-style: none;
+  padding-top: 10px;
+  clear: both;
+  margin: 0 0 25px 0;
 }
 
 .updates ul li {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .updates hr {
-	border-top: 1px solid #CCC;
+  border-top: 1px solid #CCC;
 }
 
 .updates .label {
-	display: block;
-	float: left;
-	margin-right: 10px;
+  display: block;
+  float: left;
+  margin-right: 10px;
 }
 
 .version {
-	float: left;
+  float: left;
 }
 
 .release-date {
-	float: right;
-	margin-top: 4px;
-	color: #999;
-	font-size: 0.85em;
+  float: right;
+  margin-top: 4px;
+  color: #999;
+  font-size: 0.85em;
 }
 
 .new {
-	background-color: #3a87ad;
+  background-color: #3a87ad;
 }
 
 .fix {
-	background-color: #468847;
-	padding: 1px 8px 2px;
+  background-color: #468847;
+  padding: 1px 8px 2px;
 }
 
 /***** CONTACT *****/
 #contact-form {
-	border-left: 1px solid #cccccc;
+  border-left: 1px solid #cccccc;
 }
 
 #contact-info {
-	padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
 /***** FOOTER *****/
 #copyright {
-	font-size: 0.85em;
-	line-height: 1.5em;
-	padding: 5px 0;
-	border-top: 1px solid #BBB;
-	font-size: 0.9em;
-	color: #555;
-	margin-top: 10px;
+  font-size: 0.85em;
+  line-height: 1.5em;
+  padding: 5px 0;
+  border-top: 1px solid #BBB;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 10px;
 }
 
 #credits {
-	float: right;
+  float: right;
 }
 
 #block-content h2 {
-	font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 /***** CONTENT *****/
 .filter-section a.current {
-	color: #000;
-	font-weight: bold;
+  color: #000;
+  font-weight: bold;
 }
 
 .record_actions {
-	clear: both;
-	list-style-type: none;
-	margin-top: 1em;
-	padding-top: 1em;
-	margin-left: 0;
+  clear: both;
+  list-style-type: none;
+  margin-top: 1em;
+  padding-top: 1em;
+  margin-left: 0;
 }
 
 label {
-	padding-top: 0.5em;
+  padding-top: 0.5em;
 }
 
 .table tbody [class^="icon-"],.table [class*=" icon-"] {
-	margin: 0 10px;
+  margin: 0 10px;
 }
 
 .table .row-actions {
-	white-space: nowrap;
+  white-space: nowrap;
 }
 
 table .sorted a.asc {
-	background: url("../images/table/table_sort_arrow_asc.gif") right
-		no-repeat;
-	display: block;
+  background: url("../images/table/table_sort_arrow_asc.gif") right
+    no-repeat;
+  display: block;
 }
 
 table .sorted a.desc {
-	background: url("../images/table/table_sort_arrow_desc.gif") right
-		no-repeat;
-	display: block;
+  background: url("../images/table/table_sort_arrow_desc.gif") right
+    no-repeat;
+  display: block;
 }
 
 dl {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 dt,dd {
-	line-height: 1.8em;
+  line-height: 1.8em;
 }
 
 dt {
-	float: left;
-	clear: both;
-	min-width: 18em;
-	font-weight: bold;
+  float: left;
+  clear: both;
+  min-width: 18em;
+  font-weight: bold;
 }
 
 dd {
-	float: left;
-	width: 60%;
+  float: left;
+  width: 60%;
 }
 
 .add-link {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 div.knowledgebase {
@@ -293,7 +293,7 @@ div.knowledgebase {
 }
 
 .shortinfo {
-	color: #ff0000;
+  color: #ff0000;
 }
 
 .wallet {
@@ -348,4 +348,73 @@ div.knowledgebase {
 .captcha_reload {
     margin-left: 0.5em;
     margin-right: 0.5em;
+}
+
+.navbar {
+    min-height: 0;
+}
+
+.navbar .nav > li > a {
+    color: #999999;
+    float: none;
+    line-height: 19px;
+    padding: 9px 10px 11px;
+    text-decoration: none;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.navbar .nav .active > a, .navbar .nav .active > a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.navbar .dropdown-menu:before {
+    border-bottom: 7px solid rgba(0, 0, 0, 0.2);
+    border-left: 7px solid rgba(0, 0, 0, 0);
+    border-right: 7px solid rgba(0, 0, 0, 0);
+    content: "";
+    display: inline-block;
+    left: 9px;
+    position: absolute;
+    top: -7px;
+}
+
+.navbar .dropdown-menu:after {
+    position: absolute;
+    top: -6px;
+    left: 10px;
+    display: inline-block;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #fff;
+    border-left: 6px solid transparent;
+    content: ''
+}
+
+.navbar .pull-right .dropdown-menu:before, .navbar .dropdown-menu.pull-right:before {
+    left: auto;
+    right: 12px;
+}
+
+.navbar .pull-right .dropdown-menu:after, .navbar .dropdown-menu.pull-right:after {
+    left: auto;
+    right: 13px;
+}
+
+.open .menu-dropdown, .dropdown.open .menu-dropdown, .open .dropdown-menu, .dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.navbar .pull-right .dropdown-menu, .navbar .dropdown-menu.pull-right {
+    left: auto;
+    right: 0;
+}
+
+.dropdown-menu {
+    font-size: 1em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    margin: 0;
+    text-rendering: optimizelegibility;
 }

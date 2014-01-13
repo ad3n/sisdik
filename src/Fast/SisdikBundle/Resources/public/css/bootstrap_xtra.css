@@ -872,7 +872,7 @@ a.menu:after, .dropdown-toggle:after {
     float: left;
     display: none;
     position: absolute;
-    top: 40px;
+    top: 39px;
     z-index: 900;
     min-width: 160px;
     max-width: 220px;

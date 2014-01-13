@@ -2,28 +2,28 @@ parameters:
 #    fast_sisdik.example.class: Fast\SisdikBundle\Example
 
 services:
-    fast_sisdik.navbar:
-        class: '%mopa_bootstrap.navbar.generic%'
-        scope: request
-        arguments:
-            - { rightmenu: "@fast_sisdik.menu.main=" }
-            - {}
-            - { title: "%app_title%", titleRoute: "_index", fixedTop: true, isFluid: false }
-        tags:
-            - { name: mopa_bootstrap.navbar, alias: frontendNavbar }
-
     fast_sisdik.menu_builder:
         class: Fast\SisdikBundle\Menu\Builder
         arguments: ["@knp_menu.factory", "@service_container"]
+
+#    fast_sisdik.navbar:
+#        class: Knp\Menu\MenuItem
+#        scope: request
+#        arguments:
+#            - { rightmenu: "@fast_sisdik.menu.main=" }
+#            - {}
+#            - { title: "%app_title%", titleRoute: "_index", fixedTop: true, isFluid: false }
+#        tags:
+#            - { name: mopa_bootstrap.navbar, alias: frontendNavbar }
 
     fast_sisdik.menu.main:
         class: Knp\Menu\MenuItem # the service definition requires setting the class
         factory_service: fast_sisdik.menu_builder
         factory_method: createMainMenu
-        arguments: ["@request"]
+        arguments: ["@request", "@service_container"]
         scope: request # needed as we have the request as a dependency here
         tags:
-            - { name: knp_menu.menu, alias: mainmenu } # The alias is what is used to retrieve the menu
+            - { name: knp_menu.menu, alias: mainMenu } # The alias is what is used to retrieve the menu
 
 #     fast.sisdik.menu.voter.request:
 #         class: Fast\SisdikBundle\Menu\RouteVoter

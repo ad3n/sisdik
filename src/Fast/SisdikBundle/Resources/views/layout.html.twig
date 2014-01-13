@@ -1,14 +1,15 @@
 {% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
 {% extends '::base.html.twig' %}
 
+{#         'bundles/fastsisdik/css/bootstrap.css'#}
+
 {% block stylesheets %}
     {% stylesheets
-        'bundles/fastsisdik/css/bootstrap.css'
-        '@FastSisdikBundle/Resources/public/css/bootstrap-responsive.css'
-        '@FastSisdikBundle/Resources/public/css/bootstrap_xtra.css'
+        '@MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less'
         'bundles/fastsisdik/css/styles.css'
-        '@FastSisdikBundle/Resources/public/css/media-queries.css'
         'bundles/fastsisdik/font/stylesheet.css'
+        '@FastSisdikBundle/Resources/public/css/bootstrap_xtra.css'
+        '@FastSisdikBundle/Resources/public/css/media-queries.css'
         'bundles/fastsisdik/js/libraries/themes/smoothness/jquery-ui-1.9.1.custom.min.css'
         '@FastSisdikBundle/Resources/public/css/dropkick.css'
         filter='cssrewrite'
@@ -17,7 +18,105 @@
     {% endstylesheets %}
 {% endblock %}
 
-{% block javascripts_top %}
+{% block additional_resources %}
+{% block javascripts_add %}{% endblock javascripts_add %}
+{% block stylesheets_add %}{% endblock stylesheets_add %}
+{% endblock additional_resources %}
+
+{% block body %}
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="{{ path("_index") }}" style="padding-top: 3px; padding-bottom: 5px;">
+            {% image '@FastSisdikBundle/Resources/public/images/logo_white_simple.png' %}
+              <img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" height="23" style="margin-top: 7px; display: inline-block;">
+            {% endimage %}
+            </a>
+        </div>
+        <div class="collapse navbar-collapse">
+            {{ mopa_bootstrap_menu('mainMenu') }}
+        </div>
+      </div>
+</div>
+
+<div class="container content container-fluid" id="home">
+
+  <div class="">
+      <div class="" style="text-align: right">
+          <div id="page-header">
+          {% if app.user.sekolah is not null %}
+              {% if app.user.sekolah.logo != "" %}
+                  <a href="{{ path("_index") }}"><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ app.user.sekolah.webPathLogoThumbnailDisk }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" class="img-polaroid"></a>
+                {% else %}
+                    {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
+                      <a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
+                    {% endimage %}
+                {% endif %}
+            {% else  %}
+                {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
+                  <a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
+                {% endimage %}
+            {% endif %}
+                <div id="school-name">{% spaceless %}
+                    {% if app.user is not null %}
+                        {% if app.user.sekolah is not null %}{{ app.user.sekolah.nama }}{% endif %}
+                    {% endif %}
+                {% endspaceless %}</div>
+            </div>
+            <div id="log-info">
+                &raquo; {{ app.user.username }}<br />
+            <a href="{{ path("fos_user_profile_show") }}">{% trans from "navigations" %}user.myaccount{% endtrans %}</a> |
+            <a href="{{ path("logout") }}">{% trans from "navigations" %}user.logout{% endtrans %}</a>
+            </div>
+        </div>
+  </div>
+
+  <div class="row-fluid">
+        <div class="">
+            {% if breadcrumb is defined %}
+            <div>
+                {% for items in breadcrumb %}
+                    {% if items.label != 'root' %}
+                        <a href="{{ items.uri }}">{{ items.label|trans({}, 'navigations') }}</a>
+                        {% if not loop.last %} &raquo; {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        <h2 class="page-title">
+          {% block page_heading %}Default Heading{% endblock page_heading %}
+        </h2>
+
+            {% block flashes %}
+            {% if app.session.flashbag.peekAll|length > 0 %}
+                {{ session_flash() }}
+            {% endif %}
+            {% endblock flashes %}
+
+          <div id="block-content">
+          {% block content %}
+            <h2>Sub Heading</h2>
+            <p>Bootstrap default content</p>
+        {% endblock content %}
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer container container-fluid">
+  <div id="copyright">Copyright &copy; 2012 &ndash; {{ "now"|date("Y") }}<br></div>
+</div>
+
+{% endblock body %}
+
+{% block javascripts_bottom %}
 
 <!--[if lt IE 9]>
 {% javascripts
@@ -31,19 +130,32 @@
 {% javascripts
     '@FastSisdikBundle/Resources/public/js/libraries/jquery-1.8.2.min.js'
     '@FastSisdikBundle/Resources/public/js/libraries/jquery-ui-1.9.1.custom.min.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-transition.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-dropdown.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-tab.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-collapse.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-tooltip.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-popover.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/affix.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/alert.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/button.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/carousel.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/collapse.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/dropdown.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/modal.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/popover.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/scrollspy.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/tab.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/transition.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
     '@FastSisdikBundle/Resources/public/js/custom.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/mopabootstrap-collection.js'
-
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
+{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-transition.js'#}
+{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-dropdown.js'#}
+{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-tab.js'#}
+{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-collapse.js'#}
+{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-tooltip.js'#}
+{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-popover.js'#}
+{#     '@FastSisdikBundle/Resources/public/js/libraries/mopabootstrap-collection.js'#}
 
 {#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap.min.js'#}
 {#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-scrollspy.js'#}
@@ -53,110 +165,6 @@
 {#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-modal.js'#}
 {#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-alert.js'#}
 {#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-button.js'#}
-{% endblock javascripts_top %}
-
-{% block additional_resources %}
-{% block javascripts_add %}{% endblock javascripts_add %}
-{% block stylesheets_add %}{% endblock stylesheets_add %}
-{% endblock additional_resources %}
-
-{% block body %}
-
-<!-- TOP MENU NAVIGATION -->
-{{ mopa_bootstrap_navbar('frontendNavbar', {'template': 'FastSisdikBundle::navbar.html.twig'}) }}
-{# <div class="navbar navbar-fixed-top">#}
-{# 	<div class="navbar-inner">#}
-{# 		<div class="container">#}
-
-{# 			<a class="brand pull-left" href="#">SisDik</a>#}
-
-{# 			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">#}
-{# 				<span class="icon-bar"></span>#}
-{# 				<span class="icon-bar"></span>#}
-{# 				<span class="icon-bar"></span>#}
-{# 			</a>#}
-
-{# 			<div class="nav-collapse collapse">#}
-{# 			    {{ knp_menu_render('mainmenu') }}#}
-{# 			</div>#}
-
-{# 		</div>#}
-{# 	</div>#}
-{# </div>#}
-
-<!-- MAIN CONTENT -->
-<div class="container content container-fluid" id="home">
-
-	<!-- HOME -->
-	<div class="row-fluid">
-	    <div class="span12 pull-right" style="text-align: right">
-	        <div id="page-header">
-	        {% if app.user.sekolah is not null %}
-    	        {% if app.user.sekolah.logo != "" %}
-                	<a href="{{ path("_index") }}"><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ app.user.sekolah.webPathLogoThumbnailDisk }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" class="img-polaroid"></a>
-                {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
-                    	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
-                    {% endimage %}
-                {% endif %}
-            {% else  %}
-                {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
-                	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
-                {% endimage %}
-            {% endif %}
-                <div id="school-name">{% spaceless %}
-                    {% if app.user is not null %}
-                        {% if app.user.sekolah is not null %}{{ app.user.sekolah.nama }}{% endif %}
-                    {% endif %}
-                {% endspaceless %}</div>
-            </div>
-            <div id="log-info">
-                &raquo; {{ app.user.username }}<br />
-    		    <a href="{{ path("fos_user_profile_show") }}">{% trans from "navigations" %}user.myaccount{% endtrans %}</a> |
-        		<a href="{{ path("logout") }}">{% trans from "navigations" %}user.logout{% endtrans %}</a>
-            </div>
-        </div>
-	</div>
-
-	<div class="row-fluid">
-        <div class="span12">
-            {% if breadcrumb is defined %}
-            <div>
-                {% for items in breadcrumb %}
-                    {% if items.label != 'root' %}
-                        <a href="{{ items.uri }}">{{ items.label|trans({}, 'navigations') }}</a>
-                        {% if not loop.last %} &raquo; {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </div>
-            {% endif %}
-    		<h2 class="page-title">
-    			{% block page_heading %}Default Heading{% endblock page_heading %}
-    		</h2>
-
-            {% block flashes %}
-            {% if app.session.flashbag.peekAll|length > 0 %}
-                {{ session_flash() }}
-            {% endif %}
-            {% endblock flashes %}
-
-    	    <div id="block-content">
-        	{% block content %}
-        		<h2>Sub Heading</h2>
-        		<p>Bootstrap default content</p>
-    		{% endblock content %}
-    		</div>
-		</div>
-	</div>
-</div>
-
-<!-- FOOTER -->
-<div class="footer container container-fluid">
-	<div id="copyright">Copyright &copy; 2012 &ndash; {{ "now"|date("Y") }} SisDik oleh Fast Solution<br></div>
-</div>
-
-{% endblock body %}
-
-{% block javascripts_bottom %}{% endblock %}
+{% endblock javascripts_bottom %}
 
 {% block lastresources %}{% endblock %}
