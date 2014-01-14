@@ -9,6 +9,7 @@ app/cache/*
 app/logs/*
 app/sessions/*
 app/config/parameters.ini
+app/config/parameters.yml
 app/lock/*
 build/
 vendor
