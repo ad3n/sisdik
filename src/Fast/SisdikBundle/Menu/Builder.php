@@ -49,7 +49,7 @@ class Builder extends ContainerAware
         $menu = $this->factory->createItem('root', [
             'navbar' => true,
         ]);
-        $menu->setChildrenAttribute('class', 'nav navbar-nav');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav navbar-right');
 
         if ($securityContext->isGranted([
             new Expression('hasRole("ROLE_SUPER_ADMIN")')
