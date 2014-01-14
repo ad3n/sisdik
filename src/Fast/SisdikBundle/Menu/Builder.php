@@ -48,9 +48,8 @@ class Builder extends ContainerAware
 
         $menu = $this->factory->createItem('root', [
             'navbar' => true,
-            'pull-right' => true,
         ]);
-        $menu->setChildrenAttribute('class', 'nav pull-right');
+        $menu->setChildrenAttribute('class', 'nav navbar-nav');
 
         if ($securityContext->isGranted([
             new Expression('hasRole("ROLE_SUPER_ADMIN")')
@@ -176,7 +175,6 @@ class Builder extends ContainerAware
             ])) {
                 $kehadiran->addChild($translator->trans('links.attendancemachine', [], 'navigations'), ['route' => 'attendancemachine']);
                 $kehadiran->addChild($translator->trans('links.jadwal.kehadiran', [], 'navigations'), ['route' => 'jadwal_kehadiran']);
-
                 /* $kehadiran->addChild($translator->trans('links.mesin.wakil', [], 'navigations'), ['route' => 'mesinproxy']); */
             }
 

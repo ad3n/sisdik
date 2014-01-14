@@ -1,20 +1,14 @@
-/*!
- * TrippoApp v1.0
- * Copyright 2012 Trippo, Inc
- * Licensed under CC BY 3.0
- * http://creativecommons.org/licenses/by/3.0/
- *
- */
-
-/***** STRUCTURE *****/
-body { /* 	background: url('../images/bg.png') repeat-x; */
-  /* 	background-color: #fff; */
+body {
     font-size: 13px;
+    padding-top: 60px;
 }
 
 h1,h2,h3,h4,h5,h6 {
-  text-shadow: white 0.02em 0.02em;
-  font-family: 'QlassikBold', sans-serif;
+    text-shadow: white 0.02em 0.02em;
+    font-family: 'QlassikBold', sans-serif;
+    font-weight: 700;
+    margin: 0;
+    text-rendering: optimizelegibility;
 }
 
 h2 {
@@ -31,12 +25,6 @@ h4 {
 
 h4,h5,h6 {
   line-height: 1.4em;
-}
-
-.content {
-  padding-top: 50px;
-  font-size: 1em;
-  line-height: 1.8em;
 }
 
 .content p {
@@ -64,14 +52,6 @@ h4,h5,h6 {
 
 .arrow-top img {
   margin: -7px 0 0 15px;
-}
-
-/***** NAVIGATION BAR *****/
-.navbar .brand {
-  font-weight: bold;
-  color: black;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .1), 0 0 30px
-    rgba(255, 255, 255, .125);
 }
 
 /***** HOMEPAGE *****/
@@ -141,76 +121,6 @@ h4,h5,h6 {
   padding-right: 5%;
   font-size: 0.9em;
   line-height: 1.3em;
-}
-
-/***** ABOUT PAGE *****/
-.updates ul {
-  list-style: none;
-  padding-top: 10px;
-  clear: both;
-  margin: 0 0 25px 0;
-}
-
-.updates ul li {
-  margin-bottom: 10px;
-}
-
-.updates hr {
-  border-top: 1px solid #CCC;
-}
-
-.updates .label {
-  display: block;
-  float: left;
-  margin-right: 10px;
-}
-
-.version {
-  float: left;
-}
-
-.release-date {
-  float: right;
-  margin-top: 4px;
-  color: #999;
-  font-size: 0.85em;
-}
-
-.new {
-  background-color: #3a87ad;
-}
-
-.fix {
-  background-color: #468847;
-  padding: 1px 8px 2px;
-}
-
-/***** CONTACT *****/
-#contact-form {
-  border-left: 1px solid #cccccc;
-}
-
-#contact-info {
-  padding-bottom: 20px;
-}
-
-/***** FOOTER *****/
-#copyright {
-  font-size: 0.85em;
-  line-height: 1.5em;
-  padding: 5px 0;
-  border-top: 1px solid #BBB;
-  font-size: 0.9em;
-  color: #555;
-  margin-top: 10px;
-}
-
-#credits {
-  float: right;
-}
-
-#block-content h2 {
-  font-size: 1.5em;
 }
 
 /***** CONTENT *****/
@@ -354,67 +264,31 @@ div.knowledgebase {
     min-height: 0;
 }
 
-.navbar .nav > li > a {
-    color: #999999;
-    float: none;
-    line-height: 19px;
+.navbar-brand {
+  padding: 8px 20px 8px;
+}
+
+.navbar-toggle {
+    margin-bottom: 4px;
+    margin-top: 4px;
+}
+
+.navbar-nav > li > a {
     padding: 9px 10px 11px;
-    text-decoration: none;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-
-.navbar .nav .active > a, .navbar .nav .active > a:hover {
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-.navbar .dropdown-menu:before {
-    border-bottom: 7px solid rgba(0, 0, 0, 0.2);
-    border-left: 7px solid rgba(0, 0, 0, 0);
-    border-right: 7px solid rgba(0, 0, 0, 0);
-    content: "";
-    display: inline-block;
-    left: 9px;
-    position: absolute;
-    top: -7px;
-}
-
-.navbar .dropdown-menu:after {
-    position: absolute;
-    top: -6px;
-    left: 10px;
-    display: inline-block;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid #fff;
-    border-left: 6px solid transparent;
-    content: ''
-}
-
-.navbar .pull-right .dropdown-menu:before, .navbar .dropdown-menu.pull-right:before {
-    left: auto;
-    right: 12px;
-}
-
-.navbar .pull-right .dropdown-menu:after, .navbar .dropdown-menu.pull-right:after {
-    left: auto;
-    right: 13px;
-}
-
-.open .menu-dropdown, .dropdown.open .menu-dropdown, .open .dropdown-menu, .dropdown.open .dropdown-menu {
-    display: block;
-}
-
-.navbar .pull-right .dropdown-menu, .navbar .dropdown-menu.pull-right {
-    left: auto;
-    right: 0;
 }
 
 .dropdown-menu {
-    font-size: 1em;
+    font-size: 13px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    margin: 0;
-    text-rendering: optimizelegibility;
+.form-control {
+    font-size: 13px;
+    height: 30px;
+}
+
+.search-query {
+    border-radius: 14px;
+    margin-bottom: 0;
+    padding-left: 14px;
+    padding-right: 14px;
 }
