@@ -10,7 +10,7 @@ body {
     background-color: #f5f5f5;
 }
 .form-signin {
-    max-width: 300px;
+    max-width: 350px;
     padding: 19px 29px 29px;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -49,34 +49,29 @@ body {
 </style>
 
 {% block content %}
+    <div class="container">
+        <form action="{{ path("fos_user_security_check") }}" method="post" class="form-signin">
+            <div>
+            {% image '@FastSisdikBundle/Resources/public/images/logo_black.png' %}
+                <a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" width="92" /></a>
+            {% endimage %}
+            </div>
+            <div id="copyright" style="margin: 0 0 10px 0; padding: 0; border: 0;">&copy; 2012 &ndash; {{ "now"|date("Y") }}</div>
+            <div class="news">
+                <span class="news-info">Sistem Informasi Pendidikan, dibuat untuk mempermudah administrasi sekolah.</span>
+            </div>
+            <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}">
+            <input type="password" id="password" name="_password" class="form-control" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}">
+            <button class="btn large primary" type="submit">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-<div class="container">
-
-{#     <a class="register-link" href="{{ path("fos_user_registration_register") }}">&raquo; {{ 'links.register'|trans({}, "navigations") }}</a>#}
-    <form action="{{ path("fos_user_security_check") }}" method="post" class="form-signin">
-        <div>
-        {% image '@FastSisdikBundle/Resources/public/images/logo_black.png' %}
-        	<a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" width="92" /></a>
-        {% endimage %}
-        </div>
-        <div id="copyright" style="margin: 0 0 10px 0; padding: 0; border: 0;">&copy; 2012 &ndash; {{ "now"|date("Y") }} Fast Solution</div>
-        <div class="news">
-            <span class="news-info">Sistem Informasi Pendidikan, dibuat untuk mempermudah administrasi sekolah.</span>
-            Untuk mencoba SisDik <span style="color: #ff0000; font-weight: bold;">GRATIS SELAMA 6 BULAN</span>, hubungi 0251-8190630, 0818 40 200, atau 0856 216 4200.
-        </div>
-		<input type="text" id="username" name="_username" value="{{ last_username }}" class="input-block-level" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}">
-		<input type="password" id="password" name="_password" class="input-block-level" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}">
-	    <button class="btn large primary" type="submit">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
-	    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-
-    	{% block fos_user_content %}
-            {% if error %}
-                <div class="login-error">{{ error|trans({}, 'FOSUserBundle') }}</div>
-            {% endif %}
-        {% endblock fos_user_content %}
-	</form>
-</div>
-
+            {% block fos_user_content %}
+                {% if error %}
+                    <div class="login-error">{{ error|trans({}, 'FOSUserBundle') }}</div>
+                {% endif %}
+            {% endblock fos_user_content %}
+        </form>
+    </div>
 {% endblock content %}
 
 {% endblock body %}
