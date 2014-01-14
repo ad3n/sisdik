@@ -301,3 +301,7 @@ div.knowledgebase {
     margin-top: 10px;
     padding: 5px 0;
 }
+
+.pagination-centered {
+    text-align: center;
+}

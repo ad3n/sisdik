@@ -1,43 +1,43 @@
 {# default Sliding pagination control implementation #}
 
 {% if pageCount > 1 %}
-<div class="pagination pagination-small pagination-centered">
-    <ul>
+<div class="pagination-centered">
+    <ul class="pagination pagination-sm">
         {% if first is defined and current != first %}
             <li>
                 <a href="{{ path(route, query|merge({(pageParameterName): first})) }}" class="page-far-left">&larr;</a>
             </li>
         {% endif %}
-    
+
         {% if previous is defined %}
             <li>
                 <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" class="page-left">&laquo;</a>
             </li>
         {% endif %}
-        
+
         {% for page in pagesInRange %}
             {% if page != current %}
                 <li>
                     <a href="{{ path(route, query|merge({(pageParameterName): page})) }}">{{ page }}</a>
                 </li>
             {% else %}
-                <li class="disabled active">
+                <li class="active">
                     <a href="#">{{ page }}</a>
                 </li>
             {% endif %}
         {% endfor %}
-        
+
         {% if next is defined %}
             <li>
                 <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" class="page-right">&raquo;</a>
             </li>
         {% endif %}
-        
+
         {% if last is defined and current != last %}
             <li>
                 <a href="{{ path(route, query|merge({(pageParameterName): last})) }}" class="page-far-right">&rarr;</a>
             </li>
-        {% endif %}    
+        {% endif %}
     </ul>
 </div>
 {% endif %}
