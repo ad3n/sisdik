@@ -3,10 +3,10 @@ namespace Fast\SisdikBundle\Menu;
 
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\Renderer\ListRenderer;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
+use Knp\Menu\FactoryInterface;
+use Knp\Menu\Renderer\ListRenderer;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
 /**
