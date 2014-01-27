@@ -20,47 +20,47 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('settings_user_register_withschool') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.adduser.withschool'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.add.user.withschool'|trans }}
-	</a>
+    <a href="{{ path('settings_user_register_withschool') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.adduser.withschool'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.add.user.withschool'|trans }}
+    </a>
 {% endimage %}
 </div>
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th class="{% if pagination.isSorted('u.name') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'u.name') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('u.username') %}sorted{% endif %}">
+        <tr>
+            <th class="{% if pagination.isSorted('u.name') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'u.name') }}
+            </th>
+            <th class="{% if pagination.isSorted('u.username') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.username'|trans, 'u.username') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('u.email') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('u.email') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.email'|trans, 'u.email') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('u.roles') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('u.roles') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.roles'|trans, 'u.roles') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for user in pagination %}
-    	<tr>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ user.name }}</td>
-    		<td data-title="{{ 'label.username'|trans }}">{{ user.username }}</td>
-    		<td data-title="{{ 'label.email'|trans }}">{{ user.email }}</td>
-    		<td data-title="{{ 'label.roles'|trans }}">
-    		    {% for role in user.roles %}
-    		        {{ role|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}
-    		    {% endfor %}
-    	    </td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('settings_user_inschool_edit', {'id': user.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-        		<a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="icon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
-    		</td>
-    	</tr>
+        <tr>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ user.name }}</td>
+            <td data-title="{{ 'label.username'|trans }}">{{ user.username }}</td>
+            <td data-title="{{ 'label.email'|trans }}">{{ user.email }}</td>
+            <td data-title="{{ 'label.roles'|trans }}">
+                {% for role in user.roles %}
+                    {{ role|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('settings_user_inschool_edit', {'id': user.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="glyphicon glyphicon-pencil"></a>
+                <a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="glyphicon glyphicon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
