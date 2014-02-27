@@ -1,12 +1,9 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BiayaRutin
- *
  * @ORM\Table(name="biaya_rutin", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="UNQ_biaya_rutin1", columns={"jenisbiaya_id", "tahun_id", "gelombang_id"})
  * })
@@ -15,71 +12,67 @@ use Doctrine\ORM\Mapping as ORM;
 class BiayaRutin
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nominal", type="bigint", nullable=true)
+     *
+     * @var integer
      */
     private $nominal;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="perulangan", type="string", nullable=true, options={"default"="bulan"})
+     *
+     * @var string
      */
     private $perulangan;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $urutan;
 
     /**
-     * @var \Gelombang
-     *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Gelombang
      */
     private $gelombang;
 
     /**
-     * @var \Tahun
-     *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Tahun
      */
     private $tahun;
 
     /**
-     * @var \Jenisbiaya
-     *
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Jenisbiaya
      */
     private $jenisbiaya;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -87,22 +80,15 @@ class BiayaRutin
     }
 
     /**
-     * Set nominal
-     *
      * @param integer $nominal
-     * @return BiayaRutin
      */
     public function setNominal($nominal)
     {
         $this->nominal = $nominal;
-    
-        return $this;
     }
 
     /**
-     * Get nominal
-     *
-     * @return integer 
+     * @return integer
      */
     public function getNominal()
     {
@@ -110,22 +96,15 @@ class BiayaRutin
     }
 
     /**
-     * Set perulangan
-     *
      * @param string $perulangan
-     * @return BiayaRutin
      */
     public function setPerulangan($perulangan)
     {
         $this->perulangan = $perulangan;
-    
-        return $this;
     }
 
     /**
-     * Get perulangan
-     *
-     * @return string 
+     * @return string
      */
     public function getPerulangan()
     {
@@ -133,22 +112,15 @@ class BiayaRutin
     }
 
     /**
-     * Set urutan
-     *
      * @param integer $urutan
-     * @return BiayaRutin
      */
     public function setUrutan($urutan)
     {
         $this->urutan = $urutan;
-    
-        return $this;
     }
 
     /**
-     * Get urutan
-     *
-     * @return integer 
+     * @return integer
      */
     public function getUrutan()
     {
@@ -156,22 +128,15 @@ class BiayaRutin
     }
 
     /**
-     * Set gelombang
-     *
-     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
-     * @return BiayaRutin
+     * @param Gelombang $gelombang
      */
-    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null)
+    public function setGelombang(Gelombang $gelombang = null)
     {
         $this->gelombang = $gelombang;
-    
-        return $this;
     }
 
     /**
-     * Get gelombang
-     *
-     * @return \Fast\SisdikBundle\Entity\Gelombang 
+     * @return Gelombang
      */
     public function getGelombang()
     {
@@ -179,22 +144,15 @@ class BiayaRutin
     }
 
     /**
-     * Set tahun
-     *
-     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
-     * @return BiayaRutin
+     * @param Tahun $tahun
      */
-    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null)
+    public function setTahun(Tahun $tahun = null)
     {
         $this->tahun = $tahun;
-    
-        return $this;
     }
 
     /**
-     * Get tahun
-     *
-     * @return \Fast\SisdikBundle\Entity\Tahun 
+     * @return Tahun
      */
     public function getTahun()
     {
@@ -202,22 +160,15 @@ class BiayaRutin
     }
 
     /**
-     * Set jenisbiaya
-     *
-     * @param \Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya
-     * @return BiayaRutin
+     * @param Jenisbiaya $jenisbiaya
      */
-    public function setJenisbiaya(\Fast\SisdikBundle\Entity\Jenisbiaya $jenisbiaya = null)
+    public function setJenisbiaya(Jenisbiaya $jenisbiaya = null)
     {
         $this->jenisbiaya = $jenisbiaya;
-    
-        return $this;
     }
 
     /**
-     * Get jenisbiaya
-     *
-     * @return \Fast\SisdikBundle\Entity\Jenisbiaya 
+     * @return Jenisbiaya
      */
     public function getJenisbiaya()
     {

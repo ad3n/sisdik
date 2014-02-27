@@ -1,16 +1,14 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 use Fast\SisdikBundle\Util\FileSizeFormatter;
 
 /**
- * DokumenSiswa
- *
  * @ORM\Table(name="dokumen_siswa", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="dokumen_siswa_UNIQUE", columns={"siswa_id", "jenis_dokumen_siswa_id"})
  * })
@@ -22,59 +20,59 @@ class DokumenSiswa
     const DOKUMEN_DIR = 'uploads/students/dokumen/';
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="lengkap", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $lengkap = false;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama_file", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     private $namaFile;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama_file_disk", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     private $namaFileDisk;
 
     /**
-     * @var \JenisDokumenSiswa
-     *
      * @ORM\ManyToOne(targetEntity="JenisDokumenSiswa")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="jenis_dokumen_siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var JenisDokumenSiswa
      */
     private $jenisDokumenSiswa;
 
     /**
-     * @var \Siswa
-     *
      * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="dokumenSiswa")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Siswa
      */
     private $siswa;
 
     /**
-     * @var UploadedFile
-     *
      * @Assert\File(maxSize="5M")
+     *
+     * @var UploadedFile
      */
     private $fileUpload;
 
@@ -84,145 +82,141 @@ class DokumenSiswa
     private $fileDiskSebelumnya;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set lengkap
-     *
      * @param boolean $lengkap
-     * @return DokumenSiswa
      */
-    public function setLengkap($lengkap = false) {
+    public function setLengkap($lengkap = false)
+    {
         $this->lengkap = $lengkap;
-
-        return $this;
     }
 
     /**
-     * Get lengkap
-     *
      * @return boolean
      */
-    public function isLengkap() {
+    public function isLengkap()
+    {
         return $this->lengkap;
     }
 
     /**
-     * Set namaFile
-     *
      * @param string $namaFile
-     * @return DokumenSiswa
      */
-    public function setNamaFile($namaFile) {
+    public function setNamaFile($namaFile)
+    {
         $this->namaFile = $namaFile;
-
-        return $this;
     }
 
     /**
-     * Get namaFile
-     *
      * @return string
      */
-    public function getNamaFile() {
+    public function getNamaFile()
+    {
         return strlen($this->namaFile) > 20 ? '...' . substr($this->namaFile, -17) : $this->namaFile;
     }
 
     /**
-     * Set namaFileDisk
-     *
      * @param string $namaFileDisk
-     * @return DokumenSiswa
      */
-    public function setNamaFileDisk($namaFileDisk) {
+    public function setNamaFileDisk($namaFileDisk)
+    {
         $this->namaFileDisk = $namaFileDisk;
-
-        return $this;
     }
 
     /**
-     * Get namaFileDisk
-     *
      * @return string
      */
-    public function getNamaFileDisk() {
+    public function getNamaFileDisk()
+    {
         return $this->namaFileDisk;
     }
 
     /**
-     * Set jenisDokumenSiswa
-     *
-     * @param \Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa
-     * @return DokumenSiswa
+     * @param JenisDokumenSiswa $jenisDokumenSiswa
      */
-    public function setJenisDokumenSiswa(
-            \Fast\SisdikBundle\Entity\JenisDokumenSiswa $jenisDokumenSiswa = null) {
+    public function setJenisDokumenSiswa(JenisDokumenSiswa $jenisDokumenSiswa = null)
+    {
         $this->jenisDokumenSiswa = $jenisDokumenSiswa;
-
-        return $this;
     }
 
     /**
-     * Get jenisDokumenSiswa
-     *
-     * @return \Fast\SisdikBundle\Entity\JenisDokumenSiswa
+     * @return JenisDokumenSiswa
      */
-    public function getJenisDokumenSiswa() {
+    public function getJenisDokumenSiswa()
+    {
         return $this->jenisDokumenSiswa;
     }
 
     /**
-     * Set siswa
-     *
-     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return DokumenSiswa
+     * @param Siswa $siswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
+    public function setSiswa(Siswa $siswa = null)
+    {
         $this->siswa = $siswa;
-
-        return $this;
     }
 
     /**
-     * Get siswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa
+     * @return Siswa
      */
-    public function getSiswa() {
+    public function getSiswa()
+    {
         return $this->siswa;
     }
 
-    public function getFileUpload() {
+    /**
+     * @return UploadedFile
+     */
+    public function getFileUpload()
+    {
         return $this->fileUpload;
     }
 
-    public function setFileUpload(UploadedFile $file) {
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFileUpload(UploadedFile $file)
+    {
         $this->fileUpload = $file;
-
-        return $this;
     }
 
-    public function getWebPathNamaFileDisk() {
-        return null === $this->namaFileDisk ? null : $this->getUploadDir() . '/' . $this->namaFileDisk;
+    /**
+     * @return null|string
+     */
+    public function getWebPathNamaFileDisk()
+    {
+        return (null === $this->namaFileDisk) ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->namaFileDisk;
     }
 
-    public function getRelativePathNamaFileDisk() {
-        return null === $this->namaFileDisk ? null : $this->getUploadRootDir() . '/' . $this->namaFileDisk;
+    /**
+     * @return null|string
+     */
+    public function getRelativePathNamaFileDisk()
+    {
+        return (null === $this->namaFileDisk) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->namaFileDisk;
     }
 
-    public function getRelativePathNamaFileDiskSebelumnya() {
-        return null === $this->fileDiskSebelumnya ? null
-                : $this->getUploadRootDir() . '/' . $this->fileDiskSebelumnya;
+    /**
+     * @return null|string
+     */
+    public function getRelativePathNamaFileDiskSebelumnya()
+    {
+        return (null === $this->fileDiskSebelumnya) ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fileDiskSebelumnya;
     }
 
-    public function getFilesizeNamaFileDisk($type = 'KB') {
+    /**
+     * @param  string $type
+     * @return string
+     */
+    public function getFilesizeNamaFileDisk($type = 'KB')
+    {
         $file = new File($this->getRelativePathNamaFileDisk());
+
         return FileSizeFormatter::formatBytes($file->getSize(), $type);
     }
 
@@ -230,12 +224,12 @@ class DokumenSiswa
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function prePersist() {
+    public function prePersist()
+    {
         if (null !== $this->fileUpload) {
             $this->fileDiskSebelumnya = $this->namaFileDisk;
 
-            $this->namaFileDisk = sha1(uniqid(mt_rand(), true)) . '_'
-                    . $this->fileUpload->getClientOriginalName();
+            $this->namaFileDisk = sha1(uniqid(mt_rand(), true)) . '_' . $this->fileUpload->getClientOriginalName();
             $this->namaFile = $this->fileUpload->getClientOriginalName();
         }
     }
@@ -244,7 +238,8 @@ class DokumenSiswa
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function postPersist() {
+    public function postPersist()
+    {
         if ($this->fileUpload === null) {
             return;
         }
@@ -256,7 +251,11 @@ class DokumenSiswa
         unset($this->fileUpload);
     }
 
-    private function removeFileSebelumnya() {
+    /**
+     * Menghapus file yang tersimpan sebelumnya
+     */
+    private function removeFileSebelumnya()
+    {
         if ($file = $this->getRelativePathNamaFileDiskSebelumnya()) {
             @unlink($file);
         }
@@ -265,28 +264,46 @@ class DokumenSiswa
     /**
      * @ORM\PostRemove()
      */
-    public function removeFile() {
+    public function removeFile()
+    {
         if ($file = $this->getRelativePathNamaFileDisk()) {
             @unlink($file);
         }
     }
 
-    protected function getUploadRootDir() {
+    /**
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
         return __DIR__ . '/../../../../web/' . $this->getUploadDir();
     }
 
-    protected function getUploadDir() {
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
         $fs = new Filesystem();
-        if (!$fs
-                ->exists(
-                        self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
-                                . $this->getSiswa()->getTahun()->getTahun())) {
-            $fs
-                    ->mkdir(
-                            self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
-                                    . $this->getSiswa()->getTahun()->getTahun());
+
+        if (
+            !$fs->exists(
+                self::DOKUMEN_DIR
+                . $this->getSiswa()->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getSiswa()->getTahun()->getTahun())
+        ) {
+            $fs->mkdir(
+                self::DOKUMEN_DIR
+                . $this->getSiswa()->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getSiswa()->getTahun()->getTahun()
+            );
         }
-        return self::DOKUMEN_DIR . $this->getSiswa()->getSekolah()->getId() . '/'
-                . $this->getSiswa()->getTahun()->getTahun();
+
+        return self::DOKUMEN_DIR
+            . $this->getSiswa()->getSekolah()->getId()
+            . DIRECTORY_SEPARATOR
+            . $this->getSiswa()->getTahun()->getTahun();
     }
 }

@@ -1,31 +1,29 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * DaftarBiayaPendaftaran
- *
  * @ORM\Table(name="daftar_biaya_pendaftaran")
  * @ORM\Entity
  */
 class DaftarBiayaPendaftaran
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=300, nullable=true)
      * @Assert\NotBlank
+     *
+     * @var string
      */
     private $nama;
 
@@ -35,154 +33,128 @@ class DaftarBiayaPendaftaran
     private $terpilih;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nominal", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
+     *
+     * @var integer
      */
     private $nominal;
 
     /**
-     * @var \PembayaranPendaftaran
-     *
      * @ORM\ManyToOne(targetEntity="PembayaranPendaftaran", inversedBy="daftarBiayaPendaftaran")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="pembayaran_pendaftaran_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var PembayaranPendaftaran
      */
     private $pembayaranPendaftaran;
 
     /**
-     * @var \BiayaPendaftaran
-     *
      * @ORM\ManyToOne(targetEntity="BiayaPendaftaran")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="biaya_pendaftaran_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var BiayaPendaftaran
      */
     private $biayaPendaftaran;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return DaftarBiayaPendaftaran
      */
-    public function setNama($nama) {
+    public function setNama($nama)
+    {
         $this->nama = $nama;
-
-        return $this;
     }
 
     /**
-     * Get nama
-     *
      * @return string
      */
-    public function getNama() {
+    public function getNama()
+    {
         return $this->nama;
     }
 
     /**
-     * Get nama (for screen display)
+     * Mengambil daftar nama hanya untuk tampilan
      *
      * @return string
      */
-    public function getNamaDisplay() {
+    public function getNamaDisplay()
+    {
         return strlen($this->nama) > 20 ? substr($this->nama, 0, 17) . '...' : $this->nama;
     }
 
     /**
-     * Set terpilih
-     *
      * @param boolean $terpilih
-     * @return DaftarBiayaPendaftaran
      */
-    public function setTerpilih($terpilih) {
+    public function setTerpilih($terpilih)
+    {
         $this->terpilih = $terpilih;
-
-        return $this;
     }
 
     /**
-     * Get terpilih
-     *
      * @return boolean
      */
-    public function isTerpilih() {
+    public function isTerpilih()
+    {
         return $this->terpilih;
     }
 
     /**
-     * Set nominal
-     *
      * @param integer $nominal
-     * @return DaftarBiayaPendaftaran
      */
-    public function setNominal($nominal) {
+    public function setNominal($nominal)
+    {
         $this->nominal = $nominal;
-
-        return $this;
     }
 
     /**
-     * Get nominal
-     *
      * @return integer
      */
-    public function getNominal() {
+    public function getNominal()
+    {
         return $this->nominal;
     }
 
     /**
-     * Set pembayaranPendaftaran
-     *
-     * @param \Fast\SisdikBundle\Entity\PembayaranPendaftaran $pembayaranPendaftaran
-     * @return DaftarBiayaPendaftaran
+     * @param PembayaranPendaftaran $pembayaranPendaftaran
      */
-    public function setPembayaranPendaftaran(
-            \Fast\SisdikBundle\Entity\PembayaranPendaftaran $pembayaranPendaftaran = null) {
+    public function setPembayaranPendaftaran(PembayaranPendaftaran $pembayaranPendaftaran = null)
+    {
         $this->pembayaranPendaftaran = $pembayaranPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get pembayaranPendaftaran
-     *
-     * @return \Fast\SisdikBundle\Entity\PembayaranPendaftaran
+     * @return PembayaranPendaftaran
      */
-    public function getPembayaranPendaftaran() {
+    public function getPembayaranPendaftaran()
+    {
         return $this->pembayaranPendaftaran;
     }
 
     /**
-     * Set biayaPendaftaran
-     *
-     * @param \Fast\SisdikBundle\Entity\BiayaPendaftaran $biayaPendaftaran
-     * @return DaftarBiayaPendaftaran
+     * @param BiayaPendaftaran $biayaPendaftaran
      */
-    public function setBiayaPendaftaran(\Fast\SisdikBundle\Entity\BiayaPendaftaran $biayaPendaftaran = null) {
+    public function setBiayaPendaftaran(BiayaPendaftaran $biayaPendaftaran = null)
+    {
         $this->biayaPendaftaran = $biayaPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get biayaPendaftaran
-     *
-     * @return \Fast\SisdikBundle\Entity\BiayaPendaftaran
+     * @return BiayaPendaftaran
      */
-    public function getBiayaPendaftaran() {
+    public function getBiayaPendaftaran()
+    {
         return $this->biayaPendaftaran;
     }
 }
