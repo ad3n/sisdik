@@ -44,7 +44,7 @@ class BiayaSekali
     /**
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Tahun
@@ -54,7 +54,7 @@ class BiayaSekali
     /**
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Jenisbiaya

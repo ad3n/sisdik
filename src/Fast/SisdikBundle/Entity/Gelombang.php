@@ -49,7 +49,7 @@ class Gelombang
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Sekolah

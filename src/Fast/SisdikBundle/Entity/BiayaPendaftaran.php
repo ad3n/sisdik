@@ -52,7 +52,7 @@ class BiayaPendaftaran
     /**
      * @ORM\ManyToOne(targetEntity="Jenisbiaya")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Jenisbiaya
@@ -62,7 +62,7 @@ class BiayaPendaftaran
     /**
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Tahun
@@ -72,7 +72,7 @@ class BiayaPendaftaran
     /**
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Gelombang

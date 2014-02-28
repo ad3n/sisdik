@@ -1,62 +1,55 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CukilMp
- *
  * @ORM\Table(name="cukil_mp")
  * @ORM\Entity
  */
 class CukilMp
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
     /**
-     * @var \Semester
-     *
      * @ORM\ManyToOne(targetEntity="Semester")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="semester_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="semester_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Semester
      */
     private $semester;
 
     /**
-     * @var \MataPelajaran
-     *
      * @ORM\ManyToOne(targetEntity="MataPelajaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="mata_pelajaran_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var MataPelajaran
      */
     private $mataPelajaran;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -64,22 +57,15 @@ class CukilMp
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return CukilMp
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
     {
         $this->tahunAkademik = $tahunAkademik;
-    
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return TahunAkademik
      */
     public function getTahunAkademik()
     {
@@ -87,22 +73,15 @@ class CukilMp
     }
 
     /**
-     * Set semester
-     *
-     * @param \Fast\SisdikBundle\Entity\Semester $semester
-     * @return CukilMp
+     * @param Semester $semester
      */
-    public function setSemester(\Fast\SisdikBundle\Entity\Semester $semester = null)
+    public function setSemester(Semester $semester = null)
     {
         $this->semester = $semester;
-    
-        return $this;
     }
 
     /**
-     * Get semester
-     *
-     * @return \Fast\SisdikBundle\Entity\Semester 
+     * @return Semester
      */
     public function getSemester()
     {
@@ -110,22 +89,15 @@ class CukilMp
     }
 
     /**
-     * Set mataPelajaran
-     *
-     * @param \Fast\SisdikBundle\Entity\MataPelajaran $mataPelajaran
-     * @return CukilMp
+     * @param MataPelajaran $mataPelajaran
      */
-    public function setMataPelajaran(\Fast\SisdikBundle\Entity\MataPelajaran $mataPelajaran = null)
+    public function setMataPelajaran(MataPelajaran $mataPelajaran = null)
     {
         $this->mataPelajaran = $mataPelajaran;
-    
-        return $this;
     }
 
     /**
-     * Get mataPelajaran
-     *
-     * @return \Fast\SisdikBundle\Entity\MataPelajaran 
+     * @return MataPelajaran
      */
     public function getMataPelajaran()
     {

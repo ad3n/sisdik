@@ -1,84 +1,77 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JadwalBel
- *
  * @ORM\Table(name="jadwal_bel")
  * @ORM\Entity
  */
 class JadwalBel
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="hari", type="integer", nullable=true)
+     *
+     * @var integer
      */
     private $hari;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="dari_jam", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $dariJam;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="hingga_jam", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $hinggaJam;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="berulang", type="boolean", nullable=false, options={"default" = 0})
+     *
+     * @var boolean
      */
     private $berulang;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="file", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $file;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default" = 1})
+     *
+     * @var boolean
      */
     private $aktif;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -86,22 +79,15 @@ class JadwalBel
     }
 
     /**
-     * Set hari
-     *
      * @param integer $hari
-     * @return JadwalBel
      */
     public function setHari($hari)
     {
         $this->hari = $hari;
-    
-        return $this;
     }
 
     /**
-     * Get hari
-     *
-     * @return integer 
+     * @return integer
      */
     public function getHari()
     {
@@ -109,22 +95,15 @@ class JadwalBel
     }
 
     /**
-     * Set dariJam
-     *
      * @param string $dariJam
-     * @return JadwalBel
      */
     public function setDariJam($dariJam)
     {
         $this->dariJam = $dariJam;
-    
-        return $this;
     }
 
     /**
-     * Get dariJam
-     *
-     * @return string 
+     * @return string
      */
     public function getDariJam()
     {
@@ -132,22 +111,15 @@ class JadwalBel
     }
 
     /**
-     * Set hinggaJam
-     *
      * @param string $hinggaJam
-     * @return JadwalBel
      */
     public function setHinggaJam($hinggaJam)
     {
         $this->hinggaJam = $hinggaJam;
-    
-        return $this;
     }
 
     /**
-     * Get hinggaJam
-     *
-     * @return string 
+     * @return string
      */
     public function getHinggaJam()
     {
@@ -155,22 +127,15 @@ class JadwalBel
     }
 
     /**
-     * Set berulang
-     *
      * @param boolean $berulang
-     * @return JadwalBel
      */
     public function setBerulang($berulang)
     {
         $this->berulang = $berulang;
-    
-        return $this;
     }
 
     /**
-     * Get berulang
-     *
-     * @return boolean 
+     * @return boolean
      */
     public function getBerulang()
     {
@@ -178,22 +143,15 @@ class JadwalBel
     }
 
     /**
-     * Set file
-     *
      * @param string $file
-     * @return JadwalBel
      */
     public function setFile($file)
     {
         $this->file = $file;
-    
-        return $this;
     }
 
     /**
-     * Get file
-     *
-     * @return string 
+     * @return string
      */
     public function getFile()
     {
@@ -201,22 +159,15 @@ class JadwalBel
     }
 
     /**
-     * Set aktif
-     *
      * @param boolean $aktif
-     * @return JadwalBel
      */
     public function setAktif($aktif)
     {
         $this->aktif = $aktif;
-    
-        return $this;
     }
 
     /**
-     * Get aktif
-     *
-     * @return boolean 
+     * @return boolean
      */
     public function getAktif()
     {
@@ -224,22 +175,15 @@ class JadwalBel
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return JadwalBel
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
     {
         $this->tahunAkademik = $tahunAkademik;
-    
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return TahunAkademik
      */
     public function getTahunAkademik()
     {

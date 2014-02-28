@@ -1,83 +1,76 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JadwalCmp
- *
  * @ORM\Table(name="jadwal_cmp")
  * @ORM\Entity
  */
 class JadwalCmp
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tanggal", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tanggal;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="jam", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $jam;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \Guru
-     *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Guru
      */
     private $guru;
 
     /**
-     * @var \CukilMp
-     *
      * @ORM\ManyToOne(targetEntity="CukilMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var CukilMp
      */
     private $cukilMp;
 
     /**
-     * @var \Kelas
-     *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Kelas
      */
     private $kelas;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -85,22 +78,15 @@ class JadwalCmp
     }
 
     /**
-     * Set tanggal
-     *
      * @param \DateTime $tanggal
-     * @return JadwalCmp
      */
     public function setTanggal($tanggal)
     {
         $this->tanggal = $tanggal;
-    
-        return $this;
     }
 
     /**
-     * Get tanggal
-     *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTanggal()
     {
@@ -108,22 +94,15 @@ class JadwalCmp
     }
 
     /**
-     * Set jam
-     *
      * @param string $jam
-     * @return JadwalCmp
      */
     public function setJam($jam)
     {
         $this->jam = $jam;
-    
-        return $this;
     }
 
     /**
-     * Get jam
-     *
-     * @return string 
+     * @return string
      */
     public function getJam()
     {
@@ -131,22 +110,15 @@ class JadwalCmp
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return JadwalCmp
      */
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -154,22 +126,15 @@ class JadwalCmp
     }
 
     /**
-     * Set guru
-     *
-     * @param \Fast\SisdikBundle\Entity\Guru $guru
-     * @return JadwalCmp
+     * @param Guru $guru
      */
-    public function setGuru(\Fast\SisdikBundle\Entity\Guru $guru = null)
+    public function setGuru(Guru $guru = null)
     {
         $this->guru = $guru;
-    
-        return $this;
     }
 
     /**
-     * Get guru
-     *
-     * @return \Fast\SisdikBundle\Entity\Guru 
+     * @return Guru
      */
     public function getGuru()
     {
@@ -177,22 +142,15 @@ class JadwalCmp
     }
 
     /**
-     * Set cukilMp
-     *
-     * @param \Fast\SisdikBundle\Entity\CukilMp $cukilMp
-     * @return JadwalCmp
+     * @param CukilMp $cukilMp
      */
-    public function setCukilMp(\Fast\SisdikBundle\Entity\CukilMp $cukilMp = null)
+    public function setCukilMp(CukilMp $cukilMp = null)
     {
         $this->cukilMp = $cukilMp;
-    
-        return $this;
     }
 
     /**
-     * Get cukilMp
-     *
-     * @return \Fast\SisdikBundle\Entity\CukilMp 
+     * @return CukilMp
      */
     public function getCukilMp()
     {
@@ -200,22 +158,15 @@ class JadwalCmp
     }
 
     /**
-     * Set kelas
-     *
-     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
-     * @return JadwalCmp
+     * @param Kelas $kelas
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
+    public function setKelas(Kelas $kelas = null)
     {
         $this->kelas = $kelas;
-    
-        return $this;
     }
 
     /**
-     * Get kelas
-     *
-     * @return \Fast\SisdikBundle\Entity\Kelas 
+     * @return Kelas
      */
     public function getKelas()
     {

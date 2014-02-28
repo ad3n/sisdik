@@ -52,7 +52,7 @@ class DokumenSiswa
     /**
      * @ORM\ManyToOne(targetEntity="JenisDokumenSiswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenis_dokumen_siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="jenis_dokumen_siswa_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var JenisDokumenSiswa
@@ -62,7 +62,7 @@ class DokumenSiswa
     /**
      * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="dokumenSiswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var Siswa

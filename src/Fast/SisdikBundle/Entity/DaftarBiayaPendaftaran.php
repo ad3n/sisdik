@@ -43,7 +43,7 @@ class DaftarBiayaPendaftaran
     /**
      * @ORM\ManyToOne(targetEntity="PembayaranPendaftaran", inversedBy="daftarBiayaPendaftaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pembayaran_pendaftaran_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="pembayaran_pendaftaran_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var PembayaranPendaftaran
@@ -53,7 +53,7 @@ class DaftarBiayaPendaftaran
     /**
      * @ORM\ManyToOne(targetEntity="BiayaPendaftaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="biaya_pendaftaran_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="biaya_pendaftaran_id", referencedColumnName="id", nullable=false)
      * })
      *
      * @var BiayaPendaftaran
