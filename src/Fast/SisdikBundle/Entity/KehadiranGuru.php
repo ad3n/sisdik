@@ -1,46 +1,39 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * KehadiranGuru
- *
  * @ORM\Table(name="kehadiran_guru")
  * @ORM\Entity
  */
 class KehadiranGuru
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tanggal", type="date", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tanggal;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="hadir", type="boolean", nullable=true)
+     *
+     * @var boolean
      */
     private $hadir;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -48,22 +41,15 @@ class KehadiranGuru
     }
 
     /**
-     * Set tanggal
-     *
      * @param \DateTime $tanggal
-     * @return KehadiranGuru
      */
     public function setTanggal($tanggal)
     {
         $this->tanggal = $tanggal;
-    
-        return $this;
     }
 
     /**
-     * Get tanggal
-     *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTanggal()
     {
@@ -71,22 +57,15 @@ class KehadiranGuru
     }
 
     /**
-     * Set hadir
-     *
      * @param boolean $hadir
-     * @return KehadiranGuru
      */
     public function setHadir($hadir)
     {
         $this->hadir = $hadir;
-    
-        return $this;
     }
 
     /**
-     * Get hadir
-     *
-     * @return boolean 
+     * @return boolean
      */
     public function getHadir()
     {

@@ -1,56 +1,49 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * KelompokMp
- *
  * @ORM\Table(name="kelompok_mp")
  * @ORM\Entity
  */
 class KelompokMp
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $nama;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="urutan", type="integer", nullable=true)
+     *
+     * @var integer
      */
     private $urutan;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -58,22 +51,15 @@ class KelompokMp
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return KelompokMp
      */
     public function setNama($nama)
     {
         $this->nama = $nama;
-    
-        return $this;
     }
 
     /**
-     * Get nama
-     *
-     * @return string 
+     * @return string
      */
     public function getNama()
     {
@@ -81,22 +67,17 @@ class KelompokMp
     }
 
     /**
-     * Set urutan
-     *
      * @param integer $urutan
-     * @return KelompokMp
      */
     public function setUrutan($urutan)
     {
         $this->urutan = $urutan;
-    
+
         return $this;
     }
 
     /**
-     * Get urutan
-     *
-     * @return integer 
+     * @return integer
      */
     public function getUrutan()
     {
@@ -104,22 +85,15 @@ class KelompokMp
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return KelompokMp
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
+    public function setSekolah(Sekolah $sekolah = null)
     {
         $this->sekolah = $sekolah;
-    
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah 
+     * @return Sekolah
      */
     public function getSekolah()
     {

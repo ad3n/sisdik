@@ -1,11 +1,9 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * KehadiranSiswa
- *
  * @ORM\Table(name="kehadiran_siswa", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="siswa_UNIQUE1", columns={"siswa_id", "tanggal"})
  * })
@@ -14,368 +12,307 @@ use Doctrine\ORM\Mapping as ORM;
 class KehadiranSiswa
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="status_kehadiran", type="string", length=100, nullable=false)
+     *
+     * @var string
      */
     private $statusKehadiran;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="permulaan", type="boolean", nullable=false, options={"default"=1})
+     *
+     * @var boolean
      */
     private $permulaan = true;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tanggal", type="date", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tanggal;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="jam", type="string", length=10, nullable=true)
+     *
+     * @var string
      */
     private $jam;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="sms_dlr", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $smsDlr;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="sms_dlrtime", type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     private $smsDlrtime;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="sms_terproses", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $smsTerproses = false;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan_status", type="string", length=45, nullable=true)
+     *
+     * @var string
      */
     private $keteranganStatus;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
     /**
-     * @var \Kelas
-     *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Kelas
      */
     private $kelas;
 
     /**
-     * @var \Siswa
-     *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Siswa
      */
     private $siswa;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set statusKehadiran
-     *
      * @param string $statusKehadiran
-     * @return KehadiranSiswa
      */
-    public function setStatusKehadiran($statusKehadiran) {
+    public function setStatusKehadiran($statusKehadiran)
+    {
         $this->statusKehadiran = $statusKehadiran;
-
-        return $this;
     }
 
     /**
-     * Get statusKehadiran
-     *
      * @return string
      */
-    public function getStatusKehadiran() {
+    public function getStatusKehadiran()
+    {
         return $this->statusKehadiran;
     }
 
     /**
-     * Set permulaan
-     *
      * @param boolean $permulaan
-     * @return KehadiranSiswa
      */
-    public function setPermulaan($permulaan) {
+    public function setPermulaan($permulaan)
+    {
         $this->permulaan = $permulaan;
-
-        return $this;
     }
 
     /**
-     * Is permulaan
-     *
      * @return boolean
      */
-    public function isPermulaan() {
+    public function isPermulaan()
+    {
         return $this->permulaan;
     }
 
     /**
-     * Set tanggal
-     *
      * @param \DateTime $tanggal
-     * @return KehadiranSiswa
      */
-    public function setTanggal($tanggal) {
+    public function setTanggal($tanggal)
+    {
         $this->tanggal = $tanggal;
-
-        return $this;
     }
 
     /**
-     * Get tanggal
-     *
      * @return \DateTime
      */
-    public function getTanggal() {
+    public function getTanggal()
+    {
         return $this->tanggal;
     }
 
     /**
-     * Set jam
-     *
      * @param string $jam
-     * @return KehadiranSiswa
      */
-    public function setJam($jam) {
+    public function setJam($jam)
+    {
         $this->jam = $jam;
-
-        return $this;
     }
 
     /**
-     * Get jam
-     *
      * @return string
      */
-    public function getJam() {
+    public function getJam()
+    {
         return $this->jam;
     }
 
     /**
-     * Set smsDlr
-     *
      * @param integer $smsDlr
-     * @return KehadiranSiswa
      */
-    public function setSmsDlr($smsDlr) {
+    public function setSmsDlr($smsDlr)
+    {
         $this->smsDlr = $smsDlr;
-
-        return $this;
     }
 
     /**
-     * Get smsDlr
-     *
      * @return integer
      */
-    public function getSmsDlr() {
+    public function getSmsDlr()
+    {
         return $this->smsDlr;
     }
 
     /**
-     * Set smsDlrtime
-     *
      * @param \DateTime $smsDlrtime
-     * @return KehadiranSiswa
      */
-    public function setSmsDlrtime($smsDlrtime) {
+    public function setSmsDlrtime($smsDlrtime)
+    {
         $this->smsDlrtime = $smsDlrtime;
-
-        return $this;
     }
 
     /**
-     * Get smsDlrtime
-     *
      * @return \DateTime
      */
-    public function getSmsDlrtime() {
+    public function getSmsDlrtime()
+    {
         return $this->smsDlrtime;
     }
 
     /**
-     * Set smsTerproses
-     *
      * @param boolean $smsTerproses
-     * @return KehadiranSiswa
      */
-    public function setSmsTerproses($smsTerproses) {
+    public function setSmsTerproses($smsTerproses)
+    {
         $this->smsTerproses = $smsTerproses;
-
-        return $this;
     }
 
     /**
-     * Get smsTerproses
-     *
      * @return boolean
      */
-    public function isSmsTerproses() {
+    public function isSmsTerproses()
+    {
         return $this->smsTerproses;
     }
 
     /**
-     * Set keteranganStatus
-     *
      * @param string $keteranganStatus
-     * @return KehadiranSiswa
      */
-    public function setKeteranganStatus($keteranganStatus) {
+    public function setKeteranganStatus($keteranganStatus)
+    {
         $this->keteranganStatus = $keteranganStatus;
-
-        return $this;
     }
 
     /**
-     * Get keteranganStatus
-     *
      * @return string
      */
-    public function getKeteranganStatus() {
+    public function getKeteranganStatus()
+    {
         return $this->keteranganStatus;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return KehadiranSiswa
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return KehadiranSiswa
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
+    {
         $this->tahunAkademik = $tahunAkademik;
-
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik
+     * @return TahunAkademik
      */
-    public function getTahunAkademik() {
+    public function getTahunAkademik()
+    {
         return $this->tahunAkademik;
     }
 
     /**
-     * Set kelas
-     *
-     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
-     * @return KehadiranSiswa
+     * @param Kelas $kelas
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
+    public function setKelas(Kelas $kelas = null)
+    {
         $this->kelas = $kelas;
-
-        return $this;
     }
 
     /**
-     * Get kelas
-     *
-     * @return \Fast\SisdikBundle\Entity\Kelas
+     * @return Kelas
      */
-    public function getKelas() {
+    public function getKelas()
+    {
         return $this->kelas;
     }
 
     /**
-     * Set siswa
-     *
-     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return KehadiranSiswa
+     * @param Siswa $siswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
+    public function setSiswa(Siswa $siswa = null)
+    {
         $this->siswa = $siswa;
-
-        return $this;
     }
 
     /**
-     * Get siswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa
+     * @return Siswa
      */
-    public function getSiswa() {
+    public function getSiswa()
+    {
         return $this->siswa;
     }
 }

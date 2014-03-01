@@ -1,177 +1,149 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JenisDokumenSiswa
- *
  * @ORM\Table(name="jenis_dokumen_siswa")
  * @ORM\Entity
  */
 class JenisDokumenSiswa
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama_dokumen", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     private $namaDokumen;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=255, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $urutan;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \Tahun
-     *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Tahun
      */
     private $tahun;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set namaDokumen
-     *
      * @param string $namaDokumen
-     * @return JenisDokumenSiswa
      */
-    public function setNamaDokumen($namaDokumen) {
+    public function setNamaDokumen($namaDokumen)
+    {
         $this->namaDokumen = $namaDokumen;
-
-        return $this;
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return JenisDokumenSiswa
      */
-    public function setKeterangan($keterangan) {
+    public function setKeterangan($keterangan)
+    {
         $this->keterangan = $keterangan;
-
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
      * @return string
      */
-    public function getKeterangan() {
+    public function getKeterangan()
+    {
         return $this->keterangan;
     }
 
     /**
-     * Get namaDokumen
-     *
      * @return string
      */
-    public function getNamaDokumen() {
+    public function getNamaDokumen()
+    {
         return $this->namaDokumen;
     }
 
     /**
-     * Set urutan
-     *
      * @param integer $urutan
-     * @return JenisDokumenSiswa
      */
-    public function setUrutan($urutan) {
+    public function setUrutan($urutan)
+    {
         $this->urutan = $urutan;
-
-        return $this;
     }
 
     /**
-     * Get urutan
-     *
      * @return integer
      */
-    public function getUrutan() {
+    public function getUrutan()
+    {
         return $this->urutan;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return JenisDokumenSiswa
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
     /**
-     * Set tahun
-     *
-     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
-     * @return BiayaPendaftaran
+     * @param Tahun $tahun
      */
-    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+    public function setTahun(Tahun $tahun = null)
+    {
         $this->tahun = $tahun;
-
-        return $this;
     }
 
     /**
-     * Get tahun
-     *
-     * @return \Fast\SisdikBundle\Entity\Tahun
+     * @return Tahun
      */
-    public function getTahun() {
+    public function getTahun()
+    {
         return $this->tahun;
     }
 }

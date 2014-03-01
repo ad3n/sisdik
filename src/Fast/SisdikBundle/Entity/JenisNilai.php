@@ -1,70 +1,63 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * JenisNilai
- *
  * @ORM\Table(name="jenis_nilai")
  * @ORM\Entity
  */
 class JenisNilai
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=300, nullable=true)
+     *
+     * @var string
      */
     private $nama;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kode", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $kode;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="bobot", type="integer", nullable=true)
+     *
+     * @var integer
      */
     private $bobot;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,22 +65,15 @@ class JenisNilai
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return JenisNilai
      */
     public function setNama($nama)
     {
         $this->nama = $nama;
-    
-        return $this;
     }
 
     /**
-     * Get nama
-     *
-     * @return string 
+     * @return string
      */
     public function getNama()
     {
@@ -95,22 +81,15 @@ class JenisNilai
     }
 
     /**
-     * Set kode
-     *
      * @param string $kode
-     * @return JenisNilai
      */
     public function setKode($kode)
     {
         $this->kode = $kode;
-    
-        return $this;
     }
 
     /**
-     * Get kode
-     *
-     * @return string 
+     * @return string
      */
     public function getKode()
     {
@@ -118,22 +97,15 @@ class JenisNilai
     }
 
     /**
-     * Set bobot
-     *
      * @param integer $bobot
-     * @return JenisNilai
      */
     public function setBobot($bobot)
     {
         $this->bobot = $bobot;
-    
-        return $this;
     }
 
     /**
-     * Get bobot
-     *
-     * @return integer 
+     * @return integer
      */
     public function getBobot()
     {
@@ -141,22 +113,15 @@ class JenisNilai
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return JenisNilai
      */
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -164,22 +129,15 @@ class JenisNilai
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return JenisNilai
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
     {
         $this->tahunAkademik = $tahunAkademik;
-    
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return TahunAkademik
      */
     public function getTahunAkademik()
     {

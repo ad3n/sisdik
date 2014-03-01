@@ -1,236 +1,200 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Kelas
- *
  * @ORM\Table(name="kelas")
  * @ORM\Entity
  */
 class Kelas
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=300, nullable=true)
+     *
+     * @var string
      */
     private $nama;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kode", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $kode;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $urutan;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \Tingkat
-     *
      * @ORM\ManyToOne(targetEntity="Tingkat")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tingkat_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tingkat_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Tingkat
      */
     private $tingkat;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return Kelas
      */
-    public function setNama($nama) {
+    public function setNama($nama)
+    {
         $this->nama = $nama;
-
-        return $this;
     }
 
     /**
-     * Get nama
-     *
      * @return string
      */
-    public function getNama() {
+    public function getNama()
+    {
         return $this->nama;
     }
 
     /**
-     * Set kode
-     *
      * @param string $kode
-     * @return Kelas
      */
-    public function setKode($kode) {
+    public function setKode($kode)
+    {
         $this->kode = $kode;
-
-        return $this;
     }
 
     /**
-     * Get kode
-     *
      * @return string
      */
-    public function getKode() {
+    public function getKode()
+    {
         return $this->kode;
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return Kelas
      */
-    public function setKeterangan($keterangan) {
+    public function setKeterangan($keterangan)
+    {
         $this->keterangan = $keterangan;
-
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
      * @return string
      */
-    public function getKeterangan() {
+    public function getKeterangan()
+    {
         return $this->keterangan;
     }
 
     /**
-     * Set urutan
-     *
      * @param integer $urutan
-     * @return Kelas
      */
-    public function setUrutan($urutan) {
+    public function setUrutan($urutan)
+    {
         $this->urutan = $urutan;
-
-        return $this;
     }
 
     /**
-     * Get urutan
-     *
      * @return integer
      */
-    public function getUrutan() {
+    public function getUrutan()
+    {
         return $this->urutan;
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return Kelas
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
+    {
         $this->tahunAkademik = $tahunAkademik;
-
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik
+     * @return TahunAkademik
      */
-    public function getTahunAkademik() {
+    public function getTahunAkademik()
+    {
         return $this->tahunAkademik;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return Kelas
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
 
         return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
     /**
-     * Set tingkat
-     *
-     * @param \Fast\SisdikBundle\Entity\Tingkat $tingkat
-     * @return Kelas
+     * @param Tingkat $tingkat
      */
-    public function setTingkat(\Fast\SisdikBundle\Entity\Tingkat $tingkat = null) {
+    public function setTingkat(Tingkat $tingkat = null)
+    {
         $this->tingkat = $tingkat;
-
-        return $this;
     }
 
     /**
-     * Get tingkat
-     *
-     * @return \Fast\SisdikBundle\Entity\Tingkat
+     * @return Tingkat
      */
-    public function getTingkat() {
+    public function getTingkat()
+    {
         return $this->tingkat;
     }
 }
