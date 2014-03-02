@@ -1,12 +1,10 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PanitiaPendaftaran
- *
  * @ORM\Table(name="panitia_pendaftaran", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="sekolah_tahun_id_UNIQUE", columns={"sekolah_id", "tahun_id"})
  * })
@@ -16,188 +14,161 @@ use Doctrine\ORM\Mapping as ORM;
 class PanitiaPendaftaran
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="panitia", type="text", nullable=true)
+     *
+     * @var string
      */
     private $panitia;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $aktif = 0;
 
     /**
-     * @var \User
-     *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="ketua_panitia_id", referencedColumnName="id", nullable=true)
+     *     @ORM\JoinColumn(name="ketua_panitia_id", referencedColumnName="id", nullable=true)
      * })
+     *
+     * @var User
      */
     private $ketuaPanitia;
 
     /**
-     * @var \Tahun
-     *
      * @ORM\ManyToOne(targetEntity="Tahun", inversedBy="panitiaPendaftaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Tahun
      */
     private $tahun;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId() {
-        return $this->id;
-    }
-
-    /**
-     * Set panitia
-     *
-     * @param string $panitia
-     * @return PanitiaPendaftaran
-     */
-    public function setPanitia($panitia) {
-        $this->panitia = $panitia;
-
-        return $this;
-    }
-
-    /**
-     * Get panitia
-     *
-     * @return array
-     */
-    public function getPanitia() {
-        return unserialize($this->panitia);
-    }
-
-    /**
-     * Set aktif
-     *
-     * @param boolean $aktif
-     * @return PanitiaPendaftaran
-     */
-    public function setAktif($aktif) {
-        $this->aktif = $aktif;
-
-        return $this;
-    }
-
-    /**
-     * Get aktif
-     *
-     * @return boolean
-     */
-    public function getAktif() {
-        return $this->aktif;
-    }
-
-    /**
-     * Set tahun
-     *
-     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
-     * @return PanitiaPendaftaran
-     */
-    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
-        $this->tahun = $tahun;
-
-        return $this;
-    }
-
-    /**
-     * Get tahun
-     *
-     * @return \Fast\SisdikBundle\Entity\Tahun
-     */
-    public function getTahun() {
-        return $this->tahun;
-    }
-
-    /**
-     * Set ketuaPanitia
-     *
-     * @param \Fast\SisdikBundle\Entity\User $ketuaPanitia
-     * @return PanitiaPendaftaran
-     */
-    public function setKetuaPanitia(\Fast\SisdikBundle\Entity\User $ketuaPanitia = null) {
-        $this->ketuaPanitia = $ketuaPanitia;
-
-        return $this;
-    }
-
-    /**
-     * Get ketuaPanitia
-     *
-     * @return \Fast\SisdikBundle\Entity\User
-     */
-    public function getKetuaPanitia() {
-        return $this->ketuaPanitia;
-    }
-
-    /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return PanitiaPendaftaran
-     */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
-        $this->sekolah = $sekolah;
-
-        return $this;
-    }
-
-    /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
-     */
-    public function getSekolah() {
-        return $this->sekolah;
-    }
-
-    /**
-     *
      * @var ArrayCollection
      */
     private $daftarPersonil;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->daftarPersonil = new ArrayCollection();
     }
 
     /**
-     * Get daftarPersonil
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection $daftarPersonil
+     * @return integer
      */
-    public function getDaftarPersonil() {
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $panitia
+     */
+    public function setPanitia($panitia)
+    {
+        $this->panitia = $panitia;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPanitia()
+    {
+        return unserialize($this->panitia);
+    }
+
+    /**
+     * @param boolean $aktif
+     */
+    public function setAktif($aktif)
+    {
+        $this->aktif = $aktif;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAktif()
+    {
+        return $this->aktif;
+    }
+
+    /**
+     * @param Tahun $tahun
+     */
+    public function setTahun(Tahun $tahun = null)
+    {
+        $this->tahun = $tahun;
+    }
+
+    /**
+     * @return Tahun
+     */
+    public function getTahun()
+    {
+        return $this->tahun;
+    }
+
+    /**
+     * @param User $ketuaPanitia
+     */
+    public function setKetuaPanitia(User $ketuaPanitia = null)
+    {
+        $this->ketuaPanitia = $ketuaPanitia;
+    }
+
+    /**
+     * @return User
+     */
+    public function getKetuaPanitia()
+    {
+        return $this->ketuaPanitia;
+    }
+
+    /**
+     * @param Sekolah $sekolah
+     */
+    public function setSekolah(Sekolah $sekolah = null)
+    {
+        $this->sekolah = $sekolah;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    public function getSekolah()
+    {
+        return $this->sekolah;
+    }
+
+    /**
+     * @return ArrayCollection $daftarPersonil
+     */
+    public function getDaftarPersonil()
+    {
         if ($this->daftarPersonil instanceof ArrayCollection) {
             return $this->daftarPersonil;
         }
@@ -216,11 +187,10 @@ class PanitiaPendaftaran
     }
 
     /**
-     * Set daftarPersonil
-     *
      * @param ArrayCollection $daftarPersonil
      */
-    public function setDaftarPersonil(ArrayCollection $daftarPersonil) {
+    public function setDaftarPersonil(ArrayCollection $daftarPersonil)
+    {
         $this->daftarPersonil = $daftarPersonil;
     }
 
@@ -228,8 +198,9 @@ class PanitiaPendaftaran
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function preSave() {
-        $values = array();
+    public function preSave()
+    {
+        $values = [];
 
         foreach ($this->daftarPersonil as $personil) {
             $values[] = $personil->getId();

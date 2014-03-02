@@ -4,43 +4,38 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MesinProxy
- *
  * @ORM\Table(name="mesin_proxy")
  * @ORM\Entity
  */
 class MesinProxy
 {
-
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="token", type="string", length=255, nullable=false)
+     *
+     * @var string
      */
     private $token;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -49,21 +44,14 @@ class MesinProxy
     }
 
     /**
-     * Set token
-     *
      * @param string $token
-     * @return MesinProxy
      */
     public function setToken($token)
     {
         $this->token = $token;
-        
-        return $this;
     }
 
     /**
-     * Get token
-     *
      * @return string
      */
     public function getToken()
@@ -72,22 +60,15 @@ class MesinProxy
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return MesinProxy
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
+    public function setSekolah(Sekolah $sekolah = null)
     {
         $this->sekolah = $sekolah;
-        
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
     public function getSekolah()
     {
