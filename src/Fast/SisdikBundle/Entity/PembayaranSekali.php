@@ -1,234 +1,199 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * PembayaranSekali
- *
  * @ORM\Table(name="pembayaran_sekali")
  * @ORM\Entity
  */
 class PembayaranSekali
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var array
-     *
      * @ORM\Column(name="daftar_biaya_sekali", type="array", nullable=true)
+     *
+     * @var array
      */
     private $daftarBiayaSekali;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
+     *
+     * @var integer
      */
     private $nominalTotal;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
      */
     private $waktuSimpan;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
+     *
+     * @var \DateTime
      */
     private $waktuUbah;
 
     /**
-     * @var \Siswa
-     *
      * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="pembayaranSekali")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Siswa
      */
     private $siswa;
 
     /**
-     * @var \TransaksiPembayaranSekali
-     *
      * @ORM\OneToMany(targetEntity="TransaksiPembayaranSekali", mappedBy="pembayaranSekali", cascade={"persist"})
      * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
+     *
+     * @var TransaksiPembayaranSekali
      */
     private $transaksiPembayaranSekali;
 
-    /**
-     * constructor
-     *
-     */
-    public function __construct() {
+    public function __construct()
+    {
         $this->transaksiPembayaranSekali = new ArrayCollection();
     }
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set daftarBiayaSekali
-     *
      * @param array $daftarBiayaSekali
-     * @return PembayaranSekali
      */
-    public function setDaftarBiayaSekali($daftarBiayaSekali) {
+    public function setDaftarBiayaSekali($daftarBiayaSekali)
+    {
         $this->daftarBiayaSekali = $daftarBiayaSekali;
-
-        return $this;
     }
 
     /**
-     * Get daftarBiayaSekali
-     *
      * @return array
      */
-    public function getDaftarBiayaSekali() {
+    public function getDaftarBiayaSekali()
+    {
         return $this->daftarBiayaSekali;
     }
 
     /**
-     * Set nominalTotal
-     *
      * @param integer $nominalTotal
-     * @return PembayaranSekali
      */
-    public function setNominalTotal($nominalTotal) {
+    public function setNominalTotal($nominalTotal)
+    {
         $this->nominalTotal = $nominalTotal;
-
-        return $this;
     }
 
     /**
-     * Get nominalTotal
-     *
      * @return integer
      */
-    public function getNominalTotal() {
+    public function getNominalTotal()
+    {
         return $this->nominalTotal;
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return PembayaranSekali
      */
-    public function setKeterangan($keterangan) {
+    public function setKeterangan($keterangan)
+    {
         $this->keterangan = $keterangan;
-
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
      * @return string
      */
-    public function getKeterangan() {
+    public function getKeterangan()
+    {
         return $this->keterangan;
     }
 
     /**
-     * Set waktuSimpan
-     *
      * @param \DateTime $waktuSimpan
-     * @return PembayaranSekali
      */
-    public function setWaktuSimpan($waktuSimpan) {
+    public function setWaktuSimpan($waktuSimpan)
+    {
         $this->waktuSimpan = $waktuSimpan;
-
-        return $this;
     }
 
     /**
-     * Get waktuSimpan
-     *
      * @return \DateTime
      */
-    public function getWaktuSimpan() {
+    public function getWaktuSimpan()
+    {
         return $this->waktuSimpan;
     }
 
     /**
-     * Set waktuUbah
-     *
      * @param \DateTime $waktuUbah
-     * @return PembayaranSekali
      */
-    public function setWaktuUbah($waktuUbah) {
+    public function setWaktuUbah($waktuUbah)
+    {
         $this->waktuUbah = $waktuUbah;
-
-        return $this;
     }
 
     /**
-     * Get waktuUbah
-     *
      * @return \DateTime
      */
-    public function getWaktuUbah() {
+    public function getWaktuUbah()
+    {
         return $this->waktuUbah;
     }
 
     /**
-     * Set siswa
-     *
-     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return PembayaranSekali
+     * @param Siswa $siswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
+    public function setSiswa(Siswa $siswa = null)
+    {
         $this->siswa = $siswa;
-
-        return $this;
     }
 
     /**
-     * Get siswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa
+     * @return Siswa
      */
-    public function getSiswa() {
+    public function getSiswa()
+    {
         return $this->siswa;
     }
 
     /**
-     * Set TransaksiPembayaranSekali
-     * parameter type array collection is removed to allow editing
+     * Menentukan transaksi pembayaran sekali.
+     * Type hinting ArrayCollection dihapus agar bisa melakukan pengubahan.
      *
      * @param ArrayCollection $transaksiPembayaranSekali
      */
-    public function setTransaksiPembayaranSekali($transaksiPembayaranSekali) {
+    public function setTransaksiPembayaranSekali($transaksiPembayaranSekali)
+    {
         foreach ($transaksiPembayaranSekali as $transaksi) {
             $transaksi->setPembayaranSekali($this);
         }
@@ -237,11 +202,10 @@ class PembayaranSekali
     }
 
     /**
-     * Get transaksiPembayaranSekali
-     *
-     * @return \Fast\SisdikBundle\TransaksiPembayaranSekali
+     * @return TransaksiPembayaranSekali
      */
-    public function getTransaksiPembayaranSekali() {
+    public function getTransaksiPembayaranSekali()
+    {
         return $this->transaksiPembayaranSekali;
     }
 }

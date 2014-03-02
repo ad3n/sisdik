@@ -1,91 +1,84 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PendidikanGuru
- *
  * @ORM\Table(name="pendidikan_guru")
  * @ORM\Entity
  */
 class PendidikanGuru
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="jenjang", type="integer", nullable=true)
+     *
+     * @var integer
      */
     private $jenjang;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $nama;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $alamat;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="ijazah", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $ijazah;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kelulusan", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $kelulusan;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tahunmasuk", type="date", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tahunmasuk;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tahunkeluar", type="date", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tahunkeluar;
 
     /**
-     * @var \Guru
-     *
      * @ORM\ManyToOne(targetEntity="Guru")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="guru_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Guru
      */
     private $guru;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -93,22 +86,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set jenjang
-     *
      * @param integer $jenjang
-     * @return PendidikanGuru
      */
     public function setJenjang($jenjang)
     {
         $this->jenjang = $jenjang;
-    
-        return $this;
     }
 
     /**
-     * Get jenjang
-     *
-     * @return integer 
+     * @return integer
      */
     public function getJenjang()
     {
@@ -116,22 +102,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return PendidikanGuru
      */
     public function setNama($nama)
     {
         $this->nama = $nama;
-    
-        return $this;
     }
 
     /**
-     * Get nama
-     *
-     * @return string 
+     * @return string
      */
     public function getNama()
     {
@@ -139,22 +118,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set alamat
-     *
      * @param string $alamat
-     * @return PendidikanGuru
      */
     public function setAlamat($alamat)
     {
         $this->alamat = $alamat;
-    
-        return $this;
     }
 
     /**
-     * Get alamat
-     *
-     * @return string 
+     * @return string
      */
     public function getAlamat()
     {
@@ -162,22 +134,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set ijazah
-     *
      * @param string $ijazah
-     * @return PendidikanGuru
      */
     public function setIjazah($ijazah)
     {
         $this->ijazah = $ijazah;
-    
-        return $this;
     }
 
     /**
-     * Get ijazah
-     *
-     * @return string 
+     * @return string
      */
     public function getIjazah()
     {
@@ -185,22 +150,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set kelulusan
-     *
      * @param string $kelulusan
-     * @return PendidikanGuru
      */
     public function setKelulusan($kelulusan)
     {
         $this->kelulusan = $kelulusan;
-    
-        return $this;
     }
 
     /**
-     * Get kelulusan
-     *
-     * @return string 
+     * @return string
      */
     public function getKelulusan()
     {
@@ -208,22 +166,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set tahunmasuk
-     *
      * @param \DateTime $tahunmasuk
-     * @return PendidikanGuru
      */
     public function setTahunmasuk($tahunmasuk)
     {
         $this->tahunmasuk = $tahunmasuk;
-    
-        return $this;
     }
 
     /**
-     * Get tahunmasuk
-     *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTahunmasuk()
     {
@@ -231,22 +182,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set tahunkeluar
-     *
      * @param \DateTime $tahunkeluar
-     * @return PendidikanGuru
      */
     public function setTahunkeluar($tahunkeluar)
     {
         $this->tahunkeluar = $tahunkeluar;
-    
-        return $this;
     }
 
     /**
-     * Get tahunkeluar
-     *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTahunkeluar()
     {
@@ -254,22 +198,15 @@ class PendidikanGuru
     }
 
     /**
-     * Set guru
-     *
-     * @param \Fast\SisdikBundle\Entity\Guru $guru
-     * @return PendidikanGuru
+     * @param Guru $guru
      */
-    public function setGuru(\Fast\SisdikBundle\Entity\Guru $guru = null)
+    public function setGuru(Guru $guru = null)
     {
         $this->guru = $guru;
-    
-        return $this;
     }
 
     /**
-     * Get guru
-     *
-     * @return \Fast\SisdikBundle\Entity\Guru 
+     * @return Guru
      */
     public function getGuru()
     {
