@@ -1,70 +1,63 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SiswahadirJcmp
- *
  * @ORM\Table(name="siswahadir_jcmp")
  * @ORM\Entity
  */
 class SiswahadirJcmp
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="hadir", type="boolean", nullable=true)
+     *
+     * @var boolean
      */
     private $hadir;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="jam_masuk", type="string", length=20, nullable=true)
+     *
+     * @var string
      */
     private $jamMasuk;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="jam_keluar", type="string", length=20, nullable=true)
+     *
+     * @var string
      */
     private $jamKeluar;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \JadwalCmp
-     *
      * @ORM\ManyToOne(targetEntity="JadwalCmp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jadwal_cmp_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="jadwal_cmp_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var JadwalCmp
      */
     private $jadwalCmp;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -72,22 +65,15 @@ class SiswahadirJcmp
     }
 
     /**
-     * Set hadir
-     *
      * @param boolean $hadir
-     * @return SiswahadirJcmp
      */
     public function setHadir($hadir)
     {
         $this->hadir = $hadir;
-    
-        return $this;
     }
 
     /**
-     * Get hadir
-     *
-     * @return boolean 
+     * @return boolean
      */
     public function getHadir()
     {
@@ -95,22 +81,15 @@ class SiswahadirJcmp
     }
 
     /**
-     * Set jamMasuk
-     *
      * @param string $jamMasuk
-     * @return SiswahadirJcmp
      */
     public function setJamMasuk($jamMasuk)
     {
         $this->jamMasuk = $jamMasuk;
-    
-        return $this;
     }
 
     /**
-     * Get jamMasuk
-     *
-     * @return string 
+     * @return string
      */
     public function getJamMasuk()
     {
@@ -118,22 +97,15 @@ class SiswahadirJcmp
     }
 
     /**
-     * Set jamKeluar
-     *
      * @param string $jamKeluar
-     * @return SiswahadirJcmp
      */
     public function setJamKeluar($jamKeluar)
     {
         $this->jamKeluar = $jamKeluar;
-    
-        return $this;
     }
 
     /**
-     * Get jamKeluar
-     *
-     * @return string 
+     * @return string
      */
     public function getJamKeluar()
     {
@@ -141,22 +113,15 @@ class SiswahadirJcmp
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return SiswahadirJcmp
      */
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -164,22 +129,15 @@ class SiswahadirJcmp
     }
 
     /**
-     * Set jadwalCmp
-     *
-     * @param \Fast\SisdikBundle\Entity\JadwalCmp $jadwalCmp
-     * @return SiswahadirJcmp
+     * @param JadwalCmp $jadwalCmp
      */
-    public function setJadwalCmp(\Fast\SisdikBundle\Entity\JadwalCmp $jadwalCmp = null)
+    public function setJadwalCmp(JadwalCmp $jadwalCmp = null)
     {
         $this->jadwalCmp = $jadwalCmp;
-    
-        return $this;
     }
 
     /**
-     * Get jadwalCmp
-     *
-     * @return \Fast\SisdikBundle\Entity\JadwalCmp 
+     * @return JadwalCmp
      */
     public function getJadwalCmp()
     {

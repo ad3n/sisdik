@@ -1,18 +1,16 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Symfony\Component\Filesystem\Filesystem;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\File;
-use Fast\SisdikBundle\Util\FileSizeFormatter;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Fast\SisdikBundle\Util\FileSizeFormatter;
 
 /**
- * Siswa
- *
  * @ORM\Table(name="siswa", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="nomor_pendaftaran_UNIQUE", columns={"tahun_id", "nomor_pendaftaran"}),
  *     @ORM\UniqueConstraint(name="nomor_urut_pendaftaran_UNIQUE", columns={"tahun_id", "nomor_urut_pendaftaran"}),
@@ -33,96 +31,96 @@ class Siswa
     const PHOTO_THUMB_HEIGHT = 150;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nomor_urut_pendaftaran", type="smallint", nullable=true, options={"unsigned"=true})
+     *
+     * @var integer
      */
     private $nomorUrutPendaftaran;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nomor_pendaftaran", type="string", length=45, nullable=true)
+     *
+     * @var string
      */
     private $nomorPendaftaran;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="calon_siswa", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $calonSiswa = true;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nomor_urut_persekolah", type="integer", nullable=true, options={"unsigned"=true})
+     *
+     * @var integer
      */
     private $nomorUrutPersekolah;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nomor_induk_sistem", type="string", length=45, nullable=true)
+     *
+     * @var string
      */
     private $nomorIndukSistem;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nomor_induk", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $nomorInduk;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
      * @Assert\NotBlank
+     *
+     * @var string
      */
     private $namaLengkap;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="jenis_kelamin", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $jenisKelamin;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="foto_pendaftaran", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $fotoPendaftaran;
 
     /**
-     * @var UploadedFile
-     *
      * @Assert\File(maxSize="5M")
+     *
+     * @var UploadedFile
      */
     private $file;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="foto", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $foto;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="foto_disk", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $fotoDisk;
 
@@ -132,114 +130,114 @@ class Siswa
     private $fotoDiskSebelumnya;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="agama", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $agama;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="tempat_lahir", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $tempatLahir;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tanggal_lahir", type="date", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tanggalLahir;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $email;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama_panggilan", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $namaPanggilan;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kewarganegaraan", type="string", length=200, nullable=true)
+     *
+     * @var string
      */
     private $kewarganegaraan;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="anak_ke", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $anakKe;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="jumlah_saudarakandung", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $jumlahSaudarakandung;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="jumlah_saudaratiri", type="smallint", nullable=true)
+     *
+     * @var integer
      */
     private $jumlahSaudaratiri;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="status_orphan", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $statusOrphan;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="bahasa_seharihari", type="string", length=200, nullable=true)
+     *
+     * @var string
      */
     private $bahasaSeharihari;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $alamat;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kodepos", type="string", length=30, nullable=true)
+     *
+     * @var string
      */
     private $kodepos;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="telepon", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $telepon;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="ponsel_siswa", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $ponselSiswa;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="sekolah_tinggaldi", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $sekolahTinggaldi;
 
@@ -251,117 +249,117 @@ class Siswa
     private $jarakTempat;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="cara_kesekolah", type="string", length=300, nullable=true)
+     *
+     * @var string
      */
     private $caraKesekolah;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="beratbadan", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $beratbadan;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="tinggibadan", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $tinggibadan;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="golongandarah", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $golongandarah;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="lunas_biaya_pendaftaran", type="boolean", nullable=false, options={"default" = 0})
+     *
+     * @var boolean
      */
     private $lunasBiayaPendaftaran = false;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="sisa_biaya_pendaftaran", type="bigint", nullable=false, options={"default" = -999})
+     *
+     * @var integer
      */
     private $sisaBiayaPendaftaran = -999;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="text", nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
      */
     private $waktuSimpan;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="waktu_ubah", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="update")
+     *
+     * @var \DateTime
      */
     private $waktuUbah;
 
     /**
-     * @var \Gelombang
-     *
      * @ORM\ManyToOne(targetEntity="Gelombang")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=true)
+     *     @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=true)
      * })
+     *
+     * @var Gelombang
      */
     private $gelombang;
 
     /**
-     * @var \Tahun
-     *
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Tahun
      */
     private $tahun;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \User
-     *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var User
      */
     private $dibuatOleh;
 
     /**
-     * @var \User
-     *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id", nullable=true)
+     *     @ORM\JoinColumn(name="diubah_oleh_id", referencedColumnName="id", nullable=true)
      * })
+     *
+     * @var User
      */
     private $diubahOleh;
 
@@ -376,12 +374,12 @@ class Siswa
     private $namaReferensi;
 
     /**
-     * @var \Referensi
-     *
      * @ORM\ManyToOne(targetEntity="Referensi", inversedBy="siswa", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="referensi_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     *     @ORM\JoinColumn(name="referensi_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      * })
+     *
+     * @var Referensi
      */
     private $referensi;
 
@@ -391,77 +389,74 @@ class Siswa
     private $namaSekolahAsal;
 
     /**
-     * @var \SekolahAsal
-     *
      * @ORM\ManyToOne(targetEntity="SekolahAsal", inversedBy="siswa", cascade={"persist"})
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_asal_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
+     *     @ORM\JoinColumn(name="sekolah_asal_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      * })
+     *
+     * @var SekolahAsal
      */
     private $sekolahAsal;
 
     /**
-     * @var \OrangtuaWali
-     *
      * @ORM\OneToMany(targetEntity="OrangtuaWali", mappedBy="siswa", cascade={"persist", "remove"})
      * @ORM\OrderBy({"aktif" = "DESC"})
+     *
+     * @var OrangtuaWali
      */
     private $orangtuaWali;
 
     /**
-     * @var \DokumenSiswa
-     *
      * @ORM\OneToMany(targetEntity="DokumenSiswa", mappedBy="siswa", cascade={"persist", "remove"})
+     *
+     * @var DokumenSiswa
      */
     private $dokumenSiswa;
 
     /**
-     * @var \PendidikanSiswa
-     *
      * @ORM\OneToMany(targetEntity="PendidikanSiswa", mappedBy="siswa", cascade={"persist", "remove"})
+     *
+     * @var PendidikanSiswa
      */
     private $pendidikanSiswa;
 
     /**
-     * @var \PenyakitSiswa
-     *
      * @ORM\OneToMany(targetEntity="PenyakitSiswa", mappedBy="siswa", cascade={"persist", "remove"})
+     *
+     * @var PenyakitSiswa
      */
     private $penyakitSiswa;
 
     /**
-     * @var \PembayaranPendaftaran
-     *
      * @ORM\OneToMany(targetEntity="PembayaranPendaftaran", mappedBy="siswa")
+     *
+     * @var PembayaranPendaftaran
      */
     private $pembayaranPendaftaran;
 
     /**
-     * @var \PembayaranSekali
-     *
      * @ORM\OneToMany(targetEntity="PembayaranSekali", mappedBy="siswa")
+     *
+     * @var PembayaranSekali
      */
     private $pembayaranSekali;
 
     /**
-     * @var \PembayaranRutin
-     *
      * @ORM\OneToMany(targetEntity="PembayaranRutin", mappedBy="siswa")
+     *
+     * @var PembayaranRutin
      */
     private $pembayaranRutin;
 
     /**
-     * @var \SiswaKelas
-     *
      * @ORM\OneToMany(targetEntity="SiswaKelas", mappedBy="siswa")
+     *
+     * @var SiswaKelas
      */
     private $siswaKelas;
 
-    /**
-     * constructor
-     *
-     */
-    public function __construct() {
+    public function __construct()
+    {
         $this->orangtuaWali = new ArrayCollection();
         $this->pembayaranPendaftaran = new ArrayCollection();
         $this->pembayaranSekali = new ArrayCollection();
@@ -470,1007 +465,770 @@ class Siswa
     }
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set nomorUrutPendaftaran
-     *
      * @param integer $nomorPendaftaran
-     * @return Siswa
      */
-    public function setNomorUrutPendaftaran($nomorUrutPendaftaran) {
+    public function setNomorUrutPendaftaran($nomorUrutPendaftaran)
+    {
         $this->nomorUrutPendaftaran = $nomorUrutPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get nomorUrutPendaftaran
-     *
      * @return integer
      */
-    public function getNomorUrutPendaftaran() {
+    public function getNomorUrutPendaftaran()
+    {
         return $this->nomorUrutPendaftaran;
     }
 
     /**
-     * Set nomorPendaftaran
-     *
      * @param string $nomorPendaftaran
-     * @return Siswa
      */
-    public function setNomorPendaftaran($nomorPendaftaran) {
+    public function setNomorPendaftaran($nomorPendaftaran)
+    {
         $this->nomorPendaftaran = $nomorPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get nomorPendaftaran
-     *
      * @return string
      */
-    public function getNomorPendaftaran() {
+    public function getNomorPendaftaran()
+    {
         return $this->nomorPendaftaran;
     }
 
     /**
-     * Set calonSiswa
-     *
      * @param boolean $calonSiswa
-     * @return Siswa
      */
-    public function setCalonSiswa($calonSiswa) {
+    public function setCalonSiswa($calonSiswa)
+    {
         $this->calonSiswa = $calonSiswa;
-
-        return $this;
     }
 
     /**
-     * Get calonSiswa
-     *
      * @return boolean
      */
-    public function isCalonSiswa() {
+    public function isCalonSiswa()
+    {
         return $this->calonSiswa;
     }
 
     /**
-     * Set nomorUrutPersekolah
-     *
      * @param integer $nomorUrutPersekolah
-     * @return Siswa
      */
-    public function setNomorUrutPersekolah($nomorUrutPersekolah) {
+    public function setNomorUrutPersekolah($nomorUrutPersekolah)
+    {
         $this->nomorUrutPersekolah = $nomorUrutPersekolah;
-
-        return $this;
     }
 
     /**
-     * Get nomorUrutPersekolah
-     *
      * @return integer
      */
-    public function getNomorUrutPersekolah() {
+    public function getNomorUrutPersekolah()
+    {
         return $this->nomorUrutPersekolah;
     }
 
     /**
-     * Set nomorIndukSistem
-     *
      * @param string $nomorIndukSistem
-     * @return Siswa
      */
-    public function setNomorIndukSistem($nomorIndukSistem) {
+    public function setNomorIndukSistem($nomorIndukSistem)
+    {
         $this->nomorIndukSistem = $nomorIndukSistem;
-
-        return $this;
     }
 
     /**
-     * Get nomorIndukSistem
-     *
      * @return string
      */
-    public function getNomorIndukSistem() {
+    public function getNomorIndukSistem()
+    {
         return $this->nomorIndukSistem;
     }
 
     /**
-     * Set nomorInduk
-     *
      * @param string $nomorInduk
-     * @return Siswa
      */
-    public function setNomorInduk($nomorInduk) {
+    public function setNomorInduk($nomorInduk)
+    {
         $this->nomorInduk = $nomorInduk;
-
-        return $this;
     }
 
     /**
-     * Get nomorInduk
-     *
      * @return string
      */
-    public function getNomorInduk() {
+    public function getNomorInduk()
+    {
         return $this->nomorInduk;
     }
 
     /**
-     * Set namaLengkap
-     *
      * @param string $namaLengkap
-     * @return Siswa
      */
-    public function setNamaLengkap($namaLengkap) {
+    public function setNamaLengkap($namaLengkap)
+    {
         $this->namaLengkap = $namaLengkap;
-
-        return $this;
     }
 
     /**
-     * Get namaLengkap
-     *
      * @return string
      */
-    public function getNamaLengkap() {
+    public function getNamaLengkap()
+    {
         return $this->namaLengkap;
     }
 
     /**
-     * Set jenisKelamin
-     *
      * @param string $jenisKelamin
-     * @return Siswa
      */
-    public function setJenisKelamin($jenisKelamin) {
+    public function setJenisKelamin($jenisKelamin)
+    {
         $this->jenisKelamin = $jenisKelamin;
-
-        return $this;
     }
 
     /**
-     * Get jenisKelamin
-     *
      * @return string
      */
-    public function getJenisKelamin() {
+    public function getJenisKelamin()
+    {
         return $this->jenisKelamin;
     }
 
     /**
-     * Set fotoPendaftaran
-     *
      * @param string $fotoPendaftaran
-     * @return Siswa
      */
-    public function setFotoPendaftaran($fotoPendaftaran) {
+    public function setFotoPendaftaran($fotoPendaftaran)
+    {
         $this->fotoPendaftaran = $fotoPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get fotoPendaftaran
-     *
      * @return string
      */
-    public function getFotoPendaftaran() {
+    public function getFotoPendaftaran()
+    {
         return $this->fotoPendaftaran;
     }
 
     /**
-     * Set foto
-     *
      * @param string $foto
-     * @return Siswa
      */
-    public function setFoto($foto) {
+    public function setFoto($foto)
+    {
         $this->foto = $foto;
-
-        return $this;
     }
 
     /**
-     * Get foto
-     *
      * @return string
      */
-    public function getFoto() {
+    public function getFoto()
+    {
         return $this->foto;
     }
 
     /**
-     * Set fotoDisk
-     *
      * @param string $fotoDisk
-     * @return DokumenSiswa
      */
-    public function setFotoDisk($fotoDisk) {
+    public function setFotoDisk($fotoDisk)
+    {
         $this->fotoDisk = $fotoDisk;
-
-        return $this;
     }
 
     /**
-     * Get fotoDisk
-     *
      * @return string
      */
-    public function getFotoDisk() {
+    public function getFotoDisk()
+    {
         return $this->fotoDisk;
     }
 
     /**
-     * Set agama
-     *
      * @param string $agama
-     * @return Siswa
      */
-    public function setAgama($agama) {
+    public function setAgama($agama)
+    {
         $this->agama = $agama;
-
-        return $this;
     }
 
     /**
-     * Get agama
-     *
      * @return string
      */
-    public function getAgama() {
+    public function getAgama()
+    {
         return $this->agama;
     }
 
     /**
-     * Set tempatLahir
-     *
      * @param string $tempatLahir
-     * @return Siswa
      */
-    public function setTempatLahir($tempatLahir) {
+    public function setTempatLahir($tempatLahir)
+    {
         $this->tempatLahir = $tempatLahir;
-
-        return $this;
     }
 
     /**
-     * Get tempatLahir
-     *
      * @return string
      */
-    public function getTempatLahir() {
+    public function getTempatLahir()
+    {
         return $this->tempatLahir;
     }
 
     /**
-     * Set tanggalLahir
-     *
      * @param \DateTime $tanggalLahir
-     * @return Siswa
      */
-    public function setTanggalLahir($tanggalLahir) {
+    public function setTanggalLahir($tanggalLahir)
+    {
         $this->tanggalLahir = $tanggalLahir;
-
-        return $this;
     }
 
     /**
-     * Get tanggalLahir
-     *
      * @return \DateTime
      */
-    public function getTanggalLahir() {
+    public function getTanggalLahir()
+    {
         return $this->tanggalLahir;
     }
 
     /**
-     * Set email
-     *
      * @param string $email
-     * @return Siswa
      */
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
-
-        return $this;
     }
 
     /**
-     * Get email
-     *
      * @return string
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
     /**
-     * Set namaPanggilan
-     *
      * @param string $namaPanggilan
-     * @return Siswa
      */
-    public function setNamaPanggilan($namaPanggilan) {
+    public function setNamaPanggilan($namaPanggilan)
+    {
         $this->namaPanggilan = $namaPanggilan;
-
-        return $this;
     }
 
     /**
-     * Get namaPanggilan
-     *
      * @return string
      */
-    public function getNamaPanggilan() {
+    public function getNamaPanggilan()
+    {
         return $this->namaPanggilan;
     }
 
     /**
-     * Set kewarganegaraan
-     *
      * @param string $kewarganegaraan
-     * @return Siswa
      */
-    public function setKewarganegaraan($kewarganegaraan) {
+    public function setKewarganegaraan($kewarganegaraan)
+    {
         $this->kewarganegaraan = $kewarganegaraan;
-
-        return $this;
     }
 
     /**
-     * Get kewarganegaraan
-     *
      * @return string
      */
-    public function getKewarganegaraan() {
+    public function getKewarganegaraan()
+    {
         return $this->kewarganegaraan;
     }
 
     /**
-     * Set anakKe
-     *
      * @param integer $anakKe
-     * @return Siswa
      */
-    public function setAnakKe($anakKe) {
+    public function setAnakKe($anakKe)
+    {
         $this->anakKe = $anakKe;
-
-        return $this;
     }
 
     /**
-     * Get anakKe
-     *
      * @return integer
      */
-    public function getAnakKe() {
+    public function getAnakKe()
+    {
         return $this->anakKe;
     }
 
     /**
-     * Set jumlahSaudarakandung
-     *
      * @param integer $jumlahSaudarakandung
-     * @return Siswa
      */
-    public function setJumlahSaudarakandung($jumlahSaudarakandung) {
+    public function setJumlahSaudarakandung($jumlahSaudarakandung)
+    {
         $this->jumlahSaudarakandung = $jumlahSaudarakandung;
-
-        return $this;
     }
 
     /**
-     * Get jumlahSaudarakandung
-     *
      * @return integer
      */
-    public function getJumlahSaudarakandung() {
+    public function getJumlahSaudarakandung()
+    {
         return $this->jumlahSaudarakandung;
     }
 
     /**
-     * Set jumlahSaudaratiri
-     *
      * @param integer $jumlahSaudaratiri
-     * @return Siswa
      */
-    public function setJumlahSaudaratiri($jumlahSaudaratiri) {
+    public function setJumlahSaudaratiri($jumlahSaudaratiri)
+    {
         $this->jumlahSaudaratiri = $jumlahSaudaratiri;
-
-        return $this;
     }
 
     /**
-     * Get jumlahSaudaratiri
-     *
      * @return integer
      */
-    public function getJumlahSaudaratiri() {
+    public function getJumlahSaudaratiri()
+    {
         return $this->jumlahSaudaratiri;
     }
 
     /**
-     * Set statusOrphan
-     *
      * @param string $statusOrphan
-     * @return Siswa
      */
-    public function setStatusOrphan($statusOrphan) {
+    public function setStatusOrphan($statusOrphan)
+    {
         $this->statusOrphan = $statusOrphan;
-
-        return $this;
     }
 
     /**
-     * Get statusOrphan
-     *
      * @return string
      */
-    public function getStatusOrphan() {
+    public function getStatusOrphan()
+    {
         return $this->statusOrphan;
     }
 
     /**
-     * Set bahasaSeharihari
-     *
      * @param string $bahasaSeharihari
-     * @return Siswa
      */
-    public function setBahasaSeharihari($bahasaSeharihari) {
+    public function setBahasaSeharihari($bahasaSeharihari)
+    {
         $this->bahasaSeharihari = $bahasaSeharihari;
-
-        return $this;
     }
 
     /**
-     * Get bahasaSeharihari
-     *
      * @return string
      */
-    public function getBahasaSeharihari() {
+    public function getBahasaSeharihari()
+    {
         return $this->bahasaSeharihari;
     }
 
     /**
-     * Set alamat
-     *
      * @param string $alamat
-     * @return Siswa
      */
-    public function setAlamat($alamat) {
+    public function setAlamat($alamat)
+    {
         $this->alamat = $alamat;
-
-        return $this;
     }
 
     /**
-     * Get alamat
-     *
      * @return string
      */
-    public function getAlamat() {
+    public function getAlamat()
+    {
         return $this->alamat;
     }
 
     /**
-     * Set kodepos
-     *
      * @param string $kodepos
-     * @return Siswa
      */
-    public function setKodepos($kodepos) {
+    public function setKodepos($kodepos)
+    {
         $this->kodepos = $kodepos;
-
-        return $this;
     }
 
     /**
-     * Get kodepos
-     *
      * @return string
      */
-    public function getKodepos() {
+    public function getKodepos()
+    {
         return $this->kodepos;
     }
 
     /**
-     * Set telepon
-     *
      * @param string $telepon
-     * @return Siswa
      */
-    public function setTelepon($telepon) {
+    public function setTelepon($telepon)
+    {
         $this->telepon = $telepon;
-
-        return $this;
     }
 
     /**
-     * Get telepon
-     *
      * @return string
      */
-    public function getTelepon() {
+    public function getTelepon()
+    {
         return $this->telepon;
     }
 
     /**
-     * Set ponselSiswa
-     *
      * @param string $ponselSiswa
-     * @return Siswa
      */
-    public function setPonselSiswa($ponselSiswa) {
+    public function setPonselSiswa($ponselSiswa)
+    {
         $this->ponselSiswa = $ponselSiswa;
-
-        return $this;
     }
 
     /**
-     * Get ponselSiswa
-     *
      * @return string
      */
-    public function getPonselSiswa() {
+    public function getPonselSiswa()
+    {
         return $this->ponselSiswa;
     }
 
     /**
-     * Set sekolahTinggaldi
-     *
      * @param string $sekolahTinggaldi
-     * @return Siswa
      */
-    public function setSekolahTinggaldi($sekolahTinggaldi) {
+    public function setSekolahTinggaldi($sekolahTinggaldi)
+    {
         $this->sekolahTinggaldi = $sekolahTinggaldi;
-
-        return $this;
     }
 
     /**
-     * Get sekolahTinggaldi
-     *
      * @return string
      */
-    public function getSekolahTinggaldi() {
+    public function getSekolahTinggaldi()
+    {
         return $this->sekolahTinggaldi;
     }
 
     /**
-     * Set jarakTempat
-     *
      * @param string $jarakTempat
-     * @return Siswa
      */
-    public function setJarakTempat($jarakTempat) {
+    public function setJarakTempat($jarakTempat)
+    {
         $this->jarakTempat = $jarakTempat;
-
-        return $this;
     }
 
     /**
-     * Get jarakTempat
-     *
      * @return string
      */
-    public function getJarakTempat() {
+    public function getJarakTempat()
+    {
         return $this->jarakTempat;
     }
 
     /**
-     * Set caraKesekolah
-     *
      * @param string $caraKesekolah
-     * @return Siswa
      */
-    public function setCaraKesekolah($caraKesekolah) {
+    public function setCaraKesekolah($caraKesekolah)
+    {
         $this->caraKesekolah = $caraKesekolah;
-
-        return $this;
     }
 
     /**
-     * Get caraKesekolah
-     *
      * @return string
      */
-    public function getCaraKesekolah() {
+    public function getCaraKesekolah()
+    {
         return $this->caraKesekolah;
     }
 
     /**
-     * Set beratbadan
-     *
      * @param string $beratbadan
-     * @return Siswa
      */
-    public function setBeratbadan($beratbadan) {
+    public function setBeratbadan($beratbadan)
+    {
         $this->beratbadan = $beratbadan;
-
-        return $this;
     }
 
     /**
-     * Get beratbadan
-     *
      * @return string
      */
-    public function getBeratbadan() {
+    public function getBeratbadan()
+    {
         return $this->beratbadan;
     }
 
     /**
-     * Set tinggibadan
-     *
      * @param string $tinggibadan
-     * @return Siswa
      */
-    public function setTinggibadan($tinggibadan) {
+    public function setTinggibadan($tinggibadan)
+    {
         $this->tinggibadan = $tinggibadan;
-
-        return $this;
     }
 
     /**
-     * Get tinggibadan
-     *
      * @return string
      */
-    public function getTinggibadan() {
+    public function getTinggibadan()
+    {
         return $this->tinggibadan;
     }
 
     /**
-     * Set golongandarah
-     *
      * @param string $golongandarah
-     * @return Siswa
      */
-    public function setGolongandarah($golongandarah) {
+    public function setGolongandarah($golongandarah)
+    {
         $this->golongandarah = $golongandarah;
-
-        return $this;
     }
 
     /**
-     * Get golongandarah
-     *
      * @return string
      */
-    public function getGolongandarah() {
+    public function getGolongandarah()
+    {
         return $this->golongandarah;
     }
 
     /**
-     * Set lunasBiayaPendaftaran
-     *
      * @param boolean $lunasBiayaPendaftaran
-     * @return Siswa
      */
-    public function setLunasBiayaPendaftaran($lunasBiayaPendaftaran) {
+    public function setLunasBiayaPendaftaran($lunasBiayaPendaftaran)
+    {
         $this->lunasBiayaPendaftaran = $lunasBiayaPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get lunasBiayaPendaftaran
-     *
      * @return boolean
      */
-    public function getLunasBiayaPendaftaran() {
+    public function getLunasBiayaPendaftaran()
+    {
         return $this->lunasBiayaPendaftaran;
     }
 
     /**
-     * Set sisaBiayaPendaftaran
-     *
      * @param boolean $sisaBiayaPendaftaran
-     * @return Siswa
      */
-    public function setSisaBiayaPendaftaran($sisaBiayaPendaftaran) {
+    public function setSisaBiayaPendaftaran($sisaBiayaPendaftaran)
+    {
         $this->sisaBiayaPendaftaran = $sisaBiayaPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get sisaBiayaPendaftaran
-     *
      * @return integer
      */
-    public function getSisaBiayaPendaftaran() {
+    public function getSisaBiayaPendaftaran()
+    {
         return $this->sisaBiayaPendaftaran;
     }
 
     /**
-     * Set waktuSimpan
-     *
      * @param \DateTime $waktuSimpan
-     * @return Siswa
      */
-    public function setWaktuSimpan($waktuSimpan) {
+    public function setWaktuSimpan($waktuSimpan)
+    {
         $this->waktuSimpan = $waktuSimpan;
-
-        return $this;
     }
 
     /**
-     * Get waktuSimpan
-     *
      * @return \DateTime
      */
-    public function getWaktuSimpan() {
+    public function getWaktuSimpan()
+    {
         return $this->waktuSimpan;
     }
 
     /**
-     * Set waktuUbah
-     *
      * @param \DateTime $waktuUbah
-     * @return Siswa
      */
-    public function setWaktuUbah($waktuUbah) {
+    public function setWaktuUbah($waktuUbah)
+    {
         $this->waktuUbah = $waktuUbah;
-
-        return $this;
     }
 
     /**
-     * Get waktuUbah
-     *
      * @return \DateTime
      */
-    public function getWaktuUbah() {
+    public function getWaktuUbah()
+    {
         return $this->waktuUbah;
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return Siswa
      */
-    public function setKeterangan($keterangan) {
+    public function setKeterangan($keterangan)
+    {
         $this->keterangan = $keterangan;
-
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
      * @return string
      */
-    public function getKeterangan() {
+    public function getKeterangan()
+    {
         return $this->keterangan;
     }
 
     /**
-     * Set gelombang
-     *
-     * @param \Fast\SisdikBundle\Entity\Gelombang $gelombang
-     * @return Siswa
+     * @param Gelombang $gelombang
      */
-    public function setGelombang(\Fast\SisdikBundle\Entity\Gelombang $gelombang = null) {
+    public function setGelombang(Gelombang $gelombang = null)
+    {
         $this->gelombang = $gelombang;
-
-        return $this;
     }
 
     /**
-     * Get gelombang
-     *
-     * @return \Fast\SisdikBundle\Entity\Gelombang
+     * @return Gelombang
      */
-    public function getGelombang() {
+    public function getGelombang()
+    {
         return $this->gelombang;
     }
 
     /**
-     * Set tahun
-     *
-     * @param \Fast\SisdikBundle\Entity\Tahun $tahun
-     * @return Siswa
+     * @param Tahun $tahun
      */
-    public function setTahun(\Fast\SisdikBundle\Entity\Tahun $tahun = null) {
+    public function setTahun(Tahun $tahun = null)
+    {
         $this->tahun = $tahun;
-
-        return $this;
     }
 
     /**
-     * Get tahun
-     *
-     * @return \Fast\SisdikBundle\Entity\Tahun
+     * @return Tahun
      */
-    public function getTahun() {
+    public function getTahun()
+    {
         return $this->tahun;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return Siswa
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
     /**
-     * Set dibuatOleh
-     *
-     * @param \Fast\SisdikBundle\Entity\User $dibuatOleh
-     * @return Siswa
+     * @param User $dibuatOleh
      */
-    public function setDibuatOleh(\Fast\SisdikBundle\Entity\User $dibuatOleh = null) {
+    public function setDibuatOleh(User $dibuatOleh = null)
+    {
         $this->dibuatOleh = $dibuatOleh;
-
-        return $this;
     }
 
     /**
-     * Get dibuatOleh
-     *
-     * @return \Fast\SisdikBundle\Entity\User
+     * @return User
      */
-    public function getDibuatOleh() {
+    public function getDibuatOleh()
+    {
         return $this->dibuatOleh;
     }
 
     /**
-     * Set diubahOleh
-     *
-     * @param \Fast\SisdikBundle\Entity\User $diubahOleh
-     * @return Siswa
+     * @param User $diubahOleh
      */
-    public function setDiubahOleh(\Fast\SisdikBundle\Entity\User $diubahOleh = null) {
+    public function setDiubahOleh(User $diubahOleh = null)
+    {
         $this->diubahOleh = $diubahOleh;
-
-        return $this;
     }
 
     /**
-     * Get diubahOleh
-     *
-     * @return \Fast\SisdikBundle\Entity\User
+     * @return User
      */
-    public function getDiubahOleh() {
+    public function getDiubahOleh()
+    {
         return $this->diubahOleh;
     }
 
     /**
-     * Set adaReferensi
-     *
      * @param boolean $adaReferensi
-     * @return Siswa
      */
-    public function setAdaReferensi($adaReferensi) {
+    public function setAdaReferensi($adaReferensi)
+    {
         $this->adaReferensi = $adaReferensi;
-
-        return $this;
     }
 
     /**
-     * Is adaReferensi
-     *
      * @return boolean
      */
-    public function isAdaReferensi() {
+    public function isAdaReferensi()
+    {
         return $this->adaReferensi;
     }
 
     /**
-     * Set namaReferensi
-     *
      * @param string $namaReferensi
-     * @return Siswa
      */
-    public function setNamaReferensi($namaReferensi) {
+    public function setNamaReferensi($namaReferensi)
+    {
         $this->namaReferensi = $namaReferensi;
-
-        return $this;
     }
 
     /**
-     * Get namaReferensi
-     *
      * @return string
      */
-    public function getNamaReferensi() {
+    public function getNamaReferensi()
+    {
         return $this->namaReferensi;
     }
 
     /**
-     * Set referensi
-     *
-     * @param \Fast\SisdikBundle\Entity\Referensi $referensi
-     * @return Siswa
+     * @param Referensi $referensi
      */
-    public function setReferensi(\Fast\SisdikBundle\Entity\Referensi $referensi = null) {
+    public function setReferensi(Referensi $referensi = null)
+    {
         $this->referensi = $referensi;
-
-        return $this;
     }
 
     /**
-     * Get referensi
-     *
-     * @return \Fast\SisdikBundle\Entity\Referensi
+     * @return Referensi
      */
-    public function getReferensi() {
+    public function getReferensi()
+    {
         return $this->referensi;
     }
 
     /**
-     * Set namaSekolahAsal
-     *
      * @param string $namaSekolahAsal
-     * @return Siswa
      */
-    public function setNamaSekolahAsal($namaSekolahAsal) {
+    public function setNamaSekolahAsal($namaSekolahAsal)
+    {
         $this->namaSekolahAsal = $namaSekolahAsal;
-
-        return $this;
     }
 
     /**
-     * Get namaSekolahAsal
-     *
      * @return string
      */
-    public function getNamaSekolahAsal() {
+    public function getNamaSekolahAsal()
+    {
         return $this->namaSekolahAsal;
     }
 
     /**
-     * Set sekolahAsal
-     *
-     * @param \Fast\SisdikBundle\Entity\SekolahAsal $sekolahAsal
-     * @return Siswa
+     * @param SekolahAsal $sekolahAsal
      */
-    public function setSekolahAsal(\Fast\SisdikBundle\Entity\SekolahAsal $sekolahAsal = null) {
+    public function setSekolahAsal(SekolahAsal $sekolahAsal = null)
+    {
         $this->sekolahAsal = $sekolahAsal;
-
-        return $this;
     }
 
     /**
-     * Get sekolahAsal
-     *
-     * @return \Fast\SisdikBundle\Entity\SekolahAsal
+     * @return SekolahAsal
      */
-    public function getSekolahAsal() {
+    public function getSekolahAsal()
+    {
         return $this->sekolahAsal;
     }
 
     /**
-     * Set orangtuaWali
-     *
      * @param ArrayCollection $orangtuaWali
      */
-    public function setOrangtuaWali(ArrayCollection $orangtuaWali) {
+    public function setOrangtuaWali(ArrayCollection $orangtuaWali)
+    {
         foreach ($orangtuaWali as $data) {
             $data->setSiswa($this);
         }
@@ -1479,20 +1237,18 @@ class Siswa
     }
 
     /**
-     * Get orangtuaWali
-     *
-     * @return \Fast\SisdikBundle\Entity\OrangtuaWali
+     * @return OrangtuaWali
      */
-    public function getOrangtuaWali() {
+    public function getOrangtuaWali()
+    {
         return $this->orangtuaWali;
     }
 
     /**
-     * Set siswaKelas
-     *
      * @param ArrayCollection $siswaKelas
      */
-    public function setSiswaKelas(ArrayCollection $siswaKelas) {
+    public function setSiswaKelas(ArrayCollection $siswaKelas)
+    {
         foreach ($siswaKelas as $data) {
             $data->setSiswa($this);
         }
@@ -1501,20 +1257,18 @@ class Siswa
     }
 
     /**
-     * Get siswaKelas
-     *
-     * @return \Fast\SisdikBundle\Entity\SiswaKelas
+     * @return SiswaKelas
      */
-    public function getSiswaKelas() {
+    public function getSiswaKelas()
+    {
         return $this->siswaKelas;
     }
 
     /**
-     * Get siswaKelas aktif
-     *
-     * @return array
+     * @return SiswaKelas|NULL
      */
-    public function getSiswaKelasAktif() {
+    public function getSiswaKelasAktif()
+    {
         foreach ($this->getSiswaKelas() as $siswakelas) {
             if ($siswakelas->getTahunAkademik()->getAktif() === true) {
                 return $siswakelas;
@@ -1525,22 +1279,19 @@ class Siswa
     }
 
     /**
-     * Get pembayaranPendaftaran
-     *
-     * @return \Fast\SisdikBundle\Entity\PembayaranPendaftaran
+     * @return PembayaranPendaftaran
      */
-    public function getPembayaranPendaftaran() {
+    public function getPembayaranPendaftaran()
+    {
         return $this->pembayaranPendaftaran;
     }
 
     /**
-     * Get daftar biaya pendaftaran
-     *
-     * @return \Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran
-     * array of DaftarBiayaPendaftaran
+     * @return array of DaftarBiayaPendaftaran
      */
-    public function getDaftarBiayaPendaftaran() {
-        $daftar = array();
+    public function getDaftarBiayaPendaftaran()
+    {
+        $daftar = [];
 
         foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
             $daftar[] = $pembayaran->getDaftarBiayaPendaftaran();
@@ -1550,13 +1301,11 @@ class Siswa
     }
 
     /**
-     * Get transaksi pembayaran pendaftaran
-     *
-     * @return \Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran
-     * array of TransaksiPembayaranPendaftaran
+     * @return array of TransaksiPembayaranPendaftaran
      */
-    public function getTransaksiPembayaranPendaftaran() {
-        $daftar = array();
+    public function getTransaksiPembayaranPendaftaran()
+    {
+        $daftar = [];
 
         foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
             $daftar[] = $pembayaran->getTransaksiPembayaranPendaftaran();
@@ -1566,11 +1315,10 @@ class Siswa
     }
 
     /**
-     * Get total nominal biaya pendaftaran
-     *
      * @return integer
      */
-    public function getTotalNominalBiayaPendaftaran() {
+    public function getTotalNominalBiayaPendaftaran()
+    {
         $jumlah = 0;
 
         foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
@@ -1583,11 +1331,10 @@ class Siswa
     }
 
     /**
-     * Get total nominal pembayaran pendaftaran
-     *
      * @return integer
      */
-    public function getTotalNominalPembayaranPendaftaran() {
+    public function getTotalNominalPembayaranPendaftaran()
+    {
         $jumlah = 0;
 
         foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
@@ -1600,11 +1347,10 @@ class Siswa
     }
 
     /**
-     * Get total potongan pembayaran pendaftaran
-     *
      * @return integer
      */
-    public function getTotalPotonganPembayaranPendaftaran() {
+    public function getTotalPotonganPembayaranPendaftaran()
+    {
         $jumlah = 0;
 
         foreach ($this->getPembayaranPendaftaran() as $pembayaran) {
@@ -1615,21 +1361,19 @@ class Siswa
     }
 
     /**
-     * Get pembayaranSekali
-     *
-     * @return \Fast\SisdikBundle\PembayaranSekali
+     * @return PembayaranSekali
      */
-    public function getPembayaranSekali() {
+    public function getPembayaranSekali()
+    {
         return $this->pembayaranSekali;
 
     }
 
     /**
-     * Get total nominal pembayaran sekali bayar
-     *
-     * @return \Fast\SisdikBundle\PembayaranSekali
+     * @return integer
      */
-    public function getTotalNominalPembayaranSekali() {
+    public function getTotalNominalPembayaranSekali()
+    {
         $jumlah = 0;
 
         foreach ($this->getPembayaranSekali() as $pembayaran) {
@@ -1642,20 +1386,18 @@ class Siswa
     }
 
     /**
-     * Get pembayaranRutin
-     *
-     * @return \Fast\SisdikBundle\PembayaranRutin
+     * @return PembayaranRutin
      */
-    public function getPembayaranRutin() {
+    public function getPembayaranRutin()
+    {
         return $this->pembayaranRutin;
     }
 
     /**
-     * Get total nominal pembayaran rutin
-     *
-     * @return \Fast\SisdikBundle\PembayaranRutin
+     * @return integer
      */
-    public function getTotalNominalPembayaranRutin() {
+    public function getTotalNominalPembayaranRutin()
+    {
         $jumlah = 0;
 
         foreach ($this->getPembayaranRutin() as $pembayaran) {
@@ -1667,64 +1409,109 @@ class Siswa
         return $jumlah;
     }
 
-    public function getWebcamPhotoDir() {
+    /**
+     * @return string
+     */
+    public function getWebcamPhotoDir()
+    {
         $fs = new Filesystem();
         if (!$fs->exists(self::WEBCAMPHOTO_DIR)) {
             $fs->mkdir(self::WEBCAMPHOTO_DIR);
         }
+
         return self::WEBCAMPHOTO_DIR;
     }
 
-    public function getWebcamPhotoPath() {
+    /**
+     * @return Ambigous <NULL, string>
+     */
+    public function getWebcamPhotoPath()
+    {
         $fs = new Filesystem();
-        if (!$fs
-                ->exists(
-                        self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
-                                . $this->getTahun()->getTahun())) {
-            $fs
-                    ->mkdir(
-                            self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
-                                    . $this->getTahun()->getTahun());
+        if (
+            !$fs->exists(
+                self::WEBCAMPHOTO_DIR
+                . $this->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getTahun()->getTahun()
+            )
+        ) {
+            $fs->mkdir(
+                self::WEBCAMPHOTO_DIR
+                . $this->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getTahun()->getTahun()
+            );
         }
 
-        return null === $this->fotoPendaftaran ? null
-                : self::WEBCAMPHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
-                        . $this->getTahun()->getTahun() . DIRECTORY_SEPARATOR . $this->fotoPendaftaran;
+        return null === $this->fotoPendaftaran ?
+            null : self::WEBCAMPHOTO_DIR
+                . $this->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getTahun()->getTahun()
+                . DIRECTORY_SEPARATOR
+                . $this->fotoPendaftaran
+        ;
     }
 
-    public function getFile() {
+    /**
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
         return $this->file;
     }
 
-    public function setFile(UploadedFile $file) {
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFile(UploadedFile $file)
+    {
         $this->file = $file;
-
-        return $this;
     }
 
-    public function getWebPathFotoDisk() {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR
-                . $this->fotoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getWebPathFotoDisk()
+    {
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
     }
 
-    public function getRelativePathFotoDisk() {
-        return null === $this->fotoDisk ? null
-                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getRelativePathFotoDisk()
+    {
+        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
     }
 
-    public function getRelativePathFotoDiskSebelumnya() {
-        return null === $this->fotoDiskSebelumnya ? null
-                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDiskSebelumnya;
+    /**
+     * @return NULL|string
+     */
+    public function getRelativePathFotoDiskSebelumnya()
+    {
+        return null === $this->fotoDiskSebelumnya ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDiskSebelumnya;
     }
 
-    public function getRelativePathFotoDiskThumbSebelumnya() {
-        return null === $this->fotoDiskSebelumnya ? null
-                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX
-                        . $this->fotoDiskSebelumnya;
+    /**
+     * @return NULL|string
+     */
+    public function getRelativePathFotoDiskThumbSebelumnya()
+    {
+        return null === $this->fotoDiskSebelumnya ?
+            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDiskSebelumnya
+        ;
     }
 
-    public function getFilesizeFotoDisk($type = 'KB') {
+    /**
+     * @param  string $type
+     * @return string
+     */
+    public function getFilesizeFotoDisk($type = 'KB')
+    {
         $file = new File($this->getRelativePathFotoDisk());
+
         return FileSizeFormatter::formatBytes($file->getSize(), $type);
     }
 
@@ -1732,11 +1519,13 @@ class Siswa
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function preUpload() {
+    public function preUpload()
+    {
         if (null !== $this->file) {
             $this->fotoDiskSebelumnya = $this->fotoDisk;
 
             $this->fotoDisk = sha1(uniqid(mt_rand(), true)) . '_' . $this->file->getClientOriginalName();
+
             $this->foto = $this->file->getClientOriginalName();
         }
     }
@@ -1745,23 +1534,19 @@ class Siswa
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function upload() {
+    public function upload()
+    {
         if (null === $this->file) {
             return;
         }
 
-        // if there is an error when moving the file, an exception will
-        // be automatically thrown by move(). This will properly prevent
-        // the entity from being persisted to the database on error
         if ($this->file->move($this->getUploadRootDir(), $this->fotoDisk)) {
-
             $targetfile = $this->getAbsolutePath();
             $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX
                     . $this->fotoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
             if (is_numeric($type)) {
-
                 $origRatio = $origWidth / $origHeight;
                 $resultWidth = self::PHOTO_THUMB_WIDTH;
                 $resultHeight = self::PHOTO_THUMB_HEIGHT;
@@ -1771,43 +1556,35 @@ class Siswa
                     $resultHeight = $resultWidth / $origRatio;
                 }
 
-                // Set artificially high because GD uses uncompressed images in memory
                 @ini_set('memory_limit', self::MEMORY_LIMIT);
 
                 switch ($type) {
                     case IMAGETYPE_JPEG:
                         if (imagetypes() & IMG_JPEG) {
-                            // resample image
                             $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
-
                             $srcImage = imagecreatefromjpeg($targetfile);
-                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
-                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
 
                             imagejpeg($resultImage, $thumbnailfile, 90);
                         }
                         break;
                     case IMAGETYPE_PNG:
                         if (imagetypes() & IMG_PNG) {
-                            // resample image
-                            // for png, we use imagecreate instead
                             $resultImage = imagecreate($resultWidth, $resultHeight);
-
                             $srcImage = imagecreatefrompng($targetfile);
-                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
-                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
 
                             imagepng($resultImage, $thumbnailfile, 8);
                         }
                         break;
                     case IMAGETYPE_GIF:
                         if (imagetypes() & IMG_GIF) {
-                            // resample image
                             $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
-
                             $srcImage = imagecreatefromgif($targetfile);
-                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
-                                    $resultHeight, $origWidth, $origHeight);
+
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
 
                             imagegif($resultImage, $thumbnailfile);
                         }
@@ -1821,7 +1598,8 @@ class Siswa
         unset($this->file);
     }
 
-    private function removeFotoSebelumnya() {
+    private function removeFotoSebelumnya()
+    {
         if ($file = $this->getRelativePathFotoDiskSebelumnya()) {
             @unlink($file);
         }
@@ -1833,45 +1611,67 @@ class Siswa
     /**
      * @ORM\PostRemove()
      */
-    public function removeUpload() {
+    public function removeUpload()
+    {
         if ($file = $this->getAbsolutePath()) {
             @unlink($file);
         }
     }
 
-    public function getAbsolutePath() {
-        return null === $this->fotoDisk ? null
-                : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getAbsolutePath()
+    {
+        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
     }
 
-    public function getWebPath() {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR
-                . $this->fotoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getWebPath()
+    {
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
     }
 
-    public function getWebPathThumbnail() {
-        return null === $this->fotoDisk ? null
-                : $this->getUploadDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getWebPathThumbnail()
+    {
+        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDisk;
     }
 
-    protected function getUploadRootDir() {
-        // the absolute directory path where uploaded documents should be saved
+    /**
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
         return __DIR__ . '/../../../../web/' . $this->getUploadDir();
     }
 
-    protected function getUploadDir() {
-        // get rid of the __DIR__ so it doesn't screw when displaying uploaded doc/image in the view.
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
         $fs = new Filesystem();
-        if (!$fs
-                ->exists(
-                        self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
-                                . $this->getTahun()->getTahun())) {
-            $fs
-                    ->mkdir(
-                            self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
-                                    . $this->getTahun()->getTahun());
+        if (
+            !$fs->exists(
+                self::PHOTO_DIR
+                . $this->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getTahun()->getTahun()
+            )
+        ) {
+            $fs->mkdir(
+                self::PHOTO_DIR
+                . $this->getSekolah()->getId()
+                . DIRECTORY_SEPARATOR
+                . $this->getTahun()->getTahun()
+            );
         }
-        return self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR
-                . $this->getTahun()->getTahun();
+
+        return self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR . $this->getTahun()->getTahun();
     }
 }

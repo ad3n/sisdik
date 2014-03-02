@@ -1,76 +1,69 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SiswaCmp
- *
  * @ORM\Table(name="siswa_cmp")
  * @ORM\Entity
  */
 class SiswaCmp
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nilai", type="integer", nullable=true)
+     *
+     * @var integer
      */
     private $nilai;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \JenisNilai
-     *
      * @ORM\ManyToOne(targetEntity="JenisNilai")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="jenis_nilai_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="jenis_nilai_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var JenisNilai
      */
     private $jenisNilai;
 
     /**
-     * @var \CukilMp
-     *
      * @ORM\ManyToOne(targetEntity="CukilMp")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="cukil_mp_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var CukilMp
      */
     private $cukilMp;
 
     /**
-     * @var \Siswa
-     *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Siswa
      */
     private $siswa;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -78,22 +71,15 @@ class SiswaCmp
     }
 
     /**
-     * Set nilai
-     *
      * @param integer $nilai
-     * @return SiswaCmp
      */
     public function setNilai($nilai)
     {
         $this->nilai = $nilai;
-    
-        return $this;
     }
 
     /**
-     * Get nilai
-     *
-     * @return integer 
+     * @return integer
      */
     public function getNilai()
     {
@@ -101,22 +87,15 @@ class SiswaCmp
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return SiswaCmp
      */
     public function setKeterangan($keterangan)
     {
         $this->keterangan = $keterangan;
-    
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
-     * @return string 
+     * @return string
      */
     public function getKeterangan()
     {
@@ -124,22 +103,15 @@ class SiswaCmp
     }
 
     /**
-     * Set jenisNilai
-     *
-     * @param \Fast\SisdikBundle\Entity\JenisNilai $jenisNilai
-     * @return SiswaCmp
+     * @param JenisNilai $jenisNilai
      */
-    public function setJenisNilai(\Fast\SisdikBundle\Entity\JenisNilai $jenisNilai = null)
+    public function setJenisNilai(JenisNilai $jenisNilai = null)
     {
         $this->jenisNilai = $jenisNilai;
-    
-        return $this;
     }
 
     /**
-     * Get jenisNilai
-     *
-     * @return \Fast\SisdikBundle\Entity\JenisNilai 
+     * @return JenisNilai
      */
     public function getJenisNilai()
     {
@@ -147,22 +119,15 @@ class SiswaCmp
     }
 
     /**
-     * Set cukilMp
-     *
-     * @param \Fast\SisdikBundle\Entity\CukilMp $cukilMp
-     * @return SiswaCmp
+     * @param CukilMp $cukilMp
      */
-    public function setCukilMp(\Fast\SisdikBundle\Entity\CukilMp $cukilMp = null)
+    public function setCukilMp(CukilMp $cukilMp = null)
     {
         $this->cukilMp = $cukilMp;
-    
-        return $this;
     }
 
     /**
-     * Get cukilMp
-     *
-     * @return \Fast\SisdikBundle\Entity\CukilMp 
+     * @return CukilMp
      */
     public function getCukilMp()
     {
@@ -170,22 +135,15 @@ class SiswaCmp
     }
 
     /**
-     * Set siswa
-     *
-     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return SiswaCmp
+     * @param Siswa $siswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
+    public function setSiswa(Siswa $siswa = null)
     {
         $this->siswa = $siswa;
-    
-        return $this;
     }
 
     /**
-     * Get siswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return Siswa
      */
     public function getSiswa()
     {
