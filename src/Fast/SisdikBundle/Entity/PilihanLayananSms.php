@@ -1,11 +1,9 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PilihanLayananSms
- *
  * @ORM\Table(name="pilihan_layanan_sms", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="pilihan_layanan_sms_UNIQUE", columns={"sekolah_id", "jenis_layanan"})
  * })
@@ -14,145 +12,134 @@ use Doctrine\ORM\Mapping as ORM;
 class PilihanLayananSms
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="jenis_layanan", type="string", length=45, nullable=true)
+     *
+     * @var string
      */
     private $jenisLayanan;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="status", type="boolean", nullable=true, options={"default"="1"})
+     *
+     * @var boolean
      */
     private $status = true;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Daftar layanan sms pendaftaran yang bisa ada di database
+     * Daftar layanan sms pendaftaran yang mungkin digunakan.
      *
      * @return array
      */
-    public static function getDaftarLayananPendaftaran() {
-        return array(
-                'a-pendaftaran-tercatat' => 'layanan.sms.pendaftar.tercatat',
-                'b-pendaftaran-bayar-pertama' => 'layanan.sms.pendaftar.bayar.pertama',
-                'c-pendaftaran-bayar' => 'layanan.sms.pendaftar.bayar.biaya',
-                'd-pendaftaran-bayar-lunas' => 'layanan.sms.pendaftar.bayar.lunas',
-        );
+    public static function getDaftarLayananPendaftaran()
+    {
+        return [
+            'a-pendaftaran-tercatat' => 'layanan.sms.pendaftar.tercatat',
+            'b-pendaftaran-bayar-pertama' => 'layanan.sms.pendaftar.bayar.pertama',
+            'c-pendaftaran-bayar' => 'layanan.sms.pendaftar.bayar.biaya',
+            'd-pendaftaran-bayar-lunas' => 'layanan.sms.pendaftar.bayar.lunas',
+        ];
     }
 
     /**
-     * Daftar layanan sms laporan yang bisa ada di database
+     * Daftar layanan sms laporan yang mungkin digunakan.
      *
      * @return array
      */
-    public static function getDaftarLayananLaporan() {
-        return array(
+    public static function getDaftarLayananLaporan()
+    {
+        return [
             'e-laporan-ringkasan' => 'layanan.sms.laporan.ringkasan.pendaftaran',
-        );
+        ];
     }
 
     /**
-     * Daftar layanan sms kehadiran
-     */
-    public static function getDaftarLayananKehadiran() {
-        return array(
-                'k-kehadiran-alpa' => 'layanan.sms.kehadiran.alpa',
-                'l-kehadiran-tepat' => 'layanan.sms.kehadiran.tepat',
-                'm-kehadiran-telat' => 'layanan.sms.kehadiran.telat',
-                'n-kehadiran-izin' => 'layanan.sms.kehadiran.izin',
-                'o-kehadiran-sakit' => 'layanan.sms.kehadiran.sakit',
-        );
-    }
-
-    /**
-     * Set jenisLayanan
+     * Daftar layanan sms kehadiran.
      *
+     * @return array
+     */
+    public static function getDaftarLayananKehadiran()
+    {
+        return [
+            'k-kehadiran-alpa' => 'layanan.sms.kehadiran.alpa',
+            'l-kehadiran-tepat' => 'layanan.sms.kehadiran.tepat',
+            'm-kehadiran-telat' => 'layanan.sms.kehadiran.telat',
+            'n-kehadiran-izin' => 'layanan.sms.kehadiran.izin',
+            'o-kehadiran-sakit' => 'layanan.sms.kehadiran.sakit',
+        ];
+    }
+
+    /**
      * @param string $jenisLayanan
-     * @return PilihanLayananSms
      */
-    public function setJenisLayanan($jenisLayanan) {
+    public function setJenisLayanan($jenisLayanan)
+    {
         $this->jenisLayanan = $jenisLayanan;
-
-        return $this;
     }
 
     /**
-     * Get jenisLayanan
-     *
      * @return string
      */
-    public function getJenisLayanan() {
+    public function getJenisLayanan()
+    {
         return $this->jenisLayanan;
     }
 
     /**
-     * Set status
-     *
      * @param boolean $status
-     * @return PilihanLayananSms
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->status = $status;
-
-        return $this;
     }
 
     /**
-     * Get status
-     *
      * @return boolean
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return PilihanLayananSms
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 }

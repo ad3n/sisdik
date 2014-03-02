@@ -4,91 +4,86 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ProsesKehadiranSiswa
- *
  * @ORM\Table(name="proses_kehadiran_siswa")
  * @ORM\Entity
  */
 class ProsesKehadiranSiswa
 {
-
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="tanggal", type="date", nullable=true)
+     *
+     * @var \DateTime
      */
     private $tanggal;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="berhasil_inisiasi", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $berhasilInisiasi = false;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="berhasil_diperbarui_mesin", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $berhasilDiperbaruiMesin = false;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="berhasil_validasi", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $berhasilValidasi = false;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="berhasil_kirim_sms", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
      */
     private $berhasilKirimSms = false;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
     /**
-     * @var \Kelas
-     *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Kelas
      */
     private $kelas;
 
     /**
-     * Get id
-     *
      * @return integer
      */
     public function getId()
@@ -97,21 +92,14 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set tanggal
-     *
      * @param \DateTime $tanggal
-     * @return ProsesKehadiranSiswa
      */
     public function setTanggal($tanggal)
     {
         $this->tanggal = $tanggal;
-        
-        return $this;
     }
 
     /**
-     * Get tanggal
-     *
      * @return \DateTime
      */
     public function getTanggal()
@@ -120,21 +108,14 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set berhasilInisiasi
-     *
      * @param boolean $berhasilInisiasi
-     * @return ProsesKehadiranSiswa
      */
     public function setBerhasilInisiasi($berhasilInisiasi)
     {
         $this->berhasilInisiasi = $berhasilInisiasi;
-        
-        return $this;
     }
 
     /**
-     * Get berhasilInisiasi
-     *
      * @return boolean
      */
     public function isBerhasilInisiasi()
@@ -143,21 +124,14 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set berhasilDiperbaruiMesin
-     *
      * @param boolean $berhasilDiperbaruiMesin
-     * @return ProsesKehadiranSiswa
      */
     public function setBerhasilDiperbaruiMesin($berhasilDiperbaruiMesin)
     {
         $this->berhasilDiperbaruiMesin = $berhasilDiperbaruiMesin;
-        
-        return $this;
     }
 
     /**
-     * Get berhasilDiperbaruiMesin
-     *
      * @return boolean
      */
     public function isBerhasilDiperbaruiMesin()
@@ -166,21 +140,14 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set berhasilValidasi
-     *
      * @param boolean $berhasilValidasi
-     * @return ProsesKehadiranSiswa
      */
     public function setBerhasilValidasi($berhasilValidasi)
     {
         $this->berhasilValidasi = $berhasilValidasi;
-        
-        return $this;
     }
 
     /**
-     * Get berhasilValidasi
-     *
      * @return boolean
      */
     public function isBerhasilValidasi()
@@ -189,21 +156,14 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set berhasilKirimSms
-     *
      * @param boolean $berhasilKirimSms
-     * @return ProsesKehadiranSiswa
      */
     public function setBerhasilKirimSms($berhasilKirimSms)
     {
         $this->berhasilKirimSms = $berhasilKirimSms;
-        
-        return $this;
     }
 
     /**
-     * Get berhasilKirimSms
-     *
      * @return boolean
      */
     public function isBerhasilKirimSms()
@@ -212,22 +172,15 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return ProsesKehadiranSiswa
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null)
+    public function setSekolah(Sekolah $sekolah = null)
     {
         $this->sekolah = $sekolah;
-        
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
     public function getSekolah()
     {
@@ -235,22 +188,15 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return ProsesKehadiranSiswa
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
     {
         $this->tahunAkademik = $tahunAkademik;
-        
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik
+     * @return TahunAkademik
      */
     public function getTahunAkademik()
     {
@@ -258,22 +204,15 @@ class ProsesKehadiranSiswa
     }
 
     /**
-     * Set kelas
-     *
-     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
-     * @return ProsesKehadiranSiswa
+     * @param Kelas $kelas
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
+    public function setKelas(Kelas $kelas = null)
     {
         $this->kelas = $kelas;
-        
-        return $this;
     }
 
     /**
-     * Get kelas
-     *
-     * @return \Fast\SisdikBundle\Entity\Kelas
+     * @return Kelas
      */
     public function getKelas()
     {

@@ -1,16 +1,14 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Fast\SisdikBundle\Util\FileSizeFormatter;
 use Doctrine\ORM\Mapping as ORM;
+use Fast\SisdikBundle\Util\FileSizeFormatter;
 
 /**
- * Sekolah
- *
  * @ORM\Table(name="sekolah")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
@@ -25,102 +23,102 @@ class Sekolah
     const PHOTO_THUMB_HEIGHT = 80;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=300, nullable=false)
+     *
+     * @var string
      */
     private $nama;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kode", type="string", length=50, nullable=false)
+     *
+     * @var string
      */
     private $kode;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="alamat", type="string", length=500, nullable=true)
+     *
+     * @var string
      */
     private $alamat;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kodepos", type="string", length=10, nullable=true)
+     *
+     * @var string
      */
     private $kodepos;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="telepon", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $telepon;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="fax", type="string", length=50, nullable=true)
+     *
+     * @var string
      */
     private $fax;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="email", type="string", length=100, nullable=false)
+     *
+     * @var string
      */
     private $email;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="norekening", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $norekening;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="bank", type="string", length=100, nullable=true)
+     *
+     * @var string
      */
     private $bank;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="kepsek", type="string", length=400, nullable=false)
+     *
+     * @var string
      */
     private $kepsek;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="logo", type="string", length=200, nullable=true)
+     *
+     * @var string
      */
     private $logo;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="logo_disk", type="string", length=200, nullable=true)
+     *
+     * @var string
      */
     private $logoDisk;
 
     /**
-     * @var UploadedFile
-     *
      * @Assert\File(maxSize="300k")
+     *
+     * @var UploadedFile
      */
     private $fileUpload;
 
@@ -130,329 +128,300 @@ class Sekolah
     private $fileDiskSebelumnya;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nomor_urut", type="integer", nullable=true, options={"unsigned"=true})
+     *
+     * @var integer
      */
     private $nomorUrut;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return Sekolah
      */
-    public function setNama($nama) {
+    public function setNama($nama)
+    {
         $this->nama = $nama;
-
-        return $this;
     }
 
     /**
-     * Get nama
-     *
      * @return string
      */
-    public function getNama() {
+    public function getNama()
+    {
         return $this->nama;
     }
 
     /**
-     * Set kode
-     *
      * @param string $kode
-     * @return Sekolah
      */
-    public function setKode($kode) {
+    public function setKode($kode)
+    {
         $this->kode = $kode;
-
-        return $this;
     }
 
     /**
-     * Get kode
-     *
      * @return string
      */
-    public function getKode() {
+    public function getKode()
+    {
         return $this->kode;
     }
 
     /**
-     * Set alamat
-     *
      * @param string $alamat
-     * @return Sekolah
      */
-    public function setAlamat($alamat) {
+    public function setAlamat($alamat)
+    {
         $this->alamat = $alamat;
-
-        return $this;
     }
 
     /**
-     * Get alamat
-     *
      * @return string
      */
-    public function getAlamat() {
+    public function getAlamat()
+    {
         return $this->alamat;
     }
 
     /**
-     * Set kodepos
-     *
      * @param string $kodepos
-     * @return Sekolah
      */
-    public function setKodepos($kodepos) {
+    public function setKodepos($kodepos)
+    {
         $this->kodepos = $kodepos;
-
-        return $this;
     }
 
     /**
-     * Get kodepos
-     *
      * @return string
      */
-    public function getKodepos() {
+    public function getKodepos()
+    {
         return $this->kodepos;
     }
 
     /**
-     * Set telepon
-     *
      * @param string $telepon
-     * @return Sekolah
      */
-    public function setTelepon($telepon) {
+    public function setTelepon($telepon)
+    {
         $this->telepon = $telepon;
-
-        return $this;
     }
 
     /**
-     * Get telepon
-     *
      * @return string
      */
-    public function getTelepon() {
+    public function getTelepon()
+    {
         return $this->telepon;
     }
 
     /**
-     * Set fax
-     *
      * @param string $fax
-     * @return Sekolah
      */
-    public function setFax($fax) {
+    public function setFax($fax)
+    {
         $this->fax = $fax;
-
-        return $this;
     }
 
     /**
-     * Get fax
-     *
      * @return string
      */
-    public function getFax() {
+    public function getFax()
+    {
         return $this->fax;
     }
 
     /**
-     * Set email
-     *
      * @param string $email
-     * @return Sekolah
      */
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->email = $email;
-
-        return $this;
     }
 
     /**
-     * Get email
-     *
      * @return string
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
     /**
-     * Set norekening
-     *
      * @param string $norekening
-     * @return Sekolah
      */
-    public function setNorekening($norekening) {
+    public function setNorekening($norekening)
+    {
         $this->norekening = $norekening;
-
-        return $this;
     }
 
     /**
-     * Get norekening
-     *
      * @return string
      */
-    public function getNorekening() {
+    public function getNorekening()
+    {
         return $this->norekening;
     }
 
     /**
-     * Set bank
-     *
      * @param string $bank
-     * @return Sekolah
      */
-    public function setBank($bank) {
+    public function setBank($bank)
+    {
         $this->bank = $bank;
-
-        return $this;
     }
 
     /**
-     * Get bank
-     *
      * @return string
      */
-    public function getBank() {
+    public function getBank()
+    {
         return $this->bank;
     }
 
     /**
-     * Set kepsek
-     *
      * @param string $kepsek
-     * @return Sekolah
      */
-    public function setKepsek($kepsek) {
+    public function setKepsek($kepsek)
+    {
         $this->kepsek = $kepsek;
-
-        return $this;
     }
 
     /**
-     * Get kepsek
-     *
      * @return string
      */
-    public function getKepsek() {
+    public function getKepsek()
+    {
         return $this->kepsek;
     }
 
     /**
-     * Set logo
-     *
      * @param string $logo
-     * @return Sekolah
      */
-    public function setLogo($logo) {
+    public function setLogo($logo)
+    {
         $this->logo = $logo;
-
-        return $this;
     }
 
     /**
-     * Get logo
-     *
      * @return string
      */
-    public function getLogo() {
+    public function getLogo()
+    {
         return strlen($this->logo) > 20 ? '...' . substr($this->logo, -17) : $this->logo;
     }
 
     /**
-     * Set logoDisk
-     *
      * @param string $logoDisk
-     * @return Sekolah
      */
-    public function setLogoDisk($logoDisk) {
+    public function setLogoDisk($logoDisk)
+    {
         $this->logoDisk = $logoDisk;
-
-        return $this;
     }
 
     /**
-     * Get logoDisk
-     *
      * @return string
      */
-    public function getLogoDisk() {
+    public function getLogoDisk()
+    {
         return $this->logoDisk;
     }
 
     /**
-     * Set nomorUrut
-     *
      * @param integer $nomorUrut
-     * @return Siswa
      */
-    public function setNomorUrut($nomorUrut) {
+    public function setNomorUrut($nomorUrut)
+    {
         $this->nomorUrut = $nomorUrut;
-
-        return $this;
     }
 
     /**
-     * Get nomorUrut
-     *
      * @return integer
      */
-    public function getNomorUrut() {
+    public function getNomorUrut()
+    {
         return $this->nomorUrut;
     }
 
-    public function getFileUpload() {
+    /**
+     * @param UploadedFile $file
+     */
+    public function setFileUpload(UploadedFile $file)
+    {
+        $this->fileUpload = $file;
+    }
+
+    /**
+     * @return UploadedFile
+     */
+    public function getFileUpload()
+    {
         return $this->fileUpload;
     }
 
-    public function setFileUpload(UploadedFile $file) {
-        $this->fileUpload = $file;
-
-        return $this;
+    /**
+     * @return NULL|string
+     */
+    public function getWebPathLogoDisk()
+    {
+        return null === $this->logoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->logoDisk;
     }
 
-    public function getWebPathLogoDisk() {
-        return null === $this->logoDisk ? null : $this->getUploadDir() . '/' . $this->logoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getWebPathLogoThumbnailDisk()
+    {
+        return null === $this->logoDisk ?
+            null : $this->getUploadDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->logoDisk
+        ;
     }
 
-    public function getWebPathLogoThumbnailDisk() {
-        return null === $this->logoDisk ? null
-                : $this->getUploadDir() . '/' . self::THUMBNAIL_PREFIX . $this->logoDisk;
+    /**
+     * @return NULL|string
+     */
+    public function getRelativePathLogoDisk()
+    {
+        return null === $this->logoDisk ?
+            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->logoDisk
+        ;
     }
 
-    public function getRelativePathLogoDisk() {
-        return null === $this->logoDisk ? null : $this->getUploadRootDir() . '/' . $this->logoDisk;
+    /**
+     * @return Ambigous NULL|string
+     */
+    public function getRelativePathLogoDiskSebelumnya()
+    {
+        return null === $this->fileDiskSebelumnya ?
+            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fileDiskSebelumnya
+        ;
     }
 
-    public function getRelativePathLogoDiskSebelumnya() {
-        return null === $this->fileDiskSebelumnya ? null
-                : $this->getUploadRootDir() . '/' . $this->fileDiskSebelumnya;
+    /**
+     * @return Ambigous NULL|string
+     */
+    public function getRelativePathLogoThumbDiskSebelumnya()
+    {
+        return null === $this->fileDiskSebelumnya ?
+            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fileDiskSebelumnya
+        ;
     }
 
-    public function getRelativePathLogoThumbDiskSebelumnya() {
-        return null === $this->fileDiskSebelumnya ? null
-                : $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->fileDiskSebelumnya;
-    }
-
-    public function getFilesizeLogoDisk($type = 'KB') {
+    /**
+     * @param  string $type
+     * @return string
+     */
+    public function getFilesizeLogoDisk($type = 'KB')
+    {
         $file = new File($this->getRelativePathLogoDisk());
+
         return FileSizeFormatter::formatBytes($file->getSize(), $type);
     }
 
@@ -460,12 +429,13 @@ class Sekolah
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
      */
-    public function prePersist() {
+    public function prePersist()
+    {
         if (null !== $this->fileUpload) {
             $this->fileDiskSebelumnya = $this->logoDisk;
 
-            $this->logoDisk = sha1(uniqid(mt_rand(), true)) . '_'
-                    . $this->fileUpload->getClientOriginalName();
+            $this->logoDisk = sha1(uniqid(mt_rand(), true)) . '_' . $this->fileUpload->getClientOriginalName();
+
             $this->logo = $this->fileUpload->getClientOriginalName();
         }
     }
@@ -474,19 +444,19 @@ class Sekolah
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
      */
-    public function postPersist() {
+    public function postPersist()
+    {
         if ($this->fileUpload === null) {
             return;
         }
 
         if ($this->fileUpload->move($this->getUploadRootDir(), $this->logoDisk)) {
-
             $targetfile = $this->getRelativePathLogoDisk();
-            $thumbnailfile = $this->getUploadRootDir() . '/' . self::THUMBNAIL_PREFIX . $this->logoDisk;
+            $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->logoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
-            if (is_numeric($type)) {
 
+            if (is_numeric($type)) {
                 $origRatio = $origWidth / $origHeight;
                 $resultWidth = self::PHOTO_THUMB_WIDTH;
                 $resultHeight = self::PHOTO_THUMB_HEIGHT;
@@ -504,21 +474,17 @@ class Sekolah
                             $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
 
                             $srcImage = imagecreatefromjpeg($targetfile);
-                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
-                                    $resultHeight, $origWidth, $origHeight);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
 
                             imagejpeg($resultImage, $thumbnailfile, 90);
                         }
                         break;
                     case IMAGETYPE_PNG:
                         if (imagetypes() & IMG_PNG) {
-                            // resample image
-                            // for png, we use imagecreate instead
                             $resultImage = imagecreate($resultWidth, $resultHeight);
 
                             $srcImage = imagecreatefrompng($targetfile);
-                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
-                                    $resultHeight, $origWidth, $origHeight);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
 
                             imagepng($resultImage, $thumbnailfile, 0);
                         }
@@ -528,8 +494,7 @@ class Sekolah
                             $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
 
                             $srcImage = imagecreatefromgif($targetfile);
-                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth,
-                                    $resultHeight, $origWidth, $origHeight);
+                            imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
 
                             imagegif($resultImage, $thumbnailfile);
                         }
@@ -543,7 +508,8 @@ class Sekolah
         unset($this->fileUpload);
     }
 
-    private function removeFileSebelumnya() {
+    private function removeFileSebelumnya()
+    {
         if ($file = $this->getRelativePathLogoDiskSebelumnya()) {
             @unlink($file);
         }
@@ -555,21 +521,31 @@ class Sekolah
     /**
      * @ORM\PostRemove()
      */
-    public function removeFile() {
+    public function removeFile()
+    {
         if ($file = $this->getRelativePathLogoDisk()) {
             @unlink($file);
         }
     }
 
-    protected function getUploadRootDir() {
+    /**
+     * @return string
+     */
+    protected function getUploadRootDir()
+    {
         return __DIR__ . '/../../../../web/' . $this->getUploadDir();
     }
 
-    protected function getUploadDir() {
+    /**
+     * @return string
+     */
+    protected function getUploadDir()
+    {
         $fs = new Filesystem();
         if (!$fs->exists(self::LOGO_DIR . $this->getId())) {
             $fs->mkdir(self::LOGO_DIR . $this->getId());
         }
+
         return self::LOGO_DIR . $this->getId();
     }
 }
