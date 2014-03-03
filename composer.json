@@ -51,7 +51,7 @@
 		"github-protocols" : [
 			"https"
 		],
-		"process-timeout" : "100000"
+		"process-timeout" : 100000
 	},
 	"scripts" : {
 		"post-update-cmd" : [
