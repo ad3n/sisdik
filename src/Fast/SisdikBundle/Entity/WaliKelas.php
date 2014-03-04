@@ -1,12 +1,9 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * WaliKelas
- *
  * @ORM\Table(name="wali_kelas", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="wali_kelas_unq1", columns={"tahun_akademik_id", "kelas_id"})
  * })
@@ -15,47 +12,43 @@ use Doctrine\ORM\Mapping as ORM;
 class WaliKelas
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nama", type="string", length=45, nullable=true)
+     *
+     * @var string
      */
     private $nama;
 
     /**
-     * @var \Kelas
-     *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Kelas
      */
     private $kelas;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,22 +56,15 @@ class WaliKelas
     }
 
     /**
-     * Set nama
-     *
      * @param string $nama
-     * @return WaliKelas
      */
     public function setNama($nama)
     {
         $this->nama = $nama;
-    
-        return $this;
     }
 
     /**
-     * Get nama
-     *
-     * @return string 
+     * @return string
      */
     public function getNama()
     {
@@ -86,22 +72,15 @@ class WaliKelas
     }
 
     /**
-     * Set kelas
-     *
-     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
-     * @return WaliKelas
+     * @param Kelas $kelas
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null)
+    public function setKelas(Kelas $kelas = null)
     {
         $this->kelas = $kelas;
-    
-        return $this;
     }
 
     /**
-     * Get kelas
-     *
-     * @return \Fast\SisdikBundle\Entity\Kelas 
+     * @return Kelas
      */
     public function getKelas()
     {
@@ -109,22 +88,15 @@ class WaliKelas
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return WaliKelas
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null)
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
     {
         $this->tahunAkademik = $tahunAkademik;
-    
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik 
+     * @return TahunAkademik
      */
     public function getTahunAkademik()
     {

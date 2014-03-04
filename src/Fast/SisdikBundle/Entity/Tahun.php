@@ -1,12 +1,10 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Tahun
- *
  * @ORM\Table(name="tahun", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="UNIQ_tahun1", columns={"sekolah_id", "tahun"})
  * })
@@ -15,103 +13,88 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Tahun
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="tahun", type="string", nullable=false)
+     *
+     * @var string
      */
     private $tahun;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \PanitiaPendaftaran
-     *
      * @ORM\OneToMany(targetEntity="PanitiaPendaftaran", mappedBy="tahun")
+     *
+     * @var PanitiaPendaftaran
      */
     private $panitiaPendaftaran;
 
-    /**
-     * constructor
-     *
-     */
-    public function __construct() {
+    public function __construct()
+    {
         $this->panitiaPendaftaran = new ArrayCollection();
     }
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set tahun
-     *
      * @param string $tahun
-     * @return Tahun
      */
-    public function setTahun($tahun) {
+    public function setTahun($tahun)
+    {
         $this->tahun = $tahun;
-
-        return $this;
     }
 
     /**
-     * Get tahun
-     *
      * @return string
      */
-    public function getTahun() {
+    public function getTahun()
+    {
         return $this->tahun;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return Tahun
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
     /**
-     * Get panitiaPendaftaran
-     *
-     * @return \Fast\SisdikBundle\PanitiaPendaftaran
+     * @return PanitiaPendaftaran
      */
-    public function getPanitiaPendaftaran() {
+    public function getPanitiaPendaftaran()
+    {
         return $this->panitiaPendaftaran;
     }
 }

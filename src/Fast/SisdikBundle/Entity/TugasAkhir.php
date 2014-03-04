@@ -1,49 +1,42 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TugasAkhir
- *
  * @ORM\Table(name="tugas_akhir")
  * @ORM\Entity
  */
 class TugasAkhir
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="judul", type="string", length=300, nullable=true)
+     *
+     * @var string
      */
     private $judul;
 
     /**
-     * @var \Siswa
-     *
      * @ORM\ManyToOne(targetEntity="Siswa")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Siswa
      */
     private $siswa;
 
-
-
     /**
-     * Get id
-     *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -51,22 +44,15 @@ class TugasAkhir
     }
 
     /**
-     * Set judul
-     *
      * @param string $judul
-     * @return TugasAkhir
      */
     public function setJudul($judul)
     {
         $this->judul = $judul;
-    
-        return $this;
     }
 
     /**
-     * Get judul
-     *
-     * @return string 
+     * @return string
      */
     public function getJudul()
     {
@@ -74,22 +60,15 @@ class TugasAkhir
     }
 
     /**
-     * Set siswa
-     *
-     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return TugasAkhir
+     * @param Siswa $siswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null)
+    public function setSiswa(Siswa $siswa = null)
     {
         $this->siswa = $siswa;
-    
-        return $this;
     }
 
     /**
-     * Get siswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa 
+     * @return Siswa
      */
     public function getSiswa()
     {

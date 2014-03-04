@@ -1,11 +1,9 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SiswaKelas
- *
  * @ORM\Table(name="siswa_kelas", uniqueConstraints={
  *     @ORM\UniqueConstraint(name="siswa_kelas_unq1", columns={"siswa_id", "tahun_akademik_id", "kelas_id"})
  * })
@@ -14,200 +12,169 @@ use Doctrine\ORM\Mapping as ORM;
 class SiswaKelas
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default" = 0})
+     *
+     * @var boolean
      */
     private $aktif;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=400, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \Kelas
-     *
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Kelas
      */
     private $kelas;
 
     /**
-     * @var \Penjurusan
-     *
      * @ORM\ManyToOne(targetEntity="Penjurusan")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
+     *     @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
      * })
+     *
+     * @var Penjurusan
      */
     private $penjurusan;
 
     /**
-     * @var \Siswa
-     *
      * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="siswaKelas")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Siswa
      */
     private $siswa;
 
     /**
-     * @var \TahunAkademik
-     *
      * @ORM\ManyToOne(targetEntity="TahunAkademik")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="tahun_akademik_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var TahunAkademik
      */
     private $tahunAkademik;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set aktif
-     *
      * @param boolean $aktif
-     * @return SiswaKelas
      */
-    public function setAktif($aktif) {
+    public function setAktif($aktif)
+    {
         $this->aktif = $aktif;
-
-        return $this;
     }
 
     /**
-     * Get aktif
-     *
      * @return boolean
      */
-    public function getAktif() {
+    public function getAktif()
+    {
         return $this->aktif;
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return SiswaKelas
      */
-    public function setKeterangan($keterangan) {
+    public function setKeterangan($keterangan)
+    {
         $this->keterangan = $keterangan;
-
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
      * @return string
      */
-    public function getKeterangan() {
+    public function getKeterangan()
+    {
         return $this->keterangan;
     }
 
     /**
-     * Set kelas
-     *
-     * @param \Fast\SisdikBundle\Entity\Kelas $kelas
-     * @return SiswaKelas
+     * @param Kelas $kelas
      */
-    public function setKelas(\Fast\SisdikBundle\Entity\Kelas $kelas = null) {
+    public function setKelas(Kelas $kelas = null)
+    {
         $this->kelas = $kelas;
-
-        return $this;
     }
 
     /**
-     * Get kelas
-     *
-     * @return \Fast\SisdikBundle\Entity\Kelas
+     * @return Kelas
      */
-    public function getKelas() {
+    public function getKelas()
+    {
         return $this->kelas;
     }
 
     /**
-     * Set penjurusan
-     *
-     * @param \Fast\SisdikBundle\Entity\Penjurusan $penjurusan
-     * @return SiswaKelas
+     * @param Penjurusan $penjurusan
      */
-    public function setPenjurusan(\Fast\SisdikBundle\Entity\Penjurusan $penjurusan = null) {
+    public function setPenjurusan(Penjurusan $penjurusan = null)
+    {
         $this->penjurusan = $penjurusan;
-
-        return $this;
     }
 
     /**
-     * Get penjurusan
-     *
-     * @return \Fast\SisdikBundle\Entity\Penjurusan
+     * @return Penjurusan
      */
-    public function getPenjurusan() {
+    public function getPenjurusan()
+    {
         return $this->penjurusan;
     }
 
     /**
-     * Set siswa
-     *
-     * @param \Fast\SisdikBundle\Entity\Siswa $siswa
-     * @return SiswaKelas
+     * @param Siswa $siswa
      */
-    public function setSiswa(\Fast\SisdikBundle\Entity\Siswa $siswa = null) {
+    public function setSiswa(Siswa $siswa = null)
+    {
         $this->siswa = $siswa;
-
-        return $this;
     }
 
     /**
-     * Get siswa
-     *
-     * @return \Fast\SisdikBundle\Entity\Siswa
+     * @return Siswa
      */
-    public function getSiswa() {
+    public function getSiswa()
+    {
         return $this->siswa;
     }
 
     /**
-     * Set tahunAkademik
-     *
-     * @param \Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @return SiswaKelas
+     * @param TahunAkademik $tahunAkademik
      */
-    public function setTahunAkademik(\Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik = null) {
+    public function setTahunAkademik(TahunAkademik $tahunAkademik = null)
+    {
         $this->tahunAkademik = $tahunAkademik;
-
-        return $this;
     }
 
     /**
-     * Get tahunAkademik
-     *
-     * @return \Fast\SisdikBundle\Entity\TahunAkademik
+     * @return TahunAkademik
      */
-    public function getTahunAkademik() {
+    public function getTahunAkademik()
+    {
         return $this->tahunAkademik;
     }
 }

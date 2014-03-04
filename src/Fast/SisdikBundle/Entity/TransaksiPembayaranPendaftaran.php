@@ -1,13 +1,11 @@
 <?php
-
 namespace Fast\SisdikBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * TransaksiPembayaranPendaftaran
- *
  * @ORM\Table(name="transaksi_pembayaran_pendaftaran")
  * @ORM\Entity
  */
@@ -16,256 +14,214 @@ class TransaksiPembayaranPendaftaran
     const tandakwitansi = 'D';
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var integer
      */
     private $id;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
+     *
+     * @var integer
      */
     private $nominalPembayaran;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="nomor_urut_transaksi_perbulan", type="smallint", nullable=true, options={"unsigned"=true})
+     *
+     * @var integer
      */
     private $nomorUrutTransaksiPerbulan;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="nomor_transaksi", type="string", length=45, nullable=true)
+     *
+     * @var string
      */
     private $nomorTransaksi;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
+     *
+     * @var string
      */
     private $keterangan;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
+     *
+     * @var \DateTime
      */
     private $waktuSimpan;
 
     /**
-     * @var \Sekolah
-     *
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var Sekolah
      */
     private $sekolah;
 
     /**
-     * @var \PembayaranPendaftaran
-     *
      * @ORM\ManyToOne(targetEntity="PembayaranPendaftaran", inversedBy="transaksiPembayaranPendaftaran")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="pembayaran_pendaftaran_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="pembayaran_pendaftaran_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var PembayaranPendaftaran
      */
     private $pembayaranPendaftaran;
 
     /**
-     * @var \User
-     *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     *     @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
      * })
+     *
+     * @var User
      */
     private $dibuatOleh;
 
     /**
-     * Get id
-     *
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
-     * Set nominalPembayaran
-     *
      * @param integer $nominalPembayaran
-     * @return TransaksiPembayaranPendaftaran
      */
-    public function setNominalPembayaran($nominalPembayaran) {
+    public function setNominalPembayaran($nominalPembayaran)
+    {
         $this->nominalPembayaran = $nominalPembayaran;
-
-        return $this;
     }
 
     /**
-     * Get nominalPembayaran
-     *
      * @return integer
      */
-    public function getNominalPembayaran() {
+    public function getNominalPembayaran()
+    {
         return $this->nominalPembayaran;
     }
 
     /**
-     * Set nomorUrutTransaksiPerbulan
-     *
      * @param integer $nomorUrutTransaksiPerbulan
-     * @return TransaksiPembayaranPendaftaran
      */
-    public function setNomorUrutTransaksiPerbulan($nomorUrutTransaksiPerbulan) {
+    public function setNomorUrutTransaksiPerbulan($nomorUrutTransaksiPerbulan)
+    {
         $this->nomorUrutTransaksiPerbulan = $nomorUrutTransaksiPerbulan;
-
-        return $this;
     }
 
     /**
-     * Get nomorUrutTransaksiPerbulan
-     *
      * @return integer
      */
-    public function getNomorUrutTransaksiPerbulan() {
+    public function getNomorUrutTransaksiPerbulan()
+    {
         return $this->nomorUrutTransaksiPerbulan;
     }
 
     /**
-     * Set nomorTransaksi
-     *
      * @param string $nomorTransaksi
-     * @return TransaksiPembayaranPendaftaran
      */
-    public function setNomorTransaksi($nomorTransaksi) {
+    public function setNomorTransaksi($nomorTransaksi)
+    {
         $this->nomorTransaksi = $nomorTransaksi;
-
-        return $this;
     }
 
     /**
-     * Get nomorTransaksi
-     *
      * @return string
      */
-    public function getNomorTransaksi() {
+    public function getNomorTransaksi()
+    {
         return $this->nomorTransaksi;
     }
 
     /**
-     * Set keterangan
-     *
      * @param string $keterangan
-     * @return TransaksiPembayaranPendaftaran
      */
-    public function setKeterangan($keterangan) {
+    public function setKeterangan($keterangan)
+    {
         $this->keterangan = $keterangan;
-
-        return $this;
     }
 
     /**
-     * Get keterangan
-     *
      * @return string
      */
-    public function getKeterangan() {
+    public function getKeterangan()
+    {
         return $this->keterangan;
     }
 
     /**
-     * Set waktuSimpan
-     *
      * @param \DateTime $waktuSimpan
-     * @return TransaksiPembayaranPendaftaran
      */
-    public function setWaktuSimpan($waktuSimpan) {
+    public function setWaktuSimpan($waktuSimpan)
+    {
         $this->waktuSimpan = $waktuSimpan;
-
-        return $this;
     }
 
     /**
-     * Get waktuSimpan
-     *
      * @return \DateTime
      */
-    public function getWaktuSimpan() {
+    public function getWaktuSimpan()
+    {
         return $this->waktuSimpan;
     }
 
     /**
-     * Set sekolah
-     *
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @return TransaksiPembayaranPendaftaran
+     * @param Sekolah $sekolah
      */
-    public function setSekolah(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function setSekolah(Sekolah $sekolah = null)
+    {
         $this->sekolah = $sekolah;
-
-        return $this;
     }
 
     /**
-     * Get sekolah
-     *
-     * @return \Fast\SisdikBundle\Entity\Sekolah
+     * @return Sekolah
      */
-    public function getSekolah() {
+    public function getSekolah()
+    {
         return $this->sekolah;
     }
 
     /**
-     * Set pembayaranPendaftaran
-     *
-     * @param \Fast\SisdikBundle\Entity\PembayaranPendaftaran $pembayaranPendaftaran
-     * @return TransaksiPembayaranPendaftaran
+     * @param PembayaranPendaftaran $pembayaranPendaftaran
      */
-    public function setPembayaranPendaftaran(
-            \Fast\SisdikBundle\Entity\PembayaranPendaftaran $pembayaranPendaftaran = null) {
+    public function setPembayaranPendaftaran(PembayaranPendaftaran $pembayaranPendaftaran = null)
+    {
         $this->pembayaranPendaftaran = $pembayaranPendaftaran;
-
-        return $this;
     }
 
     /**
-     * Get pembayaranPendaftaran
-     *
-     * @return \Fast\SisdikBundle\Entity\PembayaranPendaftaran
+     * @return PembayaranPendaftaran
      */
-    public function getPembayaranPendaftaran() {
+    public function getPembayaranPendaftaran()
+    {
         return $this->pembayaranPendaftaran;
     }
 
     /**
-     * Set dibuatOleh
-     *
-     * @param \Fast\SisdikBundle\Entity\User $dibuatOleh
-     * @return Siswa
+     * @param User $dibuatOleh
      */
-    public function setDibuatOleh(\Fast\SisdikBundle\Entity\User $dibuatOleh = null) {
+    public function setDibuatOleh(User $dibuatOleh = null)
+    {
         $this->dibuatOleh = $dibuatOleh;
-
-        return $this;
     }
 
     /**
-     * Get dibuatOleh
-     *
-     * @return \Fast\SisdikBundle\Entity\User
+     * @return User
      */
-    public function getDibuatOleh() {
+    public function getDibuatOleh()
+    {
         return $this->dibuatOleh;
     }
 }
