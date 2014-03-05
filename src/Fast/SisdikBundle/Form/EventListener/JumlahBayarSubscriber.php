@@ -1,82 +1,105 @@
 <?php
-
 namespace Fast\SisdikBundle\Form\EventListener;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Validator\Constraints\Range;
+
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\Constraints\Range;
 
+/**
+ * Membentuk label bidang-bidang form jumlah bayar
+ */
 class JumlahBayarSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var Translator
+     */
     private $translator;
 
-    public function __construct(Translator $translator) {
+    /**
+     * @param Translator $translator
+     */
+    public function __construct(Translator $translator)
+    {
         $this->translator = $translator;
     }
 
-    public static function getSubscribedEvents() {
-        return array(
-            FormEvents::PRE_SUBMIT => 'preSubmit'
-        );
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            FormEvents::PRE_SUBMIT => 'preSubmit',
+        ];
     }
 
-    public function preSubmit(FormEvent $event) {
+    /**
+     * @param FormEvent $event
+     */
+    public function preSubmit(FormEvent $event)
+    {
         $data = $event->getData();
-
         $form = $event->getForm();
+        $translator = $this->translator;
+
         if (array_key_exists('persenBayar', $data) && $data['persenBayar'] == 1) {
             $form
-                    ->add('jumlahBayar', 'number',
-                            array(
-                                    'constraints' => array(
-                                            new Range(
-                                                    array(
-                                                            'min' => 0, 'max' => 100,
-                                                            'minMessage' => $this->translator
-                                                                    ->trans('pencarian.persen.minimal',
-                                                                            array(), 'validators'),
-                                                            'maxMessage' => $this->translator
-                                                                    ->trans('pencarian.persen.maksimal',
-                                                                            array(), 'validators'),
-                                                    ))
-                                    ),
-                                    'attr' => array(
-                                        'class' => 'small', 'placeholder' => 'label.jumlah.bayar'
-                                    ), 'label_render' => false, 'required' => false,
-                                    'error_bubbling' => true,
-                                    'invalid_message' => /** @Ignore */ $this->translator
-                                            ->trans('pencarian.persen.tidak.sah', array(), 'validators'),
-                            ));
+                ->add('jumlahBayar', 'number', [
+                    'constraints' => [
+                        new Range([
+                            'min' => 0,
+                            'max' => 100,
+                            'minMessage' => $translator->trans('pencarian.persen.minimal', [], 'validators'),
+                            'maxMessage' => $translator->trans('pencarian.persen.maksimal', [], 'validators'),
+                        ])
+                    ],
+                    'attr' => [
+                        'class' => 'small',
+                        'placeholder' => 'label.jumlah.bayar',
+                    ],
+                    'label_render' => false,
+                    'required' => false,
+                    'error_bubbling' => true,
+                    'invalid_message' => /** @Ignore */ $translator->trans('pencarian.persen.tidak.sah', [], 'validators'),
+                ])
+            ;
         } else {
             $form
-                    ->add('jumlahBayar', 'number',
-                            array(
-                                    'precision' => 0, 'grouping' => 3,
-                                    'attr' => array(
-                                        'class' => 'small', 'placeholder' => 'label.jumlah.bayar'
-                                    ), 'label_render' => false, 'required' => false,
-                                    'error_bubbling' => true,
-                                    'invalid_message' => /** @Ignore */ $this->translator
-                                            ->trans('pencarian.nominal.tidak.sah', array(), 'validators'),
-                            ));
-
+                ->add('jumlahBayar', 'number', [
+                    'precision' => 0,
+                    'grouping' => 3,
+                    'attr' => [
+                        'class' => 'small',
+                        'placeholder' => 'label.jumlah.bayar',
+                    ],
+                    'label_render' => false,
+                    'required' => false,
+                    'error_bubbling' => true,
+                    'invalid_message' => /** @Ignore */ $translator->trans('pencarian.nominal.tidak.sah', [], 'validators'),
+                ])
+            ;
         }
         $form
-                ->add('pembandingBayar', 'choice',
-                        array(
-                                'required' => true,
-                                'choices' => array(
-                                    '=' => '=', '>' => '>', '<' => '<', '>=' => '≥', '<=' => '≤'
-                                ),
-                                'attr' => array(
-                                    'class' => 'mini pembanding-bayar'
-                                ), 'label_render' => false
-                        ))
-                ->add('persenBayar', 'checkbox',
-                        array(
-                            'required' => false, 'label_render' => false,
-                        ));
+            ->add('pembandingBayar', 'choice', [
+                'required' => true,
+                'choices' => [
+                    '=' => '=',
+                    '>' => '>',
+                    '<' => '<',
+                    '>=' => '≥',
+                    '<=' => '≤',
+                ],
+                'attr' => [
+                    'class' => 'mini pembanding-bayar',
+                ],
+                'label_render' => false,
+            ])
+            ->add('persenBayar', 'checkbox', [
+                'required' => false,
+                'label_render' => false,
+            ])
+        ;
     }
-
 }

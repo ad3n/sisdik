@@ -1,10 +1,13 @@
 <?php
-
 namespace Fast\SisdikBundle\Form\DataTransformer;
+
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Mengubah entity menjadi id ketika ditampilkan di form, dan sebaliknya ketika akan disimpan ke database
+ */
 class EntityToIdTransformer implements DataTransformerInterface
 {
     /**
@@ -17,12 +20,21 @@ class EntityToIdTransformer implements DataTransformerInterface
      */
     protected $class;
 
-    public function __construct(ObjectManager $objectManager, $class) {
+    /**
+     * @param ObjectManager $objectManager
+     * @param string        $class
+     */
+    public function __construct(ObjectManager $objectManager, $class)
+    {
         $this->objectManager = $objectManager;
         $this->class = $class;
     }
 
-    public function transform($entity) {
+    /**
+     * {@inheritdoc}
+     */
+    public function transform($entity)
+    {
         if (null === $entity) {
             return;
         }
@@ -34,7 +46,11 @@ class EntityToIdTransformer implements DataTransformerInterface
         return $entity->getId();
     }
 
-    public function reverseTransform($id) {
+    /**
+     * {@inheritdoc}
+     */
+    public function reverseTransform($id)
+    {
         if (!$id) {
             return null;
         }
