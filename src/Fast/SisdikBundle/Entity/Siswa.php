@@ -1542,8 +1542,7 @@ class Siswa
 
         if ($this->file->move($this->getUploadRootDir(), $this->fotoDisk)) {
             $targetfile = $this->getAbsolutePath();
-            $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX
-                    . $this->fotoDisk;
+            $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
             if (is_numeric($type)) {
