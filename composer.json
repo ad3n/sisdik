@@ -39,7 +39,8 @@
 		"sensio/generator-bundle" : "2.3.*",
 		"psliwa/pdf-bundle" : "dev-master",
 		"sensio/framework-extra-bundle" : "2.3.*",
-		"doctrine/doctrine-bundle" : "1.2.*"
+		"doctrine/doctrine-bundle" : "1.2.*",
+		"fortawesome/font-awesome": "v4.0.3"
 	},
 	"autoload" : {
 		"psr-0" : {
