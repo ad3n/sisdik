@@ -182,7 +182,8 @@ dd {
 }
 
 .add-link {
-  margin-bottom: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 div.knowledgebase {
@@ -320,6 +321,12 @@ div.knowledgebase {
 .pagination-centered {
     text-align: center;
 }
+
+/* menimpa konfigurasi mopabootstrapbundle css */
+.bordered-table {
+    width: 100%;
+}
+/* akhir: menimpa konfigurasi mopabootstrapbundle css */
 
 /* xtra buttons */
 .btn.danger, .alert-message.danger, .btn.danger:hover, .alert-message.danger:hover, .btn.error, .alert-message.error, .btn.error:hover, .alert-message.error:hover, .btn.success, .alert-message.success, .btn.success:hover, .alert-message.success:hover, .btn.info, .alert-message.info, .btn.info:hover, .alert-message.info:hover {
