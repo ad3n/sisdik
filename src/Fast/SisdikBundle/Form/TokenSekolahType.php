@@ -5,6 +5,8 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -18,6 +20,10 @@ class TokenSekolahType extends AbstractType
     private $entityManager;
 
     /**
+     * @InjectParams({
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
      * @param ObjectManager $objectManager
      */
     public function __construct(EntityManager $entityManager)
