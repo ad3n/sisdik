@@ -4,10 +4,10 @@ namespace Fast\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="mesin_proxy")
+ * @ORM\Table(name="token_sekolah")
  * @ORM\Entity
  */
-class MesinProxy
+class TokenSekolah
 {
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -19,11 +19,11 @@ class MesinProxy
     private $id;
 
     /**
-     * @ORM\Column(name="token", type="string", length=255, nullable=false)
+     * @ORM\Column(name="mesin_proxy", type="string", length=255, nullable=false)
      *
      * @var string
      */
-    private $token;
+    private $mesinProxy;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
@@ -44,19 +44,19 @@ class MesinProxy
     }
 
     /**
-     * @param string $token
+     * @param string $mesinProxy
      */
-    public function setToken($token)
+    public function setMesinProxy($mesinProxy)
     {
-        $this->token = $token;
+        $this->mesinProxy = $mesinProxy;
     }
 
     /**
      * @return string
      */
-    public function getToken()
+    public function getMesinProxy()
     {
-        return $this->token;
+        return $this->mesinProxy;
     }
 
     /**
