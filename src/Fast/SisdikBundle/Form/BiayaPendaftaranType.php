@@ -1,7 +1,6 @@
 <?php
 namespace Fast\SisdikBundle\Form;
 
-use Doctrine\ORM\EntityRepository;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -31,8 +30,8 @@ class BiayaPendaftaranType extends AbstractType
 
     /**
      * @param ContainerInterface $container
-     * @param string $mode
-     * @param int $nominal
+     * @param string             $mode
+     * @param int                $nominal
      */
     public function __construct(ContainerInterface $container, $mode, $nominal)
     {
@@ -43,7 +42,7 @@ class BiayaPendaftaranType extends AbstractType
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
