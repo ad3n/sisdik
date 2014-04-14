@@ -194,3 +194,7 @@ jms_translation:
             excluded_names: ["*TestCase.php", "*Test.php"]
             excluded_dirs: [cache, data, logs]
             keep: true
+
+jms_di_extra:
+    locations:
+        directories: "%kernel.root_dir%/../src"
