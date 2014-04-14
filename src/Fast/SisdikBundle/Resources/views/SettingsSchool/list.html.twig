@@ -16,21 +16,21 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('settings_school_add') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.add.school'|trans }}
-	</a>
+    <a href="{{ path('settings_school_add') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.add.school'|trans }}
+    </a>
 {% endimage %}
 </div>
 
 <div class="clearfix"></div>
 
 <table class="zebra-striped bordered-table">
-	<tbody>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td style="padding: 15px;">
-        		<dl style="margin-top: 0;">
+            <td style="padding: 15px;">
+                <dl style="margin-top: 0;">
                     <dt>{{ 'label.schoolname'|trans }}</dt>
                     <dd>{{ data.nama }}</dd>
                     <dt>{{ 'label.schoolcode'|trans }}</dt>
@@ -55,12 +55,12 @@
                 <dl>
                     <dt>{{ 'label.actions'|trans }}</dt>
                     <dd>
-                        <a href="{{ path('settings_school_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a> &nbsp;&nbsp;
-                		<a href="{{ path('settings_school_delete', {'id': data.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="icon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.school'|trans({'%schoolname%': data.nama}) }}");'></a>
-            		</dd>
+                        <a href="{{ path('settings_school_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="fa fa-pencil"></a> &nbsp;&nbsp;
+                        <a href="{{ path('settings_school_delete', {'id': data.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="fa fa-times" onclick='return confirmDrop(this, "{{ 'confirm.drop.school'|trans({'%schoolname%': data.nama}) }}");'></a>
+                    </dd>
                 </dl>
-		    </td>
-    	</tr>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
