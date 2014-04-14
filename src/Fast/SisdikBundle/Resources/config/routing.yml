@@ -266,6 +266,11 @@ penempatansiswakelas:
     type:     annotation
     prefix:   /
 
+token_sekolah:
+    resource: "@FastSisdikBundle/Controller/TokenSekolahController.php"
+    type:     annotation
+    prefix:   /
+
 
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:
