@@ -6,7 +6,7 @@ use Fast\SisdikBundle\Form\JadwalKehadiranType;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Form\JadwalKehadiranSearchType;
 use Fast\SisdikBundle\Form\JadwalKehadiranDuplicateType;
-use Fast\SisdikBundle\Entity\MesinProxy;
+use Fast\SisdikBundle\Entity\TokenSekolah;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -480,12 +480,12 @@ class JadwalKehadiranController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:MesinProxy')->findByToken($token);
+        $entity = $em->getRepository('FastSisdikBundle:TokenSekolah')->findByMesinProxy($token);
 
         if (count($entity) == 1) {
-            $mesinProxy = $entity[0];
-            if ($mesinProxy instanceof MesinProxy) {
-                $sekolah = $mesinProxy->getSekolah();
+            $tokenSekolah = $entity[0];
+            if ($tokenSekolah instanceof TokenSekolah) {
+                $sekolah = $tokenSekolah->getSekolah();
 
                 $jadwal = [];
                 foreach (JadwalKehadiran::getDaftarPerulangan() as $key => $value) {
