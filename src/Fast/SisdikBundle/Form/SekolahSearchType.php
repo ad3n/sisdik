@@ -34,10 +34,7 @@ class SekolahSearchType extends AbstractType
      *
      * @param EntityManager $entityManager
      */
-    public function __construct(
-        EntityManager $entityManager,
-        Translator $translator
-    )
+    public function __construct(EntityManager $entityManager, Translator $translator)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;
@@ -53,7 +50,8 @@ class SekolahSearchType extends AbstractType
             'attr' => [
                 'class' => 'large'
             ],
-            'label_render' => false
+            'label_render' => false,
+            'horizontal' => false,
         ]);
     }
 

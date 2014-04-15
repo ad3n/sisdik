@@ -46,7 +46,10 @@ class TokenSekolahType extends AbstractType
         ;
 
         $builder
-            ->add('mesinProxy')
+            ->add('mesinProxy', 'text', [
+                'label' => 'label.token.mesin.proxy',
+                'horizontal_input_wrapper_class' => 'col-sm-5 col-md-4 col-lg-3',
+            ])
             ->add('sekolah', 'entity', [
                 'class' => 'FastSisdikBundle:Sekolah',
                 'label' => 'label.school',
