@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2013-11-14T10:05:23Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-04-15T19:52:57Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -793,6 +793,26 @@
         <jms:reference-file line="3">views/Tingkat/new.html.twig</jms:reference-file>
         <source>tingkat.kelas.pembuatan</source>
         <target>Membuat Tingkat Kelas</target>
+      </trans-unit>
+      <trans-unit id="ac8fbea998b7eeeb8a06692eebcabe17d9c1da43" resname="token.sekolah.daftar">
+        <jms:reference-file line="3">views/TokenSekolah/index.html.twig</jms:reference-file>
+        <source>token.sekolah.daftar</source>
+        <target>Daftar Token Sekolah</target>
+      </trans-unit>
+      <trans-unit id="fd78f5121f8eed4983efc50b8254c4b58170b47b" resname="token.sekolah.detail">
+        <jms:reference-file line="3">views/TokenSekolah/show.html.twig</jms:reference-file>
+        <source>token.sekolah.detail</source>
+        <target>Detail Token Sekolah</target>
+      </trans-unit>
+      <trans-unit id="045afd9935ca6d2153308439eaf236fe8462ec1e" resname="token.sekolah.edit">
+        <jms:reference-file line="3">views/TokenSekolah/edit.html.twig</jms:reference-file>
+        <source>token.sekolah.edit</source>
+        <target>Mengubah Token Sekolah</target>
+      </trans-unit>
+      <trans-unit id="829adad20257b49e12b4ee34ae9c2e0f71696465" resname="token.sekolah.pembuatan">
+        <jms:reference-file line="3">views/TokenSekolah/new.html.twig</jms:reference-file>
+        <source>token.sekolah.pembuatan</source>
+        <target>Membuat Token Sekolah</target>
       </trans-unit>
       <trans-unit id="e837c430c4a76d1526d0f367a5c68ff2ed5721af" resname="warning.removal">
         <jms:reference-file line="10">views/Siswa/deleteconfirm.html.twig</jms:reference-file>
