@@ -8,9 +8,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Fast\SisdikBundle\Entity\TokenSekolah;
 use Fast\SisdikBundle\Entity\Sekolah;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * @Route("/token-sekolah")
+ * @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
  */
 class TokenSekolahController extends Controller
 {
