@@ -20,10 +20,10 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('rewardamount_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.reward.amount.add'|trans }}
-	</a>
+    <a href="{{ path('rewardamount_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.reward.amount.add'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -31,28 +31,28 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.year.entry'|trans }}</th>
-    		<th>{{ 'label.admissiongroup.entry'|trans }}</th>
-    		<th>{{ 'label.reward.type.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th>{{ 'label.admissiongroup.entry'|trans }}</th>
+            <th>{{ 'label.reward.type.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 't.nominal') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.reward.type.entry'|trans }}">{% if data.jenisImbalan is defined %}{{ data.jenisImbalan.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('rewardamount_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('rewardamount_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.reward.type.entry'|trans }}">{% if data.jenisImbalan is defined %}{{ data.jenisImbalan.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('rewardamount_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('rewardamount_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>

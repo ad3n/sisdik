@@ -20,10 +20,10 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('fee_registration_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.fee.registration.add'|trans }}
-	</a>
+    <a href="{{ path('fee_registration_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.fee.registration.add'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -31,30 +31,30 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
-    		<th>{{ 'label.fee.type.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+            <th>{{ 'label.fee.type.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 't.nominal') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
-    		<td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
-    		<td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
-    		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('fee_registration_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('fee_registration_edit_confirm', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
+            <td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
+            <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('fee_registration_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('fee_registration_edit_confirm', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
