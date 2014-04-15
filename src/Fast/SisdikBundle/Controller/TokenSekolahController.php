@@ -66,6 +66,7 @@ class TokenSekolahController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $entity->setMesinProxy($entity->generateRandomToken());
             $em->persist($entity);
             $em->flush();
 
@@ -171,10 +172,6 @@ class TokenSekolahController extends Controller
             'method' => 'PUT',
         ]);
 
-        $form->add('submit', 'submit', [
-            'label' => 'Update'
-        ]);
-
         return $form;
     }
 
@@ -251,7 +248,10 @@ class TokenSekolahController extends Controller
             ]))
             ->setMethod('DELETE')
             ->add('submit', 'submit', [
-                'label' => 'Delete',
+                'label' => 'label.delete',
+                'attr' => [
+                    'class' => 'btn alternative icon danger remove',
+                ],
             ])
             ->getForm()
         ;

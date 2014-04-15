@@ -74,4 +74,9 @@ class TokenSekolah
     {
         return $this->sekolah;
     }
+
+    public function generateRandomToken()
+    {
+        return sha1(uniqid(mt_rand(), true));
+    }
 }
