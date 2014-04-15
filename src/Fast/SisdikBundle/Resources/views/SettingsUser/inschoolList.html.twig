@@ -57,8 +57,8 @@
                 {% endfor %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('settings_user_inschool_edit', {'id': user.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="glyphicon glyphicon-pencil"></a>
-                <a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="glyphicon glyphicon-remove" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
+                <a href="{{ path('settings_user_inschool_edit', {'id': user.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}" class="fa fa-pencil"></a>
+                <a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{{ 'tip.delete'|trans }}" class="fa fa-times" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
             </td>
         </tr>
     {% endfor %}

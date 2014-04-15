@@ -5,10 +5,10 @@
 {% block content %}
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('settings_year_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.year.add'|trans }}
-	</a>
+    <a href="{{ path('settings_year_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.year.add'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -16,25 +16,25 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th class="{% if pagination.isSorted('t.tahun') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.year.entry'|trans, 't.tahun') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+        <tr>
+            <th class="{% if pagination.isSorted('t.tahun') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.year.entry'|trans, 't.tahun') }}
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
 {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahun }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('settings_year_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-    		{% for panitia in data.panitiaPendaftaran %}
-    		    <a href="{{ path('regcommittee_show', {'id': panitia.id}) }}" title="{{ 'tip.registration.committee'|trans }}" class="icon-tags"></a>
-    		{% endfor %}
-        		<a href="{{ path('settings_year_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahun }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('settings_year_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+            {% for panitia in data.panitiaPendaftaran %}
+                <a href="{{ path('regcommittee_show', {'id': panitia.id}) }}" title="{{ 'tip.registration.committee'|trans }}"><i class="fa fa-tags"></i></a>
+            {% endfor %}
+                <a href="{{ path('settings_year_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
 {% endfor %}
     </tbody>
 </table>

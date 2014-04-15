@@ -5,10 +5,10 @@
 {% block content %}
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('settings_placement_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.placement.add'|trans }}
-	</a>
+    <a href="{{ path('settings_placement_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.placement.add'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -16,42 +16,42 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.placement.name'|trans, 't.nama') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+        <tr>
+            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.placement.name'|trans, 't.nama') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.kepala') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.kepala') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.chief'|trans, 't.kepala') }}
-    	    </th>
-    		<th>{{ 'label.movement'|trans }}</th>
-    	    <th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.movement'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.placement.name'|trans }}">
-    		    {% if data.parent is not null %}
-    	            <i>{{ data.parent }}</i><br />&rarr;
-    		    {% endif %}
-    		    {{ data.nama }}
-    		</td>
-    		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
-    		<td data-title="{{ 'label.chief'|trans }}">{{ data.kepala }}</td>
-    		<td data-title="{{ 'label.movement'|trans }}">
-        		{% if data.lvl != 0 %}
-        		    <a href="{{ path('settings_placement_moveup', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.moveup'|trans }}" style="width: 50%; display: inline-block; text-align: center;">{{ 'label.moveup'|trans }} &uarr;</a>
-        		    <a href="{{ path('settings_placement_movedown', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.movedown'|trans }}" style="width: 40%; display: inline-block; text-align: center;">&darr; {{ 'label.movedown'|trans }}</a>
-        	    {% endif %}
-    	    </td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('settings_placement_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('settings_placement_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.placement.name'|trans }}">
+                {% if data.parent is not null %}
+                    <i>{{ data.parent }}</i><br />&rarr;
+                {% endif %}
+                {{ data.nama }}
+            </td>
+            <td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
+            <td data-title="{{ 'label.chief'|trans }}">{{ data.kepala }}</td>
+            <td data-title="{{ 'label.movement'|trans }}">
+                {% if data.lvl != 0 %}
+                    <a href="{{ path('settings_placement_moveup', {'id': data.id}) }}" title="{{ 'tip.moveup'|trans }}" style="width: 50%; display: inline-block; text-align: center;">{{ 'label.moveup'|trans }} <i class="fa fa-long-arrow-up"></i></a>
+                    <a href="{{ path('settings_placement_movedown', {'id': data.id}) }}" title="{{ 'tip.movedown'|trans }}" style="width: 40%; display: inline-block; text-align: center;"><i class="fa fa-long-arrow-down"></i> {{ 'label.movedown'|trans }}</a>
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('settings_placement_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+                <a href="{{ path('settings_placement_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
