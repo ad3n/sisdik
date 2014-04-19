@@ -503,7 +503,7 @@ class JadwalKehadiranController extends Controller
 
                     $result = $querybuilder->getQuery()->getResult();
                     if ($result) {
-                        $jadwal[] = $result;
+                        $jadwal[$key] = $result;
                     }
                 }
 
