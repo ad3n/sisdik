@@ -31,7 +31,6 @@ class JadwalKehadiran
 
     /**
      * @ORM\Column(name="perulangan", type="string", length=100, nullable=false)
-     * @Expose
      *
      * @var string
      */
