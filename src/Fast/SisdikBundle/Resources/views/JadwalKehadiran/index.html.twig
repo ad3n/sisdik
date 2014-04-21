@@ -33,10 +33,10 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('jadwal_kehadiran_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.jadwal.kehadiran.tambah'|trans }}
-	</a>
+    <a href="{{ path('jadwal_kehadiran_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.jadwal.kehadiran.tambah'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -44,74 +44,74 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.status.kehadiran'|trans }}</th>
-    		<th>{{ 'label.parameter'|trans }}</th>
-    		<th>{{ 'label.kirim.sms'|trans }}</th>
-    		<th>{{ 'label.terhubung'|trans }}</th>
-    		<th>{{ 'label.options'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+        <tr>
+            <th>{{ 'label.status.kehadiran'|trans }}</th>
+            <th>{{ 'label.parameter'|trans }}</th>
+            <th>{{ 'label.kirim.sms'|trans }}</th>
+            <th>{{ 'label.terhubung'|trans }}</th>
+            <th>{{ 'label.options'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.status.kehadiran'|trans }}">
+            <td data-title="{{ 'label.status.kehadiran'|trans }}">
                 {% if data.permulaan == 1 %}<i id="start-icon" class="icon-play"></i>{% endif %}{{ data.daftarStatusKehadiran[data.statusKehadiran]|trans }}
-    	    </td>
-    		<td data-title="{{ 'label.parameter'|trans }}">
-    		    {% if data.paramstatusDariJam is empty %}
-    		        &mdash;
-    	        {% else %}
-    	            {{ data.paramstatusDariJam(false) }}
+            </td>
+            <td data-title="{{ 'label.parameter'|trans }}">
+                {% if data.paramstatusDariJam is empty %}
+                    &mdash;
+                {% else %}
+                    {{ data.paramstatusDariJam(false) }}
                 {% endif %}
                 <span class="separator">-</span>
-    		    {% if data.paramStatusHinggaJam is empty %}
-    		        &mdash;
-    	        {% else %}
-    	            {{ data.paramStatusHinggaJam(false) }}
+                {% if data.paramStatusHinggaJam is empty %}
+                    &mdash;
+                {% else %}
+                    {{ data.paramStatusHinggaJam(false) }}
                 {% endif %}
             </td>
-    		<td data-title="{{ 'label.kirim.sms'|trans }}">
-    		    {% if data.kirimSms is empty %}
-    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-    		        {% endimage %}
-    	        {% else %}
-    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-    		        {% endimage %}
+            <td data-title="{{ 'label.kirim.sms'|trans }}">
+                {% if data.kirimSms is empty %}
+                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+                    {% endimage %}
+                {% else %}
+                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+                    {% endimage %}
                 {% endif %}
                 <span class="separator">|</span>
-    		    {% if data.smsJam is empty %}
-    		        &mdash;
-    	        {% else %}
-    	            {{ data.smsJam(false) }}
+                {% if data.smsJam is empty %}
+                    &mdash;
+                {% else %}
+                    {{ data.smsJam(false) }}
                 {% endif %}
                 <span class="separator">|</span>
                 {% if data.kirimSms is empty %}
                     &mdash;
-    		    {% else %}
-        		    {% if data.templatesms is not null %}
-        		        {{ data.templatesms.nama }}
-        		    {% endif %}
-    		    {% endif %}
-            </td>
-    		<td data-title="{{ 'label.terhubung'|trans }}">
-    		    {% if data.otomatisTerhubungMesin is empty %}
-    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-    		        {% endimage %}
-    	        {% else %}
-    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-    		        {% endimage %}
+                {% else %}
+                    {% if data.templatesms is not null %}
+                        {{ data.templatesms.nama }}
+                    {% endif %}
                 {% endif %}
             </td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('jadwal_kehadiran_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('jadwal_kehadiran_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.terhubung'|trans }}">
+                {% if data.otomatisTerhubungMesin is empty %}
+                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+                    {% endimage %}
+                {% else %}
+                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+                    {% endimage %}
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('jadwal_kehadiran_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+                <a href="{{ path('jadwal_kehadiran_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -128,12 +128,15 @@
 <div class="clearfix"></div>
 
 {% endif %}
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var url = "{{ path('data_class_ajax_updateclass') }}";
+    var url = "{{ path('data_class_ajax_updateclass') }}";
 
-	$.get(url, {tahunAkademik: $(".selectyear").val(){% if searchdata.kelas is defined %}, kelas: {{ searchdata.kelas.id }}{% endif %}}, function(data) {
-    	var options = '';
+    $.get(url, {tahunAkademik: $(".selectyear").val(){% if searchdata.kelas is defined %}, kelas: {{ searchdata.kelas.id }}{% endif %}}, function(data) {
+        var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -147,7 +150,7 @@ $(document).ready(function() {
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
         $.get(url, {tahunAkademik: $(this).val()}, function(data) {
-        	var options = '';
+            var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -157,8 +160,8 @@ $(document).ready(function() {
         });
     });
 
-	$.get(url, {tahunAkademik: $(".selectyearduplicate").val()}, function(data) {
-    	var options = '';
+    $.get(url, {tahunAkademik: $(".selectyearduplicate").val()}, function(data) {
+        var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -172,7 +175,7 @@ $(document).ready(function() {
         $(".selectclassduplicate").html('<option>{{ 'alt.loading'|trans }}</option>');
 
         $.get(url, {tahunAkademik: $(this).val()}, function(data) {
-        	var options = '';
+            var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -183,4 +186,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock content %}
+{% endblock %}
