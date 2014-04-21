@@ -10,6 +10,8 @@
 }
 #start-icon {
     margin-left: 0px;
+    margin-right: 5px;
+    color: blue;
 }
 </style>
 
@@ -56,7 +58,7 @@
     {% for data in pagination %}
         <tr>
             <td data-title="{{ 'label.status.kehadiran'|trans }}">
-                {% if data.permulaan == 1 %}<i id="start-icon" class="icon-play"></i>{% endif %}{{ data.daftarStatusKehadiran[data.statusKehadiran]|trans }}
+                {% if data.permulaan == 1 %}<i id="start-icon" class="fa fa-play"></i>{% endif %}{{ data.daftarStatusKehadiran[data.statusKehadiran]|trans }}
             </td>
             <td data-title="{{ 'label.parameter'|trans }}">
                 {% if data.paramstatusDariJam is empty %}
