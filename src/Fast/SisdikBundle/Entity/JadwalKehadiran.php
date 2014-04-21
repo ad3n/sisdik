@@ -95,6 +95,7 @@ class JadwalKehadiran
 
     /**
      * @ORM\Column(name="permulaan", type="boolean", nullable=false, options={"default"=0})
+     * @Expose
      *
      * @var boolean
      */
