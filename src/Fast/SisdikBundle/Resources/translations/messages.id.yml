@@ -1,0 +1,13 @@
+status.kehadiran.hadir.tepat: Hadir Tepat
+status.kehadiran.hadir.telat: Hadir Telat
+status.kehadiran.alpa: Alpa
+status.kehadiran.izin: Izin
+status.kehadiran.sakit: Sakit
+
+label.senin: Senin
+label.selasa: Selasa
+label.rabu: Rabu
+label.kamis: Kamis
+label.jumat: Jumat
+label.sabtu: Sabtu
+label.minggu: Minggu
