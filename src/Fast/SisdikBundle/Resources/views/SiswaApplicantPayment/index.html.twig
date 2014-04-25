@@ -26,7 +26,7 @@
 
 <div class="pull-right">
     {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
-    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<i class="fa fa-refresh fa-fw"></i></a>
 </div>
 
 <div class="clearfix">&nbsp;</div>
@@ -91,7 +91,7 @@
 
                 {{ totalBayar|number_format(0, ',', '.') }} &rarr;
                 {% if totalPotongan > 0 %}
-                <span class="icon-gift" style="margin: 0;"></span>
+                <i class="fa fa-gift"></i>
                 {% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
 
@@ -106,7 +106,7 @@
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
             {% if data.gelombang is not null %}
-                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}" class="icon-shopping-cart"></a>
+                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}"><i class="fa fa-shopping-cart"></i></a>
             {% else %}
                 ({{ 'label.tanpa.proses.pendaftaran'|trans }})
             {% endif %}

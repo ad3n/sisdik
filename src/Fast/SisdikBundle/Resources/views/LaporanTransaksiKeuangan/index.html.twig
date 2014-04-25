@@ -19,14 +19,14 @@ form .clearfix {
     margin-bottom: 5px;
 }
 .arrow-down-lanjut {
-	width: 0;
-	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-top: 4px solid #555;
-	display: inline-block;
-	margin-left: 0.3em;
-	vertical-align: middle;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
 }
 #cari-error {
     margin-bottom: 5px;
@@ -48,9 +48,6 @@ form .clearfix {
     min-height: 15px;
 }
 </style>
-{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
 
 <div class="filter-section">
     <form method="GET" action="{{ path('laporan-transaksi-keuangan') }}" class="form-search form-inline" id="search-form">
@@ -86,7 +83,7 @@ form .clearfix {
 
 <div class="pull-right">
     {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.transaksi.tercari'|trans }}: {{ transaksiTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
-    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<span class="icon-refresh" style="margin-left: 0.5em; vertical-align: middle;"></span></a>
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<i class="fa fa-refresh fa-fw"></i></a>
 </div>
 
 <div class="clearfix">&nbsp;</div>
@@ -119,11 +116,9 @@ form .clearfix {
             {% endfor %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-            {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('payment_registrationfee_show', {'sid': data.pembayaranPendaftaran.siswa.id, 'id': data.pembayaranPendaftaran.id}) }}" title="{{ 'tip.lihat.transaksi.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
-            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.transaksi.pembayaran'|trans }}" border="0" style="vertical-align: baseline;" />
-        	    </a>
-	        {% endimage %}
+                    <i class="fa fa-external-link"></i>
+                </a>
             </td>
         </tr>
     {% endfor %}
@@ -140,16 +135,21 @@ form .clearfix {
         </form>
     </div>
 </div>
+{% endblock content %}
 
-<div class="clearfix"></div>
+{% block javascripts_custom %}
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
 <script language="javascript" type="text/javascript">
 var duration = 300;
 
 $(document).ready(function() {
-	$(".pembanding-bayar").dropkick();
+    $(".pembanding-bayar").dropkick();
 
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
         changeYear: false,
         maxDate: 0
     });
@@ -160,10 +160,10 @@ $(document).ready(function() {
         $("#filename").addClass("loading");
         $.post(url, $("#search-form").serialize(), function(response) {
             if (response.redirectUrl) {
-            	window.location.href = response.redirectUrl;
-            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
-                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
-            	$("#filename").removeClass("loading");
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename").removeClass("loading");
             }
         });
         return false;
@@ -182,13 +182,13 @@ $(document).ready(function() {
                 tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}"
             }, function(response) {
                 if (response.teksterformat) {
-                	$("#teks-terformat").html(response.teksterformat);
-                	$(".teks-terformat").val(response.teksterformat);
-                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+                    $("#teks-terformat").html(response.teksterformat);
+                    $(".teks-terformat").val(response.teksterformat);
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
                 } else {
-                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                    $("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
                 }
-            	$(".pratinjau-loader").removeClass("loading");
+                $(".pratinjau-loader").removeClass("loading");
             }
         );
         return false;
@@ -196,7 +196,7 @@ $(document).ready(function() {
 
     var summaryform = $("#summary-form");
     summaryform.submit(function() {
-    	var url = "{{ path('laporan-pendaftaran_format') }}";
+        var url = "{{ path('laporan-pendaftaran_format') }}";
         $(".pratinjau-loader").addClass("loading");
         $.get(url, {
                 dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
@@ -207,14 +207,14 @@ $(document).ready(function() {
                 transaksiTercari: "{{ transaksiTercari }}",
                 tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}"
             }, function(response) {
-            	$(".pratinjau-loader").removeClass("loading");
+                $(".pratinjau-loader").removeClass("loading");
                 if (response.teksterformat) {
-                	$("#teks-terformat").html(response.teksterformat);
-                	$(".teks-terformat").val(response.teksterformat);
-                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
-            	    summaryform[0].submit();
+                    $("#teks-terformat").html(response.teksterformat);
+                    $(".teks-terformat").val(response.teksterformat);
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+                    summaryform[0].submit();
                 } else {
-                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                    $("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
                 }
             }
         );
@@ -224,47 +224,47 @@ $(document).ready(function() {
 
 var templateAktif = 0;
 function gantiTemplate() {
-	var string;
+    var string;
 
-	templateAktif++;
-	if (templateAktif == 0) {
-		string = "";
-	} else if (templateAktif == 1) {
-		string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
-	} else if (templateAktif == 2) {
-		string = "Jumlah pendaftar adalah %jumlah-tercari% dari %jumlah-total% siswa";
-	} else if (templateAktif == 3) {
-		string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
-	} else if (templateAktif == 4) {
-		string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
-	} else if (templateAktif == 5) {
-		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
-	} else if (templateAktif == 6) {
-		templateAktif = -1;
-		string = "Transaksi dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
-            		"yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
-            		"yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
-	}
+    templateAktif++;
+    if (templateAktif == 0) {
+        string = "";
+    } else if (templateAktif == 1) {
+        string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
+    } else if (templateAktif == 2) {
+        string = "Jumlah pendaftar adalah %jumlah-tercari% dari %jumlah-total% siswa";
+    } else if (templateAktif == 3) {
+        string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
+    } else if (templateAktif == 4) {
+        string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
+    } else if (templateAktif == 5) {
+        string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
+    } else if (templateAktif == 6) {
+        templateAktif = -1;
+        string = "Transaksi dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
+                    "yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
+                    "yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
+    }
 
-	return string;
+    return string;
 }
 
 function gantiPenanda() {
-	if (templateAktif == 0) {
-		return "#CCCCCC";
-	} else if (templateAktif == 1) {
-		return "#DD5500";
-	} else if (templateAktif == 2) {
-	    return "#289312";
-	} else if (templateAktif == 3) {
-	    return "#DAD25A";
-	} else if (templateAktif == 4) {
-	    return "#2B50C4";
-	} else if (templateAktif == 5) {
-	    return "#43B7B9";
-	} else if (templateAktif == -1) {
-	    return "#DD52DF";
-	}
+    if (templateAktif == 0) {
+        return "#CCCCCC";
+    } else if (templateAktif == 1) {
+        return "#DD5500";
+    } else if (templateAktif == 2) {
+        return "#289312";
+    } else if (templateAktif == 3) {
+        return "#DAD25A";
+    } else if (templateAktif == 4) {
+        return "#2B50C4";
+    } else if (templateAktif == 5) {
+        return "#43B7B9";
+    } else if (templateAktif == -1) {
+        return "#DD52DF";
+    }
 }
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
