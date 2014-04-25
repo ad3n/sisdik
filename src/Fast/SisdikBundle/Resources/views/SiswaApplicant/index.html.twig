@@ -20,10 +20,10 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('applicant_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.applicant.add'|trans }}
-	</a>
+    <a href="{{ path('applicant_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.applicant.add'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -43,29 +43,29 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
-    	    </th>
-    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
-    		<th>{{ 'label.mobilephone.parent'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.name.parent.or.guardian'|trans }}</th>
+            <th>{{ 'label.mobilephone.parent'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}</td>
             <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('applicant_editregphoto', {'id': data.id}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}" class="icon-camera"></a>
-        		<a href="{{ path('applicant_edit', {'id': data.id}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('applicant_editregphoto', {'id': data.id}) }}" title="{% trans %}tip.edit.regphoto{% endtrans %}"><i class="fa fa-camera"></i></a>
+                <a href="{{ path('applicant_edit', {'id': data.id}) }}" title="{% trans %}tip.edit.full.form{% endtrans %}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>

@@ -26,14 +26,14 @@ form .clearfix {
     margin-bottom: 5px;
 }
 .arrow-down-lanjut {
-	width: 0;
-	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-top: 4px solid #555;
-	display: inline-block;
-	margin-left: 0.3em;
-	vertical-align: middle;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
 }
 #cari-lanjutan {
     display: none;
@@ -90,16 +90,10 @@ form .clearfix {
 #blue .ui-slider-handle { border-color: #729fcf; }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 </style>
-
-{% javascripts
-    '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js'
-%}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
 
 <div class="filter-section">
     <form method="GET" action="{{ path('tahkik') }}" class="form-search form-inline" id="search-form">
@@ -157,30 +151,30 @@ form .clearfix {
 <form method="POST" action="{{ path('tahkik_update', {'idsiswa': idsiswa}) }}" class="form-inline" id="form-tahkik">
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
-    	    </th>
-    		<th>{{ 'label.ortuwali.entri'|trans }}</th>
+            </th>
+            <th>{{ 'label.ortuwali.entri'|trans }}</th>
             <th>{{ 'label.paid.amount'|trans }}</th>
-    		<th>
-    		    <input type="checkbox" value="-" id="checkbox-selector" />
-    		</th>
-    	</tr>
-	</thead>
-	<tbody>
+            <th class="row-actions">
+                <input type="checkbox" value="-" id="checkbox-selector" />
+            </th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">
-    		    {{ highlightResult(data.namaLengkap, searchkey)|raw }}
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">
+                {{ highlightResult(data.namaLengkap, searchkey)|raw }}
                 {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
-            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
-        	    </a>
+                    <i class="fa fa-external-link"></i>
+                </a>
                 {% endimage %}
-		    </td>
+            </td>
             <td data-title="{{ 'label.ortuwali.entri'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}, {{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
             <td data-title="{{ 'label.paid.amount'|trans }}">
                 {% set totalBayar = 0 %}
@@ -223,14 +217,14 @@ form .clearfix {
                 {{ totalBiaya|number_format(0, ',', '.') }}
                 {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
-            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
-        	    </a>
+                    <i class="fa fa-external-link"></i>
+                </a>
                 {% endimage %}
             </td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-    		    {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -240,12 +234,20 @@ form .clearfix {
 </form>
 
 {{ knp_pagination_render(pagination) }}
+{% endblock content %}
+
+{% block javascripts_custom %}
+
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
 <script language="javascript" type="text/javascript">
 var duration = 300;
 var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
 
 function bersihkanKetikPilih() {
-	if ($(".nama-sekolah-asal").val() == "") {
+    if ($(".nama-sekolah-asal").val() == "") {
         $(".id-sekolah-asal").val("");
     }
     if ($(".nama-referensi").val() == "") {
@@ -254,81 +256,77 @@ function bersihkanKetikPilih() {
 }
 
 $(document).ready(function() {
-	var options1 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-sekolah-asal").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-sekolah-asal").val(ui.item.id);
-    	}
-	};
-
-	var options2 = {
+    var options1 = {
         minLength: 2,
         delay: 1000,
         source: function(request, response) {
             $.ajax({
-            	url: "{{ path("referensi_ajax_ambilnama") }}",
+                url: "{{ path("sekolahasal_ajax_ambilnama") }}",
                 data: {filter: request.term},
                 success: function(data) {
                     response( $.map(data, function(item) {
                         return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-                		}
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
                     }));
                 }
             });
         },
         open: function(event, ui) {},
         search: function(event, ui) {
-        	$(".id-referensi").val("");
+            $(".id-sekolah-asal").val("");
         },
         select: function(event, ui) {
-        	$(".id-referensi").val(ui.item.id);
+              $(".id-sekolah-asal").val(ui.item.id);
         }
-	};
+    };
 
-	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options1);
-    });
+    var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+            $(".id-referensi").val(ui.item.id);
+        }
+    };
 
-    $(".nama-referensi").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options2);
-    });
+    $(".nama-sekolah-asal").autocomplete(options1);
 
-	$(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
-	if ($(".id-sekolah-asal").val() != "") {
-		$.ajax({
-			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-			data: {id: $(".id-sekolah-asal").val()},
-			success: function(data) {
-				$(".nama-sekolah-asal").val(data[0].value);
-	      		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
-			}
-		});
-	} else {
-		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
-	}
+    $(".nama-referensi").autocomplete(options2);
+
+    $(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
+    if ($(".id-sekolah-asal").val() != "") {
+        $.ajax({
+            url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+            data: {id: $(".id-sekolah-asal").val()},
+            success: function(data) {
+                $(".nama-sekolah-asal").val(data[0].value);
+                  $(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+        $(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+    }
 
     $(".nama-referensi").addClass("ui-autocomplete-loading");
     if ($(".id-referensi").val() != "") {
@@ -341,36 +339,42 @@ $(document).ready(function() {
             }
         });
     } else {
-    	$(".nama-referensi").removeClass("ui-autocomplete-loading");
+        $(".nama-referensi").removeClass("ui-autocomplete-loading");
     }
 
-	$(".pembanding-bayar").dropkick();
+    $(".pembanding-bayar").dropkick();
 
-	$(".anchor-cari-lanjutan").click(function(){
-		if ($("#cari-lanjutan").is(":visible")) {
-			$("#cari-lanjutan").hide(duration);
-			$(this).removeClass("anchor-cari-lanjutan-sel");
-			$(this).addClass("anchor-cari-lanjutan");
-		} else {
-			$("#cari-lanjutan").show(duration);
-			$(this).addClass("anchor-cari-lanjutan-sel");
-			$(this).removeClass("anchor-cari-lanjutan");
-		}
-	});
+    $(".anchor-cari-lanjutan").click(function(){
+        if ($("#cari-lanjutan").is(":visible")) {
+            $("#cari-lanjutan").hide(duration);
+            $(this).removeClass("anchor-cari-lanjutan-sel");
+            $(this).addClass("anchor-cari-lanjutan");
+        } else {
+            $("#cari-lanjutan").show(duration);
+            $(this).addClass("anchor-cari-lanjutan-sel");
+            $(this).removeClass("anchor-cari-lanjutan");
+        }
+    });
+
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeYear: false,
+        maxDate: 0
+    });
 
     if (pencarianLanjutan != 0) {
-		$("#cari-lanjutan").css("display", "block");
-		$(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
-		$(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
+        $("#cari-lanjutan").css("display", "block");
+        $(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
+        $(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
     }
 
     $("#search-form").submit(function() {
-    	bersihkanKetikPilih();
+        bersihkanKetikPilih();
         return true;
     });
 
-	$("#slider").slider({
-    	range: "min",
+    $("#slider").slider({
+        range: "min",
         value: 0,
         min: 0,
         max: 100,
@@ -383,11 +387,11 @@ $(document).ready(function() {
 
     $("#checkbox-selector").change(function(){
         if ($(this).is(":checked")) {
-        	$('#no-more-tables').find(':checkbox').attr('checked', $(this).is(":checked"));
+            $('#no-more-tables').find(':checkbox').attr('checked', $(this).is(":checked"));
         } else {
-        	$('#no-more-tables').find(':checkbox').attr('checked', false);
+            $('#no-more-tables').find(':checkbox').attr('checked', false);
         }
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

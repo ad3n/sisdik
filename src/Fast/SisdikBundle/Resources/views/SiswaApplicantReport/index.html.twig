@@ -26,14 +26,14 @@ form .clearfix {
     margin-bottom: 5px;
 }
 .arrow-down-lanjut {
-	width: 0;
-	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-top: 4px solid #555;
-	display: inline-block;
-	margin-left: 0.3em;
-	vertical-align: middle;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
 }
 #cari-lanjutan {
     display: none;
@@ -77,7 +77,7 @@ form .clearfix {
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 #cari-error {
@@ -154,12 +154,12 @@ form .clearfix {
     outline: none;
 }
 #penanda-template {
-	width: 7px;
-	height: 7px;
-	border-radius: 50%;
-	background-color: #CCCCCC;
-	display: inline-block;
-	vertical-align: middle;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #CCCCCC;
+    display: inline-block;
+    vertical-align: middle;
 }
 .pratinjau-loader {
     min-width: 15px;
@@ -167,9 +167,6 @@ form .clearfix {
 }
 /* end of ringkasan */
 </style>
-{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
-<script type="text/javascript" src="{{ asset_url }}"></script>
-{% endjavascripts %}
 
 <div class="filter-section">
     <form method="GET" action="{{ path('laporan-pendaftaran') }}" class="form-search form-inline" id="search-form">
@@ -223,31 +220,31 @@ form .clearfix {
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
-    		<th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
-    	    </th>
-    		<th>{{ 'label.name.parent.or.guardian'|trans }}</th>
-    		<th>{{ 'label.mobilephone.parent'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.name.parent.or.guardian'|trans }}</th>
+            <th>{{ 'label.mobilephone.parent'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}</td>
             <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
-            	    <img src="{{ asset_url }}" alt="{{ 'alt.lihat.data.pendaftar'|trans }}" border="0" style="vertical-align: baseline;" />
-        	    </a>
+                    <i class="fa fa-external-link"></i>
+                </a>
                 {% endimage %}
-    		</td>
-    	</tr>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -270,7 +267,7 @@ form .clearfix {
                 <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
                     {{ form_label(summaryform.teks) }}
                     {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
-                    	<a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
+                        <a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
                     {% endimage %}
                     <div class="clearfix" style="margin-bottom: 0;"></div>
                     {{ form_widget(summaryform.teks) }}
@@ -289,14 +286,19 @@ form .clearfix {
     </div>
     {% endif %}
 </div>
-
 <div class="clearfix"></div>
+{% endblock content %}
+
+{% block javascripts_custom %}
+{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
 <script language="javascript" type="text/javascript">
 var duration = 300;
 var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
 
 function bersihkanKetikPilih() {
-	if ($(".nama-sekolah-asal").val() == "") {
+    if ($(".nama-sekolah-asal").val() == "") {
         $(".id-sekolah-asal").val("");
     }
     if ($(".nama-referensi").val() == "") {
@@ -305,81 +307,77 @@ function bersihkanKetikPilih() {
 }
 
 $(document).ready(function() {
-	var options1 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-sekolah-asal").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-sekolah-asal").val(ui.item.id);
-    	}
-	};
-
-	var options2 = {
+    var options1 = {
         minLength: 2,
         delay: 1000,
         source: function(request, response) {
             $.ajax({
-            	url: "{{ path("referensi_ajax_ambilnama") }}",
+                url: "{{ path("sekolahasal_ajax_ambilnama") }}",
                 data: {filter: request.term},
                 success: function(data) {
                     response( $.map(data, function(item) {
                         return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-                		}
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
                     }));
                 }
             });
         },
         open: function(event, ui) {},
         search: function(event, ui) {
-        	$(".id-referensi").val("");
+            $(".id-sekolah-asal").val("");
         },
         select: function(event, ui) {
-        	$(".id-referensi").val(ui.item.id);
+              $(".id-sekolah-asal").val(ui.item.id);
         }
-	};
+    };
 
-	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options1);
-    });
+    var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+            $(".id-referensi").val(ui.item.id);
+        }
+    };
 
-    $(".nama-referensi").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options2);
-    });
+    $(".nama-sekolah-asal").autocomplete(options1);
 
-	$(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
-	if ($(".id-sekolah-asal").val() != "") {
-		$.ajax({
-			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-			data: {id: $(".id-sekolah-asal").val()},
-			success: function(data) {
-				$(".nama-sekolah-asal").val(data[0].value);
-	      		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
-			}
-		});
-	} else {
-		$(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
-	}
+    $(".nama-referensi").autocomplete(options2);
+
+    $(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
+    if ($(".id-sekolah-asal").val() != "") {
+        $.ajax({
+            url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+            data: {id: $(".id-sekolah-asal").val()},
+            success: function(data) {
+                $(".nama-sekolah-asal").val(data[0].value);
+                  $(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+        $(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+    }
 
     $(".nama-referensi").addClass("ui-autocomplete-loading");
     if ($(".id-referensi").val() != "") {
@@ -392,53 +390,53 @@ $(document).ready(function() {
             }
         });
     } else {
-    	$(".nama-referensi").removeClass("ui-autocomplete-loading");
+        $(".nama-referensi").removeClass("ui-autocomplete-loading");
     }
 
-	$(".pembanding-bayar").dropkick();
+    $(".pembanding-bayar").dropkick();
 
-	$(".anchor-cari-lanjutan").click(function(){
-		if ($("#cari-lanjutan").is(":visible")) {
-			$("#cari-lanjutan").hide(duration);
-			$(this).removeClass("anchor-cari-lanjutan-sel");
-			$(this).addClass("anchor-cari-lanjutan");
-		} else {
-			$("#cari-lanjutan").show(duration);
-			$(this).addClass("anchor-cari-lanjutan-sel");
-			$(this).removeClass("anchor-cari-lanjutan");
-		}
-		return false;
-	});
+    $(".anchor-cari-lanjutan").click(function(){
+        if ($("#cari-lanjutan").is(":visible")) {
+            $("#cari-lanjutan").hide(duration);
+            $(this).removeClass("anchor-cari-lanjutan-sel");
+            $(this).addClass("anchor-cari-lanjutan");
+        } else {
+            $("#cari-lanjutan").show(duration);
+            $(this).addClass("anchor-cari-lanjutan-sel");
+            $(this).removeClass("anchor-cari-lanjutan");
+        }
+        return false;
+    });
 
-	$(".anchor-ringkasan").click(function(){
-		if ($("#ringkasan").is(":visible")) {
-			$("#ringkasan").hide(duration);
-			$(this).removeClass("anchor-ringkasan-sel");
-			$(this).addClass("anchor-ringkasan");
-		} else {
-			$("#ringkasan").show(duration, function() {
-				$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
-			});
-			$(this).addClass("anchor-ringkasan-sel");
-			$(this).removeClass("anchor-ringkasan");
-		}
-		return false;
-	});
+    $(".anchor-ringkasan").click(function(){
+        if ($("#ringkasan").is(":visible")) {
+            $("#ringkasan").hide(duration);
+            $(this).removeClass("anchor-ringkasan-sel");
+            $(this).addClass("anchor-ringkasan");
+        } else {
+            $("#ringkasan").show(duration, function() {
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+            });
+            $(this).addClass("anchor-ringkasan-sel");
+            $(this).removeClass("anchor-ringkasan");
+        }
+        return false;
+    });
 
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
         changeYear: false,
         maxDate: 0
     });
 
     if (pencarianLanjutan != 0) {
-		$("#cari-lanjutan").css("display", "block");
-		$(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
-		$(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
+        $("#cari-lanjutan").css("display", "block");
+        $(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
+        $(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
     }
 
     $("#search-form").submit(function() {
-    	bersihkanKetikPilih();
+        bersihkanKetikPilih();
         return true;
     });
 
@@ -449,10 +447,10 @@ $(document).ready(function() {
         $("#filename").addClass("loading");
         $.post(url, $("#search-form").serialize(), function(response) {
             if (response.redirectUrl) {
-            	window.location.href = response.redirectUrl;
-            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
-                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
-            	$("#filename").removeClass("loading");
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename").removeClass("loading");
             }
         });
         return false;
@@ -477,13 +475,13 @@ $(document).ready(function() {
                 teks: $(".ringkasan-teks").val()
             }, function(response) {
                 if (response.teksterformat) {
-                	$("#teks-terformat").html(response.teksterformat);
-                	$(".teks-terformat").val(response.teksterformat);
-                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+                    $("#teks-terformat").html(response.teksterformat);
+                    $(".teks-terformat").val(response.teksterformat);
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
                 } else {
-                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                    $("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
                 }
-            	$(".pratinjau-loader").removeClass("loading");
+                $(".pratinjau-loader").removeClass("loading");
             }
         );
         return false;
@@ -510,7 +508,7 @@ $(document).ready(function() {
 
     var summaryform = $("#summary-form");
     summaryform.submit(function() {
-    	var url = "{{ path('laporan-pendaftaran_format') }}";
+        var url = "{{ path('laporan-pendaftaran_format') }}";
         $(".pratinjau-loader").addClass("loading");
         $.get(url, {
                 gelombang: "{% if searchdata.gelombang is not null %}{{ searchdata.gelombang.nama }}{% endif %}",
@@ -527,14 +525,14 @@ $(document).ready(function() {
                 tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}",
                 teks: $(".ringkasan-teks").val()
             }, function(response) {
-            	$(".pratinjau-loader").removeClass("loading");
+                $(".pratinjau-loader").removeClass("loading");
                 if (response.teksterformat) {
-                	$("#teks-terformat").html(response.teksterformat);
-                	$(".teks-terformat").val(response.teksterformat);
-                	$("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
-            	    summaryform[0].submit();
+                    $("#teks-terformat").html(response.teksterformat);
+                    $(".teks-terformat").val(response.teksterformat);
+                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+                    summaryform[0].submit();
                 } else {
-                	$("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
+                    $("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
                 }
             }
         );
@@ -544,47 +542,47 @@ $(document).ready(function() {
 
 var templateAktif = 0;
 function gantiTemplate() {
-	var string;
+    var string;
 
-	templateAktif++;
-	if (templateAktif == 0) {
-		string = "";
-	} else if (templateAktif == 1) {
-		string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
-	} else if (templateAktif == 2) {
-		string = "Jumlah pendaftar berjenis kelamin %jenis-kelamin% adalah %jumlah-tercari% dari %jumlah-total% siswa";
-	} else if (templateAktif == 3) {
-		string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
-	} else if (templateAktif == 4) {
-		string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
-	} else if (templateAktif == 5) {
-		string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
-	} else if (templateAktif == 6) {
-		templateAktif = -1;
-		string = "Pendaftar %jenis-kelamin% pada %gelombang% dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
-            		"yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
-            		"yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
-	}
+    templateAktif++;
+    if (templateAktif == 0) {
+        string = "";
+    } else if (templateAktif == 1) {
+        string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
+    } else if (templateAktif == 2) {
+        string = "Jumlah pendaftar berjenis kelamin %jenis-kelamin% adalah %jumlah-tercari% dari %jumlah-total% siswa";
+    } else if (templateAktif == 3) {
+        string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
+    } else if (templateAktif == 4) {
+        string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
+    } else if (templateAktif == 5) {
+        string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
+    } else if (templateAktif == 6) {
+        templateAktif = -1;
+        string = "Pendaftar %jenis-kelamin% pada %gelombang% dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
+                    "yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
+                    "yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
+    }
 
-	return string;
+    return string;
 }
 
 function gantiPenanda() {
-	if (templateAktif == 0) {
-		return "#CCCCCC";
-	} else if (templateAktif == 1) {
-		return "#DD5500";
-	} else if (templateAktif == 2) {
-	    return "#289312";
-	} else if (templateAktif == 3) {
-	    return "#DAD25A";
-	} else if (templateAktif == 4) {
-	    return "#2B50C4";
-	} else if (templateAktif == 5) {
-	    return "#43B7B9";
-	} else if (templateAktif == -1) {
-	    return "#DD52DF";
-	}
+    if (templateAktif == 0) {
+        return "#CCCCCC";
+    } else if (templateAktif == 1) {
+        return "#DD5500";
+    } else if (templateAktif == 2) {
+        return "#289312";
+    } else if (templateAktif == 3) {
+        return "#DAD25A";
+    } else if (templateAktif == 4) {
+        return "#2B50C4";
+    } else if (templateAktif == 5) {
+        return "#43B7B9";
+    } else if (templateAktif == -1) {
+        return "#DD52DF";
+    }
 }
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

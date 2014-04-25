@@ -20,10 +20,10 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('referensi_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.tambah.perujuk'|trans }}
-	</a>
+    <a href="{{ path('referensi_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.tambah.perujuk'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -31,30 +31,30 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+        <tr>
+            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.nama.perujuk'|trans, 't.nama') }}
-		    </th>
-    		<th class="{% if pagination.isSorted('t.nomorIdentitas') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.nomor.identitas'|trans, 't.nomorIdentitas') }}
-		    </th>
-    		<th class="{% if pagination.isSorted('t.ponsel') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.nomorIdentitas') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nomor.identitas'|trans, 't.nomorIdentitas') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.ponsel') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.ponsel'|trans, 't.ponsel') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.nama'|trans }}">{{ data.nama }}</td>
-    		<td data-title="{{ 'label.nomor.identitas'|trans }}">{{ data.nomorIdentitas }}</td>
-    		<td data-title="{{ 'label.ponsel'|trans }}">{{ data.ponsel }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('referensi_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('referensi_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.nama'|trans }}">{{ data.nama }}</td>
+            <td data-title="{{ 'label.nomor.identitas'|trans }}">{{ data.nomorIdentitas }}</td>
+            <td data-title="{{ 'label.ponsel'|trans }}">{{ data.ponsel }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('referensi_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('referensi_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
