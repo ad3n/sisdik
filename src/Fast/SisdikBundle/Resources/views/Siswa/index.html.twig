@@ -28,79 +28,64 @@
     </form>
 </div>
 
-<div class="row-fluid">
-    <div class="span3">
-    {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    	<a href="{{ path('siswa_new') }}" class="add-link-a">
-    	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-    	    {{ 'label.student.add'|trans }}
-    	</a>
-    {% endimage %}
-    </div>
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('siswa_new') }}"><i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.student.add'|trans }}</a>
+    </li>
 {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
-    <div class="span3">
-    {% image '@FastSisdikBundle/Resources/public/images/icon_import.png' %}
-    	<a href="{{ path('siswa_imporbaru') }}" class="add-link-a">
-    	    <img src="{{ asset_url }}" alt="{{ 'alt.import'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-    	    {{ 'label.student.import'|trans }}
-    	</a>
-    {% endimage %}
-    </div>
-    <div class="span3">
-    {% image '@FastSisdikBundle/Resources/public/images/merge.png' %}
-    	<a href="{{ path('siswa_imporgabung') }}" class="add-link-a">
-    	    <img src="{{ asset_url }}" alt="{{ 'alt.merge'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-    	    {{ 'label.student.merge'|trans }}
-    	</a>
-    {% endimage %}
+    <li>
+        <a href="{{ path('siswa_imporbaru') }}"><i class="fa fa-upload fa-lg fa-fw"></i>{{ 'label.student.import'|trans }}</a>
+    </li>
+    <li>
+        <a href="{{ path('siswa_imporgabung') }}"><i class="fa fa-upload fa-lg"></i><i class="fa fa-level-down fa-lg" style="margin-right: 5px;"></i>{{ 'label.student.merge'|trans }}</a>
+    </li>
 {% endif %}
-    </div>
-</div>
+</ul>
 
 <div class="clearfix"></div>
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.number'|trans }}</th>
-    		<th>{{ 'label.year.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.number'|trans }}</th>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.nomorInduk') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.nomorInduk') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 't.nomorInduk') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.jenisKelamin') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.jenisKelamin') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 't.jenisKelamin') }}
-    	    </th>
-    		<th>{{ 'label.mobilephone.parent'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.mobilephone.parent'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
-    		<td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
-    		<td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
-    		<td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
-    		<td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
+            <td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+            <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
+            <td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
             <td data-title="{{ 'label.mobilephone.parent'|trans }}">
             {% if data.orangtuaWali %}
-    		    {% for orangtua in data.orangtuaWali %}
-    		        {% if orangtua %}
-    		            {% if orangtua.aktif == 1 %}
-        		            {{ orangtua.ponsel }}
-    		            {% endif %}
-    		        {% endif %}
-    		    {% endfor %}
-    		{% endif %}
-    		</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('siswa_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
-    		</td>
-    	</tr>
+                {% for orangtua in data.orangtuaWali %}
+                    {% if orangtua %}
+                        {% if orangtua.aktif == 1 %}
+                            {{ orangtua.ponsel }}
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('siswa_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -108,26 +93,20 @@
 
 <div class="clearfix"></div>
 
-<div class="row-fluid">
-    <div class="span4">
-    {% image '@FastSisdikBundle/Resources/public/images/chair.png' %}
-    	<a href="{{ path('penempatan-siswa-kelas') }}" class="add-link-a">
-    	    <img src="{{ asset_url }}" alt="{{ 'alt.importclassmap'|trans }}" border="0" width="25" style="vertical-align: middle;" />
-    	    {{ 'links.penempatan.siswa.kelas'|trans({}, 'navigations') }}
-    	</a>
-    {% endimage %}
-    </div>
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('penempatan-siswa-kelas') }}">
+            <i class="fa fa-random fa-lg fa-fw"></i>{{ 'links.penempatan.siswa.kelas'|trans({}, 'navigations') }}
+        </a>
+    </li>
 {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
-    <div class="span3">
-    {% image '@FastSisdikBundle/Resources/public/images/user-gear.png' %}
-    	<a href="{{ path('siswa_generate_username') }}" class="add-link-a">
-    	    <img src="{{ asset_url }}" alt="{{ 'alt.student.generate.username'|trans }}" border="0" height="25" style="vertical-align: middle;" />
-    	    {{ 'label.student.generate.username'|trans }}
-    	</a>
-    {% endimage %}
-    </div>
+    <li>
+        <a href="{{ path('siswa_generate_username') }}">
+            </i><i class="fa fa-cogs fa-lg fa-fw"></i>{{ 'label.student.generate.username'|trans }}
+        </a>
+    </li>
 {% endif %}
-</div>
+</ul>
 
 
 <div class="clearfix" style="margin-top: 3em;"></div>
@@ -140,6 +119,9 @@
         <div id="filename"></div>
     </form>
 </div>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     $("#export-form").submit(function() {
@@ -148,14 +130,14 @@ $(document).ready(function() {
         $("#filename").addClass("loading");
         $.post(url, $(this).serialize(), function(response) {
             if (response.redirectUrl) {
-            	window.location.href = response.redirectUrl;
-            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
-                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
-            	$("#filename").removeClass("loading");
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename").removeClass("loading");
             }
         });
         return false;
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
