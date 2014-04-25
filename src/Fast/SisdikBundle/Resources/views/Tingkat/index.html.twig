@@ -5,10 +5,10 @@
 {% block content %}
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('tingkat-kelas_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.tingkat.kelas.tambah'|trans }}
-	</a>
+    <a href="{{ path('tingkat-kelas_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.tingkat.kelas.tambah'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -17,29 +17,29 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.tingkat.kelas.nama'|trans, 't.nama') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.tingkat.kelas.nama'|trans, 't.nama') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.tingkat.kelas.nama'|trans }}">{{ data.nama }}</td>
-    		<td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
-    		<td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('tingkat-kelas_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('tingkat-kelas_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.tingkat.kelas.nama'|trans }}">{{ data.nama }}</td>
+            <td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
+            <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('tingkat-kelas_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('tingkat-kelas_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>

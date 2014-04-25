@@ -20,10 +20,10 @@
 
 <div class="add-link">
 {% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('data_classguardian_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.classguardian.add'|trans }}
-	</a>
+    <a href="{{ path('data_classguardian_new') }}" class="add-link-a">
+        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
+        {{ 'label.classguardian.add'|trans }}
+    </a>
 {% endimage %}
 </div>
 
@@ -31,26 +31,26 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.year.entry'|trans }}</th>
-    		<th>{{ 'label.class.entry'|trans }}</th>
-    		<th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+        <tr>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th>{{ 'label.class.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.classguardian.name'|trans, 't.nama') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahunAkademik.nama }}</td>
-    		<td data-title="{{ 'label.class.entry'|trans }}">{{ data.kelas.nama }}</td>
-    		<td data-title="{{ 'label.classguardian.name'|trans }}">{{ data.nama }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('data_classguardian_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('data_classguardian_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahunAkademik.nama }}</td>
+            <td data-title="{{ 'label.class.entry'|trans }}">{{ data.kelas.nama }}</td>
+            <td data-title="{{ 'label.classguardian.name'|trans }}">{{ data.nama }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('data_classguardian_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('data_classguardian_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
