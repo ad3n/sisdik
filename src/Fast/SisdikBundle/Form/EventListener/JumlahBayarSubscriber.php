@@ -56,13 +56,13 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                         ])
                     ],
                     'attr' => [
-                        'class' => 'small',
                         'placeholder' => 'label.jumlah.bayar',
                     ],
                     'label_render' => false,
                     'required' => false,
                     'error_bubbling' => true,
                     'invalid_message' => /** @Ignore */ $translator->trans('pencarian.persen.tidak.sah', [], 'validators'),
+                    'horizontal' => true,
                 ])
             ;
         } else {
@@ -71,13 +71,13 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                     'precision' => 0,
                     'grouping' => 3,
                     'attr' => [
-                        'class' => 'small',
                         'placeholder' => 'label.jumlah.bayar',
                     ],
                     'label_render' => false,
                     'required' => false,
                     'error_bubbling' => true,
                     'invalid_message' => /** @Ignore */ $translator->trans('pencarian.nominal.tidak.sah', [], 'validators'),
+                    'horizontal' => true,
                 ])
             ;
         }
@@ -92,13 +92,15 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                     '<=' => '≤',
                 ],
                 'attr' => [
-                    'class' => 'mini pembanding-bayar',
+                    'class' => 'pembanding-bayar',
                 ],
                 'label_render' => false,
+                'horizontal' => true,
             ])
             ->add('persenBayar', 'checkbox', [
                 'required' => false,
                 'label_render' => false,
+                'horizontal' => true,
             ])
         ;
     }
