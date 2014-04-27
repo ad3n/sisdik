@@ -11,7 +11,7 @@
 #start-icon {
     margin-left: 0px;
     margin-right: 5px;
-    color: blue;
+    color: #FF6900;
 }
 </style>
 
@@ -33,14 +33,7 @@
 
 <div class="clearfix"></div>
 
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    <a href="{{ path('jadwal_kehadiran_new') }}" class="add-link-a">
-        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-        {{ 'label.jadwal.kehadiran.tambah'|trans }}
-    </a>
-{% endimage %}
-</div>
+<a href="{{ path('jadwal_kehadiran_new') }}"><i class="fa fa-plus-circle fa-lg fa-fw"></i>{{ 'label.jadwal.kehadiran.tambah'|trans }}</a>
 
 <div class="clearfix"></div>
 
@@ -110,8 +103,8 @@
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('jadwal_kehadiran_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-                <a href="{{ path('jadwal_kehadiran_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit info-tooltip"></a>
+                <a href="{{ path('jadwal_kehadiran_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('jadwal_kehadiran_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}"><i class="fa fa-pencil"></i></a>
             </td>
         </tr>
     {% endfor %}

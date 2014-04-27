@@ -4,52 +4,49 @@
 
 {% block content %}
 <div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('attendancemachine_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.attendancemachine.add'|trans }}
-	</a>
-{% endimage %}
+    <a href="{{ path('attendancemachine_new') }}" class="add-link-a">
+        <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.attendancemachine.add'|trans }}
+    </a>
 </div>
 
 <div class="clearfix"></div>
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th class="{% if pagination.isSorted('t.alamatIp') %}sorted{% endif %}">
-    		    {{ knp_pagination_sortable(pagination, 'label.ipaddress'|trans, 't.alamatIp') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.commkey') %}sorted{% endif %}">
+        <tr>
+            <th class="{% if pagination.isSorted('t.alamatIp') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.ipaddress'|trans, 't.alamatIp') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.commkey') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.commkey'|trans, 't.commkey') }}
-    	    </th>
-    		<th class="{% if pagination.isSorted('t.active') %}sorted{% endif %}">
+            </th>
+            <th class="{% if pagination.isSorted('t.active') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.active'|trans, 't.aktif') }}
-    	    </th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.ipaddress'|trans }}">{{ data.alamatIp }}</td>
-    		<td data-title="{{ 'label.commkey'|trans }}">{{ data.commkey }}</td>
-    		<td data-title="{{ 'label.active'|trans }}">
-    		    {% if data.aktif == 1 %}
-    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-    		        {% endimage %}
-    	        {% else %}
-    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-    		        {% endimage %}
-    		    {% endif %}
-    		</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('attendancemachine_show', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('attendancemachine_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.ipaddress'|trans }}">{{ data.alamatIp }}</td>
+            <td data-title="{{ 'label.commkey'|trans }}">{{ data.commkey }}</td>
+            <td data-title="{{ 'label.active'|trans }}">
+                {% if data.aktif == 1 %}
+                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
+                    {% endimage %}
+                {% else %}
+                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
+                    {% endimage %}
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('attendancemachine_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('attendancemachine_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
