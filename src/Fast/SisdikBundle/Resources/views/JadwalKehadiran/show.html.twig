@@ -25,12 +25,12 @@
     <dd>
         {% if entity.kirimSms is empty %}
             {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-	        {% endimage %}
+            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+            {% endimage %}
         {% else %}
-	        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-	        {% endimage %}
+            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+            {% endimage %}
         {% endif %}
     </dd>
     <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
@@ -41,24 +41,24 @@
     <dd>
         {% if entity.otomatisTerhubungMesin is empty %}
             {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-	        {% endimage %}
+            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+            {% endimage %}
         {% else %}
-	        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-	        {% endimage %}
+            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+            {% endimage %}
         {% endif %}
     </dd>
     <dt>{{ 'label.awal.kehadiran'|trans }}</dt>
     <dd>
         {% if entity.permulaan == 1 %}
-	        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-	        {% endimage %}
+            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+            {% endimage %}
         {% else %}
             {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-	        <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-	        {% endimage %}
+            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
+            {% endimage %}
         {% endif %}
     </dd>
 </dl>
@@ -72,7 +72,7 @@
     </div>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('jadwal_kehadiran_list') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
@@ -83,21 +83,23 @@
 
 <div class="clearfix"></div>
 
-<div class="add-link pull-right">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('jadwal_kehadiran_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.jadwal.kehadiran.tambah'|trans }}
-	</a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('jadwal_kehadiran_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.jadwal.kehadiran.tambah'|trans }}
+        </a>
+    </li>
+</ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.presence.schedule'|trans }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
+    $("#delete-form").submit(function(){
+        var confirmtext = "{{ 'confirm.drop.presence.schedule'|trans }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

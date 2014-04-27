@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('siswa_show', {'id': siswa.id}) }}">{{ 'link.backtostudentinfo'|trans }}</a>
     </li>
@@ -14,14 +14,13 @@
 
 <div class="clearfix"></div>
 
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('siswa-kelas_new', {'idsiswa': siswa.id}) }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.studentclass.add'|trans }}
-	</a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('siswa-kelas_new', {'idsiswa': siswa.id}) }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.studentclass.add'|trans }}
+        </a>
+    </li>
+</ul>
 
 <div class="clearfix"></div>
 
@@ -30,33 +29,33 @@
     <tr>
         <td>
             <dl>
-        		<dt>{{ 'label.year.entry'|trans }}</dt>
-        		<dd>{% if data.tahunAkademik is not null %}{{ data.tahunAkademik.nama }}{% endif %}</dd>
-        		<dt>{{ 'label.class.entry'|trans }}</dt>
-        		<dd>{% if data.kelas is not null %}{{ data.kelas.nama }}{% endif %}</dd>
-        		<dt>{{ 'label.placement.study'|trans }}</dt>
-        		<dd>{% if data.penjurusan is not null %}{{ data.penjurusan.nama }} ({{ data.penjurusan.kode }}){% endif %}</dd>
-        		<dt>{{ 'label.active'|trans }} ({{ 'shortinfo.inselectedyear'|trans }})</dt>
-        		<dd>
-        		    {% if data.aktif != 1 %}
-        		        {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                    	    <img src="{{ asset_url }}" alt="{{ 'label.inactive'|trans }}" border="0" height="25" style="vertical-align: middle;" title="{{ 'label.inactive'|trans }}" />
+                <dt>{{ 'label.year.entry'|trans }}</dt>
+                <dd>{% if data.tahunAkademik is not null %}{{ data.tahunAkademik.nama }}{% endif %}</dd>
+                <dt>{{ 'label.class.entry'|trans }}</dt>
+                <dd>{% if data.kelas is not null %}{{ data.kelas.nama }}{% endif %}</dd>
+                <dt>{{ 'label.placement.study'|trans }}</dt>
+                <dd>{% if data.penjurusan is not null %}{{ data.penjurusan.nama }} ({{ data.penjurusan.kode }}){% endif %}</dd>
+                <dt>{{ 'label.active'|trans }} ({{ 'shortinfo.inselectedyear'|trans }})</dt>
+                <dd>
+                    {% if data.aktif != 1 %}
+                        {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+                            <img src="{{ asset_url }}" alt="{{ 'label.inactive'|trans }}" border="0" height="25" style="vertical-align: middle;" title="{{ 'label.inactive'|trans }}" />
                         {% endimage %}
                     {% elseif data.aktif == 1 %}
                         {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                    	    <img src="{{ asset_url }}" alt="{{ 'label.active'|trans }}" border="0" width="25" height="25" style="vertical-align: middle;" title="{{ 'label.active'|trans }}" />
+                            <img src="{{ asset_url }}" alt="{{ 'label.active'|trans }}" border="0" width="25" height="25" style="vertical-align: middle;" title="{{ 'label.active'|trans }}" />
                         {% endimage %}
-        		    {% endif %}
-        		</dd>
-        		<dt>{{ 'label.description'|trans }}</dt>
-        		<dd>{{ data.keterangan }}</dd>
-        		<dt>{{ 'label.actions'|trans }}</dt>
-        		<dd>
-            		<a href="{{ path('siswa-kelas_edit', {'idsiswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit info-tooltip"></a>
-            	</dd>
-    		</dl>
-		</td>
-	</tr>
+                    {% endif %}
+                </dd>
+                <dt>{{ 'label.description'|trans }}</dt>
+                <dd>{{ data.keterangan }}</dd>
+                <dt>{{ 'label.actions'|trans }}</dt>
+                <dd>
+                    <a href="{{ path('siswa-kelas_edit', {'idsiswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit info-tooltip"></a>
+                </dd>
+            </dl>
+        </td>
+    </tr>
 {% endfor %}
 </table>
 {% endblock content %}

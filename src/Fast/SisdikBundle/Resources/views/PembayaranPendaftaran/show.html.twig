@@ -31,7 +31,7 @@
     <dd>
         <ul>
         {% for biaya in entity.daftarBiayaPendaftaran %}
-        	<li>
+            <li>
                 {{ biaya.nama }}, {{ currencySymbol(locale) }}. {% if biaya %}{{ biaya.nominal|number_format(0, ',', '.') }}{% endif %}
             </li>
         {% endfor %}
@@ -92,7 +92,7 @@
     <div class="clearfix extra-margin-bottom"></div>
 {% endif %}
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backto.registration.payment'|trans }}</a>
     </li>

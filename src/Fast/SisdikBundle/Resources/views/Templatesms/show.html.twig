@@ -22,7 +22,7 @@
     </div>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('sms_template', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
@@ -33,22 +33,23 @@
 
 <div class="clearfix"></div>
 
-<div class="add-link pull-right">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('sms_template_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.sms.template.add'|trans }}
-	</a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('sms_template_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.sms.template.add'|trans }}
+        </a>
+    </li>
+</ul>
+{% endblock content %}
 
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.sms.template'|trans({ '%name%': entity.nama }) }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
+    $("#delete-form").submit(function(){
+        var confirmtext = "{{ 'confirm.drop.sms.template'|trans({ '%name%': entity.nama }) }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

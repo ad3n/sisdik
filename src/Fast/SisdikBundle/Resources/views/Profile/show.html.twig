@@ -12,7 +12,7 @@
     <dd>{{ user.name }}</dd>
     <dt>{{ 'profile.show.role'|trans({}, 'FOSUserBundle') }}</dt>
     <dd><p>{% for role in roles %}
-            {{ role|e }}{%  if not loop.last %},{% endif %} 
+            {{ role|e }}{%  if not loop.last %},{% endif %}
         {% endfor %}
         </p>
     </dd>
@@ -20,7 +20,7 @@
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a class="" href="{{ path('fos_user_profile_edit') }}">{{ 'label.editaccount'|trans }}</a>
     </li>

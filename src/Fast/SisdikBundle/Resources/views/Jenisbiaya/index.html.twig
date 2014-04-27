@@ -3,14 +3,13 @@
 {% block page_heading %}{% trans from "headings" %}fee.type.list{% endtrans %}{% endblock %}
 
 {% block content %}
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    <a href="{{ path('fee_type_new') }}" class="add-link-a">
-        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-        {{ 'label.fee.type.add'|trans }}
-    </a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('fee_type_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.fee.type.add'|trans }}
+        </a>
+    </li>
+</ul>
 
 <div class="clearfix"></div>
 

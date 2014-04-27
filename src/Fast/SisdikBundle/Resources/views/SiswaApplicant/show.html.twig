@@ -22,11 +22,11 @@
                 {% for orangtua in entity.orangtuaWali %}
                     {% if orangtua %}
                         {% if orangtua.aktif == 1 %}
-            	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-            	            <dd>{{ orangtua.nama }}</dd>
-            	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-            	            <dd>{{ orangtua.ponsel }}</dd>
-            	        {% endif %}
+                            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                            <dd>{{ orangtua.nama }}</dd>
+                            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                            <dd>{{ orangtua.ponsel }}</dd>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endif %}
@@ -36,7 +36,7 @@
                     <a href="{{ path('referensi_show', { 'id': entity.referensi.id }) }}" target="_blank">
                         {{ entity.referensi.nama }}
                         {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                    	    <img src="{{ asset_url }}" alt="{{ 'alt.referensi'|trans }}" border="0" style="vertical-align: baseline;" />
+                            <img src="{{ asset_url }}" alt="{{ 'alt.referensi'|trans }}" border="0" style="vertical-align: baseline;" />
                         {% endimage %}
                     </a>
                 </dd>
@@ -47,7 +47,7 @@
                     <a href="{{ path('sekolahasal_show', { 'id': entity.sekolahAsal.id }) }}" target="_blank">
                         {{ entity.sekolahAsal.nama }}
                         {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                    	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
+                            <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
                         {% endimage %}
                     </a>
                 </dd>
@@ -106,15 +106,15 @@
         </div>
         <div class="span4">
             {% if entity.webcamPhotoPath != "" %}<img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ entity.webcamPhotoPath }}" class="img-polaroid" />{% endif %}
-            <ul class="pills">
+            <ul class="nav nav-pills">
                 <li>
                     <a href="{{ path('applicant_editregphoto', { 'id': entity.id }) }}">{{ 'link.applicant.edit.regphoto'|trans }}</a>
                 </li>
             </ul>
 
             <h4 style="margin-top: 1em;">{{ 'heading.info.pendukung'|trans }}</h4>
-        	{{ 'text.info.pendukung'|trans }}<br />
-            <ul class="pills">
+            {{ 'text.info.pendukung'|trans }}<br />
+            <ul class="nav nav-pills">
                 <li>
                     <a href="{{ path('ortuwali-pendaftar', { 'sid': entity.id }) }}">{{ 'link.ortuwali'|trans }}</a>
                 </li>
@@ -141,7 +141,7 @@
     </div>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
@@ -155,14 +155,14 @@
 
 <div class="clearfix"></div>
 
-<div class="add-link pull-right">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('applicant_new') }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.applicant.add'|trans }}
-	</a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('applicant_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.applicant.add'|trans }}
+        </a>
+    </li>
+</ul>
+
 {# <script language="javascript" type="text/javascript">#}
 {# $(document).ready(function() {#}
 {# 	$("#delete-form").submit(function(){#}

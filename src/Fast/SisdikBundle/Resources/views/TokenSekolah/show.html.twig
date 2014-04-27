@@ -26,14 +26,13 @@
 
 <div class="clearfix"></div>
 
-<div class="add-link pull-right">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-    <a href="{{ path('token-sekolah_new') }}" class="add-link-a">
-        <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-        {{ 'label.token.sekolah.tambah'|trans }}
-    </a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('token-sekolah_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.token.sekolah.tambah'|trans }}
+        </a>
+    </li>
+</ul>
 {% endblock content %}
 
 {% block javascripts_custom %}

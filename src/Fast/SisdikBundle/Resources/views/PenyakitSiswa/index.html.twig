@@ -17,37 +17,36 @@
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_new', {'sid': siswa.id}) }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.riwayat.penyakit.tambah'|trans }}
-	</a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_new', {'sid': siswa.id}) }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.riwayat.penyakit.tambah'|trans }}
+        </a>
+    </li>
+</ul>
 
 <div class="clearfix"></div>
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.nama.penyakit'|trans }}</th>
-    		<th>{{ 'label.tahun.sakit'|trans }}</th>
-    		<th>{{ 'label.lama.sakit'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+        <tr>
+            <th>{{ 'label.nama.penyakit'|trans }}</th>
+            <th>{{ 'label.tahun.sakit'|trans }}</th>
+            <th>{{ 'label.lama.sakit'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.penyakit.nama'|trans }}">{{ data.nama }}</td>
-    		<td data-title="{{ 'label.tahun.sakit'|trans }}">{{ data.tahun }}</td>
-    		<td data-title="{{ 'label.lama.sakit'|trans }}">{{ data.lamasakit }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.penyakit.nama'|trans }}">{{ data.nama }}</td>
+            <td data-title="{{ 'label.tahun.sakit'|trans }}">{{ data.tahun }}</td>
+            <td data-title="{{ 'label.lama.sakit'|trans }}">{{ data.lamasakit }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+                <a href="{{ path('riwayat-penyakit-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -55,7 +54,7 @@
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
     {% if ruteasal == 'pendaftar' %}
         <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.pendaftar'|trans }}</a>

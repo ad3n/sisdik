@@ -17,50 +17,49 @@
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
-<div class="add-link">
-{% image '@FastSisdikBundle/Resources/public/images/forms/icon_plus.gif' %}
-	<a href="{{ path('ortuwali-' ~ ruteasal ~ '_new', {'sid': siswa.id}) }}" class="add-link-a">
-	    <img src="{{ asset_url }}" alt="{{ 'alt.add'|trans }}" border="0" width="21" height="21" style="vertical-align: middle;" />
-	    {{ 'label.ortuwali.tambah'|trans }}
-	</a>
-{% endimage %}
-</div>
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('ortuwali-' ~ ruteasal ~ '_new', {'sid': siswa.id}) }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.ortuwali.tambah'|trans }}
+        </a>
+    </li>
+</ul>
 
 <div class="clearfix"></div>
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.ortuwali.nama'|trans }}</th>
-    		<th>{{ 'label.relation.tostudent'|trans }}</th>
-    		<th>{{ 'label.mobilephone'|trans }}</th>
-    		<th>{{ 'label.active'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+        <tr>
+            <th>{{ 'label.ortuwali.nama'|trans }}</th>
+            <th>{{ 'label.relation.tostudent'|trans }}</th>
+            <th>{{ 'label.mobilephone'|trans }}</th>
+            <th>{{ 'label.active'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for data in pagination %}
         <tr>
-    		<td data-title="{{ 'label.ortuwali.nama'|trans }}">{{ data.nama }}</td>
-    		<td data-title="{{ 'label.relation.tostudent'|trans }}">{{ data.hubunganDenganSiswa }}</td>
-    		<td data-title="{{ 'label.mobilephone'|trans }}">{{ data.ponsel }}</td>
-    		<td data-title="{{ 'label.active'|trans }}">
-    		    {% if data.aktif == 1 %}
-    		        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-    		        {% endimage %}
-    	        {% else %}
-    	            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-    		        <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
-    		        {% endimage %}
-    		        <a href="{{ path('ortuwali-' ~ ruteasal ~ '_activate', {'sid': siswa.id, 'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
-    		    {% endif %}
-    		</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-        		<a href="{{ path('ortuwali-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-        		<a href="{{ path('ortuwali-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.ortuwali.nama'|trans }}">{{ data.nama }}</td>
+            <td data-title="{{ 'label.relation.tostudent'|trans }}">{{ data.hubunganDenganSiswa }}</td>
+            <td data-title="{{ 'label.mobilephone'|trans }}">{{ data.ponsel }}</td>
+            <td data-title="{{ 'label.active'|trans }}">
+                {% if data.aktif == 1 %}
+                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
+                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
+                    {% endimage %}
+                {% else %}
+                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
+                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
+                    {% endimage %}
+                    <a href="{{ path('ortuwali-' ~ ruteasal ~ '_activate', {'sid': siswa.id, 'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('ortuwali-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
+                <a href="{{ path('ortuwali-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -70,7 +69,7 @@
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
     {% if ruteasal == 'pendaftar' %}
         <a href="{{ path('applicant_show', {'id': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.info.pendaftar'|trans }}</a>
