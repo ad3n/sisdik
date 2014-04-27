@@ -9,7 +9,6 @@
     margin-right: 0.4em;
 }
 .nav .active > a {
-    background-color: yellow;
 }
 .nav a:hover, .nav .active a:hover {
     color: inherit;
@@ -17,7 +16,6 @@
 }
 .nav > li > a:hover, .nav > li.active > a:hover {
     text-decoration: none;
-    background-color: yellow;
 }
 .form-inline .radio {
     padding-left: 3em;
@@ -29,14 +27,14 @@
     text-decoration: none;
 }
 .arrow-down-lanjut {
-	width: 0;
-	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-top: 4px solid #555;
-	display: inline-block;
-	margin-left: 0.3em;
-	vertical-align: middle;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
 }
 #proses-kehadiran {
     display: none;
@@ -84,6 +82,13 @@
 .ajax-loader {
     color: #003EB0;
 }
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
 </style>
 
 <div class="filter-section">
@@ -106,13 +111,23 @@
     <div class="accordion" id="proses-kehadiran-accordion">
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseOne">
-                    <span class="badge {% spaceless %}
-                        {% if prosesKehadiranSiswa is not null %}
-                            {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}badge-success{% else %}badge-warning{% endif %}
-                        {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
-                    &nbsp; {{ 'info.inisiasi.kehadiran'|trans }}
-                </a>
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseOne">
+                            <i
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.inisiasi.kehadiran'|trans }}
+                        </a>
+                    </li>
+                </ul>
             </div>
             <div id="collapseOne" class="accordion-body collapse">
                 <div class="accordion-inner">
@@ -146,30 +161,50 @@
 
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseTwo">
-                    <span class="badge {% spaceless %}
-                    {% if prosesKehadiranSiswa is not null %}
-                        {% if prosesKehadiranSiswa.berhasilDiperbaruiMesin == 1 %}badge-success{% else %}badge-warning{% endif %}
-                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
-                    &nbsp; {{ 'info.pembaruan.dari.mesin.kehadiran'|trans }}
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseTwo">
+                            <i
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilDiperbaruiMesin == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.pembaruan.dari.mesin.kehadiran'|trans }}
                 </a>
+                    </li>
+                </ul>
             </div>
             <div id="collapseTwo" class="accordion-body collapse">
                 <div class="accordion-inner">
-                    Anim pariatur cliche...
+                    Fasilitas pembaruan data secara manual belum tersedia
                 </div>
             </div>
         </div>
 
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseThree">
-                    <span id="warna-validasi" class="badge {% spaceless %}
-                    {% if prosesKehadiranSiswa is not null %}
-                        {% if prosesKehadiranSiswa.berhasilValidasi == 1 %}badge-success{% else %}badge-warning{% endif %}
-                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
-                    &nbsp; {{ 'info.validasi.kehadiran'|trans }}
-                </a>
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseThree">
+                            <i id="warna-validasi"
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilValidasi == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.validasi.kehadiran'|trans }}
+                        </a>
+                    </li>
+                </ul>
             </div>
             <div id="collapseThree" class="accordion-body collapse">
                 <div class="accordion-inner">
@@ -180,13 +215,23 @@
 
         <div class="accordion-group">
             <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFour">
-                    <span class="badge {% spaceless %}
-                    {% if prosesKehadiranSiswa is not null %}
-                        {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}badge-success{% else %}badge-warning{% endif %}
-                    {% else %}badge-warning{% endif %}{% endspaceless %}"></span>
-                    &nbsp; {{ 'info.sms.kehadiran'|trans }}
-                </a>
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFour">
+                            <i
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.sms.kehadiran'|trans }}
+                        </a>
+                    </li>
+                </ul>
             </div>
             <div id="collapseFour" class="accordion-body collapse">
                 <div class="accordion-inner">
@@ -199,7 +244,7 @@
 
                     <form id="form-kirim-sms" method="post" action="{{ path('studentspresence_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }} class="form-horizontal">
                         {{ form_widget(formSms) }}
-                    	<div class="controls">
+                        <div class="controls">
                             <button type="submit" class="btn success alternative icon play">
                         {% if prosesKehadiranSiswa is not null %}
                             {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
@@ -239,38 +284,37 @@
 {% else %}
 <p class="shortinfo">{{ 'shortinfo.tidak.ada.data.kehadiran.siswa'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}</p>
 {% endif %}
+{% endblock content %}
 
-<div class="clearfix"></div>
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 var duration = 300;
 
 $(document).ready(function() {
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
-    	changeMonth: true,
-        changeYear: true
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy'
     });
 
-	$("#anchor-proses-kehadiran").click(function(){
-		if ($("#proses-kehadiran").is(":visible")) {
-			$("#proses-kehadiran").hide(duration);
-			$(this).removeClass("anchor-proses-kehadiran-sel");
-			$(this).addClass("anchor-proses-kehadiran");
-		} else {
-			$("#proses-kehadiran").show(duration);
-			$(this).addClass("anchor-proses-kehadiran-sel");
-			$(this).removeClass("anchor-proses-kehadiran");
-		}
-		return false;
-	});
+    $("#anchor-proses-kehadiran").click(function(){
+        if ($("#proses-kehadiran").is(":visible")) {
+            $("#proses-kehadiran").hide(duration);
+            $(this).removeClass("anchor-proses-kehadiran-sel");
+            $(this).addClass("anchor-proses-kehadiran");
+        } else {
+            $("#proses-kehadiran").show(duration);
+            $(this).addClass("anchor-proses-kehadiran-sel");
+            $(this).removeClass("anchor-proses-kehadiran");
+        }
+        return false;
+    });
 
-	var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+    var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
 
-	$.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+    $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
         $(".pilih-kelas").empty();
         $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
-    	var options = '';
+        var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -285,7 +329,7 @@ $(document).ready(function() {
         $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
 
         $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
-        	var options = '';
+            var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -325,9 +369,9 @@ $(document).ready(function() {
     });
 
     $("#form-inisiasi").submit(function() {
-    	var url = $(this).attr("action");
+        var url = $(this).attr("action");
 
-    	{% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#loader-inisiasi').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 
@@ -346,4 +390,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
