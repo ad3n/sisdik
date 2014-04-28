@@ -1,39 +1,37 @@
 <?php
 namespace Fast\SisdikBundle\Form;
 
-use Symfony\Component\Security\Core\SecurityContext;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class KalenderPendidikanSearchType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('year', 'choice', array(
-            'choices' => $this->buildYearChoices(),
-            'required' => true,
-            'multiple' => false,
-            'expanded' => false,
-            'attr' => array(
-                'class' => 'small'
-            ),
-            'label_render' => false
-        ))
-            ->add('month', 'choice', array(
-            'choices' => $this->buildMonthChoices(),
-            'required' => true,
-            'multiple' => false,
-            'expanded' => false,
-            'attr' => array(
-                'class' => 'medium'
-            ),
-            'label_render' => false
-        ));
+        $builder
+            ->add('year', 'choice', [
+                'choices' => $this->buildYearChoices(),
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
+                'attr' => [
+                    'class' => 'small',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('month', 'choice', [
+                'choices' => $this->buildMonthChoices(),
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
+                'attr' => [
+                    'class' => 'medium',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+        ;
     }
 
     public function buildYearChoices()
@@ -42,12 +40,13 @@ class KalenderPendidikanSearchType extends AbstractType
         for ($i = 0; $i < 301; $i ++) {
             $year[$startyear + $i] = $startyear + $i;
         }
+
         return $year;
     }
 
     public function buildMonthChoices()
     {
-        return array(
+        return [
             1 => 'Januari',
             'Februari',
             'Maret',
@@ -60,7 +59,7 @@ class KalenderPendidikanSearchType extends AbstractType
             'Oktober',
             'November',
             'Desember'
-        );
+        ];
     }
 
     public function getName()

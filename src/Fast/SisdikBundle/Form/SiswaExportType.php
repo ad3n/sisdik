@@ -10,9 +10,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class SiswaExportType extends AbstractType
 {
-
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -20,9 +25,11 @@ class SiswaExportType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')
+        $user = $this->container
+            ->get('security.context')
             ->getToken()
-            ->getUser();
+            ->getUser()
+        ;
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
@@ -33,20 +40,24 @@ class SiswaExportType extends AbstractType
                 ->from('FastSisdikBundle:Tahun', 't')
                 ->where('t.sekolah = :sekolah')
                 ->orderBy('t.tahun', 'DESC')
-                ->setParameter('sekolah', $sekolah);
-            $builder->add('tahun', 'entity', array(
-                'class' => 'FastSisdikBundle:Tahun',
-                'label' => 'label.year.entry',
-                'multiple' => false,
-                'expanded' => false,
-                'property' => 'tahun',
-                'required' => true,
-                'query_builder' => $querybuilder,
-                'attr' => array(
-                    'class' => 'small'
-                ),
-                'label_render' => false
-            ));
+                ->setParameter('sekolah', $sekolah)
+            ;
+            $builder
+                ->add('tahun', 'entity', [
+                    'class' => 'FastSisdikBundle:Tahun',
+                    'label' => 'label.year.entry',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'tahun',
+                    'required' => true,
+                    'query_builder' => $querybuilder,
+                    'attr' => [
+                        'class' => 'small',
+                    ],
+                    'label_render' => false,
+                    'horizontal' => false,
+                ])
+            ;
         }
     }
 
