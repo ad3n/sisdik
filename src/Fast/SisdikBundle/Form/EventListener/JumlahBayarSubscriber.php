@@ -62,7 +62,7 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                     'required' => false,
                     'error_bubbling' => true,
                     'invalid_message' => /** @Ignore */ $translator->trans('pencarian.persen.tidak.sah', [], 'validators'),
-                    'horizontal' => true,
+                    'horizontal' => false,
                 ])
             ;
         } else {
@@ -77,7 +77,7 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                     'required' => false,
                     'error_bubbling' => true,
                     'invalid_message' => /** @Ignore */ $translator->trans('pencarian.nominal.tidak.sah', [], 'validators'),
-                    'horizontal' => true,
+                    'horizontal' => false,
                 ])
             ;
         }
@@ -95,12 +95,13 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                     'class' => 'pembanding-bayar',
                 ],
                 'label_render' => false,
-                'horizontal' => true,
+                'horizontal' => false,
             ])
             ->add('persenBayar', 'checkbox', [
+                'label' => '%',
                 'required' => false,
-                'label_render' => false,
-                'horizontal' => true,
+                'label_render' => true,
+                'horizontal' => false,
             ])
         ;
     }

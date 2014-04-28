@@ -16,12 +16,6 @@
     font-family: Arial,sans-serif;
     font-size: 1em;
 }
-#persen-bayar {
-    display: inline;
-    padding: 0;
-    font-weight: normal;
-    margin-bottom: 0;
-}
 form .clearfix {
     margin-bottom: 5px;
 }
@@ -95,9 +89,6 @@ form .clearfix {
     line-height: 1.5em;
     min-width: 5em;
     min-height: 15px;
-}
-#search-form .checkbox {
-    display: inline;
 }
 /* ringkasan */
 #ringkasan {
@@ -188,7 +179,25 @@ form .clearfix {
     margin: 0;
     padding: 0;
 }
-
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline .input-group-addon {
+    padding: 6px 8px 0;
+}
+.form-inline #persen-bayar {
+    display: inline;
+    padding: 0;
+    font-weight: normal;
+    margin: 0;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
 </style>
 
 <div class="filter-section">
@@ -203,7 +212,7 @@ form .clearfix {
                     <div class="input-group">
                         <div id="custom-dropkick" class="input-group-addon">{{ form_widget(searchform.pembandingBayar) }}</div>
                         {{ form_widget(searchform.jumlahBayar) }}
-                        <span class="input-group-addon"><label id="persen-bayar">% {{ form_widget(searchform.persenBayar) }}</label></span>
+                        <span class="input-group-addon">{{ form_widget(searchform.persenBayar) }}</span>
                     </div>
                 {% endspaceless %}
             </div>
