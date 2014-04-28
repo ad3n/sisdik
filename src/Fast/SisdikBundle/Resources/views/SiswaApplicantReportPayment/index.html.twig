@@ -4,9 +4,10 @@
 
 {% block content %}
 <style type="text/css">
-.control-group {
+.form-inline .form-group {
     display: inline-block;
     margin-right: 0.4em;
+    margin-bottom: 7px;
 }
 .ui-datepicker-month {
     font-size: 0.9em;
@@ -14,13 +15,6 @@
 .ui-widget {
     font-family: Arial,sans-serif;
     font-size: 1em;
-}
-#sign-percent {
-    cursor: pointer;
-    text-shadow: none;
-}
-#persen-bayar {
-    padding-left: 7px;
 }
 form .clearfix {
     margin-bottom: 5px;
@@ -166,15 +160,68 @@ form .clearfix {
     margin-left: 8px;
 }
 /* end of ringkasan */
+
+.input-group {
+    max-width: 200px;
+}
+#custom-dropkick {
+    padding: 0;
+}
+#custom-dropkick .dk_container {
+    width: 30px;
+}
+#custom-dropkick .dk_toggle {
+    max-width: 30px;
+    border-bottom: 0;
+    border-left: 0;
+    border-top: 0;
+    padding: 6px 4px;
+}
+.dk_options_inner {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline .input-group-addon {
+    padding: 6px 8px 0;
+}
+.form-inline #persen-bayar {
+    display: inline;
+    padding: 0;
+    font-weight: normal;
+    margin: 0;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
 </style>
 
 <div class="filter-section">
     <form method="GET" action="{{ path('laporan-pembayaran-pendaftaran') }}" class="form-search form-inline" id="search-form">
-        <div id="cari-standar">
+        <div class="cari-standar">
             {{ form_row(searchform.tahun) }}
             {{ form_row(searchform.gelombang) }}
             {{ form_row(searchform.dariTanggal) }}
             {{ form_row(searchform.hinggaTanggal) }}
+        </div>
+        <div class="clearfix"></div>
+        <div class="cari-standar">
+            <div class="form-group">
+                {% spaceless %}
+                    <div class="input-group">
+                        <div id="custom-dropkick" class="input-group-addon">{{ form_widget(searchform.pembandingBayar) }}</div>
+                        {{ form_widget(searchform.jumlahBayar) }}
+                        <span class="input-group-addon">{{ form_widget(searchform.persenBayar) }}</span>
+                    </div>
+                {% endspaceless %}
+            </div>
             {{ form_row(searchform.searchkey) }}
             <a href="" id="anchor-lanjutan" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
         </div>
@@ -183,17 +230,6 @@ form .clearfix {
             {{ form_row(searchform.jenisKelamin) }}
             {{ form_row(searchform.sekolahAsal) }}
             {{ form_row(searchform.namaSekolahAsal) }}
-            <div class="control-group">
-                {% spaceless %}
-                <div class="controls">
-                    <div class="input-prepend input-append">
-                        {{ form_widget(searchform.pembandingBayar) }}
-                        {{ form_widget(searchform.jumlahBayar) }}
-                        <label class="add-on checkbox" id="persen-bayar">%{{ form_widget(searchform.persenBayar) }}
-                    </div>
-                </div>
-                {% endspaceless %}
-            </div>
             {{ form_rest(searchform) }}
         </div>
         {% if form_errors(searchform) %}
@@ -206,7 +242,7 @@ form .clearfix {
     </form>
 </div>
 
-<div class="clearfix"></div>
+<div class="clearfix" style="margin-top: 10px;"></div>
 
 <div class="pull-left info-jumlah">
     {{ 'label.jumlah.siswa.total'|trans }}: {{ pendaftarTotal }}
@@ -451,6 +487,8 @@ $(document).ready(function() {
     }
 
     $(".pembanding-bayar").dropkick();
+
+    $("#cari-lanjutan").hide(duration);
 
     $(".anchor-cari-lanjutan").click(function(){
         if ($("#cari-lanjutan").is(":visible")) {

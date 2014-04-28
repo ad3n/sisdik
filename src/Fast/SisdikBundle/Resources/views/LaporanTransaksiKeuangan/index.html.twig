@@ -4,9 +4,10 @@
 
 {% block content %}
 <style type="text/css">
-.control-group {
+.form-inline .form-group {
     display: inline-block;
     margin-right: 0.4em;
+    margin-bottom: 7px;
 }
 .ui-datepicker-month {
     font-size: 0.9em;
@@ -47,6 +48,46 @@ form .clearfix {
     min-width: 5em;
     min-height: 15px;
 }
+.input-group {
+    max-width: 200px;
+}
+#custom-dropkick {
+    padding: 0;
+}
+#custom-dropkick .dk_container {
+    width: 30px;
+}
+#custom-dropkick .dk_toggle {
+    max-width: 30px;
+    border-bottom: 0;
+    border-left: 0;
+    border-top: 0;
+    padding: 6px 4px;
+}
+.dk_options_inner {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.form-inline .input-group-addon {
+    padding: 6px 8px 0;
+}
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline #persen-bayar {
+    display: inline;
+    padding: 0;
+    font-weight: normal;
+    margin: 0;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
 </style>
 
 <div class="filter-section">
@@ -54,14 +95,12 @@ form .clearfix {
         {{ form_row(searchform.dariTanggal) }}
         {{ form_row(searchform.hinggaTanggal) }}
         {{ form_row(searchform.searchkey) }}
-        <div class="control-group">
+        <div class="form-group">
             {% spaceless %}
-            <div class="controls">
-                <div class="input-prepend">
-                    {{ form_widget(searchform.pembandingBayar) }}
-                    {{ form_widget(searchform.jumlahBayar) }}
+                <div class="input-group">
+                    <div id="custom-dropkick" class="input-group-addon">{{ form_widget(searchform.pembandingBayar) }}</div>
+                        {{ form_widget(searchform.jumlahBayar) }}
                 </div>
-            </div>
             {% endspaceless %}
         </div>
         {{ form_rest(searchform) }}
@@ -75,7 +114,7 @@ form .clearfix {
     </form>
 </div>
 
-<div class="clearfix"></div>
+<div class="clearfix" style="margin-top: 10px;"></div>
 
 <div class="pull-left info-jumlah">
     {{ 'label.jumlah.transaksi.total'|trans }}: {{ transaksiTotal }}

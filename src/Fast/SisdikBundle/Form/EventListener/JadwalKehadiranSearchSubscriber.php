@@ -54,6 +54,7 @@ class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
                     'class' => 'medium pilih-perulangan',
                 ],
                 'label_render' => false,
+                'horizontal' => false,
             ])
         ;
 
@@ -73,6 +74,7 @@ class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
                             'class' => 'medium',
                         ],
                         'label_render' => false,
+                        'horizontal' => false,
                     ])
                 ;
             } elseif ($data['perulangan'] == 'c-bulanan') {
@@ -87,6 +89,7 @@ class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
                             'class' => 'medium',
                         ],
                         'label_render' => false,
+                        'horizontal' => false,
                     ])
                 ;
             }

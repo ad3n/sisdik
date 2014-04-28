@@ -4,9 +4,26 @@
 
 {% block content %}
 <style type="text/css">
-.control-group {
+.form-inline .form-group {
     display: inline-block;
-    margin-right: 0.4em;
+    margin-right: 0.8em;
+    margin-bottom: 7px;
+}
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline #persen-bayar {
+    display: inline;
+    padding: 0;
+    font-weight: normal;
+    margin: 0;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
 }
 </style>
 
@@ -18,7 +35,7 @@
     </form>
 </div>
 
-<div class="clearfix"></div>
+<div class="clearfix" style="margin-top: 10px;"></div>
 
 <div class="pull-left info-jumlah">
     {{ 'label.jumlah.siswa.total'|trans }}: {{ pendaftarTotal }}
