@@ -5,11 +5,11 @@
 {% block content %}
 <form action="{{ path('fee_registration_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-actions">
+        <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
     </div>
 </form>
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('fee_registration') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
