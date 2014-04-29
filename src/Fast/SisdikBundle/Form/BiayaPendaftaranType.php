@@ -46,8 +46,7 @@ class BiayaPendaftaranType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this
-            ->container
+        $user = $this->container
             ->get('security.context')
             ->getToken()
             ->getUser()
@@ -55,14 +54,12 @@ class BiayaPendaftaranType extends AbstractType
 
         $sekolah = $user->getSekolah();
 
-        $em = $this
-            ->container
+        $em = $this->container
             ->get('doctrine')
             ->getManager()
         ;
 
-        $querybuilder1 = $em
-            ->createQueryBuilder()
+        $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
             ->from('FastSisdikBundle:Tahun', 't')
             ->where('t.sekolah = :sekolah')
@@ -83,11 +80,11 @@ class BiayaPendaftaranType extends AbstractType
                     'class' => 'small',
                 ],
                 'read_only' => $this->mode == 'edit' ? true : false,
+                'horizontal_input_wrapper_class' => 'col-sm-4 col-md-3 col-lg-2',
             ])
         ;
 
-        $querybuilder2 = $em
-            ->createQueryBuilder()
+        $querybuilder2 = $em->createQueryBuilder()
             ->select('t')
             ->from('FastSisdikBundle:Gelombang', 't')
             ->where('t.sekolah = :sekolah')
@@ -108,6 +105,7 @@ class BiayaPendaftaranType extends AbstractType
                     'class' => 'xlarge',
                 ],
                 'read_only' => $this->mode == 'edit' ? true : false,
+                'horizontal_input_wrapper_class' => 'col-sm-5 col-md-4 col-lg-3',
             ])
         ;
 
@@ -153,6 +151,7 @@ class BiayaPendaftaranType extends AbstractType
                 'attr' => [
                     'class' => 'large',
                 ],
+                'horizontal_input_wrapper_class' => 'col-sm-6 col-md-5 col-lg-4',
             ])
             ->add('urutan', 'choice', [
                 'choices' => $this->buildOrderChoices(),
@@ -162,6 +161,7 @@ class BiayaPendaftaranType extends AbstractType
                 'attr' => [
                     'class' => 'small',
                 ],
+                'horizontal_input_wrapper_class' => 'col-sm-3 col-md-2 col-lg-1',
             ])
         ;
 
@@ -176,6 +176,7 @@ class BiayaPendaftaranType extends AbstractType
                     'as_url' => true,
                     'reload' => true,
                     'help_block' => 'help.captcha.penjelasan.ubah.biaya',
+                    'horizontal_input_wrapper_class' => 'col-sm-6 col-md-5 col-lg-4',
                 ])
             ;
         }

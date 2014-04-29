@@ -13,13 +13,15 @@
 <p id="peringatan">
 {{ 'alert.biaya.pendaftaran.peringatan.ubah'|trans|raw }}
 </p>
+
 <form id="generateform" action="{{ path('fee_registration_edit_confirm', {'id': entity.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
-        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('fee_registration') }}'">{{ 'label.cancel'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
+            <button class="btn" type="reset" onclick="window.location.href='{{ path('fee_registration') }}'">{{ 'label.cancel'|trans }}</button>
+        </div>
     </div>
 </form>
-
 {% endblock content %}
