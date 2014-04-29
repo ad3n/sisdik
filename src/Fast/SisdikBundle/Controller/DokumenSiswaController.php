@@ -99,8 +99,9 @@ class DokumenSiswaController extends Controller
                                     'type' => new DokumenSiswaType($this->container), 'required' => true,
                                     'allow_add' => true, 'allow_delete' => true, 'by_reference' => false,
                                     'options' => array(
-                                        'widget_control_group' => false, 'label_render' => false,
-                                    ), 'label_render' => false, 'widget_control_group' => false,
+                                        'widget_form_group' => false, 'label_render' => false,
+                                        'widget_remove_btn' => false,
+                                    ), 'label_render' => false,
                             ));
 
             return array(
@@ -177,8 +178,9 @@ class DokumenSiswaController extends Controller
                                 'type' => new DokumenSiswaType($this->container), 'required' => true,
                                 'allow_add' => true, 'allow_delete' => true, 'by_reference' => false,
                                 'options' => array(
-                                    'widget_control_group' => false, 'label_render' => false,
-                                ), 'label_render' => false, 'widget_control_group' => false,
+                                    'widget_form_group' => false, 'label_render' => false,
+                                    'widget_remove_btn' => false,
+                                ), 'label_render' => false,
                         ));
         $form->submit($request);
 
