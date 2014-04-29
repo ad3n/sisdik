@@ -15,3 +15,22 @@ label.minggu: Minggu
 label.jumlah.bayar: Jumlah Bayar
 label.dari.tanggal: Dari Tanggal
 label.hingga.tanggal.singkat: Hingga
+
+help:
+    captcha.penjelasan.unggah.siswa.kelas: Captcha berguna untuk mencegah penempatan siswa di suatu kelas tanpa sengaja
+    captcha.penjelasan.unggah.impor.gabung: Captcha berguna untuk mencegah pengimpor-gabungan data tanpa sengaja
+    captcha.penjelasan.unggah.impor.baru: Captcha berguna untuk mencegah pengimporan data tanpa sengaja
+    awal.kehadiran: >
+        Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.
+        Status bisa diperbarui oleh guru piket.
+        Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.
+    captcha.penjelasan.ubah.hapus: Captcha berguna untuk mencegah pengubahan/penghapusan data tanpa sengaja
+    captcha.penjelasan.ubah.biaya: Captcha berguna untuk mencegah pengubahan/penghapusan data biaya tanpa sengaja
+    konfirmasi.saya.mengerti: Cek jika telah mengerti resiko yang akan terjadi
+    tag.standar.laporan.psb: tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%
+    logo.sekolah: Maksimum file 300kB
+    regenerate.username: Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.
+    filterby.name.systemid: Nama atau Nomor Induk Sistem
+    type.captcha: ketik kode
+    captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
+    confirm.generated.username: Centang untuk menandai bahwa data valid dan boleh disimpan ke database
