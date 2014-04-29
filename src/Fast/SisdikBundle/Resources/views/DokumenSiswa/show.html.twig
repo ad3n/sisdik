@@ -27,7 +27,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('dokumen-' ~ ruteasal ~ '_delete', { 'sid': entity.siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('dokumen-' ~ ruteasal ~ '_delete', { 'sid': entity.siswa.id, 'id': entity.id }) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>

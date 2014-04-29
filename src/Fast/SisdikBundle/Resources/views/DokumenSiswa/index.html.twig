@@ -56,8 +56,8 @@
             </td>
             <td data-title="{{ 'label.lengkap'|trans }}">{% if data.lengkap == 1 %}{{ 'label.lengkap'|trans }}{% elseif data.lengkap == 0 %}{{ 'label.tidak.lengkap'|trans }}{% endif %}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('dokumen-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-                <a href="{{ path('dokumen-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit"></a>
+                <a href="{{ path('dokumen-' ~ ruteasal ~ '_show', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('dokumen-' ~ ruteasal ~ '_edit', {'sid': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
             </td>
         </tr>
     {% endfor %}
