@@ -1,3 +1,5 @@
+label.allschool: ~ Semua Sekolah ~
+
 status.kehadiran.hadir.tepat: Hadir Tepat
 status.kehadiran.hadir.telat: Hadir Telat
 status.kehadiran.alpa: Alpa
@@ -11,6 +13,8 @@ label.kamis: Kamis
 label.jumat: Jumat
 label.sabtu: Sabtu
 label.minggu: Minggu
+
+label.semua.layanan: ~ Semua Layanan ~
 
 label.jumlah.bayar: Jumlah Bayar
 label.dari.tanggal: Dari Tanggal
@@ -34,3 +38,15 @@ help:
     type.captcha: ketik kode
     captcha.username.explain: Captcha mencegah pembuatan username tanpa sengaja
     confirm.generated.username: Centang untuk menandai bahwa data valid dan boleh disimpan ke database
+
+layanan.sms:
+    pendaftar.tercatat: Pendaftar tercatat di database
+    pendaftar.bayar.pertama: Pertama kali membayar biaya pendaftaran
+    pendaftar.bayar.biaya: Membayar biaya pendaftaran
+    pendaftar.bayar.lunas: Lunas biaya pendaftaran
+    laporan.ringkasan.pendaftaran: Ringkasan laporan pendaftaran
+    kehadiran.alpa: Siswa alpa
+    kehadiran.tepat: Siswa datang tepat waktu
+    kehadiran.telat: Siswa datang terlambat
+    kehadiran.izin: Siswa izin tidak masuk sekolah
+    kehadiran.sakit: Siswa tidak masuk sekolah karena sakit
