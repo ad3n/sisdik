@@ -3,16 +3,16 @@
 {% block page_heading %}{% trans from "headings" %}jenis.dokumen.siswa.pembuatan{% endtrans %}{% endblock %}
 
 {% block content %}
-
-<div class="clearfix" style="margin-bottom: 1em;"></div>
-
 <form action="{{ path('jenisdokumensiswa_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
-<ul class="pills">
+
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('jenisdokumensiswa') }}">{{ 'link.backtolist'|trans }} {{ 'link.jenis.dokumen.siswa'|trans }}</a>
     </li>
