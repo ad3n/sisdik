@@ -3,34 +3,35 @@
 {% block page_heading %}{% trans from "headings" %}data.class.edit{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('data_class_update', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('data_class_update', {'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('data_class_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('data_class_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('data_class', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('data_class', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('data_class') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.class'|trans({ '%class%': entity.nama }) }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
+    $("#delete-form").submit(function(){
+        var confirmtext = "{{ 'confirm.drop.class'|trans({ '%class%': entity.nama }) }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
