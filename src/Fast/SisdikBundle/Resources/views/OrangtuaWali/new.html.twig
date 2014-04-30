@@ -3,28 +3,31 @@
 {% block page_heading %}{% trans from "headings" %}ortuwali.pembuatan{% endtrans %}<br />{{ 'untuk'|trans }} {{ siswa.namaLengkap }}{% endblock %}
 
 {% block content %}
-
-<div class="clearfix" style="margin-bottom: 1em;"></div>
-
 <form action="{{ path('ortuwali-' ~ ruteasal ~ '_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
-<ul class="pills">
+
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('ortuwali-' ~ ruteasal, {'sid': siswa.id}) }}">{{ 'link.backto'|trans }} {{ 'link.ortuwali'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
-    	changeMonth: true,
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
         changeYear: true,
         maxDate: "-15Y"
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

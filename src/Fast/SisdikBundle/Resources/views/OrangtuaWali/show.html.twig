@@ -2,6 +2,14 @@
 
 {% block page_heading %}{% trans from "headings" %}ortuwali.detail{% endtrans %}<br />{{ entity.siswa.namaLengkap }}{% endblock %}
 {% block content %}
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('ortuwali-' ~ ruteasal ~ '_new', { 'sid': entity.siswa.id }) }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.ortuwali.tambah'|trans }}
+        </a>
+    </li>
+</ul>
+
 <dl>
     <dt>{{ 'label.nama.siswa'|trans }}</dt>
     <dd>{{ entity.siswa.namaLengkap }}</dd>
@@ -39,7 +47,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('ortuwali-' ~ ruteasal ~ '_delete', { 'sid': entity.siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('ortuwali-' ~ ruteasal ~ '_delete', { 'sid': entity.siswa.id, 'id': entity.id }) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -52,16 +60,6 @@
     </li>
     <li>
         <a href="{{ path('ortuwali-' ~ ruteasal ~ '_edit', { 'sid': entity.siswa.id, 'id': entity.id }) }}">{{ 'link.edit'|trans }}</a>
-    </li>
-</ul>
-
-<div class="clearfix"></div>
-
-<ul class="nav nav-pills pull-right">
-    <li>
-        <a href="{{ path('ortuwali-' ~ ruteasal ~ '_new', { 'sid': entity.siswa.id }) }}" class="add-link-a">
-            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.ortuwali.tambah'|trans }}
-        </a>
     </li>
 </ul>
 {% endblock content %}
