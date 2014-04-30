@@ -77,6 +77,7 @@
     outline: none;
 }
 #form-inisiasi {
+    margin-top: 10px;
     margin-bottom: 0px;
 }
 .ajax-loader {
@@ -89,6 +90,9 @@
     font-family: Arial,sans-serif;
     font-size: 1em;
 }
+.accordion-body .accordion-inner {
+    margin-top: 5px;
+}
 </style>
 
 <div class="filter-section">
@@ -99,11 +103,11 @@
     </form>
 </div>
 
-<div class="clearfix"></div>
+<div class="clearfix" style="margin-top: 10px;"></div>
 
 <h4>{{ 'kehadiran'|trans }} {{ 'di'|trans }} {{ 'kelas'|trans }} {{ kelas.nama }} {{ 'tanggal'|trans }} {{ tanggal|date('d/m/Y') }}</h4>
 
-<a href="" id="anchor-proses-kehadiran" class="anchor-proses-kehadiran" onclick="return false;">{{ 'link.rincian.proses.kehadiran'|trans }}<span class="arrow-down-lanjut"></span></a>
+<a href="#" id="anchor-proses-kehadiran" class="anchor-proses-kehadiran" onclick="return false;">{{ 'link.rincian.proses.kehadiran'|trans }}<span class="arrow-down-lanjut"></span></a>
 
 <div id="proses-kehadiran">
     <div class="accordion" id="proses-kehadiran-accordion">
@@ -128,7 +132,7 @@
                 </ul>
             </div>
             <div id="collapseOne" class="accordion-body collapse">
-                <div class="accordion-inner">
+                <div class="accordion-inner well">
                 {% if prosesKehadiranSiswa is not null %}
                     {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}
                         {{ 'info.pesan.piket.inisiasi.berhasil'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
@@ -140,18 +144,27 @@
                 {% endif %}
                     <form id="form-inisiasi" method="post" action="{{ path('studentspresence_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }} class="form-horizontal">
                         {{ form_widget(formInisiasi) }}
-                        <button type="submit" class="btn success alternative icon play">
-                    {% if prosesKehadiranSiswa is not null %}
-                        {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}
-                            {{ 'label.inisiasi.ulang'|trans }}
-                        {% else %}
-                            {{ 'label.inisiasi'|trans }}
-                        {% endif %}
-                    {% else %}
-                        {{ 'label.inisiasi'|trans }}
-                    {% endif %}
-                        </button>
-                        <div id="loader-inisiasi" class="ajax-loader"></div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                                <button type="submit"
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilInisiasi == 1 %}
+                                    class="btn danger alternative icon play"
+                                    {% set labelInisiasi = 'label.inisiasi.ulang'|trans %}
+                                {% else %}
+                                    class="btn success alternative icon play"
+                                    {% set labelInisiasi = 'label.inisiasi'|trans %}
+                                {% endif %}
+                            {% else %}
+                                    {% set labelInisiasi = 'label.inisiasi'|trans %}
+                                class="btn success alternative icon play"
+                            {% endif %}
+                                >
+                                    {{ labelInisiasi }}
+                                </button>
+                                <div id="loader-inisiasi" class="ajax-loader"></div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -178,8 +191,8 @@
                 </ul>
             </div>
             <div id="collapseTwo" class="accordion-body collapse">
-                <div class="accordion-inner">
-                    Fasilitas pembaruan data secara manual belum tersedia
+                <div class="accordion-inner well">
+                    <span style="color: red">Fasilitas pembaruan data secara manual belum tersedia</span>
                 </div>
             </div>
         </div>
@@ -205,7 +218,7 @@
                 </ul>
             </div>
             <div id="collapseThree" class="accordion-body collapse">
-                <div class="accordion-inner">
+                <div class="accordion-inner well">
                     {{ 'info.cara.validasi.kehadiran'|trans }}
                 </div>
             </div>
@@ -232,7 +245,7 @@
                 </ul>
             </div>
             <div id="collapseFour" class="accordion-body collapse">
-                <div class="accordion-inner">
+                <div class="accordion-inner well">
                     - Info SMS kehadiran telah berhasil diproses untuk dikirim. Laporannya bisa dilihat pada menu laporan kehadiran siswa<br>
                     - Jika SMS belum diproses, info SMS kehadiran akan otomatis diproses pada pukul 08.30<br>
                     - Gunakan tombol 'Kirim SMS' untuk mendahului pemrosesan atau untuk memproses ulang info sms kehadiran siswa secara manual<br>
@@ -242,20 +255,27 @@
 
                     <form id="form-kirim-sms" method="post" action="{{ path('studentspresence_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }} class="form-horizontal">
                         {{ form_widget(formSms) }}
-                        <div class="controls">
-                            <button type="submit" class="btn success alternative icon play">
-                        {% if prosesKehadiranSiswa is not null %}
-                            {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
-                                {{ 'label.kirim.sms.ulang'|trans }}
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                                <button type="submit"
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
+                                    {% set labelKirimSMS = 'label.kirim.sms.ulang'|trans %}
+                                    class="btn danger alternative icon play"
+                                {% else %}
+                                    {% set labelKirimSMS = 'label.kirim.sms'|trans %}
+                                    class="btn success alternative icon play"
+                                {% endif %}
                             {% else %}
-                                {{ 'label.kirim.sms'|trans }}
+                                    {% set labelKirimSMS = 'label.kirim.sms'|trans %}
+                                class="btn success alternative icon play"
                             {% endif %}
-                        {% else %}
-                            {{ 'label.kirim.sms'|trans }}
-                        {% endif %}
-                            </button>
+                                >
+                                    {{ labelKirimSMS }}
+                                </button>
+                                <div id="loader-kirim-sms" class="ajax-loader"></div>
+                            </div>
                         </div>
-                        <div id="loader-kirim-sms" class="ajax-loader"></div>
                     </form>
                 </div>
             </div>
@@ -263,7 +283,7 @@
     </div>
 </div>
 
-<div class="clearfix" style="margin-bottom: 1em;"></div>
+<div class="clearfix" style="margin-bottom: 10px; margin-top: 10px;"></div>
 
 {% if entities %}
 <form method="post" action="{{ path('studentspresence_update') }}" class="form-inline" id="presenceform">
@@ -273,10 +293,8 @@
     <dd>{{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}</dd>
 {% endfor %}
 </dl>
-
 <div class="clearfix"></div>
-
-<div class="form-actions">
+<div style="padding-top: 10px;">
     <button type="submit" class="btn primary alternative icon approve">{{ 'label.save'|trans }}</button>
     <div id="output" class="ajax-loader"></div>
 </div>
