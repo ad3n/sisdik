@@ -79,33 +79,32 @@ class PanitiaPendaftaranType extends AbstractType
             'data' => $sekolah->getId()
         ))
             ->add('daftarPersonil', 'collection', array(
+            'label' => 'label.committee.list',
+            'label_render' => true,
             'type' => new PersonilType(),
             'required' => true,
             'allow_add' => true,
             'allow_delete' => true,
             'by_reference' => true,
+            'prototype' => true,
             'widget_add_btn' => array(
                 'label' => 'label.committee.add',
                 'attr' => array(
                     'class' => 'btn'
                 ),
-                'icon' => 'plus-sign'
+                'icon' => 'plus-sign',
             ),
-            'label' => 'label.committee.list',
-            'prototype' => true,
             'options' => array(
-                'widget_control_group' => true,
+                'label_render' => false,
                 'widget_remove_btn' => array(
                     'label' => 'label.delete',
                     'attr' => array(
                         'class' => 'btn'
                     ),
-                    'icon' => 'trash'
+                    'icon' => 'trash',
+                    'wrapper_div' => false,
                 ),
-                'label_render' => false
             ),
-            'label_render' => true,
-            'widget_control_group' => true
         ));
     }
 

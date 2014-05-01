@@ -33,104 +33,124 @@
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 .tak-terdefinisi {
     color: #ff0000;
 }
+.form-horizontal .form-group .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+.form-horizontal .form-group .collection-item {
+    margin-bottom: 10px;
+}
+.form-horizontal .form-group .collection-item .form-group {
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
 </style>
 
 <form action="{{ path('regcommittee_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('regcommittee_delete', { 'id': entity.id }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('regcommittee_delete', { 'id': entity.id }) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('regcommittee') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var options = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("regcommittee_ajax_get_username") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id,
-                			source: item.source,
-                			target: item.target
-            			}
-    			    }));
-				}
-			});
-		},
-		search: function(event, ui) {
-		},
-    	select: function(event, ui) {
-        	var attrid = $(event.target).attr("id");
+    var options = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("regcommittee_ajax_get_username") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id,
+                            source: item.source,
+                            target: item.target
+                        }
+                    }));
+                }
+            });
+        },
+        search: function(event, ui) {
+        },
+        select: function(event, ui) {
+            var attrid = $(event.target).attr("id");
 
-    		prefix = strstr(attrid, ui.item.source, true);
-      		suffix = ui.item.target;
+            prefix = strstr(attrid, ui.item.source, true);
+            suffix = ui.item.target;
 
-      		target = "#" + prefix + suffix;
-      		$(target).val(ui.item.id);
-    	}
-	};
+            target = "#" + prefix + suffix;
+            $(target).val(ui.item.id);
+        }
+    };
 
-	$(".committee-username").live("keydown.autocomplete", function() {
+    $(".committee-username").live("keydown.autocomplete", function() {
         $(this).autocomplete(options);
     });
 
-	$(".committee-username").each(function(){
-		$(this).addClass("ui-autocomplete-loading");
-	});
+    $(".committee-username").each(function(){
+        $(this).addClass("ui-autocomplete-loading");
+    });
 
     $(".id-panitia").each(function(){
         var idpanitia = $(this);
         var attrid = $(idpanitia).attr("id");
 
-    	if ($(idpanitia).val() != "") {
-    		$.ajax({
-    			url: "{{ path("regcommittee_ajax_get_username") }}",
-    			data: {id: $(idpanitia).val()},
-    			success: function(data) {
-    	    		prefix = strstr(attrid, data[0].target, true);
-    	      		suffix = data[0].source;
+        if ($(idpanitia).val() != "") {
+            $.ajax({
+                url: "{{ path("regcommittee_ajax_get_username") }}",
+                data: {id: $(idpanitia).val()},
+                success: function(data) {
+                    prefix = strstr(attrid, data[0].target, true);
+                    suffix = data[0].source;
 
-    	      		target = "#" + prefix + suffix;
-    	      		$(target).val(data[0].value);
+                    target = "#" + prefix + suffix;
+                    $(target).val(data[0].value);
 
-    	      		if (data[0].value == "{{ 'label.username.undefined'|trans }}") {
-        	      		$(target).addClass("tak-terdefinisi");
-    	      		}
+                    if (data[0].value == "{{ 'label.username.undefined'|trans }}") {
+                        $(target).addClass("tak-terdefinisi");
+                    }
 
-    	      		$(target).removeClass("ui-autocomplete-loading");
-    			}
-    		});
-    	}
+                    $(target).removeClass("ui-autocomplete-loading");
+                }
+            });
+        }
     });
 
-	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.registration.committee'|trans({ '%year%': entity.tahun.tahun }) }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
+    $("#delete-form").submit(function(){
+        var confirmtext = "{{ 'confirm.drop.registration.committee'|trans({ '%year%': entity.tahun.tahun }) }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

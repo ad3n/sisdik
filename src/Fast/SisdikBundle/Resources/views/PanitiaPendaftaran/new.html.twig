@@ -33,60 +33,81 @@
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
+.form-horizontal .form-group .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+.form-horizontal .form-group .collection-item {
+    margin-bottom: 10px;
+}
+.form-horizontal .form-group .collection-item .form-group {
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
 </style>
+
 <form action="{{ path('regcommittee_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
-<ul class="pills">
+
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('regcommittee') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
 
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var options = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("regcommittee_ajax_get_username") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id,
-                			source: item.source,
-                			target: item.target
-            			}
-    			    }));
-				}
-			});
-		},
-		search: function(event, ui) {
-		},
-    	select: function(event, ui) {
-        	var attrid = $(event.target).attr("id");
+    var options = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("regcommittee_ajax_get_username") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id,
+                            source: item.source,
+                            target: item.target
+                        }
+                    }));
+                }
+            });
+        },
+        search: function(event, ui) {
+        },
+        select: function(event, ui) {
+            var attrid = $(event.target).attr("id");
 
-    		prefix = strstr(attrid, ui.item.source, true);
-      		suffix = ui.item.target;
+            prefix = strstr(attrid, ui.item.source, true);
+            suffix = ui.item.target;
 
-      		target = "#" + prefix + suffix;
-      		$(target).val(ui.item.id);
-    	}
-	};
+            target = "#" + prefix + suffix;
+            $(target).val(ui.item.id);
+        }
+    };
 
-	$(".committee-username").live("keydown.autocomplete", function() {
+    $(".committee-username").live("keydown.autocomplete", function() {
         $(this).autocomplete(options);
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

@@ -25,6 +25,7 @@ class PersonilType extends AbstractType
                                         'class' => 'xlarge committee-username ketik-pilih-tambah',
                                         'placeholder' => 'label.username',
                                 ), 'label_render' => false,
+                                'horizontal' => false,
                         ));
     }
 
