@@ -19,11 +19,14 @@
     {% endimage %}
 }
 </style>
+
 <form action="{{ path('siswa_mengimporbaru') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.import'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.import'|trans }}</button>
+        </div>
     </div>
 </form>
 
@@ -40,39 +43,37 @@
 <div class="clearfix"></div>
 
 <div class="knowledgebase">
-{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
     <a href="{{ path('_index') }}" class="a-kb">
-        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
-        {{ 'link.student.import'|trans({}, 'kb') }}
+        <i class="fa fa-lightbulb-o fa-2x fa-fw"></i>{{ 'link.student.import'|trans({}, 'kb') }}
     </a>
-{% endimage %}
 </div>
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
 
-<div class="clearfix"></div>
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     $("#dl-template").submit(function() {
-    	var url = $(this).attr("action");
+        var url = $(this).attr("action");
         $("#filename").html("&nbsp;");
         $("#filename").addClass("loading");
         $.get(url, function(response) {
             if (response.redirectUrl) {
-            	window.location.href = response.redirectUrl;
-            	$("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
-                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
-            	$("#filename").removeClass("loading");
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename").removeClass("loading");
             }
         });
         return false;
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

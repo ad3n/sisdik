@@ -269,7 +269,7 @@ class SiswaType extends AbstractType
                                         'class' => 'large'
                                     ), 'label' => 'label.name.parent.or.guardian',
                                     'options' => array(
-                                        'widget_control_group' => false, 'label_render' => false,
+                                        'widget_form_group' => false, 'label_render' => false,
                                     ), 'label_render' => false, 'allow_add' => true,
                             ))
                     ->add('dibuatOleh', new EntityHiddenType($em),

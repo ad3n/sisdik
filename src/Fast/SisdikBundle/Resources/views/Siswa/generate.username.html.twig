@@ -34,41 +34,44 @@
 </style>
 
 <div id="username-info">&nbsp;</div>
+
 <form id="generateform" action="{{ path('siswa_generate_username') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.generate.username'|trans }}</button>
-	    <div id="process-output" style="color: #003EB0; line-height: 1.2em; margin-top: 1em;"></div>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary" id="submit-button">{{ 'label.generate.username'|trans }}</button>
+            <div id="process-output" style="color: #003EB0; line-height: 1.2em; margin-top: 1em;"></div>
+        </div>
     </div>
 </form>
 
 <div class="clearfix"></div>
 
 <div class="knowledgebase">
-{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
     <a href="{{ path('_index') }}" class="a-kb">
-        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
-        {{ 'link.student.manage.username'|trans({}, 'kb') }}
+        <i class="fa fa-lightbulb-o fa-2x fa-fw"></i>{{ 'link.student.manage.username'|trans({}, 'kb') }}
     </a>
-{% endimage %}
 </div>
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }} {{ 'label.student.entry'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     var checkurl = "{{ path("siswa_ajax_generated_username") }}";
     var posturl = "{{ path('siswa_generate_username') }}";
 
-	if ($(".selectyear").val() != '') {
-		$("#username-info").html("&nbsp;");
-		$('#process-output').html("");
+    if ($(".selectyear").val() != '') {
+        $("#username-info").html("&nbsp;");
+        $('#process-output').html("");
         $.get(checkurl, {tahun: $(".selectyear").val(), siswa: $(".studentfilter").val()}, function(data) {
             $("#username-info").html(data.info);
             $('#process-output').html("");
@@ -88,42 +91,42 @@ $(document).ready(function() {
     });
 
     $(".studentfilter").autocomplete({
-    	minLength: 3,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("siswa_ajax_filter_student") }}",
-    			data: {tahun: $(".selectyear").val(), filter: $(".studentfilter").val()},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label, value: item.value
-            			}
-    			    }));
-				}
-			});
-		},
-		search: function(event, ui) {
-			if ($(".selectyear").val() == '') {
-				$("#username-info").html("{{ 'shortinfo.selectyear.filterstudent'|trans }}");
-				return false;
-			}
-		},
-    	select: function(event, ui) {
-    		$.get(checkurl, {tahun: $(".selectyear").val(), siswa: ui.item.value}, function(data) {
+        minLength: 3,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("siswa_ajax_filter_student") }}",
+                data: {tahun: $(".selectyear").val(), filter: $(".studentfilter").val()},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label, value: item.value
+                        }
+                    }));
+                }
+            });
+        },
+        search: function(event, ui) {
+            if ($(".selectyear").val() == '') {
+                $("#username-info").html("{{ 'shortinfo.selectyear.filterstudent'|trans }}");
+                return false;
+            }
+        },
+        select: function(event, ui) {
+            $.get(checkurl, {tahun: $(".selectyear").val(), siswa: ui.item.value}, function(data) {
                 $("#username-info").html(data.info);
                 $('#process-output').html("");
             });
-    	}
-	});
+        }
+    });
 
     $(".studentfilter").blur(function() {
-    	$.get(checkurl, {tahun: $(".selectyear").val(), siswa: $(".studentfilter").val()}, function(data) {
+        $.get(checkurl, {tahun: $(".selectyear").val(), siswa: $(".studentfilter").val()}, function(data) {
             $("#username-info").html(data.info);
             $('#process-output').html("");
         });
     });
 
-	$("#generateform").submit(function() {
+    $("#generateform").submit(function() {
 
         {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#process-output').html('<img src="{{ asset_url }}" />');
@@ -134,30 +137,30 @@ $(document).ready(function() {
         }
 
         if ($(".regenerate-username").is(":checked") == true && $(".studentfilter").val() == '') {
-        	$('#process-output').html("{{ 'alert.student.nofilter'|trans }}");
+            $('#process-output').html("{{ 'alert.student.nofilter'|trans }}");
         } else {
             // last check to make sure student is available
-        	$.get(checkurl, {
-            	    tahun: $(".selectyear").val(),
-            	    siswa: $(".studentfilter").val(),
-            	    regenerate: $(".regenerate-username").is(":checked") == true ? 'YES' : 'NO'
-        	    }, function(data) {
-            	    console.log(data.proceedpost + ":" + posturl);
+            $.get(checkurl, {
+                    tahun: $(".selectyear").val(),
+                    siswa: $(".studentfilter").val(),
+                    regenerate: $(".regenerate-username").is(":checked") == true ? 'YES' : 'NO'
+                }, function(data) {
+                    console.log(data.proceedpost + ":" + posturl);
                     if (data.proceedpost == 'YES') {
-                    	$("#generateform").data("valid", true).submit();
+                        $("#generateform").data("valid", true).submit();
                         // $.post(posturl, $("#generateform").serialize(), function(data) {
                             // console.log(data);
                         // });
                     } else {
-                    	$("#generateform").data("valid", false);
+                        $("#generateform").data("valid", false);
                         $("#username-info").html(data.info);
                         $('#process-output').html(data.info);
                     }
             });
         }
 
-		return false;
-	});
+        return false;
+    });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

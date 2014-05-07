@@ -52,7 +52,7 @@ class SiswaGenerateUsernameType extends AbstractType
                 'label' => 'label.filter.student',
                 'required' => false,
                 'attr' => array(
-                    'class' => 'large studentfilter',
+                    'class' => 'large studentfilter ketik-pilih-tambah',
                     'placeholder' => 'help.filterby.name.systemid'
                 )
             ))->add('output', 'choice', array(
@@ -74,7 +74,8 @@ class SiswaGenerateUsernameType extends AbstractType
                 'attr' => array(
                     'class' => 'regenerate-username'
                 ),
-                'widget_checkbox_label' => 'widget'
+                'widget_checkbox_label' => 'widget',
+                'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
             ))->add('captcha', 'captcha', array(
                 'attr' => array(
                     'class' => 'medium',

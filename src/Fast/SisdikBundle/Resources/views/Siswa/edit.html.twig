@@ -28,136 +28,134 @@
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 </style>
-<form action="{{ path('siswa_update', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+
+<form action="{{ path('siswa_update', {'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('siswa_deleteconfirm', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('siswa_deleteconfirm', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('siswa', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('siswa', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        {% if page is defined %}
-        <a href="{{ path('siswa_show', {'id': entity.id, 'page': page}) }}">{{ 'link.showstudent'|trans }}</a>
-        {% else %}
-        <a href="{{ path('siswa_show', {'id': entity.id, 'page': app.request.get('page')}) }}">{{ 'link.showstudent'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('siswa_show', {'id': entity.id}) }}">{{ 'link.showstudent'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 var duration = 800;
 
 $(document).ready(function() {
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
-    	// changeMonth: true,
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
+        // changeMonth: true,
         changeYear: true,
         maxDate: "-8Y"
     });
 
-	$("#delete-form").submit(function(){
-		var confirmtext = "{{ 'confirm.drop.student'|trans({ '%student%': entity.namaLengkap }) }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
+    $("#delete-form").submit(function(){
+        var confirmtext = "{{ 'confirm.drop.student'|trans({ '%student%': entity.namaLengkap }) }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
 
-	var options1 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("referensi_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-referensi").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-referensi").val(ui.item.id);
-    	}
-	};
+    var options1 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+              $(".id-referensi").val(ui.item.id);
+        }
+    };
 
-	var options2 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-sekolah-asal").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-sekolah-asal").val(ui.item.id);
-    	}
-	};
+    var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-sekolah-asal").val("");
+        },
+        select: function(event, ui) {
+              $(".id-sekolah-asal").val(ui.item.id);
+        }
+    };
 
-	$(".nama-referensi").live("keydown.autocomplete", function() {
+    $(".nama-referensi").live("keydown.autocomplete", function() {
         $(this).autocomplete(options1);
     });
 
-	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
+    $(".nama-sekolah-asal").live("keydown.autocomplete", function() {
         $(this).autocomplete(options2);
     });
 
-	if ($(".id-referensi").val() != "") {
-		$.ajax({
-			url: "{{ path("referensi_ajax_ambilnama") }}",
-			data: {id: $(".id-referensi").val()},
-			success: function(data) {
-				$(".nama-referensi").val(data[0].value);
-			}
-		});
-	}
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+            }
+        });
+    }
 
-	if ($(".id-sekolah-asal").val() != "") {
-		$.ajax({
-			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-			data: {id: $(".id-sekolah-asal").val()},
-			success: function(data) {
-				$(".nama-sekolah-asal").val(data[0].value);
-			}
-		});
-	}
+    if ($(".id-sekolah-asal").val() != "") {
+        $.ajax({
+            url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+            data: {id: $(".id-sekolah-asal").val()},
+            success: function(data) {
+                $(".nama-sekolah-asal").val(data[0].value);
+            }
+        });
+    }
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

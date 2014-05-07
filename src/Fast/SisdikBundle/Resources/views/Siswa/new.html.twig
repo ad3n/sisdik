@@ -25,117 +25,124 @@
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 </style>
+
 <form action="{{ path('siswa_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_row(form.tahun) }}
     {{ form_row(form.namaLengkap) }}
     {{ form_row(form.nomorInduk) }}
     {{ form_widget(form.orangtuaWali) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
-<ul class="pills">
+
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('siswa') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 var duration = 800;
 
 $(document).ready(function() {
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
-    	// changeMonth: true,
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
+        // changeMonth: true,
         changeYear: true,
         maxDate: "-8Y"
     });
 
-	var options1 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("referensi_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-referensi").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-referensi").val(ui.item.id);
-    	}
-	};
+    var options1 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+              $(".id-referensi").val(ui.item.id);
+        }
+    };
 
-	var options2 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-sekolah-asal").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-sekolah-asal").val(ui.item.id);
-    	}
-	};
+    var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-sekolah-asal").val("");
+        },
+        select: function(event, ui) {
+              $(".id-sekolah-asal").val(ui.item.id);
+        }
+    };
 
-	$(".nama-referensi").live("keydown.autocomplete", function() {
+    $(".nama-referensi").live("keydown.autocomplete", function() {
         $(this).autocomplete(options1);
     });
 
-	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
+    $(".nama-sekolah-asal").live("keydown.autocomplete", function() {
         $(this).autocomplete(options2);
     });
 
-	if ($(".id-referensi").val() != "") {
-		$.ajax({
-			url: "{{ path("referensi_ajax_ambilnama") }}",
-			data: {id: $(".id-referensi").val()},
-			success: function(data) {
-				$(".nama-referensi").val(data[0].value);
-			}
-		});
-	}
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+            }
+        });
+    }
 
-	if ($(".id-sekolah-asal").val() != "") {
-		$.ajax({
-			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-			data: {id: $(".id-sekolah-asal").val()},
-			success: function(data) {
-				$(".nama-sekolah-asal").val(data[0].value);
-			}
-		});
-	}
+    if ($(".id-sekolah-asal").val() != "") {
+        $.ajax({
+            url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+            data: {id: $(".id-sekolah-asal").val()},
+            success: function(data) {
+                $(".nama-sekolah-asal").val(data[0].value);
+            }
+        });
+    }
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

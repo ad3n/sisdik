@@ -20,27 +20,19 @@
 <form id="generateform" action="{{ path('siswa_generate_username_confirm', {'file': file, 'type': type, 'regenerate': regenerate}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
-        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('siswa_generate_username') }}'">{{ 'label.cancel'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
+            &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('siswa_generate_username') }}'">{{ 'label.cancel'|trans }}</button>
+        </div>
     </div>
 </form>
 
 <div class="clearfix"></div>
 
 <div class="knowledgebase">
-{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
     <a href="{{ path('_index') }}" class="a-kb">
-        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
-        {{ 'link.student.manage.username'|trans({}, 'kb') }}
+        <i class="fa fa-lightbulb-o fa-2x fa-fw"></i>{{ 'link.student.manage.username'|trans({}, 'kb') }}
     </a>
-{% endimage %}
 </div>
-
-<div class="clearfix"></div>
-<script language="javascript" type="text/javascript">
-$(document).ready(function() {
-
-});
-</script>
 {% endblock content %}

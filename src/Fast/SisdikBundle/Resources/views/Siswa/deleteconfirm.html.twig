@@ -6,17 +6,18 @@
 {% endblock %}
 
 {% block content %}
-<br />
+<br>
 <h3>{{ 'warning.removal'|trans({}, 'headings') }}!</h3>
 <p style="color: #ff0000;">
 Menghapus data siswa akan menghapus data terkait seperti riwayat kelas, nilai, pembayaran, dan akses siswa ke sistem.<br />
-Aksi ini tidak bisa dibatalkan. Yakin ingin menghapus data siswa?</p>
+Aksi ini tidak bisa dibatalkan. Yakin ingin menghapus data siswa?
+</p>
 <form action="{{ path('siswa_delete', {'id': entity.id}) }}" method="post" {{ form_enctype(delete_form) }} class="form-inline">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.submit.proceed'|trans }}</button>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('siswa_show', {'id': entity.id}) }}">{{ 'link.backtostudentinfo'|trans }}</a>
     </li>
