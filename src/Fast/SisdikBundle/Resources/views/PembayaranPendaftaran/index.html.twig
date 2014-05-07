@@ -3,6 +3,7 @@
 {% block page_heading %}{% trans from "headings" %}payment.registrationfee.entry{% endtrans %}<br>{{ siswa.namaLengkap }}{% endblock %}
 
 {% block content %}
+{% spaceless %}
 <style type="text/css">
 .content .popover-content p {
     margin-bottom: 0;
@@ -246,6 +247,7 @@
         <a href="{{ path('applicant_payment') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endspaceless %}
 {% endblock content %}
 
 {% block javascripts_custom %}
