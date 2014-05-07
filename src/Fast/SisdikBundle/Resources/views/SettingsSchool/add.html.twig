@@ -4,18 +4,16 @@
 {% block content %}
 <form action="{{ path('settings_school_add') }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
     {{ form_widget(form) }}
-    <div class="form-actions">
-        <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('settings_school_list', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('settings_school_list', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('settings_school_list') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}
