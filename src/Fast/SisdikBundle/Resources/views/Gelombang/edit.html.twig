@@ -3,7 +3,7 @@
 {% block page_heading %}{% trans from "headings" %}settings.admissiongroup.edit{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('settings_admissiongroup_update', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('settings_admissiongroup_update', {'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
@@ -12,18 +12,14 @@
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('settings_admissiongroup_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline pull-right">
+<form id="delete-form" action="{{ path('settings_admissiongroup_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
 <ul class="nav nav-pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('settings_admissiongroup', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('settings_admissiongroup', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('settings_admissiongroup') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}

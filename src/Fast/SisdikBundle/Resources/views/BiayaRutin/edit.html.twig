@@ -19,11 +19,7 @@
 
 <ul class="nav nav-pills">
     <li>
-        {% if page is defined %}
-        <a href="{{ path('fee_recur', {'page': page}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% else %}
-        <a href="{{ path('fee_recur', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-        {% endif %}
+        <a href="{{ path('fee_recur') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}
