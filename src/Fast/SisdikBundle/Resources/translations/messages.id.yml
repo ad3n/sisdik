@@ -25,6 +25,8 @@ label.directprint: Direct Print (Dot Matrix)
 
 label.ketik-pilih.atau.ketik-tambah: Ketik-Pilih atau Ketik-Tambah
 
+label.perlu.untuk.sms: Perlu untuk kirim SMS
+
 help:
     captcha.penjelasan.unggah.siswa.kelas: Captcha berguna untuk mencegah penempatan siswa di suatu kelas tanpa sengaja
     captcha.penjelasan.unggah.impor.gabung: Captcha berguna untuk mencegah pengimpor-gabungan data tanpa sengaja

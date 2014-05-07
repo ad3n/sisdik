@@ -198,6 +198,9 @@ form .clearfix {
 .form-inline .input-group-addon .checkbox {
     width: 2em;
 }
+#summary-form label {
+    padding: 0;
+}
 </style>
 
 <div class="filter-section">
@@ -268,11 +271,9 @@ form .clearfix {
             <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}</td>
             <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
-                {% endimage %}
             </td>
         </tr>
     {% endfor %}
@@ -280,42 +281,49 @@ form .clearfix {
 </table>
 {{ knp_pagination_render(pagination) }}
 
-<div class="row-fluid">
-    <div class="span6 export-section pull-left">
-        <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
-            <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
-            <div id="filename"></div>
-        </form>
-    </div>
+<div class="clearfix"></div>
 
-    {% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
-    <div class="span6 ringkasan-section">
-        <div>
-            <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
-            <div class="clearfix" style="margin-top: 1em;"></div>
-            <div id="ringkasan">
-                <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
-                    {{ form_label(summaryform.teks) }}
-                    {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
-                        <a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
-                    {% endimage %}
-                    <div class="clearfix" style="margin-bottom: 0;"></div>
-                    {{ form_widget(summaryform.teks) }}
-                    {{ form_help(summaryform.teks) }}
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 export-section pull-left">
+    <form method="GET" action="{{ path("laporan-pendaftaran_export") }}" class="form-search form-inline" id="export-form">
+        <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
+        <div id="filename"></div>
+    </form>
+</div>
 
-                    {{ form_rest(summaryform) }}
-                    <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button><span class="pratinjau-loader">&nbsp;&nbsp;&nbsp;</span>
-                    <div class="clearfix"></div>
-                    <span id="teks-terformat"></span>
-                    <div class="clearfix"></div>
-                    <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
-                    <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
-                </form>
-            </div>
+{% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
+<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ringkasan-section">
+    <div>
+        <a href="" id="anchor-ringkasan" class="anchor-ringkasan" onclick="return false;">{{ 'label.ringkasan.laporan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        <div class="clearfix" style="margin-top: 1em;"></div>
+        <div id="ringkasan">
+            <form method="POST" action="{{ path("laporan-pendaftaran_summary") }}" id="summary-form">
+                {{ form_label(summaryform.teks) }}
+                {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}
+                    <a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>
+                {% endimage %}
+                <div class="clearfix" style="margin-bottom: 0;"></div>
+                {{ form_widget(summaryform.teks) }}
+
+                <div class="clearfix"></div>
+                {{ form_label(summaryform.nomorPonsel) }}
+                {{ form_widget(summaryform.nomorPonsel) }}
+
+                <div class="clearfix"></div>
+                {{ form_rest(summaryform) }}
+
+                <div class="clearfix"></div>
+                <button class="btn icon iinfo" id="report-preview">{{ 'label.pratinjau'|trans }}</button><span class="pratinjau-loader">&nbsp;&nbsp;&nbsp;</span>
+                <div class="clearfix"></div>
+                <span id="teks-terformat"></span>
+                <div class="clearfix"></div>
+                <button type="submit" class="btn primary alternative icon mail" id="report-sms">{{ 'label.kirim.sms'|trans }}</button>
+                <button type="submit" class="btn success alternative icon printer" id="report-pdf">{{ 'label.cetak.pdf'|trans }}</button>
+            </form>
         </div>
     </div>
-    {% endif %}
 </div>
+{% endif %}
+
 <div class="clearfix"></div>
 {% endblock content %}
 

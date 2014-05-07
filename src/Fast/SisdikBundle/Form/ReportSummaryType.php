@@ -25,6 +25,7 @@ class ReportSummaryType extends AbstractType
                                 'label_attr' => array(
                                     'class' => 'label-ringkasan-teks'
                                 ), 'required' => true, 'label_render' => true,
+                                'horizontal_label_class' => '',
                         ))
                 ->add('teksTerformat', 'hidden',
                         array(
@@ -38,6 +39,7 @@ class ReportSummaryType extends AbstractType
                                 'attr' => array(
                                     'class' => 'large nomor-ponsel', 'placeholder' => 'label.perlu.untuk.sms',
                                 ), 'required' => false, 'label_render' => true,
+                                'horizontal_label_class' => '',
                         ));
 
     }
