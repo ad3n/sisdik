@@ -15,31 +15,31 @@
 <form action="{{ path('penempatan-siswa-kelas_menempatkan-kelompok') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.tempatkan'|trans }}</button>
-	    <button type="reset" class="btn" id="tombol-batal">{{ 'label.batal'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.tempatkan'|trans }}</button>
+            <button type="reset" class="btn" id="tombol-batal">{{ 'label.batal'|trans }}</button>
+        </div>
     </div>
 </form>
 
 <div class="clearfix"></div>
 
 <div class="knowledgebase">
-{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
     <a href="{{ path('_index') }}" class="a-kb">
-        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
-        {{ 'link.penempatan.siswa.kelas'|trans({}, 'kb') }}
+        <i class="fa fa-lightbulb-o fa-fw fa-2x"></i>{{ 'link.penempatan.siswa.kelas'|trans({}, 'kb') }}
     </a>
-{% endimage %}
 </div>
+{% endblock content %}
 
-<div class="clearfix"></div>
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var url = "{{ path('data_class_ajax_updateclass') }}";
+    var url = "{{ path('data_class_ajax_updateclass') }}";
 
 {% for sheet in sheetCollection %}
     $.get(url, {tahunAkademik: $(".selectyear{{ sheet.index }}").val()}, function(data) {
-    	var options = '';
+        var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
         }
@@ -52,7 +52,7 @@ $(document).ready(function() {
         $(".selectclass{{ sheet.index }}").html('<option>{{ 'alt.loading'|trans }}</option>');
 
         $.get(url, {tahunAkademik: $(this).val()}, function(data) {
-        	var options = '';
+            var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
             }
@@ -66,4 +66,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}

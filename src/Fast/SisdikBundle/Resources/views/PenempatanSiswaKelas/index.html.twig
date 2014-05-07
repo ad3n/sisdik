@@ -23,51 +23,49 @@
 <form action="{{ path('penempatan-siswa-kelas_menempatkan') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.tempatkan'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.tempatkan'|trans }}</button>
+        </div>
     </div>
 </form>
 
 <div class="clearfix"></div>
 
 <div class="knowledgebase">
-{% image '@FastSisdikBundle/Resources/public/images/tip.png' %}
     <a href="{{ path('_index') }}" class="a-kb">
-        <img src="{{ asset_url }}" alt="{{ 'alt.tip'|trans }}" border="0" class="img-kb">
-        {{ 'link.penempatan.siswa.kelas'|trans({}, 'kb') }}
+        <i class="fa fa-lightbulb-o fa-fw fa-2x"></i>{{ 'link.penempatan.siswa.kelas'|trans({}, 'kb') }}
     </a>
-{% endimage %}
 </div>
 
 <div class="clearfix"></div>
 
 <h3 style="margin-top: 1.4em;">{{ 'heading.download.selection'|trans }}</h3>
-<div class="filter-section">
-    <div class="searchform-container">
-        <h4>{{ 'heading.inisialisasi.penempatan.siswa.kelas'|trans }}:</h4>
-        ({{ 'shortinfo.menggunakan.tahun'|trans }})
-        <form method="post" action="{{ path('penempatan-siswa-kelas_templateinit') }}" id="dl-init" class="form-search form-inline">
-            {{ form_widget(dlform_initialization) }}
-            <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
-            <div id="filename-init"></div>
-        </form>
+<div class="searchform-container">
+    <h4>{{ 'heading.inisialisasi.penempatan.siswa.kelas'|trans }}:</h4>
+    ({{ 'shortinfo.menggunakan.tahun'|trans }})
+    <form method="post" action="{{ path('penempatan-siswa-kelas_templateinit') }}" id="dl-init" class="form-search form-inline">
+        {{ form_widget(dlform_initialization) }}
+        <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
+        <div id="filename-init"></div>
+    </form>
 
-        <h4>{{ 'heading.penempatan.siswa.kelas.kenaikan.kelas'|trans }}:</h4>
-        ({{ 'shortinfo.menggunakan.tahun.akademik.dan.tingkat'|trans }})
-        <form method="post" action="{{ path('penempatan-siswa-kelas_templatemap') }}" id="dl-map" class="form-search form-inline">
-            {{ form_widget(dlform_classmap) }}
-            <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
-            <div id="filename-map"></div>
-        </form>
-    </div>
+    <h4>{{ 'heading.penempatan.siswa.kelas.kenaikan.kelas'|trans }}:</h4>
+    ({{ 'shortinfo.menggunakan.tahun.akademik.dan.tingkat'|trans }})
+    <form method="post" action="{{ path('penempatan-siswa-kelas_templatemap') }}" id="dl-map" class="form-search form-inline">
+        {{ form_widget(dlform_classmap) }}
+        <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
+        <div id="filename-map"></div>
+    </form>
 </div>
+{% endblock content %}
 
-<div class="clearfix"></div>
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	var url = "{{ path('data_class_ajax_updateclass') }}";
+    var url = "{{ path('data_class_ajax_updateclass') }}";
     $.get(url, {tahunAkademik: $(".selectyear").val()}, function(data) {
-    	var options = '';
+        var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
         }
@@ -80,7 +78,7 @@ $(document).ready(function() {
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
         $.get(url, {tahunAkademik: $(this).val()}, function(data) {
-        	var options = '';
+            var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '">' + data[i].optionDisplay + '</option>';
             }
@@ -94,10 +92,10 @@ $(document).ready(function() {
         $("#filename-init").addClass("loading");
         $.post(url, $(this).serialize(), function(response) {
             if (response.redirectUrl) {
-            	window.location.href = response.redirectUrl;
-            	$("#filename-init").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
-                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
-            	$("#filename-init").removeClass("loading");
+                window.location.href = response.redirectUrl;
+                $("#filename-init").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename-init").removeClass("loading");
             }
         });
         return false;
@@ -109,14 +107,14 @@ $(document).ready(function() {
         $("#filename-map").addClass("loading");
         $.post(url, $(this).serialize(), function(response) {
             if (response.redirectUrl) {
-            	window.location.href = response.redirectUrl;
-            	$("#filename-map").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
-                    	+ '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
-            	$("#filename-map").removeClass("loading");
+                window.location.href = response.redirectUrl;
+                $("#filename-map").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename-map").removeClass("loading");
             }
         });
         return false;
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
