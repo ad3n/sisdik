@@ -5,11 +5,14 @@
 {% block content %}
 <form action="{{ path('settings_placement_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
-<ul class="pills">
+
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('settings_placement') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
