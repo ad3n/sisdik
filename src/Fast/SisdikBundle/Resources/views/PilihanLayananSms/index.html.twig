@@ -44,18 +44,14 @@
             <td data-title="{{ 'label.layanansms.entri'|trans }}">{% if daftarJenisLayanan[entity.jenisLayanan] is defined %}{{ daftarJenisLayanan[entity.jenisLayanan]|trans }}{% endif %}</td>
             <td data-title="{{ 'label.aktif'|trans }}">
             {% if entity.status == 1 %}
-                {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-                {% endimage %}
+                <i class="fa fa-check fa-lg check"></i>
             {% else %}
-                {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
-                {% endimage %}
+                <i class="fa fa-times fa-lg uncheck"></i>
             {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('layanansms_edit', {'id': entity.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
                 <a href="{{ path('layanansms_show', {'id': entity.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('layanansms_edit', {'id': entity.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
             </td>
         </tr>
     {% endfor %}
