@@ -1,14 +1,24 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}settings.user.edit{% endtrans %}{% endblock %}
+
 {% block content %}
+<style type="text/css">
+.form-horizontal .checkbox {
+    padding-top: 0;
+}
+</style>
+
 <form action="{{ path('settings_user_edit', {'id': id}) }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
-	</div>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
+    </div>
 </form>
-<ul class="pills">
+
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('settings_user', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
     </li>

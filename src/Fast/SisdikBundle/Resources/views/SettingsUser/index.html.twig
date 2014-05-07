@@ -66,8 +66,8 @@
                 {% endfor %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('settings_user_edit', {'id': user.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="fa fa-pencil"></a>
-                <a href="{{ path('settings_user_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="fa fa-times" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
+                <a href="{{ path('settings_user_edit', {'id': user.id}) }}" title="{% trans %}tip.edit{% endtrans %}"><i class="fa fa-pencil"></i></a>
+                <a href="{{ path('settings_user_delete', {'id': user.id}) }}" title="{% trans %}tip.delete{% endtrans %}" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'><i class="fa fa-times"></i></a>
             </td>
         </tr>
     {% endfor %}

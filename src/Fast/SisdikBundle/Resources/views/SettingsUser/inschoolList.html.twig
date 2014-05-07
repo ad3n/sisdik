@@ -56,8 +56,8 @@
                 {% endfor %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('settings_user_inschool_edit', {'id': user.id, 'page': pagination.paginationData.current}) }}" title="{{ 'tip.edit'|trans }}" class="fa fa-pencil"></a>
-                <a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{{ 'tip.delete'|trans }}" class="fa fa-times" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'></a>
+                <a href="{{ path('settings_user_inschool_edit', {'id': user.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+                <a href="{{ path('settings_user_inschool_delete', {'id': user.id}) }}" title="{{ 'tip.delete'|trans }}" onclick='return confirmDrop(this, "{{ 'confirm.drop.user'|trans({'%username%': user.username}) }}");'><i class="fa fa-times"></i></a>
             </td>
         </tr>
     {% endfor %}
