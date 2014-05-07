@@ -665,3 +665,11 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
     margin-right: 5px;
 }
 /* akhir penimpaan form */
+
+.check {
+    color: green;
+}
+
+.uncheck {
+    color: red;
+}
