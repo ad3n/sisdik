@@ -116,13 +116,9 @@ $(document).ready(function() {
         }
     };
 
-    $(".nama-referensi").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options1);
-    });
+    $(".nama-referensi").autocomplete(options1);
 
-    $(".nama-sekolah-asal").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options2);
-    });
+    $(".nama-sekolah-asal").autocomplete(options2);
 
     if ($(".id-referensi").val() != "") {
         $.ajax({

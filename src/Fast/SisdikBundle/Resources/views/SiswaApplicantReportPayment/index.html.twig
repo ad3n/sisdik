@@ -450,13 +450,9 @@ $(document).ready(function() {
         }
     };
 
-    $(".nama-sekolah-asal").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options1);
-    });
+    $(".nama-sekolah-asal").autocomplete(options1);
 
-    $(".nama-referensi").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options2);
-    });
+    $(".nama-referensi").autocomplete(options2);
 
     $(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
     if ($(".id-sekolah-asal").val() != "") {
