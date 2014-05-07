@@ -31,12 +31,12 @@ class PembayaranPendaftaranCicilanType extends AbstractType
             ),
             'label' => 'label.fee.registration.transaction',
             'options' => array(
-                'widget_control_group' => false,
+                'widget_form_group' => false,
                 'label_render' => false
             ),
             'label_render' => false,
             'allow_add' => true,
-            'allow_delete' => true
+            'allow_delete' => false,
         ));
     }
 

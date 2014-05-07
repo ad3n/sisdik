@@ -29,11 +29,11 @@ class PembayaranPendaftaranType extends AbstractType
                 ->add('daftarBiayaPendaftaran', 'collection',
                         array(
                                 'type' => new DaftarBiayaPendaftaranType($this->container),
-                                'required' => true, 'allow_add' => true, 'allow_delete' => true,
+                                'required' => true, 'allow_add' => true, 'allow_delete' => false,
                                 'by_reference' => false,
                                 'options' => array(
-                                    'widget_control_group' => false, 'label_render' => false,
-                                ), 'label_render' => false, 'widget_control_group' => false,
+                                    'widget_form_group' => false, 'label_render' => false,
+                                ), 'label_render' => false, 'widget_form_group' => false,
                         ))
                 ->add('adaPotongan', 'checkbox',
                         array(
@@ -73,8 +73,8 @@ class PembayaranPendaftaranType extends AbstractType
                                     'class' => 'large'
                                 ), 'label' => 'label.fee.registration.transaction',
                                 'options' => array(
-                                    'widget_control_group' => false, 'label_render' => false,
-                                ), 'label_render' => false, 'allow_add' => true, 'allow_delete' => true,
+                                    'widget_form_group' => false, 'label_render' => false,
+                                ), 'label_render' => false, 'allow_add' => true, 'allow_delete' => false,
                         ));
     }
 
