@@ -35,7 +35,7 @@
                     <a href="{{ path('sekolahasal_show', { 'id': siswa.sekolahAsal.id }) }}" target="_blank">
                         {{ siswa.sekolahAsal.nama }}
                         {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                    	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
+                            <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
                         {% endimage %}
                     </a>
                 </dd>
@@ -48,19 +48,19 @@
                 <dd>{{ siswa.agama|title }}</dd>
                 <dt>{{ 'label.address'|trans }}</dt>
                 <dd>{{ siswa.alamat }}</dd>
-        		{% if siswa.orangtuaWali %}
-        		    {% for orangtua in siswa.orangtuaWali %}
-        		        {% if orangtua %}
-        		            {% if orangtua.aktif == 1 %}
-                	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-                	            <dd>{{ orangtua.nama }}</dd>
-                	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-                	            <dd>{{ orangtua.ponsel }}</dd>
-            		        {% endif %}
-        		        {% endif %}
-        		    {% endfor %}
-        		{% endif %}
-            	</dd>
+                {% if siswa.orangtuaWali %}
+                    {% for orangtua in siswa.orangtuaWali %}
+                        {% if orangtua %}
+                            {% if orangtua.aktif == 1 %}
+                                <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                                <dd>{{ orangtua.nama }}</dd>
+                                <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                                <dd>{{ orangtua.ponsel }}</dd>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                </dd>
             </dl>
         </div>
         <div class="span4">
@@ -89,97 +89,113 @@
     {% for transaksi in edit_form.transaksiPembayaranPendaftaran %}
         {% if loop.length > 1 %}
             {% if not loop.last %}
-                <div class="control-group">
-                    {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
-                    {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'readonly': 'readonly'} }) }}
-                    <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                <div class="form-group">
+                    {% set labelPayAmount = 'label.pay.amount'|trans %}
+                    {{ form_label(transaksi.nominalPembayaran, labelPayAmount ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'readonly': 'readonly'} }) }}
+                        <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                    </div>
                 </div>
-                <div class="control-group">
-                    {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
-                    {{ form_widget(transaksi.keterangan, { 'attr': {'readonly': 'readonly'} }) }}
-                    <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                <div class="form-group">
+                    {% set labelPaymentDescription = 'label.payment.description'|trans %}
+                    {{ form_label(transaksi.keterangan, labelPaymentDescription ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.keterangan, { 'attr': {'readonly': 'readonly'} }) }}
+                        <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                    </div>
                 </div>
             {% else %}
-                <div class="control-group">
-                    {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#{{ loop.index }}&nbsp;
-                    {{ form_widget(transaksi.nominalPembayaran) }}
-                    <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                <div class="form-group">
+                    {% set labelPayAmount = 'label.pay.amount'|trans %}
+                    {{ form_label(transaksi.nominalPembayaran, labelPayAmount ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.nominalPembayaran) }}
+                        <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                    </div>
                 </div>
-                <div class="control-group">
-                    {{ form_label(transaksi.keterangan) }}&nbsp;#{{ loop.index }}&nbsp;
-                    {{ form_widget(transaksi.keterangan) }}
-                    <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                <div class="form-group">
+                    {% set labelPaymentDescription = 'label.payment.description'|trans %}
+                    {{ form_label(transaksi.keterangan, labelPaymentDescription ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.keterangan) }}
+                        <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                    </div>
                 </div>
             {% endif %}
         {% else %}
             {{ form_row(transaksi) }}
-{#                     <div class="control-group">#}
+{#                     <div class="form-group">#}
 {#                         {{ form_label(transaksi.nominalPembayaran) }}&nbsp;#}
 {#                         {{ form_widget(transaksi.nominalPembayaran) }}#}
 {#                         <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>#}
 {#                     </div>#}
-{#                     <div class="control-group">#}
+{#                     <div class="form-group">#}
 {#                         {{ form_label(transaksi.keterangan) }}&nbsp;#}
 {#                         {{ form_widget(transaksi.keterangan) }}#}
 {#                         <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>#}
 {#                     </div>#}
         {% endif %}
     {% endfor %}
-    {{ form_rest(edit_form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
     </div>
+    {{ form_rest(edit_form) }}
 </form>
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('payment_registrationfee', { 'sid': siswa.id }) }}">{{ 'link.backto.registration.payment'|trans }}</a>
     </li>
 </ul>
 
 <div class="clearfix"></div>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 var total = 0;
 var paidamount = {{ totalNominalTransaksiSebelumnya }};
 
 $(document).ready(function() {
     $("#payable-amount-remains").click(function() {
-    	$(".pay-amount:last").val($(this).text());
+        $(".pay-amount:last").val($(this).text());
     });
 
-	$("#pay-form").submit(function() {
-		$(this).find(':submit').attr('disabled','disabled');
+    $("#pay-form").submit(function() {
+        $(this).find(':submit').attr('disabled','disabled');
 
         var payamount = 0;
         var feeamount = parseInt($.trim($("#payable-amount").text().split('.').join('')));
 
         total = 0;
 
-		$(".pay-amount").each(function() {
-			var num = 0;
+        $(".pay-amount").each(function() {
+            var num = 0;
 
-			str = $.trim($(this).val().split('.').join(''));
-		    num = str.match(/\d+/);
-		    total += parseInt(num);
-		});
+            str = $.trim($(this).val().split('.').join(''));
+            num = str.match(/\d+/);
+            total += parseInt(num);
+        });
 
-	    payamount = parseInt(total);
+        payamount = parseInt(total);
 
         if (payamount > feeamount) {
             alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
             $(this).find(':submit').removeAttr('disabled');
             return false;
         } else if (payamount == paidamount) {
-        	alert("{{ 'shortinfo.pay.nozero'|trans }}");
-        	$(this).find(':submit').removeAttr('disabled');
-        	return false;
+            alert("{{ 'shortinfo.pay.nozero'|trans }}");
+            $(this).find(':submit').removeAttr('disabled');
+            return false;
         }
 
         return true;
     });
 });
 </script>
-
-{% endblock content %}
+{% endblock javascripts_custom %}

@@ -36,9 +36,13 @@
 }
 </style>
 
-<div class="row-fluid">
-    <div class="span12">
-        <div class="span8">
+        <div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran" style="min-width: 80%;">{{ siswa.keterangan }}</div><div class="clearfix"></div>{% endif %}
+            {% if siswa.webcamPhotoPath != "" %}
+                <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webcamPhotoPath }}" class="img-polaroid" width="180" />
+            {% endif %}
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-8">
             <dl>
                 <dt>{{ 'label.year.entry'|trans }}</dt>
                 <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
@@ -51,11 +55,9 @@
                 <dt>{{ 'label.sekolah.asal'|trans }}</dt>
             {% if siswa.sekolahAsal is not null %}
                 <dd>
+                    {{ siswa.sekolahAsal.nama }}
                     <a href="{{ path('sekolahasal_show', { 'id': siswa.sekolahAsal.id }) }}" target="_blank">
-                        {{ siswa.sekolahAsal.nama }}
-                        {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
-                    	    <img src="{{ asset_url }}" alt="{{ 'alt.sekolah.asal'|trans }}" border="0" style="vertical-align: baseline;" />
-                        {% endimage %}
+                        <i class="fa fa-external-link"></i>
                     </a>
                 </dd>
             {% else %}
@@ -67,73 +69,65 @@
                 <dd>{{ siswa.agama|title }}</dd>
                 <dt>{{ 'label.address'|trans }}</dt>
                 <dd>{{ siswa.alamat }}</dd>
-            	{% if siswa.orangtuaWali %}
-            	    {% for orangtua in siswa.orangtuaWali %}
-            	        {% if orangtua %}
-            	            {% if orangtua.aktif == 1 %}
-                	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-                	            <dd>{{ orangtua.nama }}</dd>
-                	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-                	            <dd>{{ orangtua.ponsel }}</dd>
-            		        {% endif %}
-            	        {% endif %}
-            	    {% endfor %}
-            	{% endif %}
+                {% if siswa.orangtuaWali %}
+                    {% for orangtua in siswa.orangtuaWali %}
+                        {% if orangtua %}
+                            {% if orangtua.aktif == 1 %}
+                                <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                                <dd>{{ orangtua.nama }}</dd>
+                                <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                                <dd>{{ orangtua.ponsel }}</dd>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
 
-    		    {% set totalBayar = 0 %}
-    		    {% set totalBiayaMasuk = 0 %}
-    		    {% set totalPotongan = 0 %}
-    		    {% set totalBiayaSisa = 0 %}
-    		    {% set totalBiaya = 0 %}
+                {% set totalBayar = 0 %}
+                {% set totalBiayaMasuk = 0 %}
+                {% set totalPotongan = 0 %}
+                {% set totalBiayaSisa = 0 %}
+                {% set totalBiaya = 0 %}
 
-    		    {% for pembayaran in entities %}
-    		        {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
-    		        {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                {% for pembayaran in entities %}
+                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
                         {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
-    		        {% endfor %}
-    		        {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-    		            {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
-    		        {% endfor %}
-    		    {% endfor %}
+                    {% endfor %}
+                    {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+                    {% endfor %}
+                {% endfor %}
 
                 {% if itemBiayaTersimpan|length != 0 %}
-        		    {% set remainInfo %}
-        		        {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
-        		    {% endset %}
-        		    {% set remainInfo = remainInfo|json_decode %}
-        		    {% set totalBiayaSisa = remainInfo.biaya %}
-    		    {% else %}
-    		        {% set remainInfo %}
+                    {% set remainInfo %}
+                        {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% else %}
+                    {% set remainInfo %}
                         {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'json': 1}) %}
                     {% endset %}
-        		    {% set remainInfo = remainInfo|json_decode %}
-        		    {% set totalBiayaSisa = remainInfo.biaya %}
-    		    {% endif %}
-    		    {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% endif %}
+                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
 
-            	<dt>{{ 'label.payables.amount.total'|trans }}</dt>
-            	<dd>
-        	    {% if totalPotongan > 0 %}
-        	        <span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span>
-    	        {% endif %}
-    	        {{ totalBiaya|number_format(0, ',', '.') }}
-    	        </dd>
-            	<dt>{{ 'label.paid.amount.total'|trans }}</dt>
-            	<dd>{{ totalBayar|number_format(0, ',', '.') }}</dd>
-            	<dt>{{ 'label.payment.remains.total'|trans }}</dt>
-            	<dd>
-    	            {{ (totalBiayaSisa + (totalBiayaMasuk - totalPotongan - totalBayar))|number_format(0, ',', '.') }}
-            	</dd>
+                <dt>{{ 'label.payables.amount.total'|trans }}</dt>
+                <dd>
+                {% if totalPotongan > 0 %}
+                    <span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span>
+                {% endif %}
+                {{ totalBiaya|number_format(0, ',', '.') }}
+                </dd>
+                <dt>{{ 'label.paid.amount.total'|trans }}</dt>
+                <dd>{{ totalBayar|number_format(0, ',', '.') }}</dd>
+                <dt>{{ 'label.payment.remains.total'|trans }}</dt>
+                <dd>
+                    {{ (totalBiayaSisa + (totalBiayaMasuk - totalPotongan - totalBayar))|number_format(0, ',', '.') }}
+                </dd>
             </dl>
         </div>
-        <div class="span4">
-            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran" style="min-width: 80%;">{{ siswa.keterangan }}</div><div class="clearfix"></div>{% endif %}
-            {% if siswa.webcamPhotoPath != "" %}
-                <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webcamPhotoPath }}" class="img-polaroid" width="180" />
-            {% endif %}
-        </div>
-    </div>
-</div>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
@@ -141,69 +135,60 @@
 
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
-    	<tr>
-    		<th>{{ 'label.fee.registration.entry'|trans }}</th>
-    		<th style="white-space: nowrap">{{ 'label.payables.amount'|trans }}</th>
-    		<th style="white-space: nowrap">{{ 'label.paid.amount'|trans }}</th>
-    		<th>{{ 'label.actions'|trans }}</th>
-    	</tr>
-	</thead>
-	<tbody>
+        <tr>
+            <th>{{ 'label.fee.registration.entry'|trans }}</th>
+            <th style="white-space: nowrap">{{ 'label.payables.amount'|trans }}</th>
+            <th style="white-space: nowrap">{{ 'label.paid.amount'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for pembayaran in entities %}
         <tr>
-    		<td data-title="{{ 'label.fee.registration.entry'|trans }}">
-    		{% set subTotalItemBiaya = 0 %}
-		    {% if pembayaran.daftarBiayaPendaftaran %}
-    		    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
-    		        {% if biaya != '' %}
-    		            {{ biaya.nama }} ({{ biaya.nominal|number_format(0, ',', '.') }}){% if not loop.last %}, {% endif %}
-    		            {% set subTotalItemBiaya = subTotalItemBiaya + biaya.nominal %}
-    		        {% endif %}
-    		    {% endfor %}
-		    {% endif %}
-		    </td>
-    		<td data-title="{{ 'label.payables.amount'|trans }}">
-        		{% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}
-        		    <span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span>
-    		    {% endif %}
-    		    {{ (subTotalItemBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',', '.') }}
-    		</td>
-    		<td data-title="{{ 'label.paid.amount'|trans }}">{{ pembayaran.totalNominalTransaksiPembayaranPendaftaran|number_format(0, ',', '.') }}</td>
-    		<td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-    		    <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': pembayaran.id }) }}" title="{{ 'tip.detail'|trans }}" class="icon-arrow-right"></a>
-		    {% if pembayaran.transaksiPembayaranPendaftaran|length > 1 %}
-		        <a href="#" onclick="return false"
-		            title="{{ 'tip.print.receipt'|trans }}" id="popover-{{ pembayaran.id }}">
-		            {% image '@FastSisdikBundle/Resources/public/images/print-preview.png' %}
-                    	<img src="{{ asset_url }}" id="icon-preview" />
-                    {% endimage %}
-	            </a>
-	            <script language="javascript" type="text/javascript">
-	                var popContent =
-	                {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-                        {% if not loop.last %}
-                            "{{ 'label.payment'|trans }} #{{ loop.index }}<a href='{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': pembayaran.id, 'id': transaksi.id }) }}' class='icon-print'></a><br />" +
-                        {% else %}
-                            "{{ 'label.payment'|trans }} #{{ loop.index }}<a href='{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': pembayaran.id, 'id': transaksi.id }) }}' class='icon-print'></a>"
-                        {% endif %}
-                    {% endfor %}
-	                $("#popover-" + {{ pembayaran.id }}).popover({
-	                    "placement": "right",
-	                    "html": true,
-	                    "content": popContent
-		            });
-	            </script>
-	        {% else %}
-	            {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-    		    <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': pembayaran.id, 'id': transaksi.id }) }}"
-    		        title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
-		        {% endfor %}
-		    {% endif %}
-		    {% if pembayaran.totalNominalTransaksiPembayaranPendaftaran < (subTotalItemBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan)) %}
-        		<a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': pembayaran.id }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}" class="icon-shopping-cart"></a>
-		    {% endif %}
-    		</td>
-    	</tr>
+            <td data-title="{{ 'label.fee.registration.entry'|trans }}">
+            {% set subTotalItemBiaya = 0 %}
+            {% if pembayaran.daftarBiayaPendaftaran %}
+                {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                    {% if biaya != '' %}
+                        {{ biaya.nama }} ({{ biaya.nominal|number_format(0, ',', '.') }}){% if not loop.last %}, {% endif %}
+                        {% set subTotalItemBiaya = subTotalItemBiaya + biaya.nominal %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            </td>
+            <td data-title="{{ 'label.payables.amount'|trans }}">
+                {% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}
+                    <span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span>
+                {% endif %}
+                {{ (subTotalItemBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',', '.') }}
+            </td>
+            <td data-title="{{ 'label.paid.amount'|trans }}">{{ pembayaran.totalNominalTransaksiPembayaranPendaftaran|number_format(0, ',', '.') }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('payment_registrationfee_show', { 'sid': siswa.id, 'id': pembayaran.id }) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+            {% if pembayaran.transaksiPembayaranPendaftaran|length > 1 %}
+                <a href="#" onclick="return false"
+                    title="{{ 'tip.print.receipt'|trans }}" id="popover-{{ pembayaran.id }}">
+                    <span class="fa-stack">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-print fa-stack-1x fa-inverse"></i>
+                    </span>
+                </a>
+            {% else %}
+                {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': pembayaran.id, 'id': transaksi.id }) }}"
+                    title="{{ 'tip.print.receipt'|trans }}">
+                    <span class="fa-stack">
+                        <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                        <i class="fa fa-print fa-stack-1x"></i>
+                    </span>
+                </a>
+                {% endfor %}
+            {% endif %}
+            {% if pembayaran.totalNominalTransaksiPembayaranPendaftaran < (subTotalItemBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan)) %}
+                <a href="{{ path('payment_registrationfee_edit', { 'sid': siswa.id, 'id': pembayaran.id }) }}" title="{{ 'tip.payment.registrationfee.mortgage'|trans }}"><i class="fa fa-shopping-cart"></i></a>
+            {% endif %}
+            </td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -213,45 +198,57 @@
 {% if itemBiayaSemua|length > itemBiayaTersimpan|length %}
 <form id="pay-form" action="{{ path('payment_registrationfee_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_row(form.daftarBiayaPendaftaran) }}
-    <div class="control-group">
-        <div class="controls">
+    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
+        <div class="form-group">
             {{ 'label.payables.amount'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
         </div>
     </div>
-    {{ form_row(form.adaPotongan) }}
+    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
+        <div class="form-group">
+            {{ form_widget(form.adaPotongan) }}
+        </div>
+    </div>
+    <div class="clearfix"></div>
     <div id="discount-container">
         <div id="discount-type">{{ form_row(form.jenisPotongan) }}</div>
-        <div id="discount-percentage">{{ form_row(form.persenPotongan) }}</div>
         <div id="discount-amount">{{ form_row(form.nominalPotongan) }}</div>
-        <div class="control-group">
-            <div class="controls">
+        <div id="discount-percentage">{{ form_row(form.persenPotongan) }}</div>
+        <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
+            <div class="form-group">
                 {{ 'label.payables.amount.discounted'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount-discounted"></span></b>
             </div>
         </div>
+        <div class="clearfix"></div>
     </div>
-    <div class="control-group">
-        {{ form_widget(form.transaksiPembayaranPendaftaran) }}
-    </div>
+    <div class="clearfix" style="margin-top: 10px;"></div>
+    {{ form_widget(form.transaksiPembayaranPendaftaran) }}
     {{ form_rest(form) }}
-    <div class="control-group">
+    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
+        <div class="form-group">
         <p style="font-style: italic; font-size: 0.9em;">
             {{ 'shortinfo.pay.notbiggerthan.fee'|trans }}<br />
             {{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}
         </p>
+        </div>
     </div>
-    <div class="form-actions">
-    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
+        <div class="form-group">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
     </div>
 </form>
 {% endif %}
 
 <div class="clearfix"></div>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('applicant_payment') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 var duration = 400;
 var total = 0;
@@ -264,18 +261,18 @@ var discountpercent = 0;
 var discountnominal = 0;
 
 function getTotalFee(index, element) {
-	var checkbox = $(this);
-	if (checkbox.is(":checked")) {
-		var num = 0;
+    var checkbox = $(this);
+    if (checkbox.is(":checked")) {
+        var num = 0;
 
-		str = $.trim($(this).parent().text().split('.').join(''));
+        str = $.trim($(this).parent().text().split('.').join(''));
         num = str.match(/\d+$/);
         total += parseInt(num);
-	}
+    }
 }
 
 function getTotalFeeDiscounted() {
-	if ($(".discount-check").is(":checked")) {
+    if ($(".discount-check").is(":checked")) {
         type = $("#discount-type input[type='radio']:checked").val();
         if (type == 'nominal') {
             totaldiscounted = total - $.trim($(".nominal-discount").val().split('.').join('')).match(/\d+$/);
@@ -284,78 +281,78 @@ function getTotalFeeDiscounted() {
             discountpercent = $.trim($(".percentage-discount").val().split('.').join('')).match(/\d+$/);
             totaldiscounted = total - (total * (discountpercent / 100));
         }
-	} else {
-		totaldiscounted = 0;
-	}
+    } else {
+        totaldiscounted = 0;
+    }
 }
 
 $(document).ready(function() {
-	$(".discount-check").change(function(){
-		if ($(this).is(":checked")) {
-			$('#discount-container').show(duration);
-		} else {
-			$('#discount-container').hide(duration);
-			$(".percentage-discount").val("");
-			$(".nominal-discount").val("");
-			$("#fee-amount-discounted").text("");
-		}
-	});
-	if ($(".discount-check").is(":checked")) {
-	    $('#discount-container').show(duration);
-	} else {
-		$('#discount-container').hide(duration);
-		$(".percentage-discount").val("");
-		$(".nominal-discount").val("");
-		$("#fee-amount-discounted").text("");
-	}
+    $(".discount-check").change(function(){
+        if ($(this).is(":checked")) {
+            $('#discount-container').show(duration);
+        } else {
+            $('#discount-container').hide(duration);
+            $(".percentage-discount").val("");
+            $(".nominal-discount").val("");
+            $("#fee-amount-discounted").text("");
+        }
+    });
+    if ($(".discount-check").is(":checked")) {
+        $('#discount-container').show(duration);
+    } else {
+        $('#discount-container').hide(duration);
+        $(".percentage-discount").val("");
+        $(".nominal-discount").val("");
+        $("#fee-amount-discounted").text("");
+    }
 
-	$("#discount-type input[type='radio']").change(function(){
-		$("#fee-amount-discounted").text("");
-		type = $("#discount-type input[type='radio']:checked").val();
-		if (type == 'nominal') {
-			$("#discount-percentage").hide(duration);
-			$("#discount-amount").show(duration);
-			$(".percentage-discount").val("");
-		} else if (type == 'persentase') {
-			$("#discount-percentage").show(duration);
-			$("#discount-amount").hide(duration);
-			$(".nominal-discount").val("");
-		}
-	});
-	$("#fee-amount-discounted").text("");
-	type = $("#discount-type input[type='radio']:checked").val();
-	if (type == 'nominal') {
-		$("#discount-percentage").hide(duration);
-		$("#discount-amount").show(duration);
-		$(".percentage-discount").val("");
+    $("#discount-type input[type='radio']").change(function(){
+        $("#fee-amount-discounted").text("");
+        type = $("#discount-type input[type='radio']:checked").val();
+        if (type == 'nominal') {
+            $("#discount-percentage").hide();
+            $("#discount-amount").show("fade", 0);
+            $(".percentage-discount").val("");
+        } else if (type == 'persentase') {
+            $("#discount-amount").hide();
+            $("#discount-percentage").show("fade", 0);
+            $(".nominal-discount").val("");
+        }
+    });
+    $("#fee-amount-discounted").text("");
+    type = $("#discount-type input[type='radio']:checked").val();
+    if (type == 'nominal') {
+        $("#discount-percentage").hide();
+        $("#discount-amount").show("fade", 0);
+        $(".percentage-discount").val("");
 
-		discountnominal = $("#discount-amount").val();
-	} else if (type == 'persentase') {
-		$("#discount-percentage").show(duration);
-		$("#discount-amount").hide(duration);
-		$(".nominal-discount").val("");
+        discountnominal = $("#discount-amount").val();
+    } else if (type == 'persentase') {
+        $("#discount-percentage").show("fade", 0);
+        $("#discount-amount").hide();
+        $(".nominal-discount").val("");
 
-		discountpercent = $("#discount-percentage").val();
-	} else {
-		$("#discount-percentage").hide();
-		$("#discount-amount").hide();
-		$(".percentage-discount").val("");
-		$(".nominal-discount").val("");
-	}
+        discountpercent = $("#discount-percentage").val();
+    } else {
+        $("#discount-percentage").hide();
+        $("#discount-amount").hide();
+        $(".percentage-discount").val("");
+        $(".nominal-discount").val("");
+    }
 
-	// display total fee
-	$(".fee-item").each(getTotalFee);
-	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    // display total fee
+    $(".fee-item").each(getTotalFee);
+    amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     $("#fee-amount").text(amount);
 
     $("form .fee-item").change(function() {
-    	total = 0;
-    	$(".fee-item").each(getTotalFee);
+        total = 0;
+        $(".fee-item").each(getTotalFee);
 
-    	amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+        amount = total.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
         $("#fee-amount").text(amount);
 
-    	getTotalFeeDiscounted();
+        getTotalFeeDiscounted();
         totaldiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
         $("#fee-amount-discounted").text(totaldiscounted);
     });
@@ -391,7 +388,7 @@ $(document).ready(function() {
     // end of find and display discounted fee
 
     $("#pay-form").submit(function() {
-    	$(this).find(':submit').attr('disabled','disabled');
+        $(this).find(':submit').attr('disabled','disabled');
 
         var payamount = parseInt($(".pay-amount").val().split('.').join(''));
 
@@ -441,9 +438,9 @@ $(document).ready(function() {
                 $(this).find(':submit').removeAttr('disabled');
                 return false;
             } else if (payamount <= 0 || $("form .fee-item:checked").length < 1) {
-            	alert("{{ 'shortinfo.pay.nozero'|trans }}");
-            	$(this).find(':submit').removeAttr('disabled');
-            	return false;
+                alert("{{ 'shortinfo.pay.nozero'|trans }}");
+                $(this).find(':submit').removeAttr('disabled');
+                return false;
             }
         }
 
@@ -451,6 +448,25 @@ $(document).ready(function() {
     });
 
 });
-</script>
 
-{% endblock content %}
+{% for pembayaran in entities %}
+    {% if pembayaran.transaksiPembayaranPendaftaran|length > 1 %}
+    $("#popover-" + {{ pembayaran.id }}).tooltipster({
+        trigger: 'click',
+        interactive: true,
+        theme: 'tooltipster-light',
+        position: 'right',
+        content: $(
+            {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                {% if not loop.last %}
+                    '<div style="clear: both; margin: 5px;"><span>{{ 'label.payment'|trans }} #{{ loop.index }}</span>&nbsp;<a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': pembayaran.id, 'id': transaksi.id }) }}"><i class="fa fa-print"></i></a></div>' +
+                {% else %}
+                    '<div style="clear: both; margin: 5px;"><span>{{ 'label.payment'|trans }} #{{ loop.index }}</span>&nbsp;<a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': pembayaran.id, 'id': transaksi.id }) }}"><i class="fa fa-print"></i></a></div>'
+                {% endif %}
+            {% endfor %}
+        )
+    });
+    {% endif %}
+{% endfor %}
+</script>
+{% endblock javascripts_custom %}
