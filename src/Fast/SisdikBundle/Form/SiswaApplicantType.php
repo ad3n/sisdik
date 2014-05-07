@@ -76,7 +76,7 @@ class SiswaApplicantType extends AbstractType
                                         'class' => 'large'
                                     ), 'label' => 'label.name.parent.or.guardian',
                                     'options' => array(
-                                        'widget_control_group' => false, 'label_render' => false,
+                                        'widget_form_group' => false, 'label_render' => false,
                                     ), 'label_render' => false, 'allow_add' => true,
                             ))
                     ->add('adaReferensi', 'checkbox',
@@ -85,6 +85,7 @@ class SiswaApplicantType extends AbstractType
                                     'attr' => array(
                                         'class' => 'referensi-check'
                                     ), 'widget_checkbox_label' => 'widget',
+                                    'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
                             ))
                     ->add('referensi', new EntityHiddenType($em),
                             array(

@@ -35,20 +35,20 @@
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 </style>
 <form action="{{ path('applicant_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-    <div class="control-group">
+    <div class="form-group">
         {{ form_label(form.gelombang) }}
-        <div class="controls">
+        <div class="col-sm-8 col-md-7 col-lg-7">
             {{ form_widget(form.gelombang) }}
         </div>
     </div>
-    <div class="control-group">
+    <div class="form-group">
         {{ form_label(form.namaLengkap) }}
-        <div class="controls">
+        <div class="col-sm-8 col-md-7 col-lg-7">
             {{ form_widget(form.namaLengkap) }}
         </div>
     </div>
@@ -60,69 +60,68 @@
     </div>
 
     {{ form_rest(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
 
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
-var duration = 400;
-
 $(document).ready(function() {
-	$(".referensi-check").change(function(){
-		if ($(this).is(":checked")) {
-			$('#referensi-container').show(duration);
-		} else {
-			$('#referensi-container').hide(duration);
-			$(".nama-referensi").val("");
-			$(".id-referensi").val("");
-		}
-	});
-	if ($(".referensi-check").is(":checked")) {
-	    $('#referensi-container').show(duration);
-	} else {
-		$('#referensi-container').hide(duration);
-		$(".nama-referensi").val("");
-		$(".id-referensi").val("");
-	}
-
-	var options = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("referensi_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {
-			$(".id-referensi").val("");
-		},
-		search: function(event, ui) {},
-    	select: function(event, ui) {
-      		$(".id-referensi").val(ui.item.id);
-    	}
-	};
-
-	$(".nama-referensi").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options);
+    $(".referensi-check").change(function(){
+        if ($(this).is(":checked")) {
+            $('#referensi-container').show('fade');
+        } else {
+            $('#referensi-container').hide('fade');
+            $(".nama-referensi").val("");
+            $(".id-referensi").val("");
+        }
     });
+    if ($(".referensi-check").is(":checked")) {
+        $('#referensi-container').show();
+    } else {
+        $('#referensi-container').hide();
+        $(".nama-referensi").val("");
+        $(".id-referensi").val("");
+    }
+
+    var options = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        search: function(event, ui) {},
+        select: function(event, ui) {
+              $(".id-referensi").val(ui.item.id);
+        }
+    };
+
+    $(".nama-referensi").autocomplete(options);
 });
 </script>
-
-{% endblock content %}
+{% endblock javascripts_custom %}

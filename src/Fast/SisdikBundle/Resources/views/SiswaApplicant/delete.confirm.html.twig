@@ -21,15 +21,16 @@
     <dd>{{ entity.nomorPendaftaran }}</dd>
 </dl>
 
-<div class="clearfix"><br><br><br></div>
+<div class="clearfix" style="margin-bottom: 20px;"></div>
 
 <form id="generateform" action="{{ path('applicant_delete_confirm', {'id': entity.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_errors(form) }}
     {{ form_widget(form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn alternative icon danger remove" id="submit-button">{{ 'label.continue'|trans }}</button>
-        &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('applicant_show', {'id': entity.id}) }}'">{{ 'label.cancel'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn alternative icon danger remove" id="submit-button">{{ 'label.continue'|trans }}</button>
+            &nbsp;<button class="btn" type="reset" onclick="window.location.href='{{ path('applicant_show', {'id': entity.id}) }}'">{{ 'label.cancel'|trans }}</button>
+        </div>
     </div>
 </form>
-
 {% endblock content %}

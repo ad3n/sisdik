@@ -25,7 +25,7 @@
 }
 .ui-autocomplete-loading {
 {% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
-	background: white url('{{ asset_url }}') right center no-repeat;
+    background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
 #form-rest {
@@ -36,14 +36,14 @@
     text-decoration: none;
 }
 .arrow-down-form-rest {
-	width: 0;
-	height: 0;
-	border-left: 4px solid transparent;
-	border-right: 4px solid transparent;
-	border-top: 4px solid #555;
-	display: inline-block;
-	margin-left: 0.3em;
-	vertical-align: middle;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
 }
 .anchor-form-rest {
     color: #555;
@@ -80,9 +80,9 @@
     {% if is_expr_granted("hasRole('ROLE_KETUA_PANITIA_PSB')") %}
         {{ form_row(edit_form.gelombang) }}
     {% else %}
-        <div class="control-group">
-            <label class=" control-label required">{{ 'label.admissiongroup.entry'|trans }}</label>
-            <div class="controls" style="vertical-align: baseline; padding-top: 2px;">{{ entity.gelombang.nama }}</div>
+        <div class="form-group">
+            <label class="control-label required">{{ 'label.admissiongroup.entry'|trans }}</label>
+            <div class="col-sm-8 col-md-7 col-lg-7" style="vertical-align: baseline; padding-top: 2px;">{{ entity.gelombang.nama }}</div>
         </div>
     {% endif %}
     {{ form_row(edit_form.namaLengkap) }}
@@ -93,8 +93,8 @@
     {{ form_row(edit_form.alamat) }}
     {{ form_row(edit_form.keterangan) }}
 
-    <div class="control-group">
-        <div class="controls">
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
             <a href="" id="anchor" class="anchor-form-rest" onclick="return false;">{{ 'label.form.lengkap'|trans }} <span class="arrow-down-form-rest"></span></a>
         </div>
     </div>
@@ -102,17 +102,19 @@
     <div id="form-rest">
         {{ form_rest(edit_form) }}
     </div>
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('applicant_delete_confirm', { 'id': entity.id }) }}" method="get" class="form-inline">
+<form id="delete-form" action="{{ path('applicant_delete_confirm', { 'id': entity.id }) }}" method="get" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('applicant') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
@@ -120,114 +122,113 @@
         <a href="{{ path('applicant_show', {'id': entity.id}) }}">{{ 'link.info.pendaftar'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 var duration = 800;
 
 $(document).ready(function() {
-	var options1 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("referensi_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-referensi").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-referensi").val(ui.item.id);
-    	}
-	};
+    var options1 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+              $(".id-referensi").val(ui.item.id);
+        }
+    };
 
-	var options2 = {
-    	minLength: 2,
-    	delay: 1000,
-    	source: function(request, response) {
-    		$.ajax({
-    			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-    			data: {filter: request.term},
-    			success: function(data) {
-        			response( $.map(data, function(item) {
-            			return {
-                			label: item.label,
-                			value: item.value,
-                			id: item.id
-            			}
-    			    }));
-				}
-			});
-		},
-		open: function(event, ui) {},
-		search: function(event, ui) {
-			$(".id-sekolah-asal").val("");
-		},
-    	select: function(event, ui) {
-      		$(".id-sekolah-asal").val(ui.item.id);
-    	}
-	};
+    var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-sekolah-asal").val("");
+        },
+        select: function(event, ui) {
+            $(".id-sekolah-asal").val(ui.item.id);
+        }
+    };
 
-	$(".nama-referensi").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options1);
-    });
+    $(".nama-referensi").autocomplete(options1);
 
-	$(".nama-sekolah-asal").live("keydown.autocomplete", function() {
-        $(this).autocomplete(options2);
-    });
+    $(".nama-sekolah-asal").autocomplete(options2);
 
-	if ($(".id-referensi").val() != "") {
-		$.ajax({
-			url: "{{ path("referensi_ajax_ambilnama") }}",
-			data: {id: $(".id-referensi").val()},
-			success: function(data) {
-				$(".nama-referensi").val(data[0].value);
-			}
-		});
-	}
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+            }
+        });
+    }
 
-	if ($(".id-sekolah-asal").val() != "") {
-		$.ajax({
-			url: "{{ path("sekolahasal_ajax_ambilnama") }}",
-			data: {id: $(".id-sekolah-asal").val()},
-			success: function(data) {
-				$(".nama-sekolah-asal").val(data[0].value);
-			}
-		});
-	}
+    if ($(".id-sekolah-asal").val() != "") {
+        $.ajax({
+            url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+            data: {id: $(".id-sekolah-asal").val()},
+            success: function(data) {
+                $(".nama-sekolah-asal").val(data[0].value);
+            }
+        });
+    }
 
-	$('.date').datepicker({
-	    dateFormat: 'dd/mm/yy',
-    	// changeMonth: true,
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
+        // changeMonth: true,
         changeYear: true,
         maxDate: "-8Y"
     });
 
-	$(".anchor-form-rest").click(function(){
-		if ($("#form-rest").is(":visible")) {
-			$("#form-rest").hide(duration);
-			$(this).removeClass("anchor-form-rest-sel");
-			$(this).addClass("anchor-form-rest");
-		} else {
-			$("#form-rest").show(duration);
-			$(this).addClass("anchor-form-rest-sel");
-			$(this).removeClass("anchor-form-rest");
-		}
-		return false;
-	});
+    $(".anchor-form-rest").click(function(){
+        if ($("#form-rest").is(":visible")) {
+            $("#form-rest").hide(duration);
+            $(this).removeClass("anchor-form-rest-sel");
+            $(this).addClass("anchor-form-rest");
+        } else {
+            $("#form-rest").show(duration);
+            $(this).addClass("anchor-form-rest-sel");
+            $(this).removeClass("anchor-form-rest");
+        }
+        return false;
+    });
 
     $("#form-rest-anchor").click(function(){
-    	$("#form-rest").slideToggle(duration);
+        $("#form-rest").slideToggle(duration);
     });
 });
 </script>
@@ -236,4 +237,4 @@ $(document).ready(function() {
 {# 		confirmtext = confirmtext.replace(/&#039;/g, "'");#}
 {# 		return confirmDropButton(confirmtext);#}
 {# 	});#}
-{% endblock content %}
+{% endblock javascripts_custom %}
