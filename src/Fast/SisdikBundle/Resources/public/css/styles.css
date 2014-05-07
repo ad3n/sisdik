@@ -263,7 +263,8 @@ div.knowledgebase {
 }
 
 .navbar-brand {
-  padding: 8px 20px 8px;
+    padding: 8px 20px 8px;
+    height: 1em;
 }
 
 .navbar-toggle {
