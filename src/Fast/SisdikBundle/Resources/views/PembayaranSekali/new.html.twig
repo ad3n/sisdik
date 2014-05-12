@@ -37,32 +37,32 @@
             <dd>{{ siswa.nomorPendaftaran }}</dd>
             <dt>{{ 'label.gender'|trans }}</dt>
             <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
-    		{% if siswa.orangtuaWali %}
-    		    {% for orangtua in siswa.orangtuaWali %}
-    		        {% if orangtua %}
-    		            {% if orangtua.aktif == 1 %}
-            	            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-            	            <dd>{{ orangtua.nama }}</dd>
-            	            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-            	            <dd>{{ orangtua.ponsel }}</dd>
-        		        {% endif %}
-    		        {% endif %}
-    		    {% endfor %}
-    		{% endif %}
+            {% if siswa.orangtuaWali %}
+                {% for orangtua in siswa.orangtuaWali %}
+                    {% if orangtua %}
+                        {% if orangtua.aktif == 1 %}
+                            <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                            <dd>{{ orangtua.nama }}</dd>
+                            <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                            <dd>{{ orangtua.ponsel }}</dd>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </dl>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
     <h4>{{ 'applicant.fee.once'|trans({}, 'headings') }}</h4>
-    <form action="{{ path('payment_oncefee_create', { 'cid': siswa.id, 'page': app.request.get('page') }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    <form action="{{ path('payment_oncefee_create', {'cid': siswa.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
         {{ form_widget(form.daftarBiayaSekali, { 'attr': {'style': 'width: 750px; height: 230px;'} }) }}
         <div id="payment-info" style="margin-bottom: 18px;">
             {{ 'shortinfo.total.payables'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
         </div>
         {{ form_widget(form.transaksiPembayaranSekali) }}
         {{ form_rest(form) }}
-    	<div class="form-actions">
-    	    <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        <div class="form-actions">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
         </div>
     </form>
     </div>
@@ -72,7 +72,7 @@
 
 <ul class="pills">
     <li>
-        <a href="{{ path('applicant_payment', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('applicant_payment') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 

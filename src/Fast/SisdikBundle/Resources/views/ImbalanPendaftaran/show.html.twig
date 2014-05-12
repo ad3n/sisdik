@@ -25,7 +25,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('rewardamount_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline pull-right">
+<form id="delete-form" action="{{ path('rewardamount_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -34,10 +34,10 @@
 
 <ul class="nav nav-pills">
     <li>
-        <a href="{{ path('rewardamount', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('rewardamount') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('rewardamount_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('rewardamount_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}

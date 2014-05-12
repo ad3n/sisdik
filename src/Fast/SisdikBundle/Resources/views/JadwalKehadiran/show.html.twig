@@ -61,7 +61,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('jadwal_kehadiran_delete', {'id': entity.id, 'page': app.request.get('page')}) }}" method="post" class="pull-right">
+<form id="delete-form" action="{{ path('jadwal_kehadiran_delete', {'id': entity.id}) }}" method="post" class="pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
