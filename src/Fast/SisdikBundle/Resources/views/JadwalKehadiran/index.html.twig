@@ -76,13 +76,9 @@
             </td>
             <td data-title="{{ 'label.kirim.sms'|trans }}">
                 {% if data.kirimSms is empty %}
-                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-times fa-lg fa-fw uncheck"></i>
                 {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-check fa-lg fa-fw check"></i>
                 {% endif %}
                 <span class="separator">|</span>
                 {% if data.smsJam is empty %}
@@ -101,13 +97,9 @@
             </td>
             <td data-title="{{ 'label.terhubung'|trans }}">
                 {% if data.otomatisTerhubungMesin is empty %}
-                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-times fa-lg fa-fw uncheck"></i>
                 {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                    <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-check fa-lg fa-fw check"></i>
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

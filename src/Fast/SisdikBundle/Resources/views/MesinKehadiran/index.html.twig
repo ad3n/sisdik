@@ -33,13 +33,9 @@
             <td data-title="{{ 'label.commkey'|trans }}">{{ data.commkey }}</td>
             <td data-title="{{ 'label.active'|trans }}">
                 {% if data.aktif == 1 %}
-                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-check fa-lg fa-fw check"></i>
                 {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-times fa-lg fa-fw uncheck"></i>
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

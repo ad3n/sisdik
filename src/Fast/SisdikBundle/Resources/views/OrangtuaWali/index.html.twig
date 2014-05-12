@@ -45,13 +45,9 @@
             <td data-title="{{ 'label.mobilephone'|trans }}">{{ data.ponsel }}</td>
             <td data-title="{{ 'label.active'|trans }}">
                 {% if data.aktif == 1 %}
-                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-check fa-lg fa-fw check"></i>
                 {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
-                    {% endimage %}
+                    <i class="fa fa-times fa-lg fa-fw uncheck"></i>
                     <a href="{{ path('ortuwali-' ~ ruteasal ~ '_activate', {'sid': siswa.id, 'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
                 {% endif %}
             </td>

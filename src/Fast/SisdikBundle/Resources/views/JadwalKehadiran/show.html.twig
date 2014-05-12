@@ -32,13 +32,9 @@
     <dt>{{ 'label.kirim.sms'|trans }}</dt>
     <dd>
         {% if entity.kirimSms is empty %}
-            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
         {% else %}
-            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
         {% endif %}
     </dd>
     <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
@@ -48,25 +44,17 @@
     <dt>{{ 'label.terhubung.mesin.kehadiran'|trans }}</dt>
     <dd>
         {% if entity.otomatisTerhubungMesin is empty %}
-            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
         {% else %}
-            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
         {% endif %}
     </dd>
     <dt>{{ 'label.awal.kehadiran'|trans }}</dt>
     <dd>
         {% if entity.permulaan == 1 %}
-            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
         {% else %}
-            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-            <img src="{{ asset_url }}" border="0" height="20" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
         {% endif %}
     </dd>
 </dl>

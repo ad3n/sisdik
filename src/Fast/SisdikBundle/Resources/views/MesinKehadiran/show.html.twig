@@ -20,13 +20,9 @@
     <dt>{{ 'label.active'|trans }}</dt>
     <dd>
         {% if entity.aktif == 1 %}
-            {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-            <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-check fa-lg check"></i>
         {% else %}
-            {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-            <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-            {% endimage %}
+            <i class="fa fa-times fa-lg uncheck"></i>
         {% endif %}
     </dd>
 </dl>
