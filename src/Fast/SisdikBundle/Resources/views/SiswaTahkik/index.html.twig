@@ -247,11 +247,9 @@ form .clearfix {
                 <span class="icon-gift" style="margin: 0;"></span>
                 {% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
-                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
-                {% endimage %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
