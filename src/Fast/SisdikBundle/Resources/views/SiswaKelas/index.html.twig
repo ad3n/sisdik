@@ -38,20 +38,16 @@
                 <dt>{{ 'label.active'|trans }} ({{ 'shortinfo.inselectedyear'|trans }})</dt>
                 <dd>
                     {% if data.aktif != 1 %}
-                        {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                            <img src="{{ asset_url }}" alt="{{ 'label.inactive'|trans }}" border="0" height="25" style="vertical-align: middle;" title="{{ 'label.inactive'|trans }}" />
-                        {% endimage %}
+                        <i class="fa fa-times fa-lg uncheck"></i>
                     {% elseif data.aktif == 1 %}
-                        {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                            <img src="{{ asset_url }}" alt="{{ 'label.active'|trans }}" border="0" width="25" height="25" style="vertical-align: middle;" title="{{ 'label.active'|trans }}" />
-                        {% endimage %}
+                        <i class="fa fa-check fa-lg check"></i>
                     {% endif %}
                 </dd>
                 <dt>{{ 'label.description'|trans }}</dt>
                 <dd>{{ data.keterangan }}</dd>
                 <dt>{{ 'label.actions'|trans }}</dt>
                 <dd>
-                    <a href="{{ path('siswa-kelas_edit', {'idsiswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}" class="icon-edit info-tooltip"></a>
+                    <a href="{{ path('siswa-kelas_edit', {'idsiswa': siswa.id, 'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
                 </dd>
             </dl>
         </td>

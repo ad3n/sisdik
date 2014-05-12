@@ -6,37 +6,47 @@
 {% endblock %}
 
 {% block content %}
+<style type="text/css">
+.form-horizontal .checkbox {
+    padding-top: 0;
+}
+</style>
+
 <form action="{{ path('siswa-kelas_update', { 'idsiswa': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
-	<div class="form-actions">
-	    <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
     </div>
 </form>
 
-<form id="delete-form" action="{{ path('siswa-kelas_delete', { 'idsiswa': siswa.id, 'id': entity.id }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('siswa-kelas_delete', { 'idsiswa': siswa.id, 'id': entity.id }) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
 </form>
 
-<ul class="pills">
+<ul class="nav nav-pills">
     <li>
         <a href="{{ path('siswa-kelas', { 'idsiswa' : siswa.id }) }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
+{% endblock content %}
 
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
-	$("#delete-form").submit(function(){
+    $("#delete-form").submit(function(){
         {% set namaTahunAkademik = entity.tahunAkademik is not null ? entity.tahunAkademik.nama : '' %}
         {% set namaKelas = entity.kelas is not null ? entity.kelas.nama : '' %}
-		var confirmtext = "{{ 'confirm.drop.studentclass'|trans({ '%student%': siswa.namaLengkap, '%class%': namaKelas, '%year%': namaTahunAkademik }) }}";
-		confirmtext = confirmtext.replace(/&#039;/g, "'");
-		return confirmDropButton(confirmtext);
-	});
+        var confirmtext = "{{ 'confirm.drop.studentclass'|trans({ '%student%': siswa.namaLengkap, '%class%': namaKelas, '%year%': namaTahunAkademik }) }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
 
-	var url = "{{ path('data_class_ajax_updateclass') }}";
-	$.get(url, {tahunAkademik: $(".selectyear").val(), kelas: {{ entity.kelas.id }}}, function(data) {
-    	var options = '';
+    var url = "{{ path('data_class_ajax_updateclass') }}";
+    $.get(url, {tahunAkademik: $(".selectyear").val(), kelas: {{ entity.kelas.id }}}, function(data) {
+        var options = '';
         for (var i = 0; i < data.length; i++) {
             options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -51,7 +61,7 @@ $(document).ready(function() {
         $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
 
         $.get(url, {tahunAkademik: $(this).val(), kelas: {{ entity.kelas.id }}}, function(data) {
-        	var options = '';
+            var options = '';
             for (var i = 0; i < data.length; i++) {
                 options += '<option value="' + data[i].optionValue + '"'
                 + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
@@ -62,4 +72,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
