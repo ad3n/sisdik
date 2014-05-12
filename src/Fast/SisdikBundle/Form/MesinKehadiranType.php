@@ -43,7 +43,9 @@ class MesinKehadiranType extends AbstractType
                         ))
                 ->add('aktif', null,
                         array(
-                            'label' => 'label.active', 'required' => false, 'label_render' => false,
+                            'label' => 'label.active', 'required' => false,
+                            'widget_checkbox_label' => 'widget',
+                            'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
                         ));
     }
 

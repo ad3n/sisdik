@@ -141,7 +141,8 @@ class JadwalKehadiranType extends AbstractType
             'label' => 'label.kirim.sms',
             'required' => false,
             'label_render' => true,
-            'widget_checkbox_label' => 'widget'
+            'widget_checkbox_label' => 'widget',
+            'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
         ))
             ->add('smsJam', 'time', array(
             'label' => 'label.kirim.sms.jam',
@@ -179,13 +180,15 @@ class JadwalKehadiranType extends AbstractType
             'label' => 'label.otomatis.terhubung.mesin.kehadiran',
             'required' => false,
             'label_render' => true,
-            'widget_checkbox_label' => 'widget'
+            'widget_checkbox_label' => 'widget',
+            'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
         ))->add('permulaan', 'checkbox', array(
             'label' => 'label.awal.kehadiran',
             'required' => false,
             'help_block' => 'help.awal.kehadiran',
             'label_render' => true,
-            'widget_checkbox_label' => 'widget'
+            'widget_checkbox_label' => 'widget',
+            'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
         ));
     }
 

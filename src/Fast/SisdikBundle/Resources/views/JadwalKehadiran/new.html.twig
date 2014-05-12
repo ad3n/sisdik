@@ -3,6 +3,12 @@
 {% block page_heading %}{% trans from "headings" %}jadwal.kehadiran.pembuatan{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.form-horizontal .checkbox {
+    padding-top: 0;
+}
+</style>
+
 <form action="{{ path('jadwal_kehadiran_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
     <div class="form-group">
