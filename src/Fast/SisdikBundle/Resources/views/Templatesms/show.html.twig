@@ -2,6 +2,14 @@
 
 {% block page_heading %}{% trans from "headings" %}sms.template.detail{% endtrans %}{% endblock %}
 {% block content %}
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('sms_template_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.sms.template.add'|trans }}
+        </a>
+    </li>
+</ul>
+
 <dl>
     <dt>{{ 'label.school'|trans }}</dt>
     <dd>{{ entity.sekolah.nama }}</dd>
@@ -15,7 +23,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('sms_template_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post" class="form-inline">
+<form id="delete-form" action="{{ path('sms_template_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -24,20 +32,10 @@
 
 <ul class="nav nav-pills">
     <li>
-        <a href="{{ path('sms_template', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('sms_template') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('sms_template_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
-    </li>
-</ul>
-
-<div class="clearfix"></div>
-
-<ul class="nav nav-pills pull-right">
-    <li>
-        <a href="{{ path('sms_template_new') }}" class="add-link-a">
-            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.sms.template.add'|trans }}
-        </a>
+        <a href="{{ path('sms_template_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}
