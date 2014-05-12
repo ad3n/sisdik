@@ -3,6 +3,11 @@
 {% block page_heading %}{% trans from "headings" %}data.academicyear.list{% endtrans %}{% endblock %}
 
 {% block content %}
+<<style>
+#no-more-tables {
+    margin-bottom: 5px;
+}
+</style>
 <ul class="nav nav-pills">
     <li>
         <a href="{{ path('academicyear_new') }}" class="add-link-a">
@@ -43,13 +48,9 @@
             <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
             <td data-title="{{ 'label.activeyear'|trans }}">
                 {% if data.aktif == 1 %}
-                    {% image '@FastSisdikBundle/Resources/public/images/check2.png' %}
-                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle;" />
-                    {% endimage %}
+                    <i class="fa fa-check fa-lg check fa-fw"></i>
                 {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/cross.png' %}
-                    <img src="{{ asset_url }}" border="0" height="25" style="vertical-align: middle; margin-right: 10px;" />
-                    {% endimage %}
+                    <i class="fa fa-times fa-lg uncheck fa-fw"></i>
                     <a href="{{ path('academicyear_activate', {'id': data.id}) }}">{{ 'label.activate'|trans }}</a>
                 {% endif %}
             </td>

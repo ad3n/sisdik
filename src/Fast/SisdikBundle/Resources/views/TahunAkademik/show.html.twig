@@ -2,39 +2,6 @@
 
 {% block page_heading %}{% trans from "headings" %}data.academicyear.detail{% endtrans %}{% endblock %}
 {% block content %}
-<dl>
-    <dt>{{ 'label.school'|trans }}</dt>
-    <dd>{{ entity.sekolah.nama }}</dd>
-    <dt>{{ 'label.academicyear.entry'|trans }}</dt>
-    <dd>{{ entity.nama }}</dd>
-    <dt>{{ 'label.code'|trans }}</dt>
-    <dd>{{ entity.kode }}</dd>
-    <dt>{{ 'label.description'|trans }}</dt>
-    <dd>{{ entity.keterangan }}</dd>
-    <dt>{{ 'label.order'|trans }}</dt>
-    <dd>{{ entity.urutan }}</dd>
-</dl>
-
-<div class="clearfix"></div>
-
-<form id="delete-form" action="{{ path('academicyear_delete', { 'id': entity.id, 'page': app.request.get('page') }) }}" method="post"class="form-inline">
-    {{ form_widget(delete_form) }}
-    <div class="form-actions">
-        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
-    </div>
-</form>
-
-<ul class="nav nav-pills">
-    <li>
-        <a href="{{ path('academicyear', {'page': app.request.get('page')}) }}">{{ 'link.backtolist'|trans }}</a>
-    </li>
-    <li>
-        <a href="{{ path('academicyear_edit', { 'id': entity.id, 'page': app.request.get('page') }) }}">{{ 'link.edit'|trans }}</a>
-    </li>
-</ul>
-
-<div class="clearfix"></div>
-
 <ul class="nav nav-pills pull-right">
     <li>
         <a href="{{ path('academicyear_new') }}" class="add-link-a">
@@ -43,6 +10,49 @@
     </li>
 </ul>
 
+<dl>
+    <dt>{{ 'label.school'|trans }}</dt>
+    <dd>{{ entity.sekolah.nama }}</dd>
+    <dt>{{ 'label.academicyear.entry'|trans }}</dt>
+    <dd>{{ entity.nama }}</dd>
+    <dt>{{ 'label.code'|trans }}</dt>
+    <dd>{{ entity.kode }}</dd>
+    <dt>{{ 'label.activeyear'|trans }}</dt>
+    <dd>
+    {% spaceless %}
+        {% if entity.aktif == 1 %}
+            <i class="fa fa-check fa-lg check"></i>
+        {% else %}
+            <i class="fa fa-times fa-lg uncheck"></i>
+        {% endif %}
+    {% endspaceless %}
+    </dd>
+    <dt>{{ 'label.description'|trans }}</dt>
+    <dd>{{ entity.keterangan }}</dd>
+    <dt>{{ 'label.order'|trans }}</dt>
+    <dd>{{ entity.urutan }}</dd>
+</dl>
+
+<div class="clearfix"></div>
+
+<form id="delete-form" action="{{ path('academicyear_delete', {'id': entity.id}) }}" method="post"class="form-inline pull-right">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('academicyear') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+    <li>
+        <a href="{{ path('academicyear_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     $("#delete-form").submit(function(){
@@ -52,4 +62,4 @@ $(document).ready(function() {
     });
 });
 </script>
-{% endblock content %}
+{% endblock javascripts_custom %}
