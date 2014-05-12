@@ -2,6 +2,14 @@
 
 {% block page_heading %}{% trans from "headings" %}token.sekolah.detail{% endtrans %}{% endblock %}
 {% block content %}
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('token-sekolah_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.token.sekolah.tambah'|trans }}
+        </a>
+    </li>
+</ul>
+
 <dl>
     <dt>{{ 'label.school'|trans }}</dt>
     <dd>{{ entity.sekolah.nama }}</dd>
@@ -11,7 +19,7 @@
 
 <div class="clearfix"></div>
 
-{{ form_start(delete_form, {'attr': {'id': 'delete-form', 'class': 'form-horizontal'}}) }}
+{{ form_start(delete_form, {'attr': {'id': 'delete-form', 'class': 'form-horizontal pull-right'}}) }}
 {{ form_widget(delete_form) }}
 {{ form_end(delete_form) }}
 
@@ -21,16 +29,6 @@
     </li>
     <li>
         <a href="{{ path('token-sekolah_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
-    </li>
-</ul>
-
-<div class="clearfix"></div>
-
-<ul class="nav nav-pills pull-right">
-    <li>
-        <a href="{{ path('token-sekolah_new') }}" class="add-link-a">
-            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.token.sekolah.tambah'|trans }}
-        </a>
     </li>
 </ul>
 {% endblock content %}
