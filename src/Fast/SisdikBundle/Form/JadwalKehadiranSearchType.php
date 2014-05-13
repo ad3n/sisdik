@@ -1,13 +1,17 @@
 <?php
 namespace Fast\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Form\EventListener\JadwalKehadiranSearchSubscriber;
 use Fast\SisdikBundle\Entity\Sekolah;
+use Fast\SisdikBundle\Form\EventListener\JadwalKehadiranSearchSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class JadwalKehadiranSearchType extends AbstractType
 {
     /**
@@ -22,7 +26,7 @@ class JadwalKehadiranSearchType extends AbstractType
 
     /**
      * @param ContainerInterface $container
-     * @param string $repetition
+     * @param string             $repetition
      */
     public function __construct(ContainerInterface $container, $repetition = 'harian')
     {

@@ -1,50 +1,61 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
-use Fast\SisdikBundle\Form\EventListener\BiayaPendaftaranSubscriber;
+
 use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+use Fast\SisdikBundle\Form\EventListener\BiayaPendaftaranSubscriber;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class DaftarBiayaPendaftaranType extends AbstractType
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
-    public function __construct(ContainerInterface $container) {
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $em = $this->container->get('doctrine')->getManager();
 
         $builder
-                ->add('biayaPendaftaran', new EntityHiddenType($em),
-                        array(
-                            'required' => true, 'class' => 'FastSisdikBundle:BiayaPendaftaran',
-                        ))
-                ->add('nama', 'hidden',
-                        array(
-                            'required' => false,
-                        ))
-                ->add('nominal', 'hidden',
-                        array(
-                            'required' => true,
-                        ));
+            ->add('biayaPendaftaran', new EntityHiddenType($em), [
+                'required' => true,
+                'class' => 'FastSisdikBundle:BiayaPendaftaran',
+            ])
+            ->add('nama', 'hidden', [
+                'required' => false,
+            ])
+            ->add('nominal', 'hidden', [
+                'required' => true,
+            ])
+        ;
 
         $builder->addEventSubscriber(new BiayaPendaftaranSubscriber($em));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        $resolver
-                ->setDefaults(
-                        array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran'
-                        ));
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => 'Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran',
+        ]);
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_daftarbiayapendaftarantype';
     }
 }

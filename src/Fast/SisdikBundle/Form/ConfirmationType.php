@@ -4,7 +4,11 @@ namespace Fast\SisdikBundle\Form;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class ConfirmationType extends AbstractType
 {
     /**

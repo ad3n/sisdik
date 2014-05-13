@@ -6,7 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class JadwalKehadiranDuplicateType extends AbstractType
 {
     /**
@@ -59,7 +63,16 @@ class JadwalKehadiranDuplicateType extends AbstractType
      * @param integer            $mingguanHariKe
      * @param integer            $bulananHariKe
      */
-    public function __construct(ContainerInterface $container, $sekolah, $tahunAkademik = NULL, $kelas = NULL, $perulangan = NULL, $requestUri = NULL, $mingguanHariKe = NULL, $bulananHariKe = NULL)
+    public function __construct(
+        ContainerInterface $container,
+        $sekolah,
+        $tahunAkademik = NULL,
+        $kelas = NULL,
+        $perulangan = NULL,
+        $requestUri = NULL,
+        $mingguanHariKe = NULL,
+        $bulananHariKe = NULL
+    )
     {
         $this->container = $container;
         $this->sekolahSrc = $sekolah;
