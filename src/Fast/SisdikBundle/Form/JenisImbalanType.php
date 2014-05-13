@@ -6,12 +6,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class JenisImbalanType extends AbstractType
 {
-
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -19,39 +28,42 @@ class JenisImbalanType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')
-            ->getToken()
-            ->getUser();
+        $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
-        $builder->add('sekolah', new EntityHiddenType($em), array(
-            'required' => true,
-            'class' => 'FastSisdikBundle:Sekolah',
-            'data' => $sekolah->getId()
-        ))
-            ->add('nama', 'choice', array(
-            'required' => true,
-            'label' => 'label.reward.type.name',
-            'attr' => array(
-                'class' => 'medium'
-            ),
-            'choices' => $this->buildNamaJenisImbalan()
-        ))
-            ->add('keterangan', null, array(
-            'attr' => array(
-                'class' => 'xlarge'
-            )
-        ));
+        $builder
+            ->add('sekolah', new EntityHiddenType($em), [
+                'required' => true,
+                'class' => 'FastSisdikBundle:Sekolah',
+                'data' => $sekolah->getId(),
+            ])
+            ->add('nama', 'choice', [
+                'required' => true,
+                'label' => 'label.reward.type.name',
+                'attr' => [
+                    'class' => 'medium',
+                ],
+                'choices' => $this->buildNamaJenisImbalan(),
+            ])
+            ->add('keterangan', null, [
+                'attr' => [
+                    'class' => 'xlarge',
+                ],
+            ])
+        ;
     }
 
-    static function buildNamaJenisImbalan()
+    /**
+     * @return array
+     */
+    public static function buildNamaJenisImbalan()
     {
-        $array = array(
+        $array = [
             'kolektif' => 'kolektif',
-            'individu' => 'individu'
-        );
+            'individu' => 'individu',
+        ];
         asort($array);
 
         return $array;
@@ -59,9 +71,11 @@ class JenisImbalanType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Fast\SisdikBundle\Entity\JenisImbalan'
-        ));
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Fast\SisdikBundle\Entity\JenisImbalan',
+            ])
+        ;
     }
 
     public function getName()

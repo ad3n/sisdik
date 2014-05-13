@@ -3,7 +3,11 @@ namespace Fast\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class KalenderPendidikanSearchType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -58,7 +62,7 @@ class KalenderPendidikanSearchType extends AbstractType
             'September',
             'Oktober',
             'November',
-            'Desember'
+            'Desember',
         ];
     }
 

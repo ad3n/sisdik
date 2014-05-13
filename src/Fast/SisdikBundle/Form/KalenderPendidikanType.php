@@ -1,30 +1,45 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class KalenderPendidikanType extends AbstractType
 {
-    private $calendar = array();
-    private $activedates = array();
+    /**
+     * @var array
+     */
+    private $calendar = [];
 
-    public function __construct($calendar = array(), $activedates = array()) {
+    /**
+     * @var array
+     */
+    private $activedates = [];
+
+    /**
+     * @param array $calendar
+     * @param array $activedates
+     */
+    public function __construct($calendar = [], $activedates = [])
+    {
         $this->calendar = $calendar;
         $this->activedates = $activedates;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
-                ->add('year', 'hidden',
-                        array(
-                            'data' => $this->calendar['year']
-                        ))
-                ->add('month', 'hidden',
-                        array(
-                            'data' => $this->calendar['month']
-                        ));
+            ->add('year', 'hidden', [
+                'data' => $this->calendar['year'],
+            ])
+            ->add('month', 'hidden', [
+                'data' => $this->calendar['month'],
+            ])
+        ;
 
         foreach ($this->calendar['cal'] as $rows) {
             foreach ($rows as $field) {
@@ -35,31 +50,28 @@ class KalenderPendidikanType extends AbstractType
 
                 if (array_key_exists($field['num'], $this->activedates)) {
                     $builder
-                            ->add('kbm_' . $field['num'], 'checkbox',
-                                    array(
-                                            'required' => false,
-                                            'attr' => array(
-                                                'checked' => 'checked'
-                                            ), 'label_render' => false,
-                                    ));
+                        ->add('kbm_' . $field['num'], 'checkbox', [
+                            'required' => false,
+                            'attr' => [
+                                'checked' => 'checked',
+                            ],
+                            'label_render' => false,
+                        ])
+                    ;
                 } else {
                     $builder
-                            ->add('kbm_' . $field['num'], 'checkbox',
-                                    array(
-                                        'required' => false, 'label_render' => false,
-                                    ));
+                        ->add('kbm_' . $field['num'], 'checkbox', [
+                            'required' => false,
+                            'label_render' => false,
+                        ])
+                    ;
                 }
             }
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        //         $resolver->setDefaults(array(
-        //             'data_class' => 'Fast\SisdikBundle\Entity\KalenderPendidikan'
-        //         ));
-    }
-
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_kalenderpendidikantype';
     }
 }
