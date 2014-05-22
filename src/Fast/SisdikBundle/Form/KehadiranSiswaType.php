@@ -1,34 +1,54 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
+
 use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\KehadiranSiswa;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class KehadiranSiswaType extends AbstractType
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
-    private $buildparam = array();
 
-    public function __construct(ContainerInterface $container, $buildparam = array()) {
+    /**
+     * @var array
+     */
+    private $buildparam = [];
+
+    /**
+     * @param ContainerInterface $container
+     * @param array              $buildparam
+     */
+    public function __construct(ContainerInterface $container, $buildparam = [])
+    {
         $this->container = $container;
         $this->buildparam = $buildparam;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
         $em = $this->container->get('doctrine')->getManager();
 
-        // students
-        $querybuilder = $em->createQueryBuilder()->select('kehadiran, siswa')
-                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')->leftJoin('kehadiran.kelas', 'kelas')
-                ->leftJoin('kehadiran.siswa', 'siswa')->where('kelas.sekolah = :sekolah')
-                ->orderBy('kelas.kode')->addOrderBy('siswa.namaLengkap')
-                ->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kehadiran, siswa')
+            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->leftJoin('kehadiran.kelas', 'kelas')
+            ->leftJoin('kehadiran.siswa', 'siswa')
+            ->where('kelas.sekolah = :sekolah')
+            ->orderBy('kelas.kode')
+            ->addOrderBy('siswa.namaLengkap')
+            ->setParameter('sekolah', $sekolah->getId())
+        ;
 
         if ($this->buildparam['tanggal'] != '') {
             $querybuilder->andWhere('kehadiran.tanggal = :tanggal');
@@ -55,24 +75,23 @@ class KehadiranSiswaType extends AbstractType
         foreach ($entities as $entity) {
             if (is_object($entity) && $entity instanceof KehadiranSiswa) {
                 $builder
-                        ->add('kehadiran_' . $entity->getId(), 'choice',
-                                array(
-                                        'required' => true, 'expanded' => true, 'multiple' => false,
-                                        'choices' => JadwalKehadiran::getDaftarStatusKehadiran(),
-                                        'attr' => array(
-                                            'class' => 'medium'
-                                        ), 'data' => $entity->getStatusKehadiran()
-                                ));
-
+                    ->add('kehadiran_' . $entity->getId(), 'choice', [
+                        'required' => true,
+                        'expanded' => true,
+                        'multiple' => false,
+                        'choices' => JadwalKehadiran::getDaftarStatusKehadiran(),
+                        'attr' => [
+                            'class' => 'medium',
+                        ],
+                        'data' => $entity->getStatusKehadiran(),
+                    ])
+                ;
             }
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        // $resolver->setDefaults(array('data_class' => 'Fast\SisdikBundle\Entity\KehadiranSiswa'));
-    }
-
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_kehadiransiswatype';
     }
 }
