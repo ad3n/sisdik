@@ -185,7 +185,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                                 $kehadiran->setStatusKehadiran($jadwal->getStatusKehadiran());
                                 $kehadiran->setPermulaan($jadwal->isPermulaan());
                                 $kehadiran->setTanggal($waktuSekarang);
-                                $kehadiran->setJam($jam);
+                                $kehadiran->setJam($jadwal->getParamstatusDariJam());
                                 $kehadiran->setSmsTerproses(false);
 
                                 $em->persist($kehadiran);
