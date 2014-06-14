@@ -228,8 +228,17 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                                 $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
                                                 $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
 
+                                                if ($input->getOption('paksa')) {
+                                                    $kehadiranSiswa->setStatusKehadiran('b-hadir-telat');
+                                                    print "[paksa]: memaksa menjadi hadir telat\n";
+                                                }
+
                                                 $em->persist($kehadiranSiswa);
                                                 $em->flush();
+                                            } else {
+                                                if ($input->getOption('paksa')) {
+                                                    print "[paksa]: tidak mengubah data yang telah diperbarui sebelumnya\n";
+                                                }
                                             }
                                         }
                                     }
