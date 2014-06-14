@@ -12,28 +12,31 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InisiasiKehadiranCommand extends ContainerAwareCommand
+class PembaruanKehadiranCommand extends ContainerAwareCommand
 {
-    const LOCK_FILE = "inisiasi-kehadiran.lock";
+    const LOCK_FILE = "pembaruan-kehadiran.lock";
     const LOCK_DIR = "lock";
     const BEDA_WAKTU_MAKS = 610;
 
     protected function configure()
     {
         $this
-            ->setName('sisdik:kehadiran:inisiasi')
-            ->setDescription('Periksa dan jalankan inisiasi kehadiran.')
-            ->addOption('paksa', null, InputOption::VALUE_NONE, 'Memaksa pembuatan data awal hari ini')
+            ->setName('sisdik:kehadiran:pembaruan')
+            ->setDescription('Periksa dan jalankan pembaruan kehadiran.')
+            ->addOption('paksa', null, InputOption::VALUE_NONE, 'Memaksa pembaruan data kehadiran hari ini')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        print $this->getContainer()->get('kernel')->getRootDir();
+        exit;
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $text = '';
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
         $waktuSekarang = new \DateTime();
+        $tanggalSekarang = $waktuSekarang->format('Y-m-d');
         $jam = $waktuSekarang->format('H:i') . ':00';
         $mingguanHariKe = $waktuSekarang->format('w');
         $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
@@ -81,14 +84,14 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                         ->from('FastSisdikBundle:JadwalKehadiran', 'jadwal')
                         ->leftJoin('jadwal.tahunAkademik', 'tahunAkademik')
                         ->andWhere('jadwal.sekolah = :sekolah')
-                        ->andWhere('jadwal.paramstatusDariJam <= :jam')
+                        ->andWhere('jadwal.paramstatusHinggaJam <= :jam')
                         ->andWhere('jadwal.perulangan = :perulangan')
                         ->andWhere('jadwal.permulaan = :permulaan')
                         ->andWhere('tahunAkademik.aktif = :aktif')
                         ->setParameter('sekolah', $sekolah)
                         ->setParameter('jam', $jam)
                         ->setParameter('perulangan', $key)
-                        ->setParameter('permulaan', true)
+                        ->setParameter('permulaan', false)
                         ->setParameter('aktif', true)
                     ;
 
@@ -120,28 +123,37 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                             ])
                         ;
                         if (is_object($proses) && $proses instanceof ProsesKehadiranSiswa) {
-                            if ($proses->isBerhasilInisiasi()) {
+                            if ($proses->isBerhasilDiperbaruiMesin()) {
                                 continue;
                             }
                         }
 
-                        $dariJam = $jadwal->getParamstatusDariJam();
+                        $hinggaJam = $jadwal->getParamstatusHinggaJam();
 
                         if ($input->getOption('paksa')) {
-                            $dariJam = $jam;
+                            $hinggaJam = $jam;
                         }
 
-                        $waktuJadwal = strtotime(date('Y-m-d') . " $dariJam");
+                        $waktuJadwal = strtotime(date('Y-m-d') . " $hinggaJam");
                         $bedaWaktu = $waktuSekarang->getTimestamp() - $waktuJadwal;
 
                         if ($input->getOption('paksa')) {
-                            print "[paksa]: param status dari jam = " . $jadwal->getParamstatusDariJam() . "\n";
+                            print "[paksa]: param status hingga jam = " . $jadwal->getParamstatusHinggaJam() . "\n";
                             print "[paksa]: waktu jadwal menjadi = " . date("Y-m-d H:i:s", $waktuJadwal) . "\n";
                             print "[paksa]: waktu sekarang menjadi = " . $waktuSekarang->format("Y-m-d H:i:s") . "\n";
                             print "[paksa]: beda waktu = " . $bedaWaktu . "\n";
                         }
 
                         if ($bedaWaktu >= 0 && $bedaWaktu <= self::BEDA_WAKTU_MAKS) {
+                            // ambil berkas gz terbaru berdasarkan hari
+                            // salin ke /tmp
+                            $tanggalSekarang;
+                            $this->getContainer()->get('kernel')->getRootDir();
+                            $file = system("ls -1 | tail -1");
+
+                            // ekstrak
+                            // perbarui siswa yang belum diperbarui
+
                             $qbSiswaKelas = $em->createQueryBuilder()
                                 ->select('siswaKelas')
                                 ->from('FastSisdikBundle:SiswaKelas', 'siswaKelas')
@@ -217,7 +229,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                     $output->writeln($text);
                 }
             } else {
-                print "proses inisiasi kehadiran sekolah " . $sekolah->getNama() . " telah dan sedang berjalan\n";
+                print "proses pembaruan kehadiran sekolah " . $sekolah->getNama() . " telah dan sedang berjalan\n";
             }
         }
     }
@@ -248,7 +260,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
             if (in_array($lockingPID, $pids))
                 return true;
 
-            print "Removing stale $nomorUrutSekolah.inisiasi-kehadiran.lock file.\n";
+            print "Removing stale $nomorUrutSekolah.pembaruan-kehadiran.lock file.\n";
             unlink($lockfile);
         }
 
