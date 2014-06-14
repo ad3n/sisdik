@@ -335,16 +335,29 @@ class KehadiranSiswaController extends Controller
 
                     $em->persist($kehadiran);
                 }
+            }
 
+
+            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                    'tahunAkademik' => $tahunAkademik,
+                    'kelas' => $kelas,
+                    'tanggal' => new \DateTime($tanggal),
+                ])
+            ;
+            if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                $prosesKehadiranSiswa->setBerhasilInisiasi(true);
+            } else {
                 $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
                 $prosesKehadiranSiswa->setSekolah($sekolah);
                 $prosesKehadiranSiswa->setTahunAkademik($tahunAkademik);
                 $prosesKehadiranSiswa->setKelas($kelas);
                 $prosesKehadiranSiswa->setTanggal(new \DateTime($tanggal));
                 $prosesKehadiranSiswa->setBerhasilInisiasi(true);
-
-                $em->persist($prosesKehadiranSiswa);
             }
+
+            $em->persist($prosesKehadiranSiswa);
 
             $em->flush();
 
