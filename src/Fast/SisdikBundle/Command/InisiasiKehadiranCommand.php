@@ -111,7 +111,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                             continue;
                         }
 
-                        $proses = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                        $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
                             ->findOneBy([
                                 'sekolah' => $sekolah,
                                 'tahunAkademik' => $jadwal->getTahunAkademik(),
@@ -119,8 +119,8 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                                 'tanggal' => $waktuSekarang,
                             ])
                         ;
-                        if (is_object($proses) && $proses instanceof ProsesKehadiranSiswa) {
-                            if ($proses->isBerhasilInisiasi()) {
+                        if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                            if ($prosesKehadiranSiswa->isBerhasilInisiasi()) {
                                 continue;
                             }
                         }
@@ -186,15 +186,6 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
 
                                 $em->persist($kehadiran);
                             }
-
-                            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
-                                ->findOneBy([
-                                    'sekolah' => $jadwal->getSekolah()->getId(),
-                                    'tahunAkademik' => $jadwal->getTahunAkademik()->getId(),
-                                    'kelas' => $jadwal->getKelas()->getId(),
-                                    'tanggal' => $waktuSekarang,
-                                ])
-                            ;
 
                             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                                 $prosesKehadiranSiswa->setBerhasilInisiasi(true);
