@@ -43,9 +43,9 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
         $bulananHariKe = $waktuSekarang->format('j');
 
         if ($input->getOption('paksa')) {
-            $jam = '05:00:00';
+            $jam = '16:00:00';
             $waktuSekarang = new \DateTime(date("Y-m-d $jam"));
-            $mingguanHariKe = 0; // 0 = senin
+            $mingguanHariKe = 5; // 0 = senin
             $bulananHariKe = 1;
 
             print "[paksa]: periksa jadwal jam:$jam, mingguanHariKe:$mingguanHariKe, bulananHariKe:$bulananHariKe\n";
@@ -95,7 +95,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                         ->setParameter('permulaan', false)
                         ->setParameter('aktif', true)
                         ->setParameter('terhubung', true)
-                        ->orderBy('jadwal.paramStatusHinggaJam', 'ASC')
+                        ->orderBy('jadwal.paramstatusHinggaJam', 'ASC')
                     ;
 
                     if ($key == 'b-mingguan') {
@@ -140,6 +140,8 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                 . DIRECTORY_SEPARATOR
                                 . $sekolah->getId()
                                 . DIRECTORY_SEPARATOR
+                                . 'log'
+                                . DIRECTORY_SEPARATOR
                                 . $jadwal->getPerulangan()
                                 . DIRECTORY_SEPARATOR
                                 . $tanggalSekarang
@@ -165,7 +167,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
                                 $logFile = system("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
                                 $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
-                                $targetFile = TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
+                                $targetFile = self::TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
 
                                 if (!copy($sourceFile, $targetFile)) {
                                     continue;
@@ -184,6 +186,11 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                     foreach ($xmlobject->xpath('Row') as $item) {
                                         $logTanggal = new \DateTime($item->DateTime);
 
+                                        if ($input->getOption('paksa')) {
+                                            $logTanggal = $waktuSekarang;
+                                            print "[paksa]: log tanggal = " . $logTanggal->format('Y-m-d') . "\n";
+                                        }
+
                                         if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
                                             continue;
                                         }
@@ -193,6 +200,17 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                                 'nomorIndukSistem' => $item->PIN,
                                             ])
                                         ;
+
+                                        if ($input->getOption('paksa')) {
+                                            /* @var $siswa Siswa */
+                                            $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+                                                ->findOneBy([
+                                                    'nomorIndukSistem' => '1000186',
+                                                ])
+                                            ;
+                                            print "[paksa]: siswa = " . $siswa->getNomorIndukSistem() . "," . $siswa->getNamaLengkap() . "\n";
+                                        }
+
                                         if (is_object($siswa) && $siswa instanceof Siswa) {
                                             $kehadiranSiswa = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
                                                 ->findOneBy([
