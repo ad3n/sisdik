@@ -7,6 +7,7 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\KehadiranSiswa;
 use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Fast\SisdikBundle\Entity\Siswa;
+use Fast\SisdikBundle\Entity\MesinKehadiran;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -147,72 +148,88 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                 continue;
                             }
 
-                            $logFile = system("ls -1 $logDirectory | tail -1");
-                            $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
-                            $targetFile = TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
+                            $mesinFingerprint = $em->getRepository('FastSisdikBundle:MesinKehadiran')
+                                ->findBy([
+                                    'sekolah' => $sekolah,
+                                    'aktif' => true,
+                                ])
+                            ;
 
-                            if (!copy($sourceFile, $targetFile)) {
-                                continue;
-                            }
-
-                            exec("gunzip --force $targetFile");
-
-                            $buffer = file_get_contents(substr($targetFile, 0, -3));
-                            $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                            preg_match_all("/<([\w]+)[^>]*>.*?<\/\\1>/", $buffer, $matches, PREG_SET_ORDER);
-                            $xmlstring = "<?xml version='1.0'?>\n" . $matches[0][0];
-
-                            $xmlobject = simplexml_load_string($xmlstring);
-
-                            if ($xmlobject) {
-                                foreach ($xmlobject->xpath('Row') as $item) {
-                                    $logTanggal = new \DateTime($item->DateTime);
-
-                                    if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
-                                        continue;
-                                    }
-
-                                    $siswa = $em->getRepository('FastSisdikBundle:Siswa')
-                                        ->findOneBy([
-                                            'nomorIndukSistem' => $item->PIN,
-                                        ])
-                                    ;
-                                    if (is_object($siswa) && $siswa instanceof Siswa) {
-                                        $kehadiranSiswa = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
-                                            ->findOneBy([
-                                                'sekolah' => $sekolah,
-                                                'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                                'kelas' => $jadwal->getKelas(),
-                                                'siswa' => $siswa,
-                                                'tanggal' => $waktuSekarang,
-                                                'permulaan' => true,
-                                            ])
-                                        ;
-
-                                        if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
-                                            $kehadiranSiswa->setPermulaan(false);
-                                            $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
-                                            $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
-
-                                            $em->persist($kehadiranSiswa);
-                                            $em->flush();
-                                        }
-                                    }
+                            foreach ($mesinFingerprint as $mesin) {
+                                if (!(is_object($mesin) && $mesin instanceof MesinKehadiran)) {
+                                    continue;
+                                }
+                                if ($mesin->getAlamatIp() == '') {
+                                    continue;
                                 }
 
-                                $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
-                                    ->findOneBy([
-                                        'sekolah' => $sekolah,
-                                        'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                        'kelas' => $jadwal->getKelas(),
-                                        'tanggal' => $waktuSekarang,
-                                        'berhasilDiperbaruiMesin' => false,
-                                    ])
-                                ;
+                                $logFile = system("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
+                                $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
+                                $targetFile = TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
 
-                                if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
-                                    $prosesKehadiranSiswa->setBerhasilDiperbaruiMesin(true);
-                                    $em->persist($prosesKehadiranSiswa);
+                                if (!copy($sourceFile, $targetFile)) {
+                                    continue;
+                                }
+
+                                exec("gunzip --force $targetFile");
+
+                                $buffer = file_get_contents(substr($targetFile, 0, -3));
+                                $buffer = preg_replace("/\s+/", ' ', trim($buffer));
+                                preg_match_all("/<([\w]+)[^>]*>.*?<\/\\1>/", $buffer, $matches, PREG_SET_ORDER);
+                                $xmlstring = "<?xml version='1.0'?>\n" . $matches[0][0];
+
+                                $xmlobject = simplexml_load_string($xmlstring);
+
+                                if ($xmlobject) {
+                                    foreach ($xmlobject->xpath('Row') as $item) {
+                                        $logTanggal = new \DateTime($item->DateTime);
+
+                                        if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
+                                            continue;
+                                        }
+
+                                        $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+                                            ->findOneBy([
+                                                'nomorIndukSistem' => $item->PIN,
+                                            ])
+                                        ;
+                                        if (is_object($siswa) && $siswa instanceof Siswa) {
+                                            $kehadiranSiswa = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
+                                                ->findOneBy([
+                                                    'sekolah' => $sekolah,
+                                                    'tahunAkademik' => $jadwal->getTahunAkademik(),
+                                                    'kelas' => $jadwal->getKelas(),
+                                                    'siswa' => $siswa,
+                                                    'tanggal' => $waktuSekarang,
+                                                    'permulaan' => true,
+                                                ])
+                                            ;
+
+                                            if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
+                                                $kehadiranSiswa->setPermulaan(false);
+                                                $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
+                                                $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
+
+                                                $em->persist($kehadiranSiswa);
+                                                $em->flush();
+                                            }
+                                        }
+                                    }
+
+                                    $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                                        ->findOneBy([
+                                            'sekolah' => $sekolah,
+                                            'tahunAkademik' => $jadwal->getTahunAkademik(),
+                                            'kelas' => $jadwal->getKelas(),
+                                            'tanggal' => $waktuSekarang,
+                                            'berhasilDiperbaruiMesin' => false,
+                                        ])
+                                    ;
+
+                                    if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                                        $prosesKehadiranSiswa->setBerhasilDiperbaruiMesin(true);
+                                        $em->persist($prosesKehadiranSiswa);
+                                    }
                                 }
                             }
 
