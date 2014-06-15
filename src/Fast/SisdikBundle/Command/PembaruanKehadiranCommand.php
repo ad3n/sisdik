@@ -43,6 +43,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
         $bulananHariKe = $waktuSekarang->format('j');
 
         if ($input->getOption('paksa')) {
+            $jamDari = '17:50:00';
             $jam = '16:00:00';
             $waktuSekarang = new \DateTime(date("Y-m-d $jam"));
             $mingguanHariKe = 5; // 0 = senin
@@ -117,10 +118,16 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                             continue;
                         }
 
+                        $dariJam = $jadwal->getParamstatusDariJam();
                         $hinggaJam = $jadwal->getParamstatusHinggaJam();
+                        $tanggalJadwalDari = new \DateTime(date("Y-m-d $dariJam"));
+                        $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));;
 
                         if ($input->getOption('paksa')) {
+                            $dariJam = $jamDari;
                             $hinggaJam = $jam;
+                            $tanggalJadwalDari = new \DateTime(date("Y-m-d $dariJam"));
+                            $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));;
                         }
 
                         $waktuJadwal = strtotime(date('Y-m-d') . " $hinggaJam");
@@ -191,6 +198,10 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                             print "[paksa]: log tanggal = " . $logTanggal->format('Y-m-d') . "\n";
                                         }
 
+                                        if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp())) {
+                                            continue;
+                                        }
+
                                         if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
                                             continue;
                                         }
@@ -222,7 +233,6 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                                     'permulaan' => true,
                                                 ])
                                             ;
-
                                             if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
                                                 $kehadiranSiswa->setPermulaan(false);
                                                 $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
