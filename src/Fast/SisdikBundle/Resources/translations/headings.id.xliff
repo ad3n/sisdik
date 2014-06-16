@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-04-15T19:52:57Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-06-16T16:35:38Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -215,7 +215,7 @@
         <target>Mengubah Dokumen Siswa</target>
       </trans-unit>
       <trans-unit id="88a50b1cfaadddbd0a57bcd00c5aeae332575014" resname="download.file.template">
-        <jms:reference-file line="33">views/Siswa/impor-baru.html.twig</jms:reference-file>
+        <jms:reference-file line="36">views/Siswa/impor-baru.html.twig</jms:reference-file>
         <source>download.file.template</source>
         <target>Unduh File Template</target>
       </trans-unit>
@@ -482,7 +482,7 @@
       </trans-unit>
       <trans-unit id="ac6b9afa8f295cf1f1255bc6cc04785fdda9631b" resname="presence.student.list">
         <jms:reference-file line="3">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="3">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="4">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>presence.student.list</source>
         <target>Kehadiran Siswa</target>
       </trans-unit>
