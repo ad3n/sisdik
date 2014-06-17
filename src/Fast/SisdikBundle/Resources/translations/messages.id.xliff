@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-06-16T16:35:38Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-06-17T16:13:26Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -9,7 +9,7 @@
       <trans-unit id="4345cb1fa27885a8fbfe7c0c830a592cc76a552b" resname="%">
         <jms:reference-file line="101">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
         <source>%</source>
-        <target state="new">%</target>
+        <target>%</target>
       </trans-unit>
       <trans-unit id="c4dd3c8cdd8d7c95603dd67f1cd873d5f9148b29" resname="&lt;">
         <jms:reference-file line="90">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
@@ -38,6 +38,11 @@
         <jms:reference-file line="253">SisdikBundle/Controller/TokenSekolahController.php</jms:reference-file>
         <source>Delete</source>
         <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="ee788c67f83dbd07b1c4118da0a427e7f66df00b" resname="Keterangan hanya digunakan untuk izin dan sakit. Dan siswa harus dipilih.">
+        <jms:reference-file line="83">SisdikBundle/Form/KehadiranSiswaSmsType.php</jms:reference-file>
+        <source>Keterangan hanya digunakan untuk izin dan sakit. Dan siswa harus dipilih.</source>
+        <target state="new">Keterangan hanya digunakan untuk izin dan sakit. Dan siswa harus dipilih.</target>
       </trans-unit>
       <trans-unit id="afdcb56438a90e9c73c6254a564cff46d4a9b501" resname="Laki-laki">
         <jms:reference-file line="186">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
@@ -1708,6 +1713,85 @@
         <source>heading.penempatan.siswa.kelas.kenaikan.kelas</source>
         <target>Untuk Kenaikan Kelas</target>
       </trans-unit>
+      <trans-unit id="a092b50d20ebc22021b9d243d591ed3508f59c9a" resname="help.awal.kehadiran">
+        <jms:reference-file line="204">SisdikBundle/Form/JadwalKehadiranType.php</jms:reference-file>
+        <source>help.awal.kehadiran</source>
+        <target>Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.
+Status bisa diperbarui oleh guru piket.
+Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.</target>
+      </trans-unit>
+      <trans-unit id="181043bd2f2f2597a1a89a68a91da490530b9f3b" resname="help.captcha.penjelasan.ubah.biaya">
+        <jms:reference-file line="178">SisdikBundle/Form/BiayaPendaftaranType.php</jms:reference-file>
+        <source>help.captcha.penjelasan.ubah.biaya</source>
+        <target>Captcha berguna untuk mencegah pengubahan/penghapusan data biaya tanpa sengaja</target>
+      </trans-unit>
+      <trans-unit id="49a99290b3770784613af65b9d606dc6b8aea8b9" resname="help.captcha.penjelasan.ubah.hapus">
+        <jms:reference-file line="57">SisdikBundle/Form/ConfirmationType.php</jms:reference-file>
+        <source>help.captcha.penjelasan.ubah.hapus</source>
+        <target>Captcha berguna untuk mencegah pengubahan/penghapusan data tanpa sengaja</target>
+      </trans-unit>
+      <trans-unit id="736ad4056598359fef6db030dd1850087bee1e93" resname="help.captcha.penjelasan.unggah.impor.baru">
+        <jms:reference-file line="47">SisdikBundle/Form/SiswaImportType.php</jms:reference-file>
+        <source>help.captcha.penjelasan.unggah.impor.baru</source>
+        <target>Captcha berguna untuk mencegah pengimporan data tanpa sengaja</target>
+      </trans-unit>
+      <trans-unit id="af74c5fe994b2da9f41d50638ac6c56c12e4bbee" resname="help.captcha.penjelasan.unggah.impor.gabung">
+        <jms:reference-file line="21">SisdikBundle/Form/SiswaMergeType.php</jms:reference-file>
+        <source>help.captcha.penjelasan.unggah.impor.gabung</source>
+        <target>Captcha berguna untuk mencegah pengimpor-gabungan data tanpa sengaja</target>
+      </trans-unit>
+      <trans-unit id="54493b497748b908165c6e2c75f82faf8f4321a8" resname="help.captcha.penjelasan.unggah.siswa.kelas">
+        <jms:reference-file line="63">SisdikBundle/Form/PenempatanSiswaKelasType.php</jms:reference-file>
+        <source>help.captcha.penjelasan.unggah.siswa.kelas</source>
+        <target>Captcha berguna untuk mencegah penempatan siswa di suatu kelas tanpa sengaja</target>
+      </trans-unit>
+      <trans-unit id="d8a0bba13d28e311ca3c82e60e4ade0cb34de113" resname="help.captcha.username.explain">
+        <jms:reference-file line="40">SisdikBundle/Form/SiswaGenerateUsernameConfirmType.php</jms:reference-file>
+        <jms:reference-file line="87">SisdikBundle/Form/SiswaGenerateUsernameType.php</jms:reference-file>
+        <source>help.captcha.username.explain</source>
+        <target>Captcha mencegah pembuatan username tanpa sengaja</target>
+      </trans-unit>
+      <trans-unit id="147c8a5ed51d70f0785ffd360e6a3095fb6d0f7f" resname="help.confirm.generated.username">
+        <jms:reference-file line="30">SisdikBundle/Form/SiswaGenerateUsernameConfirmType.php</jms:reference-file>
+        <source>help.confirm.generated.username</source>
+        <target>Centang untuk menandai bahwa data valid dan boleh disimpan ke database</target>
+      </trans-unit>
+      <trans-unit id="38cef410da35a47b845dbc3ccf776413f099a13b" resname="help.filterby.name.systemid">
+        <jms:reference-file line="56">SisdikBundle/Form/SiswaGenerateUsernameType.php</jms:reference-file>
+        <source>help.filterby.name.systemid</source>
+        <target>Nama atau Nomor Induk Sistem</target>
+      </trans-unit>
+      <trans-unit id="8e99a6170089f4e61e04c657c4ae799f1835f689" resname="help.konfirmasi.saya.mengerti">
+        <jms:reference-file line="45">SisdikBundle/Form/ConfirmationType.php</jms:reference-file>
+        <source>help.konfirmasi.saya.mengerti</source>
+        <target>Cek jika telah mengerti resiko yang akan terjadi</target>
+      </trans-unit>
+      <trans-unit id="13d160d77fb4f52094b61f132d11a386d3eda7a2" resname="help.logo.sekolah">
+        <jms:reference-file line="85">SisdikBundle/Form/SekolahType.php</jms:reference-file>
+        <source>help.logo.sekolah</source>
+        <target>Maksimum file 300kB</target>
+      </trans-unit>
+      <trans-unit id="320c4a11e7e997f0450d662ac409758502e4b814" resname="help.regenerate.username">
+        <jms:reference-file line="73">SisdikBundle/Form/SiswaGenerateUsernameType.php</jms:reference-file>
+        <source>help.regenerate.username</source>
+        <target>Membuat ulang hanya berguna untuk siswa yang disaring. Ia akan menimpa username dan password sebelumnya.</target>
+      </trans-unit>
+      <trans-unit id="a5d8cd6c50a4ed2ae81f82399fb6f7d875277a55" resname="help.tag.standar.laporan.psb">
+        <jms:reference-file line="24">SisdikBundle/Form/ReportSummaryType.php</jms:reference-file>
+        <source>help.tag.standar.laporan.psb</source>
+        <target>tag standar tanpa mencari adalah %jumlah-total% dan %tanggal-sekarang%</target>
+      </trans-unit>
+      <trans-unit id="60f2576eed8a31221e9e0ec1df3062c990b45633" resname="help.type.captcha">
+        <jms:reference-file line="173">SisdikBundle/Form/BiayaPendaftaranType.php</jms:reference-file>
+        <jms:reference-file line="52">SisdikBundle/Form/ConfirmationType.php</jms:reference-file>
+        <jms:reference-file line="60">SisdikBundle/Form/PenempatanSiswaKelasType.php</jms:reference-file>
+        <jms:reference-file line="44">SisdikBundle/Form/SiswaImportType.php</jms:reference-file>
+        <jms:reference-file line="37">SisdikBundle/Form/SiswaGenerateUsernameConfirmType.php</jms:reference-file>
+        <jms:reference-file line="82">SisdikBundle/Form/SiswaGenerateUsernameType.php</jms:reference-file>
+        <jms:reference-file line="18">SisdikBundle/Form/SiswaMergeType.php</jms:reference-file>
+        <source>help.type.captcha</source>
+        <target>ketik kode captcha</target>
+      </trans-unit>
       <trans-unit id="bb0ffb5e53b92658fbab3e9a013b096f3df36f4e" resname="hingga.tanggal">
         <jms:reference-file line="211">SisdikBundle/Controller/LaporanTransaksiKeuanganController.php</jms:reference-file>
         <jms:reference-file line="215">SisdikBundle/Controller/LaporanTransaksiKeuanganController.php</jms:reference-file>
@@ -2374,7 +2458,16 @@
         <source>label.dailylanguage</source>
         <target>Bahasa Sehari-hari</target>
       </trans-unit>
+      <trans-unit id="04384beca5ee50b962d01e4e21654f8ecd874343" resname="label.dari.tanggal">
+        <jms:reference-file line="34">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
+        <jms:reference-file line="59">SisdikBundle/Form/SiswaApplicantReportSearchType.php</jms:reference-file>
+        <jms:reference-file line="60">SisdikBundle/Form/SiswaTahkikSearchType.php</jms:reference-file>
+        <jms:reference-file line="82">SisdikBundle/Form/SiswaApplicantReportPaymentSearchType.php</jms:reference-file>
+        <source>label.dari.tanggal</source>
+        <target>Dari Tanggal</target>
+      </trans-unit>
       <trans-unit id="ed8a99878c98873d88d27130f2ff1ea95f2ce5e1" resname="label.date">
+        <jms:reference-file line="47">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="42">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
         <source>label.date</source>
         <target>Tanggal</target>
@@ -2780,6 +2873,14 @@
         <source>label.highest.education</source>
         <target>Pendidikan Tertinggi</target>
       </trans-unit>
+      <trans-unit id="edc2a80ed5ca1621fa910ba81adb4ae2e7ea1a66" resname="label.hingga.tanggal.singkat">
+        <jms:reference-file line="45">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
+        <jms:reference-file line="70">SisdikBundle/Form/SiswaApplicantReportSearchType.php</jms:reference-file>
+        <jms:reference-file line="71">SisdikBundle/Form/SiswaTahkikSearchType.php</jms:reference-file>
+        <jms:reference-file line="93">SisdikBundle/Form/SiswaApplicantReportPaymentSearchType.php</jms:reference-file>
+        <source>label.hingga.tanggal.singkat</source>
+        <target>Hingga</target>
+      </trans-unit>
       <trans-unit id="a2cc5f51451011d21c60b2a979bffe642b246799" resname="label.how.toschool">
         <jms:reference-file line="325">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
         <jms:reference-file line="229">SisdikBundle/Form/SiswaType.php</jms:reference-file>
@@ -2880,6 +2981,18 @@
         <source>label.job</source>
         <target>Pekerjaan</target>
       </trans-unit>
+      <trans-unit id="412c1c811a435bf904fc08ac3ce7ec05ebede9ea" resname="label.jumat">
+        <jms:reference-file line="420">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.jumat</source>
+        <target>Jumat</target>
+      </trans-unit>
+      <trans-unit id="ae8be14aa9d9646206770a59b97fff84a01e5d3d" resname="label.jumlah.bayar">
+        <jms:reference-file line="59">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
+        <jms:reference-file line="74">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
+        <jms:reference-file line="80">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
+        <source>label.jumlah.bayar</source>
+        <target>Jumlah Bayar</target>
+      </trans-unit>
       <trans-unit id="2a009502367c0e9dc00e5a3485af7d8f3502fd52" resname="label.jumlah.pendaftar.tercari">
         <jms:reference-file line="37">views/SiswaApplicant/index.html.twig</jms:reference-file>
         <jms:reference-file line="212">views/SiswaApplicantReport/report.xml.twig</jms:reference-file>
@@ -2946,6 +3059,11 @@
         <source>label.jumlah.transaksi.total</source>
         <target>∑ transaksi total</target>
       </trans-unit>
+      <trans-unit id="b044371b8974ebae12627dc76d54fcad89c5c2ef" resname="label.kamis">
+        <jms:reference-file line="419">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.kamis</source>
+        <target>Kamis</target>
+      </trans-unit>
       <trans-unit id="fd7c34a11418b3ecc03ca1f9b00cbbdb6f6cff5e" resname="label.ke.sekolah.menggunakan">
         <jms:reference-file line="297">views/Siswa/template-file.xml.twig</jms:reference-file>
         <jms:reference-file line="307">views/Siswa/datasiswa-pertahun.xml.twig</jms:reference-file>
@@ -2975,6 +3093,20 @@
         <jms:reference-file line="20">views/JenisDokumenSiswa/show.html.twig</jms:reference-file>
         <source>label.keterangan</source>
         <target>Keterangan</target>
+      </trans-unit>
+      <trans-unit id="4052d7e0952da05412f1a7b56fd6a9c803bb8a39" resname="label.keterangan.kehadiran">
+        <jms:reference-file line="91">SisdikBundle/Form/KehadiranSiswaType.php</jms:reference-file>
+        <source>label.keterangan.kehadiran</source>
+        <target>Keterangan</target>
+      </trans-unit>
+      <trans-unit id="9aca5658322d9fc0b70db54419fcfadeb17dea65" resname="label.ketik-pilih.atau.ketik-tambah">
+        <jms:reference-file line="103">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
+        <jms:reference-file line="163">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
+        <jms:reference-file line="179">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
+        <jms:reference-file line="74">SisdikBundle/Form/SiswaType.php</jms:reference-file>
+        <jms:reference-file line="90">SisdikBundle/Form/SiswaType.php</jms:reference-file>
+        <source>label.ketik-pilih.atau.ketik-tambah</source>
+        <target>Ketik-Pilih atau Ketik-Tambah</target>
       </trans-unit>
       <trans-unit id="aeeff8b065d9b99aedde87dbc4f2dd25b2740afd" resname="label.kewarganegaraan">
         <jms:reference-file line="264">views/Siswa/template-file.xml.twig</jms:reference-file>
@@ -3116,6 +3248,11 @@
         <jms:reference-file line="10">views/MesinProxy/index.html.twig</jms:reference-file>
         <source>label.mesinproxy.tambah</source>
         <target>Tambah Mesin Proxy</target>
+      </trans-unit>
+      <trans-unit id="8c0ab06c7aa69c5cf51e749caf0d5c4161c15809" resname="label.minggu">
+        <jms:reference-file line="422">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.minggu</source>
+        <target>Minggu</target>
       </trans-unit>
       <trans-unit id="0d4baa566370153f900f1356dd21bbb20335e019" resname="label.mobilephone">
         <jms:reference-file line="35">views/OrangtuaWali/index.html.twig</jms:reference-file>
@@ -3680,10 +3817,18 @@
         <source>label.penyakit.nama</source>
         <target>label.penyakit.nama</target>
       </trans-unit>
+      <trans-unit id="29693d6d35bb57741f95d288c087cc599e3ab600" resname="label.perlu.untuk.sms">
+        <jms:reference-file line="40">SisdikBundle/Form/ReportSummaryType.php</jms:reference-file>
+        <source>label.perlu.untuk.sms</source>
+        <target>Perlu untuk kirim SMS</target>
+      </trans-unit>
       <trans-unit id="5ab1ad762d6e5585bea3795733c874ae6703cc72" resname="label.perujuk">
         <jms:reference-file line="104">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
         <jms:reference-file line="164">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
         <jms:reference-file line="75">SisdikBundle/Form/SiswaType.php</jms:reference-file>
+        <jms:reference-file line="128">SisdikBundle/Form/SiswaApplicantReportSearchType.php</jms:reference-file>
+        <jms:reference-file line="129">SisdikBundle/Form/SiswaTahkikSearchType.php</jms:reference-file>
+        <jms:reference-file line="151">SisdikBundle/Form/SiswaApplicantReportPaymentSearchType.php</jms:reference-file>
         <jms:reference-file line="42">views/SiswaApplicant/show.html.twig</jms:reference-file>
         <jms:reference-file line="46">views/Siswa/show.html.twig</jms:reference-file>
         <source>label.perujuk</source>
@@ -3812,6 +3957,11 @@
         <jms:reference-file line="129">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
         <source>label.presencestatus</source>
         <target>- status kehadiran -</target>
+      </trans-unit>
+      <trans-unit id="273e251fc5a2572dac542666382cccee489f763f" resname="label.rabu">
+        <jms:reference-file line="418">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.rabu</source>
+        <target>Rabu</target>
       </trans-unit>
       <trans-unit id="c40a6a9f1fc17fff0576a51f167141393d653f36" resname="label.realtimesms.hourfrom">
         <jms:reference-file line="24">views/JadwalKehadiranKepulanganSingle/show.html.twig</jms:reference-file>
@@ -3973,6 +4123,11 @@
         <source>label.roles</source>
         <target>Peran</target>
       </trans-unit>
+      <trans-unit id="ba96cd6ccf35b7d48138870577fae8a7467692c9" resname="label.sabtu">
+        <jms:reference-file line="421">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.sabtu</source>
+        <target>Sabtu</target>
+      </trans-unit>
       <trans-unit id="b9459ad372b6bec710ac35c36a3afeaddbd2e388" resname="label.salary.annually">
         <jms:reference-file line="85">SisdikBundle/Form/OrangtuaWaliType.php</jms:reference-file>
         <source>label.salary.annually</source>
@@ -4103,16 +4258,28 @@
         <target>pendaftar hari ini</target>
       </trans-unit>
       <trans-unit id="16ad49f5f7427aa07a0887beb937ec7386bb9602" resname="label.searchkey">
+        <jms:reference-file line="17">SisdikBundle/Form/SimpleSearchFormType.php</jms:reference-file>
         <jms:reference-file line="13">SisdikBundle/Form/SimpleSearchFormType.php</jms:reference-file>
+        <jms:reference-file line="68">SisdikBundle/Form/SiswaApplicantPaymentSearchType.php</jms:reference-file>
         <jms:reference-file line="39">SisdikBundle/Form/SimpleUserSearchType.php</jms:reference-file>
+        <jms:reference-file line="58">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="54">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
+        <jms:reference-file line="54">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
+        <jms:reference-file line="58">SisdikBundle/Form/SiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="65">SisdikBundle/Form/WaliKelasSearchType.php</jms:reference-file>
+        <jms:reference-file line="79">SisdikBundle/Form/SiswaApplicantReportSearchType.php</jms:reference-file>
+        <jms:reference-file line="66">SisdikBundle/Form/SiswaApplicantSearchType.php</jms:reference-file>
+        <jms:reference-file line="80">SisdikBundle/Form/SiswaTahkikSearchType.php</jms:reference-file>
+        <jms:reference-file line="102">SisdikBundle/Form/SiswaApplicantReportPaymentSearchType.php</jms:reference-file>
         <source>label.searchkey</source>
         <target>Kata Pencarian</target>
       </trans-unit>
       <trans-unit id="864a3876a9e74e989b277574b2bddcb43651e439" resname="label.sekolah.asal">
         <jms:reference-file line="180">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
         <jms:reference-file line="91">SisdikBundle/Form/SiswaType.php</jms:reference-file>
+        <jms:reference-file line="110">SisdikBundle/Form/SiswaApplicantReportSearchType.php</jms:reference-file>
+        <jms:reference-file line="111">SisdikBundle/Form/SiswaTahkikSearchType.php</jms:reference-file>
+        <jms:reference-file line="133">SisdikBundle/Form/SiswaApplicantReportPaymentSearchType.php</jms:reference-file>
         <jms:reference-file line="49">views/SiswaApplicant/show.html.twig</jms:reference-file>
         <jms:reference-file line="32">views/PembayaranPendaftaran/edit.html.twig</jms:reference-file>
         <jms:reference-file line="56">views/PembayaranPendaftaran/index.html.twig</jms:reference-file>
@@ -4129,6 +4296,11 @@
         <jms:reference-file line="96">views/SiswaApplicantReport/report.xml.twig</jms:reference-file>
         <source>label.sekolah.tinggal.di</source>
         <target>Sekolah Tinggal Di</target>
+      </trans-unit>
+      <trans-unit id="f89d924b27ea701261043b964aa6f14f37b456f9" resname="label.selasa">
+        <jms:reference-file line="417">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.selasa</source>
+        <target>Selasa</target>
       </trans-unit>
       <trans-unit id="e7f193caec81a61152390159bd374427b58089b5" resname="label.select.parentnode">
         <jms:reference-file line="64">SisdikBundle/Form/PenjurusanType.php</jms:reference-file>
@@ -4193,6 +4365,11 @@
         <jms:reference-file line="28">views/JadwalKehadiranKepulanganSingle/show.html.twig</jms:reference-file>
         <source>label.sendsms.realtime</source>
         <target>Kirim SMS Realtime</target>
+      </trans-unit>
+      <trans-unit id="e2c30844a185f68f114406c39a4fa93ddc494bbe" resname="label.senin">
+        <jms:reference-file line="416">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>label.senin</source>
+        <target>Senin</target>
       </trans-unit>
       <trans-unit id="57d31d68e98725b93c769945daad2e9b88d3a50f" resname="label.sms.massive">
         <jms:reference-file line="54">views/JadwalKehadiranKepulanganSingle/index.html.twig</jms:reference-file>
@@ -4588,6 +4765,7 @@
       <trans-unit id="05353914133c4c4be543a454c6da7e36249a974a" resname="label.username">
         <jms:reference-file line="24">SisdikBundle/Form/UserRegisterFormType.php</jms:reference-file>
         <jms:reference-file line="12">SisdikBundle/Form/RegistrationFormType.php</jms:reference-file>
+        <jms:reference-file line="26">SisdikBundle/Form/PersonilType.php</jms:reference-file>
         <jms:reference-file line="23">SisdikBundle/Form/PersonilType.php</jms:reference-file>
         <jms:reference-file line="33">views/Siswa/username.xml.twig</jms:reference-file>
         <jms:reference-file line="46">views/SettingsUser/index.html.twig</jms:reference-file>
@@ -4718,6 +4896,56 @@
         <jms:reference-file line="32">views/SiswaKelas/index.html.twig</jms:reference-file>
         <source>label.year.entry</source>
         <target>Tahun</target>
+      </trans-unit>
+      <trans-unit id="50097237c7e0593dc8dc2b6a7ea343d921434566" resname="layanan.sms.kehadiran.alpa">
+        <jms:reference-file line="90">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.kehadiran.alpa</source>
+        <target>Siswa alpa</target>
+      </trans-unit>
+      <trans-unit id="ee8c940905435e68b91b6a7b0974b2d02b3db6e3" resname="layanan.sms.kehadiran.izin">
+        <jms:reference-file line="93">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.kehadiran.izin</source>
+        <target>Siswa izin tidak masuk sekolah</target>
+      </trans-unit>
+      <trans-unit id="7d2dd96f851b349231c4c10ea699bb10812a35d9" resname="layanan.sms.kehadiran.sakit">
+        <jms:reference-file line="94">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.kehadiran.sakit</source>
+        <target>Siswa tidak masuk sekolah karena sakit</target>
+      </trans-unit>
+      <trans-unit id="013ee553655b37107c7046feb6a75f230eb59beb" resname="layanan.sms.kehadiran.telat">
+        <jms:reference-file line="92">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.kehadiran.telat</source>
+        <target>Siswa datang terlambat</target>
+      </trans-unit>
+      <trans-unit id="c626d336c883612337982a9151dbec9b9c6c7272" resname="layanan.sms.kehadiran.tepat">
+        <jms:reference-file line="91">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.kehadiran.tepat</source>
+        <target>Siswa datang tepat waktu</target>
+      </trans-unit>
+      <trans-unit id="08317ebd7a5987641966848edc5f896fe490c3a0" resname="layanan.sms.laporan.ringkasan.pendaftaran">
+        <jms:reference-file line="78">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.laporan.ringkasan.pendaftaran</source>
+        <target>Ringkasan laporan pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="f511c1fd01e18ce430c5afa55bb5bb83dda5dc8d" resname="layanan.sms.pendaftar.bayar.biaya">
+        <jms:reference-file line="65">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.pendaftar.bayar.biaya</source>
+        <target>Membayar biaya pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="0d113db7a0a848c66fc6e1cb2c223ec36c3416ef" resname="layanan.sms.pendaftar.bayar.lunas">
+        <jms:reference-file line="66">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.pendaftar.bayar.lunas</source>
+        <target>Lunas biaya pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="857b9faff3e8f476a134be7330a47c20c15806c0" resname="layanan.sms.pendaftar.bayar.pertama">
+        <jms:reference-file line="64">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.pendaftar.bayar.pertama</source>
+        <target>Pertama kali membayar biaya pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="8c7dce983449f83faf12d083b642466983e143d3" resname="layanan.sms.pendaftar.tercatat">
+        <jms:reference-file line="63">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.pendaftar.tercatat</source>
+        <target>Pendaftar tercatat di database</target>
       </trans-unit>
       <trans-unit id="b25f598744d2fedc95944f9c35b697828e50ed10" resname="leader">
         <jms:reference-file line="19">views/Default/index.html.twig</jms:reference-file>
@@ -5157,6 +5385,31 @@
         <target><![CDATA[Semua siswa (<a href="%linktotal%">%total%</a> orang) di tahun %year% belum dibuat usernamenya.
 ]]></target>
       </trans-unit>
+      <trans-unit id="3a33840be92196695442b68fd979804fbc220132" resname="status.kehadiran.alpa">
+        <jms:reference-file line="388">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>status.kehadiran.alpa</source>
+        <target>Alpa</target>
+      </trans-unit>
+      <trans-unit id="414be2149a1d2ae8d34c3483f3066e1b0532d49e" resname="status.kehadiran.hadir.telat">
+        <jms:reference-file line="387">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>status.kehadiran.hadir.telat</source>
+        <target>Hadir Telat</target>
+      </trans-unit>
+      <trans-unit id="10d9965247a52eef45bd90d20a2fbdbe9518e48f" resname="status.kehadiran.hadir.tepat">
+        <jms:reference-file line="386">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>status.kehadiran.hadir.tepat</source>
+        <target>Hadir Tepat</target>
+      </trans-unit>
+      <trans-unit id="d57c9c0b37b7303dfadc5a0a2be91bf287d35d8b" resname="status.kehadiran.izin">
+        <jms:reference-file line="389">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>status.kehadiran.izin</source>
+        <target>Izin</target>
+      </trans-unit>
+      <trans-unit id="1e60992072f3968205dd97fc3ecc800c462ea371" resname="status.kehadiran.sakit">
+        <jms:reference-file line="390">SisdikBundle/Entity/JadwalKehadiran.php</jms:reference-file>
+        <source>status.kehadiran.sakit</source>
+        <target>Sakit</target>
+      </trans-unit>
       <trans-unit id="5ffdfff1f77ab216e33b1b58b1fa24bf18e141c0" resname="tahun">
         <jms:reference-file line="3">views/SiswaApplicant/index.html.twig</jms:reference-file>
         <jms:reference-file line="3">views/SiswaApplicantReport/index.html.twig</jms:reference-file>
@@ -5354,6 +5607,26 @@
         <jms:reference-file line="66">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
         <source>≥</source>
         <target>≥</target>
+      </trans-unit>
+      <trans-unit id="fbee5bcebda7a944bbea4eba474226aa17006ca1" resname="label.allschool">
+        <jms:reference-file line="60">SisdikBundle/Form/PilihanLayananSmsSearchType.php</jms:reference-file>
+        <source>label.allschool</source>
+        <target>~ Semua Sekolah ~</target>
+      </trans-unit>
+      <trans-unit id="4ba1a0673dcb54cc0c48a945bd617a8ac224bce8" resname="label.semua.layanan">
+        <jms:reference-file line="74">SisdikBundle/Form/PilihanLayananSmsSearchType.php</jms:reference-file>
+        <source>label.semua.layanan</source>
+        <target>~ Semua Layanan ~</target>
+      </trans-unit>
+      <trans-unit id="5f303bc818a3c97496acfa3a5aee4a357aa34014" resname="label.defaultpdf">
+        <jms:reference-file line="39">SisdikBundle/Form/PilihanCetakKwitansiType.php</jms:reference-file>
+        <source>label.defaultpdf</source>
+        <target>Default (PDF)</target>
+      </trans-unit>
+      <trans-unit id="40c80b9c3617ca004b0edf012010fcbb00490e49" resname="label.directprint">
+        <jms:reference-file line="39">SisdikBundle/Form/PilihanCetakKwitansiType.php</jms:reference-file>
+        <source>label.directprint</source>
+        <target>Direct Print (Dot Matrix)</target>
       </trans-unit>
     </body>
   </file>
