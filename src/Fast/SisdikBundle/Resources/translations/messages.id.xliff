@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-06-18T14:05:18Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-06-18T16:47:26Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -1716,9 +1716,9 @@
       <trans-unit id="a092b50d20ebc22021b9d243d591ed3508f59c9a" resname="help.awal.kehadiran">
         <jms:reference-file line="204">SisdikBundle/Form/JadwalKehadiranType.php</jms:reference-file>
         <source>help.awal.kehadiran</source>
-        <target>Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.
-Status bisa diperbarui oleh guru piket.
-Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.</target>
+        <target><![CDATA[Berguna untuk menentukan data awal status kehadiran setiap siswa di kelas dan perulangan terpilih.<br>
+Status bisa diperbarui oleh guru piket.<br>
+Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.]]></target>
       </trans-unit>
       <trans-unit id="181043bd2f2f2597a1a89a68a91da490530b9f3b" resname="help.captcha.penjelasan.ubah.biaya">
         <jms:reference-file line="178">SisdikBundle/Form/BiayaPendaftaranType.php</jms:reference-file>
