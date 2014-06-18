@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-06-17T16:13:26Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-06-18T14:05:18Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -2145,6 +2145,11 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <source>label.all</source>
         <target>Semua</target>
       </trans-unit>
+      <trans-unit id="a3d3ed0b43cf6443850a2a19f1b22ad69a29710d" resname="label.allschool">
+        <jms:reference-file line="60">SisdikBundle/Form/PilihanLayananSmsSearchType.php</jms:reference-file>
+        <source>label.allschool</source>
+        <target>~ Semua Sekolah ~</target>
+      </trans-unit>
       <trans-unit id="bcb3b04a6b6325fdb144d38da410d62351e22636" resname="label.anak.ke">
         <jms:reference-file line="267">views/Siswa/template-file.xml.twig</jms:reference-file>
         <jms:reference-file line="277">views/Siswa/datasiswa-pertahun.xml.twig</jms:reference-file>
@@ -2487,6 +2492,11 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <source>label.dayno</source>
         <target>Hari Ke</target>
       </trans-unit>
+      <trans-unit id="45f341caca7ada4419481e23982fb48c10d62f9f" resname="label.defaultpdf">
+        <jms:reference-file line="39">SisdikBundle/Form/PilihanCetakKwitansiType.php</jms:reference-file>
+        <source>label.defaultpdf</source>
+        <target>Default (PDF)</target>
+      </trans-unit>
       <trans-unit id="c500bdec2fd007fbd60019bbe93b39f0c063f1a3" resname="label.delete">
         <jms:reference-file line="100">SisdikBundle/Form/PanitiaPendaftaranType.php</jms:reference-file>
         <jms:reference-file line="17">views/TahunAkademik/edit.html.twig</jms:reference-file>
@@ -2575,6 +2585,11 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="46">views/SiswaKelas/index.html.twig</jms:reference-file>
         <source>label.description</source>
         <target>Keterangan</target>
+      </trans-unit>
+      <trans-unit id="654f5456b22cbc74f98e4116456e10709df6ae20" resname="label.directprint">
+        <jms:reference-file line="39">SisdikBundle/Form/PilihanCetakKwitansiType.php</jms:reference-file>
+        <source>label.directprint</source>
+        <target>Direct Print (Dot Matrix)</target>
       </trans-unit>
       <trans-unit id="adaaacb82a22664a59909bd14426549767314bd5" resname="label.discount">
         <jms:reference-file line="40">SisdikBundle/Form/PembayaranPendaftaranType.php</jms:reference-file>
@@ -3097,7 +3112,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="4052d7e0952da05412f1a7b56fd6a9c803bb8a39" resname="label.keterangan.kehadiran">
         <jms:reference-file line="91">SisdikBundle/Form/KehadiranSiswaType.php</jms:reference-file>
         <source>label.keterangan.kehadiran</source>
-        <target>Keterangan</target>
+        <target>Keterangan kehadiran</target>
       </trans-unit>
       <trans-unit id="9aca5658322d9fc0b70db54419fcfadeb17dea65" resname="label.ketik-pilih.atau.ketik-tambah">
         <jms:reference-file line="103">SisdikBundle/Form/SiswaApplicantType.php</jms:reference-file>
@@ -4350,6 +4365,11 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="48">SisdikBundle/Form/SiswaGenerateUsernameType.php</jms:reference-file>
         <source>label.selectyear</source>
         <target>~ Tahun ~</target>
+      </trans-unit>
+      <trans-unit id="d5dd530eb574cadc90eb4b2a54227fb87492603b" resname="label.semua.layanan">
+        <jms:reference-file line="74">SisdikBundle/Form/PilihanLayananSmsSearchType.php</jms:reference-file>
+        <source>label.semua.layanan</source>
+        <target>~ Semua Layanan ~</target>
       </trans-unit>
       <trans-unit id="132c113cadd73494513453854318002af8d9f5d4" resname="label.semua.sekolah">
         <jms:reference-file line="71">SisdikBundle/Form/SekolahSearchType.php</jms:reference-file>
@@ -5607,26 +5627,6 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="66">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
         <source>≥</source>
         <target>≥</target>
-      </trans-unit>
-      <trans-unit id="fbee5bcebda7a944bbea4eba474226aa17006ca1" resname="label.allschool">
-        <jms:reference-file line="60">SisdikBundle/Form/PilihanLayananSmsSearchType.php</jms:reference-file>
-        <source>label.allschool</source>
-        <target>~ Semua Sekolah ~</target>
-      </trans-unit>
-      <trans-unit id="4ba1a0673dcb54cc0c48a945bd617a8ac224bce8" resname="label.semua.layanan">
-        <jms:reference-file line="74">SisdikBundle/Form/PilihanLayananSmsSearchType.php</jms:reference-file>
-        <source>label.semua.layanan</source>
-        <target>~ Semua Layanan ~</target>
-      </trans-unit>
-      <trans-unit id="5f303bc818a3c97496acfa3a5aee4a357aa34014" resname="label.defaultpdf">
-        <jms:reference-file line="39">SisdikBundle/Form/PilihanCetakKwitansiType.php</jms:reference-file>
-        <source>label.defaultpdf</source>
-        <target>Default (PDF)</target>
-      </trans-unit>
-      <trans-unit id="40c80b9c3617ca004b0edf012010fcbb00490e49" resname="label.directprint">
-        <jms:reference-file line="39">SisdikBundle/Form/PilihanCetakKwitansiType.php</jms:reference-file>
-        <source>label.directprint</source>
-        <target>Direct Print (Dot Matrix)</target>
       </trans-unit>
     </body>
   </file>
