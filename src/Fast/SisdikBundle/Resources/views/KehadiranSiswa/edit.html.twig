@@ -379,7 +379,6 @@ $(document).ready(function() {
 
     $("#presenceform").submit(function() {
         var url = $("#presenceform").attr("action");
-        //alert($("#presenceform").serialize());
 
         {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#output').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
@@ -390,8 +389,9 @@ $(document).ready(function() {
                 if (data.responseCode == 200) {
                     $('#output').html(data.responseText);
                     if (data.berhasilValidasi == 1) {
-                        $('#warna-validasi').removeClass('badge-warning');
-                        $('#warna-validasi').addClass('badge-success');
+                        $('#warna-validasi').removeClass('fa-warning');
+                        $('#warna-validasi').addClass('fa-check');
+                        $('#warna-validasi').css({'color': 'green'});
                     }
                 } else {
                     // if we got to this point we know that the controller
