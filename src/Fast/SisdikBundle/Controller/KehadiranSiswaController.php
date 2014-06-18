@@ -204,11 +204,14 @@ class KehadiranSiswaController extends Controller
         $data = $request->request->get('fast_sisdikbundle_kehadiransiswatype');
 
         foreach ($data as $keys => $values) {
-            if (preg_match('/_(\d+)$/', $keys, $matches) !== FALSE) {
-                $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')->find($matches[1]);
-                if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
-                    $kehadiran->setStatusKehadiran($values);
-                    $em->persist($kehadiran);
+            if (preg_match('/kehadiran_(\d+)$/', $keys, $matches) !== FALSE) {
+                if (array_key_exists(1, $matches)) {
+                    $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')->find($matches[1]);
+                    if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
+                        $kehadiran->setStatusKehadiran($values);
+                        $kehadiran->setKeteranganStatus($data['kehadiran_keterangan_' . $matches[1]]);
+                        $em->persist($kehadiran);
+                    }
                 }
             }
         }

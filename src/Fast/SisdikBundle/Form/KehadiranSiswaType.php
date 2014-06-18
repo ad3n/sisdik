@@ -85,6 +85,14 @@ class KehadiranSiswaType extends AbstractType
                         ],
                         'data' => $entity->getStatusKehadiran(),
                     ])
+                    ->add('kehadiran_keterangan_' . $entity->getId(), 'text', [
+                        'required' => false,
+                        'attr' => [
+                            'placeholder' => 'label.keterangan.kehadiran',
+                            'class' => 'keterangan-kehadiran'
+                        ],
+                        'data' => $entity->getKeteranganStatus(),
+                    ])
                 ;
             }
         }

@@ -17,9 +17,6 @@
 .nav > li > a:hover, .nav > li.active > a:hover {
     text-decoration: none;
 }
-.form-inline .radio {
-    padding-left: 3em;
-}
 .form-inline .checked label {
     color: #ff0000;
 }
@@ -92,6 +89,25 @@
 }
 .accordion-body .accordion-inner {
     margin-top: 5px;
+}
+#presenceform .radio {
+    margin-left: 20px;
+}
+#presenceform .radio label {
+    padding-left: 20px;
+}
+#presenceform .radio input {
+    margin-left: -20px;
+}
+.keterangan-kehadiran {
+    margin-left: 20px;
+}
+dt, dd {
+    margin-bottom: 10px;
+}
+dd {
+    width: auto;
+    min-width: 60%;
 }
 </style>
 
@@ -290,9 +306,13 @@
 <dl>
 {% for kehadiran in entities %}
     <dt>{{ kehadiran.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ kehadiran.siswa.nomorInduk }}</span></dt>
-    <dd>{{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}</dd>
+    <dd>
+        {{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}
+        {{ form_widget(form['kehadiran_keterangan_' ~ kehadiran.id]) }}
+    </dd>
 {% endfor %}
 </dl>
+{{ form_rest(form) }}
 <div class="clearfix"></div>
 <div style="padding-top: 10px;">
     <button type="submit" class="btn primary alternative icon approve">{{ 'label.save'|trans }}</button>
