@@ -74,14 +74,6 @@ class KehadiranSiswaSmsType extends AbstractType
             ->add('tanggal', 'hidden', [
                 'data' => $this->tanggal,
             ])
-            ->add('keterangan', 'textarea', [
-                'label' => 'label.keterangan',
-                'attr' => [
-                    'class' => 'xlarge',
-                ],
-                'required' => false,
-                'help_block' => 'Keterangan hanya digunakan untuk izin dan sakit. Dan siswa harus dipilih.',
-            ])
         ;
 
         $siswa = [];
@@ -115,29 +107,6 @@ class KehadiranSiswaSmsType extends AbstractType
                 ])
             ;
         }
-
-        $querybuilder4 = $em->createQueryBuilder()
-            ->select('template')
-            ->from('FastSisdikBundle:Templatesms', 'template')
-            ->where('template.sekolah = :sekolah')
-            ->orderBy('template.nama', 'ASC')
-            ->setParameter('sekolah', $sekolah)
-        ;
-        $builder
-            ->add('templatesms', 'entity', [
-                'class' => 'FastSisdikBundle:Templatesms',
-                'label' => 'label.sms.template.entry',
-                'multiple' => false,
-                'expanded' => false,
-                'required' => true,
-                'property' => 'optionLabel',
-                'query_builder' => $querybuilder4,
-                'attr' => [
-                    'class' => 'xlarge',
-                ],
-                'empty_value' => 'label.pilih.template.sms',
-            ])
-        ;
     }
 
     public function getName()
