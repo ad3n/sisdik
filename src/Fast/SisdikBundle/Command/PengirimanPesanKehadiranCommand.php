@@ -188,7 +188,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         $terkirim = false;
                                         $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWaliAktif);
                                         foreach ($nomorponsel as $ponsel) {
-                                            $messenger = $this->getContainer()->get('fast_sisdik.messenger');
+                                            $messenger = $this->getContainer()->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);

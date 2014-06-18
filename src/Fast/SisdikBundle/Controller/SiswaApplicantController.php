@@ -244,7 +244,7 @@ class SiswaApplicantController extends Controller
                                     if ($ponselOrtuWali != "") {
                                         $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
                                         foreach ($nomorponsel as $ponsel) {
-                                            $messenger = $this->get('fast_sisdik.messenger');
+                                            $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);

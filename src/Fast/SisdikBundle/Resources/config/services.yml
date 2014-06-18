@@ -46,7 +46,7 @@ services:
         tags:
             - { name: twig.extension }
 
-    fast_sisdik.messenger:
+    sisdik.messenger:
         class:        Fast\SisdikBundle\Util\Messenger
         scope:        prototype
         arguments:    ["@service_container", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]

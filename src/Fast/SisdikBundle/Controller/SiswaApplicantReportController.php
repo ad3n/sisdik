@@ -497,7 +497,7 @@ class SiswaApplicantReportController extends Controller
                         if ($pilihan->getStatus()) {
                             $nomorponsel = preg_split("/[\s,]+/", $summarydata['nomorPonsel']);
                             foreach ($nomorponsel as $ponsel) {
-                                $messenger = $this->get('fast_sisdik.messenger');
+                                $messenger = $this->get('sisdik.messenger');
                                 if ($messenger instanceof Messenger) {
                                     $messenger->setPhoneNumber($ponsel);
                                     $messenger->setMessage($summarydata['teksTerformat']);
