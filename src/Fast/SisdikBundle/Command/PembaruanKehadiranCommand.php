@@ -24,7 +24,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sisdik:kehadiran:pembaruan')
-            ->setDescription('Periksa dan jalankan pembaruan kehadiran.')
+            ->setDescription('Memperbarui kehadiran siswa.')
             ->addOption('paksa', null, InputOption::VALUE_NONE, 'Memaksa pembaruan data kehadiran hari ini')
         ;
     }
@@ -310,7 +310,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
             if (in_array($lockingPID, $pids))
                 return true;
 
-            print "Removing stale $nomorUrutSekolah.pembaruan-kehadiran.lock file.\n";
+            print "Removing stale $nomorUrutSekolah." . self::LOCK_FILE . " file.\n";
             unlink($lockfile);
         }
 

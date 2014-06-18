@@ -22,7 +22,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sisdik:kehadiran:inisiasi')
-            ->setDescription('Periksa dan jalankan inisiasi kehadiran.')
+            ->setDescription('Menginisiasi kehadiran siswa.')
             ->addOption('paksa', null, InputOption::VALUE_NONE, 'Memaksa pembuatan data awal hari ini')
         ;
     }
@@ -239,7 +239,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
             if (in_array($lockingPID, $pids))
                 return true;
 
-            print "Removing stale $nomorUrutSekolah.inisiasi-kehadiran.lock file.\n";
+            print "Removing stale $nomorUrutSekolah." . self::LOCK_FILE . " file.\n";
             unlink($lockfile);
         }
 
