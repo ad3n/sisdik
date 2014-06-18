@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-06-18T17:12:58Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-06-18T17:20:32Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -1783,7 +1783,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
 - Jika SMS belum diproses, info SMS kehadiran akan otomatis diproses pada pukul %jam_sms%<br>
 - Gunakan tombol 'Kirim SMS' untuk mendahului pemrosesan atau untuk memproses ulang info sms kehadiran siswa secara manual<br>
 - Template SMS menggunakan format yang terpilih di jadwal kehadiran<br>
-- Pilih siswa jika hanya ingin mengirim sms ke satu siswa tertentu]]></target>
+- Pilih siswa jika hanya ingin mengirim sms untuk satu siswa tertentu]]></target>
       </trans-unit>
       <trans-unit id="a5d8cd6c50a4ed2ae81f82399fb6f7d875277a55" resname="help.tag.standar.laporan.psb">
         <jms:reference-file line="24">SisdikBundle/Form/ReportSummaryType.php</jms:reference-file>
