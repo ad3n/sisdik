@@ -49,7 +49,7 @@ services:
     sisdik.messenger:
         class:        Fast\SisdikBundle\Util\Messenger
         scope:        prototype
-        arguments:    ["@service_container", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
+        arguments:    ["@doctrine.orm.entity_manager", "@router", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
 
     sisdik.translator.form.extractor:
         class: Fast\SisdikBundle\Translator\FormExtractor

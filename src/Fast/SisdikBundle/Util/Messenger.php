@@ -1,43 +1,125 @@
 <?php
-
 namespace Fast\SisdikBundle\Util;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
+use Doctrine\Common\Persistence\ObjectManager;
 use Fast\SisdikBundle\Entity\LogsmsKeluar;
+use Fast\SisdikBundle\Entity\Sekolah;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
- * Short message sender -- the Messenger
- *
- * @author Ihsan Faisal
- *
+ * Pengirim pesan -- the Messenger
  */
 class Messenger
 {
     /**
-     * @var Symfony\Component\DependencyInjection\Container
+     * @var ObjectManager
      */
-    private $container;
+    private $objectManager;
 
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
+     * @var string
+     */
     private $provider;
+
+    /**
+     * @var string
+     */
     private $scheme;
+
+    /**
+     * @var string
+     */
     private $host;
+
+    /**
+     * @var string
+     */
     private $port;
+
+    /**
+     * @var string
+     */
     private $user;
+
+    /**
+     * @var string
+     */
     private $password;
+
+    /**
+     * @var string
+     */
     private $resource;
+
+    /**
+     * @var string
+     */
     private $apikey;
+
+    /**
+     * @var string
+     */
     private $report;
 
+    /**
+     * @var string
+     */
     private $phonenumber;
+
+    /**
+     * @var string
+     */
     private $message;
 
+    /**
+     * @var integer
+     */
     private $logid = 0;
+
+    /**
+     * @var string
+     */
     private $deliveryReportURL;
+
+    /**
+     * @var string
+     */
     private $apiResult;
 
-    public function __construct($container, $provider, $scheme, $host, $port, $user, $password, $resource,
-            $apikey, $report) {
-        $this->container = $container;
-
+    /**
+     * @param ObjectManager $objectManager
+     * @param Router $router
+     * @param string $provider
+     * @param string $scheme
+     * @param string $host
+     * @param string $port
+     * @param string $user
+     * @param string $password
+     * @param string $resource
+     * @param string $apikey
+     * @param string $report
+     */
+    public function __construct(
+        ObjectManager $objectManager,
+        Router $router,
+        $provider,
+        $scheme,
+        $host,
+        $port,
+        $user,
+        $password,
+        $resource,
+        $apikey,
+        $report)
+    {
+        $this->objectManager = $objectManager;
+        $this->router = $router;
         $this->provider = $provider;
         $this->scheme = $scheme;
         $this->host = $host;
@@ -50,31 +132,28 @@ class Messenger
     }
 
     /**
-     * set phone number
-     *
      * @param string $phonenumber
      */
-    public function setPhonenumber($phonenumber) {
+    public function setPhonenumber($phonenumber)
+    {
         $this->phonenumber = $phonenumber;
     }
 
     /**
-     * Set message
-     *
      * @param string $message
      */
-    public function setMessage($message) {
+    public function setMessage($message)
+    {
         $this->message = $message;
     }
 
     /**
-     * Set log entry
-     *
-     * @param  \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @param  Sekolah $sekolah
      * @return integer
      */
-    public function setLogEntry(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
-        $em = $this->container->get('doctrine')->getManager();
+    public function setLogEntry(Sekolah $sekolah = null)
+    {
+        $em = $this->objectManager;
 
         $log = new LogsmsKeluar();
         $log->setPenyediaApi($this->provider);
@@ -95,10 +174,11 @@ class Messenger
      * @param string $url
      * @param string $hasil
      */
-    private function updateLogHasilAPI($url, $hasil) {
-        $em = $this->container->get('doctrine')->getManager();
+    private function updateLogHasilAPI($url, $hasil)
+    {
+        $em = $this->objectManager;
 
-        /* @var $entity \Fast\SisdikBundle\Entity\LogsmsKeluar */
+        /* @var $entity LogsmsKeluar */
         $entity = $em->getRepository('FastSisdikBundle:LogsmsKeluar')->find($this->logid);
         $entity->setApiTerpanggil($url);
         $entity->setHasilAPI($hasil);
@@ -112,17 +192,17 @@ class Messenger
      *
      * @param string $url
      */
-    public function setDeliveryReportURL($url) {
+    public function setDeliveryReportURL($url)
+    {
         $this->deliveryReportURL = $url;
     }
 
     /**
-     * Send message
-     *
-     * @param  \Fast\SisdikBundle\Entity\Sekolah $sekolah
+     * @param  Sekolah $sekolah
      * @return integer
      */
-    public function sendMessage(\Fast\SisdikBundle\Entity\Sekolah $sekolah = null) {
+    public function sendMessage(Sekolah $sekolah = null)
+    {
         if ($this->logid == 0) {
             $this->setLogEntry($sekolah);
         }
@@ -133,17 +213,32 @@ class Messenger
 
         if ($this->provider == "local") {
 
-            $param = "?username=" . $this->user . "&password=" . $this->password . "&to="
-                    . $this->phonenumber . "&text=" . urlencode($this->message);
+            $param = "?username="
+                . $this->user
+                . "&password="
+                . $this->password
+                . "&to="
+                . $this->phonenumber
+                . "&text="
+                . urlencode($this->message)
+            ;
 
             if ($this->report == "1") {
                 $this
-                        ->setDeliveryReportURL(
-                                $this->container->get('router')
-                                        ->generate("localapi_logsmskeluar_dlr_update",
-                                                array(
-                                                    'logid' => $this->logid, 'status' => "%d", 'time' => "%T"
-                                                ), UrlGeneratorInterface::ABSOLUTE_URL));
+                    ->setDeliveryReportURL(
+                        $this
+                            ->router
+                            ->generate(
+                                "localapi_logsmskeluar_dlr_update",
+                                [
+                                    'logid' => $this->logid,
+                                    'status' => "%d",
+                                    'time' => "%T"
+                                ],
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            )
+                    )
+                ;
 
                 $param .= "&dlr-mask=7&dlr-url=" . urlencode($this->deliveryReportURL);
             }
@@ -152,31 +247,47 @@ class Messenger
 
             curl_setopt($ch, CURLOPT_URL, $url);
             $hasil = curl_exec($ch);
+
             $this->updateLogHasilAPI($url, $hasil);
 
         } elseif ($this->provider == "rajasms") {
 
-            $param = "?nohp=" . $this->phonenumber . "&pesan=" . urlencode($this->message) . "&key="
-                    . $this->apikey;
+            $param = "?nohp="
+                . $this->phonenumber
+                . "&pesan="
+                . urlencode($this->message)
+                . "&key="
+                . $this->apikey
+            ;
+
             $url = $this->scheme . "://" . $this->host . $this->resource . $param;
 
             curl_setopt($ch, CURLOPT_URL, $url);
             $hasil = curl_exec($ch);
+
             $this->updateLogHasilAPI($url, $hasil);
 
         } elseif ($this->provider == "zenziva") {
 
-            $param = "?userkey=" . $this->user . "&passkey=" . $this->password . "&nohp="
-                    . $this->phonenumber . "&pesan=" . urlencode($this->message);
+            $param = "?userkey="
+                . $this->user
+                . "&passkey="
+                . $this->password
+                . "&nohp="
+                . $this->phonenumber
+                . "&pesan="
+                . urlencode($this->message)
+            ;
+
             $url = $this->scheme . "://" . $this->host . $this->resource . $param;
 
             curl_setopt($ch, CURLOPT_URL, $url);
             $hasil = curl_exec($ch);
+
             $this->updateLogHasilAPI($url, $hasil);
 
         }
 
         curl_close($ch);
-
     }
 }
