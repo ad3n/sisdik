@@ -49,6 +49,33 @@ class MesinKehadiran
     private $aktif = true;
 
     /**
+     * @ORM\Column(name="waktu_hapus_harian", type="string", length=50, nullable=true)
+     * @Expose
+     * @SerializedName("waktu_hapus_harian")
+     *
+     * @var string
+     */
+    private $waktuHapusHarian;
+
+    /**
+     * @ORM\Column(name="waktu_cadang_harian", type="string", length=50, nullable=true)
+     * @Expose
+     * @SerializedName("waktu_cadang_harian")
+     *
+     * @var string
+     */
+    private $waktuCadangHarian;
+
+    /**
+     * @ORM\Column(name="waktu_tertib_harian", type="string", length=50, nullable=true)
+     * @Expose
+     * @SerializedName("waktu_tertib_harian")
+     *
+     * @var string
+     */
+    private $waktuTertibHarian;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
@@ -112,6 +139,54 @@ class MesinKehadiran
     public function getAktif()
     {
         return $this->aktif;
+    }
+
+    /**
+     * @param string $waktuHapusHarian
+     */
+    public function setWaktuHapusHarian($waktuHapusHarian)
+    {
+        $this->waktuHapusHarian = $waktuHapusHarian;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWaktuHapusHarian()
+    {
+        return $this->waktuHapusHarian;
+    }
+
+    /**
+     * @param string $waktuCadangHarian
+     */
+    public function setWaktuCadangHarian($waktuCadangHarian)
+    {
+        $this->waktuCadangHarian = $waktuCadangHarian;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWaktuCadangHarian()
+    {
+        return $this->waktuCadangHarian;
+    }
+
+    /**
+     * @param string $waktuTertibHarian
+     */
+    public function setWaktuTertibHarian($waktuTertibHarian)
+    {
+        $this->waktuTertibHarian = $waktuTertibHarian;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWaktuTertibHarian()
+    {
+        return $this->waktuTertibHarian;
     }
 
     /**
