@@ -1,37 +1,24 @@
 <?php
-
 namespace Fast\SisdikBundle\Translator;
 
-use JMS\TranslationBundle\Exception\RuntimeException;
 use JMS\TranslationBundle\Model\FileSource;
 use JMS\TranslationBundle\Model\Message;
-use JMS\TranslationBundle\Annotation\Meaning;
-use JMS\TranslationBundle\Annotation\Desc;
-use JMS\TranslationBundle\Annotation\Ignore;
-use JMS\TranslationBundle\Translation\Extractor\FileVisitorInterface;
 use JMS\TranslationBundle\Model\MessageCatalogue;
-use JMS\TranslationBundle\Logger\LoggerAwareInterface;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use JMS\TranslationBundle\Translation\Extractor\FileVisitorInterface;
 
-class EntityExtractor implements LoggerAwareInterface, FileVisitorInterface, \PHPParser_NodeVisitor
+/**
+ * Mengekstrak scalar string dari entity dengan pola string terpisah titik, contoh: label.hari.senin
+ */
+class EntityExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
 {
     private $traverser;
     private $catalogue;
     private $file;
-    private $logger;
 
     public function __construct()
     {
         $this->traverser = new \PHPParser_NodeTraverser();
         $this->traverser->addVisitor($this);
-    }
-
-    /**
-     * @param \Symfony\Component\HttpKernel\Log\LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
     }
 
     public function enterNode(\PHPParser_Node $node)

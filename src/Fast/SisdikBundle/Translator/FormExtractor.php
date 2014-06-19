@@ -1,5 +1,4 @@
 <?php
-
 namespace Fast\SisdikBundle\Translator;
 
 use Doctrine\Common\Annotations\DocParser;
@@ -11,7 +10,6 @@ use JMS\TranslationBundle\Annotation\Desc;
 use JMS\TranslationBundle\Annotation\Ignore;
 use JMS\TranslationBundle\Model\MessageCatalogue;
 use JMS\TranslationBundle\Translation\Extractor\FileVisitorInterface;
-use JMS\TranslationBundle\Logger\LoggerAwareInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class FormExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
@@ -47,6 +45,7 @@ class FormExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
             $name = strtolower($node->name);
             if ('setdefaults' === $name || 'replacedefaults' === $name) {
                 $this->parseDefaultsCall($name, $node);
+
                 return;
             }
         }
@@ -74,7 +73,7 @@ class FormExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
                     continue;
                 }
 
-                if ('help_block' !== $item->key->value && 'attr' !== $item->key->value ) {
+                if ('help_block' !== $item->key->value && 'attr' !== $item->key->value) {
                     continue;
                 }
 
@@ -107,7 +106,6 @@ class FormExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
 
             $var = $var->var;
         }
-
 
         if (!$var instanceof \PHPParser_Node_Expr_Variable) {
             return;
@@ -152,9 +150,9 @@ class FormExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
             foreach ($this->docParser->parse($docComment, 'file '.$this->file.' near line '.$item->value->getLine()) as $annot) {
                 if ($annot instanceof Ignore) {
                     $ignore = true;
-                } else if ($annot instanceof Desc) {
+                } elseif ($annot instanceof Desc) {
                     $desc = $annot->text;
-                } else if ($annot instanceof Meaning) {
+                } elseif ($annot instanceof Meaning) {
                     $meaning = $annot->text;
                 }
             }
