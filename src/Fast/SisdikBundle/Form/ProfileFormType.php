@@ -1,23 +1,39 @@
 <?php
 namespace Fast\SisdikBundle\Form;
+
+use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class ProfileFormType extends BaseType
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
-    public function __construct(ContainerInterface $container) {
+    /**
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
-    protected function buildUserForm(FormBuilderInterface $builder, array $options) {
+    protected function buildUserForm(FormBuilderInterface $builder, array $options)
+    {
         $securityContext = $this->container->get('security.context');
+
+        $definedRoles = $this->container->getParameter('security.role_hierarchy.roles');
+
         $otherthanstudents = '';
-        foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
+        foreach ($definedRoles as $keys => $values) {
             if ($keys == 'ROLE_SISWA' || $keys == 'ROLE_USER') {
                 continue;
             }
@@ -25,63 +41,73 @@ class ProfileFormType extends BaseType
         }
         $otherthanstudents = preg_replace('/, $/', '', $otherthanstudents);
 
-        if ($securityContext
-                ->isGranted(
-                        array(
-                            new Expression("hasAnyRole($otherthanstudents)")
-                        ))) {
+        if ($securityContext->isGranted([new Expression("hasAnyRole($otherthanstudents)")])) {
             $builder
-                    ->add('username', null,
-                            array(
-                                'required' => true
-                            ));
+                ->add('username', null, [
+                    'required' => true,
+                ])
+            ;
         }
+
         $builder
-                ->add('email', 'email',
-                        array(
-                            'required' => true
-                        ))
-                ->add('name', null,
-                        array(
-                            'required' => true, 'label' => 'label.name.full'
-                        ));
+            ->add('email', 'email', [
+                'required' => true,
+            ])
+            ->add('name', null, [
+                'required' => true,
+                'label' => 'label.name.full',
+            ])
+        ;
 
         if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
+            foreach ($definedRoles as $keys => $values) {
                 $roles[$keys] = str_replace('_', ' ', $keys);
             }
+
             $builder
-                    ->add('roles', 'choice',
-                            array(
-                                    'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
-                                    'expanded' => true,
-                            ));
+                ->add('roles', 'choice', [
+                    'choices' => $roles,
+                    'label' => 'label.roles',
+                    'multiple' => true,
+                    'expanded' => true,
+                ])
+            ;
         } elseif ($securityContext->isGranted('ROLE_ADMIN')) {
-            foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
-                if ($keys == 'ROLE_SUPER_ADMIN' || $keys == 'ROLE_USER' || $keys == 'ROLE_SISWA'
-                        || $keys == 'ROLE_PANITIA_PSB' || $keys == 'ROLE_KETUA_PANITIA_PSB') {
+            foreach ($definedRoles as $keys => $values) {
+                if (
+                    $keys == 'ROLE_SUPER_ADMIN'
+                    || $keys == 'ROLE_USER'
+                    || $keys == 'ROLE_SISWA'
+                    || $keys == 'ROLE_PANITIA_PSB'
+                    || $keys == 'ROLE_KETUA_PANITIA_PSB'
+                ) {
                     continue;
                 }
                 $roles[$keys] = str_replace('_', ' ', $keys);
             }
+
             $builder
-                    ->add('roles', 'choice',
-                            array(
-                                    'choices' => $roles, 'label' => 'label.roles', 'multiple' => true,
-                                    'expanded' => true,
-                            ));
+                ->add('roles', 'choice', [
+                    'choices' => $roles,
+                    'label' => 'label.roles',
+                    'multiple' => true,
+                    'expanded' => true,
+                ])
+            ;
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
-                ->setDefaults(
-                        array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\User',
-                        ));
+            ->setDefaults([
+                'data_class' => 'Fast\SisdikBundle\Entity\User',
+            ])
+        ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_profile';
     }
 }

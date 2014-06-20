@@ -7,7 +7,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class PilihanLayananSmsSearchType extends AbstractType
 {
     /**
@@ -71,16 +75,23 @@ class PilihanLayananSmsSearchType extends AbstractType
 
     private function buildServiceChoices()
     {
-        $choices = array_merge(['' => 'label.semua.layanan'], PilihanLayananSms::getDaftarLayananPendaftaran(), PilihanLayananSms::getDaftarLayananLaporan(), PilihanLayananSms::getDaftarLayananKehadiran());
+        $choices = array_merge(
+            ['' => 'label.semua.layanan'],
+            PilihanLayananSms::getDaftarLayananPendaftaran(),
+            PilihanLayananSms::getDaftarLayananLaporan(),
+            PilihanLayananSms::getDaftarLayananKehadiran()
+        );
 
         return $choices;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-            'csrf_protection' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'csrf_protection' => false,
+            ])
+        ;
     }
 
     public function getName()

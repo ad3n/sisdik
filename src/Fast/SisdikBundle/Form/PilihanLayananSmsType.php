@@ -7,10 +7,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class PilihanLayananSmsType extends AbstractType
 {
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -21,36 +32,46 @@ class PilihanLayananSmsType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('t')
-            ->from('FastSisdikBundle:Sekolah', 't')
-            ->orderBy('t.nama', 'ASC');
-        $builder->add('sekolah', 'entity', array(
-            'class' => 'FastSisdikBundle:Sekolah',
-            'label' => 'label.school',
-            'multiple' => false,
-            'expanded' => false,
-            'property' => 'nama',
-            'empty_value' => false,
-            'required' => true,
-            'query_builder' => $querybuilder
-        ));
-        $builder->add('jenisLayanan', 'choice', array(
-            'choices' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(), PilihanLayananSms::getDaftarLayananLaporan(), PilihanLayananSms::getDaftarLayananKehadiran()),
-            'required' => true,
-            'label' => 'label.layanansms.jenis'
-        ))->add('status', 'checkbox', array(
-            'required' => false,
-            'label' => 'label.aktif',
-            'widget_checkbox_label' => 'widget',
-            'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
-        ));
+            ->select('sekolah')
+            ->from('FastSisdikBundle:Sekolah', 'sekolah')
+            ->orderBy('sekolah.nama', 'ASC')
+        ;
+        $builder
+            ->add('sekolah', 'entity', [
+                'class' => 'FastSisdikBundle:Sekolah',
+                'label' => 'label.school',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'empty_value' => false,
+                'required' => true,
+                'query_builder' => $querybuilder,
+            ])
+            ->add('jenisLayanan', 'choice', [
+                'choices' => array_merge(
+                    PilihanLayananSms::getDaftarLayananPendaftaran(),
+                    PilihanLayananSms::getDaftarLayananLaporan(),
+                    PilihanLayananSms::getDaftarLayananKehadiran()
+                ),
+                'required' => true,
+                'label' => 'label.layanansms.jenis',
+            ])
+            ->add('status', 'checkbox', [
+                'required' => false,
+                'label' => 'label.aktif',
+                'widget_checkbox_label' => 'widget',
+                'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
+            ])
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Fast\SisdikBundle\Entity\PilihanLayananSms'
-        ));
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Fast\SisdikBundle\Entity\PilihanLayananSms',
+            ])
+        ;
     }
 
     public function getName()
