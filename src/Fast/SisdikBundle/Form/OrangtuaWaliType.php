@@ -1,118 +1,140 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class OrangtuaWaliType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-                ->add('nama', null,
-                        array(
-                                'label_render' => true, 'required' => true,
-                                'label' => 'label.name.parent.or.guardian',
-                        ))
-                ->add('ponsel', null,
-                        array(
-                                'label' => 'label.mobilephone.parent', 'required' => true,
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ),
-                        ))
-                ->add('tempatLahir', null,
-                        array(
-                                'label' => 'label.birthplace',
-                                'attr' => array(
-                                    'class' => 'large'
-                                )
-                        ))
-                ->add('tanggalLahir', 'birthday',
-                        array(
-                                'label' => 'label.birthday', 'widget' => 'single_text',
-                                'format' => 'dd/MM/yyyy',
-                                'attr' => array(
-                                    'class' => 'date small'
-                                ), 'required' => false
-                        ))
-                ->add('kewarganegaraan', null,
-                        array(
-                                'label' => 'label.nationality',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'required' => false
-                        ))
-                ->add('hubunganDenganSiswa', 'choice',
-                        array(
-                                'choices' => $this->buildRelationsToStudent(),
-                                'label' => 'label.relation.tostudent', 'required' => true
-                        ))
-                ->add('pendidikanTertinggi', 'choice',
-                        array(
-                                'choices' => $this->buildEducationList(),
-                                'label' => 'label.highest.education',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                ), 'required' => true
-                        ))
-                ->add('pekerjaan', null,
-                        array(
-                                'label' => 'label.job',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                )
-                        ))
-                ->add('alamat', 'textarea',
-                        array(
-                                'label' => 'label.address',
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                ),
-                        ))
-                ->add('penghasilanBulanan', 'money',
-                        array(
-                                'currency' => 'IDR', 'required' => false, 'precision' => 0, 'grouping' => 3,
-                                'attr' => array(
-                                    'class' => 'medium', 'autocomplete' => 'off'
-                                ), 'label' => 'label.salary.monthly',
-                        ))
-                ->add('penghasilanTahunan', 'money',
-                        array(
-                                'currency' => 'IDR', 'required' => false, 'precision' => 0, 'grouping' => 3,
-                                'attr' => array(
-                                    'class' => 'medium', 'autocomplete' => 'off'
-                                ), 'label' => 'label.salary.annually',
-                        ))
-                ->add('keterangan', 'textarea',
-                        array(
-                                'label' => 'label.description',
-                                'attr' => array(
-                                    'class' => 'xlarge'
-                                ), 'required' => false,
-                        ));
+            ->add('nama', null, [
+                'label_render' => true,
+                'required' => true,
+                'label' => 'label.name.parent.or.guardian',
+            ])
+            ->add('ponsel', null, [
+                'label' => 'label.mobilephone.parent',
+                'required' => true,
+                'attr' => [
+                    'class' => 'medium',
+                ],
+            ])
+            ->add('tempatLahir', null, [
+                'label' => 'label.birthplace',
+                'attr' => [
+                    'class' => 'large',
+                ],
+            ])
+            ->add('tanggalLahir', 'birthday', [
+                'label' => 'label.birthday',
+                'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'attr' => [
+                    'class' => 'date small',
+                ],
+                'required' => false
+            ])
+            ->add('kewarganegaraan', null, [
+                'label' => 'label.nationality',
+                'attr' => [
+                    'class' => 'medium',
+                ],
+                'required' => false,
+            ])
+            ->add('hubunganDenganSiswa', 'choice', [
+                'choices' => $this->buildRelationsToStudent(),
+                'label' => 'label.relation.tostudent',
+                'required' => true,
+            ])
+            ->add('pendidikanTertinggi', 'choice', [
+                'choices' => $this->buildEducationList(),
+                'label' => 'label.highest.education',
+                'attr' => [
+                    'class' => 'medium',
+                ],
+                'required' => true,
+            ])
+            ->add('pekerjaan', null, [
+                'label' => 'label.job',
+                'attr' => [
+                    'class' => 'medium',
+                ],
+            ])
+            ->add('alamat', 'textarea', [
+                'label' => 'label.address',
+                'attr' => [
+                    'class' => 'xlarge',
+                ],
+            ])
+            ->add('penghasilanBulanan', 'money', [
+                'currency' => 'IDR',
+                'required' => false,
+                'precision' => 0,
+                'grouping' => 3,
+                'attr' => [
+                    'class' => 'medium',
+                    'autocomplete' => 'off',
+                ],
+                'label' => 'label.salary.monthly',
+            ])
+            ->add('penghasilanTahunan', 'money', [
+                'currency' => 'IDR',
+                'required' => false,
+                'precision' => 0,
+                'grouping' => 3,
+                'attr' => [
+                    'class' => 'medium',
+                    'autocomplete' => 'off',
+                ],
+                'label' => 'label.salary.annually',
+            ])
+            ->add('keterangan', 'textarea', [
+                'label' => 'label.description',
+                'attr' => [
+                    'class' => 'xlarge',
+                ],
+                'required' => false,
+            ])
+        ;
     }
 
     private function buildEducationList() {
-        return array(
-                'SD' => 'SD', 'SLTP' => 'SLTP', 'SLTA' => 'SLTA', 'Diploma' => 'Diploma 1/2/3', 'S1' => 'S1',
-                'S2' => 'S2', 'S3' => 'S3'
-        );
+        return [
+            'SD' => 'SD',
+            'SLTP' => 'SLTP',
+            'SLTA' => 'SLTA',
+            'Diploma' => 'Diploma 1/2/3',
+            'S1' => 'S1',
+            'S2' => 'S2',
+            'S3' => 'S3',
+        ];
     }
 
     private function buildRelationsToStudent() {
-        return array(
-                'Ayah' => 'Ayah', 'Ibu' => 'Ibu', 'Kakek' => 'Kakek', 'Nenek' => 'Nenek', 'Paman' => 'Paman',
-                'Bibi' => 'Bibi', 'Saudara Kandung' => 'Saudara Kandung', 'Lain-lain' => 'Lain-lain'
-        );
+        return [
+            'Ayah' => 'Ayah',
+            'Ibu' => 'Ibu',
+            'Kakek' => 'Kakek',
+            'Nenek' => 'Nenek',
+            'Paman' => 'Paman',
+            'Bibi' => 'Bibi',
+            'Saudara Kandung' => 'Saudara Kandung',
+            'Lain-lain' => 'Lain-lain',
+        ];
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
         $resolver
-                ->setDefaults(
-                        array(
-                            'data_class' => 'Fast\SisdikBundle\Entity\OrangtuaWali'
-                        ));
+            ->setDefaults([
+                'data_class' => 'Fast\SisdikBundle\Entity\OrangtuaWali',
+            ])
+        ;
     }
 
     public function getName() {
