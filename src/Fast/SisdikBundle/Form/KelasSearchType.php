@@ -6,7 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class KelasSearchType extends AbstractType
 {
     /**
@@ -24,11 +28,7 @@ class KelasSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container
-            ->get('security.context')
-            ->getToken()
-            ->getUser()
-        ;
+        $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
@@ -64,7 +64,7 @@ class KelasSearchType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'csrf_protection' => false
+                'csrf_protection' => false,
             ])
         ;
     }
