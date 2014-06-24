@@ -66,7 +66,6 @@ class PembayaranSekaliType extends AbstractType
             ),
             'label' => 'label.applicant.oncefee.transaction',
             'options' => array(
-                'widget_control_group' => false,
                 'label_render' => false
             ),
             'label_render' => false,
