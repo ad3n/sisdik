@@ -5,7 +5,11 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SiswaKelasTemplateMapType extends AbstractType
 {
     /**
