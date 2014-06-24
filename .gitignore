@@ -10,7 +10,6 @@ app/cache/*
 app/logs/*
 app/fingerprintlogs
 app/sessions/*
-app/config/parameters.ini
 app/config/parameters.yml
 app/lock/*
 build/
