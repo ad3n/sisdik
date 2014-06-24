@@ -6,7 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SimpleUserSearchType extends AbstractType
 {
     /**
@@ -24,26 +28,28 @@ class SimpleUserSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('searchoption', 'choice', [
-            'choices' => $this->buildChoices(),
-            'multiple' => false,
-            'expanded' => false,
-            'required' => false,
-            'attr' => [
-                'class' => 'large'
-            ],
-            'label_render' => false,
-            'horizontal' => false,
-        ]);
-        $builder->add('searchkey', null, [
-            'label' => 'label.searchkey',
-            'required' => false,
-            'attr' => [
-                'class' => 'medium search-query',
-            ],
-            'label_render' => false,
-            'horizontal' => false,
-        ]);
+        $builder
+            ->add('searchoption', 'choice', [
+                'choices' => $this->buildChoices(),
+                'multiple' => false,
+                'expanded' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'large',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('searchkey', null, [
+                'label' => 'label.searchkey',
+                'required' => false,
+                'attr' => [
+                    'class' => 'medium search-query',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+        ;
     }
 
     private function buildChoices()
@@ -67,9 +73,11 @@ class SimpleUserSearchType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-            'csrf_protection' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'csrf_protection' => false,
+            ])
+        ;
     }
 
     public function getName()

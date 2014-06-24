@@ -1,13 +1,17 @@
 <?php
-
 namespace Fast\SisdikBundle\Form;
+
 use Fast\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SiswaApplicantReportPaymentSearchType extends AbstractType
 {
     /**
@@ -18,11 +22,13 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
     /**
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
@@ -159,7 +165,8 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
         $builder->addEventSubscriber(new JumlahBayarSubscriber($this->container->get('translator')));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
             ->setDefaults([
                 'csrf_protection' => false,
@@ -167,7 +174,8 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'searchform';
     }
 }
