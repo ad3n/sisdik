@@ -6,7 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SiswaSearchType extends AbstractType
 {
     /**
@@ -38,7 +42,8 @@ class SiswaSearchType extends AbstractType
         ;
         $builder
             ->add('tahun', 'entity', [
-                'class' => 'FastSisdikBundle:Tahun', 'label' => 'label.year.entry',
+                'class' => 'FastSisdikBundle:Tahun',
+                'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'tahun',
