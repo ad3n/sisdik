@@ -847,17 +847,19 @@ class SiswaController extends Controller
                         $ortu->setAktif(true);
                         $ortu->{'set' . ucfirst($childfield)}(trim($value));
                     } elseif ($valuefield == 'sekolahAsal') {
-                        $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
-                                ->from('FastSisdikBundle:SekolahAsal', 'sekolahasal')
-                                ->where('sekolahasal.nama LIKE :nama')->setParameter('nama', "%$value%");
-                        $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
-                        if (count($resultSekolahAsal) >= 1) {
-                            $sekolahAsal = $resultSekolahAsal[0];
-                        } else {
-                            $sekolahAsal = new SekolahAsal();
-                            $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                        if (trim($value) != '') {
+                            $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
+                                    ->from('FastSisdikBundle:SekolahAsal', 'sekolahasal')
+                                    ->where('sekolahasal.nama LIKE :nama')->setParameter('nama', "%$value%");
+                            $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
+                            if (count($resultSekolahAsal) >= 1) {
+                                $sekolahAsal = $resultSekolahAsal[0];
+                            } else {
+                                $sekolahAsal = new SekolahAsal();
+                                $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                                $sekolahAsal->setSekolah($sekolah);
+                            }
                         }
-
                     } elseif ($valuefield == 'tanggalLahir') {
                         if ($value) {
                             $entity->{'set' . ucfirst($valuefield)}(new \DateTime($value));
