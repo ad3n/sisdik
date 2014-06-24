@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
  * Membentuk label bidang form penempatan siswa di suatu kelas
@@ -51,10 +52,11 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
         $data = $event->getData();
         $form = $event->getForm();
         $em = $this->container->get('doctrine')->getManager();
+        /* @var $translator Translator */
         $translator = $this->container->get('translator');
 
         if (is_array($data)) {
-            $label = $translator->transChoice('label.lembar.kerja')
+            $label = $translator->trans('label.lembar.kerja')
                 . ' '
                 . ($data['index'] + 1)
                 . ': '
@@ -128,6 +130,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
         $data = $event->getData();
         $form = $event->getForm();
         $em = $this->container->get('doctrine')->getManager();
+        /* @var $translator Translator */
         $translator = $this->container->get('translator');
 
         if (is_array($data)) {

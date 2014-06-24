@@ -195,8 +195,8 @@ class PenempatanSiswaKelasController extends Controller
                                 'required' => true, 'allow_add' => true, 'allow_delete' => true,
                                 'by_reference' => false,
                                 'options' => array(
-                                    'widget_control_group' => false, 'label_render' => false,
-                                ), 'label_render' => false, 'widget_control_group' => false,
+                                    'label_render' => false,
+                                ), 'label_render' => false,
                         ));
 
         return array(
@@ -231,8 +231,8 @@ class PenempatanSiswaKelasController extends Controller
                                 'required' => true, 'allow_add' => true, 'allow_delete' => true,
                                 'by_reference' => false,
                                 'options' => array(
-                                    'widget_control_group' => false, 'label_render' => false,
-                                ), 'label_render' => false, 'widget_control_group' => false,
+                                    'label_render' => false,
+                                ), 'label_render' => false,
                         ));
 
         $form->submit($this->getRequest());
