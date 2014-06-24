@@ -5,12 +5,9 @@ use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
-use JMS\DiExtraBundle\Annotation\FormType;
 
-/**
- * @FormType
- */
 class ProfileFormType extends BaseType
 {
     /**
@@ -19,21 +16,29 @@ class ProfileFormType extends BaseType
     private $container;
 
     /**
+     * @var SecurityContext
+     */
+    private $securityContext;
+
+    /**
+     * @var array
+     */
+    private $definedRoles;
+
+    /**
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->securityContext = $this->container->get('security.context');
+        $this->definedRoles = $this->container->getParameter('security.role_hierarchy.roles');
     }
 
     protected function buildUserForm(FormBuilderInterface $builder, array $options)
     {
-        $securityContext = $this->container->get('security.context');
-
-        $definedRoles = $this->container->getParameter('security.role_hierarchy.roles');
-
         $otherthanstudents = '';
-        foreach ($definedRoles as $keys => $values) {
+        foreach ($this->definedRoles as $keys => $values) {
             if ($keys == 'ROLE_SISWA' || $keys == 'ROLE_USER') {
                 continue;
             }
@@ -41,7 +46,7 @@ class ProfileFormType extends BaseType
         }
         $otherthanstudents = preg_replace('/, $/', '', $otherthanstudents);
 
-        if ($securityContext->isGranted([new Expression("hasAnyRole($otherthanstudents)")])) {
+        if ($this->securityContext->isGranted([new Expression("hasAnyRole($otherthanstudents)")])) {
             $builder
                 ->add('username', null, [
                     'required' => true,
@@ -59,9 +64,10 @@ class ProfileFormType extends BaseType
             ])
         ;
 
-        if ($securityContext->isGranted('ROLE_SUPER_ADMIN')) {
-            foreach ($definedRoles as $keys => $values) {
-                $roles[$keys] = str_replace('_', ' ', $keys);
+        if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+            foreach ($this->definedRoles as $keys => $values) {
+                $string = str_replace('ROLE_', ' ', $keys);
+                $roles[$keys] = str_replace('_', ' ', $string);
             }
 
             $builder
@@ -72,8 +78,8 @@ class ProfileFormType extends BaseType
                     'expanded' => true,
                 ])
             ;
-        } elseif ($securityContext->isGranted('ROLE_ADMIN')) {
-            foreach ($definedRoles as $keys => $values) {
+        } elseif ($this->securityContext->isGranted('ROLE_ADMIN')) {
+            foreach ($this->definedRoles as $keys => $values) {
                 if (
                     $keys == 'ROLE_SUPER_ADMIN'
                     || $keys == 'ROLE_USER'
@@ -83,7 +89,8 @@ class ProfileFormType extends BaseType
                 ) {
                     continue;
                 }
-                $roles[$keys] = str_replace('_', ' ', $keys);
+                $string = str_replace('ROLE_', ' ', $keys);
+                $roles[$keys] = str_replace('_', ' ', $string);
             }
 
             $builder
