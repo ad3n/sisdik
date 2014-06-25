@@ -6,12 +6,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class TingkatType extends AbstractType
 {
-
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -19,46 +28,48 @@ class TingkatType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')
-            ->getToken()
-            ->getUser();
+        $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
-        $builder->add('sekolah', new EntityHiddenType($em), array(
-            'required' => true,
-            'class' => 'FastSisdikBundle:Sekolah',
-            'data' => $sekolah->getId()
-        ))
-            ->add('kode', null, array(
-            'required' => true,
-            'attr' => array(
-                'class' => 'small'
-            )
-        ))
-            ->add('nama', null, array(
-            'required' => false,
-            'attr' => array(
-                'class' => 'large'
-            )
-        ))
-            ->add('urutan', 'choice', array(
-            'choices' => $this->buildOrderChoices(),
-            'required' => true,
-            'multiple' => false,
-            'expanded' => false,
-            'attr' => array(
-                'class' => 'small'
-            )
-        ));
+        $builder
+            ->add('sekolah', new EntityHiddenType($em), [
+                'required' => true,
+                'class' => 'FastSisdikBundle:Sekolah',
+                'data' => $sekolah->getId(),
+            ])
+            ->add('kode', null, [
+                'required' => true,
+                'attr' => [
+                    'class' => 'small',
+                ],
+            ])
+            ->add('nama', null, [
+                'required' => false,
+                'attr' => [
+                    'class' => 'large',
+                ],
+            ])
+            ->add('urutan', 'choice', [
+                'choices' => $this->buildOrderChoices(),
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
+                'attr' => [
+                    'class' => 'small',
+                ],
+            ])
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Fast\SisdikBundle\Entity\Tingkat'
-        ));
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Fast\SisdikBundle\Entity\Tingkat',
+            ])
+        ;
     }
 
     public function buildOrderChoices()

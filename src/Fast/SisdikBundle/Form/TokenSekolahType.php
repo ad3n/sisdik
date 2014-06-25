@@ -37,8 +37,7 @@ class TokenSekolahType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $querybuilder = $this
-            ->entityManager
+        $querybuilder = $this->entityManager
             ->createQueryBuilder()
             ->select('s')
             ->from('FastSisdikBundle:Sekolah', 's')

@@ -1,23 +1,40 @@
 <?php
 namespace Fast\SisdikBundle\Form;
+
 use Fast\SisdikBundle\Entity\Sekolah;
+use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class UserRegisterFormType extends BaseType
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
+
+    /**
+     * @var integer
+     */
     private $registrationtype;
 
-    public function __construct(ContainerInterface $container, $registrationtype = 1) {
+    /**
+     * @param ContainerInterface $container
+     * @param number             $registrationtype
+     */
+    public function __construct(ContainerInterface $container, $registrationtype = 1)
+    {
         $this->container = $container;
         $this->registrationtype = $registrationtype;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('username', null, [
                 'required' => true,
@@ -129,7 +146,8 @@ class UserRegisterFormType extends BaseType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
             ->setDefaults([
                 'data_class' => 'Fast\SisdikBundle\Entity\User',
@@ -140,7 +158,8 @@ class UserRegisterFormType extends BaseType
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_userregister';
     }
 }

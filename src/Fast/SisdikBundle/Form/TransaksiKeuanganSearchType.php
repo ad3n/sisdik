@@ -5,7 +5,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class TransaksiKeuanganSearchType extends AbstractType
 {
     /**
@@ -26,7 +30,7 @@ class TransaksiKeuanganSearchType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         $builder
-            ->add('dariTanggal', 'date',[
+            ->add('dariTanggal', 'date', [
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
                 'attr' => [

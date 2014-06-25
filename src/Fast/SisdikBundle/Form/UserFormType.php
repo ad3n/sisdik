@@ -25,14 +25,16 @@ class UserFormType extends AbstractType
 
     /**
      * @param ContainerInterface $container
-     * @param integer $formoption
+     * @param integer            $formoption
      */
-    public function __construct(ContainerInterface $container, $formoption = 0) {
+    public function __construct(ContainerInterface $container, $formoption = 0)
+    {
         $this->container = $container;
         $this->formoption = $formoption;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('username', null, [
                 'required' => true,
@@ -75,9 +77,9 @@ class UserFormType extends AbstractType
                     'expanded' => true,
                 ])
             ;
-        } else if ($this->formoption == 2) {
+        } elseif ($this->formoption == 2) {
             // role siswa, nothing
-        } else if ($this->formoption == 3) {
+        } elseif ($this->formoption == 3) {
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
                 if ($keys == 'ROLE_USER'
                         || $keys == 'ROLE_SISWA'
@@ -145,7 +147,8 @@ class UserFormType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
             ->setDefaults([
                 'data_class' => 'Fast\SisdikBundle\Entity\User',
@@ -153,7 +156,8 @@ class UserFormType extends AbstractType
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_user';
     }
 }
