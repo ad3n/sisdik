@@ -68,6 +68,12 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
+            new Expression('hasRole("ROLE_SISWA")')
+        ])) {
+            $supersettings = $menu->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => '_index']);
+        }
+
+        if ($securityContext->isGranted([
             new Expression('hasRole("ROLE_ADMIN")')
         ])) {
             $settings = $menu->addChild(
