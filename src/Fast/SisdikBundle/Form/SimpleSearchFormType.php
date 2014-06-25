@@ -4,10 +4,15 @@ namespace Fast\SisdikBundle\Form;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SimpleSearchFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('searchkey', null, [
                 'label' => 'label.searchkey',
@@ -22,7 +27,8 @@ class SimpleSearchFormType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
             ->setDefaults([
                 'csrf_protection' => false,
@@ -30,7 +36,8 @@ class SimpleSearchFormType extends AbstractType
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'searchform';
     }
 }

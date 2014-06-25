@@ -5,7 +5,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SiswaKelasTemplateInitType extends AbstractType
 {
     /**

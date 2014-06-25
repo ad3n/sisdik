@@ -6,7 +6,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SimpleTahunSearchType extends AbstractType
 {
     /**
@@ -63,9 +67,11 @@ class SimpleTahunSearchType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-            'csrf_protection' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'csrf_protection' => false,
+            ])
+        ;
     }
 
     public function getName()

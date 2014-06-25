@@ -2,14 +2,14 @@
 namespace Fast\SisdikBundle\Form;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
-use Fast\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * @FormType
@@ -33,6 +33,7 @@ class SekolahSearchType extends AbstractType
      * })
      *
      * @param EntityManager $entityManager
+     * @param Translator    $translator
      */
     public function __construct(EntityManager $entityManager, Translator $translator)
     {
@@ -42,17 +43,19 @@ class SekolahSearchType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('sekolah', 'choice', [
-            'choices' => $this->buildSchoolChoices(),
-            'multiple' => false,
-            'expanded' => false,
-            'required' => false,
-            'attr' => [
-                'class' => 'large'
-            ],
-            'label_render' => false,
-            'horizontal' => false,
-        ]);
+        $builder
+            ->add('sekolah', 'choice', [
+                'choices' => $this->buildSchoolChoices(),
+                'multiple' => false,
+                'expanded' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'large',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+        ;
     }
 
     /**
@@ -61,6 +64,7 @@ class SekolahSearchType extends AbstractType
     private function buildSchoolChoices()
     {
         $em = $this->entityManager;
+
         $entities = $em->getRepository('FastSisdikBundle:Sekolah')
             ->findBy([], [
                 'nama' => 'ASC'

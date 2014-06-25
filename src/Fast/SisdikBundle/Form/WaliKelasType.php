@@ -8,12 +8,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class WaliKelasType extends AbstractType
 {
-
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
+    /**
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -21,20 +30,20 @@ class WaliKelasType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')
-            ->getToken()
-            ->getUser();
+        $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()
-                ->select('t')
-                ->from('FastSisdikBundle:TahunAkademik', 't')
-                ->where('t.sekolah = :sekolah')
-                ->orderBy('t.urutan', 'DESC')
-                ->setParameter('sekolah', $sekolah);
-            $builder->add('tahunAkademik', 'entity', array(
+
+        $querybuilder = $em->createQueryBuilder()
+            ->select('t')
+            ->from('FastSisdikBundle:TahunAkademik', 't')
+            ->where('t.sekolah = :sekolah')
+            ->orderBy('t.urutan', 'DESC')
+            ->setParameter('sekolah', $sekolah)
+        ;
+        $builder
+            ->add('tahunAkademik', 'entity', [
                 'class' => 'FastSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
@@ -43,20 +52,23 @@ class WaliKelasType extends AbstractType
                 'empty_value' => false,
                 'required' => true,
                 'query_builder' => $querybuilder,
-                'attr' => array(
-                    'class' => 'medium selectyear'
-                )
-            ));
+                'attr' => [
+                    'class' => 'medium selectyear',
+                ],
+            ])
+        ;
 
-            $querybuilder2 = $em->createQueryBuilder()
-                ->select('t')
-                ->from('FastSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')
-                ->where('t.sekolah = :sekolah')
-                ->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')
-                ->setParameter('sekolah', $sekolah);
-            $builder->add('kelas', 'entity', array(
+        $querybuilder2 = $em->createQueryBuilder()
+            ->select('t')
+            ->from('FastSisdikBundle:Kelas', 't')
+            ->leftJoin('t.tingkat', 't2')
+            ->where('t.sekolah = :sekolah')
+            ->orderBy('t2.urutan', 'ASC')
+            ->addOrderBy('t.urutan')
+            ->setParameter('sekolah', $sekolah)
+        ;
+        $builder
+            ->add('kelas', 'entity', [
                 'class' => 'FastSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
@@ -65,25 +77,26 @@ class WaliKelasType extends AbstractType
                 'empty_value' => false,
                 'required' => true,
                 'query_builder' => $querybuilder2,
-                'attr' => array(
-                    'class' => 'large selectclass'
-                )
-            ));
-        }
-
-        $builder->add('nama', null, array(
-            'required' => true,
-            'attr' => array(
-                'class' => 'large'
-            )
-        ));
+                'attr' => [
+                    'class' => 'large selectclass',
+                ],
+            ])
+            ->add('nama', null, [
+                'required' => true,
+                'attr' => [
+                    'class' => 'large',
+                ],
+            ])
+        ;
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Fast\SisdikBundle\Entity\WaliKelas'
-        ));
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Fast\SisdikBundle\Entity\WaliKelas',
+            ])
+        ;
     }
 
     public function getName()

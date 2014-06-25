@@ -1,45 +1,46 @@
 <?php
 namespace Fast\SisdikBundle\Form;
-use Symfony\Component\Form\FormBuilderInterface;
+
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class RegistrationFormType extends BaseType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
-                ->add('username', null,
-                        array(
-                            'required' => true, 'label' => 'label.username'
-                        ))
-                ->add('email', 'email',
-                        array(
-                                'required' => true, 'label' => 'label.email',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                )
-                        ))
-                ->add('plainPassword', 'repeated',
-                        array(
-                                'type' => 'password',
-                                'invalid_message' => 'fos_user.password.notequal',
-                                'options' => array(
-                                    'label' => 'label.password'
-                                )
-                        ));
-        $builder->get('plainPassword')->get('second')->setAttribute('label', 'label.repassword');
+            ->add('username', null, [
+                'required' => true,
+                'label' => 'label.username',
+            ])
+            ->add('email', 'email', [
+                'required' => true,
+                'label' => 'label.email',
+                'attr' => array(
+                    'class' => 'medium',
+                ),
+            ])
+            ->add('plainPassword', 'repeated', [
+                'type' => 'password',
+                'invalid_message' => 'fos_user.password.notequal',
+                'options' => [
+                    'label' => 'label.password',
+                ],
+            ])
+            ->add('name', null, [
+                'required' => true,
+                'label' => 'label.name.full',
+                'attr' => [
+                    'class' => 'medium',
+                ],
+            ])
+        ;
 
-        // add custom field
-        $builder
-                ->add('name', null,
-                        array(
-                                'required' => true, 'label' => 'label.name.full',
-                                'attr' => array(
-                                    'class' => 'medium'
-                                )
-                        ));
+        $builder->get('plainPassword')->get('second')->setAttribute('label', 'label.repassword');
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'fast_sisdikbundle_registration';
     }
 }

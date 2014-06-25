@@ -1,13 +1,15 @@
 <?php
 namespace Fast\SisdikBundle\Form;
 
-use Symfony\Component\Security\Core\SecurityContext;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Fast\SisdikBundle\Entity\Sekolah;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SiswaExportType extends AbstractType
 {
     /**
@@ -25,21 +27,17 @@ class SiswaExportType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container
-            ->get('security.context')
-            ->getToken()
-            ->getUser()
-        ;
+        $user = $this->container->get('security.context')->getToken()->getUser();
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()
-                ->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')
-                ->where('t.sekolah = :sekolah')
-                ->orderBy('t.tahun', 'DESC')
+                ->select('tahun')
+                ->from('FastSisdikBundle:Tahun', 'tahun')
+                ->where('tahun.sekolah = :sekolah')
+                ->orderBy('tahun.tahun', 'DESC')
                 ->setParameter('sekolah', $sekolah)
             ;
             $builder
@@ -66,4 +64,3 @@ class SiswaExportType extends AbstractType
         return 'fast_sisdikbundle_siswaexporttype';
     }
 }
-

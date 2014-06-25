@@ -7,7 +7,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
 
+/**
+ * @FormType
+ */
 class SiswaTahkikSearchType extends AbstractType
 {
     /**
@@ -31,10 +35,10 @@ class SiswaTahkikSearchType extends AbstractType
         $em = $this->container->get('doctrine')->getManager();
 
         $querybuilder1 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('FastSisdikBundle:Gelombang', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.urutan', 'ASC')
+            ->select('gelombang')
+            ->from('FastSisdikBundle:Gelombang', 'gelombang')
+            ->where('gelombang.sekolah = :sekolah')
+            ->orderBy('gelombang.urutan', 'ASC')
             ->setParameter('sekolah', $sekolah->getId())
         ;
         $builder
@@ -139,13 +143,14 @@ class SiswaTahkikSearchType extends AbstractType
                 'horizontal' => false,
             ])
         ;
-//         ->add('kelengkapanDokumen', 'text', [
-//             'required' => false,
-//             'label_render' => false,
-//             'attr' => [
-//                 'class' => 'mini kelengkapan-dokumen',
-//             ],
-//         ]);
+//             ->add('kelengkapanDokumen', 'text', [
+//                 'required' => false,
+//                 'label_render' => false,
+//                 'attr' => [
+//                     'class' => 'mini kelengkapan-dokumen',
+//                 ],
+//             ])
+//         ;
 
         $builder->addEventSubscriber(new JumlahBayarSubscriber($this->container->get('translator')));
     }
