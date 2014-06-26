@@ -68,9 +68,9 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasRole("ROLE_SISWA")')
+            new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')
         ])) {
-            $supersettings = $menu->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => '_index']);
+            $menu->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => '_index']);
         }
 
         if ($securityContext->isGranted([
