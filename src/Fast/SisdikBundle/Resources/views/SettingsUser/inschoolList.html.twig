@@ -52,7 +52,7 @@
             <td data-title="{{ 'label.email'|trans }}">{{ user.email }}</td>
             <td data-title="{{ 'label.roles'|trans }}">
                 {% for role in user.roles %}
-                    {{ role|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}
+                    {{ role|replace({'ROLE_': ''})|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}
                 {% endfor %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

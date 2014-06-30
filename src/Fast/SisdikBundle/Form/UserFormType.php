@@ -66,7 +66,8 @@ class UserFormType extends AbstractType
                 if (!($keys == 'ROLE_USER' || $keys == 'ROLE_SUPER_ADMIN')) {
                     continue;
                 }
-                $roles[$keys] = str_replace('_', ' ', $keys);
+                $string = str_replace('ROLE_', ' ', $keys);
+                $roles[$keys] = str_replace('_', ' ', $string);
             }
 
             $builder
@@ -88,7 +89,8 @@ class UserFormType extends AbstractType
                         || $keys == 'ROLE_KETUA_PANITIA_PSB') {
                     continue;
                 }
-                $roles[$keys] = str_replace('_', ' ', $keys);
+                $string = str_replace('ROLE_', ' ', $keys);
+                $roles[$keys] = str_replace('_', ' ', $string);
             }
 
             $builder

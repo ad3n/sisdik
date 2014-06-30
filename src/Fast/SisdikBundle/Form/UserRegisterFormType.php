@@ -95,7 +95,8 @@ class UserRegisterFormType extends BaseType
                 }
             }
 
-            $roles[$keys] = str_replace('_', ' ', $keys);
+            $string = str_replace('ROLE_', ' ', $keys);
+            $roles[$keys] = str_replace('_', ' ', $string);
         }
         $builder
             ->add('roles', 'choice', [
