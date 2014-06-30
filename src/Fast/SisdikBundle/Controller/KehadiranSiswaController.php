@@ -1,14 +1,22 @@
 <?php
-
 namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\TahunAkademik;
+
 use Fast\SisdikBundle\Form\KehadiranSiswaSmsType;
+use Fast\SisdikBundle\Form\KehadiranSiswaInisiasiType;
+use Fast\SisdikBundle\Form\KehadiranSiswaType;
+use Fast\SisdikBundle\Form\KehadiranSiswaSearchType;
+use Fast\SisdikBundle\Entity\TahunAkademik;
 use Fast\SisdikBundle\Entity\KalenderPendidikan;
 use Fast\SisdikBundle\Entity\SiswaKelas;
+use Fast\SisdikBundle\Entity\Siswa;
+use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Command\InisiasiKehadiranCommand;
-use Fast\SisdikBundle\Form\KehadiranSiswaInisiasiType;
 use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
+use Fast\SisdikBundle\Entity\Sekolah;
+use Fast\SisdikBundle\Entity\KehadiranSiswa;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Fast\SisdikBundle\Entity\PilihanLayananSms;
+use Fast\SisdikBundle\Util\Messenger;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,27 +24,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Form\KehadiranSiswaType;
-use Fast\SisdikBundle\Form\KehadiranSiswaSearchType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * KehadiranSiswa controller.
- *
  * @Route("/studentspresence")
  * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
  */
 class KehadiranSiswaController extends Controller
 {
     /**
-     * Lists all KehadiranSiswa entities.
-     *
      * @Route("/", name="studentspresence")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -48,29 +49,29 @@ class KehadiranSiswaController extends Controller
         $searchform->get('tanggal')->setData($hariIni);
 
         $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
-                ->findOneBy(
-                        array(
-                            'aktif' => true, 'sekolah' => $sekolah->getId(),
-                        ));
+            ->findOneBy([
+                'aktif' => true,
+                'sekolah' => $sekolah->getId(),
+            ])
+        ;
+
         if (!(is_object($tahunAkademik) && $tahunAkademik instanceof TahunAkademik)) {
-            throw $this
-                    ->createNotFoundException(
-                            $this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
+            throw $this->createNotFoundException($this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
         }
 
-        return array(
-            'searchform' => $searchform->createView(), 'tahunAkademik' => $tahunAkademik
-        );
+        return [
+            'searchform' => $searchform->createView(),
+            'tahunAkademik' => $tahunAkademik,
+        ];
     }
 
     /**
-     * Edit KehadiranSiswa entities in a specific date
-     *
      * @Route("/edit", name="studentspresence_edit")
      * @Method("GET")
      * @Template()
      */
-    public function editAction() {
+    public function editAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -78,28 +79,38 @@ class KehadiranSiswaController extends Controller
 
         $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('kehadiran')
-                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')->leftJoin('kehadiran.kelas', 'kelas')
-                ->leftJoin('kehadiran.siswa', 'siswa')->where('kelas.sekolah = :sekolah')
-                ->orderBy('kelas.kode')->addOrderBy('siswa.namaLengkap')
-                ->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kehadiran')
+            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->leftJoin('kehadiran.kelas', 'kelas')
+            ->leftJoin('kehadiran.siswa', 'siswa')
+            ->where('kelas.sekolah = :sekolah')
+            ->orderBy('kelas.kode')
+            ->addOrderBy('siswa.namaLengkap')
+            ->setParameter('sekolah', $sekolah->getId())
+        ;
 
         $searchform->submit($this->getRequest());
         $buildparam = null;
         $kelas = null;
+
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
             $kbmAktif = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
-                    ->findOneBy(
-                            array(
-                                    'kbm' => true, 'sekolah' => $sekolah->getId(),
-                                    'tanggal' => $searchdata['tanggal']
-                            ));
+                ->findOneBy([
+                    'kbm' => true,
+                    'sekolah' => $sekolah->getId(),
+                    'tanggal' => $searchdata['tanggal']
+                ])
+            ;
+
             if (!(is_object($kbmAktif) && $kbmAktif instanceof KalenderPendidikan)) {
-                $this->get('session')->getFlashBag()
-                        ->add('error',
-                                $this->get('translator')->trans('flash.kehadiran.siswa.bukan.hari.kbm.aktif'));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.kehadiran.siswa.bukan.hari.kbm.aktif'))
+                ;
 
                 return $this->redirect($this->generateUrl('studentspresence'));
             }
@@ -112,15 +123,16 @@ class KehadiranSiswaController extends Controller
             } else {
                 $buildparam['tanggal'] = '';
             }
+
             if ($searchdata['searchkey'] != '') {
-                $querybuilder
-                        ->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey");
+                $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey");
                 $querybuilder->setParameter('searchkey', "%{$searchdata['searchkey']}%");
 
                 $buildparam['searchkey'] = $searchdata['searchkey'];
             } else {
                 $buildparam['searchkey'] = '';
             }
+
             if ($searchdata['tingkat'] != '') {
                 $querybuilder->andWhere("kelas.tingkat = :tingkat");
                 $querybuilder->setParameter('tingkat', $searchdata['tingkat']->getId());
@@ -129,6 +141,7 @@ class KehadiranSiswaController extends Controller
             } else {
                 $buildparam['tingkat'] = '';
             }
+
             if ($searchdata['kelas'] != '') {
                 $querybuilder->andWhere("kelas.id = :kelas");
                 $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
@@ -139,6 +152,7 @@ class KehadiranSiswaController extends Controller
             } else {
                 $buildparam['kelas'] = '';
             }
+
             if ($searchdata['statusKehadiran'] != '') {
                 $querybuilder->andWhere("kehadiran.statusKehadiran = :statusKehadiran");
                 $querybuilder->setParameter('statusKehadiran', $searchdata['statusKehadiran']);
@@ -153,55 +167,59 @@ class KehadiranSiswaController extends Controller
             $students = $this->createForm(new KehadiranSiswaType($this->container, $buildparam));
 
             $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
-                    ->findOneBy(
-                            array(
-                                'aktif' => true, 'sekolah' => $sekolah->getId(),
-                            ));
+                ->findOneBy([
+                    'aktif' => true,
+                    'sekolah' => $sekolah->getId(),
+                ])
+            ;
 
             $prosesKehadiranSiswa = null;
             $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
-                    ->findOneBy(
-                            array(
-                                    'sekolah' => $sekolah->getId(),
-                                    'tahunAkademik' => $tahunAkademik->getId(), 'kelas' => $kelas->getId(),
-                                    'tanggal' => $searchdata['tanggal'],
-                            ));
+                ->findOneBy([
+                    'sekolah' => $sekolah->getId(),
+                    'tahunAkademik' => $tahunAkademik->getId(),
+                    'kelas' => $kelas->getId(),
+                    'tanggal' => $searchdata['tanggal'],
+                ])
+            ;
 
-            $formInisiasi = $this
-                    ->createForm(
-                            new KehadiranSiswaInisiasiType($this->container, $kelas,
-                                    $searchdata['tanggal']->format('Y-m-d')));
+            $formInisiasi = $this->createForm(new KehadiranSiswaInisiasiType($this->container, $kelas, $searchdata['tanggal']->format('Y-m-d')));
+            $formSms = $this->createForm(new KehadiranSiswaSmsType($this->container, $kelas, $searchdata['tanggal']->format('Y-m-d'), $entities));
 
-            $formSms = $this
-                    ->createForm(
-                            new KehadiranSiswaSmsType($this->container, $kelas,
-                                    $searchdata['tanggal']->format('Y-m-d'), $entities));
-
-            return array(
-                    'kelas' => $kelas, 'entities' => $entities, 'form' => $students->createView(),
-                    'searchform' => $searchform->createView(), 'buildparam' => $buildparam,
-                    'tahunAkademik' => $tahunAkademik, 'prosesKehadiranSiswa' => $prosesKehadiranSiswa,
-                    'tanggal' => $searchdata['tanggal'], 'formInisiasi' => $formInisiasi->createView(),
-                    'formSms' => $formSms->createView(),
-            );
+            return [
+                'kelas' => $kelas,
+                'entities' => $entities,
+                'form' => $students->createView(),
+                'searchform' => $searchform->createView(),
+                'buildparam' => $buildparam,
+                'tahunAkademik' => $tahunAkademik,
+                'prosesKehadiranSiswa' => $prosesKehadiranSiswa,
+                'tanggal' => $searchdata['tanggal'],
+                'formInisiasi' => $formInisiasi->createView(),
+                'formSms' => $formSms->createView(),
+            ];
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.kehadiran.siswa.pencarian.gagal'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.kehadiran.siswa.pencarian.gagal'))
+            ;
 
             return $this->redirect($this->generateUrl('studentspresence'));
         }
     }
 
     /**
-     * Edits KehadiranSiswa entities.
+     * Memperbarui kehadiran siswa
      *
      * @Route("/update", name="studentspresence_update")
      * @Method("POST")
      */
-    public function updateAction(Request $request) {
+    public function updateAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
 
-        $data = $request->request->get('fast_sisdikbundle_kehadiransiswatype');
+        $data = $request->request->get('sisdik_kehadiransiswa');
 
         foreach ($data as $keys => $values) {
             if (preg_match('/kehadiran_(\d+)$/', $keys, $matches) !== FALSE) {
@@ -219,13 +237,14 @@ class KehadiranSiswaController extends Controller
         $return = array();
         if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
             $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
-                    ->findOneBy(
-                            array(
-                                    'sekolah' => $kehadiran->getSekolah()->getId(),
-                                    'tahunAkademik' => $kehadiran->getTahunAkademik()->getId(),
-                                    'kelas' => $kehadiran->getKelas()->getId(),
-                                    'tanggal' => $kehadiran->getTanggal(),
-                            ));
+                ->findOneBy([
+                    'sekolah' => $kehadiran->getSekolah(),
+                    'tahunAkademik' => $kehadiran->getTahunAkademik(),
+                    'kelas' => $kehadiran->getKelas(),
+                    'tanggal' => $kehadiran->getTanggal(),
+                ])
+            ;
+
             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                 $prosesKehadiranSiswa->setBerhasilValidasi(true);
             } else {
@@ -236,9 +255,11 @@ class KehadiranSiswaController extends Controller
                 $prosesKehadiranSiswa->setTanggal($kehadiran->getTanggal());
                 $prosesKehadiranSiswa->setBerhasilValidasi(true);
             }
+
             $em->persist($prosesKehadiranSiswa);
             $return['berhasilValidasi'] = 1;
         }
+
         $em->flush();
 
         $return['responseCode'] = 200;
@@ -247,27 +268,27 @@ class KehadiranSiswaController extends Controller
         $return['data'] = $data;
 
         $return = json_encode($return);
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
+
+        return new Response($return, 200, ['Content-Type' => 'application/json']);
     }
 
     /**
-     * Inisiasi kehadiran siswa
+     * Menginisiasi kehadiran siswa
      *
      * @Route("/inisiasi/{kelas_id}/{tanggal}", name="studentspresence_inisiasi")
      * @Method("POST")
      */
-    public function inisiasiAction($kelas_id, $tanggal) {
+    public function inisiasiAction($kelas_id, $tanggal)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
-                ->findOneBy(
-                        array(
-                            'aktif' => true, 'sekolah' => $sekolah->getId(),
-                        ));
+            ->findOneBy([
+                'aktif' => true,
+                'sekolah' => $sekolah->getId(),
+            ])
+        ;
 
         $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($kelas_id);
 
@@ -277,14 +298,18 @@ class KehadiranSiswaController extends Controller
         if ($formInisiasi->isValid()) {
             $statusKehadiran = $formInisiasi->get('statusKehadiran')->getData();
 
-            $qbKehadiran = $em->createQueryBuilder()->select('kehadiran')
-                    ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
-                    ->where('kehadiran.sekolah = :sekolah')
-                    ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
-                    ->andWhere('kehadiran.kelas = :kelas')->andWhere('kehadiran.tanggal = :tanggal')
-                    ->setParameter('sekolah', $sekolah->getId())
-                    ->setParameter('tahunAkademik', $tahunAkademik->getId())->setParameter('kelas', $kelas)
-                    ->setParameter('tanggal', $tanggal);
+            $qbKehadiran = $em->createQueryBuilder()
+                ->select('kehadiran')
+                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+                ->where('kehadiran.sekolah = :sekolah')
+                ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
+                ->andWhere('kehadiran.kelas = :kelas')
+                ->andWhere('kehadiran.tanggal = :tanggal')
+                ->setParameter('sekolah', $sekolah->getId())
+                ->setParameter('tahunAkademik', $tahunAkademik->getId())
+                ->setParameter('kelas', $kelas)
+                ->setParameter('tanggal', $tanggal)
+            ;
             $entities = $qbKehadiran->getQuery()->getResult();
             if (count($entities) > 0) {
                 foreach ($entities as $kehadiran) {
@@ -300,25 +325,30 @@ class KehadiranSiswaController extends Controller
                     }
                 }
             } else {
-                $qbSiswaKelas = $em->createQueryBuilder()->select('siswaKelas')
-                        ->from('FastSisdikBundle:SiswaKelas', 'siswaKelas')
-                        ->where('siswaKelas.tahunAkademik = :tahunakademik')
-                        ->andWhere('siswaKelas.kelas = :kelas')
-                        ->setParameter('tahunakademik', $tahunAkademik->getId())
-                        ->setParameter('kelas', $kelas->getId());
+                $qbSiswaKelas = $em->createQueryBuilder()
+                    ->select('siswaKelas')
+                    ->from('FastSisdikBundle:SiswaKelas', 'siswaKelas')
+                    ->where('siswaKelas.tahunAkademik = :tahunakademik')
+                    ->andWhere('siswaKelas.kelas = :kelas')
+                    ->setParameter('tahunakademik', $tahunAkademik->getId())
+                    ->setParameter('kelas', $kelas->getId())
+                ;
                 $entitiesSiswaKelas = $qbSiswaKelas->getQuery()->getResult();
                 foreach ($entitiesSiswaKelas as $siswaKelas) {
                     if (!(is_object($siswaKelas) && $siswaKelas instanceof SiswaKelas)) {
                         continue;
                     }
 
-                    $qbKehadiran = $em->createQueryBuilder()->select('kehadiran')
-                            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
-                            ->where('kehadiran.sekolah = :sekolah')->andWhere('kehadiran.siswa = :siswa')
-                            ->andWhere('kehadiran.tanggal = :tanggal')
-                            ->setParameter('sekolah', $sekolah->getId())
-                            ->setParameter('siswa', $siswaKelas->getSiswa()->getId())
-                            ->setParameter('tanggal', $tanggal);
+                    $qbKehadiran = $em->createQueryBuilder()
+                        ->select('kehadiran')
+                        ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+                        ->where('kehadiran.sekolah = :sekolah')
+                        ->andWhere('kehadiran.siswa = :siswa')
+                        ->andWhere('kehadiran.tanggal = :tanggal')
+                        ->setParameter('sekolah', $sekolah->getId())
+                        ->setParameter('siswa', $siswaKelas->getSiswa()->getId())
+                        ->setParameter('tanggal', $tanggal)
+                    ;
                     $entityKehadiran = $qbKehadiran->getQuery()->getResult();
                     if (count($entityKehadiran) >= 1) {
                         continue;
@@ -339,7 +369,6 @@ class KehadiranSiswaController extends Controller
                     $em->persist($kehadiran);
                 }
             }
-
 
             $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
                 ->findOneBy([
@@ -364,57 +393,284 @@ class KehadiranSiswaController extends Controller
 
             $em->flush();
 
-            $return = array(
-                    "responseCode" => 200,
-                    "responseText" => $this->get('translator')->trans('flash.inisiasi.berhasil.dijalankan'),
-                    "data" => 'refresh',
-            );
+            $return = [
+                "responseCode" => 200,
+                "responseText" => $this->get('translator')->trans('flash.inisiasi.berhasil.dijalankan'),
+                "data" => 'refresh',
+            ];
         } else {
-            $return = array(
-                    "responseCode" => 400,
-                    "responseText" => $this->get('translator')->trans('flash.inisiasi.gagal.dijalankan'),
-                    "data" => 'norefresh',
-            );
+            $return = [
+                "responseCode" => 400,
+                "responseText" => $this->get('translator')->trans('flash.inisiasi.gagal.dijalankan'),
+                "data" => 'norefresh',
+            ];
         }
 
         $return = json_encode($return);
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
+
+        return new Response($return, 200, ['Content-Type' => 'application/json']);
     }
 
     /**
-     * Kirim SMS
+     * Mengirim SMS kehadiran
      *
      * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="studentspresence_kirimsms")
      * @Method("POST")
      */
-    public function kirimSmsAction() {
+    public function kirimSmsAction($kelas_id, $tanggal)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
+        $translator = $this->get('translator');
+        $namaNamaHari = JadwalKehadiran::getNamaHari();
+        $tanggalTerpilih = new \DateTime($tanggal);
+        $mingguanHariKe = $tanggalTerpilih->format('w');
+        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $bulananHariKe = $tanggalTerpilih->format('j');
+
         $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
-                ->findOneBy(
-                        array(
-                            'aktif' => true, 'sekolah' => $sekolah->getId(),
-                        ));
+            ->findOneBy([
+                'aktif' => true,
+                'sekolah' => $sekolah->getId(),
+            ])
+        ;
 
         $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($kelas_id);
+
+        $qbKehadiranSiswa = $em->createQueryBuilder()
+            ->select('kehadiran')
+            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->leftJoin('kehadiran.kelas', 'kelas')
+            ->leftJoin('kehadiran.siswa', 'siswa')
+            ->where('kehadiran.sekolah = :sekolah')
+            ->andWhere('kehadiran.kelas = :kelas')
+            ->orderBy('kelas.kode')
+            ->addOrderBy('siswa.namaLengkap')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('kelas', $kelas)
+        ;
+        $kehadiranSiswa = $qbKehadiranSiswa->getQuery()->getResult();
+
+        $formKirimSms = $this->createForm(new KehadiranSiswaSmsType($this->container, $kelas, $tanggal, $kehadiranSiswa));
+        $formKirimSms->submit($this->getRequest());
+
+        if ($formKirimSms->isValid()) {
+            $statusKehadiran = $formKirimSms->get('statusKehadiran')->getData();
+            $siswa = $formKirimSms->get('siswa')->getData();
+
+            // PERINGATAN: diasumsikan bahwa perulangan apapun
+            // menggunakan template sms yang serupa :(
+            $jadwalKehadiran = $em->getRepository('FastSisdikBundle:JadwalKehadiran')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                    'tahunAkademik' => $tahunAkademik,
+                    'kelas' => $kelas,
+                    'kirimSms' => true,
+                    'statusKehadiran' => $statusKehadiran,
+                ])
+            ;
+            if (!($jadwalKehadiran instanceof JadwalKehadiran)) {
+                $return['responseCode'] = 400;
+                $return['responseText'] = "tidak ada jadwal kehadiran yang sesuai";
+                $return = json_encode($return);
+
+                return new Response($return, 200, ['Content-Type' => 'application/json']);
+            }
+
+            switch ($jadwalKehadiran->getStatusKehadiran()) {
+                case 'a-hadir-tepat':
+                    $jenisLayananSms = 'l-kehadiran-tepat';
+                    break;
+                case 'b-hadir-telat':
+                    $jenisLayananSms = 'm-kehadiran-telat';
+                    break;
+                case 'c-alpa':
+                    $jenisLayananSms = 'k-kehadiran-alpa';
+                    break;
+                case 'd-izin':
+                    $jenisLayananSms = 'n-kehadiran-izin';
+                    break;
+                case 'e-sakit':
+                    $jenisLayananSms = 'o-kehadiran-sakit';
+                    break;
+            }
+
+            $layananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                    'jenisLayanan' => $jenisLayananSms,
+                    'status' => true,
+                ])
+            ;
+            if (!(is_object($layananSms) && $layananSms instanceof PilihanLayananSms)) {
+                $return['responseCode'] = 400;
+                $return['responseText'] = "layanan sms tidak aktif atau tidak tersedia";
+                $return = json_encode($return);
+
+                return new Response($return, 200, ['Content-Type' => 'application/json']);
+            }
+
+            if ($siswa instanceof Siswa) {
+                $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'tahunAkademik' => $tahunAkademik,
+                        'kelas' => $kelas,
+                        'siswa' => $siswa,
+                        'statusKehadiran' => $statusKehadiran,
+                        'tanggal' => $tanggalTerpilih,
+                    ])
+                ;
+                if (!(is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa)) {
+                    $return['responseCode'] = 400;
+                    $return['responseText'] = "kehadiran siswa yang terpilih tak ditemukan";
+                    $return = json_encode($return);
+
+                    return new Response($return, 200, ['Content-Type' => 'application/json']);
+                }
+
+                $ortuWaliAktif = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                    ->findOneBy([
+                        'siswa' => $siswa,
+                        'aktif' => true,
+                    ])
+                ;
+                if ((is_object($ortuWaliAktif) && $ortuWaliAktif instanceof OrangtuaWali)) {
+                    $ponselOrtuWaliAktif = $ortuWaliAktif->getPonsel();
+                    if ($ponselOrtuWaliAktif != "") {
+                        $tekstemplate = $jadwalKehadiran->getTemplatesms()->getTeks();
+                        $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
+                        $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
+                        $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                        $tekstemplate = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $tekstemplate);
+                        $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
+                        $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
+
+                        $terkirim = false;
+                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWaliAktif);
+                        foreach ($nomorponsel as $ponsel) {
+                            $messenger = $this->get('sisdik.messenger');
+                            if ($messenger instanceof Messenger) {
+                                $messenger->setPhoneNumber($ponsel);
+                                $messenger->setMessage($tekstemplate);
+                                $messenger->sendMessage($sekolah);
+                                $terkirim = true;
+                            }
+                        }
+
+                        if ($terkirim) {
+                            $kehadiran->setSmsTerproses($terkirim);
+                            $em->persist($kehadiran);
+                        }
+                    } else {
+                        $return['responseCode'] = 400;
+                        $return['responseText'] = "Nomor ponsel orangtua/wali tak tersedia";
+                        $return = json_encode($return);
+
+                        return new Response($return, 200, ['Content-Type' => 'application/json']);
+                    }
+                } else {
+                    $return['responseCode'] = 400;
+                    $return['responseText'] = "Orang tua/wali siswa tak ditemukan";
+                    $return = json_encode($return);
+
+                    return new Response($return, 200, ['Content-Type' => 'application/json']);
+                }
+            } else {
+                $qbKehadiranSiswa
+                    ->andWhere('kehadiran.statusKehadiran = :status')
+                    ->setParameter('status', $statusKehadiran)
+                ;
+                $kehadiranSiswaPerStatus = $qbKehadiranSiswa->getQuery()->getResult();
+
+                foreach ($kehadiranSiswaPerStatus as $kehadiran) {
+                    if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
+                        $ortuWaliAktif = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                            ->findOneBy([
+                                'siswa' => $kehadiran->getSiswa(),
+                                'aktif' => true,
+                            ])
+                        ;
+                        if ((is_object($ortuWaliAktif) && $ortuWaliAktif instanceof OrangtuaWali)) {
+                            $ponselOrtuWaliAktif = $ortuWaliAktif->getPonsel();
+                            if ($ponselOrtuWaliAktif != "") {
+                                $tekstemplate = $jadwalKehadiran->getTemplatesms()->getTeks();
+                                $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
+                                $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
+                                $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                                $tekstemplate = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $tekstemplate);
+                                $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
+                                $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
+
+                                $terkirim = false;
+                                $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWaliAktif);
+                                foreach ($nomorponsel as $ponsel) {
+                                    $messenger = $this->get('sisdik.messenger');
+                                    if ($messenger instanceof Messenger) {
+                                        $messenger->setPhoneNumber($ponsel);
+                                        $messenger->setMessage($tekstemplate);
+                                        $messenger->sendMessage($sekolah);
+                                        $terkirim = true;
+                                    }
+                                }
+
+                                if ($terkirim) {
+                                    $kehadiran->setSmsTerproses($terkirim);
+                                    $em->persist($kehadiran);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                    'tahunAkademik' => $jadwalKehadiran->getTahunAkademik(),
+                    'kelas' => $jadwalKehadiran->getKelas(),
+                    'tanggal' => $tanggalTerpilih,
+                    'berhasilKirimSms' => false,
+                ])
+            ;
+
+            if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                $prosesKehadiranSiswa->setBerhasilKirimSms(true);
+                $em->persist($prosesKehadiranSiswa);
+            }
+
+            $em->flush();
+
+            $return['responseCode'] = 200;
+            $return['responseText'] = $translator->trans('flash.sms.kehadiran.terkirim');
+            $return['berhasilKirimSms'] = 1;
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        } else {
+            $return['responseCode'] = 400;
+            $return['responseText'] = "form tidak valid";
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('fast_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.studentspresence', array(), 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));

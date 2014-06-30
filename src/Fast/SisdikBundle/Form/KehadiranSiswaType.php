@@ -100,6 +100,6 @@ class KehadiranSiswaType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kehadiransiswatype';
+        return 'sisdik_kehadiransiswa';
     }
 }

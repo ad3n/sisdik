@@ -90,13 +90,13 @@
 .accordion-body .accordion-inner {
     margin-top: 5px;
 }
-#presenceform .radio {
+#form-kehadiran .radio {
     margin-left: 20px;
 }
-#presenceform .radio label {
+#form-kehadiran .radio label {
     padding-left: 20px;
 }
-#presenceform .radio input {
+#form-kehadiran .radio input {
     margin-left: -20px;
 }
 .keterangan-kehadiran {
@@ -158,7 +158,11 @@ dd {
                 {% else %}
                     {{ 'info.pesan.piket.inisiasi.lainnya'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
                 {% endif %}
-                    <form id="form-inisiasi" method="post" action="{{ path('studentspresence_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }} class="form-horizontal">
+                    <form
+                        id="form-inisiasi"
+                        method="post"
+                        action="{{ path('studentspresence_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }}
+                        class="form-horizontal">
                         {{ form_widget(formInisiasi) }}
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
@@ -208,7 +212,7 @@ dd {
             </div>
             <div id="collapseTwo" class="accordion-body collapse">
                 <div class="accordion-inner well">
-                    <span style="color: red">Fasilitas pembaruan data secara manual belum tersedia</span>
+                    <span style="color: red">Fasilitas pembaruan data dari mesin kehadiran secara manual belum tersedia</span>
                 </div>
             </div>
         </div>
@@ -245,7 +249,7 @@ dd {
                 <ul class="nav nav-pills">
                     <li>
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kehadiran-accordion" href="#collapseFour">
-                            <i
+                            <i id="warna-kirim-sms"
                             {% if prosesKehadiranSiswa is not null %}
                                 {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
                                     class="fa fa-check fa-fw" style="color: green"
@@ -266,7 +270,11 @@ dd {
 
                     <div class="clearfix" style="margin-bottom: 2em;"></div>
 
-                    <form id="form-kirim-sms" method="post" action="{{ path('studentspresence_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }} class="form-horizontal">
+                    <form
+                        id="form-kirim-sms"
+                        method="post"
+                        action="{{ path('studentspresence_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }}
+                        class="form-horizontal">
                         {{ form_widget(formSms) }}
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
@@ -299,7 +307,7 @@ dd {
 <div class="clearfix" style="margin-bottom: 10px; margin-top: 10px;"></div>
 
 {% if entities %}
-<form method="post" action="{{ path('studentspresence_update') }}" class="form-inline" id="presenceform">
+<form method="post" action="{{ path('studentspresence_update') }}" class="form-inline" id="form-kehadiran">
 <dl>
 {% for kehadiran in entities %}
     <dt>{{ kehadiran.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ kehadiran.siswa.nomorInduk }}</span></dt>
@@ -374,31 +382,29 @@ $(document).ready(function() {
         });
     });
 
-    $("#presenceform").submit(function() {
-        var url = $("#presenceform").attr("action");
+    $("#form-kehadiran").submit(function() {
+        var url = $(this).attr("action");
 
         {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#output').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 
-        $.post(url, $("#presenceform").serialize(),
-            function(data) {
-                if (data.responseCode == 200) {
-                    $('#output').html(data.responseText);
-                    if (data.berhasilValidasi == 1) {
-                        $('#warna-validasi').removeClass('fa-warning');
-                        $('#warna-validasi').addClass('fa-check');
-                        $('#warna-validasi').css({'color': 'green'});
-                    }
-                } else {
-                    // if we got to this point we know that the controller
-                    // did not return a json_encoded array. We can assume that
-                    // an unexpected PHP error occured
-                    // alert("An unexpected error occured.");
-                    $('#output').html("An unexpected error occured");
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200) {
+                $('#output').html(data.responseText);
+                if (data.berhasilValidasi == 1) {
+                    $('#warna-validasi').removeClass('fa-warning');
+                    $('#warna-validasi').addClass('fa-check');
+                    $('#warna-validasi').css({'color': 'green'});
                 }
+            } else {
+                // if we got to this point we know that the controller
+                // did not return a json_encoded array. We can assume that
+                // an unexpected PHP error occured
+                // alert("An unexpected error occured.");
+                $('#output').html("An unexpected error occured");
             }
-        );
+        });
 
         return false;
     });
@@ -410,16 +416,37 @@ $(document).ready(function() {
         $('#loader-inisiasi').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 
-        $.post(url, $(this).serialize(),
-                function(data) {
-                    if (data.responseCode == 200) {
-                        $('#loader-inisiasi').html(data.responseText);
-                        location.reload();
-                    } else {
-                        $('#loader-inisiasi').html("An unexpected error occured.");
-                    }
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200) {
+                $('#loader-inisiasi').html(data.responseText);
+                location.reload();
+            } else {
+                $('#loader-inisiasi').html("An unexpected error occured.");
+            }
+        });
+
+        return false;
+    });
+
+    $("#form-kirim-sms").submit(function() {
+        var url = $(this).attr("action");
+
+        {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#loader-kirim-sms').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
+        {% endimage %}
+
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200 || data.responseCode == 400) {
+                $('#loader-kirim-sms').html(data.responseText);
+                if (data.berhasilKirimSms == 1) {
+                    $('#warna-kirim-sms').removeClass('fa-warning');
+                    $('#warna-kirim-sms').addClass('fa-check');
+                    $('#warna-kirim-sms').css({'color': 'green'});
                 }
-            );
+            } else {
+                $('#loader-kirim-sms').html("An unexpected error occured.");
+            }
+        });
 
         return false;
     });
