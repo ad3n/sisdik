@@ -1,56 +1,51 @@
 <?php
 namespace Fast\SisdikBundle\Controller;
 
-use Symfony\Component\Form\FormError;
 use FOS\UserBundle\Controller\ProfileController as FOSProfileController;
 use FOS\UserBundle\Model\UserInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use FOS\UserBundle\Model\UserManagerInterface;
 
-/**
- *
- * @author Ihsan Faisal
- *
- */
 class ProfileController extends FOSProfileController
 {
-
-    /**
-     * Show the user
-     */
     public function showAction()
     {
-        $user = $this->container->get('security.context')
+        $user = $this->container
+            ->get('security.context')
             ->getToken()
-            ->getUser();
+            ->getUser()
+        ;
 
         if (! is_object($user) || ! $user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
+        $roles = [];
         foreach ($user->getRoles() as $keys => $values) {
+            $values = str_replace('ROLE_', '', $values);
             $roles[] = str_replace('_', ' ', $values);
         }
 
-        return $this->container->get('templating')->renderResponse('FastSisdikBundle:Profile:show.html.twig', array(
-            'user' => $user,
-            'roles' => $roles,
-            'name' => $user->getName()
-        ));
+        return $this->container
+            ->get('templating')
+            ->renderResponse('FastSisdikBundle:Profile:show.html.twig', [
+                'user' => $user,
+                'roles' => $roles,
+                'name' => $user->getName(),
+            ])
+        ;
     }
 
-    /**
-     * Edit the user
-     */
     public function editAction()
     {
-        $user = $this->container->get('security.context')
+        $user = $this->container
+            ->get('security.context')
             ->getToken()
-            ->getUser();
-        if (! is_object($user) || ! $user instanceof UserInterface) {
+            ->getUser()
+        ;
+        if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
@@ -66,9 +61,10 @@ class ProfileController extends FOSProfileController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-                if (! in_array('ROLE_SISWA', $data->getRoles(), true)) {
+                if (!in_array('ROLE_SISWA', $data->getRoles(), true)) {
                     if (is_numeric($data->getUsername())) {
                         $message = $this->container->get('translator')->trans('alert.username.numeric.forstudent');
+
                         $form->get('username')->addError(new FormError($message));
                     }
                 }
@@ -83,8 +79,11 @@ class ProfileController extends FOSProfileController
             }
         }
 
-        return $this->container->get('templating')->renderResponse('FOSUserBundle:Profile:edit.html.' . $this->container->getParameter('fos_user.template.engine'), array(
-            'form' => $form->createView()
-        ));
+        return $this->container
+            ->get('templating')
+            ->renderResponse('FOSUserBundle:Profile:edit.html.' . $this->container->getParameter('fos_user.template.engine'), [
+                'form' => $form->createView(),
+            ])
+        ;
     }
 }
