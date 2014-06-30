@@ -6,6 +6,7 @@ use Fast\SisdikBundle\Entity\OrangtuaWali;
 use Fast\SisdikBundle\Entity\PilihanLayananSms;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
 use Fast\SisdikBundle\Util\Messenger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -203,6 +204,21 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         }
                                     }
                                 }
+                            }
+
+                            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                                ->findOneBy([
+                                    'sekolah' => $sekolah,
+                                    'tahunAkademik' => $jadwal->getTahunAkademik(),
+                                    'kelas' => $jadwal->getKelas(),
+                                    'tanggal' => $waktuSekarang,
+                                    'berhasilKirimSms' => false,
+                                ])
+                            ;
+
+                            if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                                $prosesKehadiranSiswa->setBerhasilKirimSms(true);
+                                $em->persist($prosesKehadiranSiswa);
                             }
 
                             $em->flush();
