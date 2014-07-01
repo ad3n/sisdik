@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-06-18T17:20:32Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-07-01T15:45:41Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -5383,7 +5383,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="f3b3c040b2c67a50fe2a46bfa78fd3c82556f7ea" resname="shortinfo.tidak.ada.data.kehadiran.siswa">
         <jms:reference-file line="320">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
         <source>shortinfo.tidak.ada.data.kehadiran.siswa</source>
-        <target>Tidak ada data kehadiran siswa. Kemungkinan proses inisiasi tidak berjalan atau tidak ada jadwal untuk tanggal %tanggal%</target>
+        <target>Tidak ada data kehadiran siswa dengan pilihan pencarian yang terpilih, atau proses inisiasi kehadiran tidak berjalan, atau tidak ada jadwal untuk tanggal %tanggal%</target>
       </trans-unit>
       <trans-unit id="03a48adb9c343641c4994c811a847d506308dd51" resname="shortinfo.total.paid">
         <jms:reference-file line="86">views/PembayaranPendaftaran/edit.html.twig</jms:reference-file>
