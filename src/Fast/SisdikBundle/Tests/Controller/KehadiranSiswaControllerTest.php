@@ -13,7 +13,7 @@ class KehadiranSiswaControllerTest extends WebTestCase
         $client = static::createClient();
 
         // Create a new entry in the database
-        $crawler = $client->request('GET', '/studentspresence/');
+        $crawler = $client->request('GET', '/kehadiran-siswa/');
         $this->assertTrue(200 === $client->getResponse()->getStatusCode());
         $crawler = $client->click($crawler->selectLink('Create a new entry')->link());
 

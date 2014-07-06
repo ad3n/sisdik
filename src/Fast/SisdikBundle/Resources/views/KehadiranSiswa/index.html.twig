@@ -29,10 +29,10 @@
 </style>
 
 <div class="filter-section">
-    <form method="get" action="{{ path('studentspresence_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+    <form method="get" action="{{ path('kehadiran-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('studentspresence') }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('kehadiran-siswa') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 {% endblock content %}

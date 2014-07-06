@@ -339,10 +339,10 @@
         <source>links.status.kehadiran</source>
         <target>Status Kehadiran</target>
       </trans-unit>
-      <trans-unit id="4db922486b8e37d3b15990ea4849988f5d330e26" resname="links.studentspresence">
+      <trans-unit id="4db922486b8e37d3b15990ea4849988f5d330e26" resname="links.kehadiran.siswa">
         <jms:reference-file line="405">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <jms:reference-file line="182">SisdikBundle/Menu/Builder.php</jms:reference-file>
-        <source>links.studentspresence</source>
+        <source>links.kehadiran.siswa</source>
         <target>Kehadiran Siswa</target>
       </trans-unit>
       <trans-unit id="fbfd9df3b46017e3bdad3b1b6673bb3c0a832891" resname="links.tahkik">

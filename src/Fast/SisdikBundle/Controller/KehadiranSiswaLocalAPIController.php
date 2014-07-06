@@ -12,14 +12,14 @@ use Fast\SisdikBundle\Form\KehadiranSiswaType;
 /**
  * KehadiranSiswa controller.
  *
- * @Route("/_local/studentspresence")
+ * @Route("/_local/kehadiran-siswa")
  */
 class KehadiranSiswaLocalAPIController extends Controller
 {
     /**
      * Edits an existing KehadiranSiswa entity.
      *
-     * @Route("/{id}/update/{idlog}/{status}/{time}", name="studentspresence_update_local", defaults={"status"="","time"=""})
+     * @Route("/{id}/update/{idlog}/{status}/{time}", name="kehadiran-siswa_update_local", defaults={"status"="","time"=""})
      */
     public function updateAction(Request $request, $id, $idlog, $status, $time) {
         $em = $this->getDoctrine()->getManager();

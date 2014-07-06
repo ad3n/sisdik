@@ -27,13 +27,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * @Route("/studentspresence")
+ * @Route("/kehadiran-siswa")
  * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
  */
 class KehadiranSiswaController extends Controller
 {
     /**
-     * @Route("/", name="studentspresence")
+     * @Route("/", name="kehadiran-siswa")
      * @Template()
      */
     public function indexAction()
@@ -66,7 +66,7 @@ class KehadiranSiswaController extends Controller
     }
 
     /**
-     * @Route("/edit", name="studentspresence_edit")
+     * @Route("/edit", name="kehadiran-siswa_edit")
      * @Method("GET")
      * @Template()
      */
@@ -112,7 +112,7 @@ class KehadiranSiswaController extends Controller
                     ->add('error', $this->get('translator')->trans('flash.kehadiran.siswa.bukan.hari.kbm.aktif'))
                 ;
 
-                return $this->redirect($this->generateUrl('studentspresence'));
+                return $this->redirect($this->generateUrl('kehadiran-siswa'));
             }
 
             if ($searchdata['tanggal'] != '') {
@@ -205,14 +205,14 @@ class KehadiranSiswaController extends Controller
                 ->add('error', $this->get('translator')->trans('flash.kehadiran.siswa.pencarian.gagal'))
             ;
 
-            return $this->redirect($this->generateUrl('studentspresence'));
+            return $this->redirect($this->generateUrl('kehadiran-siswa'));
         }
     }
 
     /**
      * Memperbarui kehadiran siswa
      *
-     * @Route("/update", name="studentspresence_update")
+     * @Route("/update", name="kehadiran-siswa_update")
      * @Method("POST")
      */
     public function updateAction(Request $request)
@@ -275,7 +275,7 @@ class KehadiranSiswaController extends Controller
     /**
      * Menginisiasi kehadiran siswa
      *
-     * @Route("/inisiasi/{kelas_id}/{tanggal}", name="studentspresence_inisiasi")
+     * @Route("/inisiasi/{kelas_id}/{tanggal}", name="kehadiran-siswa_inisiasi")
      * @Method("POST")
      */
     public function inisiasiAction($kelas_id, $tanggal)
@@ -414,7 +414,7 @@ class KehadiranSiswaController extends Controller
     /**
      * Mengirim SMS kehadiran
      *
-     * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="studentspresence_kirimsms")
+     * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="kehadiran-siswa_kirimsms")
      * @Method("POST")
      */
     public function kirimSmsAction($kelas_id, $tanggal)
@@ -660,7 +660,7 @@ class KehadiranSiswaController extends Controller
     private function setCurrentMenu()
     {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.studentspresence', array(), 'navigations')]->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.kehadiran-siswa', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool()

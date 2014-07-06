@@ -141,12 +141,12 @@ attendance_machine:
     type:     annotation
     prefix:   /
 
-studentspresence:
+kehadiran_siswa:
     resource: "@FastSisdikBundle/Controller/KehadiranSiswaController.php"
     type:     annotation
     prefix:   /
 
-studentspresence_localapi:
+kehadiran_siswa_localapi:
     resource: "@FastSisdikBundle/Controller/KehadiranSiswaLocalAPIController.php"
     type:     annotation
     prefix:   /

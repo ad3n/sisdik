@@ -112,10 +112,10 @@ dd {
 </style>
 
 <div class="filter-section">
-    <form id="searchform" method="get" action="{{ path('studentspresence_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+    <form id="searchform" method="get" action="{{ path('kehadiran-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('studentspresence') }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('kehadiran-siswa') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 
@@ -161,7 +161,7 @@ dd {
                     <form
                         id="form-inisiasi"
                         method="post"
-                        action="{{ path('studentspresence_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }}
+                        action="{{ path('kehadiran-siswa_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }}
                         class="form-horizontal">
                         {{ form_widget(formInisiasi) }}
                         <div class="form-group">
@@ -273,7 +273,7 @@ dd {
                     <form
                         id="form-kirim-sms"
                         method="post"
-                        action="{{ path('studentspresence_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }}
+                        action="{{ path('kehadiran-siswa_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }}
                         class="form-horizontal">
                         {{ form_widget(formSms) }}
                         <div class="form-group">
@@ -307,7 +307,7 @@ dd {
 <div class="clearfix" style="margin-bottom: 10px; margin-top: 10px;"></div>
 
 {% if entities %}
-<form method="post" action="{{ path('studentspresence_update') }}" class="form-inline" id="form-kehadiran">
+<form method="post" action="{{ path('kehadiran-siswa_update') }}" class="form-inline" id="form-kehadiran">
 <dl>
 {% for kehadiran in entities %}
     <dt>{{ kehadiran.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ kehadiran.siswa.nomorInduk }}</span></dt>

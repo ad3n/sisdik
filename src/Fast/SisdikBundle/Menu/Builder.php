@@ -185,7 +185,7 @@ class Builder extends ContainerAware
                 /* $kehadiran->addChild($translator->trans('links.mesin.wakil', [], 'navigations'), ['route' => 'mesinproxy']); */
             }
 
-            $kehadiran->addChild($translator->trans('links.studentspresence', [], 'navigations'), ['route' => 'studentspresence']);
+            $kehadiran->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => 'kehadiran-siswa']);
         }
 
         foreach ($menu as $key => $item) {
