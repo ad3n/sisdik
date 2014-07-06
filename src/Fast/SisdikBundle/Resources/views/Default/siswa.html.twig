@@ -1,0 +1,16 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{{ 'welcome'|trans({}, 'headings') }}, {{ siswa.namaLengkap }} {% endblock %}
+
+{% block content %}
+
+{% if kehadiran %}
+    <p>
+        {{ 'dashboard.info.kehadiran.siswa'
+            |trans({'%tanggal%': kehadiran.tanggal|localizeddate('full', 'none', app.request.locale), '%nama-siswa%': siswa.namaLengkap, '%status-kehadiran%': daftarStatusKehadiran[kehadiran.statusKehadiran]|trans})
+            |desc("%tanggal% %nama-siswa% %status-kehadiran%") }}
+        {{ 'dashboard.info.kehadiran.lebih.lengkap'|trans|desc("") }}
+    </p>
+{% endif %}
+
+{% endblock content %}

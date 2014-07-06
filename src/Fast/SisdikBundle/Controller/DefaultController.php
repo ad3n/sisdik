@@ -1,76 +1,150 @@
 <?php
-
 namespace Fast\SisdikBundle\Controller;
+
 use Fast\SisdikBundle\Entity\User;
 use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
 use Fast\SisdikBundle\Entity\TahunAkademik;
 use Fast\SisdikBundle\Entity\Sekolah;
+use Fast\SisdikBundle\Entity\KalenderPendidikan;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
+/**
+ * @Route("/")
+ */
 class DefaultController extends Controller
 {
+    public function indexAction()
+    {
+        $securityContext = $this->container->get('security.context');
+
+        if ($securityContext->isGranted([new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')])) {
+            $response = $this->forward('FastSisdikBundle:Default:siswa');
+        } elseif ($securityContext->isGranted([new Expression('hasRole("ROLE_SUPER_ADMIN")')])) {
+            $response = $this->forward('FastSisdikBundle:Default:super');
+        } else {
+            $response = $this->forward('FastSisdikBundle:Default:pengelola');
+        }
+
+        return $response;
+    }
 
     /**
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->getSchool();
+    public function superAction()
+    {
+
+    }
+
+    /**
+     * @Template()
+     */
+    public function pengelolaAction()
+    {
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($sekolah) {
-            $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
-                    ->findOneBy(
-                            array(
-                                'sekolah' => $sekolah->getId(), 'aktif' => true
-                            ));
-            $tahunAkademikAktif = (is_object($tahunAkademik) && $tahunAkademik instanceof TahunAkademik) ? $tahunAkademik->getNama() : null;
+        $tahunAkademikAktif = $em->getRepository('FastSisdikBundle:TahunAkademik')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'aktif' => true,
+            ])
+        ;
 
-            $panitiaPendaftaran = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
-                    ->findOneBy(
-                            array(
-                                'sekolah' => $sekolah->getId(), 'aktif' => true
-                            ));
-            if (is_object($panitiaPendaftaran) && $panitiaPendaftaran instanceof PanitiaPendaftaran) {
-                $ketuaPanitiaPendaftaranAktif = $panitiaPendaftaran->getKetuaPanitia()->getName();
+        $panitiaPendaftaranAktif = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'aktif' => true,
+            ])
+        ;
 
-                $tempArray = array();
-                foreach ($panitiaPendaftaran->getPanitia() as $personil) {
-                    $entity = $em->getRepository('FastSisdikBundle:User')->find($personil);
+        $personilPanitiaPendaftaranAktif = null;
+        if (is_object($panitiaPendaftaranAktif) && $panitiaPendaftaranAktif instanceof PanitiaPendaftaran) {
+            $ketuaPanitiaPendaftaranAktif = $panitiaPendaftaranAktif->getKetuaPanitia()->getName();
 
-                    if ($entity instanceof User) {
-                        $tempArray[] = $entity->getName();
-                    } else {
-                        $tempArray[] = $this->get('translator')->trans('label.username.undefined');
-                    }
+            $tempArray = [];
+            foreach ($panitiaPendaftaranAktif->getPanitia() as $personil) {
+                $entity = $em->getRepository('FastSisdikBundle:User')->find($personil);
+
+                if ($entity instanceof User) {
+                    $tempArray[] = $entity->getName();
+                } else {
+                    $tempArray[] = $this->get('translator')->trans('label.username.undefined');
                 }
-                $panitiaPendaftaranAktif = implode(", ", $tempArray);
-
-            } else {
-                $ketuaPanitiaPendaftaranAktif = null;
-                $panitiaPendaftaranAktif = null;
             }
-        } else {
-            $tahunAkademikAktif = null;
-            $ketuaPanitiaPendaftaranAktif = null;
-            $panitiaPendaftaranAktif = null;
+            $personilPanitiaPendaftaranAktif = implode(", ", $tempArray);
         }
 
-        return array(
-                'tahunAkademikAktif' => $tahunAkademikAktif, 'ketuaPanitiaPendaftaranAktif' => $ketuaPanitiaPendaftaranAktif,
-                'panitiaPendaftaranAktif' => $panitiaPendaftaranAktif,
-        );
+        return [
+            'tahunAkademikAktif' => $tahunAkademikAktif,
+            'panitiaPendaftaranAktif' => $panitiaPendaftaranAktif,
+            'personilPanitiaPendaftaranAktif' => $personilPanitiaPendaftaranAktif,
+        ];
     }
 
-    private function getSchool() {
+    /**
+     * @Template()
+     */
+    public function siswaAction()
+    {
+        $sekolah = $this->getSekolah();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $tahunAkademikAktif = $em->getRepository('FastSisdikBundle:TahunAkademik')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'aktif' => true,
+            ])
+        ;
+
+        $kehadiran = null;
+        $tanggalSekarang = new \DateTime();
+
+        $kalenderPendidikan = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'tanggal' => $tanggalSekarang,
+                'kbm' => true,
+            ])
+        ;
+
+        $siswa = $this->getUser()->getSiswa();
+
+        if (is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan) {
+            $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
+                ->findOneBy([
+                    'siswa' => $siswa,
+                    'tanggal' => $tanggalSekarang,
+                ])
+            ;
+        }
+
+        return [
+            'tahunAkademikAktif' => $tahunAkademikAktif,
+            'siswa' => $siswa,
+            'kehadiran' => $kehadiran,
+            'daftarStatusKehadiran' => JadwalKehadiran::getDaftarStatusKehadiran(),
+        ];
+    }
+
+    private function getSekolah()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+            return null;
         } else {
-            return false;
+            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
         }
     }
 }

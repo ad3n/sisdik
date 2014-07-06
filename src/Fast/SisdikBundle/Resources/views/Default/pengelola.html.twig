@@ -1,0 +1,20 @@
+{% extends 'FastSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{{ 'welcome'|trans({}, 'headings') }}{% endblock %}
+
+{% block content %}
+
+{% if tahunAkademikAktif %}
+    <h4>{{ 'label.tahun.akademik.aktif'|trans|desc("Tahun Akademik Aktif") }}</h4>
+    <p>{{ tahunAkademikAktif.nama }}</p>
+{% endif %}
+
+{% if panitiaPendaftaranAktif %}
+    <h4>{{ 'label.active.regcommittee'|trans }}</h4>
+    <p>
+        {{ 'leader'|trans }}: {{ panitiaPendaftaranAktif.ketuaPanitia.name }}<br />
+        {{ 'member'|trans }}: {{ personilPanitiaPendaftaranAktif }}
+    </p>
+{% endif %}
+
+{% endblock content %}
