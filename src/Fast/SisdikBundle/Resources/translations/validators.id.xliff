@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-06-16T16:35:38Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-07-06T11:17:55Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -48,8 +48,8 @@
         <target>harap masukkan password</target>
       </trans-unit>
       <trans-unit id="1d1fed1a8442ac6d12a66f2cd2072b644261d073" resname="fos_user.password.notequal">
-        <jms:reference-file line="38">SisdikBundle/Form/UserRegisterFormType.php</jms:reference-file>
-        <jms:reference-file line="24">SisdikBundle/Form/RegistrationFormType.php</jms:reference-file>
+        <jms:reference-file line="55">SisdikBundle/Form/UserRegisterFormType.php</jms:reference-file>
+        <jms:reference-file line="25">SisdikBundle/Form/RegistrationFormType.php</jms:reference-file>
         <source>fos_user.password.notequal</source>
         <target>harap masukkan password yang sama</target>
       </trans-unit>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="06ee6913a5df84dd1fda944240c3f3d4840e07a2" resname="pencarian.nominal.tidak.sah">
         <jms:reference-file line="79">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
-        <jms:reference-file line="85">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
+        <jms:reference-file line="89">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
         <source>pencarian.nominal.tidak.sah</source>
         <target>Pencarian nominal tidak sah</target>
       </trans-unit>
