@@ -660,7 +660,7 @@ class KehadiranSiswaController extends Controller
     private function setCurrentMenu()
     {
         $menu = $this->container->get('fast_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.kehadiran-siswa', array(), 'navigations')]->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.kehadiran.siswa', array(), 'navigations')]->setCurrent(true);
     }
 
     private function isRegisteredToSchool()

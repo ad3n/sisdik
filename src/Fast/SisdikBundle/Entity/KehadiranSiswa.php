@@ -181,11 +181,12 @@ class KehadiranSiswa
     }
 
     /**
+     * @param  boolean $withsecond
      * @return string
      */
-    public function getJam()
+    public function getJam($withsecond = TRUE)
     {
-        return $this->jam;
+        return !$withsecond ? substr($this->jam, 0, 5) : $this->jam;
     }
 
     /**

@@ -146,6 +146,11 @@ kehadiran_siswa:
     type:     annotation
     prefix:   /
 
+kehadiran_siswa_laporan:
+    resource: "@FastSisdikBundle/Controller/KehadiranSiswaReportController.php"
+    type:     annotation
+    prefix:   /
+
 kehadiran_siswa_localapi:
     resource: "@FastSisdikBundle/Controller/KehadiranSiswaLocalAPIController.php"
     type:     annotation
