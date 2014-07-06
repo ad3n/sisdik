@@ -83,7 +83,7 @@
                         <text:p>{{ kehadiran.siswa.nomorInduk }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ kehadiran.statusKehadiran|trans }}</text:p>
+                        <text:p>{{ daftarStatusKehadiran[kehadiran.statusKehadiran]|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ kehadiran.getJam(false) }}</text:p>

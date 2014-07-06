@@ -6,15 +6,16 @@ use Fast\SisdikBundle\Entity\Siswa;
 use Fast\SisdikBundle\Entity\Kelas;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\KehadiranSiswa;
+use Fast\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Filesystem\Filesystem;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @Route("/laporan-kehadiran-siswa")
@@ -164,6 +165,7 @@ class KehadiranSiswaReportController extends Controller
                         'kelas' => $searchdata['kelas'],
                         'dariTanggal' => $searchdata['dariTanggal'],
                         'hinggaTanggal' => $searchdata['hinggaTanggal'],
+                        'daftarStatusKehadiran' => JadwalKehadiran::getDaftarStatusKehadiran(),
                     ])
                 );
 
