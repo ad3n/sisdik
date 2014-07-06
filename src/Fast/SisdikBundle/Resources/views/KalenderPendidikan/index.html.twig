@@ -10,10 +10,10 @@
 }
 </style>
 <div class="filter-section">
-    <form method="POST" action="{{ path('data_kaldemik_process') }}" class="form-search form-inline">
+    <form method="POST" action="{{ path('kalender-akademik_process') }}" class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('data_kaldemik') }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('kalender-akademik') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 {% endblock content %}

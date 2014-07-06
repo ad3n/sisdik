@@ -143,7 +143,7 @@ class Builder extends ContainerAware
                 'dropdown' => true,
             ]);
 
-            $academic->addChild($translator->trans('links.data.academiccalendar', [], 'navigations'), ['route' => 'data_kaldemik']);
+            $academic->addChild($translator->trans('links.data.academiccalendar', [], 'navigations'), ['route' => 'kalender-akademik']);
             $academic->addChild($translator->trans('links.tingkat', [], 'navigations'), ['route' => 'tingkat-kelas']);
             $academic->addChild($translator->trans('links.data.class', [], 'navigations'), ['route' => 'data_class']);
             $academic->addChild($translator->trans('links.data.classguardian', [], 'navigations'), ['route' => 'data_classguardian']);

@@ -1,6 +1,6 @@
 <?php
-
 namespace Fast\SisdikBundle\Controller;
+
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,91 +14,80 @@ use Fast\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * KalenderPendidikan controller.
- *
- * @Route("/data/kaldemik")
+ * @Route("/kalender-akademik")
  * @PreAuthorize("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
 class KalenderPendidikanController extends Controller
 {
     /**
-     * KalenderPendidikan index
-     *
-     * @Route("/", name="data_kaldemik")
+     * @Route("/", name="kalender-akademik")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $searchform = $this
-                ->createForm(new KalenderPendidikanSearchType(),
-                        array(
-                            'year' => date('Y')
-                        ));
+        $searchform = $this->createForm('sisdik_kalenderpendidikansearch', ['year' => date('Y')]);
 
-        return array(
-            'searchform' => $searchform->createView()
-        );
+        return [
+            'searchform' => $searchform->createView(),
+        ];
     }
 
     /**
-     * KalenderPendidikan process
-     *
-     * @Route("/process", name="data_kaldemik_process")
+     * @Route("/process", name="kalender-akademik_process")
      * @Method("POST")
      */
-    public function processAction(Request $request) {
+    public function processAction(Request $request)
+    {
         $sekolah = $this->isRegisteredToSchool();
 
-        $searchform = $this->createForm(new KalenderPendidikanSearchType());
+        $searchform = $this->createForm('sisdik_kalenderpendidikansearch');
 
         $request = $this->getRequest();
         $searchform->submit($request);
-
         $data = $searchform->getData();
 
         if ($data['year'] != '') {
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('data_kaldemik_display',
-                                            array(
-                                                'year' => $data['year'], 'month' => $data['month']
-                                            )));
+            return $this->redirect($this->generateUrl('kalender-akademik_display', [
+                'year' => $data['year'],
+                'month' => $data['month'],
+            ]));
         }
 
-        return $this->redirect($this->generateUrl('data_kaldemik'));
+        return $this->redirect($this->generateUrl('kalender-akademik'));
     }
 
     /**
-     * Displays KalenderPendidikan entities.
-     *
-     * @Route("/display/{year}/{month}", name="data_kaldemik_display")
+     * @Route("/display/{year}/{month}", name="kalender-akademik_display")
      * @Template()
      */
-    public function displayAction($year, $month) {
+    public function displayAction($year, $month)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $searchform = $this
-                ->createForm(new KalenderPendidikanSearchType(),
-                        array(
-                            'year' => $year, 'month' => $month
-                        ));
-
-        // get data for the selected year-month
-        $em = $this->getDoctrine()->getManager();
+        $searchform = $this->createForm('sisdik_kalenderpendidikansearch', [
+            'year' => $year,
+            'month' => $month,
+        ]);
 
         $nextmonth = date('Y-m-d', mktime(0, 0, 0, $month + 1, 1, $year));
-        $query = $em
-                ->createQuery(
-                        "SELECT t FROM FastSisdikBundle:KalenderPendidikan t
-                        LEFT JOIN t.sekolah t1
-                        WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                        AND t1.id = {$sekolah->getId()}")->setParameter('firstday', "$year-$month-01")
-                ->setParameter('nextmonth', $nextmonth);
-        $dates = $query->getResult();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kalenderPendidikan')
+            ->from('FastSisdikBundle:KalenderPendidikan', 'kalenderPendidikan')
+            ->where('kalenderPendidikan.sekolah = :sekolah')
+            ->andWhere('kalenderPendidikan.tanggal >= :firstday AND kalenderPendidikan.tanggal < :nextmonth')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('firstday', "$year-$month-01")
+            ->setParameter('nextmonth', $nextmonth)
+        ;
+
+        $dates = $querybuilder->getQuery()->getResult();
         $activedates = array();
         if (!empty($dates)) {
             foreach ($dates as $date) {
@@ -110,19 +99,20 @@ class KalenderPendidikanController extends Controller
 
         $form = $this->createForm(new KalenderPendidikanType($calendar, $activedates));
 
-        return array(
-                'calendar' => $calendar, 'searchform' => $searchform->createView(),
-                'form' => $form->createView(), $activedates
-        );
+        return [
+            'calendar' => $calendar,
+            'searchform' => $searchform->createView(),
+            'form' => $form->createView(),
+            $activedates,
+        ];
     }
 
     /**
-     * Edits an existing KalenderPendidikan entity.
-     *
-     * @Route("/update/{year}/{month}", name="data_kaldemik_update")
+     * @Route("/update/{year}/{month}", name="kalender-akademik_update")
      * @Method("POST")
      */
-    public function updateAction(Request $request, $year, $month) {
+    public function updateAction(Request $request, $year, $month)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -138,14 +128,17 @@ class KalenderPendidikanController extends Controller
             $dates = '';
 
             // TODO: use a smart update method, only delete an already existing data and insert a new one
+
             // delete previously saved data in the selected year-month
             $nextmonth = date('Y-m-d', mktime(0, 0, 0, $month + 1, 1, $year));
-            $query = $em
-                    ->createQuery(
-                            "DELETE FastSisdikBundle:KalenderPendidikan t
-                            WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                            AND t.sekolah = {$sekolah->getId()}")
-                    ->setParameter('firstday', "$year-$month-01")->setParameter('nextmonth', $nextmonth);
+            $query = $em->createQuery(
+                    "DELETE FastSisdikBundle:KalenderPendidikan t
+                    WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
+                    AND t.sekolah = {$sekolah->getId()}"
+                )
+                ->setParameter('firstday', "$year-$month-01")
+                ->setParameter('nextmonth', $nextmonth)
+            ;
             $query->execute();
 
             // insert the new data for the selected year-month
@@ -165,31 +158,33 @@ class KalenderPendidikanController extends Controller
             }
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.data.academic.calendar.updated',
-                                            array(
-                                                '%year%' => $year, '%month%' => $calendar['months'][$month]
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add(
+                    'success',
+                    $this->get('translator')->trans('flash.data.academic.calendar.updated', [
+                        '%year%' => $year,
+                        '%month%' => $calendar['months'][$month],
+                    ])
+                )
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('data_kaldemik_display',
-                                        array(
-                                            'year' => $year, 'month' => $month
-                                        )));
+        return $this->redirect($this->generateUrl('kalender-akademik_display', [
+            'year' => $year,
+            'month' => $month,
+        ]));
     }
 
     /**
-     * create monthly calendar
+     * Create monthly calendar
      *
      * @param integer $theyear
      * @param integer $themonth
      */
-    private function createCalendar($theyear = NULL, $themonth = NULL) {
+    private function createCalendar($theyear = NULL, $themonth = NULL)
+    {
         $now = time();
 
         if (!empty($theyear)) {
@@ -208,13 +203,30 @@ class KalenderPendidikanController extends Controller
          * want to start on sunday? use this array AND ( important! ) set $day_offset to 0 ( zero )
          * $days = array('sunday','monday','tuesday','wednesday','thursday','friday','saturday');
          */
-        $days = array(
-            'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu', 'Minggu'
-        );
-        $months = array(
-                1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
-                'Oktober', 'November', 'Desember'
-        );
+        $days = [
+            'Senin',
+            'Selasa',
+            'Rabu',
+            'Kamis',
+            "Jum'at",
+            'Sabtu',
+            'Minggu',
+        ];
+
+        $months = [
+            1 => 'Januari',
+            'Februari',
+            'Maret',
+            'April',
+            'Mei',
+            'Juni',
+            'Juli',
+            'Agustus',
+            'September',
+            'Oktober',
+            'November',
+            'Desember',
+        ];
 
         // day offset, 1 is monday, 0 is sunday
         $day_offset = 1;
@@ -223,7 +235,7 @@ class KalenderPendidikanController extends Controller
         $start_day_number = date('w', $start_day);
         $days_in_month = date('t', $start_day);
         $row = 0;
-        $cal = array();
+        $cal = [];
         $trow = 0;
         $blank_days = $start_day_number - $day_offset;
 
@@ -250,29 +262,36 @@ class KalenderPendidikanController extends Controller
 
             $trow++;
         }
+
         while ((($days_in_month + $blank_days) % 7) != 0) {
             $cal[$row][$trow]['num'] = null;
             $days_in_month++;
             $trow++;
         }
 
-        return array(
-            'months' => $months, 'days' => $days, 'cal' => $cal, 'month' => abs($month), 'year' => $year,
-        );
+        return [
+            'months' => $months,
+            'days' => $days,
+            'cal' => $cal,
+            'month' => abs($month),
+            'year' => $year,
+        ];
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('fast_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.academiccalendar', array(), 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
         } else {
             throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));

@@ -68,6 +68,6 @@ class KalenderPendidikanSearchType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kalenderpendidikansearchtype';
+        return 'sisdik_kalenderpendidikansearch';
     }
 }

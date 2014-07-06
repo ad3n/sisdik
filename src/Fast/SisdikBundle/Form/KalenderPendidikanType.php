@@ -72,6 +72,6 @@ class KalenderPendidikanType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kalenderpendidikantype';
+        return 'sisdik_kalenderpendidikan';
     }
 }

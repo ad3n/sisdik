@@ -61,10 +61,10 @@ p.day-num {
 }
 </style>
 <div class="filter-section">
-    <form method="POST" action="{{ path('data_kaldemik_process') }}" class="form-search form-inline">
+    <form method="POST" action="{{ path('kalender-akademik_process') }}" class="form-search form-inline">
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon search">{{ 'label.view'|trans }}</button>
-        <button class="btn" type="reset" onclick="window.location.href='{{ path('data_kaldemik') }}'">{{ 'label.reset'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('kalender-akademik') }}'">{{ 'label.reset'|trans }}</button>
     </form>
 </div>
 
@@ -73,7 +73,7 @@ p.day-num {
 Centang tanggal untuk menandai sebagai hari KBM aktif.<br />
 Perubahan baru akan tersimpan setelah mengklik tombol Simpan.
 </p>
-<form id="calendar-form" method="post" action="{{ path('data_kaldemik_update', {'year': calendar.year, 'month': calendar.month}) }}" class="form-inline">
+<form id="calendar-form" method="post" action="{{ path('kalender-akademik_update', {'year': calendar.year, 'month': calendar.month}) }}" class="form-inline">
     <table class="bordered-table" id="no-more-tables">
         <thead>
             <tr>
