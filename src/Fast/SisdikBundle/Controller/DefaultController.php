@@ -7,6 +7,8 @@ use Fast\SisdikBundle\Entity\TahunAkademik;
 use Fast\SisdikBundle\Entity\Sekolah;
 use Fast\SisdikBundle\Entity\KalenderPendidikan;
 use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Fast\SisdikBundle\Util\Calendar;
+use Fast\SisdikBundle\Entity\SiswaKelas;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -97,40 +99,55 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $tahunAkademikAktif = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'sekolah' => $sekolah,
                 'aktif' => true,
             ])
         ;
 
-        $kehadiran = null;
         $tanggalSekarang = new \DateTime();
-
-        $kalenderPendidikan = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
-            ->findOneBy([
-                'sekolah' => $sekolah,
-                'tanggal' => $tanggalSekarang,
-                'kbm' => true,
-            ])
-        ;
 
         $siswa = $this->getUser()->getSiswa();
 
-        if (is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan) {
-            $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
-                ->findOneBy([
-                    'siswa' => $siswa,
-                    'tanggal' => $tanggalSekarang,
-                ])
-            ;
-        }
+        $siswaKelas = $em->getRepository('FastSisdikBundle:SiswaKelas')
+            ->findOneBy([
+                'siswa' => $siswa,
+                'tahunAkademik' => $tahunAkademik,
+                'aktif' => true,
+            ])
+        ;
+
+        $objectCalendar = new Calendar;
+        $calendar = $objectCalendar->createMonthlyCalendar($tanggalSekarang->format('Y'), $tanggalSekarang->format('m'));
+
+        $nextmonth = date('Y-m-d', mktime(0, 0, 0, $tanggalSekarang->format('m') + 1, 1, $tanggalSekarang->format('Y')));
+
+        $kehadiran = $em->createQueryBuilder()
+            ->select('kehadiran')
+            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->where('kehadiran.sekolah = :sekolah')
+            ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
+            ->andWhere('kehadiran.kelas = :kelas')
+            ->andWhere('kehadiran.siswa = :siswa')
+            ->andWhere('kehadiran.tanggal >= :firstday AND kehadiran.tanggal < :nextmonth')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunAkademik', $tahunAkademik)
+            ->setParameter('kelas', $siswaKelas->getKelas())
+            ->setParameter('siswa', $siswa)
+            ->setParameter('firstday', $tanggalSekarang->format('Y-m-01'))
+            ->setParameter('nextmonth', $nextmonth)
+            ->getQuery()
+            ->getResult()
+        ;
 
         return [
-            'tahunAkademikAktif' => $tahunAkademikAktif,
+            'tahunAkademik' => $tahunAkademik,
+            'kelas' => $siswaKelas,
             'siswa' => $siswa,
             'kehadiran' => $kehadiran,
             'daftarStatusKehadiran' => JadwalKehadiran::getDaftarStatusKehadiran(),
+            'calendar' => $calendar,
         ];
     }
 

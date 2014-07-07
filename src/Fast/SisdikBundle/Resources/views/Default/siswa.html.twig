@@ -1,16 +1,160 @@
 {% extends 'FastSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{{ 'welcome'|trans({}, 'headings') }}, {{ siswa.namaLengkap }} {% endblock %}
+{% block page_heading %}
+    {{ siswa.namaLengkap }},<br>
+    {{ 'label.class.entry'|trans }} {{ kelas.kelas.nama }},<br>
+    {{ 'label.academicyear.entry'|trans }} {{ tahunAkademik.nama }}
+{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+#no-more-tables .checkbox {
+    padding: 0;
+    margin: 0;
+}
+#no-more-tables .checkbox input {
+    margin-left: 5px;
+    margin-top: 10px;
+}
+#no-more-tables th {
+    width: 14.2%;
+}
+#no-more-tables td {
+    height: 5em;
+}
+#no-more-tables label {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+#no-more-tables td {
+    border-top: 1px solid #DDDDDD;
+    vertical-align: top;
+}
+.inactive {
+    background-color: #F5CBCB;
+}
+.check {
+    background-color: #FFFFAA;
+}
+p.day-num {
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: right;
+    padding: 0 5px 0 0;
+}
+.link-actions {
+    margin-bottom: 20px;
+}
+@media screen and (max-width: 767px) {
+    p.day-num {
+        display: inline;
+    }
+    #no-more-tables .checkbox {
+        display: inline;
+    }
+    #no-more-tables .checkbox input {
+        float: none;
+    }
+}
+h3 {
+    margin-top: 20px;
+    margin-bottom: 0;
+    padding: 0;
+    text-align: center;
+}
+.info-kehadiran {
+    display: block;
+    text-align: center;
+    padding: 2px 0;
+}
+.a-hadir-tepat {
+    background-color: green;
+    color: #fff;
+}
+.b-hadir-telat {
+    background-color: magenta;
+    color: #fff;
+}
+.c-alpa {
+    background-color: red;
+    color: #fff;
+}
+.d-izin {
+    background-color: purple;
+    color: #fff;
+}
+.e-sakit {
+    background-color: purple;
+    color: #fff;
+}
+.bulan {
+    margin: 0 3em;
+}
+</style>
 
-{% if kehadiran %}
-    <p>
-        {{ 'dashboard.info.kehadiran.siswa'
-            |trans({'%tanggal%': kehadiran.tanggal|localizeddate('full', 'none', app.request.locale), '%nama-siswa%': siswa.namaLengkap, '%status-kehadiran%': daftarStatusKehadiran[kehadiran.statusKehadiran]|trans})
-            |desc("%tanggal% %nama-siswa% %status-kehadiran%") }}
-        {{ 'dashboard.info.kehadiran.lebih.lengkap'|trans|desc("") }}
-    </p>
-{% endif %}
+<h3>{{ 'kehadiran.siswa'|trans({}, 'headings')|desc("Informasi Kehadiran") }}</h3>
+<h3 style="margin-top: 0;">
+    <a href="{{ path('_index') }}"><i class="fa fa-arrow-circle-left"></i></a>
+    <span class="bulan">{{ calendar.months[calendar.month] }}, {{ calendar.year }}</span>
+    <a href="{{ path('_index') }}"><i class="fa fa-arrow-circle-right"></i></a>
+</h3>
+<table class="bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            {% for item in calendar.days %}
+            <th>
+                {{ item }}
+            </th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for items in calendar.cal %}
+        <tr>
+            {% set dayindex = 1 %}
+            {% for item in items %}
+                {% if item.num is null %}
+                    <td data-title="{{ calendar.days[loop.index0] }}" class="inactive">&nbsp;</td>
+                {% elseif item.off is not null %}
+                    <td data-title="{{ calendar.days[loop.index0] }}" class="inactive">
+                        <p class="day-num">{{ item.num }}</p>
+                    </td>
+                {% else %}
+                    <td data-title="{{ calendar.days[loop.index0] }}" class="active dates">
+                        <label>
+                            <p class="day-num">{{ item.num }}</p>
+                            {% for k in kehadiran %}
+                                {% if k.tanggal|date('j') == item.num %}
+                                <span class="info-kehadiran {{ k.statusKehadiran }}">
+                                    {% if k.statusKehadiran == 'a-hadir-tepat' %}
+                                        <i class="fa fa-clock-o fa-lg"></i>
+                                    {% elseif k.statusKehadiran == 'b-hadir-telat' %}
+                                        <i class="fa fa-bell fa-lg"></i>
+                                    {% elseif k.statusKehadiran == 'c-alpa' %}
+                                        <i class="fa fa-warning fa-lg"></i>
+                                    {% elseif k.statusKehadiran == 'd-izin' %}
+                                        <i class="fa fa-file-text-o fa-lg"></i>
+                                    {% elseif k.statusKehadiran == 'e-sakit' %}
+                                        <i class="fa fa-ambulance fa-lg"></i>
+                                    {% endif %}
+                                    {{ daftarStatusKehadiran[k.statusKehadiran]|trans }}
+                                </span>
+                                {% endif %}
+                            {% endfor %}
+                        </label>
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 {% endblock content %}
