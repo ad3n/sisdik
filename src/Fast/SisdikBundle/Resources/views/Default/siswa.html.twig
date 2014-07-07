@@ -64,9 +64,9 @@ p.day-num {
     }
     #no-more-tables .info-kehadiran {
         float: right;
-        min-width: 20em;
-        width: 20em;
-        max-width: 20em;
+        min-width: 17em;
+        width: 17em;
+        max-width: 17em;
     }
 }
 h3 {
@@ -101,14 +101,14 @@ h3 {
     color: #fff;
 }
 .bulan {
-    margin: 0 3em;
+    margin: 0 2em;
 }
 label {
     display: block;
 }
 </style>
 
-<h3>{{ 'kehadiran.siswa'|trans({}, 'headings')|desc("Informasi Kehadiran") }}</h3>
+<h3>{{ 'informasi.kehadiran.siswa'|trans({}, 'headings')|desc("Informasi Kehadiran") }}</h3>
 <h3 style="margin-top: 0;">
     <a href="{{ path('_index') }}"><i class="fa fa-arrow-circle-left"></i></a>
     <span class="bulan">{{ calendar.months[calendar.month] }}, {{ calendar.year }}</span>
@@ -143,15 +143,15 @@ label {
                                 {% if k.tanggal|date('j') == item.num %}
                                 <span class="info-kehadiran {{ k.statusKehadiran }}">
                                     {% if k.statusKehadiran == 'a-hadir-tepat' %}
-                                        <i class="fa fa-clock-o fa-lg"></i>
+                                        <i class="fa fa-clock-o fa-lg fa-fw"></i>
                                     {% elseif k.statusKehadiran == 'b-hadir-telat' %}
-                                        <i class="fa fa-bell fa-lg"></i>
+                                        <i class="fa fa-bell fa-lg fa-fw"></i>
                                     {% elseif k.statusKehadiran == 'c-alpa' %}
-                                        <i class="fa fa-warning fa-lg"></i>
+                                        <i class="fa fa-warning fa-lg fa-fw"></i>
                                     {% elseif k.statusKehadiran == 'd-izin' %}
-                                        <i class="fa fa-file-text-o fa-lg"></i>
+                                        <i class="fa fa-file-text-o fa-lg fa-fw"></i>
                                     {% elseif k.statusKehadiran == 'e-sakit' %}
-                                        <i class="fa fa-ambulance fa-lg"></i>
+                                        <i class="fa fa-ambulance fa-lg fa-fw"></i>
                                     {% endif %}
                                     {{ daftarStatusKehadiran[k.statusKehadiran]|trans }}
                                 </span>
