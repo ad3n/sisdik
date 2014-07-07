@@ -339,7 +339,9 @@ class SiswaApplicantReportController extends Controller
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-        $filenameoutput = self::OUTPUTFILE . preg_replace('/\s+/', '', $panitiaAktif[3]) . '-'
+        $patterns = ['/\s+/', '/\//'];
+        $replacements = ['', '_'];
+        $filenameoutput = self::OUTPUTFILE . preg_replace($patterns, $replacements, $panitiaAktif[3]) . '-'
                 . date("m-d-h-i") . ".sisdik";
 
         $outputfiletype = "ods";

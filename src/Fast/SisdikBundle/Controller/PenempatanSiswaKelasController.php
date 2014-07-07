@@ -337,7 +337,9 @@ class PenempatanSiswaKelasController extends Controller
             $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-            $filenameoutput = self::OUTPUTFILE . preg_replace('#/#', '_', $formdata['tahun']->getTahun()) . ".sisdik";
+            $patterns = ['/\s+/', '/\//'];
+            $replacements = ['', '_'];
+            $filenameoutput = self::OUTPUTFILE . preg_replace($patterns, $replacements, $formdata['tahun']->getTahun()) . ".sisdik";
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";
@@ -448,8 +450,10 @@ class PenempatanSiswaKelasController extends Controller
             $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-            $filenameoutput = self::OUTPUTFILE . preg_replace('#/#', '_', $formdata['tahunAkademik']->getNama()) . '.'
-                    . preg_replace('#/#', '_', $formdata['tingkat']->getKode()) . ".sisdik";
+            $patterns = ['/\s+/', '/\//'];
+            $replacements = ['', '_'];
+            $filenameoutput = self::OUTPUTFILE . preg_replace($patterns, $replacements, $formdata['tahunAkademik']->getNama()) . '.'
+                    . preg_replace($patterns, $replacements, $formdata['tingkat']->getKode()) . ".sisdik";
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";

@@ -691,7 +691,9 @@ class SiswaController extends Controller
             $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-            $filenameoutput = self::DATASISWA_OUTPUTFILE . $formdata['tahun']->getTahun() . ".sisdik";
+            $patterns = ['/\s+/', '/\//'];
+            $replacements = ['', '_'];
+            $filenameoutput = self::DATASISWA_OUTPUTFILE . preg_replace($patterns, $replacements, $formdata['tahun']->getTahun()) . ".sisdik";
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";

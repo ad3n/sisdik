@@ -451,7 +451,9 @@ class SiswaUsernameController extends Controller
         $extensiontarget = "." . $outputfiletype;
 
         $time = time();
-        $filenameoutput = self::OUTPUTPREFIX . preg_replace('/\s+/', '', strtolower($tahun->getTahun()))
+        $patterns = ['/\s+/', '/\//'];
+        $replacements = ['', '_'];
+        $filenameoutput = self::OUTPUTPREFIX . preg_replace($patterns, $replacements, strtolower($tahun->getTahun()))
                 . $time;
 
         $this->get('session')->set($filenameoutput, $outputusername);
