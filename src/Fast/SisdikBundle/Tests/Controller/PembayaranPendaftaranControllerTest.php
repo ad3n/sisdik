@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Tests\Controller;
+namespace Langgas\SisdikBundle\Tests\Controller;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Client;
@@ -19,7 +19,7 @@ class PembayaranPendaftaranControllerTest extends WebTestCase
         $em = $client->getContainer()
             ->get('doctrine')
             ->getManager();
-        $user = $em->getRepository('FastSisdikBundle:User')->findOneByUsername('admintelekomedika');
+        $user = $em->getRepository('LanggasSisdikBundle:User')->findOneByUsername('admintelekomedika');
 
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main_firewall', $user->getRoles());
         self::$kernel->getContainer()
@@ -45,12 +45,12 @@ class PembayaranPendaftaranControllerTest extends WebTestCase
         $jumlahbayar = number_format(($values[0] - $potongan) / $jumlahcicilan, 0, ',', '.');
 
         $form = $crawler->filter('#pay-form')->form(array(
-            'fast_sisdikbundle_pembayaranpendaftarantype[daftarBiayaPendaftaran][0][terpilih]' => 1,
-            'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][nominalPembayaran]' => $jumlahbayar,
-            'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][keterangan]' => 'cicilan pertama',
-            'fast_sisdikbundle_pembayaranpendaftarantype[adaPotongan]' => 1,
-            'fast_sisdikbundle_pembayaranpendaftarantype[jenisPotongan]' => 'nominal',
-            'fast_sisdikbundle_pembayaranpendaftarantype[nominalPotongan]' => $potongan
+            'langgas_sisdikbundle_pembayaranpendaftarantype[daftarBiayaPendaftaran][0][terpilih]' => 1,
+            'langgas_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][nominalPembayaran]' => $jumlahbayar,
+            'langgas_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][0][keterangan]' => 'cicilan pertama',
+            'langgas_sisdikbundle_pembayaranpendaftarantype[adaPotongan]' => 1,
+            'langgas_sisdikbundle_pembayaranpendaftarantype[jenisPotongan]' => 'nominal',
+            'langgas_sisdikbundle_pembayaranpendaftarantype[nominalPotongan]' => $potongan
         ));
 
         $client->submit($form);
@@ -69,8 +69,8 @@ class PembayaranPendaftaranControllerTest extends WebTestCase
         $crawler = $client->click($link);
         $keterangan = "cicilan yang kedua";
         $form = $crawler->filter('#pay-form')->form(array(
-            'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][1][nominalPembayaran]' => $jumlahbayar,
-            'fast_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][1][keterangan]' => $keterangan
+            'langgas_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][1][nominalPembayaran]' => $jumlahbayar,
+            'langgas_sisdikbundle_pembayaranpendaftarantype[transaksiPembayaranPendaftaran][1][keterangan]' => $keterangan
         ));
         $client->submit($form);
         $crawler = $client->followRedirect();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Tests\Controller;
+namespace Langgas\SisdikBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -19,7 +19,7 @@ class MesinKehadiranControllerTest extends WebTestCase
 
         // Fill in the form and submit it
         $form = $crawler->selectButton('Create')->form(array(
-            'fast_sisdikbundle_mesinkehadirantype[field_name]'  => 'Test',
+            'langgas_sisdikbundle_mesinkehadirantype[field_name]'  => 'Test',
             // ... other fields to fill
         ));
 
@@ -33,7 +33,7 @@ class MesinKehadiranControllerTest extends WebTestCase
         $crawler = $client->click($crawler->selectLink('Edit')->link());
 
         $form = $crawler->selectButton('Edit')->form(array(
-            'fast_sisdikbundle_mesinkehadirantype[field_name]'  => 'Foo',
+            'langgas_sisdikbundle_mesinkehadirantype[field_name]'  => 'Foo',
             // ... other fields to fill
         ));
 

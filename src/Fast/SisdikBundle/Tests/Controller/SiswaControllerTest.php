@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Tests\Controller;
+namespace Langgas\SisdikBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Tests\Controller;
+namespace Langgas\SisdikBundle\Tests\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\Cookie;
@@ -18,7 +18,7 @@ class BiayaPendaftaranControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
-        $user = $em->getRepository('FastSisdikBundle:User')->findOneByUsername('bendahara');
+        $user = $em->getRepository('LanggasSisdikBundle:User')->findOneByUsername('bendahara');
 
         $token = new UsernamePasswordToken($user, $user->getPassword(), 'main_firewall', $user->getRoles());
         self::$kernel->getContainer()->get('security.context')->setToken($token);
@@ -38,10 +38,10 @@ class BiayaPendaftaranControllerTest extends WebTestCase
         $form = $crawler->selectButton('Tambah')
                 ->form(
                         array(
-                            'fast_sisdikbundle_biayapendaftarantype[tahun]' => '11',
-                            'fast_sisdikbundle_biayapendaftarantype[gelombang]' => '1',
-                            'fast_sisdikbundle_biayapendaftarantype[jenisbiaya]' => '11',
-                            'fast_sisdikbundle_biayapendaftarantype[nominal]' => '150.000',
+                            'langgas_sisdikbundle_biayapendaftarantype[tahun]' => '11',
+                            'langgas_sisdikbundle_biayapendaftarantype[gelombang]' => '1',
+                            'langgas_sisdikbundle_biayapendaftarantype[jenisbiaya]' => '11',
+                            'langgas_sisdikbundle_biayapendaftarantype[nominal]' => '150.000',
                         // ... other fields to fill
                         ));
 
@@ -58,7 +58,7 @@ class BiayaPendaftaranControllerTest extends WebTestCase
         $form = $crawler->selectButton('Edit')
                 ->form(
                         array(
-                            'fast_sisdikbundle_biayapendaftarantype[field_name]' => 'Foo',
+                            'langgas_sisdikbundle_biayapendaftarantype[field_name]' => 'Foo',
                         // ... other fields to fill
                         ));
 
