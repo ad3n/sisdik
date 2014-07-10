@@ -1,4 +1,4 @@
-{% extends 'FastSisdikBundle::layout.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}presence.student.list{% endtrans %}{% endblock %}
 
@@ -385,7 +385,7 @@ $(document).ready(function() {
     $("#form-kehadiran").submit(function() {
         var url = $(this).attr("action");
 
-        {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#output').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 
@@ -412,7 +412,7 @@ $(document).ready(function() {
     $("#form-inisiasi").submit(function() {
         var url = $(this).attr("action");
 
-        {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#loader-inisiasi').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 
@@ -431,7 +431,7 @@ $(document).ready(function() {
     $("#form-kirim-sms").submit(function() {
         var url = $(this).attr("action");
 
-        {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#loader-kirim-sms').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
         {% endimage %}
 

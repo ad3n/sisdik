@@ -1,4 +1,4 @@
-{% extends 'FastSisdikBundle::layout.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}laporan.pembayaran.pendaftaran{% endtrans %}{% endblock %}
 
@@ -70,7 +70,7 @@ form .clearfix {
     margin-right: 0.4em;
 }
 .ui-autocomplete-loading {
-{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
     background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
@@ -84,7 +84,7 @@ form .clearfix {
     padding-left: 0;
 }
 .loading {
-    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
     background: white url('{{ asset_url }}') left center no-repeat;
     {% endimage %}
 }
@@ -355,7 +355,7 @@ form .clearfix {
 {#             <div id="ringkasan">#}
 {#                 <form method="POST" action="{{ path("laporan-pembayaran-pendaftaran_summary") }}" id="summary-form">#}
 {#                     {{ form_label(summaryform.teks) }}#}
-{#                     {% image '@FastSisdikBundle/Resources/public/images/insert-text-abc.png' %}#}
+{#                     {% image '@LanggasSisdikBundle/Resources/public/images/insert-text-abc.png' %}#}
 {#                     	<a href="" onclick="return false;" id="pemilih-ringkasan"><img src="{{ asset_url }}" style="vertical-align: middle" /></a><span id="penanda-template"></span>#}
 {#                     {% endimage %}#}
 {#                     <div class="clearfix" style="margin-bottom: 0;"></div>#}
@@ -378,7 +378,7 @@ form .clearfix {
 {% endblock content %}
 
 {% block javascripts_custom %}
-{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+{% javascripts '@LanggasSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 

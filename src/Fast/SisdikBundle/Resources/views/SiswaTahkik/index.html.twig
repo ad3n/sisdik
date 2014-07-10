@@ -1,4 +1,4 @@
-{% extends 'FastSisdikBundle::layout.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}penahkikan.siswa{% endtrans %} {{ 'tahun'|trans }} {{ panitiaAktif[3] }}{% endblock %}
 
@@ -83,7 +83,7 @@ form .clearfix {
 #slider .ui-slider-range { background: #729fcf; }
 #blue .ui-slider-handle { border-color: #729fcf; }
 .ui-autocomplete-loading {
-{% image '@FastSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
     background: white url('{{ asset_url }}') right center no-repeat;
 {% endimage %}
 }
@@ -201,7 +201,7 @@ form .clearfix {
             <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.full'|trans }}">
                 {{ highlightResult(data.namaLengkap, searchkey)|raw }}
-                {% image '@FastSisdikBundle/Resources/public/images/jump-link.png' %}
+                {% image '@LanggasSisdikBundle/Resources/public/images/jump-link.png' %}
                 <a href="{{ path('applicant_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
@@ -268,7 +268,7 @@ form .clearfix {
 
 {% block javascripts_custom %}
 
-{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+{% javascripts '@LanggasSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 

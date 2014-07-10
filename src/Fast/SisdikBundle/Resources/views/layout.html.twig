@@ -4,13 +4,13 @@
 {% block stylesheets %}
     {% stylesheets
         '@MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less'
-        'bundles/fastsisdik/css/jqueryui/themes/smoothness/jquery-ui-1.9.1.custom.min.css'
-        '@FastSisdikBundle/Resources/public/css/tooltipster/tooltipster.css'
-        '@FastSisdikBundle/Resources/public/css/tooltipster/themes/tooltipster-light.css'
-        'bundles/fastsisdik/font/stylesheet.css'
-        'bundles/fastsisdik/css/styles.css'
-        '@FastSisdikBundle/Resources/public/css/media-queries.css'
-        '@FastSisdikBundle/Resources/public/css/dropkick.css'
+        'bundles/langgassisdik/css/jqueryui/themes/smoothness/jquery-ui-1.9.1.custom.min.css'
+        '@LanggasSisdikBundle/Resources/public/css/tooltipster/tooltipster.css'
+        '@LanggasSisdikBundle/Resources/public/css/tooltipster/themes/tooltipster-light.css'
+        'bundles/langgassisdik/font/stylesheet.css'
+        'bundles/langgassisdik/css/styles.css'
+        '@LanggasSisdikBundle/Resources/public/css/media-queries.css'
+        '@LanggasSisdikBundle/Resources/public/css/dropkick.css'
         filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -34,7 +34,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{{ path("_index") }}">
-                {% image '@FastSisdikBundle/Resources/public/images/logo_white_simple.png' %}
+                {% image '@LanggasSisdikBundle/Resources/public/images/logo_white_simple.png' %}
                     <img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" height="23" style="display: inline-block;">
                 {% endimage %}
             </a>
@@ -53,12 +53,12 @@
               {% if app.user.sekolah.logo != "" %}
                   <a href="{{ path("_index") }}"><img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ app.user.sekolah.webPathLogoThumbnailDisk }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" class="img-polaroid"></a>
                 {% else %}
-                    {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
+                    {% image '@LanggasSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
                       <a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
                     {% endimage %}
                 {% endif %}
             {% else  %}
-                {% image '@FastSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
+                {% image '@LanggasSisdikBundle/Resources/public/images/standar_tutwuri.png' %}
                   <a href="{{ path("_index") }}"><img src="{{ asset_url }}" alt="{{ 'alt.logo.sekolah'|trans }}" border="0" height="80" class="img-polaroid"></a>
                 {% endimage %}
             {% endif %}
@@ -118,17 +118,17 @@
 
 <!--[if lt IE 9]>
 {% javascripts
-    '@FastSisdikBundle/Resources/public/js/libraries/css3-mediaqueries.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/html5.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/css3-mediaqueries.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/html5.js'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 <![endif]-->
 
 {% javascripts
-    '@FastSisdikBundle/Resources/public/js/libraries/jquery-1.8.3.min.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/jquery-ui-1.9.1.custom.min.js'
-    '@FastSisdikBundle/Resources/public/js/libraries/tooltipster/jquery.tooltipster.min.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/jquery-1.8.3.min.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/jquery-ui-1.9.1.custom.min.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/tooltipster/jquery.tooltipster.min.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/affix.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/alert.js'
@@ -142,29 +142,29 @@
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/transition.js'
     '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
     '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
-    '@FastSisdikBundle/Resources/public/js/custom.js'
+    '@LanggasSisdikBundle/Resources/public/js/custom.js'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
 {#     '@MopaBootstrapBundle/Resources/public/bootstrap/js/scrollspy.js'#}
 
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-transition.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-dropdown.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-tab.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-collapse.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-tooltip.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-popover.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/mopabootstrap-collection.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-transition.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-dropdown.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-tab.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-collapse.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-tooltip.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-popover.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/mopabootstrap-collection.js'#}
 
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap.min.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-scrollspy.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-carousel.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-typeahead.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-transition.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-modal.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-alert.js'#}
-{#     '@FastSisdikBundle/Resources/public/js/libraries/bootstrap-button.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap.min.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-scrollspy.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-carousel.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-typeahead.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-transition.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-modal.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-alert.js'#}
+{#     '@LanggasSisdikBundle/Resources/public/js/libraries/bootstrap-button.js'#}
 {% endblock javascripts_bottom %}
 
 {% block javascripts_custom %}{% endblock javascripts_custom %}

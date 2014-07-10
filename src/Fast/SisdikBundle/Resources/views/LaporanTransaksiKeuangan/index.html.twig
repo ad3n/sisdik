@@ -1,4 +1,4 @@
-{% extends 'FastSisdikBundle::layout.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}laporan.transaksi.keuangan{% endtrans %}{% endblock %}
 
@@ -38,7 +38,7 @@ form .clearfix {
     padding-left: 0;
 }
 .loading {
-    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
     background: white url('{{ asset_url }}') left center no-repeat;
     {% endimage %}
 }
@@ -176,7 +176,7 @@ form .clearfix {
 {% endblock content %}
 
 {% block javascripts_custom %}
-{% javascripts '@FastSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+{% javascripts '@LanggasSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 

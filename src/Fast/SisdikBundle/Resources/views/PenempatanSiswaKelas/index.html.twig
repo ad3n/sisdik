@@ -1,4 +1,4 @@
-{% extends 'FastSisdikBundle::layout.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}penempatan.siswa.kelas{% endtrans %}{% endblock %}
 
@@ -14,7 +14,7 @@
     min-height: 15px;
 }
 .loading {
-    {% image '@FastSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
     background: white url('{{ asset_url }}') left center no-repeat;
     {% endimage %}
 }

@@ -1,4 +1,4 @@
-{% extends 'FastSisdikBundle::layout.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
 {% block page_heading %}{% trans from "headings" %}academic.calendar{% endtrans %}{% endblock %}
 
@@ -110,7 +110,7 @@ Perubahan baru akan tersimpan setelah mengklik tombol Simpan.
     </table>
 
     <div class="link-actions">
-        {% image '@FastSisdikBundle/Resources/public/images/arrow_ltr.png' %}
+        {% image '@LanggasSisdikBundle/Resources/public/images/arrow_ltr.png' %}
         <img src="{{ asset_url }}" border="0" style="vertical-align: bottom;" />
         {% endimage %}
         <a onclick="if (markAllDates('calendar-form')) return false;" href="" class="additional-link">{{ 'label.checkall'|trans }}</a>
