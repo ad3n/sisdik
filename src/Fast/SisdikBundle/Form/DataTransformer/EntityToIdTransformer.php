@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form\DataTransformer;
+namespace Langgas\SisdikBundle\Form\DataTransformer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\DataTransformerInterface;

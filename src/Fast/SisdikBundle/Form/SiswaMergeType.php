@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,6 +31,6 @@ class SiswaMergeType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswamergetype';
+        return 'langgas_sisdikbundle_siswamergetype';
     }
 }

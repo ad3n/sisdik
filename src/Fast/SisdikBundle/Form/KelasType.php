@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,13 +35,13 @@ class KelasType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('tingkat')
-            ->from('FastSisdikBundle:Tingkat', 'tingkat')
+            ->from('LanggasSisdikBundle:Tingkat', 'tingkat')
             ->where('tingkat.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tingkat', 'entity', [
-                'class' => 'FastSisdikBundle:Tingkat',
+                'class' => 'LanggasSisdikBundle:Tingkat',
                 'label' => 'label.tingkat',
                 'multiple' => false,
                 'expanded' => false,
@@ -57,7 +57,7 @@ class KelasType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('tahunAkademik')
-            ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->addOrderBy('tahunAkademik.nama', 'DESC')
@@ -65,7 +65,7 @@ class KelasType extends AbstractType
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -82,7 +82,7 @@ class KelasType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('nama', 'text', [
@@ -119,7 +119,7 @@ class KelasType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Kelas',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Kelas',
             ])
         ;
     }
@@ -131,6 +131,6 @@ class KelasType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kelastype';
+        return 'langgas_sisdikbundle_kelastype';
     }
 }

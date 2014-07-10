@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form\EventListener;
+namespace Langgas\SisdikBundle\Form\EventListener;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -66,7 +66,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $qbTahunAkademik = $em
                 ->createQueryBuilder()
                 ->select('tahunAkademik')
-                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
                 ->where('tahunAkademik.sekolah = :sekolah')
                 ->orderBy('tahunAkademik.urutan', 'DESC')
                 ->addOrderBy('tahunAkademik.nama', 'DESC')
@@ -75,7 +75,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 
             $form
                 ->add('tahunAkademik', 'entity', [
-                    'class' => 'FastSisdikBundle:TahunAkademik',
+                    'class' => 'LanggasSisdikBundle:TahunAkademik',
                     'label' => /** @Ignore */ $label,
                     'multiple' => false,
                     'expanded' => false,
@@ -91,7 +91,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $qbKelas = $em
                 ->createQueryBuilder()
                 ->select('kelas')
-                ->from('FastSisdikBundle:Kelas', 'kelas')
+                ->from('LanggasSisdikBundle:Kelas', 'kelas')
                 ->leftJoin('kelas.tingkat', 'tingkat')
                 ->where('kelas.sekolah = :sekolah')
                 ->orderBy('tingkat.urutan', 'ASC')
@@ -101,7 +101,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 
             $form
                 ->add('kelas', 'entity', [
-                    'class' => 'FastSisdikBundle:Kelas',
+                    'class' => 'LanggasSisdikBundle:Kelas',
                     'label_render' => false,
                     'multiple' => false,
                     'expanded' => false,
@@ -144,7 +144,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $qbTahunAkademik = $em
                 ->createQueryBuilder()
                 ->select('tahunAkademik')
-                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
                 ->where('tahunAkademik.sekolah = :sekolah')
                 ->orderBy('tahunAkademik.urutan', 'DESC')
                 ->addOrderBy('tahunAkademik.nama', 'DESC')
@@ -153,7 +153,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 
             $form
                 ->add('tahunAkademik', 'entity', [
-                    'class' => 'FastSisdikBundle:TahunAkademik',
+                    'class' => 'LanggasSisdikBundle:TahunAkademik',
                     'label' => /** @Ignore */ $label,
                     'multiple' => false,
                     'expanded' => false,
@@ -169,7 +169,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $qbKelas = $em
                 ->createQueryBuilder()
                 ->select('kelas')
-                ->from('FastSisdikBundle:Kelas', 'kelas')
+                ->from('LanggasSisdikBundle:Kelas', 'kelas')
                 ->leftJoin('kelas.tingkat', 'tingkat')
                 ->where('kelas.sekolah = :sekolah')
                 ->orderBy('tingkat.urutan', 'ASC')
@@ -179,7 +179,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 
             $form
                 ->add('kelas', 'entity', [
-                    'class' => 'FastSisdikBundle:Kelas',
+                    'class' => 'LanggasSisdikBundle:Kelas',
                     'label_render' => false,
                     'multiple' => false,
                     'expanded' => false,

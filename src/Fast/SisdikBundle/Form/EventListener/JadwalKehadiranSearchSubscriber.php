@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form\EventListener;
+namespace Langgas\SisdikBundle\Form\EventListener;
 
 use Doctrine\ORM\EntityManager;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;

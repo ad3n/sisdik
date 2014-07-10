@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,13 +38,13 @@ class PersonilType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Personil',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Personil',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_personiltype';
+        return 'langgas_sisdikbundle_personiltype';
     }
 }

@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +36,7 @@ class PenjurusanType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('nama', null, [
@@ -60,14 +60,14 @@ class PenjurusanType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('penjurusan')
-            ->from('FastSisdikBundle:Penjurusan', 'penjurusan')
+            ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
             ->where('penjurusan.sekolah = :sekolah')
             ->orderBy('penjurusan.sekolah ASC, penjurusan.root, penjurusan.lft', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('parent', 'entity', [
-                'class' => 'FastSisdikBundle:Penjurusan',
+                'class' => 'LanggasSisdikBundle:Penjurusan',
                 'label' => 'label.parentnode',
                 'multiple' => false,
                 'expanded' => false,
@@ -86,13 +86,13 @@ class PenjurusanType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Penjurusan',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Penjurusan',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_penjurusantype';
+        return 'langgas_sisdikbundle_penjurusantype';
     }
 }

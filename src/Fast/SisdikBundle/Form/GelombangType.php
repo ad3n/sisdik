@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,7 @@ class GelombangType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('nama', null, [
@@ -77,6 +77,6 @@ class GelombangType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_gelombangtype';
+        return 'langgas_sisdikbundle_gelombangtype';
     }
 }

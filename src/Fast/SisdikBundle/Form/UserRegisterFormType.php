@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -111,7 +111,7 @@ class UserRegisterFormType extends BaseType
             if (($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))) {
                 $builder
                     ->add('sekolah', 'entity', [
-                        'class' => 'FastSisdikBundle:Sekolah',
+                        'class' => 'LanggasSisdikBundle:Sekolah',
                         'label' => 'label.school',
                         'multiple' => false,
                         'expanded' => false,
@@ -129,7 +129,7 @@ class UserRegisterFormType extends BaseType
                     $builder
                         ->add('sekolah', new EntityHiddenType($em), [
                             'required' => true,
-                            'class' => 'FastSisdikBundle:Sekolah',
+                            'class' => 'LanggasSisdikBundle:Sekolah',
                             'data' => $sekolah->getId(),
                         ])
                     ;
@@ -151,7 +151,7 @@ class UserRegisterFormType extends BaseType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\User',
+                'data_class' => 'Langgas\SisdikBundle\Entity\User',
                 'validation_groups' => [
                     'Registration',
                 ],
@@ -161,6 +161,6 @@ class UserRegisterFormType extends BaseType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_userregister';
+        return 'langgas_sisdikbundle_userregister';
     }
 }

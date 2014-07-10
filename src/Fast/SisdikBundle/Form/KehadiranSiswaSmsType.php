@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -68,7 +68,7 @@ class KehadiranSiswaSmsType extends AbstractType
             ])
             ->add('kelas', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'data' => $this->kelas->getId(),
             ])
             ->add('tanggal', 'hidden', [
@@ -86,14 +86,14 @@ class KehadiranSiswaSmsType extends AbstractType
         if (count($siswa) > 0) {
             $querybuilder1 = $em->createQueryBuilder()
                 ->select('siswa')
-                ->from('FastSisdikBundle:Siswa', 'siswa')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
                 ->where('siswa.id IN (:id)')
                 ->orderBy('siswa.namaLengkap', 'ASC')
                 ->setParameter('id', $siswa)
             ;
             $builder
                 ->add('siswa', 'entity', [
-                    'class' => 'FastSisdikBundle:Siswa',
+                    'class' => 'LanggasSisdikBundle:Siswa',
                     'label' => 'label.student.entry',
                     'multiple' => false,
                     'expanded' => false,
@@ -111,6 +111,6 @@ class KehadiranSiswaSmsType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kehadiransiswasmstype';
+        return 'langgas_sisdikbundle_kehadiransiswasmstype';
     }
 }

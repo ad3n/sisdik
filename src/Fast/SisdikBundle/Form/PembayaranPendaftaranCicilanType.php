@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -53,13 +53,13 @@ class PembayaranPendaftaranCicilanType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\PembayaranPendaftaran',
+                'data_class' => 'Langgas\SisdikBundle\Entity\PembayaranPendaftaran',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_pembayaranpendaftarantype';
+        return 'langgas_sisdikbundle_pembayaranpendaftarantype';
     }
 }

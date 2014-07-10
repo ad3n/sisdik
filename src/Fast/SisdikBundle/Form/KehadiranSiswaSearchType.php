@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -64,14 +64,14 @@ class KehadiranSiswaSearchType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('tingkat')
-            ->from('FastSisdikBundle:Tingkat', 'tingkat')
+            ->from('LanggasSisdikBundle:Tingkat', 'tingkat')
             ->where('tingkat.sekolah = :sekolah')
             ->orderBy('tingkat.kode')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tingkat', 'entity', [
-                'class' => 'FastSisdikBundle:Tingkat',
+                'class' => 'LanggasSisdikBundle:Tingkat',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -88,7 +88,7 @@ class KehadiranSiswaSearchType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kelas')
-            ->from('FastSisdikBundle:Kelas', 'kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
             ->leftJoin('kelas.tingkat', 'tingkat')
             ->leftJoin('kelas.tahunAkademik', 'tahunAkademik')
             ->where('kelas.sekolah = :sekolah')
@@ -100,7 +100,7 @@ class KehadiranSiswaSearchType extends AbstractType
         ;
         $builder
             ->add('kelas', 'entity', [
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -134,6 +134,6 @@ class KehadiranSiswaSearchType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kehadiransiswasearchtype';
+        return 'langgas_sisdikbundle_kehadiransiswasearchtype';
     }
 }

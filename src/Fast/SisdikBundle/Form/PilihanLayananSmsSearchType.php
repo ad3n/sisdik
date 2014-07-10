@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -58,7 +58,7 @@ class PilihanLayananSmsSearchType extends AbstractType
     private function buildSchoolChoices()
     {
         $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
+        $entities = $em->getRepository('LanggasSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
 
         $choices = [
             '' => 'label.allschool',

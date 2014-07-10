@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
@@ -35,14 +35,14 @@ class SiswaGenerateUsernameType extends AbstractType
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()
                 ->select('tahun')
-                ->from('FastSisdikBundle:Tahun', 'tahun')
+                ->from('LanggasSisdikBundle:Tahun', 'tahun')
                 ->where('tahun.sekolah = :sekolah')
                 ->orderBy('tahun.tahun', 'DESC')
                 ->setParameter('sekolah', $sekolah)
             ;
             $builder
                 ->add('tahun', 'entity', [
-                    'class' => 'FastSisdikBundle:Tahun',
+                    'class' => 'LanggasSisdikBundle:Tahun',
                     'label' => 'label.year.entry',
                     'multiple' => false,
                     'expanded' => false,
@@ -99,6 +99,6 @@ class SiswaGenerateUsernameType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswagenerateusernametype';
+        return 'langgas_sisdikbundle_siswagenerateusernametype';
     }
 }

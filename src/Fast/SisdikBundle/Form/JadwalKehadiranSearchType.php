@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\EventListener\JadwalKehadiranSearchSubscriber;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\EventListener\JadwalKehadiranSearchSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,14 +47,14 @@ class JadwalKehadiranSearchType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('tahunAkademik')
-            ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -71,7 +71,7 @@ class JadwalKehadiranSearchType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('kelas')
-            ->from('FastSisdikBundle:Kelas', 'kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
             ->leftJoin('kelas.tingkat', 'tingkat')
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('tingkat.urutan', 'ASC')
@@ -80,7 +80,7 @@ class JadwalKehadiranSearchType extends AbstractType
         ;
         $builder
             ->add('kelas', 'entity', [
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,

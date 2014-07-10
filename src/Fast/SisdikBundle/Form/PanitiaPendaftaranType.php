@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\User;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,14 +36,14 @@ class PanitiaPendaftaranType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Tahun', 't')
+            ->from('LanggasSisdikBundle:Tahun', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.tahun', 'DESC')
             ->setParameter('sekolah', $sekolah->getId())
         ;
         $builder
             ->add('tahun', 'entity', [
-                'class' => 'FastSisdikBundle:Tahun',
+                'class' => 'LanggasSisdikBundle:Tahun',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -59,7 +59,7 @@ class PanitiaPendaftaranType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:User', 't')
+            ->from('LanggasSisdikBundle:User', 't')
             ->where('t.sekolah = :sekolah')
             ->andWhere('t.siswa IS NULL')
             ->andWhere('t.sekolah IS NOT NULL')
@@ -68,7 +68,7 @@ class PanitiaPendaftaranType extends AbstractType
         ;
         $builder
             ->add('ketuaPanitia', 'entity', [
-                'class' => 'FastSisdikBundle:User',
+                'class' => 'LanggasSisdikBundle:User',
                 'label' => 'label.committee.leader',
                 'multiple' => false,
                 'expanded' => false,
@@ -82,7 +82,7 @@ class PanitiaPendaftaranType extends AbstractType
             ])
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('daftarPersonil', 'collection', [
@@ -120,13 +120,13 @@ class PanitiaPendaftaranType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\PanitiaPendaftaran',
+                'data_class' => 'Langgas\SisdikBundle\Entity\PanitiaPendaftaran',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_panitiapendaftarantype';
+        return 'langgas_sisdikbundle_panitiapendaftarantype';
     }
 }

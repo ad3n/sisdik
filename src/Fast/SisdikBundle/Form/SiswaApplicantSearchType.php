@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,14 +36,14 @@ class SiswaApplicantSearchType extends AbstractType
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()
                 ->select('t')
-                ->from('FastSisdikBundle:Gelombang', 't')
+                ->from('LanggasSisdikBundle:Gelombang', 't')
                 ->where('t.sekolah = :sekolah')
                 ->orderBy('t.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId())
             ;
             $builder
                 ->add('gelombang', 'entity', [
-                    'class' => 'FastSisdikBundle:Gelombang',
+                    'class' => 'LanggasSisdikBundle:Gelombang',
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'nama',

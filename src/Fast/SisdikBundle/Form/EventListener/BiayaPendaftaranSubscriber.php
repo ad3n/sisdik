@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Form\EventListener;
+namespace Langgas\SisdikBundle\Form\EventListener;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
-use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -74,7 +74,7 @@ class BiayaPendaftaranSubscriber implements EventSubscriberInterface
 
         $biayaPendaftaran = $this
             ->objectManager
-            ->getRepository('FastSisdikBundle:BiayaPendaftaran')
+            ->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
             ->find($data['biayaPendaftaran'])
         ;
 

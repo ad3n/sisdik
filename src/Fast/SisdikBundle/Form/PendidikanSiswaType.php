@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\PendidikanSiswa;
+use Langgas\SisdikBundle\Entity\PendidikanSiswa;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -106,13 +106,13 @@ class PendidikanSiswaType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\PendidikanSiswa',
+                'data_class' => 'Langgas\SisdikBundle\Entity\PendidikanSiswa',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_pendidikansiswatype';
+        return 'langgas_sisdikbundle_pendidikansiswatype';
     }
 }

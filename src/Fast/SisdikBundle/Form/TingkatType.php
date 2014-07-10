@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +36,7 @@ class TingkatType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('kode', null, [
@@ -67,7 +67,7 @@ class TingkatType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Tingkat',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Tingkat',
             ])
         ;
     }
@@ -79,6 +79,6 @@ class TingkatType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_tingkattype';
+        return 'langgas_sisdikbundle_tingkattype';
     }
 }

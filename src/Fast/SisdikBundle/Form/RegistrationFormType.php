@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,6 +41,6 @@ class RegistrationFormType extends BaseType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_registration';
+        return 'langgas_sisdikbundle_registration';
     }
 }

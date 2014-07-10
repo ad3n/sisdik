@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Siswa;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,7 @@ class SiswaTahkikType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:Siswa')
+        $entities = $em->getRepository('LanggasSisdikBundle:Siswa')
             ->findBy([
                 'id' => preg_split('/:/', $this->idsiswa),
             ])
@@ -58,6 +58,6 @@ class SiswaTahkikType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswatahkiktype';
+        return 'langgas_sisdikbundle_siswatahkiktype';
     }
 }

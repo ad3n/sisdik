@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Form\EventListener;
+namespace Langgas\SisdikBundle\Form\EventListener;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Fast\SisdikBundle\Entity\DokumenSiswa;
-use Fast\SisdikBundle\Entity\JenisDokumenSiswa;
+use Langgas\SisdikBundle\Entity\DokumenSiswa;
+use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -77,7 +77,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
 
         $jenisDokumen = $this
             ->objectManager
-            ->getRepository('FastSisdikBundle:JenisDokumenSiswa')
+            ->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')
             ->find($data['jenisDokumenSiswa'])
         ;
 

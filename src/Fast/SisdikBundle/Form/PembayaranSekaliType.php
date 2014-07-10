@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\BiayaSekali;
+use Langgas\SisdikBundle\Entity\BiayaSekali;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -39,11 +39,11 @@ class PembayaranSekaliType extends AbstractType
         $sekolah = $user->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($this->siswaId);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($this->siswaId);
 
         $querybuilder = $em->createQueryBuilder()
             ->select('biaya')
-            ->from('FastSisdikBundle:BiayaSekali', 'biaya')
+            ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
             ->where('biaya.tahun = :tahun')
             ->andWhere('biaya.gelombang = :gelombang')
             ->orderBy('biaya.urutan', 'ASC')
@@ -96,13 +96,13 @@ class PembayaranSekaliType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\PembayaranSekali',
+                'data_class' => 'Langgas\SisdikBundle\Entity\PembayaranSekali',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_pembayaransekalitype';
+        return 'langgas_sisdikbundle_pembayaransekalitype';
     }
 }

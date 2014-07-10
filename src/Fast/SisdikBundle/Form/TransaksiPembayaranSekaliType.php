@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,13 +40,13 @@ class TransaksiPembayaranSekaliType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\TransaksiPembayaranSekali',
+                'data_class' => 'Langgas\SisdikBundle\Entity\TransaksiPembayaranSekali',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_transaksipembayaransekalitype';
+        return 'langgas_sisdikbundle_transaksipembayaransekalitype';
     }
 }

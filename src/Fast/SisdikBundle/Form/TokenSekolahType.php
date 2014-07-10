@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
@@ -40,7 +40,7 @@ class TokenSekolahType extends AbstractType
         $querybuilder = $this->entityManager
             ->createQueryBuilder()
             ->select('s')
-            ->from('FastSisdikBundle:Sekolah', 's')
+            ->from('LanggasSisdikBundle:Sekolah', 's')
             ->orderBy('s.nama', 'ASC')
         ;
 
@@ -51,7 +51,7 @@ class TokenSekolahType extends AbstractType
                 'required' => false,
             ])
             ->add('sekolah', 'entity', [
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'label' => 'label.school',
                 'multiple' => false,
                 'expanded' => false,
@@ -70,7 +70,7 @@ class TokenSekolahType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\TokenSekolah',
+                'data_class' => 'Langgas\SisdikBundle\Entity\TokenSekolah',
             ])
         ;
     }

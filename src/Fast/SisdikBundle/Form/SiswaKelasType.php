@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\TahunAkademik;
-use Fast\SisdikBundle\Entity\Penjurusan;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Entity\Penjurusan;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,7 +37,7 @@ class SiswaKelasType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('tahunAkademik')
-            ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->setParameter('sekolah', $sekolah)
@@ -45,7 +45,7 @@ class SiswaKelasType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('kelas')
-            ->from('FastSisdikBundle:Kelas', 'kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
             ->leftJoin('kelas.tingkat', 'tingkat')
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('tingkat.urutan', 'ASC')
@@ -55,7 +55,7 @@ class SiswaKelasType extends AbstractType
 
         $querybuilder3 = $em->createQueryBuilder()
             ->select('penjurusan')
-            ->from('FastSisdikBundle:Penjurusan', 'penjurusan')
+            ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
             ->where('penjurusan.sekolah = :sekolah')
             ->orderBy('penjurusan.root, penjurusan.lvl', 'ASC')
             ->setParameter('sekolah', $sekolah)
@@ -63,7 +63,7 @@ class SiswaKelasType extends AbstractType
 
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -76,7 +76,7 @@ class SiswaKelasType extends AbstractType
                 ],
             ])
             ->add('kelas', 'entity', [
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -89,7 +89,7 @@ class SiswaKelasType extends AbstractType
                 ],
             ])
             ->add('penjurusan', 'entity', [
-                'class' => 'FastSisdikBundle:Penjurusan',
+                'class' => 'LanggasSisdikBundle:Penjurusan',
                 'label' => 'label.placement.study',
                 'multiple' => false,
                 'expanded' => false,
@@ -112,7 +112,7 @@ class SiswaKelasType extends AbstractType
                 ],
             ])
             ->add('siswa', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:Siswa',
+                'class' => 'LanggasSisdikBundle:Siswa',
             ])
         ;
     }
@@ -121,13 +121,13 @@ class SiswaKelasType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\SiswaKelas',
+                'data_class' => 'Langgas\SisdikBundle\Entity\SiswaKelas',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswakelastype';
+        return 'langgas_sisdikbundle_siswakelastype';
     }
 }

@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,7 @@ class KelasSearchType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('tahunAkademik')
-            ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->addOrderBy('tahunAkademik.nama', 'DESC')
@@ -43,7 +43,7 @@ class KelasSearchType extends AbstractType
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,

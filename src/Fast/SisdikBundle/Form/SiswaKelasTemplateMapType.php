@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,7 +34,7 @@ class SiswaKelasTemplateMapType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('tahunAkademik')
-            ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->addOrderBy('tahunAkademik.nama', 'DESC')
@@ -42,7 +42,7 @@ class SiswaKelasTemplateMapType extends AbstractType
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -59,14 +59,14 @@ class SiswaKelasTemplateMapType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('tingkat')
-            ->from('FastSisdikBundle:Tingkat', 'tingkat')
+            ->from('LanggasSisdikBundle:Tingkat', 'tingkat')
             ->where('tingkat.sekolah = :sekolah')
             ->orderBy('tingkat.kode')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tingkat', 'entity', [
-                'class' => 'FastSisdikBundle:Tingkat',
+                'class' => 'LanggasSisdikBundle:Tingkat',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -84,6 +84,6 @@ class SiswaKelasTemplateMapType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswakelastemplatemaptype';
+        return 'langgas_sisdikbundle_siswakelastemplatemaptype';
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,13 +55,13 @@ class PenyakitSiswaType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\PenyakitSiswa',
+                'data_class' => 'Langgas\SisdikBundle\Entity\PenyakitSiswa',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_penyakitsiswatype';
+        return 'langgas_sisdikbundle_penyakitsiswatype';
     }
 }

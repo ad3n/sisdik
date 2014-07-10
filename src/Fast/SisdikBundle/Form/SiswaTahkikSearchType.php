@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -36,14 +36,14 @@ class SiswaTahkikSearchType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('gelombang')
-            ->from('FastSisdikBundle:Gelombang', 'gelombang')
+            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
             ->where('gelombang.sekolah = :sekolah')
             ->orderBy('gelombang.urutan', 'ASC')
             ->setParameter('sekolah', $sekolah->getId())
         ;
         $builder
             ->add('gelombang', 'entity', [
-                'class' => 'FastSisdikBundle:Gelombang',
+                'class' => 'LanggasSisdikBundle:Gelombang',
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
@@ -101,7 +101,7 @@ class SiswaTahkikSearchType extends AbstractType
                 'horizontal' => false,
             ])
             ->add('sekolahAsal', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:SekolahAsal',
+                'class' => 'LanggasSisdikBundle:SekolahAsal',
                 'attr' => [
                     'class' => 'id-sekolah-asal',
                 ],
@@ -119,7 +119,7 @@ class SiswaTahkikSearchType extends AbstractType
                 'horizontal' => false,
             ])
             ->add('referensi', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:Referensi',
+                'class' => 'LanggasSisdikBundle:Referensi',
                 'attr' => [
                     'class' => 'large id-referensi',
                 ],

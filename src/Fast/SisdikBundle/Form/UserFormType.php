@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
@@ -107,7 +107,7 @@ class UserFormType extends AbstractType
             if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
                 $builder
                     ->add('sekolah', 'entity', [
-                        'class' => 'FastSisdikBundle:Sekolah',
+                        'class' => 'LanggasSisdikBundle:Sekolah',
                         'label' => 'label.school',
                         'multiple' => false,
                         'expanded' => false,
@@ -123,7 +123,7 @@ class UserFormType extends AbstractType
                     $em = $this->container->get('doctrine')->getManager();
                     $querybuilder = $em->createQueryBuilder()
                         ->select('t')
-                        ->from('FastSisdikBundle:Sekolah', 't')
+                        ->from('LanggasSisdikBundle:Sekolah', 't')
                         ->where('t.id = :sekolah')
                         ->setParameter('sekolah', $sekolah)
                     ;
@@ -131,7 +131,7 @@ class UserFormType extends AbstractType
                     $builder
                         ->add('sekolah', new EntityHiddenType($em), [
                             'required' => true,
-                            'class' => 'FastSisdikBundle:Sekolah',
+                            'class' => 'LanggasSisdikBundle:Sekolah',
                             'data' => $sekolah->getId(),
                         ])
                     ;
@@ -153,13 +153,13 @@ class UserFormType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\User',
+                'data_class' => 'Langgas\SisdikBundle\Entity\User',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_user';
+        return 'langgas_sisdikbundle_user';
     }
 }

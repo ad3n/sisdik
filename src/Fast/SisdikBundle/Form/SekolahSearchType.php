@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Doctrine\ORM\EntityManager;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -65,7 +65,7 @@ class SekolahSearchType extends AbstractType
     {
         $em = $this->entityManager;
 
-        $entities = $em->getRepository('FastSisdikBundle:Sekolah')
+        $entities = $em->getRepository('LanggasSisdikBundle:Sekolah')
             ->findBy([], [
                 'nama' => 'ASC'
             ])

@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,14 +35,14 @@ class JenisDokumenSiswaType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('tahun')
-            ->from('FastSisdikBundle:Tahun', 'tahun')
+            ->from('LanggasSisdikBundle:Tahun', 'tahun')
             ->where('tahun.sekolah = :sekolah')
             ->orderBy('tahun.tahun', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tahun', 'entity', [
-                'class' => 'FastSisdikBundle:Tahun',
+                'class' => 'LanggasSisdikBundle:Tahun',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -59,7 +59,7 @@ class JenisDokumenSiswaType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('namaDokumen', 'text', [
@@ -99,13 +99,13 @@ class JenisDokumenSiswaType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\JenisDokumenSiswa',
+                'data_class' => 'Langgas\SisdikBundle\Entity\JenisDokumenSiswa',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_jenisdokumensiswatype';
+        return 'langgas_sisdikbundle_jenisdokumensiswatype';
     }
 }

@@ -1,10 +1,10 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
+use Langgas\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
@@ -36,7 +36,7 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Tahun', 't')
+            ->from('LanggasSisdikBundle:Tahun', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.tahun', 'DESC')
             ->setParameter('sekolah', $sekolah->getId())
@@ -44,7 +44,7 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Gelombang', 't')
+            ->from('LanggasSisdikBundle:Gelombang', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.urutan', 'ASC')
             ->setParameter('sekolah', $sekolah->getId())
@@ -52,7 +52,7 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
 
         $builder
             ->add('tahun', 'entity', [
-                'class' => 'FastSisdikBundle:Tahun',
+                'class' => 'LanggasSisdikBundle:Tahun',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -67,7 +67,7 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
                 'horizontal' => false,
             ])
             ->add('gelombang', 'entity', [
-                'class' => 'FastSisdikBundle:Gelombang',
+                'class' => 'LanggasSisdikBundle:Gelombang',
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
@@ -125,7 +125,7 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
                 'horizontal' => false,
             ])
             ->add('sekolahAsal', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:SekolahAsal',
+                'class' => 'LanggasSisdikBundle:SekolahAsal',
                 'attr' => [
                     'class' => 'id-sekolah-asal',
                 ],
@@ -143,7 +143,7 @@ class SiswaApplicantReportPaymentSearchType extends AbstractType
                 'horizontal' => false,
             ])
             ->add('referensi', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:Referensi',
+                'class' => 'LanggasSisdikBundle:Referensi',
                 'attr' => [
                     'class' => 'large id-referensi',
                 ],

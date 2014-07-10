@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -62,6 +62,6 @@ class ConfirmationType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_confirmtype';
+        return 'langgas_sisdikbundle_confirmtype';
     }
 }

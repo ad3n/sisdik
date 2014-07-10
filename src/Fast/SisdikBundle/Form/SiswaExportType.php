@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,14 +35,14 @@ class SiswaExportType extends AbstractType
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()
                 ->select('tahun')
-                ->from('FastSisdikBundle:Tahun', 'tahun')
+                ->from('LanggasSisdikBundle:Tahun', 'tahun')
                 ->where('tahun.sekolah = :sekolah')
                 ->orderBy('tahun.tahun', 'DESC')
                 ->setParameter('sekolah', $sekolah)
             ;
             $builder
                 ->add('tahun', 'entity', [
-                    'class' => 'FastSisdikBundle:Tahun',
+                    'class' => 'LanggasSisdikBundle:Tahun',
                     'label' => 'label.year.entry',
                     'multiple' => false,
                     'expanded' => false,
@@ -61,6 +61,6 @@ class SiswaExportType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswaexporttype';
+        return 'langgas_sisdikbundle_siswaexporttype';
     }
 }

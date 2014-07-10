@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Form\EventListener\DokumenFieldSubscriber;
+use Langgas\SisdikBundle\Form\EventListener\DokumenFieldSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,11 +32,11 @@ class DokumenSiswaType extends AbstractType
 
         $builder
             ->add('jenisDokumenSiswa', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:JenisDokumenSiswa',
+                'class' => 'LanggasSisdikBundle:JenisDokumenSiswa',
                 'label_render' => false,
             ])
             ->add('siswa', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:Siswa',
+                'class' => 'LanggasSisdikBundle:Siswa',
                 'label_render' => false,
             ])
         ;
@@ -47,12 +47,12 @@ class DokumenSiswaType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Fast\SisdikBundle\Entity\DokumenSiswa',
+            'data_class' => 'Langgas\SisdikBundle\Entity\DokumenSiswa',
         ]);
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_dokumensiswatype';
+        return 'langgas_sisdikbundle_dokumensiswatype';
     }
 }

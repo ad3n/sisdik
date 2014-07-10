@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,12 +33,12 @@ class PilihanLayananSmsType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('sekolah')
-            ->from('FastSisdikBundle:Sekolah', 'sekolah')
+            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
             ->orderBy('sekolah.nama', 'ASC')
         ;
         $builder
             ->add('sekolah', 'entity', [
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'label' => 'label.school',
                 'multiple' => false,
                 'expanded' => false,
@@ -69,13 +69,13 @@ class PilihanLayananSmsType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\PilihanLayananSms',
+                'data_class' => 'Langgas\SisdikBundle\Entity\PilihanLayananSms',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_pilihanlayanansmstype';
+        return 'langgas_sisdikbundle_pilihanlayanansmstype';
     }
 }

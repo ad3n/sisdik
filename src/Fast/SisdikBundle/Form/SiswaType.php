@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,14 +42,14 @@ class SiswaType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('tahun')
-            ->from('FastSisdikBundle:Tahun', 'tahun')
+            ->from('LanggasSisdikBundle:Tahun', 'tahun')
             ->where('tahun.sekolah = :sekolah')
             ->orderBy('tahun.tahun', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tahun', 'entity', [
-                'class' => 'FastSisdikBundle:Tahun',
+                'class' => 'LanggasSisdikBundle:Tahun',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -63,7 +63,7 @@ class SiswaType extends AbstractType
             ])
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('namaLengkap', null, [
@@ -80,7 +80,7 @@ class SiswaType extends AbstractType
                 ],
             ])
             ->add('referensi', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:Referensi',
+                'class' => 'LanggasSisdikBundle:Referensi',
                 'label_render' => false,
                 'required' => false,
                 'attr' => [
@@ -96,7 +96,7 @@ class SiswaType extends AbstractType
                 'label' => 'label.perujuk',
             ])
             ->add('sekolahAsal', new EntityHiddenType($em), [
-                'class' => 'FastSisdikBundle:SekolahAsal',
+                'class' => 'LanggasSisdikBundle:SekolahAsal',
                 'label_render' => false,
                 'required' => false,
                 'attr' => [
@@ -289,7 +289,7 @@ class SiswaType extends AbstractType
                 ])
                 ->add('dibuatOleh', new EntityHiddenType($em), [
                     'required' => true,
-                    'class' => 'FastSisdikBundle:User',
+                    'class' => 'LanggasSisdikBundle:User',
                     'data' => $user->getId(),
                 ])
             ;
@@ -297,7 +297,7 @@ class SiswaType extends AbstractType
             $builder
                 ->add('diubahOleh', new EntityHiddenType($em), [
                     'required' => true,
-                    'class' => 'FastSisdikBundle:User',
+                    'class' => 'LanggasSisdikBundle:User',
                     'data' => $user->getId(),
                 ])
             ;
@@ -308,13 +308,13 @@ class SiswaType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Siswa',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Siswa',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswatype';
+        return 'langgas_sisdikbundle_siswatype';
     }
 }

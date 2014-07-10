@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,7 +55,7 @@ class SimpleUserSearchType extends AbstractType
     private function buildChoices()
     {
         $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
+        $entities = $em->getRepository('LanggasSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
 
         $choices = [
             '' => 'label.all',

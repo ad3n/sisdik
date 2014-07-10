@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -108,13 +108,13 @@ class ProfileFormType extends BaseType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\User',
+                'data_class' => 'Langgas\SisdikBundle\Entity\User',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_profile';
+        return 'langgas_sisdikbundle_profile';
     }
 }

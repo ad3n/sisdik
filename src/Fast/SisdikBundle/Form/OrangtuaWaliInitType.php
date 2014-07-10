@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,12 +32,12 @@ class OrangtuaWaliInitType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\OrangtuaWali',
+                'data_class' => 'Langgas\SisdikBundle\Entity\OrangtuaWali',
             ])
         ;
     }
 
     public function getName() {
-        return 'fast_sisdikbundle_orangtuawaliinittype';
+        return 'langgas_sisdikbundle_orangtuawaliinittype';
     }
 }

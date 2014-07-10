@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -36,7 +36,7 @@ class TahunAkademikType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('nama', null, [
@@ -72,7 +72,7 @@ class TahunAkademikType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\TahunAkademik',
+                'data_class' => 'Langgas\SisdikBundle\Entity\TahunAkademik',
             ])
         ;
     }
@@ -84,6 +84,6 @@ class TahunAkademikType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_tahunakademiktype';
+        return 'langgas_sisdikbundle_tahunakademiktype';
     }
 }

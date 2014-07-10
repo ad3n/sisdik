@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,21 +40,21 @@ class JadwalKehadiranType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
         ;
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('tahunAkademik')
-            ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -69,7 +69,7 @@ class JadwalKehadiranType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('kelas')
-            ->from('FastSisdikBundle:Kelas', 'kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
             ->leftJoin('kelas.tingkat', 'tingkat')
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('tingkat.urutan', 'ASC')
@@ -78,7 +78,7 @@ class JadwalKehadiranType extends AbstractType
         ;
         $builder
             ->add('kelas', 'entity', [
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -172,14 +172,14 @@ class JadwalKehadiranType extends AbstractType
 
         $querybuilder4 = $em->createQueryBuilder()
             ->select('template')
-            ->from('FastSisdikBundle:Templatesms', 'template')
+            ->from('LanggasSisdikBundle:Templatesms', 'template')
             ->where('template.sekolah = :sekolah')
             ->orderBy('template.nama', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('templatesms', 'entity', [
-                'class' => 'FastSisdikBundle:Templatesms',
+                'class' => 'LanggasSisdikBundle:Templatesms',
                 'label' => 'label.sms.template.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -212,12 +212,12 @@ class JadwalKehadiranType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Fast\SisdikBundle\Entity\JadwalKehadiran',
+            'data_class' => 'Langgas\SisdikBundle\Entity\JadwalKehadiran',
         ]);
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_jadwalkehadirantype';
+        return 'langgas_sisdikbundle_jadwalkehadirantype';
     }
 }

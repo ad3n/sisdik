@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,7 +37,7 @@ class LayananSmsPendaftaranType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('jenisLayanan', 'choice', [
@@ -49,14 +49,14 @@ class LayananSmsPendaftaranType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Templatesms', 't')
+            ->from('LanggasSisdikBundle:Templatesms', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.nama', 'ASC')
             ->setParameter('sekolah', $sekolah->getId())
         ;
         $builder
             ->add('templatesms', 'entity', [
-                'class' => 'FastSisdikBundle:Templatesms',
+                'class' => 'LanggasSisdikBundle:Templatesms',
                 'label' => 'label.sms.template.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -74,13 +74,13 @@ class LayananSmsPendaftaranType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\LayananSmsPendaftaran',
+                'data_class' => 'Langgas\SisdikBundle\Entity\LayananSmsPendaftaran',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_layanansmspendaftarantype';
+        return 'langgas_sisdikbundle_layanansmspendaftarantype';
     }
 }

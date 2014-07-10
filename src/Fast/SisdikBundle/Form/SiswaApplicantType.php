@@ -1,10 +1,10 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
@@ -52,12 +52,12 @@ class SiswaApplicantType extends AbstractType
                 $builder
                     ->add('sekolah', new EntityHiddenType($em), [
                         'required' => true,
-                        'class' => 'FastSisdikBundle:Sekolah',
+                        'class' => 'LanggasSisdikBundle:Sekolah',
                         'data' => $sekolah->getId(),
                     ])
                     ->add('tahun', new EntityHiddenType($em), [
                         'required' => true,
-                        'class' => 'FastSisdikBundle:Tahun',
+                        'class' => 'LanggasSisdikBundle:Tahun',
                         'data' => $this->tahunAktif,
                     ])
                 ;
@@ -68,14 +68,14 @@ class SiswaApplicantType extends AbstractType
             if (is_object($sekolah) && $sekolah instanceof Sekolah) {
                 $querybuilder2 = $em->createQueryBuilder()
                     ->select('gelombang')
-                    ->from('FastSisdikBundle:Gelombang', 'gelombang')
+                    ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
                     ->where('gelombang.sekolah = :sekolah')
                     ->orderBy('gelombang.urutan', 'ASC')
                     ->setParameter('sekolah', $sekolah)
                 ;
                 $builder
                     ->add('gelombang', 'entity', [
-                        'class' => 'FastSisdikBundle:Gelombang',
+                        'class' => 'LanggasSisdikBundle:Gelombang',
                         'label' => 'label.admissiongroup.entry',
                         'multiple' => false,
                         'expanded' => false,
@@ -122,7 +122,7 @@ class SiswaApplicantType extends AbstractType
                     'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
                 ])
                 ->add('referensi', new EntityHiddenType($em), [
-                    'class' => 'FastSisdikBundle:Referensi',
+                    'class' => 'LanggasSisdikBundle:Referensi',
                     'label_render' => false,
                     'required' => false,
                     'attr' => [
@@ -139,7 +139,7 @@ class SiswaApplicantType extends AbstractType
                 ])
                 ->add('dibuatOleh', new EntityHiddenType($em), [
                     'required' => true,
-                    'class' => 'FastSisdikBundle:User',
+                    'class' => 'LanggasSisdikBundle:User',
                     'data' => $user->getId(),
                 ])
             ;
@@ -152,7 +152,7 @@ class SiswaApplicantType extends AbstractType
                 ])
                 ->add('diubahOleh', new EntityHiddenType($em), [
                     'required' => true,
-                    'class' => 'FastSisdikBundle:User',
+                    'class' => 'LanggasSisdikBundle:User',
                     'data' => $user->getId(),
                 ])
             ;
@@ -160,14 +160,14 @@ class SiswaApplicantType extends AbstractType
             if ($this->container->get('security.context')->isGranted('ROLE_KETUA_PANITIA_PSB')) {
                 $querybuilder2 = $em->createQueryBuilder()
                     ->select('gelombang')
-                    ->from('FastSisdikBundle:Gelombang', 'gelombang')
+                    ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
                     ->where('gelombang.sekolah = :sekolah')
                     ->orderBy('gelombang.urutan', 'ASC')
                     ->setParameter('sekolah', $sekolah)
                 ;
                 $builder
                     ->add('gelombang', 'entity', [
-                        'class' => 'FastSisdikBundle:Gelombang',
+                        'class' => 'LanggasSisdikBundle:Gelombang',
                         'label' => 'label.admissiongroup.entry',
                         'multiple' => false,
                         'expanded' => false,
@@ -191,7 +191,7 @@ class SiswaApplicantType extends AbstractType
                     'label' => 'label.name.full',
                 ])
                 ->add('referensi', new EntityHiddenType($em), [
-                    'class' => 'FastSisdikBundle:Referensi',
+                    'class' => 'LanggasSisdikBundle:Referensi',
                     'label_render' => false,
                     'required' => false,
                     'attr' => [
@@ -207,7 +207,7 @@ class SiswaApplicantType extends AbstractType
                     'label' => 'label.perujuk',
                 ])
                 ->add('sekolahAsal', new EntityHiddenType($em), [
-                    'class' => 'FastSisdikBundle:SekolahAsal',
+                    'class' => 'LanggasSisdikBundle:SekolahAsal',
                     'label_render' => false,
                     'required' => false,
                     'attr' => [
@@ -383,7 +383,7 @@ class SiswaApplicantType extends AbstractType
                 ])
                 ->add('diubahOleh', new EntityHiddenType($em), [
                     'required' => true,
-                    'class' => 'FastSisdikBundle:User',
+                    'class' => 'LanggasSisdikBundle:User',
                     'data' => $user->getId(),
                 ])
             ;
@@ -394,13 +394,13 @@ class SiswaApplicantType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Siswa',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Siswa',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_siswaapplicanttype';
+        return 'langgas_sisdikbundle_siswaapplicanttype';
     }
 }

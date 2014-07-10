@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,7 +35,7 @@ class KelasDuplicateType extends AbstractType
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()
                 ->select('tahunAkademik')
-                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
                 ->where('tahunAkademik.sekolah = :sekolah')
                 ->orderBy('tahunAkademik.urutan', 'DESC')
                 ->addOrderBy('tahunAkademik.nama', 'DESC')
@@ -43,7 +43,7 @@ class KelasDuplicateType extends AbstractType
             ;
             $builder
                 ->add('tahunAkademikSource', 'entity', [
-                    'class' => 'FastSisdikBundle:TahunAkademik',
+                    'class' => 'LanggasSisdikBundle:TahunAkademik',
                     'label' => 'label.from',
                     'multiple' => false,
                     'expanded' => false,
@@ -56,7 +56,7 @@ class KelasDuplicateType extends AbstractType
                     'label_render' => true,
                 ])
                 ->add('tahunAkademikTarget', 'entity', [
-                    'class' => 'FastSisdikBundle:TahunAkademik',
+                    'class' => 'LanggasSisdikBundle:TahunAkademik',
                     'label' => 'label.to',
                     'multiple' => false,
                     'expanded' => false,
@@ -83,6 +83,6 @@ class KelasDuplicateType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kelasduplicatetype';
+        return 'langgas_sisdikbundle_kelasduplicatetype';
     }
 }

@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,14 +37,14 @@ class WaliKelasType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:TahunAkademik', 't')
+            ->from('LanggasSisdikBundle:TahunAkademik', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.urutan', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -60,7 +60,7 @@ class WaliKelasType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Kelas', 't')
+            ->from('LanggasSisdikBundle:Kelas', 't')
             ->leftJoin('t.tingkat', 't2')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t2.urutan', 'ASC')
@@ -69,7 +69,7 @@ class WaliKelasType extends AbstractType
         ;
         $builder
             ->add('kelas', 'entity', [
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -94,13 +94,13 @@ class WaliKelasType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\WaliKelas',
+                'data_class' => 'Langgas\SisdikBundle\Entity\WaliKelas',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_walikelastype';
+        return 'langgas_sisdikbundle_walikelastype';
     }
 }

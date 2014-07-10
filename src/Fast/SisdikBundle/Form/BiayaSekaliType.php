@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,14 +40,14 @@ class BiayaSekaliType extends AbstractType
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder1 = $em->createQueryBuilder()
                 ->select('t')
-                ->from('FastSisdikBundle:Tahun', 't')
+                ->from('LanggasSisdikBundle:Tahun', 't')
                 ->where('t.sekolah = :sekolah')
                 ->orderBy('t.tahun', 'DESC')
                 ->setParameter('sekolah', $sekolah)
             ;
             $builder
                 ->add('tahun', 'entity', [
-                    'class' => 'FastSisdikBundle:Tahun',
+                    'class' => 'LanggasSisdikBundle:Tahun',
                     'label' => 'label.year.entry',
                     'multiple' => false,
                     'expanded' => false,
@@ -63,14 +63,14 @@ class BiayaSekaliType extends AbstractType
 
             $querybuilder3 = $em->createQueryBuilder()
                 ->select('t')
-                ->from('FastSisdikBundle:Jenisbiaya', 't')
+                ->from('LanggasSisdikBundle:Jenisbiaya', 't')
                 ->where('t.sekolah = :sekolah')
                 ->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah)
             ;
             $builder
                 ->add('jenisbiaya', 'entity', [
-                    'class' => 'FastSisdikBundle:Jenisbiaya',
+                    'class' => 'LanggasSisdikBundle:Jenisbiaya',
                     'label' => 'label.fee.type.entry',
                     'multiple' => false,
                     'expanded' => false,
@@ -118,12 +118,12 @@ class BiayaSekaliType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Fast\SisdikBundle\Entity\BiayaSekali'
+            'data_class' => 'Langgas\SisdikBundle\Entity\BiayaSekali'
         ));
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_biayasekalitype';
+        return 'langgas_sisdikbundle_biayasekalitype';
     }
 }

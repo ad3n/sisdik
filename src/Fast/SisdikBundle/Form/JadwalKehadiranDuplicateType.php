@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -114,14 +114,14 @@ class JadwalKehadiranDuplicateType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:TahunAkademik', 't')
+            ->from('LanggasSisdikBundle:TahunAkademik', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.urutan', 'DESC')
             ->setParameter('sekolah', $this->sekolahSrc)
         ;
         $builder
             ->add('tahunAkademik', 'entity', [
-                'class' => 'FastSisdikBundle:TahunAkademik',
+                'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -138,7 +138,7 @@ class JadwalKehadiranDuplicateType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Kelas', 't')
+            ->from('LanggasSisdikBundle:Kelas', 't')
             ->leftJoin('t.tingkat', 't2')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t2.urutan', 'ASC')
@@ -147,7 +147,7 @@ class JadwalKehadiranDuplicateType extends AbstractType
         ;
         $builder
             ->add('kelas', 'entity', [
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -213,6 +213,6 @@ class JadwalKehadiranDuplicateType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_jadwalkehadiranduplicatetype';
+        return 'langgas_sisdikbundle_jadwalkehadiranduplicatetype';
     }
 }

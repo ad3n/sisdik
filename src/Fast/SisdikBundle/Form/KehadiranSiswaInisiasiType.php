@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Fast\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\Kelas;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
@@ -56,7 +56,7 @@ class KehadiranSiswaInisiasiType extends AbstractType
             ])
             ->add('kelas', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Kelas',
+                'class' => 'LanggasSisdikBundle:Kelas',
                 'data' => $this->kelas->getId(),
             ])
             ->add('tanggal', 'hidden', [
@@ -67,6 +67,6 @@ class KehadiranSiswaInisiasiType extends AbstractType
 
     public function getName()
     {
-        return 'fast_sisdikbundle_kehadiransiswainisiasitype';
+        return 'langgas_sisdikbundle_kehadiransiswainisiasitype';
     }
 }

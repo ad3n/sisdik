@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
-use Fast\SisdikBundle\Form\EventListener\BiayaPendaftaranSubscriber;
+use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+use Langgas\SisdikBundle\Form\EventListener\BiayaPendaftaranSubscriber;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,7 +34,7 @@ class DaftarBiayaPendaftaranType extends AbstractType
         $builder
             ->add('biayaPendaftaran', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:BiayaPendaftaran',
+                'class' => 'LanggasSisdikBundle:BiayaPendaftaran',
             ])
             ->add('nama', 'hidden', [
                 'required' => false,
@@ -50,12 +50,12 @@ class DaftarBiayaPendaftaranType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran',
+            'data_class' => 'Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran',
         ]);
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_daftarbiayapendaftarantype';
+        return 'langgas_sisdikbundle_daftarbiayapendaftarantype';
     }
 }

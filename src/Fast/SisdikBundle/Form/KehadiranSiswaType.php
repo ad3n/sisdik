@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,7 +41,7 @@ class KehadiranSiswaType extends AbstractType
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kehadiran, siswa')
-            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
             ->leftJoin('kehadiran.kelas', 'kelas')
             ->leftJoin('kehadiran.siswa', 'siswa')
             ->where('kelas.sekolah = :sekolah')

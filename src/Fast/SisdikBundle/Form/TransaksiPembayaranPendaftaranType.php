@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,12 +35,12 @@ class TransaksiPembayaranPendaftaranType extends AbstractType
         $builder
             ->add('sekolah', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:Sekolah',
+                'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
             ->add('dibuatOleh', new EntityHiddenType($em), [
                 'required' => true,
-                'class' => 'FastSisdikBundle:User',
+                'class' => 'LanggasSisdikBundle:User',
                 'data' => $user->getId(),
             ])
             ->add('nominalPembayaran', 'money', [
@@ -69,13 +69,13 @@ class TransaksiPembayaranPendaftaranType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran',
+                'data_class' => 'Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_transaksipembayaranpendaftarantype';
+        return 'langgas_sisdikbundle_transaksipembayaranpendaftarantype';
     }
 }

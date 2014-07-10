@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -61,14 +61,14 @@ class BiayaPendaftaranType extends AbstractType
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Tahun', 't')
+            ->from('LanggasSisdikBundle:Tahun', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.tahun', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('tahun', 'entity', [
-                'class' => 'FastSisdikBundle:Tahun',
+                'class' => 'LanggasSisdikBundle:Tahun',
                 'label' => 'label.year.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -86,14 +86,14 @@ class BiayaPendaftaranType extends AbstractType
 
         $querybuilder2 = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Gelombang', 't')
+            ->from('LanggasSisdikBundle:Gelombang', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.urutan', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('gelombang', 'entity', [
-                'class' => 'FastSisdikBundle:Gelombang',
+                'class' => 'LanggasSisdikBundle:Gelombang',
                 'label' => 'label.admissiongroup.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -121,14 +121,14 @@ class BiayaPendaftaranType extends AbstractType
         $querybuilder3 = $em
             ->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Jenisbiaya', 't')
+            ->from('LanggasSisdikBundle:Jenisbiaya', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.nama', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
         $builder
             ->add('jenisbiaya', 'entity', [
-                'class' => 'FastSisdikBundle:Jenisbiaya',
+                'class' => 'LanggasSisdikBundle:Jenisbiaya',
                 'label' => 'label.fee.type.entry',
                 'multiple' => false,
                 'expanded' => false,
@@ -197,7 +197,7 @@ class BiayaPendaftaranType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\BiayaPendaftaran',
+                'data_class' => 'Langgas\SisdikBundle\Entity\BiayaPendaftaran',
             ])
         ;
     }
@@ -207,6 +207,6 @@ class BiayaPendaftaranType extends AbstractType
      */
     public function getName()
     {
-        return 'fast_sisdikbundle_biayapendaftarantype';
+        return 'langgas_sisdikbundle_biayapendaftarantype';
     }
 }

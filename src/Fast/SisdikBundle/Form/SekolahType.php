@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Form;
+namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -91,13 +91,13 @@ class SekolahType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Fast\SisdikBundle\Entity\Sekolah',
+                'data_class' => 'Langgas\SisdikBundle\Entity\Sekolah',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'fast_sisdikbundle_sekolahtype';
+        return 'langgas_sisdikbundle_sekolahtype';
     }
 }
