@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Util\EasyCSV;
+namespace Langgas\SisdikBundle\Util\EasyCSV;
 
 class Writer extends AbstractBase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Util\EasyCSV;
+namespace Langgas\SisdikBundle\Util\EasyCSV;
 
 /**
  * ClassLoader implementation that implements the technical interoperability

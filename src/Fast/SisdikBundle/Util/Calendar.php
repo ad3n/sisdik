@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Util;
+namespace Langgas\SisdikBundle\Util;
 
 /**
  * Create monthly calendar

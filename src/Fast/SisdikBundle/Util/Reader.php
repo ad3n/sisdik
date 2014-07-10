@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Util;
+namespace Langgas\SisdikBundle\Util;
 /*
  * Read a CSV file
  *

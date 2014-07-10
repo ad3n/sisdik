@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Util;
+namespace Langgas\SisdikBundle\Util;
 /**
  * Epson Escape Commands for direct printing to dot matrix
  * @author Ihsan Faisal

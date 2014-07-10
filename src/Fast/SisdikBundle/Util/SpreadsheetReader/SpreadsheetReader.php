@@ -1,7 +1,7 @@
 <?php
 
-namespace Fast\SisdikBundle\Util\SpreadsheetReader;
-use Fast\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader_ODS;
+namespace Langgas\SisdikBundle\Util\SpreadsheetReader;
+use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader_ODS;
 /**
  * Main class for spreadsheet reading
  *

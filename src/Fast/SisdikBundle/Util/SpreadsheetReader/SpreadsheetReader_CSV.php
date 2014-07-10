@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Util\SpreadsheetReader;
+namespace Langgas\SisdikBundle\Util\SpreadsheetReader;
 /**
  * Class for parsing CSV files
  *

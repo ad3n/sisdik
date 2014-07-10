@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Util;
+namespace Langgas\SisdikBundle\Util;
 /**
  * 
  * @author Life.Object life.object@gmail.com

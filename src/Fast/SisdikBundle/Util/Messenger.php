@@ -1,9 +1,9 @@
 <?php
-namespace Fast\SisdikBundle\Util;
+namespace Langgas\SisdikBundle\Util;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Fast\SisdikBundle\Entity\LogsmsKeluar;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\LogsmsKeluar;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -179,7 +179,7 @@ class Messenger
         $em = $this->objectManager;
 
         /* @var $entity LogsmsKeluar */
-        $entity = $em->getRepository('FastSisdikBundle:LogsmsKeluar')->find($this->logid);
+        $entity = $em->getRepository('LanggasSisdikBundle:LogsmsKeluar')->find($this->logid);
         $entity->setApiTerpanggil($url);
         $entity->setHasilAPI($hasil);
 
