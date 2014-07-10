@@ -25,7 +25,7 @@ class AppKernel extends Kernel
                 new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
                 new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
                 new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-                new Fast\SisdikBundle\FastSisdikBundle($this),
+                new Langgas\SisdikBundle\LanggasSisdikBundle($this),
                 new Ps\PdfBundle\PsPdfBundle(),
                 new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
                 new JMS\SerializerBundle\JMSSerializerBundle(),

@@ -128,13 +128,13 @@ jms_security_extra:
 fos_user:
     db_driver: orm
     firewall_name: main_firewall
-    user_class: Fast\SisdikBundle\Entity\User
+    user_class: Langgas\SisdikBundle\Entity\User
     registration:
         form:
-            type: fast_sisdikbundle_registration
+            type: langgas_sisdikbundle_registration
     profile:
         form:
-            type: fast_sisdikbundle_profile
+            type: langgas_sisdikbundle_profile
 
 fos_rest:
     param_fetcher_listener: true
@@ -160,7 +160,7 @@ sensio_framework_extra:
 
 knp_menu:
     twig:
-        template: FastSisdikBundle:Menu:knp_menu.html.twig
+        template: LanggasSisdikBundle:Menu:knp_menu.html.twig
 
 knp_paginator:
     page_range: 5                      # default page range used in pagination control
@@ -170,8 +170,8 @@ knp_paginator:
         sort_direction_name: direction # sort direction query parameter name
         distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
     template:
-        pagination: FastSisdikBundle:Pagination:sliding.html.twig     # sliding pagination controls template
-        sortable: FastSisdikBundle:Pagination:sortable_link.html.twig # sort link template
+        pagination: LanggasSisdikBundle:Pagination:sliding.html.twig     # sliding pagination controls template
+        sortable: LanggasSisdikBundle:Pagination:sortable_link.html.twig # sort link template
 
 mopa_bootstrap:
     form:
@@ -220,8 +220,8 @@ services:
 jms_translation:
     configs:
         sisdik:
-            dirs: ["%kernel.root_dir%/../src/Fast/SisdikBundle"]
-            output_dir: "%kernel.root_dir%/../src/Fast/SisdikBundle/Resources/translations"
+            dirs: ["%kernel.root_dir%/../src/Langgas/SisdikBundle"]
+            output_dir: "%kernel.root_dir%/../src/Langgas/SisdikBundle/Resources/translations"
             ignored_domains: [routes]
             excluded_names: ["*TestCase.php", "*Test.php"]
             excluded_dirs: [cache, data, logs]

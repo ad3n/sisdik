@@ -5,13 +5,13 @@
 {% block stylesheets %}
     {% stylesheets
         '@MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less'
-        'bundles/fastsisdik/css/jqueryui/themes/smoothness/jquery-ui-1.9.1.custom.min.css'
-        '@FastSisdikBundle/Resources/public/css/tooltipster/tooltipster.css'
-        '@FastSisdikBundle/Resources/public/css/tooltipster/themes/tooltipster-light.css'
-        'bundles/fastsisdik/font/stylesheet.css'
-        'bundles/fastsisdik/css/styles.css'
-        '@FastSisdikBundle/Resources/public/css/media-queries.css'
-        '@FastSisdikBundle/Resources/public/css/dropkick.css'
+        'bundles/langgassisdik/css/jqueryui/themes/smoothness/jquery-ui-1.9.1.custom.min.css'
+        '@LanggasSisdikBundle/Resources/public/css/tooltipster/tooltipster.css'
+        '@LanggasSisdikBundle/Resources/public/css/tooltipster/themes/tooltipster-light.css'
+        'bundles/langgassisdik/font/stylesheet.css'
+        'bundles/langgassisdik/css/styles.css'
+        '@LanggasSisdikBundle/Resources/public/css/media-queries.css'
+        '@LanggasSisdikBundle/Resources/public/css/dropkick.css'
         filter='cssrewrite'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
@@ -29,7 +29,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{{ path("_index") }}">
-                {% image '@FastSisdikBundle/Resources/public/images/logo_white_simple.png' %}
+                {% image '@LanggasSisdikBundle/Resources/public/images/logo_white_simple.png' %}
                     <img src="{{ asset_url }}" alt="{{ 'alt.logo'|trans }}" border="0" height="23" style="display: inline-block;">
                 {% endimage %}
             </a>

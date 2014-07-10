@@ -1,13 +1,13 @@
 logout:
     pattern:    /logout
 
-FastSisdikBundle:
-    resource: "@FastSisdikBundle/Resources/config/routing.yml"
+LanggasSisdikBundle:
+    resource: "@LanggasSisdikBundle/Resources/config/routing.yml"
     prefix:   /
 
 #_welcome:
 #    pattern:  /
-#    defaults: { _controller: "FastSisdikBundle:Welcome:index" }
+#    defaults: { _controller: "LanggasSisdikBundle:Welcome:index" }
 
 #_welcome:
 #    pattern:  /
