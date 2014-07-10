@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Translator;
+namespace Langgas\SisdikBundle\Translator;
 
 use JMS\TranslationBundle\Model\FileSource;
 use JMS\TranslationBundle\Model\Message;

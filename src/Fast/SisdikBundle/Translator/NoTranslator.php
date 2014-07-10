@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Translator;
+namespace Langgas\SisdikBundle\Translator;
 
 use Symfony\Component\Translation\TranslatorInterface;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Translator;
+namespace Langgas\SisdikBundle\Translator;
 
 use Doctrine\Common\Annotations\DocParser;
 use JMS\TranslationBundle\Exception\RuntimeException;
