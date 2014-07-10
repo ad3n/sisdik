@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\DependencyInjection\Compiler;
+namespace Langgas\SisdikBundle\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -16,7 +16,7 @@ class TranslatorCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container) {
         if ('test' === $this->kernel->getEnvironment()) {
             $definition = $container->getDefinition('translator.default');
-            $definition->setClass('Fast\SisdikBundle\Translator\NoTranslator');
+            $definition->setClass('Langgas\SisdikBundle\Translator\NoTranslator');
         }
     }
 }

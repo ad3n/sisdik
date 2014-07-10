@@ -1,12 +1,12 @@
 <?php
 
-namespace Fast\SisdikBundle;
+namespace Langgas\SisdikBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Fast\SisdikBundle\DependencyInjection\Compiler\TranslatorCompilerPass;
+use Langgas\SisdikBundle\DependencyInjection\Compiler\TranslatorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class FastSisdikBundle extends Bundle
+class LanggasSisdikBundle extends Bundle
 {
     private $kernel;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\DependencyInjection;
+namespace Langgas\SisdikBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
