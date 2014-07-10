@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Menu;
+namespace Langgas\SisdikBundle\Menu;
 
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -1,28 +1,28 @@
 services:
-    fast_sisdik.menu_builder:
-        class: Fast\SisdikBundle\Menu\Builder
+    langgas_sisdik.menu_builder:
+        class: Langgas\SisdikBundle\Menu\Builder
         arguments: ["@knp_menu.factory", "@service_container"]
 
-    fast_sisdik.menu.main:
+    langgas_sisdik.menu.main:
         class: Knp\Menu\MenuItem
-        factory_service: fast_sisdik.menu_builder
+        factory_service: langgas_sisdik.menu_builder
         factory_method: createMainMenu
         arguments: ["@request", "@service_container"]
         scope: request
         tags:
             - { name: knp_menu.menu, alias: mainMenu }
 
-    fast_sisdik.registration.form.type:
-        class: Fast\SisdikBundle\Form\RegistrationFormType
+    langgas_sisdik.registration.form.type:
+        class: Langgas\SisdikBundle\Form\RegistrationFormType
         arguments: ["%fos_user.model.user.class%"]
         tags:
-            - { name: form.type, alias: fast_sisdikbundle_registration }
+            - { name: form.type, alias: langgas_sisdikbundle_registration }
 
-    fast_sisdik.profile.form.type:
-        class: Fast\SisdikBundle\Form\ProfileFormType
+    langgas_sisdik.profile.form.type:
+        class: Langgas\SisdikBundle\Form\ProfileFormType
         arguments: ["@service_container"]
         tags:
-            - { name: form.type, alias: fast_sisdikbundle_profile }
+            - { name: form.type, alias: langgas_sisdikbundle_profile }
 
     bcc.twig.extension:
         class: BCC\ExtraToolsBundle\Twig\TwigExtension
@@ -34,23 +34,23 @@ services:
         tags:
             - { name: twig.extension }
 
-    fast.twig.fast_extension:
-        class: Fast\SisdikBundle\Twig\FastExtension
+    langgas.twig.langgas_extension:
+        class: Langgas\SisdikBundle\Twig\LanggasExtension
         tags:
             - { name: twig.extension }
 
     sisdik.messenger:
-        class:        Fast\SisdikBundle\Util\Messenger
+        class:        Langgas\SisdikBundle\Util\Messenger
         scope:        prototype
         arguments:    ["@doctrine.orm.entity_manager", "@router", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
 
     sisdik.translator.form.extractor:
-        class: Fast\SisdikBundle\Translator\FormExtractor
+        class: Langgas\SisdikBundle\Translator\FormExtractor
         tags:
             - { name: jms_translation.file_visitor }
         arguments: ["@jms_translation.doc_parser"]
 
     sisdik.translator.entity.extractor:
-        class: Fast\SisdikBundle\Translator\EntityExtractor
+        class: Langgas\SisdikBundle\Translator\EntityExtractor
         tags:
             - { name: jms_translation.file_visitor }

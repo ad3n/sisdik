@@ -1,6 +1,6 @@
 _index:
     pattern:  /
-    defaults: { _controller: "FastSisdikBundle:Default:index" }
+    defaults: { _controller: "LanggasSisdikBundle:Default:index" }
 
 # third party bundles ---------------------------------------------------------------------------------------- #
 
@@ -32,254 +32,254 @@ gregwar_captcha_routing:
 
 
 _settings:
-    resource: "@FastSisdikBundle/Controller/SettingsController.php"
+    resource: "@LanggasSisdikBundle/Controller/SettingsController.php"
     type:     annotation
     prefix:   /settings
 
 settings_user:
-    resource: "@FastSisdikBundle/Controller/SettingsUserController.php"
+    resource: "@LanggasSisdikBundle/Controller/SettingsUserController.php"
     type:     annotation
     prefix:   /settings
 
 settings_school:
-    resource: "@FastSisdikBundle/Controller/SettingsSchoolController.php"
+    resource: "@LanggasSisdikBundle/Controller/SettingsSchoolController.php"
     type:     annotation
     prefix:   /settings
 
 settings_specsch:
-    resource: "@FastSisdikBundle/Controller/SekolahController.php"
+    resource: "@LanggasSisdikBundle/Controller/SekolahController.php"
     type:     annotation
     prefix:   /settings
 
 settings_placement:
-    resource: "@FastSisdikBundle/Controller/PenjurusanController.php"
+    resource: "@LanggasSisdikBundle/Controller/PenjurusanController.php"
     type:     annotation
     prefix:   /settings
 
 settings_year:
-    resource: "@FastSisdikBundle/Controller/TahunController.php"
+    resource: "@LanggasSisdikBundle/Controller/TahunController.php"
     type:     annotation
     prefix:   /settings
 
 settings_admissiongroup:
-    resource: "@FastSisdikBundle/Controller/GelombangController.php"
+    resource: "@LanggasSisdikBundle/Controller/GelombangController.php"
     type:     annotation
     prefix:   /settings
 
 settings_feetype:
-    resource: "@FastSisdikBundle/Controller/JenisbiayaController.php"
+    resource: "@LanggasSisdikBundle/Controller/JenisbiayaController.php"
     type:     annotation
     prefix:   /
 
 settings_feeonce:
-    resource: "@FastSisdikBundle/Controller/BiayaSekaliController.php"
+    resource: "@LanggasSisdikBundle/Controller/BiayaSekaliController.php"
     type:     annotation
     prefix:   /
 
 settings_feerecur:
-    resource: "@FastSisdikBundle/Controller/BiayaRutinController.php"
+    resource: "@LanggasSisdikBundle/Controller/BiayaRutinController.php"
     type:     annotation
     prefix:   /
 
 fee_registration:
-    resource: "@FastSisdikBundle/Controller/BiayaPendaftaranController.php"
+    resource: "@LanggasSisdikBundle/Controller/BiayaPendaftaranController.php"
     type:     annotation
     prefix:   /
 
 student:
-    resource: "@FastSisdikBundle/Controller/SiswaController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaController.php"
     type:     annotation
     prefix:   /
 
 student_username:
-    resource: "@FastSisdikBundle/Controller/SiswaUsernameController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaUsernameController.php"
     type:     annotation
     prefix:   /
 
 class:
-    resource: "@FastSisdikBundle/Controller/KelasController.php"
+    resource: "@LanggasSisdikBundle/Controller/KelasController.php"
     type:     annotation
     prefix:   /
 
 academicyear:
-    resource: "@FastSisdikBundle/Controller/TahunAkademikController.php"
+    resource: "@LanggasSisdikBundle/Controller/TahunAkademikController.php"
     type:     annotation
     prefix:   /
 
 classguardian:
-    resource: "@FastSisdikBundle/Controller/WaliKelasController.php"
+    resource: "@LanggasSisdikBundle/Controller/WaliKelasController.php"
     type:     annotation
     prefix:   /
 
 studentclass:
-    resource: "@FastSisdikBundle/Controller/SiswaKelasController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaKelasController.php"
     type:     annotation
     prefix:   /
 
 smstemplate:
-    resource: "@FastSisdikBundle/Controller/TemplatesmsController.php"
+    resource: "@LanggasSisdikBundle/Controller/TemplatesmsController.php"
     type:     annotation
     prefix:   /
 
 academiccalendar:
-    resource: "@FastSisdikBundle/Controller/KalenderPendidikanController.php"
+    resource: "@LanggasSisdikBundle/Controller/KalenderPendidikanController.php"
     type:     annotation
     prefix:   /
 
 jadwal_kehadiran:
-    resource: "@FastSisdikBundle/Controller/JadwalKehadiranController.php"
+    resource: "@LanggasSisdikBundle/Controller/JadwalKehadiranController.php"
     type:     annotation
     prefix:   /
 
 tingkatkelas:
-    resource: "@FastSisdikBundle/Controller/TingkatController.php"
+    resource: "@LanggasSisdikBundle/Controller/TingkatController.php"
     type:     annotation
     prefix:   /
 
 attendance_machine:
-    resource: "@FastSisdikBundle/Controller/MesinKehadiranController.php"
+    resource: "@LanggasSisdikBundle/Controller/MesinKehadiranController.php"
     type:     annotation
     prefix:   /
 
 kehadiran_siswa:
-    resource: "@FastSisdikBundle/Controller/KehadiranSiswaController.php"
+    resource: "@LanggasSisdikBundle/Controller/KehadiranSiswaController.php"
     type:     annotation
     prefix:   /
 
 kehadiran_siswa_laporan:
-    resource: "@FastSisdikBundle/Controller/KehadiranSiswaReportController.php"
+    resource: "@LanggasSisdikBundle/Controller/KehadiranSiswaReportController.php"
     type:     annotation
     prefix:   /
 
 kehadiran_siswa_localapi:
-    resource: "@FastSisdikBundle/Controller/KehadiranSiswaLocalAPIController.php"
+    resource: "@LanggasSisdikBundle/Controller/KehadiranSiswaLocalAPIController.php"
     type:     annotation
     prefix:   /
 
 rewardtype:
-    resource: "@FastSisdikBundle/Controller/JenisImbalanController.php"
+    resource: "@LanggasSisdikBundle/Controller/JenisImbalanController.php"
     type:     annotation
     prefix:   /
 
 rewardamount:
-    resource: "@FastSisdikBundle/Controller/ImbalanPendaftaranController.php"
+    resource: "@LanggasSisdikBundle/Controller/ImbalanPendaftaranController.php"
     type:     annotation
     prefix:   /
 
 regcommittee:
-    resource: "@FastSisdikBundle/Controller/PanitiaPendaftaranController.php"
+    resource: "@LanggasSisdikBundle/Controller/PanitiaPendaftaranController.php"
     type:     annotation
     prefix:   /
 
 applicant:
-    resource: "@FastSisdikBundle/Controller/SiswaApplicantController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaApplicantController.php"
     type:     annotation
     prefix:   /
 
 payment:
-    resource: "@FastSisdikBundle/Controller/SiswaApplicantPaymentController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaApplicantPaymentController.php"
     type:     annotation
     prefix:   /
 
 payment_oncefee:
-    resource: "@FastSisdikBundle/Controller/PembayaranSekaliController.php"
+    resource: "@LanggasSisdikBundle/Controller/PembayaranSekaliController.php"
     type:     annotation
     prefix:   /
 
 payment_registrationfee:
-    resource: "@FastSisdikBundle/Controller/PembayaranPendaftaranController.php"
+    resource: "@LanggasSisdikBundle/Controller/PembayaranPendaftaranController.php"
     type:     annotation
     prefix:   /
 
 payment_registrationfee_print:
-    resource: "@FastSisdikBundle/Controller/PembayaranPendaftaranCetakController.php"
+    resource: "@LanggasSisdikBundle/Controller/PembayaranPendaftaranCetakController.php"
     type:     annotation
     prefix:   /
 
 printreceiptsoption:
-    resource: "@FastSisdikBundle/Controller/PilihanCetakKwitansiController.php"
+    resource: "@LanggasSisdikBundle/Controller/PilihanCetakKwitansiController.php"
     type:     annotation
     prefix:   /
 
 ortuwali:
-    resource: "@FastSisdikBundle/Controller/OrangtuaWaliController.php"
+    resource: "@LanggasSisdikBundle/Controller/OrangtuaWaliController.php"
     type:     annotation
     prefix:   /
 
 layanansms:
-    resource: "@FastSisdikBundle/Controller/PilihanLayananSmsController.php"
+    resource: "@LanggasSisdikBundle/Controller/PilihanLayananSmsController.php"
     type:     annotation
     prefix:   /
 
 smspendaftaran:
-    resource: "@FastSisdikBundle/Controller/LayananSmsPendaftaranController.php"
+    resource: "@LanggasSisdikBundle/Controller/LayananSmsPendaftaranController.php"
     type:     annotation
     prefix:   /
 
 riwayatpenyakit:
-    resource: "@FastSisdikBundle/Controller/PenyakitSiswaController.php"
+    resource: "@LanggasSisdikBundle/Controller/PenyakitSiswaController.php"
     type:     annotation
     prefix:   /
 
 pendidikansiswa:
-    resource: "@FastSisdikBundle/Controller/PendidikanSiswaController.php"
+    resource: "@LanggasSisdikBundle/Controller/PendidikanSiswaController.php"
     type:     annotation
     prefix:   /
 
 jenisdokumensiswa:
-    resource: "@FastSisdikBundle/Controller/JenisDokumenSiswaController.php"
+    resource: "@LanggasSisdikBundle/Controller/JenisDokumenSiswaController.php"
     type:     annotation
     prefix:   /
 
 dokumensiswa:
-    resource: "@FastSisdikBundle/Controller/DokumenSiswaController.php"
+    resource: "@LanggasSisdikBundle/Controller/DokumenSiswaController.php"
     type:     annotation
     prefix:   /
 
 referensi:
-    resource: "@FastSisdikBundle/Controller/ReferensiController.php"
+    resource: "@LanggasSisdikBundle/Controller/ReferensiController.php"
     type:     annotation
     prefix:   /
 
 sekolahasal:
-    resource: "@FastSisdikBundle/Controller/SekolahAsalController.php"
+    resource: "@LanggasSisdikBundle/Controller/SekolahAsalController.php"
     type:     annotation
     prefix:   /
 
 laporanpendaftaran:
-    resource: "@FastSisdikBundle/Controller/SiswaApplicantReportController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaApplicantReportController.php"
     type:     annotation
     prefix:   /
 
 laporan-pembayaran-pendaftaran:
-    resource: "@FastSisdikBundle/Controller/SiswaApplicantReportPaymentController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaApplicantReportPaymentController.php"
     type:     annotation
     prefix:   /
 
 laporan-transaksi-keuangan:
-    resource: "@FastSisdikBundle/Controller/LaporanTransaksiKeuanganController.php"
+    resource: "@LanggasSisdikBundle/Controller/LaporanTransaksiKeuanganController.php"
     type:     annotation
     prefix:   /
 
 tahkik:
-    resource: "@FastSisdikBundle/Controller/SiswaTahkikController.php"
+    resource: "@LanggasSisdikBundle/Controller/SiswaTahkikController.php"
     type:     annotation
     prefix:   /
 
 penempatansiswakelas:
-    resource: "@FastSisdikBundle/Controller/PenempatanSiswaKelasController.php"
+    resource: "@LanggasSisdikBundle/Controller/PenempatanSiswaKelasController.php"
     type:     annotation
     prefix:   /
 
 token_sekolah:
-    resource: "@FastSisdikBundle/Controller/TokenSekolahController.php"
+    resource: "@LanggasSisdikBundle/Controller/TokenSekolahController.php"
     type:     annotation
     prefix:   /
 
 
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:
-    resource: "@FastSisdikBundle/Controller/LocalAPILogsmsKeluarController.php"
+    resource: "@LanggasSisdikBundle/Controller/LocalAPILogsmsKeluarController.php"
     type:     annotation
     prefix:   /
 # end of local APIs ---------------------------------------------------------------------------------- #
