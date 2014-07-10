@@ -1,12 +1,12 @@
 <?php
-namespace Fast\SisdikBundle\Command;
+namespace Langgas\SisdikBundle\Command;
 
-use Fast\SisdikBundle\Entity\KalenderPendidikan;
-use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\SiswaKelas;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -50,7 +50,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
 
         $qbSekolah = $em->createQueryBuilder()
             ->select('sekolah')
-            ->from('FastSisdikBundle:Sekolah', 'sekolah')
+            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
         ;
         $semuaSekolah = $qbSekolah->getQuery()->getResult();
 
@@ -63,7 +63,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                 print "[paksa]: " . $sekolah->getNama() . "\n";
             }
 
-            $kalenderPendidikan = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
+            $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'tanggal' => $waktuSekarang,
@@ -78,7 +78,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                 foreach ($perulangan as $key => $value) {
                     $querybuilder = $em->createQueryBuilder()
                         ->select('jadwal')
-                        ->from('FastSisdikBundle:JadwalKehadiran', 'jadwal')
+                        ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwal')
                         ->leftJoin('jadwal.tahunAkademik', 'tahunAkademik')
                         ->andWhere('jadwal.sekolah = :sekolah')
                         ->andWhere('jadwal.paramstatusDariJam <= :jam')
@@ -111,7 +111,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                             continue;
                         }
 
-                        $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                        $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                             ->findOneBy([
                                 'sekolah' => $sekolah,
                                 'tahunAkademik' => $jadwal->getTahunAkademik(),
@@ -144,7 +144,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                         if ($bedaWaktu >= 0 && $bedaWaktu <= self::BEDA_WAKTU_MAKS) {
                             $qbSiswaKelas = $em->createQueryBuilder()
                                 ->select('siswaKelas')
-                                ->from('FastSisdikBundle:SiswaKelas', 'siswaKelas')
+                                ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
                                 ->where('siswaKelas.tahunAkademik = :tahunakademik')
                                 ->andWhere('siswaKelas.kelas = :kelas')
                                 ->setParameter('tahunakademik', $jadwal->getTahunAkademik())
@@ -159,7 +159,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
 
                                 $qbKehadiran = $em->createQueryBuilder()
                                     ->select('kehadiran')
-                                    ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+                                    ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
                                     ->where('kehadiran.sekolah = :sekolah')
                                     ->andWhere('kehadiran.siswa = :siswa')
                                     ->andWhere('kehadiran.tanggal = :tanggal')

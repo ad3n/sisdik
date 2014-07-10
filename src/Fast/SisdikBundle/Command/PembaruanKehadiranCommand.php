@@ -1,13 +1,13 @@
 <?php
-namespace Fast\SisdikBundle\Command;
+namespace Langgas\SisdikBundle\Command;
 
-use Fast\SisdikBundle\Entity\KalenderPendidikan;
-use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\MesinKehadiran;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\MesinKehadiran;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,7 +54,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
         $qbSekolah = $em->createQueryBuilder()
             ->select('sekolah')
-            ->from('FastSisdikBundle:Sekolah', 'sekolah')
+            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
         ;
         $semuaSekolah = $qbSekolah->getQuery()->getResult();
 
@@ -67,7 +67,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                 print "[paksa]: " . $sekolah->getNama() . "\n";
             }
 
-            $kalenderPendidikan = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
+            $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'tanggal' => $waktuSekarang,
@@ -82,7 +82,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                 foreach ($perulangan as $key => $value) {
                     $querybuilder = $em->createQueryBuilder()
                         ->select('jadwal')
-                        ->from('FastSisdikBundle:JadwalKehadiran', 'jadwal')
+                        ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwal')
                         ->leftJoin('jadwal.tahunAkademik', 'tahunAkademik')
                         ->andWhere('jadwal.sekolah = :sekolah')
                         ->andWhere('jadwal.paramstatusHinggaJam <= :jam')
@@ -157,7 +157,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                 continue;
                             }
 
-                            $mesinFingerprint = $em->getRepository('FastSisdikBundle:MesinKehadiran')
+                            $mesinFingerprint = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')
                                 ->findBy([
                                     'sekolah' => $sekolah,
                                     'aktif' => true,
@@ -206,7 +206,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                             continue;
                                         }
 
-                                        $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+                                        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
                                             ->findOneBy([
                                                 'nomorIndukSistem' => $item->PIN,
                                             ])
@@ -214,7 +214,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
                                         if ($input->getOption('paksa')) {
                                             /* @var $siswa Siswa */
-                                            $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+                                            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
                                                 ->findOneBy([
                                                     'nomorIndukSistem' => '1000186',
                                                 ])
@@ -223,7 +223,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                         }
 
                                         if (is_object($siswa) && $siswa instanceof Siswa) {
-                                            $kehadiranSiswa = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
+                                            $kehadiranSiswa = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')
                                                 ->findOneBy([
                                                     'sekolah' => $sekolah,
                                                     'tahunAkademik' => $jadwal->getTahunAkademik(),
@@ -253,7 +253,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                         }
                                     }
 
-                                    $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                                    $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                                         ->findOneBy([
                                             'sekolah' => $sekolah,
                                             'tahunAkademik' => $jadwal->getTahunAkademik(),

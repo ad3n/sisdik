@@ -1,13 +1,13 @@
 <?php
-namespace Fast\SisdikBundle\Command;
+namespace Langgas\SisdikBundle\Command;
 
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
-use Fast\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
+use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,7 +54,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
 
         $qbSekolah = $em->createQueryBuilder()
             ->select('sekolah')
-            ->from('FastSisdikBundle:Sekolah', 'sekolah')
+            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
         ;
         $semuaSekolah = $qbSekolah->getQuery()->getResult();
 
@@ -67,7 +67,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                 foreach ($perulangan as $key => $value) {
                     $querybuilder = $em->createQueryBuilder()
                         ->select('jadwal')
-                        ->from('FastSisdikBundle:JadwalKehadiran', 'jadwal')
+                        ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwal')
                         ->leftJoin('jadwal.tahunAkademik', 'tahunAkademik')
                         ->where('jadwal.sekolah = :sekolah')
                         ->andWhere('jadwal.smsJam = :jam')
@@ -119,7 +119,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                 break;
                         }
 
-                        $layananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                        $layananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                             ->findOneBy([
                                 'sekolah' => $sekolah,
                                 'jenisLayanan' => $jenisLayananSms,
@@ -149,7 +149,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                         if ($bedaWaktu >= 0 && $bedaWaktu <= self::BEDA_WAKTU_MAKS) {
                             $qbKehadiran = $em->createQueryBuilder()
                                 ->select('kehadiran')
-                                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+                                ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
                                 ->where('kehadiran.sekolah = :sekolah')
                                 ->andWhere('kehadiran.tahunAkademik = :tahunakademik')
                                 ->andWhere('kehadiran.kelas = :kelas')
@@ -168,7 +168,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                     continue;
                                 }
 
-                                $ortuWaliAktif = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                                $ortuWaliAktif = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')
                                     ->findOneBy([
                                         'siswa' => $kehadiran->getSiswa(),
                                         'aktif' => true,
@@ -206,7 +206,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                 }
                             }
 
-                            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+                            $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                                 ->findOneBy([
                                     'sekolah' => $sekolah,
                                     'tahunAkademik' => $jadwal->getTahunAkademik(),
