@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Entity;
+namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Entity;
+namespace Langgas\SisdikBundle\Entity;
 
 /**
  * Merepresentasikan identitas user anggota panitia pendaftaran.

@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Entity;
+namespace Langgas\SisdikBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;

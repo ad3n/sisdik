@@ -1,12 +1,12 @@
 <?php
-namespace Fast\SisdikBundle\Entity;
+namespace Langgas\SisdikBundle\Entity;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Doctrine\ORM\Mapping as ORM;
-use Fast\SisdikBundle\Util\FileSizeFormatter;
+use Langgas\SisdikBundle\Util\FileSizeFormatter;
 
 /**
  * @ORM\Table(name="sekolah")
