@@ -1,8 +1,8 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Session\Session;
-use Fast\SisdikBundle\Form\ConfirmationType;
+use Langgas\SisdikBundle\Form\ConfirmationType;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -11,10 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\BiayaPendaftaranType;
-use Fast\SisdikBundle\Form\BiayaSearchFormType;
+use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\BiayaPendaftaranType;
+use Langgas\SisdikBundle\Form\BiayaSearchFormType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -47,7 +47,7 @@ class BiayaPendaftaranController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:BiayaPendaftaran', 't')
+            ->from('LanggasSisdikBundle:BiayaPendaftaran', 't')
             ->leftJoin('t.tahun', 't2')
             ->leftJoin('t.gelombang', 't3')
             ->leftJoin('t.jenisbiaya', 't4')
@@ -100,7 +100,7 @@ class BiayaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
 
         if (! $entity) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
@@ -140,7 +140,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/create", name="fee_registration_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:BiayaPendaftaran:new.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaPendaftaran:new.html.twig")
      * @Secure(roles="ROLE_BENDAHARA")
      */
     public function createAction(Request $request)
@@ -156,7 +156,7 @@ class BiayaPendaftaranController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $qbsisabiaya = $em->createQueryBuilder()
-                ->update('FastSisdikBundle:Siswa', 'siswa')
+                ->update('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
                 ->leftJoin('pembayaran.daftarBiayaPendaftaran', 'daftar')
                 ->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal())
@@ -198,7 +198,7 @@ class BiayaPendaftaranController extends Controller
      * Displays a form to edit an existing BiayaPendaftaran entity.
      *
      * @Route("/{id}/confirm", name="fee_registration_edit_confirm")
-     * @Template("FastSisdikBundle:BiayaPendaftaran:edit.confirm.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaPendaftaran:edit.confirm.html.twig")
      * @Secure(roles="ROLE_BENDAHARA")
      */
     public function editConfirmAction($id)
@@ -208,7 +208,7 @@ class BiayaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
         if (! $entity && ! ($entity instanceof BiayaPendaftaran)) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
@@ -266,7 +266,7 @@ class BiayaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
         if (! $entity && ! ($entity instanceof BiayaPendaftaran)) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
@@ -287,7 +287,7 @@ class BiayaPendaftaranController extends Controller
      *
      * @Route("/{id}/update/{sessiondata}", name="fee_registration_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:BiayaPendaftaran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaPendaftaran:edit.html.twig")
      * @Secure(roles="ROLE_BENDAHARA")
      */
     public function updateAction(Request $request, $id, $sessiondata)
@@ -308,7 +308,7 @@ class BiayaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
         if (! (is_object($entity) && $entity instanceof BiayaPendaftaran)) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
@@ -328,7 +328,7 @@ class BiayaPendaftaranController extends Controller
             // siswa belum menggunakan -> sisa biaya dikurang
             $qbsiswa = $em->createQueryBuilder()
                 ->select('DISTINCT(siswa.id)')
-                ->from('FastSisdikBundle:Siswa', 'siswa')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
                 ->leftJoin('pembayaran.daftarBiayaPendaftaran', 'daftar')
                 ->where('siswa.tahun = :tahun')
@@ -344,7 +344,7 @@ class BiayaPendaftaranController extends Controller
 
             if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0) {
                 $qbsisabiaya = $em->createQueryBuilder()
-                    ->update('FastSisdikBundle:Siswa', 'siswa')
+                    ->update('LanggasSisdikBundle:Siswa', 'siswa')
                     ->where('siswa.tahun = :tahun')
                     ->andWhere('siswa.gelombang = :gelombang')
                     ->andWhere('siswa.sisaBiayaPendaftaran >= 0')
@@ -411,7 +411,7 @@ class BiayaPendaftaranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
 
             if (! $entity) {
                 throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
@@ -460,7 +460,7 @@ class BiayaPendaftaranController extends Controller
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->findBy(array(
+        $entities = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->findBy(array(
             'tahun' => $tahun,
             'gelombang' => $gelombang
         ));
@@ -498,7 +498,7 @@ class BiayaPendaftaranController extends Controller
         $usedfee = preg_replace('/,$/', '', $usedfee);
         $querybuilder = $em->createQueryBuilder()
             ->select('biaya')
-            ->from('FastSisdikBundle:BiayaPendaftaran', 'biaya')
+            ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
             ->where('biaya.tahun = :tahun')
             ->andWhere('biaya.gelombang = :gelombang')
             ->setParameter("tahun", $tahun)
@@ -538,7 +538,7 @@ class BiayaPendaftaranController extends Controller
         $sekolah = $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
 
         if ($entity instanceof BiayaPendaftaran) {
             if ($type == 1) {
@@ -566,7 +566,7 @@ class BiayaPendaftaranController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.registration', array(), 'navigations')]->setCurrent(true);
     }
 

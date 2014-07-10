@@ -1,10 +1,10 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 
 use Symfony\Component\Filesystem\Exception\IOException;
-use Fast\SisdikBundle\Util\EscapeCommand;
+use Langgas\SisdikBundle\Util\EscapeCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,11 +12,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Fast\SisdikBundle\Entity\PembayaranPendaftaran;
-use Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -39,23 +39,23 @@ class PembayaranPendaftaranCetakController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $pembayaran = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($pid);
+        $pembayaran = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->find($pid);
         if (!(is_object($pembayaran) && $pembayaran instanceof PembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
         $daftarBiayaPendaftaran = $pembayaran->getDaftarBiayaPendaftaran();
 
-        $transaksi = $em->getRepository('FastSisdikBundle:TransaksiPembayaranPendaftaran')->find($id);
+        $transaksi = $em->getRepository('LanggasSisdikBundle:TransaksiPembayaranPendaftaran')->find($id);
         if (!$transaksi && !($transaksi instanceof TransaksiPembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity TransaksiPembayaranPendaftaran tak ditemukan.');
         }
 
-        $transaksiPembayaran = $em->getRepository('FastSisdikBundle:TransaksiPembayaranPendaftaran')
+        $transaksiPembayaran = $em->getRepository('LanggasSisdikBundle:TransaksiPembayaranPendaftaran')
                 ->findBy(
                         array(
                             'pembayaranPendaftaran' => $pid
@@ -119,7 +119,7 @@ class PembayaranPendaftaranCetakController extends Controller
         $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
 
         $output = 'pdf';
-        $pilihanCetak = $em->getRepository('FastSisdikBundle:PilihanCetakKwitansi')
+        $pilihanCetak = $em->getRepository('LanggasSisdikBundle:PilihanCetakKwitansi')
                 ->findBy(array(
                     'sekolah' => $sekolah->getId()
                 ));
@@ -824,7 +824,7 @@ class PembayaranPendaftaranCetakController extends Controller
             $tmpResponse = new Response();
 
             $this
-                    ->render('FastSisdikBundle:PembayaranPendaftaran:receipts.pdf.twig',
+                    ->render('LanggasSisdikBundle:PembayaranPendaftaran:receipts.pdf.twig',
                             array(
                                     'sekolah' => $sekolah, 'siswa' => $siswa, 'pembayaran' => $pembayaran,
                                     'transaksi' => $transaksi, 'totalHarga' => $totalHarga,

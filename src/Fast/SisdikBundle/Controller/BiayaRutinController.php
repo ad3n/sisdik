@@ -1,21 +1,21 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
-use Fast\SisdikBundle\Form\BiayaSearchFormType;
+use Langgas\SisdikBundle\Form\BiayaSearchFormType;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\BrowserKit\Request;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\BiayaRutin;
-use Fast\SisdikBundle\Form\BiayaRutinType;
-use Fast\SisdikBundle\Entity\Jenisbiaya;
-use Fast\SisdikBundle\Entity\Tahun;
-use Fast\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\BiayaRutin;
+use Langgas\SisdikBundle\Form\BiayaRutinType;
+use Langgas\SisdikBundle\Entity\Jenisbiaya;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Entity\Gelombang;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -40,7 +40,7 @@ class BiayaRutinController extends Controller
 
         $searchform = $this->createForm(new BiayaSearchFormType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaRutin', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:BiayaRutin', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
                 ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
                 ->addOrderBy('t.urutan', 'ASC');
@@ -85,7 +85,7 @@ class BiayaRutinController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaRutin')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
@@ -121,7 +121,7 @@ class BiayaRutinController extends Controller
      *
      * @Route("/create", name="fee_recur_create")
      * @Method("post")
-     * @Template("FastSisdikBundle:BiayaRutin:new.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaRutin:new.html.twig")
      */
     public function createAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -174,7 +174,7 @@ class BiayaRutinController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaRutin')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
@@ -194,7 +194,7 @@ class BiayaRutinController extends Controller
      *
      * @Route("/{id}/update", name="fee_recur_update")
      * @Method("post")
-     * @Template("FastSisdikBundle:BiayaRutin:edit.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaRutin:edit.html.twig")
      */
     public function updateAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -202,7 +202,7 @@ class BiayaRutinController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaRutin')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
@@ -260,7 +260,7 @@ class BiayaRutinController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:BiayaRutin')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
@@ -299,7 +299,7 @@ class BiayaRutinController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.recur', array(), 'navigations')]->setCurrent(true);
     }
 

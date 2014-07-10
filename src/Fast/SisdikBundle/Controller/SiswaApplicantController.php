@@ -1,18 +1,18 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Form\ConfirmationType;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Form\ConfirmationType;
 
-use Fast\SisdikBundle\Form\SiswaApplicantSearchType;
-use Fast\SisdikBundle\Entity\SekolahAsal;
-use Fast\SisdikBundle\Entity\Referensi;
-use Fast\SisdikBundle\Util\Messenger;
-use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Form\SiswaApplicantSearchType;
+use Langgas\SisdikBundle\Entity\SekolahAsal;
+use Langgas\SisdikBundle\Entity\Referensi;
+use Langgas\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +20,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Form\SiswaApplicantType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Form\SiswaApplicantType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -62,13 +62,13 @@ class SiswaApplicantController extends Controller
 
         $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
 
-        $qbtotal = $em->createQueryBuilder()->select('COUNT(t.id)')->from('FastSisdikBundle:Siswa', 't')
+        $qbtotal = $em->createQueryBuilder()->select('COUNT(t.id)')->from('LanggasSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->where('t.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->andWhere('t2.id = ?1')->setParameter(1, $panitiaAktif[2]);
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $qbsearchnum = $em->createQueryBuilder()->select('COUNT(t.id)')->from('FastSisdikBundle:Siswa', 't')
+        $qbsearchnum = $em->createQueryBuilder()->select('COUNT(t.id)')->from('LanggasSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
                 ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
@@ -76,7 +76,7 @@ class SiswaApplicantController extends Controller
                 ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
                 ->setParameter(1, $panitiaAktif[2]);
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
                 ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
@@ -152,7 +152,7 @@ class SiswaApplicantController extends Controller
      *
      * @Route("/", name="applicant_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:SiswaApplicant:new.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaApplicant:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -180,7 +180,7 @@ class SiswaApplicantController extends Controller
             $entity->setCalonSiswa(true);
 
             $qbmaxnum = $em->createQueryBuilder()->select('MAX(siswa.nomorUrutPendaftaran)')
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where("siswa.tahun = :tahun")
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where("siswa.tahun = :tahun")
                     ->setParameter('tahun', $entity->getTahun())->andWhere('siswa.sekolah = :sekolah')
                     ->setParameter('sekolah', $entity->getSekolah());
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
@@ -200,7 +200,7 @@ class SiswaApplicantController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'a-pendaftaran-tercatat',
@@ -210,7 +210,7 @@ class SiswaApplicantController extends Controller
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
                             $layananSmsPendaftaran = $em
-                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
                                     ->findBy(
                                             array(
                                                     'sekolah' => $sekolah,
@@ -344,7 +344,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -382,7 +382,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         $this->verifyTahun($entity->getTahun()->getTahun());
 
@@ -405,7 +405,7 @@ class SiswaApplicantController extends Controller
      *
      * @Route("/{id}", name="applicant_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:SiswaApplicant:edit.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaApplicant:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -425,7 +425,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         $this->verifyTahun($entity->getTahun()->getTahun());
 
@@ -545,7 +545,7 @@ class SiswaApplicantController extends Controller
      *
      * @Route("/{id}/editregphoto", name="applicant_editregphoto")
      * @Method("GET")
-     * @Template("FastSisdikBundle:SiswaApplicant:editregphoto.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaApplicant:editregphoto.html.twig")
      */
     public function editRegistrationPhotoAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -565,7 +565,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         $this->verifyTahun($entity->getTahun()->getTahun());
 
@@ -587,7 +587,7 @@ class SiswaApplicantController extends Controller
      *
      * @Route("/{id}/updateregphoto", name="applicant_updateregphoto")
      * @Method("POST")
-     * @Template("FastSisdikBundle:SiswaApplicant:editregphoto.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaApplicant:editregphoto.html.twig")
      */
     public function updateRegistrationPhotoAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -607,7 +607,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         $this->verifyTahun($entity->getTahun()->getTahun());
 
@@ -658,7 +658,7 @@ class SiswaApplicantController extends Controller
      * menghapus hanya bisa dilakukan terhadap data yang belum memiliki data pembayaran
      *
      * @Route("/{id}/remove", name="applicant_delete_confirm")
-     * @Template("FastSisdikBundle:SiswaApplicant:delete.confirm.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaApplicant:delete.confirm.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KETUA_PANITIA_PSB")
      */
     public function deleteConfirmAction($id) {
@@ -679,7 +679,7 @@ class SiswaApplicantController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
         if (!$entity && !$entity instanceof Siswa) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
@@ -761,7 +761,7 @@ class SiswaApplicantController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $qb0 = $em->createQueryBuilder()->select('panitia')
-                ->from('FastSisdikBundle:PanitiaPendaftaran', 'panitia')->leftJoin('panitia.tahun', 'tahun')
+                ->from('LanggasSisdikBundle:PanitiaPendaftaran', 'panitia')->leftJoin('panitia.tahun', 'tahun')
                 ->where('panitia.sekolah = :sekolah')->andWhere('panitia.aktif = 1')
                 ->orderBy('tahun.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())
                 ->setMaxResults(1);
@@ -793,7 +793,7 @@ class SiswaApplicantController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
     }
 

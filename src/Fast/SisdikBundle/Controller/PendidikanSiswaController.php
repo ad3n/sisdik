@@ -1,7 +1,7 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Util\RuteAsal;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Util\RuteAsal;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,9 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\PendidikanSiswa;
-use Fast\SisdikBundle\Form\PendidikanSiswaType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PendidikanSiswa;
+use Langgas\SisdikBundle\Form\PendidikanSiswaType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -36,7 +36,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:PendidikanSiswa', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:PendidikanSiswa', 't')
                 ->where('t.siswa = :siswa')->orderBy('t.jenjang', 'ASC')->setParameter('siswa', $sid);
 
         $paginator = $this->get('knp_paginator');
@@ -44,7 +44,7 @@ class PendidikanSiswaController extends Controller
 
         return array(
                 'pagination' => $pagination,
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
@@ -69,7 +69,7 @@ class PendidikanSiswaController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -80,7 +80,7 @@ class PendidikanSiswaController extends Controller
      * @Route("/pendaftar", name="pendidikan-sebelumnya-pendaftar_create")
      * @Route("/siswa", name="pendidikan-sebelumnya-siswa_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PendidikanSiswa:new.html.twig")
+     * @Template("LanggasSisdikBundle:PendidikanSiswa:new.html.twig")
      */
     public function createAction(Request $request, $sid) {
         $this->isRegisteredToSchool();
@@ -93,7 +93,7 @@ class PendidikanSiswaController extends Controller
         $form->submit($request);
 
         if ($form->isValid()) {
-            $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
             $entity->setSiswa($siswa);
             $em->persist($entity);
             $em->flush();
@@ -121,7 +121,7 @@ class PendidikanSiswaController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
@@ -141,7 +141,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PendidikanSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PendidikanSiswa tak ditemukan.');
@@ -170,7 +170,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PendidikanSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PendidikanSiswa tak ditemukan.');
@@ -182,7 +182,7 @@ class PendidikanSiswaController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -193,7 +193,7 @@ class PendidikanSiswaController extends Controller
      * @Route("/pendaftar/{id}", name="pendidikan-sebelumnya-pendaftar_update")
      * @Route("/siswa/{id}", name="pendidikan-sebelumnya-siswa_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PendidikanSiswa:edit.html.twig")
+     * @Template("LanggasSisdikBundle:PendidikanSiswa:edit.html.twig")
      */
     public function updateAction(Request $request, $sid, $id) {
         $this->isRegisteredToSchool();
@@ -201,7 +201,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PendidikanSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PendidikanSiswa tak ditemukan.');
@@ -247,7 +247,7 @@ class PendidikanSiswaController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -267,7 +267,7 @@ class PendidikanSiswaController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:PendidikanSiswa')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity PendidikanSiswa tak ditemukan.');
@@ -326,7 +326,7 @@ class PendidikanSiswaController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
             $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
         } else {

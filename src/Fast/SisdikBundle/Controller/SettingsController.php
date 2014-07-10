@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

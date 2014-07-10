@@ -1,12 +1,12 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\Gelombang;
-use Fast\SisdikBundle\Entity\DaftarBiayaPendaftaran;
-use Fast\SisdikBundle\Util\Messenger;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
-use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+use Langgas\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +14,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\PembayaranPendaftaran;
-use Fast\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
-use Fast\SisdikBundle\Form\PembayaranPendaftaranType;
-use Fast\SisdikBundle\Form\PembayaranPendaftaranCicilanType;
+use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Form\PembayaranPendaftaranType;
+use Langgas\SisdikBundle\Form\PembayaranPendaftaranCicilanType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -44,13 +44,13 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
             throw $this
                     ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        $entities = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')
+        $entities = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')
                 ->findBy(array(
                     'siswa' => $siswa
                 ));
@@ -69,7 +69,7 @@ class PembayaranPendaftaranController extends Controller
             $entity->setJenisPotongan("nominal");
 
             foreach ($itemBiaya['tersisa'] as $id) {
-                $biaya = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->find($id);
+                $biaya = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
 
                 $daftarBiaya = new DaftarBiayaPendaftaran();
                 $daftarBiaya->setBiayaPendaftaran($biaya);
@@ -98,7 +98,7 @@ class PembayaranPendaftaranController extends Controller
      *
      * @Route("/", name="payment_registrationfee_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PembayaranPendaftaran:index.html.twig")
+     * @Template("LanggasSisdikBundle:PembayaranPendaftaran:index.html.twig")
      */
     public function createAction(Request $request, $sid) {
         $sekolah = $this->isRegisteredToSchool();
@@ -106,13 +106,13 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
             throw $this
                     ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        $entities = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')
+        $entities = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')
                 ->findBy(array(
                     'siswa' => $siswa
                 ));
@@ -147,7 +147,7 @@ class PembayaranPendaftaranController extends Controller
 
             $now = new \DateTime();
             $qbmaxnum = $em->createQueryBuilder()->select('MAX(transaksi.nomorUrutTransaksiPerbulan)')
-                    ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                    ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                     ->where("YEAR(transaksi.waktuSimpan) = :tahunsimpan")
                     ->setParameter('tahunsimpan', $now->format('Y'))
                     ->andWhere("MONTH(transaksi.waktuSimpan) = :bulansimpan")
@@ -179,7 +179,7 @@ class PembayaranPendaftaranController extends Controller
                     $nominalBiaya += $biaya->getNominal();
                     $itemBiayaTerproses[] = $biaya->getBiayaPendaftaran()->getId();
 
-                    $biayaPendaftaranTmp = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+                    $biayaPendaftaranTmp = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
                             ->find($biaya->getBiayaPendaftaran()->getId());
                     $biayaPendaftaranTmp->setTerpakai(true);
 
@@ -230,7 +230,7 @@ class PembayaranPendaftaranController extends Controller
             $em->flush();
 
             if (count($itemBiaya['tersimpan']) == 0) {
-                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'b-pendaftaran-bayar-pertama',
@@ -240,7 +240,7 @@ class PembayaranPendaftaranController extends Controller
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
                             $layananSmsPendaftaran = $em
-                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
                                     ->findBy(
                                             array(
                                                     'sekolah' => $sekolah,
@@ -289,7 +289,7 @@ class PembayaranPendaftaranController extends Controller
                 }
             }
 
-            $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+            $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                     ->findBy(
                             array(
                                 'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar',
@@ -298,7 +298,7 @@ class PembayaranPendaftaranController extends Controller
             foreach ($pilihanLayananSms as $pilihan) {
                 if ($pilihan instanceof PilihanLayananSms) {
                     if ($pilihan->getStatus()) {
-                        $layananSmsPendaftaran = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                        $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
                                 ->findBy(
                                         array(
                                             'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar'
@@ -371,7 +371,7 @@ class PembayaranPendaftaranController extends Controller
             }
 
             if ($siswa->getLunasBiayaPendaftaran()) {
-                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
@@ -381,7 +381,7 @@ class PembayaranPendaftaranController extends Controller
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
                             $layananSmsPendaftaran = $em
-                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
                                     ->findBy(
                                             array(
                                                     'sekolah' => $sekolah,
@@ -468,13 +468,13 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
             throw $this
                     ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->find($id);
         if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
@@ -500,7 +500,7 @@ class PembayaranPendaftaranController extends Controller
             }
         }
 
-        $transaksiPembayaran = $em->getRepository('FastSisdikBundle:TransaksiPembayaranPendaftaran')
+        $transaksiPembayaran = $em->getRepository('LanggasSisdikBundle:TransaksiPembayaranPendaftaran')
                 ->findBy(
                         array(
                             'pembayaranPendaftaran' => $id
@@ -530,13 +530,13 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
             throw $this
                     ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->find($id);
         if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
@@ -591,7 +591,7 @@ class PembayaranPendaftaranController extends Controller
      *
      * @Route("/{id}/update", name="payment_registrationfee_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PembayaranPendaftaran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:PembayaranPendaftaran:edit.html.twig")
      */
     public function updateAction(Request $request, $sid, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -599,7 +599,7 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
             throw $this
                     ->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
@@ -607,7 +607,7 @@ class PembayaranPendaftaranController extends Controller
         // total payment start here because of the unknown behavior during submitting request
         $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran();
 
-        $entity = $em->getRepository('FastSisdikBundle:PembayaranPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->find($id);
         if (!(is_object($entity) && $entity instanceof PembayaranPendaftaran)) {
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
@@ -650,7 +650,7 @@ class PembayaranPendaftaranController extends Controller
 
             $now = new \DateTime();
             $qbmaxnum = $em->createQueryBuilder()->select('MAX(transaksi.nomorUrutTransaksiPerbulan)')
-                    ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                    ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                     ->where("YEAR(transaksi.waktuSimpan) = :tahunsimpan")
                     ->setParameter('tahunsimpan', $now->format('Y'))
                     ->andWhere("MONTH(transaksi.waktuSimpan) = :bulansimpan")
@@ -693,7 +693,7 @@ class PembayaranPendaftaranController extends Controller
 
             $em->flush();
 
-            $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+            $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                     ->findBy(
                             array(
                                 'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar',
@@ -702,7 +702,7 @@ class PembayaranPendaftaranController extends Controller
             foreach ($pilihanLayananSms as $pilihan) {
                 if ($pilihan instanceof PilihanLayananSms) {
                     if ($pilihan->getStatus()) {
-                        $layananSmsPendaftaran = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                        $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
                                 ->findBy(
                                         array(
                                             'sekolah' => $sekolah, 'jenisLayanan' => 'c-pendaftaran-bayar'
@@ -769,7 +769,7 @@ class PembayaranPendaftaranController extends Controller
             }
 
             if ($siswa->getLunasBiayaPendaftaran()) {
-                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
@@ -779,7 +779,7 @@ class PembayaranPendaftaranController extends Controller
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
                             $layananSmsPendaftaran = $em
-                                    ->getRepository('FastSisdikBundle:LayananSmsPendaftaran')
+                                    ->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
                                     ->findBy(
                                             array(
                                                     'sekolah' => $sekolah,
@@ -871,7 +871,7 @@ class PembayaranPendaftaranController extends Controller
     private function getBiayaProperties(Siswa $siswa) {
         $em = $this->getDoctrine()->getManager();
 
-        $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+        $biayaPendaftaran = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
                 ->findBy(
                         array(
                             'tahun' => $siswa->getTahun(), 'gelombang' => $siswa->getGelombang(),
@@ -886,7 +886,7 @@ class PembayaranPendaftaranController extends Controller
         }
 
         $querybuilder1 = $em->createQueryBuilder()->select('daftar')
-                ->from('FastSisdikBundle:DaftarBiayaPendaftaran', 'daftar')
+                ->from('LanggasSisdikBundle:DaftarBiayaPendaftaran', 'daftar')
                 ->leftJoin('daftar.biayaPendaftaran', 'biaya')
                 ->leftJoin('daftar.pembayaranPendaftaran', 'pembayaran')->where('pembayaran.siswa = :siswa')
                 ->setParameter('siswa', $siswa->getId())->orderBy('biaya.urutan', 'ASC');
@@ -914,7 +914,7 @@ class PembayaranPendaftaranController extends Controller
 
         if (is_array($remainfee) && count($remainfee) > 0) {
             $querybuilder = $em->createQueryBuilder()->select('biaya')
-                    ->from('FastSisdikBundle:BiayaPendaftaran', 'biaya')->where('biaya.tahun = :tahun')
+                    ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')->where('biaya.tahun = :tahun')
                     ->andWhere('biaya.gelombang = :gelombang')->setParameter("tahun", $tahun)
                     ->setParameter("gelombang", $gelombang)->andWhere('biaya.id IN (?1)')
                     ->setParameter(1, $remainfee);
@@ -934,7 +934,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.applicant.payment', array(), 'navigations')]->setCurrent(true);
     }
 

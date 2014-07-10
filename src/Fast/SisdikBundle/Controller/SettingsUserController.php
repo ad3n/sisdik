@@ -1,22 +1,22 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
-use Fast\SisdikBundle\Form\SimpleUserSearchType;
+use Langgas\SisdikBundle\Form\SimpleUserSearchType;
 use Symfony\Component\Translation\IdentityTranslator;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Entity\Staf;
-use Fast\SisdikBundle\Entity\Guru;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\User;
-use Fast\SisdikBundle\Form\SimpleSearchFormType;
+use Langgas\SisdikBundle\Entity\Staf;
+use Langgas\SisdikBundle\Entity\Guru;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Form\SimpleSearchFormType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use FOS\UserBundle\Model\UserManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraint;
-use Fast\SisdikBundle\Form\UserRegisterFormType;
-use Fast\SisdikBundle\Form\UserFormType;
+use Langgas\SisdikBundle\Form\UserRegisterFormType;
+use Langgas\SisdikBundle\Form\UserFormType;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Menu\MenuItem;
@@ -49,7 +49,7 @@ class SettingsUserController extends Controller
 
         $searchform = $this->createForm(new SimpleUserSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('u')->from('FastSisdikBundle:User', 'u')
+        $querybuilder = $em->createQueryBuilder()->select('u')->from('LanggasSisdikBundle:User', 'u')
                 ->orderBy('u.username', 'ASC');
 
         $searchform->submit($this->getRequest());
@@ -120,7 +120,7 @@ class SettingsUserController extends Controller
 
                 if (in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected)
                         || in_array('ROLE_WALI_KELAS', $roleselected)) {
-                    $guru = $em->getRepository('FastSisdikBundle:Guru')
+                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')
                             ->findOneBy(
                                     array(
                                         'username' => $user->getUsername()
@@ -142,7 +142,7 @@ class SettingsUserController extends Controller
                 if (in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_ADMIN', $roleselected)) {
-                    $staf = $em->getRepository('FastSisdikBundle:Staf')
+                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')
                             ->findOneBy(
                                     array(
                                         'username' => $user->getUsername()
@@ -186,7 +186,7 @@ class SettingsUserController extends Controller
     /**
      * @Route("/register/ns", name="settings_user_register_noschool")
      * @Secure(roles="ROLE_SUPER_ADMIN")
-     * @Template("FastSisdikBundle:SettingsUser:register.ns.html.twig")
+     * @Template("LanggasSisdikBundle:SettingsUser:register.ns.html.twig")
      */
     public function registerNoSchoolAction(Request $request) {
         $this->setCurrentMenu(1);
@@ -233,7 +233,7 @@ class SettingsUserController extends Controller
 
     /**
      * @Route("/register/ws", name="settings_user_register_withschool")
-     * @Template("FastSisdikBundle:SettingsUser:register.ws.html.twig")
+     * @Template("LanggasSisdikBundle:SettingsUser:register.ws.html.twig")
      */
     public function registerWithSchoolAction(Request $request) {
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
@@ -267,7 +267,7 @@ class SettingsUserController extends Controller
 
                 if (in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected)
                         || in_array('ROLE_WALI_KELAS', $roleselected)) {
-                    $guru = $em->getRepository('FastSisdikBundle:Guru')
+                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')
                             ->findOneBy(
                                     array(
                                         'username' => $user->getUsername()
@@ -286,7 +286,7 @@ class SettingsUserController extends Controller
                 if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_ADMIN', $roleselected)) {
-                    $staf = $em->getRepository('FastSisdikBundle:Staf')
+                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')
                             ->findOneBy(
                                     array(
                                         'username' => $user->getUsername()
@@ -331,7 +331,7 @@ class SettingsUserController extends Controller
      */
     public function deleteAction($id, $confirmed) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('FastSisdikBundle:User');
+        $repository = $em->getRepository('LanggasSisdikBundle:User');
         $user = $repository->find($id);
         $username = $user->getUsername();
 
@@ -383,7 +383,7 @@ class SettingsUserController extends Controller
 
         $searchform = $this->createForm(new SimpleSearchFormType());
 
-        $querybuilder = $em->createQueryBuilder()->select('u')->from('FastSisdikBundle:User', 'u')
+        $querybuilder = $em->createQueryBuilder()->select('u')->from('LanggasSisdikBundle:User', 'u')
                 ->where("u.sekolah != ''")->orderBy('u.username', 'ASC');
 
         $searchform->submit($request);
@@ -459,7 +459,7 @@ class SettingsUserController extends Controller
                 }
 
                 if (in_array('ROLE_GURU', $roleselected)) {
-                    $guru = $em->getRepository('FastSisdikBundle:Guru')
+                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')
                             ->findOneBy(
                                     array(
                                         'username' => $user->getUsername()
@@ -480,7 +480,7 @@ class SettingsUserController extends Controller
                 if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
                         || in_array('ROLE_WALI_KELAS', $roleselected)
                         || in_array('ROLE_ADMIN', $roleselected)) {
-                    $staf = $em->getRepository('FastSisdikBundle:Staf')
+                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')
                             ->findOneBy(
                                     array(
                                         'username' => $user->getUsername()
@@ -531,7 +531,7 @@ class SettingsUserController extends Controller
      */
     public function inschoolDeleteAction($id, $confirmed) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('FastSisdikBundle:User');
+        $repository = $em->getRepository('LanggasSisdikBundle:User');
         $user = $repository->find($id);
         $username = $user->getUsername();
 
@@ -569,10 +569,10 @@ class SettingsUserController extends Controller
 
     private function setCurrentMenu($option = 1) {
         if ($option == 1) {
-            $menu = $this->get('fast_sisdik.menu.main');
+            $menu = $this->get('langgas_sisdik.menu.main');
             $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', array(), 'navigations')][$this->get('translator')->trans('links.alluser', array(), 'navigations')]->setCurrent(true);
         } else if ($option == 2) {
-            $menu = $this->get('fast_sisdik.menu.main');
+            $menu = $this->get('langgas_sisdik.menu.main');
             $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.user', array(), 'navigations')]->setCurrent(true);
         }
     }

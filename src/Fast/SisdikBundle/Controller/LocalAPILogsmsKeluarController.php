@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,7 +24,7 @@ class LocalAPILogsmsKeluarController extends Controller
     public function updateAction(Request $request, $logid, $status, $time) {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:LogsmsKeluar')->find($logid);
+        $entity = $em->getRepository('LanggasSisdikBundle:LogsmsKeluar')->find($logid);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity LogsmsKeluar tak ditemukan.');

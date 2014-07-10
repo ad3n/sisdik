@@ -1,11 +1,11 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\SekolahFormType;
-use Fast\SisdikBundle\Form\SimpleSearchFormType;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\SekolahFormType;
+use Langgas\SisdikBundle\Form\SimpleSearchFormType;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,7 +43,7 @@ class SettingsSchoolController extends Controller
         $em = $this->getDoctrine()->getManager();
         $query = $em
                 ->createQuery(
-                        "SELECT s FROM FastSisdikBundle:Sekolah s "
+                        "SELECT s FROM LanggasSisdikBundle:Sekolah s "
                                 . ($searchcondition != '' ? " WHERE $searchcondition " : '')
                                 . ' ORDER BY s.nama ASC');
 
@@ -76,7 +76,7 @@ class SettingsSchoolController extends Controller
 
                 $qbe = $em->createQueryBuilder();
                 $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('sekolah.nomorUrut'))
-                        ->from('FastSisdikBundle:Sekolah', 'sekolah');
+                        ->from('LanggasSisdikBundle:Sekolah', 'sekolah');
 
                 $nomorUrut = $querynomor->getQuery()->getSingleScalarResult();
                 $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
@@ -112,7 +112,7 @@ class SettingsSchoolController extends Controller
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('FastSisdikBundle:Sekolah');
+        $repository = $em->getRepository('LanggasSisdikBundle:Sekolah');
         $school = $repository->find($id);
 
         $form = $this->createForm(new SekolahFormType(), $school);
@@ -153,7 +153,7 @@ class SettingsSchoolController extends Controller
      */
     public function deleteAction($id, $confirmed) {
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('FastSisdikBundle:Sekolah');
+        $repository = $em->getRepository('LanggasSisdikBundle:Sekolah');
         $school = $repository->find($id);
         $schoolname = $school->getNama();
 
@@ -189,7 +189,7 @@ class SettingsSchoolController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->get('fast_sisdik.menu.main');
+        $menu = $this->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', array(), 'navigations')][$this->get('translator')->trans('links.schools', array(), 'navigations')]->setCurrent(true);
     }
 }

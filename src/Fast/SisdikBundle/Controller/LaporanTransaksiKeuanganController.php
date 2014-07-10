@@ -1,24 +1,24 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Util\Messenger;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Fast\SisdikBundle\Form\ReportSummaryType;
+use Langgas\SisdikBundle\Form\ReportSummaryType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
-use Fast\SisdikBundle\Entity\Referensi;
+use Langgas\SisdikBundle\Entity\Referensi;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Entity\Gelombang;
-use Fast\SisdikBundle\Form\TransaksiKeuanganSearchType;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Form\TransaksiKeuanganSearchType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -60,18 +60,18 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
         $transaksiTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->leftJoin('pembayaran.siswa', 'siswa');
 
         $querybuilder = $em->createQueryBuilder()->select('transaksi')
-                ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->leftJoin('pembayaran.siswa', 'siswa')->addOrderBy('transaksi.waktuSimpan', 'DESC');
@@ -169,18 +169,18 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
         $transaksiTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->leftJoin('pembayaran.siswa', 'siswa');
 
         $querybuilder = $em->createQueryBuilder()->select('transaksi')
-                ->from('FastSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
                 ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
                 ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
                 ->leftJoin('pembayaran.siswa', 'siswa')->addOrderBy('transaksi.waktuSimpan', 'DESC');
@@ -285,12 +285,12 @@ class LaporanTransaksiKeuanganController extends Controller
                         ->addFromString('styles.xml',
                                 $this
                                         ->renderView(
-                                                "FastSisdikBundle:LaporanTransaksiKeuangan:styles.xml.twig"));
+                                                "LanggasSisdikBundle:LaporanTransaksiKeuangan:styles.xml.twig"));
                 $ziparchive
                         ->addFromString('content.xml',
                                 $this
                                         ->renderView(
-                                                "FastSisdikBundle:LaporanTransaksiKeuangan:report.xml.twig",
+                                                "LanggasSisdikBundle:LaporanTransaksiKeuangan:report.xml.twig",
                                                 array(
                                                         'entities' => $entities,
                                                         'transaksiTercari' => $transaksiTercari,
@@ -385,7 +385,7 @@ class LaporanTransaksiKeuanganController extends Controller
                 $tmpResponse = new Response();
 
                 $this
-                        ->render('FastSisdikBundle:SiswaApplicantReport:summary.pdf.twig',
+                        ->render('LanggasSisdikBundle:SiswaApplicantReport:summary.pdf.twig',
                                 array(
                                     'sekolah' => $sekolah, 'teks' => $summarydata['teksTerformat'],
                                 ), $tmpResponse);
@@ -409,7 +409,7 @@ class LaporanTransaksiKeuanganController extends Controller
                                                     'filename' => $filename, 'type' => 'pdf',
                                                 )));
             } elseif ($summarydata['output'] == 'sms') {
-                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'e-laporan-ringkasan',
@@ -517,7 +517,7 @@ class LaporanTransaksiKeuanganController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.laporan.transaksi.keuangan', array(), 'navigations')]->setCurrent(true);
     }
 

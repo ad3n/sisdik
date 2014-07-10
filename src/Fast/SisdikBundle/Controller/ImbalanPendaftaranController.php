@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,13 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\ImbalanPendaftaran;
-use Fast\SisdikBundle\Form\ImbalanPendaftaranType;
-use Fast\SisdikBundle\Form\SimpleTahunSearchType;
-use Fast\SisdikBundle\Entity\JenisImbalan;
-use Fast\SisdikBundle\Entity\Tahun;
-use Fast\SisdikBundle\Entity\Gelombang;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\ImbalanPendaftaran;
+use Langgas\SisdikBundle\Form\ImbalanPendaftaranType;
+use Langgas\SisdikBundle\Form\SimpleTahunSearchType;
+use Langgas\SisdikBundle\Entity\JenisImbalan;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -40,7 +40,7 @@ class ImbalanPendaftaranController extends Controller
         $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahun', 't2')
+                ->from('LanggasSisdikBundle:ImbalanPendaftaran', 't')->leftJoin('t.tahun', 't2')
                 ->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisImbalan', 't4')
                 ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
@@ -75,7 +75,7 @@ class ImbalanPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
@@ -111,7 +111,7 @@ class ImbalanPendaftaranController extends Controller
      *
      * @Route("/create", name="rewardamount_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:ImbalanPendaftaran:new.html.twig")
+     * @Template("LanggasSisdikBundle:ImbalanPendaftaran:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -162,7 +162,7 @@ class ImbalanPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
@@ -182,7 +182,7 @@ class ImbalanPendaftaranController extends Controller
      *
      * @Route("/{id}/update", name="rewardamount_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:ImbalanPendaftaran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:ImbalanPendaftaran:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -190,7 +190,7 @@ class ImbalanPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:ImbalanPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
@@ -243,7 +243,7 @@ class ImbalanPendaftaranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:ImbalanPendaftaran')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:ImbalanPendaftaran')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
@@ -275,7 +275,7 @@ class ImbalanPendaftaranController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.reward.amount', array(), 'navigations')]->setCurrent(true);
     }
 

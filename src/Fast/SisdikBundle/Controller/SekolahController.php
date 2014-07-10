@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -7,8 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\SekolahType;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\SekolahType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -44,7 +44,7 @@ class SekolahController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($sekolah->getId());
+        $entity = $em->getRepository('LanggasSisdikBundle:Sekolah')->find($sekolah->getId());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Sekolah tak ditemukan.');
@@ -88,7 +88,7 @@ class SekolahController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($sekolah->getId());
+        $entity = $em->getRepository('LanggasSisdikBundle:Sekolah')->find($sekolah->getId());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Sekolah tak ditemukan.');
@@ -107,7 +107,7 @@ class SekolahController extends Controller
      *
      * @Route("/update", name="settings_specsch_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Sekolah:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Sekolah:edit.html.twig")
      */
     public function updateAction(
         Request $request)
@@ -117,7 +117,7 @@ class SekolahController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Sekolah')->find($sekolah->getId());
+        $entity = $em->getRepository('LanggasSisdikBundle:Sekolah')->find($sekolah->getId());
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Sekolah tak ditemukan.');
@@ -152,7 +152,7 @@ class SekolahController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.school', array(), 'navigations')]->setCurrent(true);
     }
 

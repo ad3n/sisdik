@@ -1,15 +1,15 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Jenisbiaya;
-use Fast\SisdikBundle\Form\JenisbiayaType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Jenisbiaya;
+use Langgas\SisdikBundle\Form\JenisbiayaType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -32,7 +32,7 @@ class JenisbiayaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Jenisbiaya', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Jenisbiaya', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -56,7 +56,7 @@ class JenisbiayaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Jenisbiaya')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Jenisbiaya')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
@@ -92,7 +92,7 @@ class JenisbiayaController extends Controller
      *
      * @Route("/create", name="fee_type_create")
      * @Method("post")
-     * @Template("FastSisdikBundle:Jenisbiaya:new.html.twig")
+     * @Template("LanggasSisdikBundle:Jenisbiaya:new.html.twig")
      */
     public function createAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -143,7 +143,7 @@ class JenisbiayaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Jenisbiaya')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Jenisbiaya')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
@@ -163,7 +163,7 @@ class JenisbiayaController extends Controller
      *
      * @Route("/{id}/update", name="fee_type_update")
      * @Method("post")
-     * @Template("FastSisdikBundle:Jenisbiaya:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Jenisbiaya:edit.html.twig")
      */
     public function updateAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -171,7 +171,7 @@ class JenisbiayaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Jenisbiaya')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Jenisbiaya')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
@@ -227,7 +227,7 @@ class JenisbiayaController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Jenisbiaya')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Jenisbiaya')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
@@ -269,7 +269,7 @@ class JenisbiayaController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.type', array(), 'navigations')]->setCurrent(true);
     }
 

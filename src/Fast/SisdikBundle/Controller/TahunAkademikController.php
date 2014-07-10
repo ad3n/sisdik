@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\TahunAkademik;
-use Fast\SisdikBundle\Form\TahunAkademikType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Form\TahunAkademikType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -35,7 +35,7 @@ class TahunAkademikController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('tahunakademik')
-                    ->from('FastSisdikBundle:TahunAkademik', 'tahunakademik')
+                    ->from('LanggasSisdikBundle:TahunAkademik', 'tahunakademik')
                     ->where('tahunakademik.sekolah = :sekolah')->orderBy('tahunakademik.urutan', 'DESC')
                     ->addOrderBy('tahunakademik.nama', 'DESC')->setParameter('sekolah', $sekolah->getId());
         }
@@ -59,13 +59,13 @@ class TahunAkademikController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TahunAkademik')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TahunAkademik')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
         }
 
-        $query = $em->createQueryBuilder()->update('FastSisdikBundle:TahunAkademik', 't')
+        $query = $em->createQueryBuilder()->update('LanggasSisdikBundle:TahunAkademik', 't')
                 ->set('t.aktif', '0')->where('t.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId())->getQuery();
         $query->execute();
@@ -95,7 +95,7 @@ class TahunAkademikController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TahunAkademik')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TahunAkademik')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
@@ -124,7 +124,7 @@ class TahunAkademikController extends Controller
 
         $qbe = $em->createQueryBuilder();
         $queryUrutan = $em->createQueryBuilder()->select($qbe->expr()->max('tahunAkademik.urutan'))
-                ->from('FastSisdikBundle:TahunAkademik', 'tahunAkademik')
+                ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
                 ->where('tahunAkademik.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
         $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
         $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
@@ -144,7 +144,7 @@ class TahunAkademikController extends Controller
      *
      * @Route("/create", name="academicyear_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:TahunAkademik:new.html.twig")
+     * @Template("LanggasSisdikBundle:TahunAkademik:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -199,7 +199,7 @@ class TahunAkademikController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TahunAkademik')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TahunAkademik')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
@@ -219,7 +219,7 @@ class TahunAkademikController extends Controller
      *
      * @Route("/{id}/update", name="academicyear_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:TahunAkademik:edit.html.twig")
+     * @Template("LanggasSisdikBundle:TahunAkademik:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -227,7 +227,7 @@ class TahunAkademikController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TahunAkademik')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TahunAkademik')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
@@ -284,7 +284,7 @@ class TahunAkademikController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:TahunAkademik')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:TahunAkademik')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
@@ -326,7 +326,7 @@ class TahunAkademikController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.academicyear', array(), 'navigations')]->setCurrent(true);
     }
 

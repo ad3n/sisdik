@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Templatesms;
-use Fast\SisdikBundle\Form\TemplatesmsType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Templatesms;
+use Langgas\SisdikBundle\Form\TemplatesmsType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -34,7 +34,7 @@ class TemplatesmsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Templatesms', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Templatesms', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
         }
@@ -59,7 +59,7 @@ class TemplatesmsController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Templatesms')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Templatesms')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
@@ -95,7 +95,7 @@ class TemplatesmsController extends Controller
      *
      * @Route("/create", name="sms_template_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Templatesms:new.html.twig")
+     * @Template("LanggasSisdikBundle:Templatesms:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -144,7 +144,7 @@ class TemplatesmsController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Templatesms')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Templatesms')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
@@ -164,7 +164,7 @@ class TemplatesmsController extends Controller
      *
      * @Route("/{id}/update", name="sms_template_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Templatesms:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Templatesms:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -172,7 +172,7 @@ class TemplatesmsController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Templatesms')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Templatesms')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
@@ -223,7 +223,7 @@ class TemplatesmsController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Templatesms')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Templatesms')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
@@ -270,7 +270,7 @@ class TemplatesmsController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.smstemplate', array(), 'navigations')]->setCurrent(true);
     }
 

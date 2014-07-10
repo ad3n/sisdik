@@ -1,16 +1,16 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\LayananSmsPendaftaran;
-use Fast\SisdikBundle\Form\LayananSmsPendaftaranType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Langgas\SisdikBundle\Form\LayananSmsPendaftaranType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -39,7 +39,7 @@ class LayananSmsPendaftaranController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:LayananSmsPendaftaran', 't')
+            ->from('LanggasSisdikBundle:LayananSmsPendaftaran', 't')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.jenisLayanan', 'ASC')
             ->setParameter('sekolah', $sekolah->getId());
@@ -79,7 +79,7 @@ class LayananSmsPendaftaranController extends Controller
      *
      * @Route("/create", name="smspendaftaran_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:LayananSmsPendaftaran:new.html.twig")
+     * @Template("LanggasSisdikBundle:LayananSmsPendaftaran:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -131,7 +131,7 @@ class LayananSmsPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
         if (! $entity) {
             throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
@@ -160,7 +160,7 @@ class LayananSmsPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
         if (! $entity) {
             throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
@@ -181,7 +181,7 @@ class LayananSmsPendaftaranController extends Controller
      *
      * @Route("/{id}/update", name="smspendaftaran_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:LayananSmsPendaftaran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:LayananSmsPendaftaran:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -190,7 +190,7 @@ class LayananSmsPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
         if (! $entity) {
             throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
@@ -242,7 +242,7 @@ class LayananSmsPendaftaranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:LayananSmsPendaftaran')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
             if (! $entity) {
                 throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
@@ -284,7 +284,7 @@ class LayananSmsPendaftaranController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.smspendaftaran', array(), 'navigations')]->setCurrent(true);
     }
 

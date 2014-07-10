@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Penjurusan;
-use Fast\SisdikBundle\Form\PenjurusanType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Penjurusan;
+use Langgas\SisdikBundle\Form\PenjurusanType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -34,12 +34,12 @@ class PenjurusanController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $results = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
+            $results = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Penjurusan', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.root ASC, t.lft', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
         }
 
-        $repo = $em->getRepository("FastSisdikBundle:Penjurusan");
+        $repo = $em->getRepository("LanggasSisdikBundle:Penjurusan");
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($results, $this->getRequest()->query->get('page', 1), 20);
@@ -53,7 +53,7 @@ class PenjurusanController extends Controller
      * @Route("/move-up/{id}", name="settings_placement_moveup")
      */
     public function moveUpAction($id) {
-        $repo = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Penjurusan');
+        $repo = $this->getDoctrine()->getManager()->getRepository('LanggasSisdikBundle:Penjurusan');
         $node = $repo->find($id);
 
         $repo->moveUp($node);
@@ -65,7 +65,7 @@ class PenjurusanController extends Controller
      * @Route("/move-down/{id}", name="settings_placement_movedown")
      */
     public function moveDownAction($id) {
-        $repo = $this->getDoctrine()->getManager()->getRepository('FastSisdikBundle:Penjurusan');
+        $repo = $this->getDoctrine()->getManager()->getRepository('LanggasSisdikBundle:Penjurusan');
         $node = $repo->find($id);
 
         $repo->moveDown($node);
@@ -85,7 +85,7 @@ class PenjurusanController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Penjurusan')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Penjurusan')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
@@ -121,7 +121,7 @@ class PenjurusanController extends Controller
      *
      * @Route("/create", name="settings_placement_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Penjurusan:new.html.twig")
+     * @Template("LanggasSisdikBundle:Penjurusan:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -172,7 +172,7 @@ class PenjurusanController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Penjurusan')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Penjurusan')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
@@ -192,7 +192,7 @@ class PenjurusanController extends Controller
      *
      * @Route("/{id}/update", name="settings_placement_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Penjurusan:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Penjurusan:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -200,7 +200,7 @@ class PenjurusanController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Penjurusan')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Penjurusan')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
@@ -251,7 +251,7 @@ class PenjurusanController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Penjurusan')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Penjurusan')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
@@ -293,7 +293,7 @@ class PenjurusanController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.placement', array(), 'navigations')]->setCurrent(true);
     }
 

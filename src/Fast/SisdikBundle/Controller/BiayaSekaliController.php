@@ -1,8 +1,8 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
-use Fast\SisdikBundle\Form\BiayaSekaliSearchFormType;
+use Langgas\SisdikBundle\Form\BiayaSekaliSearchFormType;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,9 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\BiayaSekali;
-use Fast\SisdikBundle\Form\BiayaSekaliType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\BiayaSekali;
+use Langgas\SisdikBundle\Form\BiayaSekaliType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -37,7 +37,7 @@ class BiayaSekaliController extends Controller
 
         $searchform = $this->createForm(new BiayaSekaliSearchFormType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:BiayaSekali', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:BiayaSekali', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.jenisbiaya', 't4')->where('t2.sekolah = :sekolah')
                 ->orderBy('t2.tahun', 'DESC')->addOrderBy('t.urutan', 'ASC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
@@ -77,7 +77,7 @@ class BiayaSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaSekali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaSekali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaSekali tak ditemukan.');
@@ -113,7 +113,7 @@ class BiayaSekaliController extends Controller
      *
      * @Route("/create", name="fee_once_create")
      * @Method("post")
-     * @Template("FastSisdikBundle:BiayaSekali:new.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaSekali:new.html.twig")
      */
     public function createAction(Request $request) {
         $this->isRegisteredToSchool();
@@ -165,7 +165,7 @@ class BiayaSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaSekali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaSekali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaSekali tak ditemukan.');
@@ -190,7 +190,7 @@ class BiayaSekaliController extends Controller
      *
      * @Route("/{id}/update", name="fee_once_update")
      * @Method("post")
-     * @Template("FastSisdikBundle:BiayaSekali:edit.html.twig")
+     * @Template("LanggasSisdikBundle:BiayaSekali:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $this->isRegisteredToSchool();
@@ -198,7 +198,7 @@ class BiayaSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:BiayaSekali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaSekali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaSekali tak ditemukan.');
@@ -252,7 +252,7 @@ class BiayaSekaliController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:BiayaSekali')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:BiayaSekali')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity BiayaSekali tak ditemukan.');
@@ -296,7 +296,7 @@ class BiayaSekaliController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.once', array(), 'navigations')]->setCurrent(true);
     }
 

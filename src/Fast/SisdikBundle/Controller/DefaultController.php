@@ -1,14 +1,14 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
-use Fast\SisdikBundle\Entity\User;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
-use Fast\SisdikBundle\Entity\TahunAkademik;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\KalenderPendidikan;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Fast\SisdikBundle\Util\Calendar;
-use Fast\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Util\Calendar;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -25,11 +25,11 @@ class DefaultController extends Controller
         $securityContext = $this->container->get('security.context');
 
         if ($securityContext->isGranted([new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')])) {
-            $response = $this->forward('FastSisdikBundle:Default:siswa');
+            $response = $this->forward('LanggasSisdikBundle:Default:siswa');
         } elseif ($securityContext->isGranted([new Expression('hasRole("ROLE_SUPER_ADMIN")')])) {
-            $response = $this->forward('FastSisdikBundle:Default:super');
+            $response = $this->forward('LanggasSisdikBundle:Default:super');
         } else {
-            $response = $this->forward('FastSisdikBundle:Default:pengelola');
+            $response = $this->forward('LanggasSisdikBundle:Default:pengelola');
         }
 
         return $response;
@@ -52,14 +52,14 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $tahunAkademikAktif = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademikAktif = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'sekolah' => $sekolah,
                 'aktif' => true,
             ])
         ;
 
-        $panitiaPendaftaranAktif = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')
+        $panitiaPendaftaranAktif = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')
             ->findOneBy([
                 'sekolah' => $sekolah,
                 'aktif' => true,
@@ -72,7 +72,7 @@ class DefaultController extends Controller
 
             $tempArray = [];
             foreach ($panitiaPendaftaranAktif->getPanitia() as $personil) {
-                $entity = $em->getRepository('FastSisdikBundle:User')->find($personil);
+                $entity = $em->getRepository('LanggasSisdikBundle:User')->find($personil);
 
                 if ($entity instanceof User) {
                     $tempArray[] = $entity->getName();
@@ -99,7 +99,7 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'sekolah' => $sekolah,
                 'aktif' => true,
@@ -110,7 +110,7 @@ class DefaultController extends Controller
 
         $siswa = $this->getUser()->getSiswa();
 
-        $siswaKelas = $em->getRepository('FastSisdikBundle:SiswaKelas')
+        $siswaKelas = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
             ->findOneBy([
                 'siswa' => $siswa,
                 'tahunAkademik' => $tahunAkademik,
@@ -125,7 +125,7 @@ class DefaultController extends Controller
 
         $kehadiran = $em->createQueryBuilder()
             ->select('kehadiran')
-            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
             ->where('kehadiran.sekolah = :sekolah')
             ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
             ->andWhere('kehadiran.kelas = :kelas')

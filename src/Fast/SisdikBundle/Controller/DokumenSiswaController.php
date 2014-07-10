@@ -1,10 +1,10 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\JenisDokumenSiswa;
-use Fast\SisdikBundle\Util\RuteAsal;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
+use Langgas\SisdikBundle\Util\RuteAsal;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,9 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\DokumenSiswa;
-use Fast\SisdikBundle\Form\DokumenSiswaType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\DokumenSiswa;
+use Langgas\SisdikBundle\Form\DokumenSiswaType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -40,12 +40,12 @@ class DokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $jenisDokumen = $em->getRepository('FastSisdikBundle:JenisDokumenSiswa')
+        $jenisDokumen = $em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')
                 ->findBy(
                         array(
                             'sekolah' => $siswa->getSekolah(), 'tahun' => $siswa->getTahun(),
@@ -60,7 +60,7 @@ class DokumenSiswaController extends Controller
             }
         }
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:DokumenSiswa', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:DokumenSiswa', 't')
                 ->leftJoin('t.jenisDokumenSiswa', 't2')->where('t.siswa = :siswa')
                 ->setParameter('siswa', $siswa)->orderBy('t2.urutan', 'ASC');
         $entities = $querybuilder->getQuery()->getResult();
@@ -88,7 +88,7 @@ class DokumenSiswaController extends Controller
                 $dokumen = new DokumenSiswa();
                 $dokumen
                         ->setJenisDokumenSiswa(
-                                $em->getRepository('FastSisdikBundle:JenisDokumenSiswa')->find($id));
+                                $em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')->find($id));
                 $dokumen->setSiswa($siswa);
                 $dokumenCollection->add($dokumen);
             }
@@ -118,7 +118,7 @@ class DokumenSiswaController extends Controller
      * @Route("/pendaftar", name="dokumen-pendaftar_create")
      * @Route("/siswa", name="dokumen-siswa_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:DokumenSiswa:index.html.twig")
+     * @Template("LanggasSisdikBundle:DokumenSiswa:index.html.twig")
      */
     public function createAction(Request $request, $sid) {
         $this->isRegisteredToSchool();
@@ -126,12 +126,12 @@ class DokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $jenisDokumen = $em->getRepository('FastSisdikBundle:JenisDokumenSiswa')
+        $jenisDokumen = $em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')
                 ->findBy(
                         array(
                             'sekolah' => $siswa->getSekolah(), 'tahun' => $siswa->getTahun(),
@@ -146,7 +146,7 @@ class DokumenSiswaController extends Controller
             }
         }
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:DokumenSiswa', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:DokumenSiswa', 't')
                 ->leftJoin('t.jenisDokumenSiswa', 't2')->where('t.siswa = :siswa')
                 ->setParameter('siswa', $siswa)->orderBy('t2.urutan', 'ASC');
         $entities = $querybuilder->getQuery()->getResult();
@@ -167,7 +167,7 @@ class DokumenSiswaController extends Controller
             $dokumen = new DokumenSiswa();
             $dokumen
                     ->setJenisDokumenSiswa(
-                            $em->getRepository('FastSisdikBundle:JenisDokumenSiswa')->find($id));
+                            $em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')->find($id));
             $dokumen->setSiswa($siswa);
             $dokumenCollection->add($dokumen);
         }
@@ -231,7 +231,7 @@ class DokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
@@ -259,12 +259,12 @@ class DokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
@@ -286,7 +286,7 @@ class DokumenSiswaController extends Controller
      * @Route("/pendaftar/{id}", name="dokumen-pendaftar_update")
      * @Route("/siswa/{id}", name="dokumen-siswa_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:DokumenSiswa:edit.html.twig")
+     * @Template("LanggasSisdikBundle:DokumenSiswa:edit.html.twig")
      */
     public function updateAction(Request $request, $sid, $id) {
         $this->isRegisteredToSchool();
@@ -294,12 +294,12 @@ class DokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
@@ -356,7 +356,7 @@ class DokumenSiswaController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:DokumenSiswa')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity DokumenSiswa tak ditemukan.');
@@ -416,7 +416,7 @@ class DokumenSiswaController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
             $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
         } else {

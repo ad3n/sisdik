@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as FOSProfileController;
 use FOS\UserBundle\Model\UserInterface;
@@ -30,7 +30,7 @@ class ProfileController extends FOSProfileController
 
         return $this->container
             ->get('templating')
-            ->renderResponse('FastSisdikBundle:Profile:show.html.twig', [
+            ->renderResponse('LanggasSisdikBundle:Profile:show.html.twig', [
                 'user' => $user,
                 'roles' => $roles,
                 'name' => $user->getName(),

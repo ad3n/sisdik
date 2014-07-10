@@ -1,28 +1,28 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\BiayaPendaftaran;
-use Fast\SisdikBundle\Entity\Tahun;
-use Fast\SisdikBundle\Util\Messenger;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Fast\SisdikBundle\Form\ReportSummaryType;
+use Langgas\SisdikBundle\Form\ReportSummaryType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
-use Fast\SisdikBundle\Entity\Referensi;
+use Langgas\SisdikBundle\Entity\Referensi;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Entity\Gelombang;
-use Fast\SisdikBundle\Form\SiswaApplicantReportPaymentSearchType;
-use Fast\SisdikBundle\Entity\SekolahAsal;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Form\SiswaApplicantReportPaymentSearchType;
+use Langgas\SisdikBundle\Entity\SekolahAsal;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -64,12 +64,12 @@ class SiswaApplicantReportPaymentController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
-                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
                 ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
                 ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->leftJoin('siswa.orangtuaWali', 'orangtua')
                 ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
@@ -233,12 +233,12 @@ class SiswaApplicantReportPaymentController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('siswa.id'))
-                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
                 ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
                 ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
                 ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->leftJoin('siswa.orangtuaWali', 'orangtua')
                 ->where('siswa.calonSiswa = :calon')->setParameter('calon', true)
@@ -385,7 +385,7 @@ class SiswaApplicantReportPaymentController extends Controller
         $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
         $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
 
-        $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+        $biayaPendaftaran = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
                 ->findBy(
                         array(
                                 'tahun' => $searchdata['tahun']->getId(),
@@ -402,12 +402,12 @@ class SiswaApplicantReportPaymentController extends Controller
                         ->addFromString('styles.xml',
                                 $this
                                         ->renderView(
-                                                "FastSisdikBundle:SiswaApplicantReportPayment:styles.xml.twig"));
+                                                "LanggasSisdikBundle:SiswaApplicantReportPayment:styles.xml.twig"));
                 $ziparchive
                         ->addFromString('content.xml',
                                 $this
                                         ->renderView(
-                                                "FastSisdikBundle:SiswaApplicantReportPayment:report.xml.twig",
+                                                "LanggasSisdikBundle:SiswaApplicantReportPayment:report.xml.twig",
                                                 array(
                                                         'entities' => $entities,
                                                         'pendaftarTercari' => $pendaftarTercari,
@@ -506,7 +506,7 @@ class SiswaApplicantReportPaymentController extends Controller
                 $tmpResponse = new Response();
 
                 $this
-                        ->render('FastSisdikBundle:SiswaApplicantReport:summary.pdf.twig',
+                        ->render('LanggasSisdikBundle:SiswaApplicantReport:summary.pdf.twig',
                                 array(
                                     'sekolah' => $sekolah, 'teks' => $summarydata['teksTerformat'],
                                 ), $tmpResponse);
@@ -530,7 +530,7 @@ class SiswaApplicantReportPaymentController extends Controller
                                                     'filename' => $filename, 'type' => 'pdf',
                                                 )));
             } elseif ($summarydata['output'] == 'sms') {
-                $pilihanLayananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
                                 array(
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'e-laporan-ringkasan',
@@ -618,7 +618,7 @@ class SiswaApplicantReportPaymentController extends Controller
     private function getBiayaProperties(Siswa $siswa) {
         $em = $this->getDoctrine()->getManager();
 
-        $biayaPendaftaran = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')
+        $biayaPendaftaran = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
                 ->findBy(
                         array(
                             'tahun' => $siswa->getTahun(), 'gelombang' => $siswa->getGelombang(),
@@ -633,7 +633,7 @@ class SiswaApplicantReportPaymentController extends Controller
         }
 
         $querybuilder1 = $em->createQueryBuilder()->select('daftar')
-                ->from('FastSisdikBundle:DaftarBiayaPendaftaran', 'daftar')
+                ->from('LanggasSisdikBundle:DaftarBiayaPendaftaran', 'daftar')
                 ->leftJoin('daftar.biayaPendaftaran', 'biaya')
                 ->leftJoin('daftar.pembayaranPendaftaran', 'pembayaran')->where('pembayaran.siswa = :siswa')
                 ->setParameter('siswa', $siswa->getId())->orderBy('biaya.urutan', 'ASC');
@@ -710,7 +710,7 @@ class SiswaApplicantReportPaymentController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.laporan.pembayaran.pendaftaran', array(), 'navigations')]->setCurrent(true);
     }
 

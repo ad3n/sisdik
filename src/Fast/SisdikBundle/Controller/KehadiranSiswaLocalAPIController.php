@@ -1,13 +1,13 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Form\KehadiranSiswaType;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Form\KehadiranSiswaType;
 
 /**
  * KehadiranSiswa controller.
@@ -24,7 +24,7 @@ class KehadiranSiswaLocalAPIController extends Controller
     public function updateAction(Request $request, $id, $idlog, $status, $time) {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:KehadiranSiswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')->find($id);
 
         if (!$entity) {
             return 'Unable to find KehadiranSiswa entity.';

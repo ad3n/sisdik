@@ -1,7 +1,7 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SekolahList
@@ -17,7 +17,7 @@ class SekolahList
     private function getSekolah()
     {
         $em = $this->container->get('doctrine')->getManager();
-        $sekolah = $em->getRepository('FastSisdikBundle:Sekolah')
+        $sekolah = $em->getRepository('LanggasSisdikBundle:Sekolah')
             ->createQueryBuilder('t')
             ->orderBy('t.nama', 'ASC')
             ->getQuery()

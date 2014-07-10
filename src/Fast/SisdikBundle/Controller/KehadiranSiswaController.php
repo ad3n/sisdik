@@ -1,22 +1,22 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
-use Fast\SisdikBundle\Form\KehadiranSiswaSmsType;
-use Fast\SisdikBundle\Form\KehadiranSiswaInisiasiType;
-use Fast\SisdikBundle\Form\KehadiranSiswaType;
-use Fast\SisdikBundle\Form\KehadiranSiswaSearchType;
-use Fast\SisdikBundle\Entity\TahunAkademik;
-use Fast\SisdikBundle\Entity\KalenderPendidikan;
-use Fast\SisdikBundle\Entity\SiswaKelas;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\ProsesKehadiranSiswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Fast\SisdikBundle\Entity\PilihanLayananSms;
-use Fast\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Form\KehadiranSiswaSmsType;
+use Langgas\SisdikBundle\Form\KehadiranSiswaInisiasiType;
+use Langgas\SisdikBundle\Form\KehadiranSiswaType;
+use Langgas\SisdikBundle\Form\KehadiranSiswaSearchType;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +48,7 @@ class KehadiranSiswaController extends Controller
         $hariIni = new \DateTime();
         $searchform->get('tanggal')->setData($hariIni);
 
-        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
                 'sekolah' => $sekolah->getId(),
@@ -81,7 +81,7 @@ class KehadiranSiswaController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kehadiran')
-            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
             ->leftJoin('kehadiran.kelas', 'kelas')
             ->leftJoin('kehadiran.siswa', 'siswa')
             ->where('kelas.sekolah = :sekolah')
@@ -97,7 +97,7 @@ class KehadiranSiswaController extends Controller
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            $kbmAktif = $em->getRepository('FastSisdikBundle:KalenderPendidikan')
+            $kbmAktif = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
                 ->findOneBy([
                     'kbm' => true,
                     'sekolah' => $sekolah->getId(),
@@ -146,7 +146,7 @@ class KehadiranSiswaController extends Controller
                 $querybuilder->andWhere("kelas.id = :kelas");
                 $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
 
-                $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($searchdata['kelas']->getId());
+                $kelas = $em->getRepository('LanggasSisdikBundle:Kelas')->find($searchdata['kelas']->getId());
 
                 $buildparam['kelas'] = $searchdata['kelas']->getId();
             } else {
@@ -166,7 +166,7 @@ class KehadiranSiswaController extends Controller
 
             $students = $this->createForm(new KehadiranSiswaType($this->container, $buildparam));
 
-            $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+            $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
                 ->findOneBy([
                     'aktif' => true,
                     'sekolah' => $sekolah->getId(),
@@ -174,7 +174,7 @@ class KehadiranSiswaController extends Controller
             ;
 
             $prosesKehadiranSiswa = null;
-            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+            $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                 ->findOneBy([
                     'sekolah' => $sekolah->getId(),
                     'tahunAkademik' => $tahunAkademik->getId(),
@@ -224,7 +224,7 @@ class KehadiranSiswaController extends Controller
         foreach ($data as $keys => $values) {
             if (preg_match('/kehadiran_(\d+)$/', $keys, $matches) !== FALSE) {
                 if (array_key_exists(1, $matches)) {
-                    $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')->find($matches[1]);
+                    $kehadiran = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')->find($matches[1]);
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
                         $kehadiran->setStatusKehadiran($values);
                         $kehadiran->setKeteranganStatus($data['kehadiran_keterangan_' . $matches[1]]);
@@ -236,7 +236,7 @@ class KehadiranSiswaController extends Controller
 
         $return = array();
         if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
-            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+            $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                 ->findOneBy([
                     'sekolah' => $kehadiran->getSekolah(),
                     'tahunAkademik' => $kehadiran->getTahunAkademik(),
@@ -283,14 +283,14 @@ class KehadiranSiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
-        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
                 'sekolah' => $sekolah->getId(),
             ])
         ;
 
-        $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($kelas_id);
+        $kelas = $em->getRepository('LanggasSisdikBundle:Kelas')->find($kelas_id);
 
         $formInisiasi = $this->createForm(new KehadiranSiswaInisiasiType($this->container, $kelas, $tanggal));
         $formInisiasi->submit($this->getRequest());
@@ -300,7 +300,7 @@ class KehadiranSiswaController extends Controller
 
             $qbKehadiran = $em->createQueryBuilder()
                 ->select('kehadiran')
-                ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+                ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
                 ->where('kehadiran.sekolah = :sekolah')
                 ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
                 ->andWhere('kehadiran.kelas = :kelas')
@@ -327,7 +327,7 @@ class KehadiranSiswaController extends Controller
             } else {
                 $qbSiswaKelas = $em->createQueryBuilder()
                     ->select('siswaKelas')
-                    ->from('FastSisdikBundle:SiswaKelas', 'siswaKelas')
+                    ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
                     ->where('siswaKelas.tahunAkademik = :tahunakademik')
                     ->andWhere('siswaKelas.kelas = :kelas')
                     ->setParameter('tahunakademik', $tahunAkademik->getId())
@@ -341,7 +341,7 @@ class KehadiranSiswaController extends Controller
 
                     $qbKehadiran = $em->createQueryBuilder()
                         ->select('kehadiran')
-                        ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+                        ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
                         ->where('kehadiran.sekolah = :sekolah')
                         ->andWhere('kehadiran.siswa = :siswa')
                         ->andWhere('kehadiran.tanggal = :tanggal')
@@ -370,7 +370,7 @@ class KehadiranSiswaController extends Controller
                 }
             }
 
-            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+            $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'tahunAkademik' => $tahunAkademik,
@@ -429,18 +429,18 @@ class KehadiranSiswaController extends Controller
         $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
         $bulananHariKe = $tanggalTerpilih->format('j');
 
-        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
                 'sekolah' => $sekolah->getId(),
             ])
         ;
 
-        $kelas = $em->getRepository('FastSisdikBundle:Kelas')->find($kelas_id);
+        $kelas = $em->getRepository('LanggasSisdikBundle:Kelas')->find($kelas_id);
 
         $qbKehadiranSiswa = $em->createQueryBuilder()
             ->select('kehadiran')
-            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
             ->leftJoin('kehadiran.kelas', 'kelas')
             ->leftJoin('kehadiran.siswa', 'siswa')
             ->where('kehadiran.sekolah = :sekolah')
@@ -461,7 +461,7 @@ class KehadiranSiswaController extends Controller
 
             // PERINGATAN: diasumsikan bahwa perulangan apapun
             // menggunakan template sms yang serupa :(
-            $jadwalKehadiran = $em->getRepository('FastSisdikBundle:JadwalKehadiran')
+            $jadwalKehadiran = $em->getRepository('LanggasSisdikBundle:JadwalKehadiran')
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'tahunAkademik' => $tahunAkademik,
@@ -496,7 +496,7 @@ class KehadiranSiswaController extends Controller
                     break;
             }
 
-            $layananSms = $em->getRepository('FastSisdikBundle:PilihanLayananSms')
+            $layananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'jenisLayanan' => $jenisLayananSms,
@@ -512,7 +512,7 @@ class KehadiranSiswaController extends Controller
             }
 
             if ($siswa instanceof Siswa) {
-                $kehadiran = $em->getRepository('FastSisdikBundle:KehadiranSiswa')
+                $kehadiran = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')
                     ->findOneBy([
                         'sekolah' => $sekolah,
                         'tahunAkademik' => $tahunAkademik,
@@ -530,7 +530,7 @@ class KehadiranSiswaController extends Controller
                     return new Response($return, 200, ['Content-Type' => 'application/json']);
                 }
 
-                $ortuWaliAktif = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                $ortuWaliAktif = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')
                     ->findOneBy([
                         'siswa' => $siswa,
                         'aktif' => true,
@@ -586,7 +586,7 @@ class KehadiranSiswaController extends Controller
 
                 foreach ($kehadiranSiswaPerStatus as $kehadiran) {
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
-                        $ortuWaliAktif = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                        $ortuWaliAktif = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')
                             ->findOneBy([
                                 'siswa' => $kehadiran->getSiswa(),
                                 'aktif' => true,
@@ -625,7 +625,7 @@ class KehadiranSiswaController extends Controller
                 }
             }
 
-            $prosesKehadiranSiswa = $em->getRepository('FastSisdikBundle:ProsesKehadiranSiswa')
+            $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'tahunAkademik' => $jadwalKehadiran->getTahunAkademik(),
@@ -659,7 +659,7 @@ class KehadiranSiswaController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.kehadiran.siswa', array(), 'navigations')]->setCurrent(true);
     }
 

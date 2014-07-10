@@ -1,13 +1,13 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Form\SiswaGenerateUsernameConfirmType;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Form\SiswaGenerateUsernameConfirmType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Form\SimpleSearchFormType;
-use Fast\SisdikBundle\Form\SiswaSearchType;
-use Fast\SisdikBundle\Entity\Tahun;
-use Fast\SisdikBundle\Util\PasswordGenerator;
+use Langgas\SisdikBundle\Form\SimpleSearchFormType;
+use Langgas\SisdikBundle\Form\SiswaSearchType;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Util\PasswordGenerator;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +16,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\User;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\SiswaKelas;
-use Fast\SisdikBundle\Form\SiswaGenerateUsernameType;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Form\SiswaGenerateUsernameType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -43,7 +43,7 @@ class SiswaUsernameController extends Controller
      * Generate student usernames
      *
      * @Route("/", name="siswa_generate_username")
-     * @Template("FastSisdikBundle:Siswa:generate.username.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:generate.username.html.twig")
      */
     public function generateUsernameAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -90,7 +90,7 @@ class SiswaUsernameController extends Controller
      * confirm student usernames creation
      *
      * @Route("/confirm/{file}.{type}/{regenerate}", name="siswa_generate_username_confirm")
-     * @Template("FastSisdikBundle:Siswa:generate.username.confirm.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:generate.username.confirm.html.twig")
      */
     public function generateUsernameConfirmAction($file, $type, $regenerate = '') {
         $sekolah = $this->isRegisteredToSchool();
@@ -167,8 +167,8 @@ class SiswaUsernameController extends Controller
         $nomorIndukSistem = $this->getRequest()->query->get('siswa');
         $regenerate = $this->getRequest()->query->get('regenerate');
 
-        $tahun = $em->getRepository('FastSisdikBundle:Tahun')->find($idtahun);
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+        $tahun = $em->getRepository('LanggasSisdikBundle:Tahun')->find($idtahun);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
                 ->findOneBy(
                         array(
                             'nomorIndukSistem' => $nomorIndukSistem, 'calonSiswa' => false
@@ -241,7 +241,7 @@ class SiswaUsernameController extends Controller
                 'generated' => 'NO', 'partial' => 'NO', 'info' => $info, 'proceedpost' => 'NO'
             );
         } else {
-            $entities = $em->getRepository('FastSisdikBundle:Siswa')
+            $entities = $em->getRepository('LanggasSisdikBundle:Siswa')
                     ->findBy(
                             array(
                                 'tahun' => $tahun, 'calonSiswa' => false,
@@ -255,7 +255,7 @@ class SiswaUsernameController extends Controller
             if (count($siswa_identities) != 0) {
                 $query = $em
                         ->createQuery(
-                                "SELECT COUNT(t.id) FROM FastSisdikBundle:User t JOIN t.siswa t1 "
+                                "SELECT COUNT(t.id) FROM LanggasSisdikBundle:User t JOIN t.siswa t1 "
                                         . " WHERE t.siswa IS NOT NULL AND t1.tahun = :tahun "
                                         . " AND t.sekolah = :sekolah ");
                 $query->setParameter("tahun", $tahun);
@@ -264,7 +264,7 @@ class SiswaUsernameController extends Controller
 
                 $queryduplication = $em
                         ->createQuery(
-                                "SELECT COUNT(t.id) FROM FastSisdikBundle:User t "
+                                "SELECT COUNT(t.id) FROM LanggasSisdikBundle:User t "
                                         . " WHERE t.username IN (?1) ")->setParameter(1, $siswa_identities);
                 $duplicatedusername_num = $queryduplication->getSingleScalarResult();
 
@@ -353,11 +353,11 @@ class SiswaUsernameController extends Controller
         $idtahun = $this->getRequest()->query->get('tahun');
         $filter = $this->getRequest()->query->get('filter');
 
-        $tahun = $em->getRepository('FastSisdikBundle:Tahun')->find($idtahun);
+        $tahun = $em->getRepository('LanggasSisdikBundle:Tahun')->find($idtahun);
 
         $query = $em
                 ->createQuery(
-                        "SELECT siswa FROM FastSisdikBundle:Siswa siswa WHERE siswa.tahun = :tahun "
+                        "SELECT siswa FROM LanggasSisdikBundle:Siswa siswa WHERE siswa.tahun = :tahun "
                                 . " AND siswa.sekolah = :sekolah AND siswa.calonSiswa = :calon "
                                 . " AND (siswa.nomorIndukSistem LIKE :filter OR siswa.namaLengkap LIKE :filter) ");
         $query->setParameter("tahun", $tahun);
@@ -401,7 +401,7 @@ class SiswaUsernameController extends Controller
         if ($penyaring != '') {
             // get filtered student
             $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
                     ->setParameter('tahun', $tahun->getId())
                     ->andWhere('siswa.nomorIndukSistem = :nomorsistem')
                     ->setParameter('nomorsistem', $penyaring)->andWhere('siswa.calonSiswa = :calon')
@@ -410,7 +410,7 @@ class SiswaUsernameController extends Controller
         } else {
             // get students in a year
             $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
                     ->setParameter('tahun', $tahun->getId())->andWhere('siswa.calonSiswa = :calon')
                     ->setParameter('calon', false)->orderBy('siswa.nomorIndukSistem', 'ASC');
             $results = $querybuilder->getQuery()->getResult();
@@ -421,7 +421,7 @@ class SiswaUsernameController extends Controller
             if (is_object($siswa) && $siswa instanceof Siswa) {
                 $passwordobject = new PasswordGenerator($passwordargs);
 
-                $siswakelas = $em->getRepository('FastSisdikBundle:SiswaKelas')
+                $siswakelas = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
                         ->findOneBy(
                                 array(
                                     'siswa' => $siswa, 'aktif' => TRUE
@@ -474,7 +474,7 @@ class SiswaUsernameController extends Controller
                 $ziparchive
                         ->addFromString('content.xml',
                                 $this
-                                        ->renderView("FastSisdikBundle:Siswa:username.xml.twig",
+                                        ->renderView("LanggasSisdikBundle:Siswa:username.xml.twig",
                                                 array(
                                                     'users' => $outputusername,
                                                 )));
@@ -493,7 +493,7 @@ class SiswaUsernameController extends Controller
                 $ziparchive
                         ->addFromString('content.xml',
                                 $this
-                                        ->renderView("FastSisdikBundle:Siswa:username.xml.twig",
+                                        ->renderView("LanggasSisdikBundle:Siswa:username.xml.twig",
                                                 array(
                                                     'users' => $outputusername,
                                                 )));
@@ -521,7 +521,7 @@ class SiswaUsernameController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
 
         foreach ($credentials as $key => $value) {
-            $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
                     ->findOneBy(
                             array(
                                 'nomorIndukSistem' => $value['username']
@@ -570,7 +570,7 @@ class SiswaUsernameController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
     }
 

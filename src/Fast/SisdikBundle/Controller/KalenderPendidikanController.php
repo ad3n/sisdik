@@ -1,5 +1,5 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -7,10 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\KalenderPendidikan;
-use Fast\SisdikBundle\Form\KalenderPendidikanType;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Util\Calendar;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Form\KalenderPendidikanType;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Util\Calendar;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -79,7 +79,7 @@ class KalenderPendidikanController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kalenderPendidikan')
-            ->from('FastSisdikBundle:KalenderPendidikan', 'kalenderPendidikan')
+            ->from('LanggasSisdikBundle:KalenderPendidikan', 'kalenderPendidikan')
             ->where('kalenderPendidikan.sekolah = :sekolah')
             ->andWhere('kalenderPendidikan.tanggal >= :firstday AND kalenderPendidikan.tanggal < :nextmonth')
             ->setParameter('sekolah', $sekolah)
@@ -134,7 +134,7 @@ class KalenderPendidikanController extends Controller
             // delete previously saved data in the selected year-month
             $nextmonth = date('Y-m-d', mktime(0, 0, 0, $month + 1, 1, $year));
             $query = $em->createQuery(
-                    "DELETE FastSisdikBundle:KalenderPendidikan t
+                    "DELETE LanggasSisdikBundle:KalenderPendidikan t
                     WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
                     AND t.sekolah = {$sekolah->getId()}"
                 )
@@ -181,7 +181,7 @@ class KalenderPendidikanController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.academiccalendar', array(), 'navigations')]->setCurrent(true);
     }
 

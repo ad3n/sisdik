@@ -1,14 +1,14 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\PembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -38,16 +38,16 @@ class SiswaApplicantPaymentController extends Controller
         $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
 
         $qbtotal = $em->createQueryBuilder()->select('COUNT(siswa.id)')
-                ->from('FastSisdikBundle:Siswa', 'siswa')->andWhere('siswa.sekolah = :sekolah')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')->andWhere('siswa.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $qbsearchnum = $em->createQueryBuilder()->select('COUNT(DISTINCT siswa.id)')
-                ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.tahun', 'tahun')
                 ->leftJoin('siswa.gelombang', 'gelombang')->leftJoin('siswa.sekolahAsal', 'sekolahasal')
                 ->andWhere('siswa.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
 
-        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('FastSisdikBundle:Siswa', 'siswa')
+        $querybuilder = $em->createQueryBuilder()->select('siswa')->from('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.tahun', 'tahun')->leftJoin('siswa.gelombang', 'gelombang')
                 ->leftJoin('siswa.sekolahAsal', 'sekolahasal')->andWhere('siswa.sekolah = :sekolah')
                 ->orderBy('tahun.tahun', 'DESC')->addOrderBy('gelombang.urutan', 'DESC')
@@ -152,7 +152,7 @@ class SiswaApplicantPaymentController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.applicant.payment', array(), 'navigations')]->setCurrent(true);
     }
 

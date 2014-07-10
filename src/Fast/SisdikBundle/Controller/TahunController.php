@@ -1,16 +1,16 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Tahun;
-use Fast\SisdikBundle\Form\TahunType;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Form\TahunType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -38,7 +38,7 @@ class TahunController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:Tahun', 't')
+            ->from('LanggasSisdikBundle:Tahun', 't')
             ->leftJoin('t.panitiaPendaftaran', 't2')
             ->where('t.sekolah = :sekolah')
             ->orderBy('t.tahun', 'DESC')
@@ -66,7 +66,7 @@ class TahunController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Tahun')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
@@ -106,7 +106,7 @@ class TahunController extends Controller
      *
      * @Route("/create", name="settings_year_create")
      * @Method("post")
-     * @Template("FastSisdikBundle:Tahun:new.html.twig")
+     * @Template("LanggasSisdikBundle:Tahun:new.html.twig")
      */
     public function createAction(
         Request $request)
@@ -169,7 +169,7 @@ class TahunController extends Controller
                 $message);
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Tahun')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
@@ -191,7 +191,7 @@ class TahunController extends Controller
      *
      * @Route("/{id}/update", name="settings_year_update")
      * @Method("post")
-     * @Template("FastSisdikBundle:Tahun:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Tahun:edit.html.twig")
      */
     public function updateAction(
         Request $request,
@@ -209,7 +209,7 @@ class TahunController extends Controller
                 $message);
         }
 
-        $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Tahun')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
@@ -271,7 +271,7 @@ class TahunController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Tahun')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Tahun')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Tahun tak ditemukan.');
@@ -317,7 +317,7 @@ class TahunController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.year', array(), 'navigations')]->setCurrent(true);
     }
 
@@ -348,19 +348,19 @@ class TahunController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $biayaRutinEntity = $em->getRepository('FastSisdikBundle:BiayaRutin')->findOneBy(array(
+        $biayaRutinEntity = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->findOneBy(array(
             'tahun' => $id
         ));
-        $biayaSekaliEntity = $em->getRepository('FastSisdikBundle:BiayaSekali')->findOneBy(array(
+        $biayaSekaliEntity = $em->getRepository('LanggasSisdikBundle:BiayaSekali')->findOneBy(array(
             'tahun' => $id
         ));
-        $siswaEntity = $em->getRepository('FastSisdikBundle:Siswa')->findOneBy(array(
+        $siswaEntity = $em->getRepository('LanggasSisdikBundle:Siswa')->findOneBy(array(
             'tahun' => $id
         ));
-        $panitiaPendaftaranEntity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->findOneBy(array(
+        $panitiaPendaftaranEntity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->findOneBy(array(
             'tahun' => $id
         ));
-        $biayaPendaftaranEntity = $em->getRepository('FastSisdikBundle:BiayaPendaftaran')->findOneBy(array(
+        $biayaPendaftaranEntity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->findOneBy(array(
             'tahun' => $id
         ));
         if ($biayaSekaliEntity || $biayaRutinEntity || $siswaEntity || $panitiaPendaftaranEntity || $biayaPendaftaranEntity) {

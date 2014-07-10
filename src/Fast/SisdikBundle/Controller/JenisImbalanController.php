@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\JenisImbalan;
-use Fast\SisdikBundle\Form\JenisImbalanType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\JenisImbalan;
+use Langgas\SisdikBundle\Form\JenisImbalanType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -35,7 +35,7 @@ class JenisImbalanController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:JenisImbalan', 't')->where('t.sekolah = :sekolah')
+                    ->from('LanggasSisdikBundle:JenisImbalan', 't')->where('t.sekolah = :sekolah')
                     ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah->getId());
         }
 
@@ -59,7 +59,7 @@ class JenisImbalanController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:JenisImbalan')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JenisImbalan tak ditemukan.');
@@ -95,7 +95,7 @@ class JenisImbalanController extends Controller
      *
      * @Route("/create", name="rewardtype_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:JenisImbalan:new.html.twig")
+     * @Template("LanggasSisdikBundle:JenisImbalan:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -151,7 +151,7 @@ class JenisImbalanController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:JenisImbalan')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JenisImbalan tak ditemukan.');
@@ -171,7 +171,7 @@ class JenisImbalanController extends Controller
      *
      * @Route("/{id}/update", name="rewardtype_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:JenisImbalan:edit.html.twig")
+     * @Template("LanggasSisdikBundle:JenisImbalan:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -179,7 +179,7 @@ class JenisImbalanController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:JenisImbalan')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JenisImbalan tak ditemukan.');
@@ -236,7 +236,7 @@ class JenisImbalanController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:JenisImbalan')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity JenisImbalan tak ditemukan.');
@@ -269,7 +269,7 @@ class JenisImbalanController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.reward.type', array(), 'navigations')]->setCurrent(true);
     }
 

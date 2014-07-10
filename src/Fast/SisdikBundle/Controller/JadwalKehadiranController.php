@@ -1,12 +1,12 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
-use Fast\SisdikBundle\Form\JadwalKehadiranType;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\JadwalKehadiranSearchType;
-use Fast\SisdikBundle\Form\JadwalKehadiranDuplicateType;
-use Fast\SisdikBundle\Entity\TokenSekolah;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Form\JadwalKehadiranType;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\JadwalKehadiranSearchType;
+use Langgas\SisdikBundle\Form\JadwalKehadiranDuplicateType;
+use Langgas\SisdikBundle\Entity\TokenSekolah;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -35,7 +35,7 @@ class JadwalKehadiranController extends Controller
     /**
      * @Route("/jadwal-kehadiran/daftar/{perulangan}", name="jadwal_kehadiran_list")
      * @Method("GET")
-     * @Template("FastSisdikBundle:JadwalKehadiran:index.html.twig")
+     * @Template("LanggasSisdikBundle:JadwalKehadiran:index.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function listAction($perulangan = 'harian')
@@ -49,7 +49,7 @@ class JadwalKehadiranController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('jadwalKehadiran')
-            ->from('FastSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
+            ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
             ->leftJoin('jadwalKehadiran.tahunAkademik', 'tahunAkademik')
             ->leftJoin('jadwalKehadiran.kelas', 'kelas')
             ->leftJoin('jadwalKehadiran.templatesms', 'templatesms')
@@ -166,7 +166,7 @@ class JadwalKehadiranController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('jadwalKehadiran')
-            ->from('FastSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
+            ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
             ->leftJoin('jadwalKehadiran.tahunAkademik', 'tahunAkademik')
             ->leftJoin('jadwalKehadiran.kelas', 'kelas')
             ->leftJoin('jadwalKehadiran.templatesms', 'templatesms')
@@ -265,7 +265,7 @@ class JadwalKehadiranController extends Controller
     /**
      * @Route("/jadwal-kehadiran", name="jadwal_kehadiran_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:JadwalKehadiran:new.html.twig")
+     * @Template("LanggasSisdikBundle:JadwalKehadiran:new.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction(Request $request)
@@ -337,7 +337,7 @@ class JadwalKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:JadwalKehadiran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:JadwalKehadiran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JadwalKehadiran tak ditemukan.');
@@ -365,7 +365,7 @@ class JadwalKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:JadwalKehadiran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:JadwalKehadiran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JadwalKehadiran tak ditemukan.');
@@ -384,7 +384,7 @@ class JadwalKehadiranController extends Controller
     /**
      * @Route("/jadwal-kehadiran/{id}", name="jadwal_kehadiran_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:JadwalKehadiran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:JadwalKehadiran:edit.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction(Request $request, $id)
@@ -394,7 +394,7 @@ class JadwalKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:JadwalKehadiran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:JadwalKehadiran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JadwalKehadiran tak ditemukan.');
@@ -441,7 +441,7 @@ class JadwalKehadiranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:JadwalKehadiran')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:JadwalKehadiran')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity JadwalKehadiran tak ditemukan.');
@@ -480,7 +480,7 @@ class JadwalKehadiranController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TokenSekolah')->findByMesinProxy($token);
+        $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->findByMesinProxy($token);
 
         if (count($entity) == 1) {
             $tokenSekolah = $entity[0];
@@ -491,7 +491,7 @@ class JadwalKehadiranController extends Controller
                 foreach (JadwalKehadiran::getDaftarPerulangan() as $key => $value) {
                     $querybuilder = $em->createQueryBuilder()
                         ->select('jadwalKehadiran')
-                        ->from('FastSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
+                        ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
                         ->leftJoin('jadwalKehadiran.tahunAkademik', 'tahunAkademik')
                         ->where('jadwalKehadiran.sekolah = :sekolah')
                         ->setParameter('sekolah', $sekolah->getId())
@@ -512,7 +512,7 @@ class JadwalKehadiranController extends Controller
 
                 $querybuilder2 = $em->createQueryBuilder()
                     ->select('mesinKehadiran')
-                    ->from('FastSisdikBundle:MesinKehadiran', 'mesinKehadiran')
+                    ->from('LanggasSisdikBundle:MesinKehadiran', 'mesinKehadiran')
                     ->where('mesinKehadiran.sekolah = :sekolah')
                     ->setParameter('sekolah', $sekolah->getId());
                 $mesinKehadiran = $querybuilder2->getQuery()->getResult();
@@ -538,7 +538,7 @@ class JadwalKehadiranController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.presence', [], 'navigations')][$this->get('translator')->trans('links.jadwal.kehadiran', [], 'navigations')]->setCurrent(true);
     }
 

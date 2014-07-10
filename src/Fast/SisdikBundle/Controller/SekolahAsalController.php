@@ -1,7 +1,7 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Form\SimpleSearchFormType;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Form\SimpleSearchFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -10,9 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\SekolahAsal;
-use Fast\SisdikBundle\Form\SekolahAsalType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\SekolahAsal;
+use Langgas\SisdikBundle\Form\SekolahAsalType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -41,7 +41,7 @@ class SekolahAsalController extends Controller
 
         $searchform = $this->createForm(new SimpleSearchFormType());
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SekolahAsal', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:SekolahAsal', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -69,7 +69,7 @@ class SekolahAsalController extends Controller
      *
      * @Route("/", name="sekolahasal_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:SekolahAsal:new.html.twig")
+     * @Template("LanggasSisdikBundle:SekolahAsal:new.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function createAction(Request $request) {
@@ -142,7 +142,7 @@ class SekolahAsalController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:SekolahAsal')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SekolahAsal tak ditemukan.');
@@ -169,7 +169,7 @@ class SekolahAsalController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:SekolahAsal')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SekolahAsal tak ditemukan.');
@@ -189,7 +189,7 @@ class SekolahAsalController extends Controller
      *
      * @Route("/{id}", name="sekolahasal_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:SekolahAsal:edit.html.twig")
+     * @Template("LanggasSisdikBundle:SekolahAsal:edit.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function updateAction(Request $request, $id) {
@@ -198,7 +198,7 @@ class SekolahAsalController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:SekolahAsal')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SekolahAsal tak ditemukan.');
@@ -250,7 +250,7 @@ class SekolahAsalController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:SekolahAsal')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:SekolahAsal')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity SekolahAsal tak ditemukan.');
@@ -300,7 +300,7 @@ class SekolahAsalController extends Controller
         $filter = $this->getRequest()->query->get('filter');
         $id = $this->getRequest()->query->get('id');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:SekolahAsal', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:SekolahAsal', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -344,7 +344,7 @@ class SekolahAsalController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.sekolahasal', array(), 'navigations')]->setCurrent(true);
     }
 

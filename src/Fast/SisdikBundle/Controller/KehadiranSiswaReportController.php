@@ -1,12 +1,12 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
-use Fast\SisdikBundle\Entity\TahunAkademik;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\KehadiranSiswa;
-use Fast\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,7 +31,7 @@ class KehadiranSiswaReportController extends Controller
     /**
      * @Route("/", name="laporan-kehadiran-siswa")
      * @Method("GET")
-     * @Template("FastSisdikBundle:KehadiranSiswa:laporan.html.twig")
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:laporan.html.twig")
      */
     public function indexAction()
     {
@@ -45,7 +45,7 @@ class KehadiranSiswaReportController extends Controller
         $hariIni = new \DateTime();
         $searchform->get('hinggaTanggal')->setData($hariIni);
 
-        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
                 'sekolah' => $sekolah->getId(),
@@ -73,7 +73,7 @@ class KehadiranSiswaReportController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $tahunAkademik = $em->getRepository('FastSisdikBundle:TahunAkademik')
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
                 'sekolah' => $sekolah->getId(),
@@ -94,7 +94,7 @@ class KehadiranSiswaReportController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kehadiranSiswa')
-            ->from('FastSisdikBundle:KehadiranSiswa', 'kehadiranSiswa')
+            ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiranSiswa')
             ->leftJoin('kehadiranSiswa.siswa', 'siswa')
             ->where('kehadiranSiswa.sekolah = :sekolah')
             ->andWhere('kehadiranSiswa.tahunAkademik = :tahunAkademik')
@@ -159,7 +159,7 @@ class KehadiranSiswaReportController extends Controller
             if (copy($documentbase, $documenttarget) === TRUE) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
-                $ziparchive->addFromString('content.xml', $this->renderView("FastSisdikBundle:KehadiranSiswa:laporan.xml.twig", [
+                $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:KehadiranSiswa:laporan.xml.twig", [
                         'kehadiranSiswa' => $kehadiranSiswa,
                         'tahunAkademik' => $tahunAkademik,
                         'kelas' => $searchdata['kelas'],
@@ -230,7 +230,7 @@ class KehadiranSiswaReportController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.laporan.kehadiran.siswa', array(), 'navigations')]->setCurrent(true);
     }
 

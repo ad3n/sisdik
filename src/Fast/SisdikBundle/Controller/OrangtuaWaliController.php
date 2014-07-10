@@ -1,7 +1,7 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Util\RuteAsal;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Util\RuteAsal;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,9 +9,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
-use Fast\SisdikBundle\Form\OrangtuaWaliType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Form\OrangtuaWaliType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -35,7 +35,7 @@ class OrangtuaWaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:OrangtuaWali', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:OrangtuaWali', 't')
                 ->where('t.siswa = :siswa')->orderBy('t.aktif', 'DESC')->setParameter('siswa', $sid);
 
         $paginator = $this->get('knp_paginator');
@@ -43,7 +43,7 @@ class OrangtuaWaliController extends Controller
 
         return array(
                 'pagination' => $pagination,
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -60,13 +60,13 @@ class OrangtuaWaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
         }
 
-        $query = $em->createQueryBuilder()->update('FastSisdikBundle:OrangtuaWali', 't')->set('t.aktif', 0)
+        $query = $em->createQueryBuilder()->update('LanggasSisdikBundle:OrangtuaWali', 't')->set('t.aktif', 0)
                 ->where('t.siswa = :siswa')->setParameter('siswa', $sid)->getQuery();
         $query->execute();
 
@@ -103,7 +103,7 @@ class OrangtuaWaliController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -114,7 +114,7 @@ class OrangtuaWaliController extends Controller
      * @Route("/pendaftar/create", name="ortuwali-pendaftar_create")
      * @Route("/siswa/create", name="ortuwali-siswa_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:OrangtuaWali:new.html.twig")
+     * @Template("LanggasSisdikBundle:OrangtuaWali:new.html.twig")
      */
     public function createAction(Request $request, $sid) {
         $this->isRegisteredToSchool();
@@ -127,7 +127,7 @@ class OrangtuaWaliController extends Controller
         $form->submit($request);
 
         if ($form->isValid()) {
-            $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($sid);
+            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
             $entity->setSiswa($siswa);
             $entity->setAktif(false);
 
@@ -156,7 +156,7 @@ class OrangtuaWaliController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -174,7 +174,7 @@ class OrangtuaWaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
@@ -201,7 +201,7 @@ class OrangtuaWaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
@@ -213,7 +213,7 @@ class OrangtuaWaliController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -224,7 +224,7 @@ class OrangtuaWaliController extends Controller
      * @Route("/pendaftar/{id}/update", name="ortuwali-pendaftar_update")
      * @Route("/siswa/{id}/update", name="ortuwali-siswa_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:OrangtuaWali:edit.html.twig")
+     * @Template("LanggasSisdikBundle:OrangtuaWali:edit.html.twig")
      */
     public function updateAction(Request $request, $sid, $id) {
         $this->isRegisteredToSchool();
@@ -232,7 +232,7 @@ class OrangtuaWaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
@@ -269,7 +269,7 @@ class OrangtuaWaliController extends Controller
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
                 'delete_form' => $deleteForm->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($sid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
         );
     }
@@ -289,7 +289,7 @@ class OrangtuaWaliController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:OrangtuaWali')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
@@ -343,7 +343,7 @@ class OrangtuaWaliController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
             $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
         } else {

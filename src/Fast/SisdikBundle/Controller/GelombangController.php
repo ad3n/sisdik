@@ -1,15 +1,15 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Gelombang;
-use Fast\SisdikBundle\Form\GelombangType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Form\GelombangType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
@@ -33,7 +33,7 @@ class GelombangController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Gelombang', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Gelombang', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
         }
@@ -59,7 +59,7 @@ class GelombangController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Gelombang')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Gelombang')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
@@ -96,7 +96,7 @@ class GelombangController extends Controller
      *
      * @Route("/create", name="settings_admissiongroup_create")
      * @Method("post")
-     * @Template("FastSisdikBundle:Gelombang:new.html.twig")
+     * @Template("LanggasSisdikBundle:Gelombang:new.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction() {
@@ -149,7 +149,7 @@ class GelombangController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Gelombang')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Gelombang')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
@@ -169,7 +169,7 @@ class GelombangController extends Controller
      *
      * @Route("/{id}/update", name="settings_admissiongroup_update")
      * @Method("post")
-     * @Template("FastSisdikBundle:Gelombang:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Gelombang:edit.html.twig")
      * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction($id) {
@@ -178,7 +178,7 @@ class GelombangController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Gelombang')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Gelombang')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
@@ -235,7 +235,7 @@ class GelombangController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Gelombang')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Gelombang')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
@@ -278,7 +278,7 @@ class GelombangController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.admissiongroup', array(), 'navigations')]->setCurrent(true);
     }
 

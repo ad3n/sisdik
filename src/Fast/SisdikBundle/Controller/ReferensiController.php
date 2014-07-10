@@ -1,7 +1,7 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Form\SimpleSearchFormType;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Form\SimpleSearchFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -10,9 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Referensi;
-use Fast\SisdikBundle\Form\ReferensiType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Referensi;
+use Langgas\SisdikBundle\Form\ReferensiType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -41,7 +41,7 @@ class ReferensiController extends Controller
 
         $searchform = $this->createForm(new SimpleSearchFormType());
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Referensi', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Referensi', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -88,7 +88,7 @@ class ReferensiController extends Controller
      *
      * @Route("/", name="referensi_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Referensi:new.html.twig")
+     * @Template("LanggasSisdikBundle:Referensi:new.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function createAction(Request $request) {
@@ -140,7 +140,7 @@ class ReferensiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Referensi')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Referensi')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Referensi tak ditemukan.');
@@ -167,7 +167,7 @@ class ReferensiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Referensi')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Referensi')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Referensi tak ditemukan.');
@@ -187,7 +187,7 @@ class ReferensiController extends Controller
      *
      * @Route("/{id}", name="referensi_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Referensi:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Referensi:edit.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH, ROLE_PANITIA_PSB")
      */
     public function updateAction(Request $request, $id) {
@@ -196,7 +196,7 @@ class ReferensiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Referensi')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Referensi')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Referensi tak ditemukan.');
@@ -248,7 +248,7 @@ class ReferensiController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Referensi')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Referensi')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Referensi tak ditemukan.');
@@ -296,7 +296,7 @@ class ReferensiController extends Controller
         $filter = $this->getRequest()->query->get('filter');
         $id = $this->getRequest()->query->get('id');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Referensi', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Referensi', 't')
                 ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
 
@@ -339,7 +339,7 @@ class ReferensiController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.referensi', array(), 'navigations')]->setCurrent(true);
     }
 

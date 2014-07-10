@@ -1,18 +1,18 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\Common\Collections\ArrayCollection;
-use Fast\SisdikBundle\Form\PenempatanSiswaKelasKelompokType;
+use Langgas\SisdikBundle\Form\PenempatanSiswaKelasKelompokType;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
+use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Fast\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
-use Fast\SisdikBundle\Form\PenempatanSiswaKelasType;
-use Fast\SisdikBundle\Form\SiswaKelasTemplateMapType;
-use Fast\SisdikBundle\Form\SiswaKelasTemplateInitType;
+use Langgas\SisdikBundle\Form\PenempatanSiswaKelasType;
+use Langgas\SisdikBundle\Form\SiswaKelasTemplateMapType;
+use Langgas\SisdikBundle\Form\SiswaKelasTemplateInitType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -20,10 +20,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\User;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Util\EasyCSV\Reader;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Util\EasyCSV\Reader;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -72,7 +72,7 @@ class PenempatanSiswaKelasController extends Controller
      *
      * @Route("/menempatkan", name="penempatan-siswa-kelas_menempatkan")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PenempatanSiswaKelas:index.html.twig")
+     * @Template("LanggasSisdikBundle:PenempatanSiswaKelas:index.html.twig")
      */
     public function menempatkanAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -168,7 +168,7 @@ class PenempatanSiswaKelasController extends Controller
      *
      * @Route("/tempatkan-kelompok", name="penempatan-siswa-kelas_tempatkan-kelompok")
      * @Method("GET")
-     * @Template("FastSisdikBundle:PenempatanSiswaKelas:tempatkan-kelompok.html.twig")
+     * @Template("LanggasSisdikBundle:PenempatanSiswaKelas:tempatkan-kelompok.html.twig")
      */
     public function tempatkanKelompokAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -209,7 +209,7 @@ class PenempatanSiswaKelasController extends Controller
      *
      * @Route("/menempatkan-kelompok", name="penempatan-siswa-kelas_menempatkan-kelompok")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PenempatanSiswaKelas:tempatkan-kelompok.html.twig")
+     * @Template("LanggasSisdikBundle:PenempatanSiswaKelas:tempatkan-kelompok.html.twig")
      */
     public function menempatkanKelompokAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -322,14 +322,14 @@ class PenempatanSiswaKelasController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.siswaKelas', 'siswakelas')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.siswaKelas', 'siswakelas')
                     ->where('siswa.tahun = :tahun')->andWhere('siswa.sekolah = :sekolah')
                     ->andWhere('siswa.calonSiswa = :calon')->andWhere('siswakelas.id IS NULL')
                     ->setParameter('tahun', $formdata['tahun']->getId())
                     ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
             $entities = $querybuilder->getQuery()->getResult();
 
-            $qbjurusan = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Penjurusan', 't')
+            $qbjurusan = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Penjurusan', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.root ASC, t.lft', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
             $penjurusan = $qbjurusan->getQuery()->getResult();
@@ -362,17 +362,17 @@ class PenempatanSiswaKelasController extends Controller
                             ->addFromString('styles.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
+                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
                     $ziparchive
                             ->addFromString('settings.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:PenempatanSiswaKelas:settings.xml.twig"));
+                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:settings.xml.twig"));
                     $ziparchive
                             ->addFromString('content.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:PenempatanSiswaKelas:siswakelas-awal.xml.twig",
+                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:siswakelas-awal.xml.twig",
                                                     array(
                                                         'entities' => $entities, 'penjurusan' => $penjurusan
                                                     )));
@@ -417,7 +417,7 @@ class PenempatanSiswaKelasController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            $qbkelas = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+            $qbkelas = $em->createQueryBuilder()->select('kelas')->from('LanggasSisdikBundle:Kelas', 'kelas')
                     ->where('kelas.sekolah = :sekolah')->andWhere('kelas.tahunAkademik = :tahunakademik')
                     ->andWhere('kelas.tingkat = :tingkat')->orderBy('kelas.urutan', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId())
@@ -428,7 +428,7 @@ class PenempatanSiswaKelasController extends Controller
             $entities = array();
             foreach ($kelas as $data) {
                 $querybuilder = $em->createQueryBuilder()->select('siswakelas')
-                        ->from('FastSisdikBundle:SiswaKelas', 'siswakelas')
+                        ->from('LanggasSisdikBundle:SiswaKelas', 'siswakelas')
                         ->leftJoin('siswakelas.siswa', 'siswa')->leftJoin('siswakelas.kelas', 'kelas')
                         ->where('siswakelas.tahunAkademik = :tahunAkademik')
                         ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
@@ -441,7 +441,7 @@ class PenempatanSiswaKelasController extends Controller
             }
 
             $qbjurusan = $em->createQueryBuilder()->select('penjurusan')
-                    ->from('FastSisdikBundle:Penjurusan', 'penjurusan')
+                    ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
                     ->where('penjurusan.sekolah = :sekolah')
                     ->orderBy('penjurusan.root ASC, penjurusan.lft', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
@@ -476,12 +476,12 @@ class PenempatanSiswaKelasController extends Controller
                             ->addFromString('styles.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
+                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
                     $ziparchive
                             ->addFromString('settings.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:PenempatanSiswaKelas:settings.multipage.xml.twig",
+                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:settings.multipage.xml.twig",
                                                     array(
                                                         'kelas' => $kelas
                                                     )));
@@ -489,7 +489,7 @@ class PenempatanSiswaKelasController extends Controller
                             ->addFromString('content.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:PenempatanSiswaKelas:siswakelas-kenaikan.xml.twig",
+                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:siswakelas-kenaikan.xml.twig",
                                                     array(
                                                             'kelas' => $kelas, 'entities' => $entities,
                                                             'penjurusan' => $penjurusan
@@ -556,9 +556,9 @@ class PenempatanSiswaKelasController extends Controller
      *
      * @param  array                                  $content
      * @param  array                                  $fieldnames
-     * @param  Fast\SisdikBundle\Entity\Sekolah       $sekolah
-     * @param  Fast\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @param  Fast\SisdikBundle\Entity\Kelas         $kelas
+     * @param  Langgas\SisdikBundle\Entity\Sekolah       $sekolah
+     * @param  Langgas\SisdikBundle\Entity\TahunAkademik $tahunAkademik
+     * @param  Langgas\SisdikBundle\Entity\Kelas         $kelas
      * @param  boolean                                $andFlush
      * @throws \Exception
      */
@@ -570,7 +570,7 @@ class PenempatanSiswaKelasController extends Controller
         if (is_int($keyNomorIndukSistem)) {
             $siswakelas = new SiswaKelas();
 
-            $siswa = $em->getRepository('FastSisdikBundle:Siswa')
+            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
                     ->findOneBy(
                             array(
                                 'nomorIndukSistem' => $content[$keyNomorIndukSistem], 'sekolah' => $sekolah
@@ -585,7 +585,7 @@ class PenempatanSiswaKelasController extends Controller
 
             $keyKodeJurusan = array_search('kodeJurusan', $fieldnames);
             if (is_int($keyKodeJurusan)) {
-                $penjurusan = $em->getRepository('FastSisdikBundle:Penjurusan')
+                $penjurusan = $em->getRepository('LanggasSisdikBundle:Penjurusan')
                         ->findOneBy(
                                 array(
                                     'kode' => $content[$keyKodeJurusan], 'sekolah' => $sekolah->getId()
@@ -603,7 +603,7 @@ class PenempatanSiswaKelasController extends Controller
                 // siswa hanya boleh berstatus aktif di satu kelas dalam satu tahun akademik aktif
                 $aktif = $content[$keyAktif];
                 if ($aktif == 1) {
-                    $obj = $em->getRepository('FastSisdikBundle:SiswaKelas')
+                    $obj = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
                             ->findOneBy(
                                     array(
                                             'siswa' => $siswa->getId(),
@@ -636,7 +636,7 @@ class PenempatanSiswaKelasController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.penempatan.siswa.kelas', array(), 'navigations')]->setCurrent(true);
     }
 

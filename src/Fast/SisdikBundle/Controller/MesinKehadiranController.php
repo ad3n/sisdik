@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\MesinKehadiran;
-use Fast\SisdikBundle\Form\MesinKehadiranType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\MesinKehadiran;
+use Langgas\SisdikBundle\Form\MesinKehadiranType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -35,7 +35,7 @@ class MesinKehadiranController extends Controller
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
             $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('FastSisdikBundle:MesinKehadiran', 't')->where('t.sekolah = :sekolah')
+                    ->from('LanggasSisdikBundle:MesinKehadiran', 't')->where('t.sekolah = :sekolah')
                     ->orderBy('t.alamatIp', 'ASC')->setParameter('sekolah', $sekolah->getId());
         }
 
@@ -59,7 +59,7 @@ class MesinKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:MesinKehadiran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
@@ -95,7 +95,7 @@ class MesinKehadiranController extends Controller
      *
      * @Route("/create", name="attendancemachine_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:MesinKehadiran:new.html.twig")
+     * @Template("LanggasSisdikBundle:MesinKehadiran:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -144,7 +144,7 @@ class MesinKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:MesinKehadiran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
@@ -164,7 +164,7 @@ class MesinKehadiranController extends Controller
      *
      * @Route("/{id}/update", name="attendancemachine_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:MesinKehadiran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:MesinKehadiran:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -172,7 +172,7 @@ class MesinKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:MesinKehadiran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
@@ -223,7 +223,7 @@ class MesinKehadiranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:MesinKehadiran')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
@@ -259,7 +259,7 @@ class MesinKehadiranController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.attendancemachine', array(), 'navigations')]->setCurrent(true);
     }
 

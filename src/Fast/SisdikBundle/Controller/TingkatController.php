@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Tingkat;
-use Fast\SisdikBundle\Form\TingkatType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Tingkat;
+use Langgas\SisdikBundle\Form\TingkatType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -34,7 +34,7 @@ class TingkatController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Tingkat', 't')
+            $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Tingkat', 't')
                     ->where('t.sekolah = :sekolah')->orderBy('t.kode', 'ASC')
                     ->setParameter('sekolah', $sekolah->getId());
         }
@@ -59,7 +59,7 @@ class TingkatController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Tingkat')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
@@ -88,7 +88,7 @@ class TingkatController extends Controller
 
         $qbe = $em->createQueryBuilder();
         $queryUrutan = $em->createQueryBuilder()->select($qbe->expr()->max('tingkat.urutan'))
-                ->from('FastSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
+                ->from('LanggasSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId());
         $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
         $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
@@ -108,7 +108,7 @@ class TingkatController extends Controller
      *
      * @Route("/create", name="tingkat-kelas_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Tingkat:new.html.twig")
+     * @Template("LanggasSisdikBundle:Tingkat:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -157,7 +157,7 @@ class TingkatController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Tingkat')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
@@ -177,7 +177,7 @@ class TingkatController extends Controller
      *
      * @Route("/{id}/update", name="tingkat-kelas_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Tingkat:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Tingkat:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -185,7 +185,7 @@ class TingkatController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Tingkat')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
@@ -236,7 +236,7 @@ class TingkatController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Tingkat')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Tingkat')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
@@ -278,7 +278,7 @@ class TingkatController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.tingkat', array(), 'navigations')]->setCurrent(true);
     }
 

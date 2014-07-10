@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,12 +8,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\WaliKelas;
-use Fast\SisdikBundle\Form\WaliKelasType;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Entity\TahunAkademik;
-use Fast\SisdikBundle\Form\WaliKelasSearchType;
+use Langgas\SisdikBundle\Entity\WaliKelas;
+use Langgas\SisdikBundle\Form\WaliKelasType;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Form\WaliKelasSearchType;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
@@ -39,7 +39,7 @@ class WaliKelasController extends Controller
 
         $searchform = $this->createForm(new WaliKelasSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:WaliKelas', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:WaliKelas', 't')
                 ->leftJoin('t.kelas', 't2')->leftJoin('t.tahunAkademik', 't3')->where('t2.sekolah = :sekolah')
                 ->orderBy('t3.urutan', 'DESC')->addOrderBy('t2.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
@@ -78,7 +78,7 @@ class WaliKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:WaliKelas')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
@@ -114,7 +114,7 @@ class WaliKelasController extends Controller
      *
      * @Route("/create", name="data_classguardian_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:WaliKelas:new.html.twig")
+     * @Template("LanggasSisdikBundle:WaliKelas:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -169,7 +169,7 @@ class WaliKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:WaliKelas')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
@@ -189,7 +189,7 @@ class WaliKelasController extends Controller
      *
      * @Route("/{id}/update", name="data_classguardian_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:WaliKelas:edit.html.twig")
+     * @Template("LanggasSisdikBundle:WaliKelas:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -197,7 +197,7 @@ class WaliKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:WaliKelas')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
@@ -253,7 +253,7 @@ class WaliKelasController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:WaliKelas')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
@@ -284,7 +284,7 @@ class WaliKelasController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.classguardian', array(), 'navigations')]->setCurrent(true);
     }
 

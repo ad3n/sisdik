@@ -1,12 +1,12 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
-use Fast\SisdikBundle\Entity\SekolahAsal;
-use Fast\SisdikBundle\Entity\OrangtuaWali;
+namespace Langgas\SisdikBundle\Controller;
+use Langgas\SisdikBundle\Entity\SekolahAsal;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
+use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,15 +18,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\User;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Form\SiswaType;
-use Fast\SisdikBundle\Form\SiswaSearchType;
-use Fast\SisdikBundle\Form\SiswaImportType;
-use Fast\SisdikBundle\Form\SiswaMergeType;
-use Fast\SisdikBundle\Form\SiswaExportType;
-use Fast\SisdikBundle\Util\EasyCSV\Reader;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Form\SiswaType;
+use Langgas\SisdikBundle\Form\SiswaSearchType;
+use Langgas\SisdikBundle\Form\SiswaImportType;
+use Langgas\SisdikBundle\Form\SiswaMergeType;
+use Langgas\SisdikBundle\Form\SiswaExportType;
+use Langgas\SisdikBundle\Util\EasyCSV\Reader;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -62,7 +62,7 @@ class SiswaController extends Controller
 
         $searchform = $this->createForm(new SiswaSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Siswa', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Siswa', 't')
                 ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.calonSiswa = :calon')
                 ->setParameter('calon', false)->andWhere('t.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId())->orderBy('t2.tahun', 'DESC')
@@ -106,7 +106,7 @@ class SiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -145,7 +145,7 @@ class SiswaController extends Controller
      *
      * @Route("/create", name="siswa_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Siswa:new.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:new.html.twig")
      */
     public function createAction() {
         $sekolah = $this->isRegisteredToSchool();
@@ -164,7 +164,7 @@ class SiswaController extends Controller
 
             $qbe = $em->createQueryBuilder();
             $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
                     ->setParameter('sekolah', $sekolah->getId());
 
             $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
@@ -219,7 +219,7 @@ class SiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -239,7 +239,7 @@ class SiswaController extends Controller
      *
      * @Route("/{id}/update", name="siswa_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Siswa:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:edit.html.twig")
      */
     public function updateAction($id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -248,7 +248,7 @@ class SiswaController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userManager = $this->get('fos_user.user_manager');
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
         $prevNomorInduk = $entity->getNomorInduk();
 
         if (!$entity) {
@@ -300,7 +300,7 @@ class SiswaController extends Controller
      *
      * @Route("/{id}/deleteconfirm", name="siswa_deleteconfirm")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Siswa:deleteconfirm.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:deleteconfirm.html.twig")
      */
     public function deleteConfirmAction($id) {
         $this->isRegisteredToSchool();
@@ -308,7 +308,7 @@ class SiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -338,7 +338,7 @@ class SiswaController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Siswa')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
@@ -371,7 +371,7 @@ class SiswaController extends Controller
      * Displays a form to import Siswa entities.
      *
      * @Route("/impor-baru", name="siswa_imporbaru")
-     * @Template("FastSisdikBundle:Siswa:impor-baru.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:impor-baru.html.twig")
      * @Method("GET")
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -390,7 +390,7 @@ class SiswaController extends Controller
      * Mengimpor data siswa baru
      *
      * @Route("/mengimpor-baru", name="siswa_mengimporbaru")
-     * @Template("FastSisdikBundle:Siswa:impor-baru.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:impor-baru.html.twig")
      * @Method("POST")
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -488,7 +488,7 @@ class SiswaController extends Controller
      * Displays a form to import and merge Siswa entities.
      *
      * @Route("/impor-gabung", name="siswa_imporgabung")
-     * @Template("FastSisdikBundle:Siswa:impor-gabung.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:impor-gabung.html.twig")
      * @Method("GET")
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -509,7 +509,7 @@ class SiswaController extends Controller
      * Displays a form to import and merge Siswa entities.
      *
      * @Route("/mengimpor-gabung", name="siswa_mengimporgabung")
-     * @Template("FastSisdikBundle:Siswa:impor-gabung.html.twig")
+     * @Template("LanggasSisdikBundle:Siswa:impor-gabung.html.twig")
      * @Method("POST")
      * @Secure(roles="ROLE_ADMIN")
      */
@@ -636,13 +636,13 @@ class SiswaController extends Controller
                 $ziparchive->open($documenttarget);
                 $ziparchive
                         ->addFromString('styles.xml',
-                                $this->renderView("FastSisdikBundle:Siswa:styles.xml.twig"));
+                                $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
                 $ziparchive
                         ->addFromString('settings.xml',
-                                $this->renderView("FastSisdikBundle:Siswa:settings.xml.twig"));
+                                $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
                 $ziparchive
                         ->addFromString('content.xml',
-                                $this->renderView("FastSisdikBundle:Siswa:template-file.xml.twig"));
+                                $this->renderView("LanggasSisdikBundle:Siswa:template-file.xml.twig"));
                 if ($ziparchive->close() === TRUE) {
                     $return = array(
                             "redirectUrl" => $this
@@ -682,7 +682,7 @@ class SiswaController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
                     ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
                     ->setParameter('tahun', $formdata['tahun']->getId())
                     ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
@@ -722,15 +722,15 @@ class SiswaController extends Controller
                     $ziparchive->open($documenttarget);
                     $ziparchive
                             ->addFromString('styles.xml',
-                                    $this->renderView("FastSisdikBundle:Siswa:styles.xml.twig"));
+                                    $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
                     $ziparchive
                             ->addFromString('settings.xml',
-                                    $this->renderView("FastSisdikBundle:Siswa:settings.xml.twig"));
+                                    $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
                     $ziparchive
                             ->addFromString('content.xml',
                                     $this
                                             ->renderView(
-                                                    "FastSisdikBundle:Siswa:datasiswa-pertahun.xml.twig",
+                                                    "LanggasSisdikBundle:Siswa:datasiswa-pertahun.xml.twig",
                                                     array(
                                                             'entities' => $entities,
                                                             'jumlahSiswa' => count($entities)
@@ -801,8 +801,8 @@ class SiswaController extends Controller
      *
      * @param array                             $content
      * @param array                             $fieldnames
-     * @param \Fast\SisdikBundle\Entity\Sekolah $sekolah
-     * @param \Fast\SisdikBundle\Entity\Tahun   $tahun
+     * @param \Langgas\SisdikBundle\Entity\Sekolah $sekolah
+     * @param \Langgas\SisdikBundle\Entity\Tahun   $tahun
      * @param boolean                           $andFlush
      */
     private function imporSiswaBaru($content, $fieldnames, $sekolah, $tahun, $andFlush = false) {
@@ -819,7 +819,7 @@ class SiswaController extends Controller
 
         $entity = new Siswa();
 
-        $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+        $reflectionClass = new \ReflectionClass('Langgas\SisdikBundle\Entity\Siswa');
         $entityFields = array();
         foreach ($reflectionClass->getProperties() as $property) {
             $entityFields[] = $property->getName();
@@ -851,7 +851,7 @@ class SiswaController extends Controller
                     } elseif ($valuefield == 'sekolahAsal') {
                         if (trim($value) != '') {
                             $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
-                                    ->from('FastSisdikBundle:SekolahAsal', 'sekolahasal')
+                                    ->from('LanggasSisdikBundle:SekolahAsal', 'sekolahasal')
                                     ->where('sekolahasal.nama LIKE :nama')->setParameter('nama', "%$value%");
                             $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
                             if (count($resultSekolahAsal) >= 1) {
@@ -877,7 +877,7 @@ class SiswaController extends Controller
         if ($this->nomorUrutPersekolah == 0) {
             $qbe = $em->createQueryBuilder();
             $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
-                    ->from('FastSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
                     ->setParameter('sekolah', $sekolah->getId());
             $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
             $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
@@ -925,7 +925,7 @@ class SiswaController extends Controller
         $keyNomorIndukSistem = array_search('nomorIndukSistem', $fieldnames);
         if (is_int($keyNomorIndukSistem)) {
             if (array_key_exists($keyNomorIndukSistem, $content)) {
-                $entity = $em->getRepository('FastSisdikBundle:Siswa')
+                $entity = $em->getRepository('LanggasSisdikBundle:Siswa')
                         ->findOneBy(
                                 array(
                                     'nomorIndukSistem' => $content[$keyNomorIndukSistem]
@@ -934,7 +934,7 @@ class SiswaController extends Controller
                     return;
                 }
 
-                $reflectionClass = new \ReflectionClass('Fast\SisdikBundle\Entity\Siswa');
+                $reflectionClass = new \ReflectionClass('Langgas\SisdikBundle\Entity\Siswa');
                 $entityFields = array();
                 foreach ($reflectionClass->getProperties() as $property) {
                     $entityFields[] = $property->getName();
@@ -962,7 +962,7 @@ class SiswaController extends Controller
                             if ($valuefield != 'nomorIndukSistem') {
                                 if ($valuefield == 'orangtuaWali') {
                                     if ($ortu === null) {
-                                        $ortu = $em->getRepository('FastSisdikBundle:OrangtuaWali')
+                                        $ortu = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')
                                                 ->findOneBy(
                                                         array(
                                                             'aktif' => true, 'siswa' => $entity->getId()
@@ -976,7 +976,7 @@ class SiswaController extends Controller
                                 } elseif ($valuefield == 'sekolahAsal') {
                                     if ($sekolahAsal === null) {
                                         $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
-                                                ->from('FastSisdikBundle:SekolahAsal', 'sekolahasal')
+                                                ->from('LanggasSisdikBundle:SekolahAsal', 'sekolahasal')
                                                 ->where('sekolahasal.nama LIKE :nama')
                                                 ->setParameter('nama', "%$value%");
                                         $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
@@ -1036,7 +1036,7 @@ class SiswaController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
     }
 

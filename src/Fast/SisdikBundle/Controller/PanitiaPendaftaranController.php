@@ -1,11 +1,11 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Symfony\Component\Form\FormError;
-use Fast\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Response;
-use Fast\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\User;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,11 +13,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\PanitiaPendaftaran;
-use Fast\SisdikBundle\Form\PanitiaPendaftaranType;
-use Fast\SisdikBundle\Entity\Personil;
-use Fast\SisdikBundle\Form\SimpleTahunSearchType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
+use Langgas\SisdikBundle\Form\PanitiaPendaftaranType;
+use Langgas\SisdikBundle\Entity\Personil;
+use Langgas\SisdikBundle\Form\SimpleTahunSearchType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -43,7 +43,7 @@ class PanitiaPendaftaranController extends Controller
         $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')
+                ->from('LanggasSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')
                 ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC');
         $querybuilder->setParameter('sekolah', $sekolah->getId());
 
@@ -77,7 +77,7 @@ class PanitiaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
@@ -101,13 +101,13 @@ class PanitiaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
         }
 
-        $results = $em->getRepository('FastSisdikBundle:Tahun')
+        $results = $em->getRepository('LanggasSisdikBundle:Tahun')
                 ->findBy(array(
                     'sekolah' => $sekolah->getId()
                 ));
@@ -118,7 +118,7 @@ class PanitiaPendaftaranController extends Controller
             }
         }
 
-        $query = $em->createQueryBuilder()->update('FastSisdikBundle:PanitiaPendaftaran', 't')
+        $query = $em->createQueryBuilder()->update('LanggasSisdikBundle:PanitiaPendaftaran', 't')
                 ->set('t.aktif', '0')->where('t.tahun IN (?1)')->setParameter(1, $daftarTahun)->getQuery();
         $query->execute();
 
@@ -160,7 +160,7 @@ class PanitiaPendaftaranController extends Controller
      *
      * @Route("/create", name="regcommittee_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PanitiaPendaftaran:new.html.twig")
+     * @Template("LanggasSisdikBundle:PanitiaPendaftaran:new.html.twig")
      */
     public function createAction(Request $request) {
         $this->isRegisteredToSchool();
@@ -265,7 +265,7 @@ class PanitiaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
@@ -285,7 +285,7 @@ class PanitiaPendaftaranController extends Controller
      *
      * @Route("/{id}/update", name="regcommittee_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PanitiaPendaftaran:edit.html.twig")
+     * @Template("LanggasSisdikBundle:PanitiaPendaftaran:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $this->isRegisteredToSchool();
@@ -293,7 +293,7 @@ class PanitiaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
@@ -406,7 +406,7 @@ class PanitiaPendaftaranController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:PanitiaPendaftaran')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
@@ -444,7 +444,7 @@ class PanitiaPendaftaranController extends Controller
         $this->isRegisteredToSchool();
 
         $em = $this->getDoctrine()->getManager();
-        $entity = $em->getRepository('FastSisdikBundle:User')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:User')->find($id);
 
         if ($entity instanceof User) {
             $name = $entity->getName();
@@ -469,7 +469,7 @@ class PanitiaPendaftaranController extends Controller
         $filter = $this->getRequest()->query->get('filter');
         $id = $this->getRequest()->query->get('id');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:User', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:User', 't')
                 ->where('t.sekolah IS NOT NULL')->andWhere('t.sekolah = :sekolah')
                 ->andWhere('t.siswa IS NULL')->orderBy('t.name', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
@@ -518,7 +518,7 @@ class PanitiaPendaftaranController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.regcommittee', array(), 'navigations')]->setCurrent(true);
     }
 

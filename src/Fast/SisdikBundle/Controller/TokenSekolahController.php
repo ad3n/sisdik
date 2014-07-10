@@ -1,13 +1,13 @@
 <?php
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\TokenSekolah;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\TokenSekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -31,7 +31,7 @@ class TokenSekolahController extends Controller
 
         $querybuilder = $em->createQueryBuilder()
             ->select('t')
-            ->from('FastSisdikBundle:TokenSekolah', 't')
+            ->from('LanggasSisdikBundle:TokenSekolah', 't')
             ->leftJoin('t.sekolah', 't2')
             ->orderBy('t2.nama', 'ASC')
         ;
@@ -58,7 +58,7 @@ class TokenSekolahController extends Controller
     /**
      * @Route("/", name="token-sekolah_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:TokenSekolah:new.html.twig")
+     * @Template("LanggasSisdikBundle:TokenSekolah:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -121,7 +121,7 @@ class TokenSekolahController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TokenSekolah')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TokenSekolah tak ditemukan.');
@@ -144,7 +144,7 @@ class TokenSekolahController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TokenSekolah')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TokenSekolah tak ditemukan.');
@@ -180,13 +180,13 @@ class TokenSekolahController extends Controller
     /**
      * @Route("/{id}", name="token-sekolah_update")
      * @Method("PUT")
-     * @Template("FastSisdikBundle:TokenSekolah:edit.html.twig")
+     * @Template("LanggasSisdikBundle:TokenSekolah:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:TokenSekolah')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TokenSekolah tak ditemukan.');
@@ -224,7 +224,7 @@ class TokenSekolahController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:TokenSekolah')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity TokenSekolah tak ditemukan.');
@@ -261,7 +261,7 @@ class TokenSekolahController extends Controller
 
     private function setCurrentMenu()
     {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', [], 'navigations')][$this->get('translator')->trans('links.token.sekolah', [], 'navigations')]->setCurrent(true);
     }
 }

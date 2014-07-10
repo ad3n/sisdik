@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\PilihanCetakKwitansi;
-use Fast\SisdikBundle\Entity\Sekolah;
-use Fast\SisdikBundle\Form\PilihanCetakKwitansiType;
+use Langgas\SisdikBundle\Entity\PilihanCetakKwitansi;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\PilihanCetakKwitansiType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -34,7 +34,7 @@ class PilihanCetakKwitansiController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:PilihanCetakKwitansi', 't')->where('t.sekolah = :sekolah')
+                ->from('LanggasSisdikBundle:PilihanCetakKwitansi', 't')->where('t.sekolah = :sekolah')
                 ->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
         $results = $querybuilder->getQuery()->getResult();
         $entity = false;
@@ -82,7 +82,7 @@ class PilihanCetakKwitansiController extends Controller
      *
      * @Route("/create", name="printreceiptsoption_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PilihanCetakKwitansi:new.html.twig")
+     * @Template("LanggasSisdikBundle:PilihanCetakKwitansi:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -126,7 +126,7 @@ class PilihanCetakKwitansiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PilihanCetakKwitansi')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PilihanCetakKwitansi')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PilihanCetakKwitansi tak ditemukan.');
@@ -144,7 +144,7 @@ class PilihanCetakKwitansiController extends Controller
      *
      * @Route("/{id}/update", name="printreceiptsoption_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PilihanCetakKwitansi:edit.html.twig")
+     * @Template("LanggasSisdikBundle:PilihanCetakKwitansi:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -152,7 +152,7 @@ class PilihanCetakKwitansiController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PilihanCetakKwitansi')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PilihanCetakKwitansi')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PilihanCetakKwitansi tak ditemukan.');
@@ -189,7 +189,7 @@ class PilihanCetakKwitansiController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.printreceiptsoption', array(), 'navigations')]->setCurrent(true);
     }
 

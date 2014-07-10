@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,11 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\Kelas;
-use Fast\SisdikBundle\Form\KelasType;
-use Fast\SisdikBundle\Form\KelasSearchType;
-use Fast\SisdikBundle\Form\KelasDuplicateType;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Form\KelasType;
+use Langgas\SisdikBundle\Form\KelasSearchType;
+use Langgas\SisdikBundle\Form\KelasDuplicateType;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -38,7 +38,7 @@ class KelasController extends Controller
 
         $searchform = $this->createForm(new KelasSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Kelas', 't')
                 ->leftJoin('t.tingkat', 't2')->leftJoin('t.tahunAkademik', 't3')
                 ->where('t.sekolah = :sekolah')->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
                 ->setParameter('sekolah', $sekolah->getId());
@@ -76,7 +76,7 @@ class KelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Kelas')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Kelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Kelas tak ditemukan.');
@@ -112,7 +112,7 @@ class KelasController extends Controller
      *
      * @Route("/create", name="data_class_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Kelas:new.html.twig")
+     * @Template("LanggasSisdikBundle:Kelas:new.html.twig")
      */
     public function createAction(Request $request) {
         $sekolah = $this->isRegisteredToSchool();
@@ -168,7 +168,7 @@ class KelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Kelas')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Kelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Kelas tak ditemukan.');
@@ -188,7 +188,7 @@ class KelasController extends Controller
      *
      * @Route("/{id}/update", name="data_class_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:Kelas:edit.html.twig")
+     * @Template("LanggasSisdikBundle:Kelas:edit.html.twig")
      */
     public function updateAction(Request $request, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -196,7 +196,7 @@ class KelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:Kelas')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:Kelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Kelas tak ditemukan.');
@@ -254,7 +254,7 @@ class KelasController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('FastSisdikBundle:Kelas')->find($id);
+            $entity = $em->getRepository('LanggasSisdikBundle:Kelas')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Kelas tak ditemukan.');
@@ -312,7 +312,7 @@ class KelasController extends Controller
             $tahunAkademikTarget = $duplicatedata['tahunAkademikTarget'];
 
             // get all classes from the source academic year
-            $entities = $em->getRepository('FastSisdikBundle:Kelas')
+            $entities = $em->getRepository('LanggasSisdikBundle:Kelas')
                     ->findBy(
                             array(
                                 'tahunAkademik' => $tahunAkademikSource->getId()
@@ -365,7 +365,7 @@ class KelasController extends Controller
         $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $kelas = $this->getRequest()->query->get('kelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Kelas', 't')
                 ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')
                 ->andWhere('t.tahunAkademik = :tahunAkademik')->orderBy('t2.urutan', 'ASC')
                 ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah->getId())
@@ -401,7 +401,7 @@ class KelasController extends Controller
         $tingkat = $this->getRequest()->query->get('tingkat');
         $kelas = $this->getRequest()->query->get('kelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('kelas')->from('FastSisdikBundle:Kelas', 'kelas')
+        $querybuilder = $em->createQueryBuilder()->select('kelas')->from('LanggasSisdikBundle:Kelas', 'kelas')
                 ->leftJoin('kelas.tingkat', 'tingkat')->where('kelas.sekolah = :sekolah')
                 ->andWhere('kelas.tahunAkademik = :tahunAkademik')
                 ->setParameter('tahunAkademik', $tahunAkademik)->andWhere('tingkat.id = :tingkat')
@@ -435,7 +435,7 @@ class KelasController extends Controller
         $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $kelas = $this->getRequest()->query->get('kelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('FastSisdikBundle:Kelas', 't')
+        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Kelas', 't')
                 ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')
                 ->andWhere('t.tahunAkademik = :tahunAkademik')->orderBy('t2.urutan', 'ASC')
                 ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
@@ -464,7 +464,7 @@ class KelasController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.class', array(), 'navigations')]->setCurrent(true);
     }
 

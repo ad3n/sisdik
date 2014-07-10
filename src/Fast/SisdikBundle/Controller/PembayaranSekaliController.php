@@ -1,6 +1,6 @@
 <?php
 
-namespace Fast\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -8,11 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Fast\SisdikBundle\Entity\PembayaranSekali;
-use Fast\SisdikBundle\Form\PembayaranSekaliType;
-use Fast\SisdikBundle\Entity\TransaksiPembayaranSekali;
-use Fast\SisdikBundle\Entity\Siswa;
-use Fast\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\PembayaranSekali;
+use Langgas\SisdikBundle\Form\PembayaranSekaliType;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaranSekali;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -37,7 +37,7 @@ class PembayaranSekaliController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('FastSisdikBundle:PembayaranSekali', 't')->where('t.siswa = :siswa')
+                ->from('LanggasSisdikBundle:PembayaranSekali', 't')->where('t.siswa = :siswa')
                 ->setParameter('siswa', $cid)->setMaxResults(1);
         $results = $querybuilder->getQuery()->getResult();
         $entity = false;
@@ -89,7 +89,7 @@ class PembayaranSekaliController extends Controller
 
         return array(
                 'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($cid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($cid),
         );
     }
 
@@ -98,7 +98,7 @@ class PembayaranSekaliController extends Controller
      *
      * @Route("/create", name="payment_oncefee_create")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PembayaranSekali:new.html.twig")
+     * @Template("LanggasSisdikBundle:PembayaranSekali:new.html.twig")
      */
     public function createAction(Request $request, $cid) {
         $sekolah = $this->isRegisteredToSchool();
@@ -106,7 +106,7 @@ class PembayaranSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($cid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($cid);
 
         $entity = new PembayaranSekali();
         $form = $this->createForm(new PembayaranSekaliType($this->container, $cid), $entity);
@@ -159,7 +159,7 @@ class PembayaranSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PembayaranSekali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranSekali')->find($id);
         $transaksiPembayaranSekali = new TransaksiPembayaranSekali();
         $entity->getTransaksiPembayaranSekali()->add($transaksiPembayaranSekali);
 
@@ -171,7 +171,7 @@ class PembayaranSekaliController extends Controller
 
         return array(
                 'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'siswa' => $em->getRepository('FastSisdikBundle:Siswa')->find($cid),
+                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($cid),
         );
     }
 
@@ -180,7 +180,7 @@ class PembayaranSekaliController extends Controller
      *
      * @Route("/{id}/update", name="payment_oncefee_update")
      * @Method("POST")
-     * @Template("FastSisdikBundle:PembayaranSekali:edit.html.twig")
+     * @Template("LanggasSisdikBundle:PembayaranSekali:edit.html.twig")
      */
     public function updateAction(Request $request, $cid, $id) {
         $sekolah = $this->isRegisteredToSchool();
@@ -188,9 +188,9 @@ class PembayaranSekaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('FastSisdikBundle:PembayaranSekali')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranSekali')->find($id);
 
-        $siswa = $em->getRepository('FastSisdikBundle:Siswa')->find($cid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($cid);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity PembayaranSekali tak ditemukan.');
@@ -234,7 +234,7 @@ class PembayaranSekaliController extends Controller
     }
 
     private function setCurrentMenu() {
-        $menu = $this->container->get('fast_sisdik.menu.main');
+        $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.applicant.payment', array(), 'navigations')]->setCurrent(true);
     }
 
