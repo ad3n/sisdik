@@ -141,6 +141,9 @@ class DefaultController extends Controller
             ->getResult()
         ;
 
+        $bulanSebelumnya = $tanggalSekarang->modify('first day of -1 month')->format('m');
+        $bulanBerikutnya = $tanggalSekarang->modify('first day of +2 month')->format('m');
+
         return [
             'tahunAkademik' => $tahunAkademik,
             'kelas' => $siswaKelas,
@@ -148,6 +151,9 @@ class DefaultController extends Controller
             'kehadiran' => $kehadiran,
             'daftarStatusKehadiran' => JadwalKehadiran::getDaftarStatusKehadiran(),
             'calendar' => $calendar,
+            'tanggalSekarang' => $tanggalSekarang,
+            'bulanSebelumnya' => $bulanSebelumnya,
+            'bulanBerikutnya' => $bulanBerikutnya,
         ];
     }
 
