@@ -1,12 +1,16 @@
 <?php
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -19,25 +23,44 @@ class BiayaPendaftaranType extends AbstractType
     private $container;
 
     /**
-     * @var int
-     */
-    private $nominal;
-
-    /**
      * @var string
      */
     private $mode;
 
     /**
-     * @param ContainerInterface $container
-     * @param string             $mode
-     * @param int                $nominal
+     * @var int
      */
-    public function __construct(ContainerInterface $container, $mode, $nominal)
+    private $nominal;
+
+    /**
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context"),
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param SecurityContext $securityContext
+     * @param EntityManager   $entityManager
+     */
+    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
     {
-        $this->container = $container;
-        $this->nominal = $nominal;
+        $this->securityContext = $securityContext;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @param string $mode
+     */
+    public function setMode($mode)
+    {
         $this->mode = $mode;
+    }
+
+    /**
+     * @param int $nominal
+     */
+    public function setNominal($nominal)
+    {
+        $this->nominal = $nominal;
     }
 
     /**
@@ -46,18 +69,11 @@ class BiayaPendaftaranType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container
-            ->get('security.context')
-            ->getToken()
-            ->getUser()
-        ;
+        $sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
+        $em = $this->entityManager;
 
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container
-            ->get('doctrine')
-            ->getManager()
-        ;
+        $this->setMode($options['mode']);
+        $this->setNominal($options['nominal']);
 
         $querybuilder1 = $em->createQueryBuilder()
             ->select('t')
@@ -198,6 +214,8 @@ class BiayaPendaftaranType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\BiayaPendaftaran',
+                'mode' => 'new',
+                'nominal' => null,
             ])
         ;
     }
@@ -207,6 +225,6 @@ class BiayaPendaftaranType extends AbstractType
      */
     public function getName()
     {
-        return 'langgas_sisdikbundle_biayapendaftarantype';
+        return 'sisdik_biayapendaftaran';
     }
 }
