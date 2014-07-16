@@ -20,7 +20,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * Kelas controller.
  *
  * @Route("/data/class")
- * @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_GURU', 'ROLE_GURU_PIKET', 'ROLE_USER')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_GURU', 'ROLE_GURU_PIKET')")
  */
 class KelasController extends Controller
 {
