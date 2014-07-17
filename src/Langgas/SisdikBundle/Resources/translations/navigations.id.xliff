@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-07-06T11:17:56Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-07-17T12:58:27Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -9,15 +9,15 @@
       <trans-unit id="89f2e2cacbf43f8430a5588bb2635b466ef70c85" resname="headings.academic">
         <jms:reference-file line="333">SisdikBundle/Controller/PendidikanSiswaController.php</jms:reference-file>
         <jms:reference-file line="423">SisdikBundle/Controller/DokumenSiswaController.php</jms:reference-file>
-        <jms:reference-file line="266">SisdikBundle/Controller/KalenderPendidikanController.php</jms:reference-file>
+        <jms:reference-file line="185">SisdikBundle/Controller/KalenderPendidikanController.php</jms:reference-file>
         <jms:reference-file line="319">SisdikBundle/Controller/PenyakitSiswaController.php</jms:reference-file>
         <jms:reference-file line="350">SisdikBundle/Controller/OrangtuaWaliController.php</jms:reference-file>
         <jms:reference-file line="288">SisdikBundle/Controller/WaliKelasController.php</jms:reference-file>
         <jms:reference-file line="307">SisdikBundle/Controller/SiswaKelasController.php</jms:reference-file>
-        <jms:reference-file line="572">SisdikBundle/Controller/SiswaUsernameController.php</jms:reference-file>
-        <jms:reference-file line="1038">SisdikBundle/Controller/SiswaController.php</jms:reference-file>
+        <jms:reference-file line="574">SisdikBundle/Controller/SiswaUsernameController.php</jms:reference-file>
+        <jms:reference-file line="1040">SisdikBundle/Controller/SiswaController.php</jms:reference-file>
         <jms:reference-file line="468">SisdikBundle/Controller/KelasController.php</jms:reference-file>
-        <jms:reference-file line="636">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="640">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
         <jms:reference-file line="282">SisdikBundle/Controller/TingkatController.php</jms:reference-file>
         <jms:reference-file line="142">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>headings.academic</source>
@@ -25,7 +25,7 @@
       </trans-unit>
       <trans-unit id="33915f1fa8183b5bb352a3b9ffbcd8436cb3612e" resname="headings.fee">
         <jms:reference-file line="300">SisdikBundle/Controller/BiayaSekaliController.php</jms:reference-file>
-        <jms:reference-file line="570">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
+        <jms:reference-file line="567">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="303">SisdikBundle/Controller/BiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="273">SisdikBundle/Controller/JenisImbalanController.php</jms:reference-file>
         <jms:reference-file line="279">SisdikBundle/Controller/ImbalanPendaftaranController.php</jms:reference-file>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="bacda30ed57f9c44b7cc6ae191c1000657b7f2cb" resname="headings.pendaftaran">
         <jms:reference-file line="309">SisdikBundle/Controller/SiswaTahkikController.php</jms:reference-file>
-        <jms:reference-file line="640">SisdikBundle/Controller/SiswaApplicantReportController.php</jms:reference-file>
+        <jms:reference-file line="642">SisdikBundle/Controller/SiswaApplicantReportController.php</jms:reference-file>
         <jms:reference-file line="331">SisdikBundle/Controller/PendidikanSiswaController.php</jms:reference-file>
         <jms:reference-file line="797">SisdikBundle/Controller/SiswaApplicantController.php</jms:reference-file>
         <jms:reference-file line="421">SisdikBundle/Controller/DokumenSiswaController.php</jms:reference-file>
@@ -61,7 +61,7 @@
         <target>Pendaftaran</target>
       </trans-unit>
       <trans-unit id="0558a8a6debd439a63ebc1f2862663afb7f51d80" resname="headings.pengaturan.sisdik">
-        <jms:reference-file line="573">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
+        <jms:reference-file line="549">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
         <jms:reference-file line="193">SisdikBundle/Controller/SettingsSchoolController.php</jms:reference-file>
         <jms:reference-file line="265">SisdikBundle/Controller/TokenSekolahController.php</jms:reference-file>
         <jms:reference-file line="299">SisdikBundle/Controller/PilihanLayananSmsController.php</jms:reference-file>
@@ -72,9 +72,8 @@
       <trans-unit id="3a4f836e9bb89e8ee0df0225a356c147b579a7a9" resname="headings.presence">
         <jms:reference-file line="263">SisdikBundle/Controller/MesinKehadiranController.php</jms:reference-file>
         <jms:reference-file line="542">SisdikBundle/Controller/JadwalKehadiranController.php</jms:reference-file>
-        <jms:reference-file line="232">SisdikBundle/Controller/KehadiranSiswaReportController.php</jms:reference-file>
+        <jms:reference-file line="234">SisdikBundle/Controller/KehadiranSiswaReportController.php</jms:reference-file>
         <jms:reference-file line="663">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
-        <jms:reference-file line="464">SisdikBundle/Controller/JadwalKehadiranKepulanganSingleController.php</jms:reference-file>
         <jms:reference-file line="176">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>headings.presence</source>
         <target>Kehadiran</target>
@@ -82,7 +81,7 @@
       <trans-unit id="14b9f42b22ec4b75ffc5eeb2806ee889ae6a0d9a" resname="headings.setting">
         <jms:reference-file line="330">SisdikBundle/Controller/TahunAkademikController.php</jms:reference-file>
         <jms:reference-file line="291">SisdikBundle/Controller/JenisDokumenSiswaController.php</jms:reference-file>
-        <jms:reference-file line="576">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
+        <jms:reference-file line="552">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
         <jms:reference-file line="288">SisdikBundle/Controller/LayananSmsPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="156">SisdikBundle/Controller/SekolahController.php</jms:reference-file>
         <jms:reference-file line="274">SisdikBundle/Controller/TemplatesmsController.php</jms:reference-file>
@@ -110,7 +109,7 @@
         <target>Gelombang</target>
       </trans-unit>
       <trans-unit id="ab8e9fa07923cdb2610bcc3b25519ca83e906395" resname="links.alluser">
-        <jms:reference-file line="573">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
+        <jms:reference-file line="549">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
         <jms:reference-file line="64">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.alluser</source>
         <target>Semua User</target>
@@ -134,7 +133,7 @@
         <target>Kelas</target>
       </trans-unit>
       <trans-unit id="402828e76068c000e45a51839d53866a7e7ed3ff" resname="links.data.academiccalendar">
-        <jms:reference-file line="266">SisdikBundle/Controller/KalenderPendidikanController.php</jms:reference-file>
+        <jms:reference-file line="185">SisdikBundle/Controller/KalenderPendidikanController.php</jms:reference-file>
         <jms:reference-file line="146">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.data.academiccalendar</source>
         <target>Kalender Pendidikan</target>
@@ -164,7 +163,7 @@
         <target>Biaya Berulang</target>
       </trans-unit>
       <trans-unit id="1f087e11a4e518c792ab96039985e49b8d8ae8b3" resname="links.fee.registration">
-        <jms:reference-file line="570">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
+        <jms:reference-file line="567">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="105">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.fee.registration</source>
         <target>Biaya Pendaftaran</target>
@@ -207,7 +206,7 @@
         <target>Kehadiran Siswa</target>
       </trans-unit>
       <trans-unit id="c0fd7dad9e8ce3c353fb96e2f2ec06e1dde496b0" resname="links.laporan.kehadiran.siswa">
-        <jms:reference-file line="232">SisdikBundle/Controller/KehadiranSiswaReportController.php</jms:reference-file>
+        <jms:reference-file line="234">SisdikBundle/Controller/KehadiranSiswaReportController.php</jms:reference-file>
         <jms:reference-file line="189">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.laporan.kehadiran.siswa</source>
         <target>Laporan</target>
@@ -219,7 +218,7 @@
         <target>Laporan Pendaftaran</target>
       </trans-unit>
       <trans-unit id="4540d7c23be91ea7cf17893d7232d637b5fd85b0" resname="links.laporan.pendaftaran">
-        <jms:reference-file line="640">SisdikBundle/Controller/SiswaApplicantReportController.php</jms:reference-file>
+        <jms:reference-file line="642">SisdikBundle/Controller/SiswaApplicantReportController.php</jms:reference-file>
         <jms:reference-file line="127">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.laporan.pendaftaran</source>
         <target>Laporan Pendaftaran</target>
@@ -243,7 +242,7 @@
       </trans-unit>
       <trans-unit id="f9eae5f1eb5282a20cc735094a3372964bc0ae1f" resname="links.penempatan.siswa.kelas">
         <jms:reference-file line="99">views/Siswa/index.html.twig</jms:reference-file>
-        <jms:reference-file line="636">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="640">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
         <jms:reference-file line="151">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.penempatan.siswa.kelas</source>
         <target>Penempatan Siswa → Kelas</target>
@@ -327,8 +326,8 @@
         <jms:reference-file line="319">SisdikBundle/Controller/PenyakitSiswaController.php</jms:reference-file>
         <jms:reference-file line="350">SisdikBundle/Controller/OrangtuaWaliController.php</jms:reference-file>
         <jms:reference-file line="307">SisdikBundle/Controller/SiswaKelasController.php</jms:reference-file>
-        <jms:reference-file line="572">SisdikBundle/Controller/SiswaUsernameController.php</jms:reference-file>
-        <jms:reference-file line="1038">SisdikBundle/Controller/SiswaController.php</jms:reference-file>
+        <jms:reference-file line="574">SisdikBundle/Controller/SiswaUsernameController.php</jms:reference-file>
+        <jms:reference-file line="1040">SisdikBundle/Controller/SiswaController.php</jms:reference-file>
         <jms:reference-file line="150">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.siswa</source>
         <target>Siswa</target>
@@ -372,7 +371,7 @@
         <target>Token Sekolah</target>
       </trans-unit>
       <trans-unit id="ce228b306ebb7697254a0364912fef20cc7db600" resname="links.user">
-        <jms:reference-file line="576">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
+        <jms:reference-file line="552">SisdikBundle/Controller/SettingsUserController.php</jms:reference-file>
         <jms:reference-file line="86">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.user</source>
         <target>User</target>
@@ -400,7 +399,6 @@
       </trans-unit>
       <trans-unit id="80637ef391de8f80d897fd0fe313db9c348ca73a" resname="user.logout">
         <jms:reference-file line="74">Resources/views/layout.html.twig</jms:reference-file>
-        <jms:reference-file line="273">Resources/views/template.twig</jms:reference-file>
         <source>user.logout</source>
         <target>Logout</target>
       </trans-unit>
@@ -411,7 +409,6 @@
       </trans-unit>
       <trans-unit id="58536de899a2190d3468ab7b4a36e781667efcff" resname="user.myaccount">
         <jms:reference-file line="73">Resources/views/layout.html.twig</jms:reference-file>
-        <jms:reference-file line="272">Resources/views/template.twig</jms:reference-file>
         <source>user.myaccount</source>
         <target>Akun Saya</target>
       </trans-unit>
