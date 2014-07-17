@@ -18,9 +18,14 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class BiayaPendaftaranType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
+
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
      * @var string
