@@ -6,10 +6,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
- * UserFormType will be used both for ADMIN and SUPER ADMIN role,
- * so we need to put certain condition depend on the logged in user session
+ * @FormType
  */
 class UserFormType extends AbstractType
 {
@@ -21,20 +23,32 @@ class UserFormType extends AbstractType
     /**
      * @var integer
      */
-    private $formoption;
+    private $mode;
 
     /**
+     * @InjectParams({
+     *     "container" = @Inject("service_container")
+     * })
+     *
      * @param ContainerInterface $container
-     * @param integer            $formoption
      */
-    public function __construct(ContainerInterface $container, $formoption = 0)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->formoption = $formoption;
+    }
+
+    /**
+     * @param integer $mode
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->setMode($options['mode']);
+
         $builder
             ->add('username', null, [
                 'required' => true,
@@ -60,7 +74,7 @@ class UserFormType extends AbstractType
             ])
         ;
 
-        if ($this->formoption == 1) {
+        if ($this->mode == 1) {
             // role user and super admin, not registered to any school
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
                 if (!($keys == 'ROLE_USER' || $keys == 'ROLE_SUPER_ADMIN')) {
@@ -78,9 +92,9 @@ class UserFormType extends AbstractType
                     'expanded' => true,
                 ])
             ;
-        } elseif ($this->formoption == 2) {
+        } elseif ($this->mode == 2) {
             // role siswa, nothing
-        } elseif ($this->formoption == 3) {
+        } elseif ($this->mode == 3) {
             foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
                 if ($keys == 'ROLE_USER'
                         || $keys == 'ROLE_SISWA'
@@ -103,7 +117,7 @@ class UserFormType extends AbstractType
             ;
         }
 
-        if ($this->formoption > 1) {
+        if ($this->mode > 1) {
             if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
                 $builder
                     ->add('sekolah', 'entity', [
@@ -134,6 +148,22 @@ class UserFormType extends AbstractType
                             'class' => 'LanggasSisdikBundle:Sekolah',
                             'data' => $sekolah->getId(),
                         ])
+                        ->add('plainPassword', 'repeated', [
+                            'type' => 'password',
+                            'invalid_message' => 'fos_user.password.notequal',
+                            'first_options' => [
+                                'label' => 'label.password',
+                                'attr' => [
+                                    'class' => 'medium',
+                                ],
+                            ],
+                            'second_options' => [
+                                'label' => 'label.repassword',
+                                'attr' => [
+                                    'class' => 'medium',
+                                ],
+                            ],
+                        ])
                     ;
                 }
             }
@@ -154,12 +184,13 @@ class UserFormType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\User',
+                'mode' => 0,
             ])
         ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_user';
+        return 'sisdik_useredit';
     }
 }

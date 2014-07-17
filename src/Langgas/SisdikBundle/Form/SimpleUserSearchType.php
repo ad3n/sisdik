@@ -1,12 +1,16 @@
 <?php
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -14,16 +18,28 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SimpleUserSearchType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @var EntityManager
      */
-    public function __construct(ContainerInterface $container)
+    private $entityManager;
+
+    /**
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context"),
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param SecurityContext $securityContext
+     * @param EntityManager   $entityManager
+     */
+    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -54,8 +70,7 @@ class SimpleUserSearchType extends AbstractType
 
     private function buildChoices()
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('LanggasSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
+        $entities = $this->entityManager->getRepository('LanggasSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
 
         $choices = [
             '' => 'label.all',
@@ -82,6 +97,6 @@ class SimpleUserSearchType extends AbstractType
 
     public function getName()
     {
-        return 'searchform';
+        return 'sisdik_cariuser';
     }
 }

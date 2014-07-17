@@ -38,6 +38,6 @@ class SimpleSearchFormType extends AbstractType
 
     public function getName()
     {
-        return 'searchform';
+        return 'cari';
     }
 }

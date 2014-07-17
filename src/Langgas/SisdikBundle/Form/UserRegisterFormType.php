@@ -7,6 +7,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -21,20 +23,32 @@ class UserRegisterFormType extends BaseType
     /**
      * @var integer
      */
-    private $registrationtype;
+    private $mode;
 
     /**
+     * @InjectParams({
+     *     "container" = @Inject("service_container")
+     * })
+     *
      * @param ContainerInterface $container
-     * @param number             $registrationtype
      */
-    public function __construct(ContainerInterface $container, $registrationtype = 1)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->registrationtype = $registrationtype;
+    }
+
+    /**
+     * @param integer $mode
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->setMode($options['mode']);
+
         $builder
             ->add('username', null, [
                 'required' => true,
@@ -79,7 +93,7 @@ class UserRegisterFormType extends BaseType
         ;
 
         foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
-            if ($this->registrationtype == 1) {
+            if ($this->mode == 1) {
                 // registration type 1, no school, only for super admin
                 if (!($keys == 'ROLE_USER' || $keys == 'ROLE_SUPER_ADMIN')) {
                     continue;
@@ -107,7 +121,7 @@ class UserRegisterFormType extends BaseType
             ])
         ;
 
-        if ($this->registrationtype != 1) {
+        if ($this->mode != 1) {
             if (($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))) {
                 $builder
                     ->add('sekolah', 'entity', [
@@ -155,12 +169,13 @@ class UserRegisterFormType extends BaseType
                 'validation_groups' => [
                     'Registration',
                 ],
+                'mode' => 1,
             ])
         ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_userregister';
+        return 'sisdik_registeruser';
     }
 }

@@ -1,56 +1,47 @@
 <?php
-
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
-use Langgas\SisdikBundle\Form\SimpleUserSearchType;
-use Symfony\Component\Translation\IdentityTranslator;
-use Symfony\Component\Form\FormError;
+use FOS\UserBundle\Model\UserManager;
 use Langgas\SisdikBundle\Entity\Staf;
 use Langgas\SisdikBundle\Entity\Guru;
-use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\User;
-use Langgas\SisdikBundle\Form\SimpleSearchFormType;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use FOS\UserBundle\Model\UserManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Validator\Constraint;
-use Langgas\SisdikBundle\Form\UserRegisterFormType;
-use Langgas\SisdikBundle\Form\UserFormType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Menu\MenuItem;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- *
- * @author Ihsan Faisal
  * @Route("/user")
  * @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
- *
  */
 class SettingsUserController extends Controller
 {
     /**
      * @Route("/", name="settings_user")
-     * @Template()
      * @Secure(roles="ROLE_SUPER_ADMIN")
+     * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->setCurrentMenu(1);
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SimpleUserSearchType($this->container));
+        $searchform = $this->createForm('sisdik_cariuser');
 
-        $querybuilder = $em->createQueryBuilder()->select('u')->from('LanggasSisdikBundle:User', 'u')
-                ->orderBy('u.username', 'ASC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('u')
+            ->from('LanggasSisdikBundle:User', 'u')
+            ->orderBy('u.username', 'ASC')
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
@@ -77,40 +68,31 @@ class SettingsUserController extends Controller
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'form' => $searchform->createView(), 'pagination' => $pagination,
-        );
+        return [
+            'form' => $searchform->createView(),
+            'pagination' => $pagination,
+        ];
     }
 
     /**
-     * @Template()
      * @Route("/edit/{id}", name="settings_user_edit")
      * @Secure(roles="ROLE_SUPER_ADMIN")
+     * @Template()
      */
-    public function editAction(Request $request, $id) {
+    public function editAction(Request $request, $id)
+    {
         $this->setCurrentMenu(1);
 
         $em = $this->getDoctrine()->getManager();
 
         $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserBy(array(
-                    'id' => $id
-                ));
+        $user = $userManager->findUserBy([
+            'id' => $id,
+        ]);
 
         $roleproperties = $user->getRoles();
 
-        if ($user->getSekolah() !== NULL) {
-            if (in_array('ROLE_SISWA', $roleproperties)) {
-                $formoption = 2;
-            } else {
-                $formoption = 3;
-            }
-        } else {
-            // role user and super admin
-            $formoption = 1;
-        }
-
-        $form = $this->createForm(new UserFormType($this->container, $formoption), $user);
+        $form = $this->createForm('sisdik_useredit', $user, ['mode' => 1]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
@@ -118,13 +100,12 @@ class SettingsUserController extends Controller
             if ($form->isValid()) {
                 $roleselected = $form->getData()->getRoles();
 
-                if (in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected)
-                        || in_array('ROLE_WALI_KELAS', $roleselected)) {
+                if (in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected) || in_array('ROLE_WALI_KELAS', $roleselected)) {
                     $guru = $em->getRepository('LanggasSisdikBundle:Guru')
-                            ->findOneBy(
-                                    array(
-                                        'username' => $user->getUsername()
-                                    ));
+                        ->findOneBy([
+                            'username' => $user->getUsername()
+                        ])
+                    ;
                     if (is_object($guru) && $guru instanceof Guru) {
                         $user->setGuru($guru);
                     } else {
@@ -134,19 +115,17 @@ class SettingsUserController extends Controller
                         $user->setGuru($guru);
                     }
                 }
-                if (!(in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected)
-                        || in_array('ROLE_WALI_KELAS', $roleselected))) {
+
+                if (!(in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected) || in_array('ROLE_WALI_KELAS', $roleselected))) {
                     $user->setGuru(null);
                 }
 
-                if (in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_ADMIN', $roleselected)) {
+                if (in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_ADMIN', $roleselected)) {
                     $staf = $em->getRepository('LanggasSisdikBundle:Staf')
-                            ->findOneBy(
-                                    array(
-                                        'username' => $user->getUsername()
-                                    ));
+                        ->findOneBy([
+                            'username' => $user->getUsername()
+                        ])
+                    ;
                     if (is_object($staf) && $staf instanceof Staf) {
                         $user->setStaf($staf);
                     } else {
@@ -156,9 +135,8 @@ class SettingsUserController extends Controller
                         $user->setStaf($staf);
                     }
                 }
-                if (!(in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_ADMIN', $roleselected))) {
+
+                if (!(in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_ADMIN', $roleselected))) {
                     $user->setStaf(null);
                 }
 
@@ -166,21 +144,22 @@ class SettingsUserController extends Controller
 
                 $user = $form->getData();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.user.updated',
-                                                array(
-                                                    '%username%' => $user->getUsername()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.user.updated', [
+                        '%username%' => $user->getUsername(),
+                    ]))
+                ;
 
                 return $this->redirect($this->generateUrl('settings_user'));
             }
         }
 
-        return array(
-            'form' => $form->createView(), 'id' => $id
-        );
+        return [
+            'form' => $form->createView(),
+            'id' => $id,
+        ];
     }
 
     /**
@@ -188,7 +167,8 @@ class SettingsUserController extends Controller
      * @Secure(roles="ROLE_SUPER_ADMIN")
      * @Template("LanggasSisdikBundle:SettingsUser:register.ns.html.twig")
      */
-    public function registerNoSchoolAction(Request $request) {
+    public function registerNoSchoolAction(Request $request)
+    {
         $this->setCurrentMenu(1);
 
         $em = $this->getDoctrine()->getManager();
@@ -196,46 +176,45 @@ class SettingsUserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $form = $this->createForm(new UserRegisterFormType($this->container, 1), $user);
+        $form = $this->createForm('sisdik_user', $user, ['mode' => 1]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
-
             $data = $form->getData();
+
             if (is_numeric($data->getUsername())) {
                 $message = $this->get('translator')->trans('alert.username.numeric.forstudent');
                 $form->get('username')->addError(new FormError($message));
             }
 
             if ($form->isValid()) {
-
                 $user->setConfirmationToken(null);
                 $user->setEnabled(true);
 
                 $userManager->updateUser($user);
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.user.inserted',
-                                                array(
-                                                    '%username%' => $user->getUsername()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.user.inserted', [
+                        '%username%' => $user->getUsername(),
+                    ]));
 
                 return $this->redirect($this->generateUrl('settings_user'));
             }
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
      * @Route("/register/ws", name="settings_user_register_withschool")
      * @Template("LanggasSisdikBundle:SettingsUser:register.ws.html.twig")
      */
-    public function registerWithSchoolAction(Request $request) {
+    public function registerWithSchoolAction(Request $request)
+    {
         if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->setCurrentMenu(1);
         } else {
@@ -247,7 +226,7 @@ class SettingsUserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $form = $this->createForm(new UserRegisterFormType($this->container, 2), $user);
+        $form = $this->createForm('sisdik_registeruser', $user, ['mode' => 2]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
@@ -259,19 +238,15 @@ class SettingsUserController extends Controller
             }
 
             if ($form->isValid()) {
-
                 $user->setConfirmationToken(null);
                 $user->setEnabled(true);
 
                 $roleselected = $form->getData()->getRoles();
 
-                if (in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected)
-                        || in_array('ROLE_WALI_KELAS', $roleselected)) {
-                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')
-                            ->findOneBy(
-                                    array(
-                                        'username' => $user->getUsername()
-                                    ));
+                if (in_array('ROLE_GURU', $roleselected) || in_array('ROLE_GURU_PIKET', $roleselected) || in_array('ROLE_WALI_KELAS', $roleselected)) {
+                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')->findOneBy([
+                        'username' => $user->getUsername(),
+                    ]);
                     if (is_object($guru) && $guru instanceof Guru) {
                         $user->setGuru($guru);
                     } else {
@@ -283,14 +258,10 @@ class SettingsUserController extends Controller
                     }
                 }
 
-                if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_ADMIN', $roleselected)) {
-                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')
-                            ->findOneBy(
-                                    array(
-                                        'username' => $user->getUsername()
-                                    ));
+                if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_WAKIL_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_ADMIN', $roleselected)) {
+                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')->findOneBy([
+                        'username' => $user->getUsername(),
+                    ]);
                     if (is_object($staf) && $staf instanceof Staf) {
                         $user->setStaf($staf);
                     } else {
@@ -304,13 +275,13 @@ class SettingsUserController extends Controller
 
                 $userManager->updateUser($user);
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.user.inserted',
-                                                array(
-                                                    '%username%' => $user->getUsername()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.user.inserted', [
+                        '%username%' => $user->getUsername(),
+                    ]))
+                ;
 
                 if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
                     return $this->redirect($this->generateUrl('settings_user'));
@@ -320,16 +291,17 @@ class SettingsUserController extends Controller
             }
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
-        );
+        ];
     }
 
     /**
      * @Route("/delete/{id}/{confirmed}", name="settings_user_delete", defaults={"confirmed"=0}, requirements={"id"="\d+"})
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
-    public function deleteAction($id, $confirmed) {
+    public function deleteAction($id, $confirmed)
+    {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('LanggasSisdikBundle:User');
         $user = $repository->find($id);
@@ -339,14 +311,13 @@ class SettingsUserController extends Controller
             try {
                 $this->container->get('fos_user.user_manager')->deleteUser($user);
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.user.deleted',
-                                                array(
-                                                    '%username%' => $username
-                                                )));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.user.deleted', [
+                        '%username%' => $username,
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
@@ -355,14 +326,13 @@ class SettingsUserController extends Controller
             return $this->redirect($this->generateUrl('settings_user'));
         }
 
-        // should be returned to the originated page
-        $this->get('session')->getFlashBag()
-                ->add('error',
-                        $this->get('translator')
-                                ->trans('flash.settings.user.fail.delete',
-                                        array(
-                                            '%username%' => $username
-                                        )));
+        $this
+            ->get('session')
+            ->getFlashBag()
+            ->add('error', $this->get('translator')->trans('flash.settings.user.fail.delete', [
+                '%username%' => $username,
+            ]))
+        ;
 
         return $this->redirect($this->generateUrl('settings_user'));
     }
@@ -372,7 +342,8 @@ class SettingsUserController extends Controller
      * @Route("/inschool/list", name="settings_user_inschool_list")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function inschoolListAction(Request $request) {
+    public function inschoolListAction(Request $request)
+    {
         $this->setCurrentMenu(2);
 
         $em = $this->getDoctrine()->getManager();
@@ -381,10 +352,14 @@ class SettingsUserController extends Controller
         $searchcondition = '';
         $searchkey = '';
 
-        $searchform = $this->createForm(new SimpleSearchFormType());
+        $searchform = $this->createForm('cari');
 
-        $querybuilder = $em->createQueryBuilder()->select('u')->from('LanggasSisdikBundle:User', 'u')
-                ->where("u.sekolah != ''")->orderBy('u.username', 'ASC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('u')
+            ->from('LanggasSisdikBundle:User', 'u')
+            ->where("u.sekolah != ''")
+            ->orderBy('u.username', 'ASC')
+        ;
 
         $searchform->submit($request);
         $searchdata = $searchform->getData();
@@ -398,11 +373,13 @@ class SettingsUserController extends Controller
         }
 
         if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            $this->get('session')->getFlashBag()
-                    ->add('info', $this->get('translator')->trans('flash.settings.user.message1'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('info', $this->get('translator')->trans('flash.settings.user.message1'))
+            ;
 
-            $querybuilder->andWhere("u.username != :username")
-                    ->setParameter("username", $user->getUsername());
+            $querybuilder->andWhere("u.username != :username")->setParameter("username", $user->getUsername());
 
         } else {
             $sekolah = $user->getSekolah();
@@ -410,43 +387,48 @@ class SettingsUserController extends Controller
                 throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
             }
 
-            $querybuilder->andWhere("u.sekolah = :sekolah")->setParameter("sekolah", $sekolah->getId());
+            $querybuilder
+                ->andWhere("u.sekolah = :sekolah")
+                ->setParameter("sekolah", $sekolah->getId())
+            ;
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'form' => $searchform->createView(), 'pagination' => $pagination,
-        );
+        return [
+            'form' => $searchform->createView(),
+            'pagination' => $pagination,
+        ];
     }
 
     /**
-     * @Template()
      * @Route("/inschool/edit/{id}/{page}", name="settings_user_inschool_edit", defaults={"page"=1})
      * @Secure(roles="ROLE_ADMIN")
+     * @Template()
      */
-    public function inschoolEditAction(Request $request, $id, $page) {
+    public function inschoolEditAction(Request $request, $id, $page)
+    {
         $this->setCurrentMenu(2);
 
         $em = $this->getDoctrine()->getManager();
 
         $userManager = $this->container->get('fos_user.user_manager');
-        $user = $userManager->findUserBy(array(
-                    'id' => $id
-                ));
+        $user = $userManager->findUserBy([
+            'id' => $id,
+        ]);
 
         $roleproperties = $user->getRoles();
 
         if ($user->getSekolah() !== NULL) {
             if (in_array('ROLE_SISWA', $roleproperties)) {
-                $formoption = 2;
+                $mode = 2;
             } else {
-                $formoption = 3;
+                $mode = 3;
             }
         }
 
-        $form = $this->createForm(new UserFormType($this->container, $formoption), $user);
+        $form = $this->createForm('sisdik_useredit', $user, ['mode' => $mode]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
@@ -459,11 +441,9 @@ class SettingsUserController extends Controller
                 }
 
                 if (in_array('ROLE_GURU', $roleselected)) {
-                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')
-                            ->findOneBy(
-                                    array(
-                                        'username' => $user->getUsername()
-                                    ));
+                    $guru = $em->getRepository('LanggasSisdikBundle:Guru')->findOneBy([
+                        'username' => $user->getUsername(),
+                    ]);
                     if (is_object($guru) && $guru instanceof Guru) {
                         $user->setGuru($guru);
                     } else {
@@ -473,18 +453,15 @@ class SettingsUserController extends Controller
                         $user->setGuru($guru);
                     }
                 }
+
                 if (!in_array('ROLE_GURU', $roleselected)) {
                     $user->setGuru(null);
                 }
 
-                if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_WALI_KELAS', $roleselected)
-                        || in_array('ROLE_ADMIN', $roleselected)) {
-                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')
-                            ->findOneBy(
-                                    array(
-                                        'username' => $user->getUsername()
-                                    ));
+                if (in_array('ROLE_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_WALI_KELAS', $roleselected) || in_array('ROLE_ADMIN', $roleselected)) {
+                    $staf = $em->getRepository('LanggasSisdikBundle:Staf')->findOneBy([
+                        'username' => $user->getUsername(),
+                    ]);
                     if (is_object($staf) && $staf instanceof Staf) {
                         $user->setStaf($staf);
                     } else {
@@ -494,42 +471,40 @@ class SettingsUserController extends Controller
                         $user->setStaf($staf);
                     }
                 }
-                if (!(in_array('ROLE_KEPALA_SEKOLAH', $roleselected)
-                        || in_array('ROLE_WALI_KELAS', $roleselected)
-                        || in_array('ROLE_ADMIN', $roleselected))) {
+
+                if (!(in_array('ROLE_KEPALA_SEKOLAH', $roleselected) || in_array('ROLE_WALI_KELAS', $roleselected) || in_array('ROLE_ADMIN', $roleselected))) {
                     $user->setStaf(null);
                 }
 
                 $userManager->updateUser($user);
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.user.updated',
-                                                array(
-                                                    '%username%' => $user->getUsername()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.user.updated', [
+                        '%username%' => $user->getUsername(),
+                    ]))
+                ;
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('settings_user_inschool_list',
-                                                array(
-                                                    'page' => $page
-                                                )));
+                return $this->redirect($this->generateUrl('settings_user_inschool_list', [
+                    'page' => $page,
+                ]));
             }
         }
 
-        return array(
-            'form' => $form->createView(), 'id' => $id, 'page' => $page
-        );
+        return [
+            'form' => $form->createView(),
+            'id' => $id,
+            'page' => $page,
+        ];
     }
 
     /**
      * @Route("/inschool/delete/{id}/{confirmed}", name="settings_user_inschool_delete", defaults={"confirmed"=0}, requirements={"id"="\d+"})
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function inschoolDeleteAction($id, $confirmed) {
+    public function inschoolDeleteAction($id, $confirmed)
+    {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('LanggasSisdikBundle:User');
         $user = $repository->find($id);
@@ -539,14 +514,13 @@ class SettingsUserController extends Controller
             try {
                 $this->container->get('fos_user.user_manager')->deleteUser($user);
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.user.deleted',
-                                                array(
-                                                    '%username%' => $username
-                                                )));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.user.deleted', [
+                        '%username%' => $username,
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
@@ -555,25 +529,27 @@ class SettingsUserController extends Controller
             return $this->redirect($this->generateUrl('settings_user_inschool_list'));
         }
 
-        // should be returned to the originated page
-        $this->get('session')->getFlashBag()
-                ->add('error',
-                        $this->get('translator')
-                                ->trans('flash.settings.user.fail.delete',
-                                        array(
-                                            '%username%' => $username
-                                        )));
+        $this
+            ->get('session')
+            ->getFlashBag()
+            ->add('error', $this->get('translator')->trans('flash.settings.user.fail.delete', [
+                '%username%' => $username,
+            ]))
+        ;
 
         return $this->redirect($this->generateUrl('settings_user_inschool_list'));
     }
 
-    private function setCurrentMenu($option = 1) {
+    private function setCurrentMenu($option = 1)
+    {
+        $translator = $this->get('translator');
+
         if ($option == 1) {
             $menu = $this->get('langgas_sisdik.menu.main');
-            $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', array(), 'navigations')][$this->get('translator')->trans('links.alluser', array(), 'navigations')]->setCurrent(true);
-        } else if ($option == 2) {
+            $menu[$translator->trans('headings.pengaturan.sisdik', [], 'navigations')][$translator->trans('links.alluser', [], 'navigations')]->setCurrent(true);
+        } elseif ($option == 2) {
             $menu = $this->get('langgas_sisdik.menu.main');
-            $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.user', array(), 'navigations')]->setCurrent(true);
+            $menu[$translator->trans('headings.setting', [], 'navigations')][$translator->trans('links.user', [], 'navigations')]->setCurrent(true);
         }
     }
 }
