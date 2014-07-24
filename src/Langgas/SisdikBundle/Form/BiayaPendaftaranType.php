@@ -38,6 +38,11 @@ class BiayaPendaftaranType extends AbstractType
     private $nominal;
 
     /**
+     * @var Sekolah
+     */
+    private $sekolah;
+
+    /**
      * @InjectParams({
      *     "securityContext" = @Inject("security.context"),
      *     "entityManager" = @Inject("doctrine.orm.entity_manager")
@@ -50,6 +55,8 @@ class BiayaPendaftaranType extends AbstractType
     {
         $this->securityContext = $securityContext;
         $this->entityManager = $entityManager;
+
+        $this->sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     /**
@@ -74,18 +81,16 @@ class BiayaPendaftaranType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
-        $em = $this->entityManager;
-
         $this->setMode($options['mode']);
         $this->setNominal($options['nominal']);
 
-        $querybuilder1 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Tahun', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.tahun', 'DESC')
-            ->setParameter('sekolah', $sekolah)
+        $querybuilder1 = $this->entityManager
+            ->createQueryBuilder()
+            ->select('tahun')
+            ->from('LanggasSisdikBundle:Tahun', 'tahun')
+            ->where('tahun.sekolah = :sekolah')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->setParameter('sekolah', $this->sekolah)
         ;
         $builder
             ->add('tahun', 'entity', [
@@ -105,12 +110,13 @@ class BiayaPendaftaranType extends AbstractType
             ])
         ;
 
-        $querybuilder2 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Gelombang', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.urutan', 'ASC')
-            ->setParameter('sekolah', $sekolah)
+        $querybuilder2 = $this->entityManager
+            ->createQueryBuilder()
+            ->select('gelombang')
+            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
+            ->where('gelombang.sekolah = :sekolah')
+            ->orderBy('gelombang.urutan', 'ASC')
+            ->setParameter('sekolah', $this->sekolah)
         ;
         $builder
             ->add('gelombang', 'entity', [
@@ -139,13 +145,13 @@ class BiayaPendaftaranType extends AbstractType
             ;
         }
 
-        $querybuilder3 = $em
+        $querybuilder3 = $this->entityManager
             ->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Jenisbiaya', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.nama', 'ASC')
-            ->setParameter('sekolah', $sekolah)
+            ->select('jenisbiaya')
+            ->from('LanggasSisdikBundle:Jenisbiaya', 'jenisbiaya')
+            ->where('jenisbiaya.sekolah = :sekolah')
+            ->orderBy('jenisbiaya.nama', 'ASC')
+            ->setParameter('sekolah', $this->sekolah)
         ;
         $builder
             ->add('jenisbiaya', 'entity', [

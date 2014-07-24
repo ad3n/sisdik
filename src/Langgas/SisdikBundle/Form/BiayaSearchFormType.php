@@ -27,6 +27,11 @@ class BiayaSearchFormType extends AbstractType
     private $entityManager;
 
     /**
+     * @var Sekolah
+     */
+    private $sekolah;
+
+    /**
      * @InjectParams({
      *     "securityContext" = @Inject("security.context"),
      *     "entityManager" = @Inject("doctrine.orm.entity_manager")
@@ -39,19 +44,19 @@ class BiayaSearchFormType extends AbstractType
     {
         $this->securityContext = $securityContext;
         $this->entityManager = $entityManager;
+
+        $this->sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
-        $em = $this->entityManager;
-
-        $querybuilder1 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Tahun', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.tahun', 'DESC')
-            ->setParameter('sekolah', $sekolah)
+        $querybuilder1 = $this->entityManager
+            ->createQueryBuilder()
+            ->select('tahun')
+            ->from('LanggasSisdikBundle:Tahun', 'gelombang')
+            ->where('gelombang.sekolah = :sekolah')
+            ->orderBy('gelombang.tahun', 'DESC')
+            ->setParameter('sekolah', $this->sekolah)
         ;
         $builder
             ->add('tahun', 'entity', [
@@ -71,12 +76,13 @@ class BiayaSearchFormType extends AbstractType
             ])
         ;
 
-        $querybuilder2 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Gelombang', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.urutan', 'ASC')
-            ->setParameter('sekolah', $sekolah)
+        $querybuilder2 = $this->entityManager
+            ->createQueryBuilder()
+            ->select('gelombang')
+            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
+            ->where('gelombang.sekolah = :sekolah')
+            ->orderBy('gelombang.urutan', 'ASC')
+            ->setParameter('sekolah', $this->sekolah)
         ;
         $builder
             ->add('gelombang', 'entity', [
