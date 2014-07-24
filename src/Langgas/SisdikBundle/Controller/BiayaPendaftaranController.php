@@ -2,10 +2,8 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
-use Langgas\SisdikBundle\Form\ConfirmationType;
 use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Form\BiayaPendaftaranType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -205,7 +203,9 @@ class BiayaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
-        $form = $this->createForm(new ConfirmationType($this->container, uniqid()));
+        $form = $this->createForm('sisdik_confirm', null, [
+            'sessiondata' => uniqid(),
+        ]);
 
         $request = $this->getRequest();
         if ($request->getMethod() == "POST") {
