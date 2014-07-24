@@ -2,12 +2,14 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,30 +17,36 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class EntityHiddenType extends AbstractType
 {
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
-    protected $objectManager;
+    private $entityManager;
 
     /**
-     * @param ObjectManager $objectManager
+     * @InjectParams({
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param EntityManager $entityManager
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new EntityToIdTransformer($this->objectManager, $options['class']);
+        $transformer = new EntityToIdTransformer($this->entityManager, $options['class']);
         $builder->addModelTransformer($transformer);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-            'class' => null,
-            'invalid_message' => 'Entity tak ditemukan.',
-        ]);
+        $resolver
+            ->setDefaults([
+                'class' => null,
+                'invalid_message' => 'Entity tak ditemukan.',
+            ])
+        ;
     }
 
     public function getParent()
@@ -48,6 +56,6 @@ class EntityHiddenType extends AbstractType
 
     public function getName()
     {
-        return 'entity_hidden';
+        return 'sisdik_entityhidden';
     }
 }

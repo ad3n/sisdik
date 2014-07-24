@@ -2,12 +2,14 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Form\EventListener\DokumenFieldSubscriber;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,45 +17,49 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class DokumenSiswaType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var EntityManager
      */
-    private $container;
+    private $entityManager;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param EntityManager $entityManager
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
-            ->add('jenisDokumenSiswa', new EntityHiddenType($em), [
+            ->add('jenisDokumenSiswa', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:JenisDokumenSiswa',
                 'label_render' => false,
             ])
-            ->add('siswa', new EntityHiddenType($em), [
+            ->add('siswa', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:Siswa',
                 'label_render' => false,
             ])
         ;
 
-        $builder->addEventSubscriber(new DokumenFieldSubscriber($em));
+        $builder->addEventSubscriber(new DokumenFieldSubscriber($this->entityManager));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => 'Langgas\SisdikBundle\Entity\DokumenSiswa',
-        ]);
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Langgas\SisdikBundle\Entity\DokumenSiswa',
+            ])
+        ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_dokumensiswatype';
+        return 'sisdik_dokumensiswa';
     }
 }

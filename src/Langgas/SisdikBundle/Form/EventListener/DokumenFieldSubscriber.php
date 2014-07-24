@@ -2,7 +2,7 @@
 
 namespace Langgas\SisdikBundle\Form\EventListener;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\DokumenSiswa;
 use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
 use Symfony\Component\Form\FormEvent;
@@ -15,16 +15,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DokumenFieldSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
-    private $objectManager;
+    private $entityManager;
 
     /**
-     * @param ObjectManager $objectManager
+     * @param EntityManager $entityManager
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -77,7 +77,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
         $data = $event->getData();
 
         $jenisDokumen = $this
-            ->objectManager
+            ->entityManager
             ->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')
             ->find($data['jenisDokumenSiswa'])
         ;
