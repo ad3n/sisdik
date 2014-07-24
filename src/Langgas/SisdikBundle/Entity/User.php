@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;

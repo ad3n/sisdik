@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
