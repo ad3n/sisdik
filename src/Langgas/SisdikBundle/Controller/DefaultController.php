@@ -1,16 +1,12 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
 use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\KalenderPendidikan;
-use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Langgas\SisdikBundle\Util\Calendar;
-use Langgas\SisdikBundle\Entity\SiswaKelas;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
@@ -90,17 +86,11 @@ class DefaultController extends Controller
         ];
     }
 
+    /**
+     * @return Sekolah
+     */
     private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return null;
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }
