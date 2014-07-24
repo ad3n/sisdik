@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
@@ -30,7 +31,7 @@ class BiayaPendaftaranController extends Controller
     {
         $this->get('session')->remove('biaya_confirm');
 
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -85,7 +86,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function showAction($id)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -111,7 +112,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function newAction()
     {
-        $this->isRegisteredToSchool();
+        $this->getSekolah();
         $this->setCurrentMenu();
 
         $entity = new BiayaPendaftaran;
@@ -134,7 +135,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function createAction(Request $request)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $entity = new BiayaPendaftaran;
@@ -193,7 +194,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function editConfirmAction($id)
     {
-        $this->isRegisteredToSchool();
+        $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -253,7 +254,7 @@ class BiayaPendaftaranController extends Controller
             ]));
         }
 
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -297,7 +298,7 @@ class BiayaPendaftaranController extends Controller
             ]));
         }
 
-        $this->isRegisteredToSchool();
+        $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -395,7 +396,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $this->isRegisteredToSchool();
+        $this->getSekolah();
 
         $form = $this->createDeleteForm($id);
         $form->submit($request);
@@ -451,7 +452,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function getFeeInfoTotalAction($tahun, $gelombang, $json)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
         $entities = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->findBy([
@@ -486,7 +487,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function getFeeInfoRemainAction($tahun, $gelombang, $usedfee, $json = 0)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
         $usedfee = preg_replace('/,$/', '', $usedfee);
@@ -531,7 +532,7 @@ class BiayaPendaftaranController extends Controller
      */
     public function getFeeInfoAction($id, $type = 1)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
@@ -567,17 +568,11 @@ class BiayaPendaftaranController extends Controller
         $menu[$this->get('translator')->trans('headings.fee', [], 'navigations')][$this->get('translator')->trans('links.fee.registration', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }
