@@ -176,7 +176,7 @@ class SettingsUserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $form = $this->createForm('sisdik_user', $user, ['mode' => 1]);
+        $form = $this->createForm('sisdik_registeruser', $user, ['mode' => 1]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
