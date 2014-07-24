@@ -564,8 +564,10 @@ class BiayaPendaftaranController extends Controller
 
     private function setCurrentMenu()
     {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.fee', [], 'navigations')][$this->get('translator')->trans('links.fee.registration', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.fee', [], 'navigations')][$translator->trans('links.fee.registration', [], 'navigations')]->setCurrent(true);
     }
 
     /**
