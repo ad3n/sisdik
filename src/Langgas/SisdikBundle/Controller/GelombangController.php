@@ -1,60 +1,55 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Gelombang;
-use Langgas\SisdikBundle\Form\GelombangType;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use JMS\SecurityExtraBundle\Annotation\Secure;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Gelombang controller.
- *
- * @Route("/admissiongroup")
+ * @Route("/gelombang-penerimaan")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
  */
 class GelombangController extends Controller
 {
     /**
-     * Lists all Gelombang entities.
-     *
      * @Route("/", name="settings_admissiongroup")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Gelombang', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.urutan', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
-        }
+        $querybuilder = $em->createQueryBuilder()
+            ->select('gelombang')
+            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
+            ->where('gelombang.sekolah = :sekolah')
+            ->orderBy('gelombang.urutan', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination
-        );
+        return [
+            'pagination' => $pagination,
+        ];
     }
 
     /**
-     * Finds and displays a Gelombang entity.
-     *
      * @Route("/{id}/show", name="settings_admissiongroup_show")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -67,84 +62,75 @@ class GelombangController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new Gelombang entity.
-     *
      * @Route("/new", name="settings_admissiongroup_new")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
-        $entity = new Gelombang();
-        $form = $this->createForm(new GelombangType($this->container), $entity);
+        $entity = new Gelombang;
+        $form = $this->createForm('sisdik_gelombang', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new Gelombang entity.
-     *
      * @Route("/create", name="settings_admissiongroup_create")
      * @Method("post")
      * @Template("LanggasSisdikBundle:Gelombang:new.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function createAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction()
+    {
         $this->setCurrentMenu();
 
-        $entity = new Gelombang();
-        $request = $this->getRequest();
-        $form = $this->createForm(new GelombangType($this->container), $entity);
-        $form->submit($request);
+        $entity = new Gelombang;
+
+        $form = $this->createForm('sisdik_gelombang', $entity);
+
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.settings.admissiongroup.inserted',
-                                            array(
-                                                '%admissiongroup%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.settings.admissiongroup.inserted', [
+                    '%admissiongroup%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('settings_admissiongroup_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
-
+            return $this->redirect($this->generateUrl('settings_admissiongroup_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing Gelombang entity.
-     *
      * @Route("/{id}/edit", name="settings_admissiongroup_edit")
      * @Template()
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -155,25 +141,23 @@ class GelombangController extends Controller
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new GelombangType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_gelombang', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing Gelombang entity.
-     *
      * @Route("/{id}/update", name="settings_admissiongroup_update")
      * @Method("post")
      * @Template("LanggasSisdikBundle:Gelombang:edit.html.twig")
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function updateAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -184,54 +168,44 @@ class GelombangController extends Controller
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new GelombangType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_gelombang', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        $request = $this->getRequest();
-
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.settings.admissiongroup.updated',
-                                            array(
-                                                '%admissiongroup%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.settings.admissiongroup.updated', [
+                    '%admissiongroup%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('settings_admissiongroup_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('settings_admissiongroup_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a Gelombang entity.
-     *
      * @Route("/{id}/delete", name="settings_admissiongroup_delete")
      * @Method("post")
-     * @Secure(roles="ROLE_ADMIN")
      */
-    public function deleteAction($id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction($id)
+    {
         $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
 
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -245,53 +219,54 @@ class GelombangController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.settings.admissiongroup.deleted',
-                                                array(
-                                                    '%admissiongroup%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.settings.admissiongroup.deleted', [
+                        '%admissiongroup%' => $entity->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')->trans('flash.settings.admissiongroup.fail.delete'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.settings.admissiongroup.fail.delete'))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('settings_admissiongroup',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('settings_admissiongroup'));
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    /**
+     * @param  integer                      $id
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.admissiongroup', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.setting', array(), 'navigations')][$translator->trans('links.admissiongroup', array(), 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
