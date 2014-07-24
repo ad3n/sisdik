@@ -1,7 +1,7 @@
 <?php
 namespace Langgas\SisdikBundle\Form;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,42 +22,29 @@ class BiayaSearchFormType extends AbstractType
     private $securityContext;
 
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var Sekolah
-     */
-    private $sekolah;
-
-    /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
-     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     *     "securityContext" = @Inject("security.context")
      * })
      *
      * @param SecurityContext $securityContext
-     * @param EntityManager   $entityManager
      */
-    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+    public function __construct(SecurityContext $securityContext)
     {
         $this->securityContext = $securityContext;
-        $this->entityManager = $entityManager;
+    }
 
-        $this->sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $querybuilder1 = $this->entityManager
-            ->createQueryBuilder()
-            ->select('tahun')
-            ->from('LanggasSisdikBundle:Tahun', 'gelombang')
-            ->where('gelombang.sekolah = :sekolah')
-            ->orderBy('gelombang.tahun', 'DESC')
-            ->setParameter('sekolah', $this->sekolah)
-        ;
+        $sekolah = $this->getSekolah();
+
         $builder
             ->add('tahun', 'entity', [
                 'class' => 'LanggasSisdikBundle:Tahun',
@@ -67,24 +54,21 @@ class BiayaSearchFormType extends AbstractType
                 'property' => 'tahun',
                 'empty_value' => 'label.selectyear',
                 'required' => false,
-                'query_builder' => $querybuilder1,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tahun')
+                        ->where('tahun.sekolah = :sekolah')
+                        ->orderBy('tahun.tahun', 'DESC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'small'
                 ],
                 'label_render' => false,
                 'horizontal' => false,
             ])
-        ;
-
-        $querybuilder2 = $this->entityManager
-            ->createQueryBuilder()
-            ->select('gelombang')
-            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
-            ->where('gelombang.sekolah = :sekolah')
-            ->orderBy('gelombang.urutan', 'ASC')
-            ->setParameter('sekolah', $this->sekolah)
-        ;
-        $builder
             ->add('gelombang', 'entity', [
                 'class' => 'LanggasSisdikBundle:Gelombang',
                 'label' => 'label.admissiongroup.entry',
@@ -93,16 +77,21 @@ class BiayaSearchFormType extends AbstractType
                 'property' => 'nama',
                 'empty_value' => 'label.selectadmissiongroup',
                 'required' => false,
-                'query_builder' => $querybuilder2,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('gelombang')
+                        ->where('gelombang.sekolah = :sekolah')
+                        ->orderBy('gelombang.urutan', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium'
                 ],
                 'label_render' => false,
                 'horizontal' => false,
             ])
-        ;
-
-        $builder
             ->add('jenisbiaya', null, [
                 'label' => 'label.fee.type.entry',
                 'required' => false,

@@ -1,9 +1,8 @@
 <?php
 namespace Langgas\SisdikBundle\Form;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -23,56 +22,23 @@ class BiayaPendaftaranType extends AbstractType
     private $securityContext;
 
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var string
-     */
-    private $mode;
-
-    /**
-     * @var int
-     */
-    private $nominal;
-
-    /**
-     * @var Sekolah
-     */
-    private $sekolah;
-
-    /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
-     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     *     "securityContext" = @Inject("security.context")
      * })
      *
      * @param SecurityContext $securityContext
-     * @param EntityManager   $entityManager
      */
-    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+    public function __construct(SecurityContext $securityContext)
     {
         $this->securityContext = $securityContext;
-        $this->entityManager = $entityManager;
-
-        $this->sekolah = $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     /**
-     * @param string $mode
+     * @return Sekolah
      */
-    public function setMode($mode)
+    private function getSekolah()
     {
-        $this->mode = $mode;
-    }
-
-    /**
-     * @param int $nominal
-     */
-    public function setNominal($nominal)
-    {
-        $this->nominal = $nominal;
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     /**
@@ -81,17 +47,8 @@ class BiayaPendaftaranType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->setMode($options['mode']);
-        $this->setNominal($options['nominal']);
+        $sekolah = $this->getSekolah();
 
-        $querybuilder1 = $this->entityManager
-            ->createQueryBuilder()
-            ->select('tahun')
-            ->from('LanggasSisdikBundle:Tahun', 'tahun')
-            ->where('tahun.sekolah = :sekolah')
-            ->orderBy('tahun.tahun', 'DESC')
-            ->setParameter('sekolah', $this->sekolah)
-        ;
         $builder
             ->add('tahun', 'entity', [
                 'class' => 'LanggasSisdikBundle:Tahun',
@@ -101,24 +58,21 @@ class BiayaPendaftaranType extends AbstractType
                 'property' => 'tahun',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder1,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tahun')
+                        ->where('tahun.sekolah = :sekolah')
+                        ->orderBy('tahun.tahun', 'DESC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'small',
                 ],
-                'read_only' => $this->mode == 'edit' ? true : false,
+                'read_only' => $options['mode'] == 'edit' ? true : false,
                 'horizontal_input_wrapper_class' => 'col-sm-4 col-md-3 col-lg-2',
             ])
-        ;
-
-        $querybuilder2 = $this->entityManager
-            ->createQueryBuilder()
-            ->select('gelombang')
-            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
-            ->where('gelombang.sekolah = :sekolah')
-            ->orderBy('gelombang.urutan', 'ASC')
-            ->setParameter('sekolah', $this->sekolah)
-        ;
-        $builder
             ->add('gelombang', 'entity', [
                 'class' => 'LanggasSisdikBundle:Gelombang',
                 'label' => 'label.admissiongroup.entry',
@@ -127,32 +81,32 @@ class BiayaPendaftaranType extends AbstractType
                 'property' => 'nama',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder2,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('gelombang')
+                        ->where('gelombang.sekolah = :sekolah')
+                        ->orderBy('gelombang.urutan', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'xlarge',
                 ],
-                'read_only' => $this->mode == 'edit' ? true : false,
+                'read_only' => $options['mode'] == 'edit' ? true : false,
                 'horizontal_input_wrapper_class' => 'col-sm-5 col-md-4 col-lg-3',
             ])
         ;
 
-        if ($this->mode == 'edit') {
+        if ($options['mode'] == 'edit') {
             $builder
                 ->add('nominalSebelumnya', 'hidden', [
                     'required' => false,
-                    'data' => $this->nominal
+                    'data' => $options['nominal'],
                 ])
             ;
         }
 
-        $querybuilder3 = $this->entityManager
-            ->createQueryBuilder()
-            ->select('jenisbiaya')
-            ->from('LanggasSisdikBundle:Jenisbiaya', 'jenisbiaya')
-            ->where('jenisbiaya.sekolah = :sekolah')
-            ->orderBy('jenisbiaya.nama', 'ASC')
-            ->setParameter('sekolah', $this->sekolah)
-        ;
         $builder
             ->add('jenisbiaya', 'entity', [
                 'class' => 'LanggasSisdikBundle:Jenisbiaya',
@@ -162,14 +116,20 @@ class BiayaPendaftaranType extends AbstractType
                 'property' => 'nama',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder3,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('jenisbiaya')
+                        ->where('jenisbiaya.sekolah = :sekolah')
+                        ->orderBy('jenisbiaya.nama', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'xlarge',
                 ],
-                'read_only' => $this->mode == 'edit' ? true : false,
-            ]);
-
-        $builder
+                'read_only' => $options['mode'] == 'edit' ? true : false,
+            ])
             ->add('nominal', 'money', [
                 'currency' => 'IDR',
                 'required' => true,
@@ -192,7 +152,7 @@ class BiayaPendaftaranType extends AbstractType
             ])
         ;
 
-        if ($this->nominal !== null) {
+        if ($options['nominal'] !== null) {
             $builder
                 ->add('captcha', 'captcha', [
                     'attr' => [

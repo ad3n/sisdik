@@ -1,43 +1,21 @@
 <?php
 namespace Langgas\SisdikBundle\Form;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * @FormType
  */
 class ConfirmationType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var string
-     */
-    private $data;
-
-    /**
-     * @param ContainerInterface $container
-     * @param string             $data
-     */
-    public function __construct(ContainerInterface $container, $data)
-    {
-        $this->container = $container;
-        $this->data = $data;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
             ->add('sessiondata', 'hidden', [
-                'data' => $this->data,
+                'data' => $options['sessiondata'],
             ])
             ->add('confirm', 'checkbox', [
                 'label' => 'label.saya.mengerti',
@@ -60,8 +38,17 @@ class ConfirmationType extends AbstractType
         ;
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'sessiondata' => null,
+            ])
+        ;
+    }
+
     public function getName()
     {
-        return 'langgas_sisdikbundle_confirmtype';
+        return 'sisdik_confirm';
     }
 }
