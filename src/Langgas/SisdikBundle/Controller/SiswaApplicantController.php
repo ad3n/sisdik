@@ -1,8 +1,8 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
-use Langgas\SisdikBundle\Form\ConfirmationType;
 
+use Langgas\SisdikBundle\Form\ConfirmationType;
 use Langgas\SisdikBundle\Form\SiswaApplicantSearchType;
 use Langgas\SisdikBundle\Entity\SekolahAsal;
 use Langgas\SisdikBundle\Entity\Referensi;
@@ -697,7 +697,9 @@ class SiswaApplicantController extends Controller
                                             )));
         }
 
-        $form = $this->createForm(new ConfirmationType($this->container, uniqid()));
+        $form = $this->createForm('sisdik_confirm', null, [
+            'sessiondata' => uniqid(),
+        ]);
 
         $request = $this->getRequest();
         if ($request->getMethod() == "POST") {
