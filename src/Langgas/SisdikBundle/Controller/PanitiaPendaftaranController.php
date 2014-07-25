@@ -16,7 +16,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Langgas\SisdikBundle\Form\PanitiaPendaftaranType;
 use Langgas\SisdikBundle\Entity\Personil;
-use Langgas\SisdikBundle\Form\SimpleTahunSearchType;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
@@ -40,7 +39,7 @@ class PanitiaPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
+        $searchform = $this->createForm('sisdik_caritahun');
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('LanggasSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')

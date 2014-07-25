@@ -1,7 +1,7 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
-use Langgas\SisdikBundle\Form\SimpleTahunSearchType;
+
 use Doctrine\DBAL\DBALException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ class JenisDokumenSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SimpleTahunSearchType($this->container));
+        $searchform = $this->createForm('sisdik_caritahun');
 
         $querybuilder = $em->createQueryBuilder()->select('t')
                 ->from('LanggasSisdikBundle:JenisDokumenSiswa', 't')->leftJoin('t.tahun', 't2')
