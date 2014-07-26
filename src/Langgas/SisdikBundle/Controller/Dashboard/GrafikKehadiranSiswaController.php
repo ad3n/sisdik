@@ -1,58 +1,27 @@
 <?php
 
-namespace Langgas\SisdikBundle\Controller;
+namespace Langgas\SisdikBundle\Controller\Dashboard;
 
-use Langgas\SisdikBundle\Entity\User;
-use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
-use Langgas\SisdikBundle\Entity\TahunAkademik;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\KehadiranSiswa;
-use Langgas\SisdikBundle\Entity\Tingkat;
-use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
-use Doctrine\ORM\EntityManager;
 
 /**
- * @Route("/")
+ * @Route("/grafik-kehadiran-siswa")
  */
-class DefaultController extends Controller
+class GrafikKehadiranSiswaController extends Controller
 {
-    public function indexAction()
-    {
-        $securityContext = $this->container->get('security.context');
-
-        if ($securityContext->isGranted([new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')])) {
-            return $this->redirect($this->generateUrl('siswa__kehadiran'));
-        } elseif ($securityContext->isGranted([new Expression('hasRole("ROLE_SUPER_ADMIN")')])) {
-            $response = $this->forward('LanggasSisdikBundle:Default:super');
-        } else {
-            $response = $this->forward('LanggasSisdikBundle:Default:pengelola');
-        }
-
-        return $response;
-    }
-
     /**
+     * @Route("/{tanggal}", name="siswa__kehadiran_grafik")
      * @Template()
      */
-    public function superAction()
-    {
-
-    }
-
-    /**
-     * @Template()
-     */
-    public function pengelolaAction()
+    public function indexAction($tanggal = null)
     {
         $sekolah = $this->getSekolah();
 
-        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademikAktif = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
@@ -62,31 +31,7 @@ class DefaultController extends Controller
             ])
         ;
 
-        $panitiaPendaftaranAktif = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')
-            ->findOneBy([
-                'sekolah' => $sekolah,
-                'aktif' => true,
-            ])
-        ;
-
-        $personilPanitiaPendaftaranAktif = null;
-        if (is_object($panitiaPendaftaranAktif) && $panitiaPendaftaranAktif instanceof PanitiaPendaftaran) {
-            $ketuaPanitiaPendaftaranAktif = $panitiaPendaftaranAktif->getKetuaPanitia()->getName();
-
-            $tempArray = [];
-            foreach ($panitiaPendaftaranAktif->getPanitia() as $personil) {
-                $entity = $em->getRepository('LanggasSisdikBundle:User')->find($personil);
-
-                if ($entity instanceof User) {
-                    $tempArray[] = $entity->getName();
-                } else {
-                    $tempArray[] = $this->get('translator')->trans('label.username.undefined');
-                }
-            }
-            $personilPanitiaPendaftaranAktif = implode(", ", $tempArray);
-        }
-
-        $tanggalTampil = new \DateTime();
+        $tanggalTampil = new \DateTime($tanggal);
         $tanggalSebelumnya = $tanggalTampil->modify('-1 day')->format('Y-m-d');
         $tanggalBerikutnya = $tanggalTampil->modify('+2 day')->format('Y-m-d');
         $tanggalTampil->modify('-1 day');
@@ -183,8 +128,6 @@ class DefaultController extends Controller
 
         return [
             'tahunAkademikAktif' => $tahunAkademikAktif,
-            'panitiaPendaftaranAktif' => $panitiaPendaftaranAktif,
-            'personilPanitiaPendaftaranAktif' => $personilPanitiaPendaftaranAktif,
             'tanggalTampil' => $tanggalTampil,
             'tanggalSebelumnya' => $tanggalSebelumnya,
             'tanggalBerikutnya' => $tanggalBerikutnya,

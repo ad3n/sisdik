@@ -80,20 +80,6 @@ h3 {
     <div class="clearfix"></div>
 {% endfor %}
 
-<div class="clearfix" style="margin-top: 20px;"></div>
-
-{% if tahunAkademikAktif %}
-    <h3 style="margin-bottom: 0;">{{ 'label.tahun.akademik.aktif'|trans|desc("Tahun Akademik Aktif") }}: {{ tahunAkademikAktif.nama }}</h3>
-{% endif %}
-
-{% if panitiaPendaftaranAktif %}
-    <h3 style="margin-bottom: 0;">{{ 'label.active.regcommittee'|trans }}</h3>
-    <p style="text-align: center;">
-        {{ 'leader'|trans }}: {{ panitiaPendaftaranAktif.ketuaPanitia.name }}<br />
-        {{ 'member'|trans }}: {{ personilPanitiaPendaftaranAktif }}
-    </p>
-{% endif %}
-
 {% endblock content %}
 
 {% block javascripts_custom %}
