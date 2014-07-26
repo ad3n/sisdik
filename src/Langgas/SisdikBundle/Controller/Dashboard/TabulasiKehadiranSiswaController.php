@@ -1,5 +1,6 @@
 <?php
-namespace Langgas\SisdikBundle\Controller\Siswa;
+
+namespace Langgas\SisdikBundle\Controller\Dashboard;
 
 use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
@@ -14,10 +15,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * @Route("/kehadiran")
+ * @Route("/siswa/kehadiran")
  * @PreAuthorize("hasRole('ROLE_SISWA')")
  */
-class KehadiranController extends Controller
+class TabulasiKehadiranSiswaController extends Controller
 {
     /**
      * @Route("/{year}/{month}", name="siswa__kehadiran")
@@ -91,17 +92,11 @@ class KehadiranController extends Controller
         ];
     }
 
+    /**
+     * @return Sekolah
+     */
     private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            return null;
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }

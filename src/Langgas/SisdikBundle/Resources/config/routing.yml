@@ -32,11 +32,6 @@ core_controller:
     type:     annotation
     prefix:   /
 
-siswa_controller:
-    resource: "@LanggasSisdikBundle/Controller/Siswa"
-    type:     annotation
-    prefix:   /siswa/
-
 # local APIs ---------------------------------------------------------------------------------- #
 localapi_logsmskeluar:
     resource: "@LanggasSisdikBundle/Controller/LocalAPILogsmsKeluarController.php"
