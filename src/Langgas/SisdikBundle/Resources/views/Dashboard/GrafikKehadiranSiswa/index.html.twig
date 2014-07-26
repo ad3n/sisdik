@@ -27,6 +27,16 @@ h3 {
 #grafik-kehadiran-siswa-total .legendLabel {
     padding: 4px;
 }
+@media screen and (max-width: 320px) {
+    .grafik-container-total {
+        width: 280px;
+        height: 150px;
+    }
+    #grafik-kehadiran-siswa-total {
+        width: 260px;
+        height: 130px;
+    }
+}
 
 .info-kehadiran-kelas {
     display: inline-block;
@@ -59,7 +69,7 @@ h3 {
     <a href="{{ path('siswa__kehadiran_grafik', {'tanggal': tanggalBerikutnya}) }}"><i class="fa fa-arrow-circle-right"></i></a>
 </h3>
 
-<h4 style="text-align: center;">{{ 'informasi.kehadiran.siswa.total'|trans|desc("Informasi Kehadiran Total") }}</h4>
+<h4 style="text-align: center;">{{ 'informasi.kehadiran.siswa.total'|trans({}, 'headings')|desc("Informasi Kehadiran Total") }}</h4>
 <div class="grafik-container-total">
     <div id="grafik-kehadiran-siswa-total"></div>
 </div>
