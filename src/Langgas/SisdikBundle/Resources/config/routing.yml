@@ -55,10 +55,10 @@ localapi_logsmskeluar:
 
 # redirect all non-existent route
 anything:
-    path:     /{path}
+    path:     /{mypath}
     defaults:
         _controller: FrameworkBundle:Redirect:urlRedirect
         path: /
         permanent: true
     requirements:
-        path: ".+"
+        mypath: ".+"
