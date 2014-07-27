@@ -1,57 +1,55 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Langgas\SisdikBundle\Entity\Jenisbiaya;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Jenisbiaya;
-use Langgas\SisdikBundle\Form\JenisbiayaType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Jenisbiaya controller.
- *
- * @Route("/fee/type")
+ * @Route("/jenis-biaya")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class JenisbiayaController extends Controller
 {
     /**
-     * Lists all Jenisbiaya entities.
-     *
      * @Route("/", name="fee_type")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Jenisbiaya', 't')
-                ->where('t.sekolah = :sekolah')->orderBy('t.nama', 'ASC')
-                ->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('jenisbiaya')
+            ->from('LanggasSisdikBundle:Jenisbiaya', 'jenisbiaya')
+            ->where('jenisbiaya.sekolah = :sekolah')
+            ->orderBy('jenisbiaya.nama', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination
-        );
+        return [
+            'pagination' => $pagination,
+        ];
     }
 
     /**
-     * Finds and displays a Jenisbiaya entity.
-     *
      * @Route("/{id}/show", name="fee_type_show")
      * @Template()
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -64,81 +62,75 @@ class JenisbiayaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new Jenisbiaya entity.
-     *
      * @Route("/new", name="fee_type_new")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
-        $entity = new Jenisbiaya();
-        $form = $this->createForm(new JenisbiayaType($this->container), $entity);
+        $entity = new Jenisbiaya;
+        $form = $this->createForm('sisdik_jenisbiaya', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new Jenisbiaya entity.
-     *
      * @Route("/create", name="fee_type_create")
      * @Method("post")
      * @Template("LanggasSisdikBundle:Jenisbiaya:new.html.twig")
      */
-    public function createAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction()
+    {
         $this->setCurrentMenu();
 
-        $entity = new Jenisbiaya();
-        $request = $this->getRequest();
-        $form = $this->createForm(new JenisbiayaType($this->container), $entity);
-        $form->submit($request);
+        $entity = new Jenisbiaya;
+
+        $form = $this->createForm('sisdik_jenisbiaya', $entity);
+
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.fee.type.inserted',
-                                            array(
-                                                '%feetype%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.fee.type.inserted', [
+                    '%feetype%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('fee_type_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('fee_type_show', [
+                'id' => $entity->getId(),
+            ]));
 
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing Jenisbiaya entity.
-     *
      * @Route("/{id}/edit", name="fee_type_edit")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -149,13 +141,14 @@ class JenisbiayaController extends Controller
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new JenisbiayaType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_jenisbiaya', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
@@ -165,8 +158,8 @@ class JenisbiayaController extends Controller
      * @Method("post")
      * @Template("LanggasSisdikBundle:Jenisbiaya:edit.html.twig")
      */
-    public function updateAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -177,53 +170,44 @@ class JenisbiayaController extends Controller
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new JenisbiayaType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_jenisbiaya', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        $request = $this->getRequest();
-
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.fee.type.updated',
-                                            array(
-                                                '%feetype%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.fee.type.updated', [
+                    '%feetype%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('fee_type_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('fee_type_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a Jenisbiaya entity.
-     *
      * @Route("/{id}/delete", name="fee_type_delete")
      * @Method("post")
      */
-    public function deleteAction($id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction($id)
+    {
         $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
 
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -237,52 +221,51 @@ class JenisbiayaController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.fee.type.deleted',
-                                                array(
-                                                    '%feetype%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.fee.type.deleted', [
+                        '%feetype%' => $entity->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.fee.type.fail.delete'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.fee.type.fail.delete'))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('fee_type',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('fee_type'));
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.type', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.fee', [], 'navigations')][$translator->trans('links.fee.type', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
