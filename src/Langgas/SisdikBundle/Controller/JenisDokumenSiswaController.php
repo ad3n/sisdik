@@ -3,77 +3,76 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
-use Langgas\SisdikBundle\Form\JenisDokumenSiswaType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * JenisDokumenSiswa controller.
- *
- * @Route("/jenisdokumensiswa")
+ * @Route("/jenis-dokumen-siswa")
  */
 class JenisDokumenSiswaController extends Controller
 {
-
     /**
-     * Lists all JenisDokumenSiswa entities.
-     *
      * @Route("/", name="jenisdokumensiswa")
      * @PreAuthorize("hasRole('ROLE_ADMIN')")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm('sisdik_caritahun');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('LanggasSisdikBundle:JenisDokumenSiswa', 't')->leftJoin('t.tahun', 't2')
-                ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->AddOrderBy('t.urutan', 'ASC')
-                ->AddOrderBy('t.namaDokumen', 'ASC')->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('jenisDokumenSiswa')
+            ->from('LanggasSisdikBundle:JenisDokumenSiswa', 'jenisDokumenSiswa')
+            ->leftJoin('jenisDokumenSiswa.tahun', 'tahun')
+            ->where('jenisDokumenSiswa.sekolah = :sekolah')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->addOrderBy('jenisDokumenSiswa.urutan', 'ASC')
+            ->addOrderBy('jenisDokumenSiswa.namaDokumen', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
             if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+                $querybuilder->andWhere('jenisDokumenSiswa.tahun = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']);
             }
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination, 'searchform' => $searchform->createView()
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+        ];
     }
 
     /**
-     * Creates a new JenisDokumenSiswa entity.
-     *
      * @Route("/", name="jenisdokumensiswa_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:JenisDokumenSiswa:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
         $this->setCurrentMenu();
 
-        $entity = new JenisDokumenSiswa();
-        $form = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
+        $entity = new JenisDokumenSiswa;
+        $form = $this->createForm('sisdik_jenisdokumensiswa', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -81,56 +80,50 @@ class JenisDokumenSiswaController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.jenis.dokumen.siswa.tersimpan',
-                                            array(
-                                                '%nama%' => $entity->getNamaDokumen()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.jenis.dokumen.siswa.tersimpan', [
+                    '%nama%' => $entity->getNamaDokumen(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('jenisdokumensiswa_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('jenisdokumensiswa_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new JenisDokumenSiswa entity.
-     *
      * @Route("/new", name="jenisdokumensiswa_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
-        $entity = new JenisDokumenSiswa();
-        $form = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
+        $entity = new JenisDokumenSiswa;
+        $form = $this->createForm('sisdik_jenisdokumensiswa', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Finds and displays a JenisDokumenSiswa entity.
-     *
      * @Route("/{id}", name="jenisdokumensiswa_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -143,20 +136,19 @@ class JenisDokumenSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing JenisDokumenSiswa entity.
-     *
      * @Route("/{id}/edit", name="jenisdokumensiswa_edit")
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -167,24 +159,24 @@ class JenisDokumenSiswaController extends Controller
             throw $this->createNotFoundException('Entity JenisDokumenSiswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_jenisdokumensiswa', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing JenisDokumenSiswa entity.
-     *
      * @Route("/{id}", name="jenisdokumensiswa_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:JenisDokumenSiswa:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -196,45 +188,39 @@ class JenisDokumenSiswaController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new JenisDokumenSiswaType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_jenisdokumensiswa', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.jenis.dokumen.siswa.terbarui',
-                                            array(
-                                                '%nama%' => $entity->getNamaDokumen()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.jenis.dokumen.siswa.terbarui', [
+                    '%nama%' => $entity->getNamaDokumen(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('jenisdokumensiswa_edit',
-                                            array(
-                                                'id' => $id
-                                            )));
+            return $this->redirect($this->generateUrl('jenisdokumensiswa_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a JenisDokumenSiswa entity.
-     *
      * @Route("/{id}/delete", name="jenisdokumensiswa_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction(Request $request, $id)
+    {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
@@ -249,58 +235,59 @@ class JenisDokumenSiswaController extends Controller
             try {
                 $em->remove($entity);
                 $em->flush();
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.jenis.dokumen.siswa.terhapus',
-                                                array(
-                                                    '%nama%' => $entity->getNamaDokumen()
-                                                )));
+
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.jenis.dokumen.siswa.terhapus', [
+                        '%nama%' => $entity->getNamaDokumen(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.jenis.dokumen.siswa.gagal.dihapus',
-                                            array(
-                                                '%nama%' => $entity->getNamaDokumen()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.jenis.dokumen.siswa.gagal.dihapus', [
+                    '%nama%' => $entity->getNamaDokumen(),
+                ]))
+            ;
         }
 
         return $this->redirect($this->generateUrl('jenisdokumensiswa'));
     }
 
     /**
-     * Creates a form to delete a JenisDokumenSiswa entity by id.
+     * @param integer $id
      *
-     * @param mixed $id The entity id
-     *
-     * @return Symfony\Component\Form\Form The form
+     * @return Symfony\Component\Form\Form
      */
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.jenisdokumensiswa', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.setting', [], 'navigations')][$translator->trans('links.jenisdokumensiswa', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }

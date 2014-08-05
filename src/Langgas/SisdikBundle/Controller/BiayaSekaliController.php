@@ -302,7 +302,7 @@ class BiayaSekaliController extends Controller
         $translator = $this->get('translator');
 
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$translator->trans('headings.fee', array(), 'navigations')][$translator->trans('links.fee.once', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.fee', [], 'navigations')][$translator->trans('links.fee.once', [], 'navigations')]->setCurrent(true);
     }
 
     /**
