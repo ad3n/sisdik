@@ -79,6 +79,7 @@ h3 {
     display: block;
     text-align: center;
     padding: 2px 0;
+    cursor: pointer;
 }
 .a-hadir-tepat {
     background-color: green;
@@ -141,7 +142,9 @@ label {
                             <p class="day-num">{{ item.num }}</p>
                             {% for k in kehadiran %}
                                 {% if k.tanggal|date('j') == item.num %}
-                                <span class="info-kehadiran {{ k.statusKehadiran }}">
+                                <span class="info-kehadiran {{ k.statusKehadiran }}"
+                                    title="{{ 'tip.keterangan.kehadiran'|trans }}"
+                                    id="popover-{{ k.id }}">
                                     {% if k.statusKehadiran == 'a-hadir-tepat' %}
                                         <i class="fa fa-clock-o fa-lg fa-fw"></i>
                                     {% elseif k.statusKehadiran == 'b-hadir-telat' %}
@@ -167,3 +170,35 @@ label {
 </table>
 
 {% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+{% for items in calendar.cal %}
+{% for item in items %}
+    {% if item.num is null %}
+    {% elseif item.off is not null %}
+    {% else %}
+        {% for k in kehadiran %}
+            {% if k.tanggal|date('j') == item.num %}
+                {% if k.statusKehadiran != 'c-alpa' %}
+                    $("#popover-" + {{ k.id }}).tooltipster({
+                        trigger: 'click',
+                        interactive: true,
+                        theme: 'tooltipster-light',
+                        position: 'top',
+                        content: $(
+                            '<span>'
+                            {% if k.statusKehadiran != 'd-izin' and k.statusKehadiran != 'e-sakit' %}
+                                + '<i class="fa fa-calendar-o"></i> {{ k.jam(false) }}<br>'
+                            {% endif %}
+                            + '<i class="fa fa-comment"></i> {% if k.keteranganStatus %}{{ k.keteranganStatus }}{% else %}--{% endif %}</span>'
+                        )
+                    });
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+{% endfor %}
+</script>
+{% endblock javascripts_custom %}
