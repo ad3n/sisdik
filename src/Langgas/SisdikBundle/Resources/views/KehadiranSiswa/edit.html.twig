@@ -278,7 +278,7 @@ dd {
                         {{ form_widget(formSms) }}
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
-                                <button type="submit"
+                                <button type="submit" id="tombol-kirim-sms"
                             {% if prosesKehadiranSiswa is not null %}
                                 {% if prosesKehadiranSiswa.berhasilKirimSms == 1 %}
                                     {% set labelKirimSMS = 'label.kirim.sms.ulang'|trans %}
@@ -442,6 +442,9 @@ $(document).ready(function() {
                     $('#warna-kirim-sms').removeClass('fa-warning');
                     $('#warna-kirim-sms').addClass('fa-check');
                     $('#warna-kirim-sms').css({'color': 'green'});
+                    $('#tombol-kirim-sms').removeClass('success');
+                    $('#tombol-kirim-sms').addClass('danger');
+                    $('#tombol-kirim-sms').html('{{ 'label.kirim.sms.ulang'|trans }}');
                 }
             } else {
                 $('#loader-kirim-sms').html("An unexpected error occured.");

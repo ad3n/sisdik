@@ -445,10 +445,12 @@ class KehadiranSiswaController extends Controller
             ->leftJoin('kehadiran.siswa', 'siswa')
             ->where('kehadiran.sekolah = :sekolah')
             ->andWhere('kehadiran.kelas = :kelas')
+            ->andWhere('kehadiran.tanggal = :tanggal')
             ->orderBy('kelas.kode')
             ->addOrderBy('siswa.namaLengkap')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('kelas', $kelas)
+            ->setParameter('tanggal', $tanggalTerpilih->format('Y-m-d'))
         ;
         $kehadiranSiswa = $qbKehadiranSiswa->getQuery()->getResult();
 
@@ -472,7 +474,7 @@ class KehadiranSiswaController extends Controller
             ;
             if (!($jadwalKehadiran instanceof JadwalKehadiran)) {
                 $return['responseCode'] = 400;
-                $return['responseText'] = "tidak ada jadwal kehadiran yang sesuai";
+                $return['responseText'] = "tidak ada jadwal yang sesuai atau jadwal tidak diatur untuk bisa mengirim sms";
                 $return = json_encode($return);
 
                 return new Response($return, 200, ['Content-Type' => 'application/json']);
