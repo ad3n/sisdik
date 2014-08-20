@@ -1,28 +1,27 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Langgas\SisdikBundle\Form\SiswaGenerateUsernameConfirmType;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Form\FormError;
 use Langgas\SisdikBundle\Form\SimpleSearchFormType;
 use Langgas\SisdikBundle\Form\SiswaSearchType;
 use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Form\SiswaGenerateUsernameType;
 use Langgas\SisdikBundle\Util\PasswordGenerator;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\User;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Entity\SiswaKelas;
-use Langgas\SisdikBundle\Form\SiswaGenerateUsernameType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * SiswaUsername controller. Manage students' username.
@@ -45,7 +44,8 @@ class SiswaUsernameController extends Controller
      * @Route("/", name="siswa_generate_username")
      * @Template("LanggasSisdikBundle:Siswa:generate.username.html.twig")
      */
-    public function generateUsernameAction() {
+    public function generateUsernameAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -92,7 +92,8 @@ class SiswaUsernameController extends Controller
      * @Route("/confirm/{file}.{type}/{regenerate}", name="siswa_generate_username_confirm")
      * @Template("LanggasSisdikBundle:Siswa:generate.username.confirm.html.twig")
      */
-    public function generateUsernameConfirmAction($file, $type, $regenerate = '') {
+    public function generateUsernameConfirmAction($file, $type, $regenerate = '')
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -110,6 +111,7 @@ class SiswaUsernameController extends Controller
                     $this->get('session')->getFlashBag()
                             ->add('success',
                                     $this->get('translator')->trans('flash.student.username.populated'));
+
                     return $this->redirect($this->generateUrl('siswa_generate_username'));
                 }
             }
@@ -126,7 +128,8 @@ class SiswaUsernameController extends Controller
      *
      * @Route("/download/{file}.{type}", name="siswa_generate_username_download")
      */
-    public function downloadGeneratedFileAction($file, $type) {
+    public function downloadGeneratedFileAction($file, $type)
+    {
         $filetarget = $file . '.' . $type;
 
         $documenttarget = $this->get('kernel')->getRootDir() . self::DOCUMENTS_DIR
@@ -139,7 +142,7 @@ class SiswaUsernameController extends Controller
 
         if ($type == 'xls') {
             $response->headers->set('Content-Type', 'application/vnd.ms-excel');
-        } else if ($type == 'ods') {
+        } elseif ($type == 'ods') {
             $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
         } else {
             $response->headers->set('Content-Type', 'application');
@@ -159,7 +162,8 @@ class SiswaUsernameController extends Controller
      *
      * @Route("/ajax/checkgeneratedusername", name="siswa_ajax_generated_username")
      */
-    public function ajaxCheckGeneratedUsernameAction(Request $request) {
+    public function ajaxCheckGeneratedUsernameAction(Request $request)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
@@ -230,7 +234,7 @@ class SiswaUsernameController extends Controller
                 );
             }
 
-        } else if ($nomorIndukSistem != '' && is_null($siswa)) {
+        } elseif ($nomorIndukSistem != '' && is_null($siswa)) {
             // the filtered student doesn't exist!
             $info = $this->get('translator')
                     ->trans('alert.student.noexists',
@@ -346,7 +350,8 @@ class SiswaUsernameController extends Controller
      *
      * @Route("/ajax/filterstudent", name="siswa_ajax_filter_student")
      */
-    public function ajaxFilterStudentAction(Request $request) {
+    public function ajaxFilterStudentAction(Request $request)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $em = $this->getDoctrine()->getManager();
 
@@ -382,15 +387,14 @@ class SiswaUsernameController extends Controller
 
     /**
      *
-     * @param Tahun $tahun
-     * @param int $penyaring
-     * @param string $outputfiletype
+     * @param Tahun   $tahun
+     * @param int     $penyaring
+     * @param string  $outputfiletype
      * @param boolean $regenerate
      *
      * @return string $filename
      */
-    private function generateUsernamePasswordList($tahun, $penyaring, $outputfiletype = "ods",
-            $regenerate = FALSE) {
+    private function generateUsernamePasswordList($tahun, $penyaring, $outputfiletype = "ods", $regenerate = false) {
         $em = $this->getDoctrine()->getManager();
 
         $passwordargs = array(
@@ -408,12 +412,25 @@ class SiswaUsernameController extends Controller
                     ->setParameter('calon', false);
             $results = $querybuilder->getQuery()->getResult();
         } else {
-            // get students in a year
-            $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
-                    ->setParameter('tahun', $tahun->getId())->andWhere('siswa.calonSiswa = :calon')
-                    ->setParameter('calon', false)->orderBy('siswa.nomorIndukSistem', 'ASC');
-            $results = $querybuilder->getQuery()->getResult();
+            $qbUsername = $em->createQueryBuilder()
+                ->select('user.username')
+                ->from('LanggasSisdikBundle:User', 'user')
+                ->where('user.sekolah = :sekolah')
+                ->andWhere('user.siswa IS NOT NULL')
+                ->setParameter('sekolah', $tahun->getSekolah())
+            ;
+            $usernameTersimpan = $qbUsername->getQuery()->getArrayResult();
+
+            $query = $em->createQuery(
+                    "SELECT siswa FROM LanggasSisdikBundle:Siswa siswa
+                    WHERE siswa.tahun = :tahun AND siswa.calonSiswa = :calon AND siswa.nomorIndukSistem NOT IN (?1)
+                    ORDER BY siswa.nomorIndukSistem ASC"
+                )
+                ->setParameter('tahun', $tahun)
+                ->setParameter('calon', false)
+                ->setParameter(1, array_map(function ($p) { return $p['username']; }, $usernameTersimpan))
+            ;
+            $results = $query->execute();
         }
 
         $outputusername = array();
@@ -516,7 +533,8 @@ class SiswaUsernameController extends Controller
      *
      * @param array $credentials
      */
-    private function generateUsernamePassword($credentials, $regenerate) {
+    private function generateUsernamePassword($credentials, $regenerate)
+    {
         $em = $this->getDoctrine()->getManager();
         $userManager = $this->container->get('fos_user.user_manager');
 
@@ -569,12 +587,14 @@ class SiswaUsernameController extends Controller
         return true;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('langgas_sisdik.menu.main');
         $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
