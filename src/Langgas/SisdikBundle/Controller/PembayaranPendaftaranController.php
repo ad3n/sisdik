@@ -272,7 +272,7 @@ class PembayaranPendaftaranController extends Controller
                                             $siswa->getGelombang()->getNama(), $tekstemplate);
 
                                     if ($ponselOrtuWali != "") {
-                                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                        $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
@@ -354,7 +354,7 @@ class PembayaranPendaftaranController extends Controller
                                         $tekstemplate);
 
                                 if ($ponselOrtuWali != "") {
-                                    $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                    $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
                                     foreach ($nomorponsel as $ponsel) {
                                         $messenger = $this->get('sisdik.messenger');
                                         if ($messenger instanceof Messenger) {
@@ -417,7 +417,7 @@ class PembayaranPendaftaranController extends Controller
                                             $tekstemplate);
 
                                     if ($ponselOrtuWali != "") {
-                                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                        $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
@@ -752,7 +752,7 @@ class PembayaranPendaftaranController extends Controller
                                         $tekstemplate);
 
                                 if ($ponselOrtuWali != "") {
-                                    $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                    $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
                                     foreach ($nomorponsel as $ponsel) {
                                         $messenger = $this->get('sisdik.messenger');
                                         if ($messenger instanceof Messenger) {
@@ -815,7 +815,7 @@ class PembayaranPendaftaranController extends Controller
                                             $tekstemplate);
 
                                     if ($ponselOrtuWali != "") {
-                                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWali);
+                                        $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {

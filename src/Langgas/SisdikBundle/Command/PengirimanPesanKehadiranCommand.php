@@ -187,7 +187,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
 
                                         $terkirim = false;
-                                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWaliAktif);
+                                        $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWaliAktif);
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->getContainer()->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {

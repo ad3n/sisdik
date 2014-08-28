@@ -497,7 +497,7 @@ class SiswaApplicantReportController extends Controller
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
-                            $nomorponsel = preg_split("/[\s,]+/", $summarydata['nomorPonsel']);
+                            $nomorponsel = preg_split("/[\s,\/]+/", $summarydata['nomorPonsel']);
                             foreach ($nomorponsel as $ponsel) {
                                 $messenger = $this->get('sisdik.messenger');
                                 if ($messenger instanceof Messenger) {

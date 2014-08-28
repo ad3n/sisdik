@@ -550,7 +550,7 @@ class KehadiranSiswaController extends Controller
                         $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
 
                         $terkirim = false;
-                        $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWaliAktif);
+                        $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWaliAktif);
                         foreach ($nomorponsel as $ponsel) {
                             $messenger = $this->get('sisdik.messenger');
                             if ($messenger instanceof Messenger) {
@@ -606,7 +606,7 @@ class KehadiranSiswaController extends Controller
                                 $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
 
                                 $terkirim = false;
-                                $nomorponsel = preg_split("/[\s,]+/", $ponselOrtuWaliAktif);
+                                $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWaliAktif);
                                 foreach ($nomorponsel as $ponsel) {
                                     $messenger = $this->get('sisdik.messenger');
                                     if ($messenger instanceof Messenger) {
