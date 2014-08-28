@@ -502,6 +502,7 @@ class JadwalKehadiranController extends Controller
                         ->andWhere("jadwalKehadiran.paramstatusDariJam != '' OR jadwalKehadiran.paramstatusHinggaJam != ''")
                         ->addOrderBy('jadwalKehadiran.mingguanHariKe', 'ASC')
                         ->addOrderBy('jadwalKehadiran.paramstatusDariJam', 'ASC')
+                        ->addOrderBy('jadwalKehadiran.paramstatusHinggaJam', 'DESC')
                         ->addOrderBy('jadwalKehadiran.bulananHariKe');
 
                     $result = $querybuilder->getQuery()->getResult();
