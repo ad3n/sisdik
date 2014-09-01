@@ -75,7 +75,7 @@
                 {% for orangtua in data.orangtuaWali %}
                     {% if orangtua %}
                         {% if orangtua.aktif == 1 %}
-                            {{ orangtua.nama }},
+                            {% if orangtua.nama != "" %}{{ orangtua.nama }},{% endif %}
                             {{ orangtua.ponsel }}
                         {% endif %}
                     {% endif %}
