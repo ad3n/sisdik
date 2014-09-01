@@ -1,23 +1,12 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use Langgas\SisdikBundle\Entity\SekolahAsal;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Form\FormError;
-use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Siswa;
@@ -27,12 +16,23 @@ use Langgas\SisdikBundle\Form\SiswaImportType;
 use Langgas\SisdikBundle\Form\SiswaMergeType;
 use Langgas\SisdikBundle\Form\SiswaExportType;
 use Langgas\SisdikBundle\Util\EasyCSV\Reader;
+use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * Siswa controller.
- *
  * @Route("/data-siswa")
  * @PreAuthorize("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
@@ -49,12 +49,11 @@ class SiswaController extends Controller
     private $nomorUrutPersekolah = 0;
 
     /**
-     * Lists all Siswa entities.
-     *
      * @Route("/", name="siswa")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -62,11 +61,18 @@ class SiswaController extends Controller
 
         $searchform = $this->createForm(new SiswaSearchType($this->container));
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->where('t.calonSiswa = :calon')
-                ->setParameter('calon', false)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t.namaLengkap', 'ASC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('t')
+            ->from('LanggasSisdikBundle:Siswa', 't')
+            ->leftJoin('t.tahun', 't2')
+            ->leftJoin('t.gelombang', 't3')
+            ->where('t.calonSiswa = :calon')
+            ->setParameter('calon', false)
+            ->andWhere('t.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah->getId())
+            ->orderBy('t2.tahun', 'DESC')
+            ->addOrderBy('t.namaLengkap', 'ASC')
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
@@ -100,7 +106,8 @@ class SiswaController extends Controller
      * @Route("/{id}/show", name="siswa_show")
      * @Template()
      */
-    public function showAction($id) {
+    public function showAction($id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -125,7 +132,8 @@ class SiswaController extends Controller
      * @Route("/new", name="siswa_new")
      * @Template()
      */
-    public function newAction() {
+    public function newAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -147,7 +155,8 @@ class SiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:new.html.twig")
      */
-    public function createAction() {
+    public function createAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -213,7 +222,8 @@ class SiswaController extends Controller
      * @Route("/{id}/edit", name="siswa_edit")
      * @Template()
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -241,7 +251,8 @@ class SiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:edit.html.twig")
      */
-    public function updateAction($id) {
+    public function updateAction($id)
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -302,7 +313,8 @@ class SiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:deleteconfirm.html.twig")
      */
-    public function deleteConfirmAction($id) {
+    public function deleteConfirmAction($id)
+    {
         $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -327,7 +339,8 @@ class SiswaController extends Controller
      * @Route("/{id}/delete", name="siswa_delete")
      * @Method("POST")
      */
-    public function deleteAction($id) {
+    public function deleteAction($id)
+    {
         $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -375,7 +388,8 @@ class SiswaController extends Controller
      * @Method("GET")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function imporBaruAction() {
+    public function imporBaruAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -394,7 +408,8 @@ class SiswaController extends Controller
      * @Method("POST")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function mengimporBaruAction() {
+    public function mengimporBaruAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -426,10 +441,10 @@ class SiswaController extends Controller
 
                 $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
 
-                $fieldnames = array();
-                $content = array();
+                $fieldnames = [];
+                $content = [];
                 foreach ($reader as $row) {
-                    $cellContent = array();
+                    $cellContent = [];
                     foreach ($row as $cell) {
                         if (array_key_exists('table:style-name', $cell['attributes'])
                                 && $cell['attributes']['table:style-name'] == 'nama-kolom') {
@@ -492,7 +507,8 @@ class SiswaController extends Controller
      * @Method("GET")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function imporGabungAction() {
+    public function imporGabungAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -513,7 +529,8 @@ class SiswaController extends Controller
      * @Method("POST")
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function mengimporGabungAction() {
+    public function mengimporGabungAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -544,10 +561,10 @@ class SiswaController extends Controller
 
                 $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
 
-                $fieldnames = array();
-                $content = array();
+                $fieldnames = [];
+                $content = [];
                 foreach ($reader as $row) {
-                    $cellContent = array();
+                    $cellContent = [];
                     foreach ($row as $cell) {
                         if (array_key_exists('table:style-name', $cell['attributes'])
                                 && $cell['attributes']['table:style-name'] == 'nama-kolom') {
@@ -608,7 +625,8 @@ class SiswaController extends Controller
      * @Route("/file-template", name="siswa_file_template")
      * @Method("GET")
      */
-    public function fileTemplateAction() {
+    public function fileTemplateAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -669,7 +687,8 @@ class SiswaController extends Controller
      * @Route("/ekspor", name="siswa_export")
      * @Method("POST")
      */
-    public function exportAction() {
+    public function exportAction()
+    {
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
@@ -763,7 +782,8 @@ class SiswaController extends Controller
      * @Route("/download/{filename}/{type}/{tahun}", name="siswa_downloadfile")
      * @Method("GET")
      */
-    public function downloadFileAction($filename, $type = 'ods', $tahun = '') {
+    public function downloadFileAction($filename, $type = 'ods', $tahun = '')
+    {
         $sekolah = $this->isRegisteredToSchool();
 
         $filetarget = $filename;
@@ -791,7 +811,8 @@ class SiswaController extends Controller
         return $response;
     }
 
-    private function formatNamaField(&$item, $key) {
+    private function formatNamaField(&$item, $key)
+    {
         preg_match("/(\d+:)(.+)/", $item, $matches);
         $item = $matches[2];
     }
@@ -799,13 +820,14 @@ class SiswaController extends Controller
     /**
      * mengimpor data siswa baru
      *
-     * @param array                             $content
-     * @param array                             $fieldnames
+     * @param array                                $content
+     * @param array                                $fieldnames
      * @param \Langgas\SisdikBundle\Entity\Sekolah $sekolah
      * @param \Langgas\SisdikBundle\Entity\Tahun   $tahun
-     * @param boolean                           $andFlush
+     * @param boolean                              $andFlush
      */
-    private function imporSiswaBaru($content, $fieldnames, $sekolah, $tahun, $andFlush = false) {
+    private function imporSiswaBaru($content, $fieldnames, $sekolah, $tahun, $andFlush = false)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $atleastone = false;
@@ -820,7 +842,7 @@ class SiswaController extends Controller
         $entity = new Siswa();
 
         $reflectionClass = new \ReflectionClass('Langgas\SisdikBundle\Entity\Siswa');
-        $entityFields = array();
+        $entityFields = [];
         foreach ($reflectionClass->getProperties() as $property) {
             $entityFields[] = $property->getName();
         }
@@ -913,12 +935,13 @@ class SiswaController extends Controller
     }
 
     /**
-     *
      * @param array   $content
      * @param array   $fieldnames
      * @param boolean $andFlush
      */
-    private function gabungSiswa($content, $fieldnames, $andFlush = false) {
+    private function gabungSiswa($content, $fieldnames, $andFlush = false)
+    {
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         // cari kolom yang berisi nomor induk sistem
@@ -926,22 +949,19 @@ class SiswaController extends Controller
         if (is_int($keyNomorIndukSistem)) {
             if (array_key_exists($keyNomorIndukSistem, $content)) {
                 $entity = $em->getRepository('LanggasSisdikBundle:Siswa')
-                        ->findOneBy(
-                                array(
-                                    'nomorIndukSistem' => $content[$keyNomorIndukSistem]
-                                ));
+                    ->findOneBy([
+                        'nomorIndukSistem' => $content[$keyNomorIndukSistem],
+                    ])
+                ;
                 if (!$entity && !($entity instanceof Siswa)) {
                     return;
                 }
 
                 $reflectionClass = new \ReflectionClass('Langgas\SisdikBundle\Entity\Siswa');
-                $entityFields = array();
+                $entityFields = [];
                 foreach ($reflectionClass->getProperties() as $property) {
                     $entityFields[] = $property->getName();
                 }
-
-                $ortu = null;
-                $sekolahAsal = null;
 
                 foreach ($fieldnames as $keyfield => $valuefield) {
 
@@ -961,33 +981,34 @@ class SiswaController extends Controller
 
                             if ($valuefield != 'nomorIndukSistem') {
                                 if ($valuefield == 'orangtuaWali') {
-                                    if ($ortu === null) {
+                                    if ($value != null) {
                                         $ortu = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')
-                                                ->findOneBy(
-                                                        array(
-                                                            'aktif' => true, 'siswa' => $entity->getId()
-                                                        ));
+                                            ->findOneBy([
+                                                'aktif' => true,
+                                                'siswa' => $entity,
+                                            ])
+                                        ;
                                         if (is_object($ortu) && $ortu instanceof OrangtuaWali) {
-                                            $ortu->{'set' . ucfirst($childfield)}(trim($value));
+                                            $ortu->{'set' . ucfirst($childfield)}($value);
+                                            $em->persist($ortu);
                                         }
-                                    } elseif ($ortu instanceof OrangtuaWali) {
-                                        $ortu->{'set' . ucfirst($childfield)}(trim($value));
                                     }
                                 } elseif ($valuefield == 'sekolahAsal') {
-                                    if ($sekolahAsal === null) {
+                                    if ($value != null) {
                                         $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
-                                                ->from('LanggasSisdikBundle:SekolahAsal', 'sekolahasal')
-                                                ->where('sekolahasal.nama LIKE :nama')
-                                                ->setParameter('nama', "%$value%");
+                                            ->from('LanggasSisdikBundle:SekolahAsal', 'sekolahasal')
+                                            ->where('sekolahasal.nama LIKE :nama')
+                                            ->setParameter('nama', "%$value%")
+                                        ;
                                         $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
                                         if (count($resultSekolahAsal) >= 1) {
                                             $sekolahAsal = $resultSekolahAsal[0];
                                         } else {
-                                            $sekolahAsal = new SekolahAsal();
-                                            $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                                            $sekolahAsal = new SekolahAsal;
+                                            $sekolahAsal->setSekolah($entity->getSekolah());
+                                            $sekolahAsal->{'set' . ucfirst($childfield)}($value);
                                         }
-                                    } elseif (is_object($sekolahAsal) && $sekolahAsal instanceof SekolahAsal) {
-                                        $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                                        $entity->setSekolahAsal($sekolahAsal);
                                     }
                                 } elseif ($valuefield == 'tanggalLahir') {
                                     if ($value) {
@@ -1002,45 +1023,49 @@ class SiswaController extends Controller
                     }
                 }
 
-                $entity->setSekolahAsal($sekolahAsal);
                 $entity->setDiubahOleh($this->getUser());
 
                 $em->persist($entity);
-
-                if (is_object($ortu) && $ortu instanceof OrangtuaWali) {
-                    $em->persist($ortu);
-                }
 
                 $this->gabungSiswaJumlah++;
 
                 if ($andFlush) {
                     $em->flush();
-                    $em->clear($entity);
-                    $em->clear($ortu);
-                    $em->clear($sekolahAsal);
                 }
             }
         }
     }
 
-    private function createProceedDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createProceedDeleteForm($id)
+    {
+        return $this
+            ->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this
+            ->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.academic', [], 'navigations')][$this->get('translator')->trans('links.siswa', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
+    private function isRegisteredToSchool()
+    {
         $user = $this->getUser();
         $sekolah = $user->getSekolah();
 
