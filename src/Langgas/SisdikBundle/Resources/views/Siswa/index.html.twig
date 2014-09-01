@@ -58,7 +58,7 @@
             <th class="{% if pagination.isSorted('t.jenisKelamin') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 't.jenisKelamin') }}
             </th>
-            <th>{{ 'label.mobilephone.parent'|trans }}</th>
+            <th>{{ 'label.ortuwali.entri'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
     </thead>
@@ -70,11 +70,12 @@
             <td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
             <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
             <td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
-            <td data-title="{{ 'label.mobilephone.parent'|trans }}">
+            <td data-title="{{ 'label.ortuwali.entri'|trans }}">
             {% if data.orangtuaWali %}
                 {% for orangtua in data.orangtuaWali %}
                     {% if orangtua %}
                         {% if orangtua.aktif == 1 %}
+                            {{ orangtua.nama }},
                             {{ orangtua.ponsel }}
                         {% endif %}
                     {% endif %}
