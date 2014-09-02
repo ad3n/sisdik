@@ -198,7 +198,8 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                             print "[paksa]: log tanggal = " . $logTanggal->format('Y-m-d') . "\n";
                                         }
 
-                                        if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp())) {
+                                        // +60 detik perbedaan
+                                        if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp() + 60)) {
                                             continue;
                                         }
 
