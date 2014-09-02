@@ -1,6 +1,7 @@
 <?php
 namespace Langgas\SisdikBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
@@ -25,11 +26,15 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
             ->setName('sisdik:kehadiran:pesan')
             ->setDescription('Mengirim pesan kehadiran siswa.')
             ->addOption('paksa', null, InputOption::VALUE_NONE, 'Memaksa pengiriman pesan kehadiran untuk hari ini')
+            ->addOption('debug', null, InputOption::VALUE_NONE, 'Menampilkan informasi debug')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $smsKehadiranTerproses = 0;
+
+        /* @var $em EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
         $translator = $this->getContainer()->get('translator');
         $translator->setLocale("id_ID");
@@ -153,11 +158,13 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                 ->where('kehadiran.sekolah = :sekolah')
                                 ->andWhere('kehadiran.tahunAkademik = :tahunakademik')
                                 ->andWhere('kehadiran.kelas = :kelas')
+                                ->andWhere('kehadiran.tanggal = :tanggal')
                                 ->andWhere('kehadiran.statusKehadiran = :statuskehadiran')
                                 ->andWhere('kehadiran.smsTerproses = :terproses')
                                 ->setParameter('sekolah', $sekolah)
                                 ->setParameter('tahunakademik', $jadwal->getTahunAkademik())
                                 ->setParameter('kelas', $jadwal->getKelas())
+                                ->setParameter('tanggal', $waktuSekarang->format("Y-m-d"))
                                 ->setParameter('statuskehadiran', $jadwal->getStatusKehadiran())
                                 ->setParameter('terproses', false)
                             ;
@@ -181,8 +188,11 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         $tekstemplate = $jadwal->getTemplatesms()->getTeks();
                                         $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
                                         $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
-                                        $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
-                                        $tekstemplate = str_replace("%tanggal%", $waktuSekarang->format('d/m/Y'), $tekstemplate);
+
+                                        $indeksHari = $kehadiran->getTanggal()->format('w') - 1 == -1 ? 7 : $kehadiran->getTanggal()->format('w') - 1;
+                                        $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $tekstemplate);
+
+                                        $tekstemplate = str_replace("%tanggal%", $kehadiran->getTanggal()->format('d/m/Y'), $tekstemplate);
                                         $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
                                         $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
 
@@ -193,14 +203,29 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                             if ($messenger instanceof Messenger) {
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
-                                                $messenger->sendMessage($sekolah);
+
+                                                if ($input->getOption('debug')) {
+                                                    $messenger->populateMessage();
+                                                    print "[debug]: " . $messenger->getMessageCommand() . "\n";
+                                                } else {
+                                                    $messenger->sendMessage($sekolah);
+                                                }
+
+                                                $smsKehadiranTerproses++;
+
+                                                if ($input->getOption('paksa')) {
+                                                    print $smsKehadiranTerproses . ", ";
+                                                }
+
                                                 $terkirim = true;
                                             }
                                         }
 
                                         if ($terkirim) {
-                                            $kehadiran->setSmsTerproses($terkirim);
-                                            $em->persist($kehadiran);
+                                            if (!$input->getOption('debug')) {
+                                                $kehadiran->setSmsTerproses($terkirim);
+                                                $em->persist($kehadiran);
+                                            }
                                         }
                                     }
                                 }
@@ -217,13 +242,21 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                             ;
 
                             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
-                                $prosesKehadiranSiswa->setBerhasilKirimSms(true);
-                                $em->persist($prosesKehadiranSiswa);
+                                if (!$input->getOption('debug')) {
+                                    $prosesKehadiranSiswa->setBerhasilKirimSms(true);
+                                    $em->persist($prosesKehadiranSiswa);
+                                }
                             }
 
-                            $em->flush();
+                            if (!$input->getOption('debug')) {
+                                $em->flush();
+                            }
                         }
                     }
+                }
+
+                if ($input->getOption('debug')) {
+                    $text .= "[debug]: SMS kehadiran terproses = $smsKehadiranTerproses";
                 }
 
                 if ($text != '') {
