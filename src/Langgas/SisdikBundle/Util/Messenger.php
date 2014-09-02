@@ -93,17 +93,27 @@ class Messenger
     private $apiResult;
 
     /**
+     * @var string
+     */
+    private $messageCommand;
+
+    /**
+     * @var boolean
+     */
+    private $messagePopulated = false;
+
+    /**
      * @param ObjectManager $objectManager
-     * @param Router $router
-     * @param string $provider
-     * @param string $scheme
-     * @param string $host
-     * @param string $port
-     * @param string $user
-     * @param string $password
-     * @param string $resource
-     * @param string $apikey
-     * @param string $report
+     * @param Router        $router
+     * @param string        $provider
+     * @param string        $scheme
+     * @param string        $host
+     * @param string        $port
+     * @param string        $user
+     * @param string        $password
+     * @param string        $resource
+     * @param string        $apikey
+     * @param string        $report
      */
     public function __construct(
         ObjectManager $objectManager,
@@ -145,6 +155,14 @@ class Messenger
     public function setMessage($message)
     {
         $this->message = $message;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessageCommand()
+    {
+        return $this->messageCommand;
     }
 
     /**
@@ -198,21 +216,11 @@ class Messenger
     }
 
     /**
-     * @param  Sekolah $sekolah
-     * @return integer
+     * @return string
      */
-    public function sendMessage(Sekolah $sekolah = null)
+    public function populateMessage()
     {
-        if ($this->logid == 0) {
-            $this->setLogEntry($sekolah);
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 13);
-
         if ($this->provider == "local") {
-
             $param = "?username="
                 . $this->user
                 . "&password="
@@ -225,33 +233,23 @@ class Messenger
 
             if ($this->report == "1") {
                 $this
-                    ->setDeliveryReportURL(
-                        $this
-                            ->router
-                            ->generate(
-                                "localapi_logsmskeluar_dlr_update",
-                                [
-                                    'logid' => $this->logid,
-                                    'status' => "%d",
-                                    'time' => "%T"
-                                ],
-                                UrlGeneratorInterface::ABSOLUTE_URL
-                            )
+                    ->setDeliveryReportURL($this->router
+                        ->generate(
+                            "localapi_logsmskeluar_dlr_update", [
+                                'logid' => $this->logid,
+                                'status' => "%d",
+                                'time' => "%T"
+                            ],
+                            UrlGeneratorInterface::ABSOLUTE_URL
+                        )
                     )
                 ;
 
                 $param .= "&dlr-mask=7&dlr-url=" . urlencode($this->deliveryReportURL);
             }
 
-            $url = $this->scheme . "://" . $this->host . ":" . $this->port . $this->resource . $param;
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $hasil = curl_exec($ch);
-
-            $this->updateLogHasilAPI($url, $hasil);
-
+            $this->messageCommand = $this->scheme . "://" . $this->host . ":" . $this->port . $this->resource . $param;
         } elseif ($this->provider == "rajasms") {
-
             $param = "?nohp="
                 . $this->phonenumber
                 . "&pesan="
@@ -260,13 +258,7 @@ class Messenger
                 . $this->apikey
             ;
 
-            $url = $this->scheme . "://" . $this->host . $this->resource . $param;
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $hasil = curl_exec($ch);
-
-            $this->updateLogHasilAPI($url, $hasil);
-
+            $this->messageCommand = $url = $this->scheme . "://" . $this->host . $this->resource . $param;
         } elseif ($this->provider == "zenziva") {
 
             $param = "?userkey="
@@ -279,14 +271,35 @@ class Messenger
                 . urlencode($this->message)
             ;
 
-            $url = $this->scheme . "://" . $this->host . $this->resource . $param;
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $hasil = curl_exec($ch);
-
-            $this->updateLogHasilAPI($url, $hasil);
-
+            $this->messageCommand = $this->scheme . "://" . $this->host . $this->resource . $param;
         }
+
+        $this->messagePopulated = true;
+
+        return $this->messageCommand;
+    }
+
+    /**
+     * @param Sekolah $sekolah
+     */
+    public function sendMessage(Sekolah $sekolah = null)
+    {
+        if (!$this->messagePopulated) {
+            $this->populateMessage();
+        }
+
+        if ($this->logid == 0) {
+            $this->setLogEntry($sekolah);
+        }
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 13);
+
+        curl_setopt($ch, CURLOPT_URL, $this->messageCommand);
+        $hasil = curl_exec($ch);
+
+        $this->updateLogHasilAPI($this->messageCommand, $hasil);
 
         curl_close($ch);
     }
