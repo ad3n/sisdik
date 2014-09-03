@@ -69,6 +69,44 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
             }
 
             if (!$this->isLocked($sekolah->getNomorUrut())) {
+                $tahunAkademikAktif = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'aktif' => true,
+                    ])
+                ;
+
+                $qbKehadiranSemua = $em->createQueryBuilder()
+                    ->select('COUNT(kehadiran.id)')
+                    ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
+                    ->where('kehadiran.sekolah = :sekolah')
+                    ->andWhere('kehadiran.tahunAkademik = :tahunakademik')
+                    ->andWhere('kehadiran.tanggal = :tanggal')
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('tahunakademik', $tahunAkademikAktif)
+                    ->setParameter('tanggal', $waktuSekarang->format("Y-m-d"))
+                ;
+                $jumlahKehadiranSemua = $qbKehadiranSemua->getQuery()->getSingleScalarResult();
+
+                $qbKehadiranPermulaan = $em->createQueryBuilder()
+                    ->select('COUNT(kehadiran.id)')
+                    ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
+                    ->where('kehadiran.sekolah = :sekolah')
+                    ->andWhere('kehadiran.tahunAkademik = :tahunakademik')
+                    ->andWhere('kehadiran.tanggal = :tanggal')
+                    ->andWhere('kehadiran.permulaan = :permulaan')
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('tahunakademik', $tahunAkademikAktif)
+                    ->setParameter('tanggal', $waktuSekarang->format("Y-m-d"))
+                    ->setParameter('permulaan', true)
+                ;
+                $jumlahKehadiranPermulaan = $qbKehadiranPermulaan->getQuery()->getSingleScalarResult();
+
+                // jangan kirim pesan jika semua data kehadiran masih berstatus permulaan
+                if ($jumlahKehadiranSemua == $jumlahKehadiranPermulaan) {
+                    continue;
+                }
+
                 foreach ($perulangan as $key => $value) {
                     $querybuilder = $em->createQueryBuilder()
                         ->select('jadwal')
