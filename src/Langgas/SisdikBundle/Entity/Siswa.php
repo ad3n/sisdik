@@ -1238,11 +1238,25 @@ class Siswa
     }
 
     /**
-     * @return OrangtuaWali
+     * @return ArrayCollection $orangtuaWali
      */
     public function getOrangtuaWali()
     {
         return $this->orangtuaWali;
+    }
+
+    /**
+     * @return OrangtuaWali|NULL
+     */
+    public function getOrangtuaWaliAktif()
+    {
+        foreach ($this->orangtuaWali as $ortu) {
+            if ($ortu->isAktif()) {
+                return $ortu;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -103,7 +103,10 @@
     margin-left: 20px;
 }
 dt, dd {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+}
+dt {
+    max-width: 20%;
 }
 dd {
     width: auto;
@@ -310,7 +313,10 @@ dd {
 <form method="post" action="{{ path('kehadiran-siswa_update') }}" class="form-inline" id="form-kehadiran">
 <dl>
 {% for kehadiran in entities %}
-    <dt>{{ kehadiran.siswa.namaLengkap }}<br /><span style="font-weight: normal;">{{ kehadiran.siswa.nomorInduk }}</span></dt>
+    <dt>
+        {{ kehadiran.siswa.namaLengkap }}
+        <br />
+        <span style="font-weight: normal; line-height: 1em;">{{ kehadiran.siswa.nomorInduk }} &mdash; {% if kehadiran.siswa.orangtuaWaliAktif != null %} {{ kehadiran.siswa.orangtuaWaliAktif.nama }} &raquo; {{ kehadiran.siswa.orangtuaWaliAktif.ponsel }} {% endif %}</span></dt>
     <dd>
         {{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}
         {{ form_widget(form['kehadiran_keterangan_' ~ kehadiran.id]) }}
