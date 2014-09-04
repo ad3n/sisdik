@@ -1,242 +1,232 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\VendorSekolah;
-use Langgas\SisdikBundle\Form\VendorSekolahType;
 
 /**
- * @Route("/vendor")
+ * @Route("/penyedia-jasa")
  */
 class VendorSekolahController extends Controller
 {
     /**
-     * @Route("/", name="vendor")
+     * @Route("/", name="vendor_sekolah")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
+        $sekolah = $this->getSekolah();
+
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->findAll();
+        $querybuilder = $em->createQueryBuilder()
+            ->select('vendorSekolah')
+            ->from('LanggasSisdikBundle:VendorSekolah', 'vendorSekolah')
+            ->where('vendorSekolah.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+            ->setMaxResults(1)
+        ;
+        $results = $querybuilder->getQuery()->getResult();
 
-        return array(
-            'entities' => $entities,
-        );
+        $entity = false;
+        foreach ($results as $result) {
+            if (is_object($result) && $result instanceof VendorSekolah) {
+                $entity = $result;
+            }
+        }
+
+        if (!$entity) {
+            return $this->redirect($this->generateUrl('vendor_sekolah_new'));
+        } else {
+            return $this->redirect($this->generateUrl('vendor_sekolah_edit', [
+                'id' => $entity->getId(),
+            ]));
+        }
     }
 
     /**
-     * Creates a new VendorSekolah entity.
-     *
-     * @Route("/", name="vendor_create")
+     * @Route("/", name="vendor_sekolah_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:VendorSekolah:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new VendorSekolah();
+        $this->setCurrentMenu();
+
+        $entity = new VendorSekolah;
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
 
-            return $this->redirect($this->generateUrl('vendor_show', array('id' => $entity->getId())));
+            try {
+                $em->persist($entity);
+                $em->flush();
+
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.vendor.sekolah.tersimpan'))
+                ;
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.unique.vendor.sekolah');
+                throw new DBALException($message);
+            }
+
+            return $this->redirect($this->generateUrl('vendor_sekolah'));
         }
 
-        return array(
+        return [
             'entity' => $entity,
             'form'   => $form->createView(),
-        );
+        ];
     }
 
     /**
-    * Creates a form to create a VendorSekolah entity.
-    *
-    * @param VendorSekolah $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * @param  VendorSekolah                $entity
+     * @return \Symfony\Component\Form\Form
+     */
     private function createCreateForm(VendorSekolah $entity)
     {
-        $form = $this->createForm(new VendorSekolahType(), $entity, array(
-            'action' => $this->generateUrl('vendor_create'),
+        $form = $this->createForm('sisdik_vendorsekolah', $entity, [
+            'action' => $this->generateUrl('vendor_sekolah_create'),
             'method' => 'POST',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        ]);
 
         return $form;
     }
 
     /**
-     * Displays a form to create a new VendorSekolah entity.
-     *
-     * @Route("/new", name="vendor_new")
+     * @Route("/new", name="vendor_sekolah_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new VendorSekolah();
+        $this->setCurrentMenu();
+
+        $entity = new VendorSekolah;
         $form   = $this->createCreateForm($entity);
 
-        return array(
+        return [
             'entity' => $entity,
             'form'   => $form->createView(),
-        );
+        ];
     }
 
     /**
-     * Finds and displays a VendorSekolah entity.
-     *
-     * @Route("/{id}", name="vendor_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find VendorSekolah entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-
-    /**
-     * Displays a form to edit an existing VendorSekolah entity.
-     *
-     * @Route("/{id}/edit", name="vendor_edit")
+     * @Route("/{id}/edit", name="vendor_sekolah_edit")
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find VendorSekolah entity.');
+            throw $this->createNotFoundException('Tak bisa menemukan entity penyedia jasa sms.');
         }
 
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return [
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+        ];
     }
 
     /**
-    * Creates a form to edit a VendorSekolah entity.
-    *
-    * @param VendorSekolah $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
+     * @param  VendorSekolah                $entity
+     * @return \Symfony\Component\Form\Form
+     */
     private function createEditForm(VendorSekolah $entity)
     {
-        $form = $this->createForm(new VendorSekolahType(), $entity, array(
-            'action' => $this->generateUrl('vendor_update', array('id' => $entity->getId())),
+        $form = $this->createForm('sisdik_vendorsekolah', $entity, [
+            'action' => $this->generateUrl('vendor_sekolah_update', [
+                'id' => $entity->getId(),
+            ]),
             'method' => 'PUT',
-        ));
-
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        ]);
 
         return $form;
     }
+
     /**
-     * Edits an existing VendorSekolah entity.
-     *
-     * @Route("/{id}", name="vendor_update")
+     * @Route("/{id}", name="vendor_sekolah_update")
      * @Method("PUT")
      * @Template("LanggasSisdikBundle:VendorSekolah:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find VendorSekolah entity.');
+            throw $this->createNotFoundException('Tak bisa menemukan entity penyedia jasa sms.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('vendor_edit', array('id' => $id)));
-        }
+            try {
+                $em->persist($entity);
+                $em->flush();
 
-        return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
-    /**
-     * Deletes a VendorSekolah entity.
-     *
-     * @Route("/{id}", name="vendor_delete")
-     * @Method("DELETE")
-     */
-    public function deleteAction(Request $request, $id)
-    {
-        $form = $this->createDeleteForm($id);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find VendorSekolah entity.');
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.vendor.sekolah.tersimpan'))
+                ;
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.unique.vendor.sekolah');
+                throw new DBALException($message);
             }
 
-            $em->remove($entity);
-            $em->flush();
+            return $this->redirect($this->generateUrl('vendor_sekolah_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return $this->redirect($this->generateUrl('vendor'));
+        return [
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+        ];
+    }
+
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
+        $menu = $this->container->get('langgas_sisdik.menu.main');
+        $menu[$translator->trans('headings.setting', [], 'navigations')][$translator->trans('links.penyedia.jasa.sms', [], 'navigations')]->setCurrent(true);
     }
 
     /**
-     * Creates a form to delete a VendorSekolah entity by id.
-     *
-     * @param mixed $id The entity id
-     *
-     * @return \Symfony\Component\Form\Form The form
+     * @return Sekolah
      */
-    private function createDeleteForm($id)
+    private function getSekolah()
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('vendor_delete', array('id' => $id)))
-            ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+        return $this->getUser()->getSekolah();
     }
 }

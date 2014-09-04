@@ -1,15 +1,41 @@
-{% extends '::base.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>VendorSekolah creation</h1>
+{% block page_heading %}{% trans from "headings" %}penyedia.jasa.sms{% endtrans %}{% endblock %}
 
-    {{ form(form) }}
+{% block content %}
+<style type="text/css">
+.form-horizontal .radio {
+    padding-top: 0;
+}
+</style>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('vendor') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{{ form_end(form) }}
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script type="text/javascript">
+$(function() {
+    if ($('input:radio:checked').val() == 'standar') {
+        $("input:text").prop('disabled', true);
+    } else {
+        $("input:text").prop('disabled', false);
+    }
+
+    $('input:radio').change(function() {
+        if ($(this).val() == 'standar') {
+            $("input:text").prop('disabled', true);
+        } else {
+            $("input:text").prop('disabled', false);
+        }
+    });
+});
+</script>
 {% endblock %}

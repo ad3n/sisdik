@@ -20,6 +20,13 @@ class VendorSekolah
     private $id;
 
     /**
+     * @ORM\Column(name="jenis", type="string", length=50, nullable=false, options={"default"="standar"})
+     *
+     * @var string
+     */
+    private $jenis = "standar";
+
+    /**
      * @ORM\Column(name="url_pengirim_pesan", type="string", length=255, nullable=true)
      *
      * @var string
@@ -42,6 +49,22 @@ class VendorSekolah
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param string $jenis
+     */
+    public function setJenis($jenis)
+    {
+        $this->jenis = $jenis;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJenis()
+    {
+        return $this->jenis;
     }
 
     /**
