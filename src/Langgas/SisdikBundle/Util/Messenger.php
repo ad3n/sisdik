@@ -4,6 +4,7 @@ namespace Langgas\SisdikBundle\Util;
 use Doctrine\Common\Persistence\ObjectManager;
 use Langgas\SisdikBundle\Entity\LogsmsKeluar;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Monolog\Logger;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -21,6 +22,11 @@ class Messenger
      * @var Router
      */
     private $router;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * @var string
@@ -118,6 +124,7 @@ class Messenger
     public function __construct(
         ObjectManager $objectManager,
         Router $router,
+        Logger $logger,
         $provider,
         $scheme,
         $host,
@@ -130,6 +137,7 @@ class Messenger
     {
         $this->objectManager = $objectManager;
         $this->router = $router;
+        $this->logger = $logger;
         $this->provider = $provider;
         $this->scheme = $scheme;
         $this->host = $host;
@@ -299,6 +307,7 @@ class Messenger
         curl_setopt($ch, CURLOPT_URL, $this->messageCommand);
         $hasil = curl_exec($ch);
 
+        $this->logger->addInfo($this->messageCommand);
         $this->updateLogHasilAPI($this->messageCommand, $hasil);
 
         curl_close($ch);
