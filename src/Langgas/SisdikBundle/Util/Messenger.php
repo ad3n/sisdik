@@ -1,12 +1,13 @@
 <?php
+
 namespace Langgas\SisdikBundle\Util;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Langgas\SisdikBundle\Entity\LogsmsKeluar;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Monolog\Logger;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Pengirim pesan -- the Messenger
@@ -121,6 +122,7 @@ class Messenger
     /**
      * @param ObjectManager $objectManager
      * @param Router        $router
+     * @param Logger        $logger
      * @param string        $provider
      * @param string        $scheme
      * @param string        $host
@@ -322,7 +324,7 @@ class Messenger
         curl_setopt($ch, CURLOPT_URL, $this->messageCommand);
         $hasil = curl_exec($ch);
 
-        $this->logger->addInfo($this->messageCommand);
+        $this->logger->info($this->messageCommand);
         $this->updateLogHasilAPI($this->messageCommand, $hasil);
 
         curl_close($ch);

@@ -42,7 +42,7 @@ services:
     sisdik.messenger:
         class:        Langgas\SisdikBundle\Util\Messenger
         scope:        prototype
-        arguments:    ["@doctrine.orm.entity_manager", "@router", "@logger", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
+        arguments:    ["@doctrine.orm.entity_manager", "@router", "@monolog.logger.messenger", "%messenger_provider%", "%messenger_scheme%", "%messenger_host%", "%messenger_port%", "%messenger_user%", "%messenger_password%", "%messenger_resource%", "%messenger_apikey%", "%messenger_report%"]
 
     sisdik.translator.form.extractor:
         class: Langgas\SisdikBundle\Translator\FormExtractor
