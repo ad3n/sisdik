@@ -26,7 +26,7 @@
 		"gregwar/captcha-bundle" : "dev-master",
 		"symfony/icu" : "v1.1.0",
 		"knplabs/knp-paginator-bundle" : "dev-master",
-		"symfony/monolog-bundle" : "2.3.*",
+		"symfony/monolog-bundle" : "2.4.*",
 		"sensio/distribution-bundle" : "2.3.*",
 		"whiteoctober/breadcrumbs-bundle" : "dev-master",
 		"symfony/symfony" : "2.3.*",
