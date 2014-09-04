@@ -109,6 +109,16 @@ class Messenger
     private $messagePopulated = false;
 
     /**
+     * @var boolean
+     */
+    private $useVendor = false;
+
+    /**
+     * @var string
+     */
+    private $vendorURL = "";
+
+    /**
      * @param ObjectManager $objectManager
      * @param Router        $router
      * @param string        $provider
@@ -228,58 +238,63 @@ class Messenger
      */
     public function populateMessage()
     {
-        if ($this->provider == "local") {
-            $param = "?username="
-                . $this->user
-                . "&password="
-                . $this->password
-                . "&to="
-                . $this->phonenumber
-                . "&text="
-                . urlencode($this->message)
-            ;
-
-            if ($this->report == "1") {
-                $this
-                    ->setDeliveryReportURL($this->router
-                        ->generate(
-                            "localapi_logsmskeluar_dlr_update", [
-                                'logid' => $this->logid,
-                                'status' => "%d",
-                                'time' => "%T"
-                            ],
-                            UrlGeneratorInterface::ABSOLUTE_URL
-                        )
-                    )
+        if ($this->useVendor) {
+            $this->messageCommand = str_replace("%nomor%", $this->phonenumber, $this->vendorURL);
+            $this->messageCommand = str_replace("%pesan%", urlencode($this->message), $this->messageCommand);
+        } else {
+            if ($this->provider == "local") {
+                $param = "?username="
+                    . $this->user
+                    . "&password="
+                    . $this->password
+                    . "&to="
+                    . $this->phonenumber
+                    . "&text="
+                    . urlencode($this->message)
                 ;
 
-                $param .= "&dlr-mask=7&dlr-url=" . urlencode($this->deliveryReportURL);
+                if ($this->report == "1") {
+                    $this
+                        ->setDeliveryReportURL($this->router
+                            ->generate(
+                                "localapi_logsmskeluar_dlr_update", [
+                                    'logid' => $this->logid,
+                                    'status' => "%d",
+                                    'time' => "%T"
+                                ],
+                                UrlGeneratorInterface::ABSOLUTE_URL
+                            )
+                        )
+                    ;
+
+                    $param .= "&dlr-mask=7&dlr-url=" . urlencode($this->deliveryReportURL);
+                }
+
+                $this->messageCommand = $this->scheme . "://" . $this->host . ":" . $this->port . $this->resource . $param;
+            } elseif ($this->provider == "rajasms") {
+                $param = "?nohp="
+                    . $this->phonenumber
+                    . "&pesan="
+                    . urlencode($this->message)
+                    . "&key="
+                    . $this->apikey
+                ;
+
+                $this->messageCommand = $url = $this->scheme . "://" . $this->host . $this->resource . $param;
+            } elseif ($this->provider == "zenziva") {
+
+                $param = "?userkey="
+                    . $this->user
+                    . "&passkey="
+                    . $this->password
+                    . "&nohp="
+                    . $this->phonenumber
+                    . "&pesan="
+                    . urlencode($this->message)
+                ;
+
+                $this->messageCommand = $this->scheme . "://" . $this->host . $this->resource . $param;
             }
-
-            $this->messageCommand = $this->scheme . "://" . $this->host . ":" . $this->port . $this->resource . $param;
-        } elseif ($this->provider == "rajasms") {
-            $param = "?nohp="
-                . $this->phonenumber
-                . "&pesan="
-                . urlencode($this->message)
-                . "&key="
-                . $this->apikey
-            ;
-
-            $this->messageCommand = $url = $this->scheme . "://" . $this->host . $this->resource . $param;
-        } elseif ($this->provider == "zenziva") {
-
-            $param = "?userkey="
-                . $this->user
-                . "&passkey="
-                . $this->password
-                . "&nohp="
-                . $this->phonenumber
-                . "&pesan="
-                . urlencode($this->message)
-            ;
-
-            $this->messageCommand = $this->scheme . "://" . $this->host . $this->resource . $param;
         }
 
         $this->messagePopulated = true;
@@ -311,5 +326,21 @@ class Messenger
         $this->updateLogHasilAPI($this->messageCommand, $hasil);
 
         curl_close($ch);
+    }
+
+    /**
+     * @param boolean $useVendor
+     */
+    public function setUseVendor($useVendor = false)
+    {
+        $this->useVendor = $useVendor;
+    }
+
+    /**
+     * @param string $url
+     */
+    public function setVendorURL($url = "")
+    {
+        $this->vendorURL = $url;
     }
 }

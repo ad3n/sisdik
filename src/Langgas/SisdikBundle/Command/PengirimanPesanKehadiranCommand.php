@@ -8,6 +8,7 @@ use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,6 +70,12 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
             }
 
             if (!$this->isLocked($sekolah->getNomorUrut())) {
+                $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                    ])
+                ;
+
                 $tahunAkademikAktif = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
                     ->findOneBy([
                         'sekolah' => $sekolah,
@@ -245,6 +252,12 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->getContainer()->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
+                                                if ($vendorSekolah instanceof VendorSekolah) {
+                                                    if ($vendorSekolah->getJenis() == 'khusus') {
+                                                        $messenger->setUseVendor(true);
+                                                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                                    }
+                                                }
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
 
