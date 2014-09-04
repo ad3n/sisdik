@@ -231,7 +231,13 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $tekstemplate);
 
                                         $tekstemplate = str_replace("%tanggal%", $kehadiran->getTanggal()->format('d/m/Y'), $tekstemplate);
-                                        $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
+
+                                        if (!$kehadiran->isTervalidasi()) {
+                                            $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
+                                        } else {
+                                            $tekstemplate = str_replace("%jam%", "", $tekstemplate);
+                                        }
+
                                         $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
 
                                         $terkirim = false;

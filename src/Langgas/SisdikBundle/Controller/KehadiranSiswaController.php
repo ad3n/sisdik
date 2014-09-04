@@ -226,6 +226,7 @@ class KehadiranSiswaController extends Controller
                     $kehadiran = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')->find($matches[1]);
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
                         $kehadiran->setStatusKehadiran($values);
+                        $kehadiran->setTervalidasi(true);
                         $kehadiran->setKeteranganStatus($data['kehadiran_keterangan_' . $matches[1]]);
                         $em->persist($kehadiran);
                     }
@@ -315,6 +316,7 @@ class KehadiranSiswaController extends Controller
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
                         $kehadiran->setKeteranganStatus(null);
                         $kehadiran->setPermulaan(true);
+                        $kehadiran->setTervalidasi(false);
                         $kehadiran->setSmsDlr(null);
                         $kehadiran->setSmsDlrtime(null);
                         $kehadiran->setSmsTerproses(false);
@@ -360,6 +362,7 @@ class KehadiranSiswaController extends Controller
                     $kehadiran->setSiswa($siswaKelas->getSiswa());
                     $kehadiran->setStatusKehadiran($statusKehadiran);
                     $kehadiran->setPermulaan(true);
+                    $kehadiran->setTervalidasi(false);
                     $kehadiran->setTanggal(new \DateTime($tanggal));
                     $jam = new \DateTime();
                     $kehadiran->setJam($jam->format('H:i') . ':00');

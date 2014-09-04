@@ -36,6 +36,13 @@ class KehadiranSiswa
     private $permulaan = true;
 
     /**
+     * @ORM\Column(name="tervalidasi", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
+     */
+    private $tervalidasi = false;
+
+    /**
      * @ORM\Column(name="tanggal", type="date", nullable=true)
      *
      * @var \DateTime
@@ -155,6 +162,22 @@ class KehadiranSiswa
     public function isPermulaan()
     {
         return $this->permulaan;
+    }
+
+    /**
+     * @param boolean $tervalidasi
+     */
+    public function setTervalidasi($tervalidasi)
+    {
+        $this->tervalidasi = $tervalidasi;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTervalidasi()
+    {
+        return $this->tervalidasi;
     }
 
     /**
