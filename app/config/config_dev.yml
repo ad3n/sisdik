@@ -10,14 +10,19 @@ web_profiler:
     intercept_redirects: false
 
 monolog:
+    channels: ["messenger"]
     handlers:
         main:
-            type:  stream
-            path:  %kernel.logs_dir%/%kernel.environment%.log
-            level: debug
+            type:     stream
+            path:     "%kernel.logs_dir%/%kernel.environment%.log"
+            level:    debug
         firephp:
-            type:  firephp
-            level: info
+            type:     firephp
+            level:    info
+        messenger:
+            type:     stream
+            path:     "%kernel.logs_dir%/%kernel.environment%_messenger.log"
+            channels: [messenger]
 
 assetic:
    use_controller: false
