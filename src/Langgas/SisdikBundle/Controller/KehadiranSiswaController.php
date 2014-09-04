@@ -4,7 +4,6 @@ namespace Langgas\SisdikBundle\Controller;
 use Langgas\SisdikBundle\Form\KehadiranSiswaSmsType;
 use Langgas\SisdikBundle\Form\KehadiranSiswaInisiasiType;
 use Langgas\SisdikBundle\Form\KehadiranSiswaType;
-use Langgas\SisdikBundle\Form\KehadiranSiswaSearchType;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\SiswaKelas;
@@ -43,7 +42,7 @@ class KehadiranSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
+        $searchform = $this->createForm('sisdik_kehadiransiswasearch');
 
         $hariIni = new \DateTime();
         $searchform->get('tanggal')->setData($hariIni);
@@ -77,7 +76,7 @@ class KehadiranSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new KehadiranSiswaSearchType($this->container));
+        $searchform = $this->createForm('sisdik_kehadiransiswasearch');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kehadiran')

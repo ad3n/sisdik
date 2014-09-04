@@ -126,6 +126,9 @@ class GrafikKehadiranSiswaController extends Controller
             }
         }
 
+        $searchform = $this->createForm('sisdik_kehadiransiswasearch');
+        $searchform->setData(['tanggal' => $tanggalTampil]);
+
         return [
             'tahunAkademikAktif' => $tahunAkademikAktif,
             'tanggalTampil' => $tanggalTampil,
@@ -136,6 +139,7 @@ class GrafikKehadiranSiswaController extends Controller
             'daftarKelasPerTingkat' => $daftarKelasPerTingkat,
             'kehadiranSiswaTotal' => $kehadiranSiswaTotal,
             'kehadiranSiswaPerKelas' => $kehadiranSiswaPerKelas,
+            'searchform' => $searchform->createView(),
         ];
     }
 

@@ -84,7 +84,7 @@ h3 {
             <div class="grafik-container-perkelas">
                 <div class="grafik-kehadiran-siswa-perkelas" id="grafik-kehadiran-siswa-perkelas-{{ kelas.id }}"></div>
             </div>
-            <span class="link-info-tabulasi"><a href="{{ path('kehadiran-siswa') }}">lihat tabulasi</a></span>
+            <span class="link-info-tabulasi"><a href="{{ path('kehadiran-siswa_edit') }}" class="lihat-tabulasi" data-tingkat="{{ kelas.tingkat.id }}" data-kelas="{{ kelas.id }}">lihat tabulasi</a></span>
         </div>
     {% endfor %}
     <div class="clearfix"></div>
@@ -103,6 +103,12 @@ h3 {
         {{ 'member'|trans }}: {{ personilPanitiaPendaftaranAktif }}
     </p>
 {% endif %}
+
+<div style="display: none;">
+    <form id="form-kehadiran" method="get" action="{{ path('kehadiran-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+        {{ form_widget(searchform) }}
+    </form>
+</div>
 
 {% endblock content %}
 
@@ -178,6 +184,13 @@ $(function () {
         });
         {% endfor %}
     {% endfor %}
+
+    $(".lihat-tabulasi").click(function(){
+        $("#sisdik_kehadiransiswasearch_tingkat").val($(this).attr("data-tingkat"));
+        $("#sisdik_kehadiransiswasearch_kelas").val($(this).attr("data-kelas"));
+        $("#form-kehadiran").submit();
+        return false;
+    });
 });
 </script>
 {% endblock %}
