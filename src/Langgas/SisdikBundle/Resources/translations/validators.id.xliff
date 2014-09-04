@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-07-17T12:58:27Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-09-04T21:32:30Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
       <trans-unit id="983d99112b30201b0bef8c793b31a83390402198" resname="Entity tak ditemukan.">
-        <jms:reference-file line="39">SisdikBundle/Form/EntityHiddenType.php</jms:reference-file>
+        <jms:reference-file line="47">SisdikBundle/Form/EntityHiddenType.php</jms:reference-file>
         <source>Entity tak ditemukan.</source>
         <target>Entity tak ditemukan.</target>
       </trans-unit>
@@ -48,9 +48,9 @@
         <target>harap masukkan password</target>
       </trans-unit>
       <trans-unit id="1d1fed1a8442ac6d12a66f2cd2072b644261d073" resname="fos_user.password.notequal">
-        <jms:reference-file line="153">SisdikBundle/Form/UserFormType.php</jms:reference-file>
-        <jms:reference-file line="69">SisdikBundle/Form/UserRegisterFormType.php</jms:reference-file>
-        <jms:reference-file line="25">SisdikBundle/Form/RegistrationFormType.php</jms:reference-file>
+        <jms:reference-file line="154">SisdikBundle/Form/UserFormType.php</jms:reference-file>
+        <jms:reference-file line="70">SisdikBundle/Form/UserRegisterFormType.php</jms:reference-file>
+        <jms:reference-file line="26">SisdikBundle/Form/RegistrationFormType.php</jms:reference-file>
         <source>fos_user.password.notequal</source>
         <target>harap masukkan password yang sama</target>
       </trans-unit>
@@ -75,23 +75,23 @@
         <target>username terlalu singkat</target>
       </trans-unit>
       <trans-unit id="06ee6913a5df84dd1fda944240c3f3d4840e07a2" resname="pencarian.nominal.tidak.sah">
-        <jms:reference-file line="79">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
-        <jms:reference-file line="89">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
+        <jms:reference-file line="80">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
+        <jms:reference-file line="90">SisdikBundle/Form/TransaksiKeuanganSearchType.php</jms:reference-file>
         <source>pencarian.nominal.tidak.sah</source>
         <target>Pencarian nominal tidak sah</target>
       </trans-unit>
       <trans-unit id="a2d86027bc4abf948ee8065d52bbff2a2af2e509" resname="pencarian.persen.maksimal">
-        <jms:reference-file line="55">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
+        <jms:reference-file line="56">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
         <source>pencarian.persen.maksimal</source>
         <target>Maksimal pencarian 100%</target>
       </trans-unit>
       <trans-unit id="20bfbd3102b6137ccaeeb9890be3221ca9a792c2" resname="pencarian.persen.minimal">
-        <jms:reference-file line="54">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
+        <jms:reference-file line="55">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
         <source>pencarian.persen.minimal</source>
         <target>Minimal pencarian 0%</target>
       </trans-unit>
       <trans-unit id="5c0c9947d345defb087d5546608ece1466c4afa9" resname="pencarian.persen.tidak.sah">
-        <jms:reference-file line="64">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
+        <jms:reference-file line="65">Form/EventListener/JumlahBayarSubscriber.php</jms:reference-file>
         <source>pencarian.persen.tidak.sah</source>
         <target>Pencarian persentase tidak sah</target>
       </trans-unit>
