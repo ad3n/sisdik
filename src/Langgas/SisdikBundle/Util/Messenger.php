@@ -294,7 +294,7 @@ class Messenger
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 13);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
         curl_setopt($ch, CURLOPT_URL, $this->messageCommand);
         $hasil = curl_exec($ch);
