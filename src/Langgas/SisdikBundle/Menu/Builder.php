@@ -1,12 +1,13 @@
 <?php
+
 namespace Langgas\SisdikBundle\Menu;
 
+use Knp\Menu\FactoryInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
-use Knp\Menu\FactoryInterface;
-use Knp\Menu\Renderer\ListRenderer;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
 /**
@@ -25,7 +26,7 @@ class Builder extends ContainerAware
     protected $container;
 
     /**
-     * @param FactoryInterface $factory
+     * @param FactoryInterface   $factory
      * @param ContainerInterface $container
      */
     public function __construct(
@@ -38,12 +39,15 @@ class Builder extends ContainerAware
     }
 
     /**
-     * @param Request $request
+     * @param  Request       $request
      * @return ItemInterface
      */
     public function createMainMenu(Request $request)
     {
+        /* @var $securityContext SecurityContext */
         $securityContext = $this->container->get('security.context');
+
+        /* @var $translator Translator */
         $translator = $this->container->get('translator');
 
         $menu = $this->factory->createItem('root', [
@@ -91,6 +95,7 @@ class Builder extends ContainerAware
             $settings->addChild($translator->trans('links.academicyear', [], 'navigations'), ['route' => 'academicyear']);
             $settings->addChild($translator->trans('links.smstemplate', [], 'navigations'), ['route' => 'sms_template']);
             $settings->addChild($translator->trans('links.smspendaftaran', [], 'navigations'), ['route' => 'smspendaftaran']);
+            $settings->addChild($translator->trans('links.penyedia.jasa.sms', [], 'navigations'), ['route' => 'vendor_sekolah']);
             $settings->addChild($translator->trans('links.jenisdokumensiswa', [], 'navigations'), ['route' => 'jenisdokumensiswa']);
         }
 
