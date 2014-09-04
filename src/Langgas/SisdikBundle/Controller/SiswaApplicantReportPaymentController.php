@@ -1,6 +1,7 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Util\Messenger;
@@ -25,6 +26,7 @@ use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 
 /**
  * Siswa laporan-pembayaran-pendaftaran controller.
@@ -536,6 +538,12 @@ class SiswaApplicantReportPaymentController extends Controller
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'e-laporan-ringkasan',
                                 ));
 
+                $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                    ])
+                ;
+
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
@@ -543,6 +551,12 @@ class SiswaApplicantReportPaymentController extends Controller
                             foreach ($nomorponsel as $ponsel) {
                                 $messenger = $this->get('sisdik.messenger');
                                 if ($messenger instanceof Messenger) {
+                                    if ($vendorSekolah instanceof VendorSekolah) {
+                                        if ($vendorSekolah->getJenis() == 'khusus') {
+                                            $messenger->setUseVendor(true);
+                                            $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                        }
+                                    }
                                     $messenger->setPhoneNumber($ponsel);
                                     $messenger->setMessage($summarydata['teksTerformat']);
                                     $messenger->sendMessage($sekolah);

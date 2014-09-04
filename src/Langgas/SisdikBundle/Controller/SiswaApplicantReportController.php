@@ -23,6 +23,7 @@ use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 
 /**
  * Siswa laporan-pendaftaran controller.
@@ -494,6 +495,12 @@ class SiswaApplicantReportController extends Controller
                                     'sekolah' => $sekolah, 'jenisLayanan' => 'e-laporan-ringkasan',
                                 ));
 
+                $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                    ])
+                ;
+
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
@@ -501,6 +508,12 @@ class SiswaApplicantReportController extends Controller
                             foreach ($nomorponsel as $ponsel) {
                                 $messenger = $this->get('sisdik.messenger');
                                 if ($messenger instanceof Messenger) {
+                                    if ($vendorSekolah instanceof VendorSekolah) {
+                                        if ($vendorSekolah->getJenis() == 'khusus') {
+                                            $messenger->setUseVendor(true);
+                                            $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                        }
+                                    }
                                     $messenger->setPhoneNumber($ponsel);
                                     $messenger->setMessage($summarydata['teksTerformat']);
                                     $messenger->sendMessage($sekolah);

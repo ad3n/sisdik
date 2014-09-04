@@ -22,6 +22,7 @@ use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use Langgas\SisdikBundle\Form\PembayaranPendaftaranType;
 use Langgas\SisdikBundle\Form\PembayaranPendaftaranCicilanType;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 
 /**
  * PembayaranPendaftaran controller.
@@ -229,6 +230,12 @@ class PembayaranPendaftaranController extends Controller
 
             $em->flush();
 
+            $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                ])
+            ;
+
             if (count($itemBiaya['tersimpan']) == 0) {
                 $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                         ->findBy(
@@ -276,6 +283,12 @@ class PembayaranPendaftaranController extends Controller
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
+                                                if ($vendorSekolah instanceof VendorSekolah) {
+                                                    if ($vendorSekolah->getJenis() == 'khusus') {
+                                                        $messenger->setUseVendor(true);
+                                                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                                    }
+                                                }
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
                                                 $messenger->sendMessage($sekolah);
@@ -358,6 +371,12 @@ class PembayaranPendaftaranController extends Controller
                                     foreach ($nomorponsel as $ponsel) {
                                         $messenger = $this->get('sisdik.messenger');
                                         if ($messenger instanceof Messenger) {
+                                            if ($vendorSekolah instanceof VendorSekolah) {
+                                                if ($vendorSekolah->getJenis() == 'khusus') {
+                                                    $messenger->setUseVendor(true);
+                                                    $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                                }
+                                            }
                                             $messenger->setPhoneNumber($ponsel);
                                             $messenger->setMessage($tekstemplate);
                                             $messenger->sendMessage($sekolah);
@@ -421,6 +440,12 @@ class PembayaranPendaftaranController extends Controller
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
+                                                if ($vendorSekolah instanceof VendorSekolah) {
+                                                    if ($vendorSekolah->getJenis() == 'khusus') {
+                                                        $messenger->setUseVendor(true);
+                                                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                                    }
+                                                }
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
                                                 $messenger->sendMessage($sekolah);
@@ -693,6 +718,12 @@ class PembayaranPendaftaranController extends Controller
 
             $em->flush();
 
+            $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                ])
+            ;
+
             $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                     ->findBy(
                             array(
@@ -756,6 +787,12 @@ class PembayaranPendaftaranController extends Controller
                                     foreach ($nomorponsel as $ponsel) {
                                         $messenger = $this->get('sisdik.messenger');
                                         if ($messenger instanceof Messenger) {
+                                            if ($vendorSekolah instanceof VendorSekolah) {
+                                                if ($vendorSekolah->getJenis() == 'khusus') {
+                                                    $messenger->setUseVendor(true);
+                                                    $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                                }
+                                            }
                                             $messenger->setPhoneNumber($ponsel);
                                             $messenger->setMessage($tekstemplate);
                                             $messenger->sendMessage($sekolah);
@@ -819,6 +856,12 @@ class PembayaranPendaftaranController extends Controller
                                         foreach ($nomorponsel as $ponsel) {
                                             $messenger = $this->get('sisdik.messenger');
                                             if ($messenger instanceof Messenger) {
+                                                if ($vendorSekolah instanceof VendorSekolah) {
+                                                    if ($vendorSekolah->getJenis() == 'khusus') {
+                                                        $messenger->setUseVendor(true);
+                                                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                                    }
+                                                }
                                                 $messenger->setPhoneNumber($ponsel);
                                                 $messenger->setMessage($tekstemplate);
                                                 $messenger->sendMessage($sekolah);

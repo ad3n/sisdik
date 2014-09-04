@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
 use Langgas\SisdikBundle\Form\KehadiranSiswaSmsType;
@@ -16,6 +17,7 @@ use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Util\Messenger;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -463,6 +465,12 @@ class KehadiranSiswaController extends Controller
             $statusKehadiran = $formKirimSms->get('statusKehadiran')->getData();
             $siswa = $formKirimSms->get('siswa')->getData();
 
+            $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                ])
+            ;
+
             // PERINGATAN: diasumsikan bahwa perulangan apapun
             // menggunakan template sms yang serupa :(
             $jadwalKehadiran = $em->getRepository('LanggasSisdikBundle:JadwalKehadiran')
@@ -556,6 +564,12 @@ class KehadiranSiswaController extends Controller
                         foreach ($nomorponsel as $ponsel) {
                             $messenger = $this->get('sisdik.messenger');
                             if ($messenger instanceof Messenger) {
+                                if ($vendorSekolah instanceof VendorSekolah) {
+                                    if ($vendorSekolah->getJenis() == 'khusus') {
+                                        $messenger->setUseVendor(true);
+                                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                    }
+                                }
                                 $messenger->setPhoneNumber($ponsel);
                                 $messenger->setMessage($tekstemplate);
                                 $messenger->sendMessage($sekolah);
@@ -612,6 +626,12 @@ class KehadiranSiswaController extends Controller
                                 foreach ($nomorponsel as $ponsel) {
                                     $messenger = $this->get('sisdik.messenger');
                                     if ($messenger instanceof Messenger) {
+                                        if ($vendorSekolah instanceof VendorSekolah) {
+                                            if ($vendorSekolah->getJenis() == 'khusus') {
+                                                $messenger->setUseVendor(true);
+                                                $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                                            }
+                                        }
                                         $messenger->setPhoneNumber($ponsel);
                                         $messenger->setMessage($tekstemplate);
                                         $messenger->sendMessage($sekolah);
