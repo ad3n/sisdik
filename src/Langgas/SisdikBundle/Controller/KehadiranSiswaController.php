@@ -228,6 +228,7 @@ class KehadiranSiswaController extends Controller
                     $kehadiran = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')->find($matches[1]);
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
                         $kehadiran->setStatusKehadiran($values);
+                        $kehadiran->setPermulaan(false);
                         $kehadiran->setTervalidasi(true);
                         $kehadiran->setKeteranganStatus($data['kehadiran_keterangan_' . $matches[1]]);
                         $em->persist($kehadiran);
