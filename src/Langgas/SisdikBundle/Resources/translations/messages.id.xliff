@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-09-08T17:36:09Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-09-08T18:07:44Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -1784,8 +1784,8 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="272">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
         <source>help.sms.kehadiran</source>
         <target><![CDATA[- Info laporan SMS kehadiran %status_sms% diproses untuk dikirim. Laporannya bisa dilihat pada menu laporan kehadiran siswa<br>
-- Jika SMS belum diproses, info SMS kehadiran akan otomatis diproses pada pukul %jam_sms%<br>
-- Gunakan tombol 'Kirim SMS' untuk mendahului pemrosesan atau untuk memproses ulang info sms kehadiran siswa secara manual<br>
+- Jika SMS belum diproses, info SMS kehadiran akan otomatis diproses sesuai jam yang ditentukan di jadwal kehadiran<br>
+- Gunakan tombol 'Kirim SMS' untuk mendahului pemrosesan atau 'Kirim SMS Ulang' untuk memproses ulang info sms kehadiran siswa secara manual<br>
 - Template SMS menggunakan format yang terpilih di jadwal kehadiran<br>
 - Pilih siswa jika hanya ingin mengirim sms untuk satu siswa tertentu]]></target>
       </trans-unit>

@@ -269,7 +269,12 @@ dd {
             </div>
             <div id="collapseFour" class="accordion-body collapse">
                 <div class="accordion-inner well">
-                    {{ 'help.sms.kehadiran'|trans|raw }}
+                    {% if prosesKehadiranSiswa.berhasilKirimSms %}
+                        {% set statusSms = "berhasil" %}
+                    {% else %}
+                        {% set statusSms = "tidak berhasil atau belum" %}
+                    {% endif %}
+                    {{ 'help.sms.kehadiran'|trans({'%status_sms%': statusSms})|raw }}
 
                     <div class="clearfix" style="margin-bottom: 2em;"></div>
 
