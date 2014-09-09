@@ -2,6 +2,7 @@
 
 namespace Langgas\SisdikBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Form\SiswaGenerateUsernameConfirmType;
 use Langgas\SisdikBundle\Form\SimpleSearchFormType;
 use Langgas\SisdikBundle\Form\SiswaSearchType;
@@ -395,6 +396,7 @@ class SiswaUsernameController extends Controller
      * @return string $filename
      */
     private function generateUsernamePasswordList($tahun, $penyaring, $outputfiletype = "ods", $regenerate = false) {
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $passwordargs = array(
@@ -421,15 +423,27 @@ class SiswaUsernameController extends Controller
             ;
             $usernameTersimpan = $qbUsername->getQuery()->getArrayResult();
 
-            $query = $em->createQuery(
-                    "SELECT siswa FROM LanggasSisdikBundle:Siswa siswa
-                    WHERE siswa.tahun = :tahun AND siswa.calonSiswa = :calon AND siswa.nomorIndukSistem NOT IN (?1)
-                    ORDER BY siswa.nomorIndukSistem ASC"
-                )
-                ->setParameter('tahun', $tahun)
-                ->setParameter('calon', false)
-                ->setParameter(1, array_map(function ($p) { return $p['username']; }, $usernameTersimpan))
-            ;
+            if (count($usernameTersimpan) > 0) {
+                $query = $em->createQuery(
+                        "SELECT siswa FROM LanggasSisdikBundle:Siswa siswa
+                        WHERE siswa.tahun = :tahun AND siswa.calonSiswa = :calon AND siswa.nomorIndukSistem NOT IN (?1)
+                        ORDER BY siswa.nomorIndukSistem ASC"
+                    )
+                    ->setParameter('tahun', $tahun)
+                    ->setParameter('calon', false)
+                    ->setParameter(1, array_map(function ($p) { return $p['username']; }, $usernameTersimpan))
+                ;
+            } else {
+                $query = $em->createQueryBuilder()
+                    ->select('siswa')
+                    ->from('LanggasSisdikBundle:Siswa', 'siswa')
+                    ->where('siswa.tahun = :tahun')
+                    ->andWhere('siswa.calonSiswa = :calon')
+                    ->orderBy('siswa.nomorIndukSistem', 'ASC')
+                    ->setParameter('tahun', $tahun)
+                    ->setParameter('calon', false)
+                ;
+            }
             $results = $query->execute();
         }
 
