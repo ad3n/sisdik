@@ -17,7 +17,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 {
     const LOCK_FILE = "pembaruan-kehadiran.lock";
     const LOCK_DIR = "lock";
-    const BEDA_WAKTU_MAKS = 610;
+    const BEDA_WAKTU_MAKS = 910;
     const TMP_DIR = "/tmp";
 
     protected function configure()
@@ -121,13 +121,13 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                         $dariJam = $jadwal->getParamstatusDariJam();
                         $hinggaJam = $jadwal->getParamstatusHinggaJam();
                         $tanggalJadwalDari = new \DateTime(date("Y-m-d $dariJam"));
-                        $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));;
+                        $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
 
                         if ($input->getOption('paksa')) {
                             $dariJam = $jamDari;
                             $hinggaJam = $jam;
                             $tanggalJadwalDari = new \DateTime(date("Y-m-d $dariJam"));
-                            $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));;
+                            $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
                         }
 
                         $waktuJadwal = strtotime(date('Y-m-d') . " $hinggaJam");
