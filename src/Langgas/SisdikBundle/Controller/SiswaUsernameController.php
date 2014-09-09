@@ -433,8 +433,9 @@ class SiswaUsernameController extends Controller
                     ->setParameter('calon', false)
                     ->setParameter(1, array_map(function ($p) { return $p['username']; }, $usernameTersimpan))
                 ;
+                $results = $query->execute();
             } else {
-                $query = $em->createQueryBuilder()
+                $qbSiswa = $em->createQueryBuilder()
                     ->select('siswa')
                     ->from('LanggasSisdikBundle:Siswa', 'siswa')
                     ->where('siswa.tahun = :tahun')
@@ -443,8 +444,8 @@ class SiswaUsernameController extends Controller
                     ->setParameter('tahun', $tahun)
                     ->setParameter('calon', false)
                 ;
+                $results = $qbSiswa->getQuery()->getResult();
             }
-            $results = $query->execute();
         }
 
         $outputusername = array();
