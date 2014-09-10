@@ -26,6 +26,9 @@
             <th class="{% if pagination.isSorted('mesinKehadiran.webPassword') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.web.password'|trans, 'mesinKehadiran.webPassword') }}
             </th>
+            <th class="{% if pagination.isSorted('mesinKehadiran.waktuTertibHarian') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.waktu.tertib.harian'|trans, 'mesinKehadiran.waktuTertibHarian') }}
+            </th>
             <th class="{% if pagination.isSorted('mesinKehadiran.active') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.active'|trans, 'mesinKehadiran.aktif') }}
             </th>
@@ -39,6 +42,7 @@
             <td data-title="{{ 'label.commkey'|trans }}">{{ data.commkey }}</td>
             <td data-title="{{ 'label.web.username'|trans }}">{{ data.webUsername }}</td>
             <td data-title="{{ 'label.web.password'|trans }}">{{ data.webPassword }}</td>
+            <td data-title="{{ 'label.waktu.tertib.harian'|trans }}">{{ data.waktuTertibHarian(false) }}</td>
             <td data-title="{{ 'label.active'|trans }}">
                 {% if data.aktif == 1 %}
                     <i class="fa fa-check fa-lg fa-fw check"></i>

@@ -21,6 +21,8 @@
     <dd>{{ entity.webUsername }}</dd>
     <dt>{{ 'label.web.password'|trans }}</dt>
     <dd>{{ entity.webPassword }}</dd>
+    <dt>{{ 'label.waktu.tertib.harian'|trans }}</dt>
+    <dd>{{ entity.waktuTertibHarian(false) }}</dd>
     <dt>{{ 'label.active'|trans }}</dt>
     <dd>
         {% if entity.aktif == 1 %}

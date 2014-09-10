@@ -68,24 +68,6 @@ class MesinKehadiran
     private $webPassword;
 
     /**
-     * @ORM\Column(name="waktu_hapus_harian", type="string", length=50, nullable=true)
-     * @Expose
-     * @SerializedName("waktu_hapus_harian")
-     *
-     * @var string
-     */
-    private $waktuHapusHarian;
-
-    /**
-     * @ORM\Column(name="waktu_cadang_harian", type="string", length=50, nullable=true)
-     * @Expose
-     * @SerializedName("waktu_cadang_harian")
-     *
-     * @var string
-     */
-    private $waktuCadangHarian;
-
-    /**
      * @ORM\Column(name="waktu_tertib_harian", type="string", length=50, nullable=true)
      * @Expose
      * @SerializedName("waktu_tertib_harian")
@@ -161,38 +143,6 @@ class MesinKehadiran
     }
 
     /**
-     * @param string $waktuHapusHarian
-     */
-    public function setWaktuHapusHarian($waktuHapusHarian)
-    {
-        $this->waktuHapusHarian = $waktuHapusHarian;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWaktuHapusHarian()
-    {
-        return $this->waktuHapusHarian;
-    }
-
-    /**
-     * @param string $waktuCadangHarian
-     */
-    public function setWaktuCadangHarian($waktuCadangHarian)
-    {
-        $this->waktuCadangHarian = $waktuCadangHarian;
-    }
-
-    /**
-     * @return string
-     */
-    public function getWaktuCadangHarian()
-    {
-        return $this->waktuCadangHarian;
-    }
-
-    /**
      * @param string $waktuTertibHarian
      */
     public function setWaktuTertibHarian($waktuTertibHarian)
@@ -201,11 +151,12 @@ class MesinKehadiran
     }
 
     /**
+     * @param  boolean $withsecond
      * @return string
      */
-    public function getWaktuTertibHarian()
+    public function getWaktuTertibHarian($withsecond = TRUE)
     {
-        return $this->waktuTertibHarian;
+        return !$withsecond ? substr($this->waktuTertibHarian, 0, 5) : $this->waktuTertibHarian;
     }
 
     /**

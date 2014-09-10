@@ -74,6 +74,15 @@ class MesinKehadiranType extends AbstractType
                 'required' => false,
                 'data' => '123456',
             ])
+            ->add('waktuTertibHarian', 'time', [
+                'label' => 'label.waktu.tertib.harian',
+                'required' => false,
+                'input' => 'string',
+                'widget' => 'single_text',
+                'with_seconds' => false,
+                'data' => '05:00:00',
+                'help_block' => 'help.waktu.tertib.harian',
+            ])
             ->add('aktif', null, [
                 'label' => 'label.active',
                 'required' => false,
