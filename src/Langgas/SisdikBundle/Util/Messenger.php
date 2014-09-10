@@ -324,7 +324,7 @@ class Messenger
         curl_setopt($ch, CURLOPT_URL, $this->messageCommand);
         $hasil = curl_exec($ch);
 
-        $this->logger->info($this->messageCommand);
+        $this->logger->info($sekolah->getId() . ' | ' . $sekolah->getNama() . ' | ' . $this->messageCommand);
         $this->updateLogHasilAPI($this->messageCommand, $hasil);
 
         curl_close($ch);
