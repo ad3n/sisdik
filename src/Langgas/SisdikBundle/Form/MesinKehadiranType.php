@@ -59,7 +59,6 @@ class MesinKehadiranType extends AbstractType
             ])
             ->add('commkey', null, [
                 'label' => 'label.commkey',
-                'data' => '0',
                 'attr' => [
                     'class' => 'mini',
                 ],
@@ -67,12 +66,10 @@ class MesinKehadiranType extends AbstractType
             ->add('webUsername', null, [
                 'label' => 'label.web.username',
                 'required' => false,
-                'data' => 'administrator',
             ])
             ->add('webPassword', null, [
                 'label' => 'label.web.password',
                 'required' => false,
-                'data' => '123456',
             ])
             ->add('waktuTertibHarian', 'time', [
                 'label' => 'label.waktu.tertib.harian',
@@ -80,7 +77,6 @@ class MesinKehadiranType extends AbstractType
                 'input' => 'string',
                 'widget' => 'single_text',
                 'with_seconds' => false,
-                'data' => '05:00:00',
                 'help_block' => 'help.waktu.tertib.harian',
             ])
             ->add('aktif', null, [

@@ -38,7 +38,7 @@ class MesinKehadiran
      *
      * @var string
      */
-    private $commkey;
+    private $commkey = 0;
 
     /**
      * @ORM\Column(name="aktif", type="boolean", nullable=false, options={"default"=1})
@@ -56,7 +56,7 @@ class MesinKehadiran
      *
      * @var string
      */
-    private $webUsername;
+    private $webUsername = "administrator";
 
     /**
      * @ORM\Column(name="web_password", type="string", length=50, nullable=false, options={"default"="123456"})
@@ -65,7 +65,7 @@ class MesinKehadiran
      *
      * @var string
      */
-    private $webPassword;
+    private $webPassword = "123456";
 
     /**
      * @ORM\Column(name="waktu_tertib_harian", type="string", length=50, nullable=true)
@@ -74,7 +74,7 @@ class MesinKehadiran
      *
      * @var string
      */
-    private $waktuTertibHarian;
+    private $waktuTertibHarian = "05:00:00";
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")

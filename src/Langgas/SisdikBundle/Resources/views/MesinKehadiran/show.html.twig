@@ -35,6 +35,8 @@
 
 <div class="clearfix"></div>
 
+<p style="font-style: italic; margin-top: 10px;">* {{ 'help.waktu.tertib.harian'|trans }}</p>
+
 <form id="delete-form" action="{{ path('attendancemachine_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
