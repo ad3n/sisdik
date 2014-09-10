@@ -33,11 +33,11 @@
         <tr>
             <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
             <th>{{ 'label.fee.type.entry'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 't.nominal') }}
+            <th class="{% if pagination.isSorted('biayaPendaftaran.nominal') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 'biayaPendaftaran.nominal') }}
             </th>
-            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
+            <th class="{% if pagination.isSorted('biayaPendaftaran.urutan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 'biayaPendaftaran.urutan') }}
             </th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
