@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Command;
 
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
@@ -17,7 +18,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 {
     const LOCK_FILE = "pembaruan-kehadiran.lock";
     const LOCK_DIR = "lock";
-    const BEDA_WAKTU_MAKS = 910;
+    const BEDA_WAKTU_MAKS = 1810;
     const TMP_DIR = "/tmp";
 
     protected function configure()
