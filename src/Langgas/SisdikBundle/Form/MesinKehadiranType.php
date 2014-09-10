@@ -3,11 +3,13 @@
 namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,27 +17,36 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class MesinKehadiranType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
+        $sekolah = $this->getSekolah();
 
         $builder
-            ->add('sekolah', new EntityHiddenType($em), [
+            ->add('sekolah', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
@@ -48,9 +59,20 @@ class MesinKehadiranType extends AbstractType
             ])
             ->add('commkey', null, [
                 'label' => 'label.commkey',
+                'data' => '0',
                 'attr' => [
                     'class' => 'mini',
                 ],
+            ])
+            ->add('webUsername', null, [
+                'label' => 'label.web.username',
+                'required' => false,
+                'data' => 'administrator',
+            ])
+            ->add('webPassword', null, [
+                'label' => 'label.web.password',
+                'required' => false,
+                'data' => '123456',
             ])
             ->add('aktif', null, [
                 'label' => 'label.active',
@@ -72,6 +94,6 @@ class MesinKehadiranType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_mesinkehadirantype';
+        return 'sisdik_mesinkehadiran';
     }
 }

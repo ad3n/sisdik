@@ -50,6 +50,24 @@ class MesinKehadiran
     private $aktif = true;
 
     /**
+     * @ORM\Column(name="web_username", type="string", length=50, nullable=false, options={"default"="administrator"})
+     * @Expose
+     * @SerializedName("web_username")
+     *
+     * @var string
+     */
+    private $webUsername;
+
+    /**
+     * @ORM\Column(name="web_password", type="string", length=50, nullable=false, options={"default"="123456"})
+     * @Expose
+     * @SerializedName("web_password")
+     *
+     * @var string
+     */
+    private $webPassword;
+
+    /**
      * @ORM\Column(name="waktu_hapus_harian", type="string", length=50, nullable=true)
      * @Expose
      * @SerializedName("waktu_hapus_harian")
@@ -204,5 +222,37 @@ class MesinKehadiran
     public function getSekolah()
     {
         return $this->sekolah;
+    }
+
+    /**
+     * @param string $webUsername
+     */
+    public function setWebUsername($webUsername)
+    {
+        $this->webUsername = $webUsername;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebUsername()
+    {
+        return $this->webUsername;
+    }
+
+    /**
+     * @param string $webPassword
+     */
+    public function setWebPassword($webPassword)
+    {
+        $this->webPassword = $webPassword;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebPassword()
+    {
+        return $this->webPassword;
     }
 }

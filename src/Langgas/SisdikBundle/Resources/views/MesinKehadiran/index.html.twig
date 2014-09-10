@@ -14,14 +14,20 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('t.alamatIp') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.ipaddress'|trans, 't.alamatIp') }}
+            <th class="{% if pagination.isSorted('mesinKehadiran.alamatIp') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.ipaddress'|trans, 'mesinKehadiran.alamatIp') }}
             </th>
-            <th class="{% if pagination.isSorted('t.commkey') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.commkey'|trans, 't.commkey') }}
+            <th class="{% if pagination.isSorted('mesinKehadiran.commkey') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.commkey'|trans, 'mesinKehadiran.commkey') }}
             </th>
-            <th class="{% if pagination.isSorted('t.active') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.active'|trans, 't.aktif') }}
+            <th class="{% if pagination.isSorted('mesinKehadiran.webUsername') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.web.username'|trans, 'mesinKehadiran.webUsername') }}
+            </th>
+            <th class="{% if pagination.isSorted('mesinKehadiran.webPassword') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.web.password'|trans, 'mesinKehadiran.webPassword') }}
+            </th>
+            <th class="{% if pagination.isSorted('mesinKehadiran.active') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.active'|trans, 'mesinKehadiran.aktif') }}
             </th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
@@ -31,6 +37,8 @@
         <tr>
             <td data-title="{{ 'label.ipaddress'|trans }}">{{ data.alamatIp }}</td>
             <td data-title="{{ 'label.commkey'|trans }}">{{ data.commkey }}</td>
+            <td data-title="{{ 'label.web.username'|trans }}">{{ data.webUsername }}</td>
+            <td data-title="{{ 'label.web.password'|trans }}">{{ data.webPassword }}</td>
             <td data-title="{{ 'label.active'|trans }}">
                 {% if data.aktif == 1 %}
                     <i class="fa fa-check fa-lg fa-fw check"></i>
