@@ -18,6 +18,10 @@
     background: white url('{{ asset_url }}') left center no-repeat;
     {% endimage %}
 }
+.peringatan {
+    font-size: 1em;
+    color: #ff0000;
+}
 </style>
 
 <form action="{{ path('siswa_mengimporbaru') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
@@ -31,6 +35,12 @@
 </form>
 
 <div class="clearfix"></div>
+
+<div class="peringatan">
+    {{ 'peringatan.impor.baru'|trans|raw }}<br>
+</div>
+
+<div class="clearfix" style="margin-top: 2em;"></div>
 
 <div class="download-section">
     <h4>{{ 'download.file.template'|trans({}, 'headings') }}:</h4>
