@@ -2,10 +2,8 @@
 
 namespace Langgas\SisdikBundle\Entity;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Entity\User as BaseUser;
 
 /**
@@ -69,6 +67,13 @@ class User extends BaseUser
      * @var Staf
      */
     private $staf;
+
+    /**
+     * @ORM\Column(name="nomor_ponsel", type="string", length=50, nullable=true)
+     *
+     * @var string
+     */
+    private $nomorPonsel;
 
     /**
      * @return integer
@@ -156,5 +161,21 @@ class User extends BaseUser
     public function getStaf()
     {
         return $this->staf;
+    }
+
+    /**
+     * @param string $nomorPonsel
+     */
+    public function setNomorPonsel($nomorPonsel)
+    {
+        $this->nomorPonsel = $nomorPonsel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNomorPonsel()
+    {
+        return $this->nomorPonsel;
     }
 }
