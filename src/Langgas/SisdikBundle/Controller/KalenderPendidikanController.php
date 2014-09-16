@@ -1,16 +1,16 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Util\Calendar;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\KalenderPendidikan;
-use Langgas\SisdikBundle\Form\KalenderPendidikanType;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Util\Calendar;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -25,7 +25,6 @@ class KalenderPendidikanController extends Controller
      */
     public function indexAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $searchform = $this->createForm('sisdik_kalenderpendidikansearch', ['year' => date('Y')]);
@@ -41,8 +40,6 @@ class KalenderPendidikanController extends Controller
      */
     public function processAction(Request $request)
     {
-        $sekolah = $this->isRegisteredToSchool();
-
         $searchform = $this->createForm('sisdik_kalenderpendidikansearch');
 
         $request = $this->getRequest();
@@ -65,7 +62,7 @@ class KalenderPendidikanController extends Controller
      */
     public function displayAction($year, $month)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $searchform = $this->createForm('sisdik_kalenderpendidikansearch', [
@@ -75,6 +72,7 @@ class KalenderPendidikanController extends Controller
 
         $nextmonth = date('Y-m-d', mktime(0, 0, 0, $month + 1, 1, $year));
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()
@@ -88,17 +86,24 @@ class KalenderPendidikanController extends Controller
         ;
 
         $dates = $querybuilder->getQuery()->getResult();
-        $activedates = array();
+        $activedates = [];
         if (!empty($dates)) {
             foreach ($dates as $date) {
-                $activedates[$date->getTanggal()->format('j')] = $date->getTanggal()->format('j');
+                if ($date instanceof KalenderPendidikan) {
+                    if ($date->getKbm() === true) {
+                        $activedates[$date->getTanggal()->format('j')] = $date->getTanggal()->format('j');
+                    }
+                }
             }
         }
 
         $objectCalendar = new Calendar;
         $calendar = $objectCalendar->createMonthlyCalendar($year, $month);
 
-        $form = $this->createForm(new KalenderPendidikanType($calendar, $activedates));
+        $form = $this->createForm('sisdik_kalenderpendidikan', null, [
+            'calendar' => $calendar,
+            'activedates' => $activedates,
+        ]);
 
         return [
             'calendar' => $calendar,
@@ -114,47 +119,44 @@ class KalenderPendidikanController extends Controller
      */
     public function updateAction(Request $request, $year, $month)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $objectCalendar = new Calendar;
         $calendar = $objectCalendar->createMonthlyCalendar($year, $month);
 
-        $form = $this->createForm(new KalenderPendidikanType($calendar));
+        $form = $this->createForm('sisdik_kalenderpendidikan', null, [
+            'calendar' => $calendar,
+        ]);
         $form->submit($request);
 
         if ($form->isValid()) {
+            /* @var $em EntityManager */
             $em = $this->getDoctrine()->getManager();
-
             $data = $form->getData();
-            $dates = '';
 
-            // TODO: use a smart update method, only delete an already existing data and insert a new one
-
-            // delete previously saved data in the selected year-month
-            $nextmonth = date('Y-m-d', mktime(0, 0, 0, $month + 1, 1, $year));
-            $query = $em->createQuery(
-                    "DELETE LanggasSisdikBundle:KalenderPendidikan t
-                    WHERE t.tanggal >= :firstday AND t.tanggal < :nextmonth
-                    AND t.sekolah = {$sekolah->getId()}"
-                )
-                ->setParameter('firstday', "$year-$month-01")
-                ->setParameter('nextmonth', $nextmonth)
-            ;
-            $query->execute();
-
-            // insert the new data for the selected year-month
             for ($i = 1; $i <= 31; $i++) {
                 if (array_key_exists('kbm_' . $i, $data) === true) {
-                    if ($data['kbm_' . $i] == 1) {
-                        $date = new \DateTime("$year-$month-$i");
-
-                        $entity = new KalenderPendidikan();
-                        $entity->setSekolah($sekolah);
-                        $entity->setKbm(true);
-                        $entity->setTanggal($date);
-
-                        $em->persist($entity);
+                    $tanggal = new \DateTime("$year-$month-$i");
+                    $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')->findOneBy([
+                        'sekolah' => $sekolah,
+                        'tanggal' => $tanggal,
+                    ]);
+                    if ($kalenderPendidikan instanceof KalenderPendidikan) {
+                        if ($data['kbm_' . $i] == 1) {
+                            $kalenderPendidikan->setKbm(true);
+                        } else {
+                            $kalenderPendidikan->setKbm(false);
+                        }
+                        $em->persist($kalenderPendidikan);
+                    } else {
+                        if ($data['kbm_' . $i] == 1) {
+                            $kalenderPendidikan = new KalenderPendidikan;
+                            $kalenderPendidikan->setSekolah($sekolah);
+                            $kalenderPendidikan->setKbm(true);
+                            $kalenderPendidikan->setTanggal($tanggal);
+                            $em->persist($kalenderPendidikan);
+                        }
                     }
                 }
             }
@@ -163,13 +165,10 @@ class KalenderPendidikanController extends Controller
             $this
                 ->get('session')
                 ->getFlashBag()
-                ->add(
-                    'success',
-                    $this->get('translator')->trans('flash.data.academic.calendar.updated', [
-                        '%year%' => $year,
-                        '%month%' => $calendar['months'][$month],
-                    ])
-                )
+                ->add('success', $this->get('translator')->trans('flash.data.academic.calendar.updated', [
+                    '%year%' => $year,
+                    '%month%' => $calendar['months'][$month],
+                ]))
             ;
         }
 
@@ -182,20 +181,14 @@ class KalenderPendidikanController extends Controller
     private function setCurrentMenu()
     {
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.academiccalendar', array(), 'navigations')]->setCurrent(true);
+        $menu[$this->get('translator')->trans('headings.academic', [], 'navigations')][$this->get('translator')->trans('links.data.academiccalendar', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }

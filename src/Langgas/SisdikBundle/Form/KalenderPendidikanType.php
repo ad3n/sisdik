@@ -4,6 +4,7 @@ namespace Langgas\SisdikBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -11,45 +12,25 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class KalenderPendidikanType extends AbstractType
 {
-    /**
-     * @var array
-     */
-    private $calendar = [];
-
-    /**
-     * @var array
-     */
-    private $activedates = [];
-
-    /**
-     * @param array $calendar
-     * @param array $activedates
-     */
-    public function __construct($calendar = [], $activedates = [])
-    {
-        $this->calendar = $calendar;
-        $this->activedates = $activedates;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('year', 'hidden', [
-                'data' => $this->calendar['year'],
+                'data' => $options['calendar']['year'],
             ])
             ->add('month', 'hidden', [
-                'data' => $this->calendar['month'],
+                'data' => $options['calendar']['month'],
             ])
         ;
 
-        foreach ($this->calendar['cal'] as $rows) {
+        foreach ($options['calendar']['cal'] as $rows) {
             foreach ($rows as $field) {
                 if ($field['num'] == '')
                     continue;
                 if ($field['off'] == 1)
                     continue;
 
-                if (array_key_exists($field['num'], $this->activedates)) {
+                if (array_key_exists($field['num'], $options['activedates'])) {
                     $builder
                         ->add('kbm_' . $field['num'], 'checkbox', [
                             'required' => false,
@@ -69,6 +50,16 @@ class KalenderPendidikanType extends AbstractType
                 }
             }
         }
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'calendar' => [],
+                'activedates' => [],
+            ])
+        ;
     }
 
     public function getName()
