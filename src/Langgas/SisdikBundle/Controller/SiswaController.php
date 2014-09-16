@@ -7,14 +7,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Langgas\SisdikBundle\Entity\SekolahAsal;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
-use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Form\SiswaType;
-use Langgas\SisdikBundle\Form\SiswaSearchType;
-use Langgas\SisdikBundle\Form\SiswaImportType;
-use Langgas\SisdikBundle\Form\SiswaMergeType;
-use Langgas\SisdikBundle\Form\SiswaExportType;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Util\EasyCSV\Reader;
 use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -24,7 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -54,50 +48,87 @@ class SiswaController extends Controller
      */
     public function indexAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new SiswaSearchType($this->container));
+        $qbtotal = $em->createQueryBuilder()
+            ->select('COUNT(siswa.id)')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->andWhere('siswa.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+        ;
+        $siswaTotal = $qbtotal->getQuery()->getSingleScalarResult();
+
+        $searchform = $this->createForm('sisdik_carisiswa');
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Siswa', 't')
-            ->leftJoin('t.tahun', 't2')
-            ->leftJoin('t.gelombang', 't3')
-            ->where('t.calonSiswa = :calon')
+            ->select('siswa')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.calonSiswa = :calon')
+            ->setParameter('sekolah', $sekolah)
             ->setParameter('calon', false)
-            ->andWhere('t.sekolah = :sekolah')
-            ->setParameter('sekolah', $sekolah->getId())
-            ->orderBy('t2.tahun', 'DESC')
-            ->addOrderBy('t.namaLengkap', 'ASC')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->addOrderBy('siswa.namaLengkap', 'ASC')
         ;
+
+        $qbJumlahPencarian = $em->createQueryBuilder()
+            ->select('COUNT(siswa.id)')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.calonSiswa = :calon')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('calon', false)
+        ;
+
+        $tampilkanTercari = false;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            if ($searchdata['tahun'] instanceof Tahun) {
+                $querybuilder->andWhere('siswa.tahun = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']);
+
+                $qbJumlahPencarian->andWhere('siswa.tahun = :tahun');
+                $qbJumlahPencarian->setParameter('tahun', $searchdata['tahun']);
+
+                $tampilkanTercari = true;
             }
+
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere("t.namaLengkap LIKE :searchkey OR t.nomorInduk = :searchkey2");
+                $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2");
                 $querybuilder->setParameter('searchkey', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('searchkey2', $searchdata['searchkey']);
+
+                $qbJumlahPencarian->andWhere('siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2');
+                $qbJumlahPencarian->setParameter('searchkey', "%{$searchdata['searchkey']}%");
+                $qbJumlahPencarian->setParameter('searchkey2', $searchdata['searchkey']);
+
+                $tampilkanTercari = true;
             }
         }
+
+        $siswaTercari = $qbJumlahPencarian->getQuery()->getSingleScalarResult();
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        $dlform = $this->createForm(new SiswaExportType($this->container));
+        $dlform = $this->createForm('sisdik_siswaexport');
 
-        return array(
-                'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'dlform' => $dlform->createView(),
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'dlform' => $dlform->createView(),
+            'siswaTotal' => $siswaTotal,
+            'tampilkanTercari' => $tampilkanTercari,
+            'siswaTercari' => $siswaTercari,
+        ];
     }
 
     /**
@@ -108,7 +139,6 @@ class SiswaController extends Controller
      */
     public function showAction($id)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -121,9 +151,10 @@ class SiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
@@ -134,47 +165,47 @@ class SiswaController extends Controller
      */
     public function newAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $entity = new Siswa();
-        $orangtuaWali = new OrangtuaWali();
+        $entity = new Siswa;
+        $orangtuaWali = new OrangtuaWali;
         $entity->getOrangtuaWali()->add($orangtuaWali);
 
-        $form = $this->createForm(new SiswaType($this->container, "new"), $entity);
+        $form = $this->createForm('sisdik_siswa', $entity, ['mode' => 'new']);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new Siswa entity.
-     *
      * @Route("/create", name="siswa_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:new.html.twig")
      */
     public function createAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
-        $userManager = $this->get('fos_user.user_manager');
 
-        $entity = new Siswa();
-        $request = $this->getRequest();
-        $form = $this->createForm(new SiswaType($this->container, "new"), $entity);
-        $form->submit($request);
+        $entity = new Siswa;
+        $form = $this->createForm('sisdik_siswa', $entity, ['mode' => 'new']);
 
+        $form->submit($this->getRequest());
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
             $qbe = $em->createQueryBuilder();
-            $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
-                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
-                    ->setParameter('sekolah', $sekolah->getId());
+            $querynomor = $em->createQueryBuilder()
+                ->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
+                ->where('siswa.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah)
+            ;
 
             $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
             $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
@@ -193,38 +224,31 @@ class SiswaController extends Controller
                 throw new DBALException($e);
             }
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.data.student.inserted',
-                                            array(
-                                                '%student%' => $entity->getNamaLengkap()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.data.student.inserted', [
+                    '%student%' => $entity->getNamaLengkap(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('siswa_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
-
+            return $this->redirect($this->generateUrl('siswa_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing Siswa entity.
-     *
      * @Route("/{id}/edit", name="siswa_edit")
      * @Template()
      */
     public function editAction($id)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -235,29 +259,26 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaType($this->container, "edit"), $entity);
+        $editForm = $this->createForm('sisdik_siswa', $entity, ['mode' => 'edit']);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing Siswa entity.
-     *
      * @Route("/{id}/update", name="siswa_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:edit.html.twig")
      */
     public function updateAction($id)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
-        $userManager = $this->get('fos_user.user_manager');
 
         $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
         $prevNomorInduk = $entity->getNomorInduk();
@@ -266,7 +287,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaType($this->container, "edit"), $entity);
+        $editForm = $this->createForm('sisdik_siswa', $entity, ['mode' => 'edit']);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -282,27 +303,24 @@ class SiswaController extends Controller
                 throw new DBALException($message);
             }
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.data.student.updated',
-                                            array(
-                                                '%student%' => $entity->getNamaLengkap()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.data.student.updated', [
+                    '%student%' => $entity->getNamaLengkap(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('siswa_edit',
-                                            array(
-                                                'id' => $id
-                                            )));
+            return $this->redirect($this->generateUrl('siswa_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
@@ -315,7 +333,6 @@ class SiswaController extends Controller
      */
     public function deleteConfirmAction($id)
     {
-        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -328,20 +345,18 @@ class SiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a Siswa entity.
-     *
      * @Route("/{id}/delete", name="siswa_delete")
      * @Method("POST")
      */
     public function deleteAction($id)
     {
-        $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $form = $this->createDeleteForm($id);
@@ -361,28 +376,29 @@ class SiswaController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.student.deleted',
-                                                array(
-                                                    '%student%' => $entity->getNamaLengkap()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.student.deleted', [
+                        '%student%' => $entity->getNamaLengkap(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.data.student.fail.delete'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.data.student.fail.delete'))
+            ;
         }
 
         return $this->redirect($this->generateUrl('siswa'));
     }
 
     /**
-     * Displays a form to import Siswa entities.
-     *
      * @Route("/impor-baru", name="siswa_imporbaru")
      * @Template("LanggasSisdikBundle:Siswa:impor-baru.html.twig")
      * @Method("GET")
@@ -390,19 +406,16 @@ class SiswaController extends Controller
      */
     public function imporBaruAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaImportType($this->container));
+        $form = $this->createForm('sisdik_siswaimpor');
 
-        return array(
-            'form' => $form->createView()
-        );
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Mengimpor data siswa baru
-     *
      * @Route("/mengimpor-baru", name="siswa_mengimporbaru")
      * @Template("LanggasSisdikBundle:Siswa:impor-baru.html.twig")
      * @Method("POST")
@@ -410,10 +423,10 @@ class SiswaController extends Controller
      */
     public function mengimporBaruAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaImportType($this->container));
+        $form = $this->createForm('sisdik_siswaimpor');
 
         $form->submit($this->getRequest());
 
@@ -446,11 +459,9 @@ class SiswaController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom') {
+                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
                             $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
+                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
                             // baris yang tak perlu dibaca
                         } else {
                             $cellContent[] = $cell['data'];
@@ -461,10 +472,10 @@ class SiswaController extends Controller
                     }
                 }
 
-                array_walk($fieldnames,
-                        array(
-                            &$this, "formatNamaField"
-                        ));
+                array_walk($fieldnames, [
+                    &$this,
+                    "formatNamaField",
+                ]);
 
                 foreach ($content as $value) {
                     $this->imporSiswaBaru($value, $fieldnames, $sekolah, $tahun);
@@ -480,28 +491,26 @@ class SiswaController extends Controller
                     throw new \Exception($message);
                 }
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.student.imported',
-                                                array(
-                                                        '%count%' => $this->imporSiswaJumlah,
-                                                        '%year%' => $tahun->getTahun(),
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.student.imported', [
+                        '%count%' => $this->imporSiswaJumlah,
+                        '%year%' => $tahun->getTahun(),
+                    ]))
+                ;
 
                 return $this->redirect($this->generateUrl('siswa_imporbaru'));
 
             }
         }
 
-        return array(
-            'form' => $form->createView()
-        );
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to import and merge Siswa entities.
-     *
      * @Route("/impor-gabung", name="siswa_imporgabung")
      * @Template("LanggasSisdikBundle:Siswa:impor-gabung.html.twig")
      * @Method("GET")
@@ -509,21 +518,19 @@ class SiswaController extends Controller
      */
     public function imporGabungAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaMergeType());
+        $form = $this->createForm('sisdik_siswagabung');
 
-        $dlform = $this->createForm(new SiswaExportType($this->container));
+        $dlform = $this->createForm('sisdik_siswaexport');
 
-        return array(
-            'form' => $form->createView(), 'dlform' => $dlform->createView()
-        );
+        return [
+            'form' => $form->createView(),
+            'dlform' => $dlform->createView(),
+        ];
     }
 
     /**
-     * Displays a form to import and merge Siswa entities.
-     *
      * @Route("/mengimpor-gabung", name="siswa_mengimporgabung")
      * @Template("LanggasSisdikBundle:Siswa:impor-gabung.html.twig")
      * @Method("POST")
@@ -531,10 +538,10 @@ class SiswaController extends Controller
      */
     public function mengimporGabungAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaMergeType());
+        $form = $this->createForm('sisdik_siswagabung');
 
         $form->submit($this->getRequest());
 
@@ -566,11 +573,9 @@ class SiswaController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom') {
+                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
                             $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
+                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
                             // baris yang tak perlu dibaca
                         } else {
                             $cellContent[] = $cell['data'];
@@ -581,10 +586,10 @@ class SiswaController extends Controller
                     }
                 }
 
-                array_walk($fieldnames,
-                        array(
-                            &$this, "formatNamaField"
-                        ));
+                array_walk($fieldnames, [
+                    &$this,
+                    "formatNamaField",
+                ]);
 
                 foreach ($content as $value) {
                     $this->gabungSiswa($value, $fieldnames, $sekolah);
@@ -600,23 +605,24 @@ class SiswaController extends Controller
                     throw new \Exception($message);
                 }
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.student.merged',
-                                                array(
-                                                    '%count%' => $this->gabungSiswaJumlah,
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.student.merged', [
+                        '%count%' => $this->gabungSiswaJumlah,
+                    ]))
+                ;
 
                 return $this->redirect($this->generateUrl('siswa_imporgabung'));
             }
         }
 
-        $dlform = $this->createForm(new SiswaExportType($this->container));
+        $dlform = $this->createForm('sisdik_siswaexport');
 
-        return array(
-            'form' => $form->createView(), 'dlform' => $dlform->createView()
-        );
+        return [
+            'form' => $form->createView(),
+            'dlform' => $dlform->createView(),
+        ];
     }
 
     /**
@@ -627,7 +633,7 @@ class SiswaController extends Controller
      */
     public function fileTemplateAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
@@ -640,7 +646,7 @@ class SiswaController extends Controller
         $filesource = $filenameoutput . $extensionsource;
         $filetarget = $filenameoutput . $extensiontarget;
 
-        $fs = new Filesystem();
+        $fs = new Filesystem;
         if (!$fs->exists($outputdir . $sekolah->getId())) {
             $fs->mkdir($outputdir . $sekolah->getId());
         }
@@ -650,32 +656,24 @@ class SiswaController extends Controller
 
         if ($outputfiletype == 'ods') {
             if (copy($documentbase, $documenttarget) === TRUE) {
-                $ziparchive = new \ZipArchive();
+                $ziparchive = new \ZipArchive;
                 $ziparchive->open($documenttarget);
-                $ziparchive
-                        ->addFromString('styles.xml',
-                                $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
-                $ziparchive
-                        ->addFromString('settings.xml',
-                                $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
-                $ziparchive
-                        ->addFromString('content.xml',
-                                $this->renderView("LanggasSisdikBundle:Siswa:template-file.xml.twig"));
+                $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
+                $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
+                $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:Siswa:template-file.xml.twig"));
                 if ($ziparchive->close() === TRUE) {
-                    $return = array(
-                            "redirectUrl" => $this
-                                    ->generateUrl("siswa_downloadfile",
-                                            array(
-                                                'filename' => $filetarget
-                                            )), "filename" => $filetarget,
-                    );
+                    $return = [
+                        "redirectUrl" => $this->generateUrl("siswa_downloadfile", [
+                            'filename' => $filetarget
+                        ]),
+                        "filename" => $filetarget,
+                    ];
 
                     $return = json_encode($return);
 
-                    return new Response($return, 200,
-                            array(
-                                'Content-Type' => 'application/json'
-                            ));
+                    return new Response($return, 200, [
+                        'Content-Type' => 'application/json',
+                    ]);
                 }
             }
         }
@@ -689,22 +687,27 @@ class SiswaController extends Controller
      */
     public function exportAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaExportType($this->container));
+        $form = $this->createForm('sisdik_siswaexport');
 
         $form->submit($this->getRequest());
-
         if ($form->isValid()) {
             $formdata = $form->getData();
+            /* @var $em EntityManager */
             $em = $this->getDoctrine()->getManager();
 
-            $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.tahun = :tahun')
-                    ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
-                    ->setParameter('tahun', $formdata['tahun']->getId())
-                    ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
+            $querybuilder = $em->createQueryBuilder()
+                ->select('siswa')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
+                ->where('siswa.tahun = :tahun')
+                ->andWhere('siswa.sekolah = :sekolah')
+                ->andWhere('siswa.calonSiswa = :calon')
+                ->setParameter('tahun', $formdata['tahun'])
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('calon', false)
+            ;
             $entities = $querybuilder->getQuery()->getResult();
 
             $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
@@ -719,57 +722,50 @@ class SiswaController extends Controller
             $filesource = $filenameoutput . $extensionsource;
             $filetarget = $filenameoutput . $extensiontarget;
 
-            $fs = new Filesystem();
-            if (!$fs
-                    ->exists(
-                            $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
-                                    . $formdata['tahun']->getTahun())) {
-                $fs
-                        ->mkdir(
-                                $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
-                                        . $formdata['tahun']->getTahun());
+            $fs = new Filesystem;
+            if (!$fs->exists($outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $formdata['tahun']->getTahun())) {
+                $fs->mkdir($outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $formdata['tahun']->getTahun());
             }
 
-            $documentsource = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
-                    . $formdata['tahun']->getTahun() . DIRECTORY_SEPARATOR . $filesource;
-            $documenttarget = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR
-                    . $formdata['tahun']->getTahun() . DIRECTORY_SEPARATOR . $filetarget;
+            $documentsource = $outputdir
+                . $sekolah->getId()
+                . DIRECTORY_SEPARATOR
+                . $formdata['tahun']->getTahun()
+                . DIRECTORY_SEPARATOR
+                . $filesource
+            ;
+            $documenttarget = $outputdir
+                . $sekolah->getId()
+                . DIRECTORY_SEPARATOR
+                . $formdata['tahun']->getTahun()
+                . DIRECTORY_SEPARATOR
+                . $filetarget
+            ;
 
             if ($outputfiletype == 'ods') {
                 if (copy($documentbase, $documenttarget) === TRUE) {
-                    $ziparchive = new \ZipArchive();
+                    $ziparchive = new \ZipArchive;
                     $ziparchive->open($documenttarget);
-                    $ziparchive
-                            ->addFromString('styles.xml',
-                                    $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
-                    $ziparchive
-                            ->addFromString('settings.xml',
-                                    $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
-                    $ziparchive
-                            ->addFromString('content.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:Siswa:datasiswa-pertahun.xml.twig",
-                                                    array(
-                                                            'entities' => $entities,
-                                                            'jumlahSiswa' => count($entities)
-                                                    )));
+                    $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
+                    $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
+                    $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:Siswa:datasiswa-pertahun.xml.twig", [
+                        'entities' => $entities,
+                        'jumlahSiswa' => count($entities),
+                    ]));
                     if ($ziparchive->close() === TRUE) {
-                        $return = array(
-                                "redirectUrl" => $this
-                                        ->generateUrl("siswa_downloadfile",
-                                                array(
-                                                        'filename' => $filetarget,
-                                                        'tahun' => $formdata['tahun']->getTahun(),
-                                                )), "filename" => $filetarget,
-                        );
+                        $return = [
+                            "redirectUrl" => $this->generateUrl("siswa_downloadfile", [
+                                'filename' => $filetarget,
+                                'tahun' => $formdata['tahun']->getTahun(),
+                            ]),
+                            "filename" => $filetarget,
+                        ];
 
                         $return = json_encode($return);
 
-                        return new Response($return, 200,
-                                array(
-                                    'Content-Type' => 'application/json'
-                                ));
+                        return new Response($return, 200, [
+                            'Content-Type' => 'application/json',
+                        ]);
                     }
                 }
             }
@@ -784,12 +780,13 @@ class SiswaController extends Controller
      */
     public function downloadFileAction($filename, $type = 'ods', $tahun = '')
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
 
         $filetarget = $filename;
-        $documenttarget = $tahun != '' ? self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR
-                        . $tahun . DIRECTORY_SEPARATOR . $filetarget
-                : self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR . $filetarget;
+        $documenttarget = $tahun != ''
+            ? self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR . $tahun . DIRECTORY_SEPARATOR . $filetarget
+            : self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR . $filetarget
+        ;
 
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
@@ -828,6 +825,7 @@ class SiswaController extends Controller
      */
     private function imporSiswaBaru($content, $fieldnames, $sekolah, $tahun, $andFlush = false)
     {
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $atleastone = false;
@@ -836,10 +834,9 @@ class SiswaController extends Controller
                 $atleastone = true;
             }
         }
-        if (!$atleastone)
-            return;
+        if (!$atleastone) return;
 
-        $entity = new Siswa();
+        $entity = new Siswa;
 
         $reflectionClass = new \ReflectionClass('Langgas\SisdikBundle\Entity\Siswa');
         $entityFields = [];
@@ -847,8 +844,8 @@ class SiswaController extends Controller
             $entityFields[] = $property->getName();
         }
 
-        $orangtuaWali = new ArrayCollection();
-        $ortu = new OrangtuaWali();
+        $orangtuaWali = new ArrayCollection;
+        $ortu = new OrangtuaWali;
         $sekolahAsal = null;
 
         foreach ($fieldnames as $keyfield => $valuefield) {
@@ -872,14 +869,18 @@ class SiswaController extends Controller
                         $ortu->{'set' . ucfirst($childfield)}(trim($value));
                     } elseif ($valuefield == 'sekolahAsal') {
                         if (trim($value) != '') {
-                            $querySekolahAsal = $em->createQueryBuilder()->select('sekolahasal')
-                                    ->from('LanggasSisdikBundle:SekolahAsal', 'sekolahasal')
-                                    ->where('sekolahasal.nama LIKE :nama')->setParameter('nama', "%$value%");
+                            $querySekolahAsal = $em->createQueryBuilder()
+                                ->select('sekolahasal')
+                                ->from('LanggasSisdikBundle:SekolahAsal', 'sekolahasal')
+                                ->where('sekolahasal.nama LIKE :nama')
+                                ->setParameter('nama', "%$value%")
+                            ;
                             $resultSekolahAsal = $querySekolahAsal->getQuery()->getResult();
+
                             if (count($resultSekolahAsal) >= 1) {
                                 $sekolahAsal = $resultSekolahAsal[0];
                             } else {
-                                $sekolahAsal = new SekolahAsal();
+                                $sekolahAsal = new SekolahAsal;
                                 $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
                                 $sekolahAsal->setSekolah($sekolah);
                             }
@@ -898,9 +899,13 @@ class SiswaController extends Controller
 
         if ($this->nomorUrutPersekolah == 0) {
             $qbe = $em->createQueryBuilder();
-            $querynomor = $em->createQueryBuilder()->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
-                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where('siswa.sekolah = :sekolah')
-                    ->setParameter('sekolah', $sekolah->getId());
+            $querynomor = $em->createQueryBuilder()
+                ->select($qbe->expr()->max('siswa.nomorUrutPersekolah'))
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
+                ->where('siswa.sekolah = :sekolah')
+                ->setParameter('sekolah', $sekolah)
+            ;
+
             $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
             $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
             $nomorUrutPersekolah++;
@@ -1064,18 +1069,11 @@ class SiswaController extends Controller
         $menu[$this->get('translator')->trans('headings.academic', [], 'navigations')][$this->get('translator')->trans('links.siswa', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin.or.headmaster'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }

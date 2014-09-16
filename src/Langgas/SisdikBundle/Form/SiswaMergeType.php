@@ -32,6 +32,6 @@ class SiswaMergeType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_siswamergetype';
+        return 'sisdik_siswagabung';
     }
 }

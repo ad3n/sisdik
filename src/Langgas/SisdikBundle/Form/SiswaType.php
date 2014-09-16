@@ -2,12 +2,16 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,39 +19,42 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SiswaType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @var string
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    private $mode;
-
-    /**
-     * @param ContainerInterface $container
-     * @param string             $mode
-     */
-    public function __construct(ContainerInterface $container, $mode = "new")
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
-        $this->mode = $mode;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
+    }
+
+    /**
+     * @return User
+     */
+    private function getUser()
+    {
+        return $this->securityContext->getToken()->getUser();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
-        $em = $this->container->get('doctrine')->getManager();
-
-        $querybuilder1 = $em->createQueryBuilder()
-            ->select('tahun')
-            ->from('LanggasSisdikBundle:Tahun', 'tahun')
-            ->where('tahun.sekolah = :sekolah')
-            ->orderBy('tahun.tahun', 'DESC')
-            ->setParameter('sekolah', $sekolah)
-        ;
         $builder
             ->add('tahun', 'entity', [
                 'class' => 'LanggasSisdikBundle:Tahun',
@@ -57,12 +64,20 @@ class SiswaType extends AbstractType
                 'property' => 'tahun',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder1,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tahun')
+                        ->where('tahun.sekolah = :sekolah')
+                        ->orderBy('tahun.tahun', 'DESC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium',
                 ],
             ])
-            ->add('sekolah', new EntityHiddenType($em), [
+            ->add('sekolah', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
@@ -80,7 +95,7 @@ class SiswaType extends AbstractType
                     'class' => 'medium',
                 ],
             ])
-            ->add('referensi', new EntityHiddenType($em), [
+            ->add('referensi', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:Referensi',
                 'label_render' => false,
                 'required' => false,
@@ -96,7 +111,7 @@ class SiswaType extends AbstractType
                 ],
                 'label' => 'label.perujuk',
             ])
-            ->add('sekolahAsal', new EntityHiddenType($em), [
+            ->add('sekolahAsal', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:SekolahAsal',
                 'label_render' => false,
                 'required' => false,
@@ -272,7 +287,7 @@ class SiswaType extends AbstractType
             ])
         ;
 
-        if ($this->mode == "new") {
+        if ($options['mode'] == "new") {
             $builder
                 ->add('orangtuaWali', 'collection', [
                     'type' => new OrangtuaWaliInitType(),
@@ -288,18 +303,18 @@ class SiswaType extends AbstractType
                     'label_render' => false,
                     'allow_add' => true,
                 ])
-                ->add('dibuatOleh', new EntityHiddenType($em), [
+                ->add('dibuatOleh', 'sisdik_entityhidden', [
                     'required' => true,
                     'class' => 'LanggasSisdikBundle:User',
-                    'data' => $user->getId(),
+                    'data' => $this->getUser()->getId(),
                 ])
             ;
-        } elseif ($this->mode == "edit") {
+        } elseif ($options['mode'] == "edit") {
             $builder
-                ->add('diubahOleh', new EntityHiddenType($em), [
+                ->add('diubahOleh', 'sisdik_entityhidden', [
                     'required' => true,
                     'class' => 'LanggasSisdikBundle:User',
-                    'data' => $user->getId(),
+                    'data' => $this->getUser()->getId(),
                 ])
             ;
         }
@@ -310,12 +325,13 @@ class SiswaType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\Siswa',
+                'mode' => 'new',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_siswatype';
+        return 'sisdik_siswa';
     }
 }

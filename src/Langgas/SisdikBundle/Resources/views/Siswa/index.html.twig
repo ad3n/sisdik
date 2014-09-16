@@ -44,19 +44,29 @@
 
 <div class="clearfix"></div>
 
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ siswaTotal }}
+</div>
+
+{% if tampilkanTercari %}
+<div class="pull-right info-jumlah">
+    {{ 'label.jumlah.siswa.tercari'|trans }}: {{ siswaTercari }}
+</div>
+{% endif %}
+
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
             <th>{{ 'label.number'|trans }}</th>
             <th>{{ 'label.year.entry'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
             </th>
-            <th class="{% if pagination.isSorted('t.nomorInduk') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 't.nomorInduk') }}
+            <th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
             </th>
-            <th class="{% if pagination.isSorted('t.jenisKelamin') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 't.jenisKelamin') }}
+            <th class="{% if pagination.isSorted('siswa.jenisKelamin') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 'siswa.jenisKelamin') }}
             </th>
             <th>{{ 'label.kelas.aktif'|trans }}</th>
             <th>{{ 'label.ortuwali.entri'|trans }}</th>
