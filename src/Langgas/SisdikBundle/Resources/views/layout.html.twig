@@ -69,9 +69,9 @@
                 {% endspaceless %}</div>
             </div>
             <div id="log-info">
-                &raquo; {{ app.user.username }}<br />
-            <a href="{{ path("fos_user_profile_show") }}">{% trans from "navigations" %}user.myaccount{% endtrans %}</a> |
-            <a href="{{ path("logout") }}">{% trans from "navigations" %}user.logout{% endtrans %}</a>
+                &raquo; {{ app.user.username }}{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}, {{ app.user.nomorPonsel }}{% endif %}<br />
+                <a href="{{ path("fos_user_profile_show") }}">{% trans from "navigations" %}user.myaccount{% endtrans %}</a> |
+                <a href="{{ path("logout") }}">{% trans from "navigations" %}user.logout{% endtrans %}</a>
             </div>
         </div>
     </div>

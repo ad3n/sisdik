@@ -2,7 +2,7 @@
 
 {% block page_heading %}{% trans from "headings" %}profile.show{% endtrans %}{% endblock %}
 {% block content %}
-<h3>{{ app.user.username }}</h3>
+<h3 style="color: purple;">{{ app.user.username }}</h3>
 <dl>
     <dt>{{ 'profile.show.username'|trans({}, 'FOSUserBundle') }}</dt>
     <dd>{{ user.username }}</dd>
@@ -10,6 +10,10 @@
     <dd>{{ user.email }}</dd>
     <dt>{{ 'profile.show.name'|trans({}, 'FOSUserBundle') }}</dt>
     <dd>{{ user.name }}</dd>
+    {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
+        <dt>{{ 'profile.nomor.ponsel'|trans({}, 'FOSUserBundle') }}</dt>
+        <dd>{{ user.nomorPonsel }}</dd>
+    {% endif %}
     <dt>{{ 'profile.show.role'|trans({}, 'FOSUserBundle') }}</dt>
     <dd><p>{% for role in roles %}
             {{ role|e }}{%  if not loop.last %},{% endif %}
