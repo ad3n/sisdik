@@ -58,22 +58,28 @@ class GrafikKehadiranSiswaController extends Controller
 
         $kehadiranSiswaTotal = null;
         $kehadiran = [];
-        foreach ($daftarStatusKehadiran as $key => $val) {
-            $result = $em->createQueryBuilder()
-                ->select('COUNT(kehadiranSiswa.id)')
-                ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiranSiswa')
-                ->where('kehadiranSiswa.sekolah = :sekolah')
-                ->andWhere('kehadiranSiswa.tahunAkademik = :tahunAkademik')
-                ->andWhere('kehadiranSiswa.tanggal = :tanggal')
-                ->andWhere('kehadiranSiswa.statusKehadiran = :statusKehadiran')
-                ->setParameter('sekolah', $sekolah)
-                ->setParameter('tahunAkademik', $tahunAkademikAktif)
-                ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
-                ->setParameter('statusKehadiran', $key)
-                ->getQuery()
-                ->getSingleScalarResult()
-            ;
-            $kehadiran[$key] = $result;
+        if (is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan) {
+            foreach ($daftarStatusKehadiran as $key => $val) {
+                $result = $em->createQueryBuilder()
+                    ->select('COUNT(kehadiranSiswa.id)')
+                    ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiranSiswa')
+                    ->where('kehadiranSiswa.sekolah = :sekolah')
+                    ->andWhere('kehadiranSiswa.tahunAkademik = :tahunAkademik')
+                    ->andWhere('kehadiranSiswa.tanggal = :tanggal')
+                    ->andWhere('kehadiranSiswa.statusKehadiran = :statusKehadiran')
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('tahunAkademik', $tahunAkademikAktif)
+                    ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
+                    ->setParameter('statusKehadiran', $key)
+                    ->getQuery()
+                    ->getSingleScalarResult()
+                ;
+                $kehadiran[$key] = $result;
+            }
+        } else {
+            foreach ($daftarStatusKehadiran as $key => $val) {
+                $kehadiran[$key] = 0;
+            }
         }
         $kehadiranSiswaTotal = $kehadiran;
 
