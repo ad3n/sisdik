@@ -1,20 +1,22 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
-use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Doctrine\ORM\EntityManager;
+use FOS\RestBundle\Controller\FOSRestController as Controller;
 use Langgas\SisdikBundle\Form\JadwalKehadiranType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Form\JadwalKehadiranSearchType;
 use Langgas\SisdikBundle\Form\JadwalKehadiranDuplicateType;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\TokenSekolah;
-use FOS\RestBundle\Controller\FOSRestController as Controller;
-use JMS\SecurityExtraBundle\Annotation\Secure;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/")
@@ -492,6 +494,7 @@ class JadwalKehadiranController extends Controller
      */
     public function unduhJadwalKehadiranAction($token)
     {
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->findByMesinProxy($token);
@@ -532,9 +535,12 @@ class JadwalKehadiranController extends Controller
                     ->setParameter('sekolah', $sekolah->getId());
                 $mesinKehadiran = $querybuilder2->getQuery()->getResult();
 
+                $userAdmin = $em->getRepository('LanggasSisdikBundle:User')->findByRole($sekolah, 'ROLE_ADMIN');
+
                 return [
                     'jadwal' => $jadwal,
                     'mesinKehadiran' => $mesinKehadiran,
+                    'userAdmin' => $userAdmin,
                 ];
             }
         } else {

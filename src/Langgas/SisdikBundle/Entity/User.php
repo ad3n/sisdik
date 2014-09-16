@@ -3,12 +3,16 @@
 namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Entity\User as BaseUser;
+use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Table(name="fos_user")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Langgas\SisdikBundle\Repository\UserRepository")
+ * @ExclusionPolicy("all")
  */
 class User extends BaseUser
 {
@@ -25,6 +29,8 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      * @Assert\Length(min=3, max=255, minMessage="The name is too short.", maxMessage="The name is too long.", groups={"Registration", "Profile"})
+     * @Expose
+     * @SerializedName("nama")
      */
     private $name;
 
@@ -70,6 +76,8 @@ class User extends BaseUser
 
     /**
      * @ORM\Column(name="nomor_ponsel", type="string", length=50, nullable=true)
+     * @Expose
+     * @SerializedName("nomor_ponsel")
      *
      * @var string
      */
