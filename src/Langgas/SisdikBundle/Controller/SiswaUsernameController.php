@@ -5,7 +5,6 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Form\SiswaGenerateUsernameConfirmType;
 use Langgas\SisdikBundle\Form\SimpleSearchFormType;
-use Langgas\SisdikBundle\Form\SiswaSearchType;
 use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\Sekolah;
@@ -285,8 +284,7 @@ class SiswaUsernameController extends Controller
                         'generated' => 'YES', 'partial' => 'YES', 'info' => $info, 'proceedpost' => 'YES'
                     );
                 } elseif ($siswa_num > $username_num && $username_num == 0) {
-                    $searchtype = new SiswaSearchType($this->container);
-                    $linktotal = $this->generateUrl("siswa") . "?{$searchtype->getName()}[tahun]="
+                    $linktotal = $this->generateUrl("siswa") . "?sisdik_carisiswa[tahun]="
                             . $tahun->getId();
 
                     $info = $this->get('translator')
@@ -395,7 +393,8 @@ class SiswaUsernameController extends Controller
      *
      * @return string $filename
      */
-    private function generateUsernamePasswordList($tahun, $penyaring, $outputfiletype = "ods", $regenerate = false) {
+    private function generateUsernamePasswordList($tahun, $penyaring, $outputfiletype = "ods", $regenerate = false)
+    {
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
