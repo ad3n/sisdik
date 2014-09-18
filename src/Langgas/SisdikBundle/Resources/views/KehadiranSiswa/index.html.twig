@@ -26,6 +26,19 @@
     font-family: Arial,sans-serif;
     font-size: 1em;
 }
+#pesan-proses {
+    line-height: 1.5em;
+    min-height: 15px;
+    min-width: 5em;
+    color: #dd5500;
+    margin-top: 0.5em;
+    padding-top: 1em;
+}
+.loading {
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left top no-repeat;
+    {% endimage %}
+}
 </style>
 
 <div class="filter-section">
@@ -33,6 +46,17 @@
         {{ form_widget(searchform) }}
         <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
         <button class="btn" type="reset" onclick="window.location.href='{{ path('kehadiran-siswa') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix" style="margin-top: 50px;"></div>
+
+<div class="kehadiran-extra-section">
+    <h4>Proses Kehadiran Manual:</h4>
+    <form id="form-proses-kehadiran-manual" method="get" action="{{ path('kehadiran-siswa_manual') }}" class="form-search form-inline">
+        <input id="proxy-url" type="hidden" name="proxyUrl" value="http://wakil-sisdik.local:8000/ambil-kehadiran-manual.php">
+        <button id="tombol-proses-kehadiran-manual" type="submit" class="btn success alternative icon transfer">Proses Log Kehadiran Hari ini</button>
+        <div id="pesan-proses"></div>
     </form>
 </div>
 {% endblock content %}
@@ -73,6 +97,40 @@ $(document).ready(function() {
             }
             $(".pilih-kelas").html(options);
         });
+    });
+
+    $("#form-proses-kehadiran-manual").submit(function() {
+        var proxyUrl = $("#proxy-url").val(), prosesUrl = $(this).attr("action");
+
+        $("#tombol-proses-kehadiran-manual").attr('disabled', 'disabled');
+        $("#pesan-proses").html("");
+
+        $("#pesan-proses").addClass("loading");
+        $.get(proxyUrl, function(response) {
+            var text = '';
+            for (i = 0; i < response.pesan.length; i++) {
+                text += response.pesan[i] + "<br>";
+            }
+            $("#pesan-proses").html(text);
+
+            if (response.adaLogTerkirim) {
+                $("#pesan-proses").addClass("loading");
+                $.get(prosesUrl, function(response) {
+                    for (i = 0; i < response.pesan.length; i++) {
+                        text += response.pesan[i] + "<br>";
+                    }
+
+                    $("#pesan-proses").html(text);
+                    $("#pesan-proses").removeClass("loading");
+                    $("#tombol-proses-kehadiran-manual").removeAttr('disabled');
+                });
+            } else {
+                $("#pesan-proses").removeClass("loading");
+                $("#tombol-proses-kehadiran-manual").removeAttr('disabled');
+            }
+        });
+
+        return false;
     });
 });
 </script>
