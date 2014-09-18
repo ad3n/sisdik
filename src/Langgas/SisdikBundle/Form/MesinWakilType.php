@@ -2,11 +2,11 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
-use Doctrine\ORM\EntityRepository;
 
 /**
  * @FormType

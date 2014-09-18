@@ -47,6 +47,7 @@ class KehadiranSiswaController extends Controller
         $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm('sisdik_kehadiransiswasearch');
@@ -65,9 +66,16 @@ class KehadiranSiswaController extends Controller
             throw $this->createNotFoundException($this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
         }
 
+        $mesinWakil = $em->getRepository('LanggasSisdikBundle:MesinWakil')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
+
         return [
             'searchform' => $searchform->createView(),
             'tahunAkademik' => $tahunAkademik,
+            'mesinWakil' => $mesinWakil,
         ];
     }
 
