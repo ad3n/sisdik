@@ -2,6 +2,7 @@
 
 namespace Langgas\SisdikBundle\Controller;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\MesinWakil;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,9 +10,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * @Route("/mesin-wakil")
+ * @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
  */
 class MesinWakilController extends Controller
 {
@@ -68,8 +71,20 @@ class MesinWakilController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+
+            try {
+                $em->persist($entity);
+                $em->flush();
+
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.mesin.wakil.berhasil.tersimpan'))
+                ;
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.unique.mesin.wakil');
+                throw new DBALException($message);
+            }
 
             return $this->redirect($this->generateUrl('mesin-wakil_show', [
                 'id' => $entity->getId(),
@@ -197,7 +212,18 @@ class MesinWakilController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+            try {
+                $em->flush();
+
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.mesin.wakil.berhasil.terbarui'))
+                ;
+            } catch (DBALException $e) {
+                $message = $this->get('translator')->trans('exception.unique.mesin.wakil');
+                throw new DBALException($message);
+            }
 
             return $this->redirect($this->generateUrl('mesin-wakil_edit', ['id' => $id]));
         }

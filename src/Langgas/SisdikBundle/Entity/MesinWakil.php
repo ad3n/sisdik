@@ -5,7 +5,9 @@ namespace Langgas\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="mesin_wakil")
+ * @ORM\Table(name="mesin_wakil", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="fk_mesin_wakil_sekolah1_idx", columns={"sekolah_id"})
+ * })
  * @ORM\Entity
  */
 class MesinWakil
