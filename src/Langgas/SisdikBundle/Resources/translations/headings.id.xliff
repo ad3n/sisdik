@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-09-18T17:36:04Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-09-18T20:09:48Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -452,6 +452,11 @@
         <jms:reference-file line="3">views/PembayaranPendaftaran/show.html.twig</jms:reference-file>
         <source>payment.registrationfee.transaction</source>
         <target>Transaksi Pembayaran Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="2b125a9ea5d2b8719f07c4fc54153b26c7662688" resname="pembaruan.kehadiran.manual">
+        <jms:reference-file line="55">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <source>pembaruan.kehadiran.manual</source>
+        <target>Pembaruan Kehadiran Manual</target>
       </trans-unit>
       <trans-unit id="76f5bbbce0ec96552ffffac64ac3267339ee9a46" resname="pembuatan.mesin.wakil">
         <jms:reference-file line="3">views/MesinWakil/new.html.twig</jms:reference-file>
