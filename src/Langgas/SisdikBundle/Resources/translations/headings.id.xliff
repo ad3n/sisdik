@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-09-04T21:37:21Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-09-18T17:36:04Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -78,6 +78,11 @@
         <jms:reference-file line="3">views/BiayaPendaftaran/edit.confirm.html.twig</jms:reference-file>
         <source>biaya.pendaftaran.konfirmasi.ubah</source>
         <target>Konfirmasi Pengubahan Biaya Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="9f1cd7d9a2d492e14ad40bd3362963577a559704" resname="daftar.mesin.wakil">
+        <jms:reference-file line="3">views/MesinWakil/index.html.twig</jms:reference-file>
+        <source>daftar.mesin.wakil</source>
+        <target>Daftar Mesin Wakil</target>
       </trans-unit>
       <trans-unit id="913ca911802c37caaf115966db6f2c8973703116" resname="data.academicyear.creation">
         <jms:reference-file line="3">views/TahunAkademik/new.html.twig</jms:reference-file>
@@ -199,6 +204,11 @@
         <source>data.studentclass.list</source>
         <target>Riwayat Kelas</target>
       </trans-unit>
+      <trans-unit id="4e2645387f58fab436b4d6ab595b79e1a7c559d3" resname="detail.mesin.wakil">
+        <jms:reference-file line="3">views/MesinWakil/show.html.twig</jms:reference-file>
+        <source>detail.mesin.wakil</source>
+        <target>Detail Mesin Wakil</target>
+      </trans-unit>
       <trans-unit id="80d382e159da8ef94531afd52c37f8e41388c3c4" resname="dokumen.siswa.daftar">
         <jms:reference-file line="3">views/DokumenSiswa/index.html.twig</jms:reference-file>
         <source>dokumen.siswa.daftar</source>
@@ -215,7 +225,7 @@
         <target>Mengubah Dokumen Siswa</target>
       </trans-unit>
       <trans-unit id="88a50b1cfaadddbd0a57bcd00c5aeae332575014" resname="download.file.template">
-        <jms:reference-file line="36">views/Siswa/impor-baru.html.twig</jms:reference-file>
+        <jms:reference-file line="46">views/Siswa/impor-baru.html.twig</jms:reference-file>
         <source>download.file.template</source>
         <target>Unduh File Template</target>
       </trans-unit>
@@ -393,6 +403,11 @@
         <source>layanansms.pembuatan</source>
         <target>Membuat Pilihan Layanan SMS</target>
       </trans-unit>
+      <trans-unit id="d21f426b108cceb76add6751cd5b4fe2596248ec" resname="mengubah.mesin.wakil">
+        <jms:reference-file line="3">views/MesinWakil/edit.html.twig</jms:reference-file>
+        <source>mengubah.mesin.wakil</source>
+        <target>Mengubah Mesin Wakil</target>
+      </trans-unit>
       <trans-unit id="730ebadc12c807953ddf893669758186fe861bbc" resname="mesinproxy.daftar">
         <jms:reference-file line="3">views/MesinProxy/index.html.twig</jms:reference-file>
         <source>mesinproxy.daftar</source>
@@ -438,6 +453,11 @@
         <source>payment.registrationfee.transaction</source>
         <target>Transaksi Pembayaran Biaya Pendaftaran</target>
       </trans-unit>
+      <trans-unit id="76f5bbbce0ec96552ffffac64ac3267339ee9a46" resname="pembuatan.mesin.wakil">
+        <jms:reference-file line="3">views/MesinWakil/new.html.twig</jms:reference-file>
+        <source>pembuatan.mesin.wakil</source>
+        <target>Membuat Mesin Wakil</target>
+      </trans-unit>
       <trans-unit id="f4ec79f83968c3157ea69561f63d2615b15927bc" resname="penahkikan.siswa">
         <jms:reference-file line="3">views/SiswaTahkik/index.html.twig</jms:reference-file>
         <source>penahkikan.siswa</source>
@@ -481,6 +501,7 @@
       </trans-unit>
       <trans-unit id="b8d352ef0fec3efc6d13c1ed8db134222ffbe1dc" resname="penyedia.jasa.sms">
         <jms:reference-file line="3">views/VendorSekolah/new.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/VendorSekolah/edit.html.twig</jms:reference-file>
         <source>penyedia.jasa.sms</source>
         <target>Mengatur Penyedia Jasa SMS</target>
       </trans-unit>
