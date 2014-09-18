@@ -1,0 +1,20 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}pembuatan.mesin.wakil{% endtrans %}{% endblock %}
+
+{% block content %}
+{{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
+    </div>
+{{ form_end(form) }}
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('mesin-wakil') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

@@ -69,6 +69,7 @@ class Builder extends ContainerAware
             $supersettings->addChild($translator->trans('links.schools', [], 'navigations'), ['route' => 'settings_school_list']);
             $supersettings->addChild($translator->trans('links.layanansms', [], 'navigations'), ['route' => 'layanansms']);
             $supersettings->addChild($translator->trans('links.token.sekolah', [], 'navigations'), ['route' => 'token-sekolah']);
+            $supersettings->addChild($translator->trans('links.mesin.wakil', [], 'navigations'), ['route' => 'mesin-wakil']);
         }
 
         if ($securityContext->isGranted([

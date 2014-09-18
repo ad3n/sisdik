@@ -1,0 +1,52 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.mesin.wakil{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('mesin-wakil') }}" class="form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('mesin-wakil') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('mesin-wakil_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.tambah.mesin.wakil'|trans }}
+        </a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.school'|trans }}</th>
+            <th>{{ 'label.url.kehadiran.manual'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in pagination %}
+        <tr>
+            <td data-title="{{ 'label.school'|trans }}">{% if entity.sekolah is defined %}{{ entity.sekolah.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.url.kehadiran.manual'|trans }}">{{ entity.urlKehadiranManual }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('mesin-wakil_edit', {'id': entity.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
