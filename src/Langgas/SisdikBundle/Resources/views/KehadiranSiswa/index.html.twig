@@ -55,7 +55,7 @@
     <h4>{{ 'pembaruan.kehadiran.manual'|trans({}, 'headings') }}:</h4>
     <form id="form-proses-kehadiran-manual" method="get" action="{{ path('kehadiran-siswa_manual') }}" class="form-search form-inline">
         <input id="proxy-url" type="hidden" name="proxyUrl" value="{% if mesinWakil %}{{ mesinWakil.urlKehadiranManual }}{% endif %}">
-        <button id="tombol-proses-kehadiran-manual" type="submit" class="btn success alternative icon link">{{ 'proses.pembaruan.kehadiran.manual'|trans }}</button>
+        <button id="tombol-proses-kehadiran-manual" type="submit" class="btn success alternative icon transfer">{{ 'proses.pembaruan.kehadiran.manual'|trans }}</button>
         <div id="pesan-proses"></div>
     </form>
 </div>

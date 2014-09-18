@@ -26,7 +26,7 @@ class MesinWakil
      *
      * @var string
      */
-    private $urlKehadiranManual = "http://192.168.1.99/ambil-kehadiran-manual.php";
+    private $urlKehadiranManual;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
