@@ -177,7 +177,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                 $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
                                 $targetFile = self::TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
 
-                                if (!copy($sourceFile, $targetFile)) {
+                                if (!@copy($sourceFile, $targetFile)) {
                                     continue;
                                 }
 
