@@ -3,6 +3,27 @@
 {% block page_heading %}{% trans from "headings" %}attendancemachine.list{% endtrans %}{% endblock %}
 
 {% block content %}
+<style type="text/css">
+.pesan {
+    line-height: 1.5em;
+    min-height: 10px;
+    min-width: 5em;
+    color: #dd5500;
+}
+.loading {
+    padding-top: 1em;
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left top no-repeat;
+    {% endimage %}
+}
+.icon-proses {
+    color: #dd5500;
+    vertical-align: middle;
+}
+.help-block {
+    margin-bottom: 2px;
+}
+</style>
 <div class="add-link">
     <a href="{{ path('attendancemachine_new') }}" class="add-link-a">
         <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.attendancemachine.add'|trans }}
@@ -60,5 +81,45 @@
 </table>
 <p style="font-style: italic;">* {{ 'help.waktu.tertib.harian'|trans }}</p>
 
+<div class="clearfix" style="margin-top: 2em;"></div>
+
+<div>
+    <h4>{{ 'pembaruan.jadwal.mesin.kehadiran'|trans({}, 'headings') }}:</h4>
+    <div class="form-group">
+        <i class="fa fa-upload fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pembaruan-jadwal" class="btn primary" sisdik-url="{% if mesinWakil %}{{ mesinWakil.urlJadwalKehadiran }}{% endif %}">{{ 'simpan.perubahan.jadwal.mesin.kehadiran'|trans }}</button>
+        <p class="help-block">{{ 'bantuan.simpan.perubahan.jadwal.mesin.kehadiran'|trans }}</p>
+        <div class="pesan" id="pesan-proses-pembaruan-jadwal"></div>
+    </div>
+</div>
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $("#tombol-proses-pembaruan-jadwal").click(function() {
+        var jadwalKehadiran = {{ render(controller('LanggasSisdikBundle:JadwalKehadiran:unduhJadwalKehadiran', {'token': tokenSekolah.mesinProxy, '_format': 'json'})) }};
+        var proxyUrl = $(this).attr("sisdik-url");
+
+        if (proxyUrl == "") {
+            alert("{{ 'url.jadwal.mesin.kehadiran.kosong'|trans }}");
+            return false;
+        }
+
+        $(this).attr('disabled', 'disabled');
+        $("#pesan-proses-pembaruan-jadwal").html("").addClass("loading");
+
+        $.post(proxyUrl, {'jadwalKehadiran': JSON.stringify(jadwalKehadiran)}, function(response) {
+            var text = '';
+            if (response.pesan) {
+                for (i = 0; i < response.pesan.length; i++) {
+                    text += response.pesan[i] + "<br>";
+                }
+            }
+            $("#pesan-proses-pembaruan-jadwal").html(text).removeClass("loading");
+            $("#tombol-proses-pembaruan-jadwal").removeAttr('disabled');
+        });
+    });
+});
+</script>
+{% endblock javascripts_custom %}

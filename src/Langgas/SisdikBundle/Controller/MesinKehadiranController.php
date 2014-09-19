@@ -44,8 +44,22 @@ class MesinKehadiranController extends Controller
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
+        $tokenSekolah = $em->getRepository('LanggasSisdikBundle:TokenSekolah')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
+
+        $mesinWakil = $em->getRepository('LanggasSisdikBundle:MesinWakil')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
+
         return [
             'pagination' => $pagination,
+            'tokenSekolah' => $tokenSekolah,
+            'mesinWakil' => $mesinWakil,
         ];
     }
 
