@@ -815,6 +815,7 @@ class KehadiranSiswaController extends Controller
                     . " - "
                     . $jadwal->getParamstatusHinggaJam(false)
                 ;
+                $counterJumlahTerproses = 0;
 
                 foreach ($mesinFingerprint as $mesin) {
                     if (!(is_object($mesin) && $mesin instanceof MesinKehadiran)) {
@@ -828,7 +829,7 @@ class KehadiranSiswaController extends Controller
                     $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
                     $targetFile = self::TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
 
-                    if (!copy($sourceFile, $targetFile)) {
+                    if (!@copy($sourceFile, $targetFile)) {
                         continue;
                     }
 
@@ -870,7 +871,7 @@ class KehadiranSiswaController extends Controller
                                     ])
                                 ;
                                 if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
-                                    $retval['pesan'][] = "Memperbarui kehadiran siswa "
+                                    /**$retval['pesan'][] = "Memperbarui kehadiran siswa "
                                         . $kehadiranSiswa->getSiswa()->getNamaLengkap()
                                         . " ("
                                         . $kehadiranSiswa->getSiswa()->getNomorIndukSistem()
@@ -878,7 +879,8 @@ class KehadiranSiswaController extends Controller
                                         . $kehadiranSiswa->getKelas()->getNama()
                                         . ", tanggal "
                                         . $kehadiranSiswa->getTanggal()->format('d/m/Y')
-                                    ;
+                                    ;**/
+                                    $counterJumlahTerproses++;
 
                                     $kehadiranSiswa->setPermulaan(false);
                                     $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
@@ -942,7 +944,7 @@ class KehadiranSiswaController extends Controller
                                         ])
                                     ;
                                     if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
-                                        $retval['pesan'][] = "Memperbarui kehadiran siswa "
+                                        /**$retval['pesan'][] = "Memperbarui kehadiran siswa "
                                             . $kehadiranSiswa->getSiswa()->getNamaLengkap()
                                             . " ("
                                             . $kehadiranSiswa->getSiswa()->getNomorIndukSistem()
@@ -950,7 +952,9 @@ class KehadiranSiswaController extends Controller
                                             . $kehadiranSiswa->getKelas()->getNama()
                                             . ", tanggal "
                                             . $kehadiranSiswa->getTanggal()->format('d/m/Y')
-                                        ;
+                                        ;**/
+                                        $counterJumlahTerproses++;
+
                                         $kehadiranSiswa->setPermulaan(false);
                                         $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
                                         $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
@@ -978,6 +982,7 @@ class KehadiranSiswaController extends Controller
                         }
                     }
                 }
+                $retval['pesan'][] = "»» Jumlah kehadiran siswa terbarui: $counterJumlahTerproses";
 
                 $em->flush();
             }

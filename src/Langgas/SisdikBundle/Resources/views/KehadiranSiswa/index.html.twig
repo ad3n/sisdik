@@ -26,18 +26,24 @@
     font-family: Arial,sans-serif;
     font-size: 1em;
 }
-#pesan-proses {
+.pesan {
     line-height: 1.5em;
-    min-height: 15px;
+    min-height: 10px;
     min-width: 5em;
     color: #dd5500;
-    margin-top: 0.5em;
-    padding-top: 1em;
 }
 .loading {
+    padding-top: 1em;
     {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
     background: white url('{{ asset_url }}') left top no-repeat;
     {% endimage %}
+}
+.icon-proses {
+    color: #dd5500;
+    vertical-align: middle;
+}
+.help-block {
+    margin-bottom: 2px;
 }
 </style>
 
@@ -51,13 +57,18 @@
 
 <div class="clearfix" style="margin-top: 50px;"></div>
 
-<div class="kehadiran-extra-section">
+<div>
     <h4>{{ 'pembaruan.kehadiran.manual'|trans({}, 'headings') }}:</h4>
-    <form id="form-proses-kehadiran-manual" method="get" action="{{ path('kehadiran-siswa_manual') }}" class="form-search form-inline">
-        <input id="proxy-url" type="hidden" name="proxyUrl" value="{% if mesinWakil %}{{ mesinWakil.urlKehadiranManual }}{% endif %}">
-        <button id="tombol-proses-kehadiran-manual" type="submit" class="btn success alternative icon transfer">{{ 'proses.pembaruan.kehadiran.manual'|trans }}</button>
-        <div id="pesan-proses"></div>
-    </form>
+    <div class="form-group" style="margin-bottom: 20px;">
+        <i class="fa fa-upload fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pengiriman-berkas" class="btn primary" sisdik-url="{% if mesinWakil %}{{ mesinWakil.urlKehadiranManual }}{% endif %}">{{ 'ambil.dan.kirim.log.mesin.kehadiran'|trans }}</button>
+        <p class="help-block">{{ 'bantuan.ambil.dan.kirim.log.mesin.kehadiran'|trans }}</p>
+        <div class="pesan" id="pesan-proses-pengiriman"></div>
+    </div>
+    <div class="form-group">
+        <i class="fa fa-pie-chart fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pembaruan-manual" class="btn primary" sisdik-url="{{ path('kehadiran-siswa_manual') }}">{{ 'perbarui.kehadiran.manual'|trans }}</button>
+        <p class="help-block">{{ 'bantuan.perbarui.kehadiran.manual'|trans }}</p>
+        <div class="pesan" id="pesan-proses-pembaruan"></div>
+    </div>
 </div>
 {% endblock content %}
 
@@ -99,43 +110,43 @@ $(document).ready(function() {
         });
     });
 
-    $("#form-proses-kehadiran-manual").submit(function() {
-        var proxyUrl = $("#proxy-url").val(), prosesUrl = $(this).attr("action");
+    $("#tombol-proses-pengiriman-berkas").click(function() {
+        var proxyUrl = $(this).attr("sisdik-url");
 
         if (proxyUrl == "") {
-            alert("{{ 'url.wakil.sisdik.kosong'|trans }}");
+            alert("{{ 'url.kehadiran.manual.kosong'|trans }}");
             return false;
         }
 
-        $("#tombol-proses-kehadiran-manual").attr('disabled', 'disabled');
-        $("#pesan-proses").html("");
+        $(this).attr('disabled', 'disabled');
+        $("#pesan-proses-pengiriman").html("").addClass("loading");
 
-        $("#pesan-proses").addClass("loading");
         $.get(proxyUrl, function(response) {
             var text = '';
             for (i = 0; i < response.pesan.length; i++) {
                 text += response.pesan[i] + "<br>";
             }
-            $("#pesan-proses").html(text);
-
-            if (response.adaLogTerkirim) {
-                $("#pesan-proses").addClass("loading");
-                $.get(prosesUrl, function(response) {
-                    for (i = 0; i < response.pesan.length; i++) {
-                        text += response.pesan[i] + "<br>";
-                    }
-
-                    $("#pesan-proses").html(text);
-                    $("#pesan-proses").removeClass("loading");
-                    $("#tombol-proses-kehadiran-manual").removeAttr('disabled');
-                });
-            } else {
-                $("#pesan-proses").removeClass("loading");
-                $("#tombol-proses-kehadiran-manual").removeAttr('disabled');
-            }
+            $("#pesan-proses-pengiriman").html(text).removeClass("loading");
+            $("#tombol-proses-pengiriman-berkas").removeAttr('disabled');
         });
+    });
 
-        return false;
+    $("#tombol-proses-pembaruan-manual").click(function() {
+        var updateUrl = $(this).attr("sisdik-url");
+
+        $(this).attr('disabled', 'disabled');
+        $("#pesan-proses-pembaruan").html("").addClass("loading");
+
+        $.get(updateUrl, function(response) {
+            var text = '';
+            if (response.pesan) {
+                for (i = 0; i < response.pesan.length; i++) {
+                    text += response.pesan[i] + "<br>";
+                }
+            }
+            $("#pesan-proses-pembaruan").html(text).removeClass("loading");
+            $("#tombol-proses-pembaruan-manual").removeAttr('disabled');
+        });
     });
 });
 </script>
