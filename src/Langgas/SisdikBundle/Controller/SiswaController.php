@@ -102,13 +102,15 @@ class SiswaController extends Controller
             }
 
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2");
+                $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2 OR siswa.nomorIndukSistem = :searchkey3");
                 $querybuilder->setParameter('searchkey', "%{$searchdata['searchkey']}%");
                 $querybuilder->setParameter('searchkey2', $searchdata['searchkey']);
+                $querybuilder->setParameter('searchkey3', $searchdata['searchkey']);
 
                 $qbJumlahPencarian->andWhere('siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2');
                 $qbJumlahPencarian->setParameter('searchkey', "%{$searchdata['searchkey']}%");
                 $qbJumlahPencarian->setParameter('searchkey2', $searchdata['searchkey']);
+                $qbJumlahPencarian->setParameter('searchkey3', $searchdata['searchkey']);
 
                 $tampilkanTercari = true;
             }
