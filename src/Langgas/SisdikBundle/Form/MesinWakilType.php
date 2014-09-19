@@ -24,6 +24,10 @@ class MesinWakilType extends AbstractType
                 'label' => 'label.url.kehadiran.manual',
                 'required' => true,
             ])
+            ->add('urlJadwalKehadiran', 'text', [
+                'label' => 'label.url.jadwal.kehadiran',
+                'required' => true,
+            ])
             ->add('sekolah', 'entity', [
                 'class' => 'LanggasSisdikBundle:Sekolah',
                 'label' => 'label.school',
