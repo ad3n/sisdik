@@ -107,7 +107,7 @@ class SiswaController extends Controller
                 $querybuilder->setParameter('searchkey2', $searchdata['searchkey']);
                 $querybuilder->setParameter('searchkey3', $searchdata['searchkey']);
 
-                $qbJumlahPencarian->andWhere('siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2');
+                $qbJumlahPencarian->andWhere('siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk = :searchkey2 OR siswa.nomorIndukSistem = :searchkey3');
                 $qbJumlahPencarian->setParameter('searchkey', "%{$searchdata['searchkey']}%");
                 $qbJumlahPencarian->setParameter('searchkey2', $searchdata['searchkey']);
                 $qbJumlahPencarian->setParameter('searchkey3', $searchdata['searchkey']);
