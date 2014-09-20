@@ -59,7 +59,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th>{{ 'label.number'|trans }}</th>
+            <th>{{ 'label.identitas.sisdik'|trans }}</th>
             <th>{{ 'label.year.entry'|trans }}</th>
             <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
@@ -78,7 +78,7 @@
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.number'|trans }}">{{ pagination.paginationData.firstItemNumber + loop.index - 1 }}</td>
+            <td data-title="{{ 'label.identitas.sisdik'|trans }}" class="info-id">{{ data.nomorIndukSistem }}</td>
             <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
             <td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
             <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
