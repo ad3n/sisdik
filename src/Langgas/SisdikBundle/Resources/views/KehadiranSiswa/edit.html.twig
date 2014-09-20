@@ -112,6 +112,10 @@ dd {
     width: auto;
     min-width: 60%;
 }
+.info-pelengkap-siswa {
+    font-weight: normal;
+    line-height: 1em;
+}
 </style>
 
 <div class="filter-section">
@@ -322,8 +326,9 @@ dd {
 {% for kehadiran in entities %}
     <dt>
         {{ kehadiran.siswa.namaLengkap }}
-        <br />
-        <span style="font-weight: normal; line-height: 1em;">{{ kehadiran.siswa.nomorInduk }} &mdash; {% if kehadiran.siswa.orangtuaWaliAktif != null %} {{ kehadiran.siswa.orangtuaWaliAktif.nama }} &raquo; {{ kehadiran.siswa.orangtuaWaliAktif.ponsel }} {% endif %}</span></dt>
+        <br><i class="fa fa-info-circle fa-fw"></i> <span class="info-pelengkap-siswa info-id">{{ kehadiran.siswa.nomorIndukSistem }}</span>{% if kehadiran.siswa.nomorInduk %}<span class="info-pelengkap-siswa">, {{ kehadiran.siswa.nomorInduk }}</span>{% endif %}
+        <br><i class="fa fa-phone fa-fw"></i> <span class="info-pelengkap-siswa">{% if kehadiran.siswa.orangtuaWaliAktif != null %}{{ kehadiran.siswa.orangtuaWaliAktif.nama }} &raquo; {{ kehadiran.siswa.orangtuaWaliAktif.ponsel }} {% endif %}</span>
+    </dt>
     <dd>
         {{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}
         {{ form_widget(form['kehadiran_keterangan_' ~ kehadiran.id]) }}
