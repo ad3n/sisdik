@@ -86,7 +86,7 @@
 <div>
     <h4>{{ 'pembaruan.jadwal.mesin.kehadiran'|trans({}, 'headings') }}:</h4>
     <div class="form-group">
-        <i class="fa fa-upload fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pembaruan-jadwal" class="btn primary" sisdik-url="{% if mesinWakil %}{{ mesinWakil.urlJadwalKehadiran }}{% endif %}">{{ 'simpan.perubahan.jadwal.mesin.kehadiran'|trans }}</button>
+        <i class="fa fa-download fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pembaruan-jadwal" class="btn primary" sisdik-url="{% if mesinWakil %}{{ mesinWakil.urlJadwalKehadiran }}{% endif %}">{{ 'simpan.perubahan.jadwal.mesin.kehadiran'|trans }}</button>
         <p class="help-block">{{ 'bantuan.simpan.perubahan.jadwal.mesin.kehadiran'|trans }}</p>
         <div class="pesan" id="pesan-proses-pembaruan-jadwal"></div>
     </div>
