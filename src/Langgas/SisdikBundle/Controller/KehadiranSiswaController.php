@@ -59,7 +59,7 @@ class KehadiranSiswaController extends Controller
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
-                'sekolah' => $sekolah->getId(),
+                'sekolah' => $sekolah,
             ])
         ;
 
@@ -140,8 +140,9 @@ class KehadiranSiswaController extends Controller
             }
 
             if ($searchdata['searchkey'] != '') {
-                $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey");
+                $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem = :searchkey2");
                 $querybuilder->setParameter('searchkey', "%{$searchdata['searchkey']}%");
+                $querybuilder->setParameter('searchkey2', $searchdata['searchkey']);
 
                 $buildparam['searchkey'] = $searchdata['searchkey'];
             } else {

@@ -56,8 +56,9 @@ class KehadiranSiswaType extends AbstractType
             $querybuilder->setParameter('tanggal', $this->buildparam['tanggal']);
         }
         if ($this->buildparam['searchkey'] != '') {
-            $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey");
+            $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem = :searchkey2");
             $querybuilder->setParameter('searchkey', '%' . $this->buildparam['searchkey'] . '%');
+            $querybuilder->setParameter('searchkey2', $this->buildparam['searchkey']);
         }
         if ($this->buildparam['tingkat'] != '') {
             $querybuilder->andWhere("kelas.tingkat = :tingkat");
