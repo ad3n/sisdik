@@ -765,7 +765,7 @@ class KehadiranSiswaController extends Controller
             ->andWhere('jadwal.paramstatusHinggaJam <= ?2')
             ->andWhere('tahunAkademik.aktif = ?3')
             ->andWhere('jadwal.id NOT IN (?4)')
-            ->andWhere("jadwal.perulangan = ?5 OR jadwal.perulangan = ?6 OR jadwal.perulangan = ?7 OR jadwal.mingguanHariKe = ?8 OR jadwal.bulananHariKe = ?9")
+            ->andWhere("jadwal.perulangan = ?5 OR (jadwal.perulangan = ?6 AND jadwal.mingguanHariKe = ?8) OR (jadwal.perulangan = ?7 AND jadwal.bulananHariKe = ?9)")
             ->andWhere("jadwal.paramstatusDariJam != '' OR jadwal.paramstatusHinggaJam != ''")
             ->setParameter(1, $sekolah)
             ->setParameter(2, $jam)
