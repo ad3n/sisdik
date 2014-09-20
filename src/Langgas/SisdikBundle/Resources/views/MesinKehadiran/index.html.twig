@@ -24,6 +24,7 @@
     margin-bottom: 2px;
 }
 </style>
+
 <div class="add-link">
     <a href="{{ path('attendancemachine_new') }}" class="add-link-a">
         <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.attendancemachine.add'|trans }}
@@ -80,6 +81,7 @@
     </tbody>
 </table>
 <p style="font-style: italic;">* {{ 'help.waktu.tertib.harian'|trans }}</p>
+{{ knp_pagination_render(pagination) }}
 
 <div class="clearfix" style="margin-top: 2em;"></div>
 
@@ -91,7 +93,6 @@
         <div class="pesan" id="pesan-proses-pembaruan-jadwal"></div>
     </div>
 </div>
-{{ knp_pagination_render(pagination) }}
 {% endblock content %}
 
 {% block javascripts_custom %}
