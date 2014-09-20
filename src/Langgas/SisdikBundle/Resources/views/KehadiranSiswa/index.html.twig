@@ -111,7 +111,7 @@ $(document).ready(function() {
     });
 
     $("#tombol-proses-pengiriman-berkas").click(function() {
-        var proxyUrl = $(this).attr("sisdik-url");
+        var proxyUrl = $(this).attr("sisdik-url"), text = '';
 
         if (proxyUrl == "") {
             alert("{{ 'url.kehadiran.manual.kosong'|trans }}");
@@ -122,7 +122,6 @@ $(document).ready(function() {
         $("#pesan-proses-pengiriman").html("").addClass("loading");
 
         $.get(proxyUrl, function(response) {
-            var text = '';
             for (i = 0; i < response.pesan.length; i++) {
                 text += response.pesan[i] + "<br>";
             }
@@ -131,22 +130,31 @@ $(document).ready(function() {
         });
     });
 
-    $("#tombol-proses-pembaruan-manual").click(function() {
-        var updateUrl = $(this).attr("sisdik-url");
+    function prosesPembaruanManual(prosesKehadiran, textOutput, urutan, daftarJadwal) {
+        var urlProses = $("#tombol-proses-pembaruan-manual").attr("sisdik-url") + '/' + urutan + '/' + daftarJadwal;
+        $("#pesan-proses-pembaruan").html(textOutput).addClass("loading");
 
-        $(this).attr('disabled', 'disabled');
-        $("#pesan-proses-pembaruan").html("").addClass("loading");
-
-        $.get(updateUrl, function(response) {
-            var text = '';
+        $.get(urlProses, function(response) {
+            console.log(response);
             if (response.pesan) {
                 for (i = 0; i < response.pesan.length; i++) {
-                    text += response.pesan[i] + "<br>";
+                    textOutput += response.pesan[i] + "<br>";
                 }
             }
-            $("#pesan-proses-pembaruan").html(text).removeClass("loading");
-            $("#tombol-proses-pembaruan-manual").removeAttr('disabled');
+            if (response.selesai == 1) {
+                prosesKehadiran = false;
+                $("#pesan-proses-pembaruan").html(textOutput).removeClass("loading");
+                $("#tombol-proses-pembaruan-manual").removeAttr('disabled');
+            } else {
+                prosesPembaruanManual(prosesKehadiran, textOutput, response.urutan, response.daftarJadwal);
+            }
         });
+    }
+
+    $("#tombol-proses-pembaruan-manual").click(function() {
+        $("#tombol-proses-pembaruan-manual").attr('disabled', 'disabled');
+
+        prosesPembaruanManual(true, '', 0, '0');
     });
 });
 </script>
