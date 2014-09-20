@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-09-20T11:50:56Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-09-20T12:05:16Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -288,7 +288,7 @@
       <trans-unit id="0dbdb363664f3fa4f33c81c9bf7d7203ea473444" resname="bantuan.simpan.perubahan.jadwal.mesin.kehadiran">
         <jms:reference-file line="90">views/MesinKehadiran/index.html.twig</jms:reference-file>
         <source>bantuan.simpan.perubahan.jadwal.mesin.kehadiran</source>
-        <target>Informasi jadwal dan mesin kehadiran disimpan di mesin wakil sisdik</target>
+        <target>Informasi jadwal dan mesin kehadiran perlu disimpan di mesin wakil sisdik. Wakil sisdik akan memproses kehadiran otomatis berdasarkan informasi jadwal yang tersimpan.</target>
       </trans-unit>
       <trans-unit id="6213d12b4240968364a4fcc5c6f316db3092fb3f" resname="cannot.alter.applicant.inactive.year">
         <jms:reference-file line="806">SisdikBundle/Controller/SiswaApplicantController.php</jms:reference-file>
