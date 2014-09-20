@@ -11,7 +11,7 @@
     <dt>{{ 'profile.show.name'|trans({}, 'FOSUserBundle') }}</dt>
     <dd>{{ user.name }}</dd>
     {% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
-        <dt>{{ 'profile.nomor.ponsel'|trans({}, 'FOSUserBundle') }}</dt>
+        <dt>{{ 'label.nomor.ponsel'|trans }}</dt>
         <dd>{{ user.nomorPonsel }}</dd>
     {% endif %}
     <dt>{{ 'profile.show.role'|trans({}, 'FOSUserBundle') }}</dt>

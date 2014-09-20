@@ -102,6 +102,7 @@ class ProfileFormType extends BaseType
                     'expanded' => true,
                 ])
                 ->add('nomorPonsel', 'text', [
+                    'label' => 'label.nomor.ponsel',
                     'required' => true,
                     'help_block' => 'help.hanya.digunakan.untuk.peran.admin'
                 ])
