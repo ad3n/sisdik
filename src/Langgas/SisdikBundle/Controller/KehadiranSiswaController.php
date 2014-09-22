@@ -859,7 +859,13 @@ class KehadiranSiswaController extends Controller
 
                 $logFile = exec("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
                 $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
-                $targetFile = self::TMP_DIR . DIRECTORY_SEPARATOR . $logFile;
+                $targetFile = self::TMP_DIR
+                    . DIRECTORY_SEPARATOR
+                    . $sekolah->getId()
+                    . '-sisdik-'
+                    . uniqid(mt_rand(), true)
+                    . $logFile
+                ;
 
                 if (!@copy($sourceFile, $targetFile)) {
                     continue;
@@ -1007,6 +1013,8 @@ class KehadiranSiswaController extends Controller
                         }
                     }
                 }
+
+                @unlink(substr($targetFile, 0, -3));
             }
 
             $em->flush();
