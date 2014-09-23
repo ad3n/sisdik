@@ -2,6 +2,7 @@
 
 namespace Langgas\SisdikBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
@@ -30,6 +31,7 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /* @var $em EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
 
         $text = '';
@@ -148,8 +150,10 @@ class InisiasiKehadiranCommand extends ContainerAwareCommand
                                 ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
                                 ->where('siswaKelas.tahunAkademik = :tahunakademik')
                                 ->andWhere('siswaKelas.kelas = :kelas')
+                                ->andWhere('siswaKelas.aktif = :aktif')
                                 ->setParameter('tahunakademik', $jadwal->getTahunAkademik())
                                 ->setParameter('kelas', $jadwal->getKelas())
+                                ->setParameter('aktif', true)
                             ;
                             $entitiesSiswaKelas = $qbSiswaKelas->getQuery()->getResult();
 

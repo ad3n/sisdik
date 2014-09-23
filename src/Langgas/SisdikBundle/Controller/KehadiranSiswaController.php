@@ -299,6 +299,7 @@ class KehadiranSiswaController extends Controller
     public function inisiasiAction($kelas_id, $tanggal)
     {
         $sekolah = $this->isRegisteredToSchool();
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
@@ -349,8 +350,10 @@ class KehadiranSiswaController extends Controller
                     ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
                     ->where('siswaKelas.tahunAkademik = :tahunakademik')
                     ->andWhere('siswaKelas.kelas = :kelas')
+                    ->andWhere('siswaKelas.aktif = :aktif')
                     ->setParameter('tahunakademik', $tahunAkademik->getId())
                     ->setParameter('kelas', $kelas->getId())
+                    ->setParameter('aktif', true)
                 ;
                 $entitiesSiswaKelas = $qbSiswaKelas->getQuery()->getResult();
                 foreach ($entitiesSiswaKelas as $siswaKelas) {
