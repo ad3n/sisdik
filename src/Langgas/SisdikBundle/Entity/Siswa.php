@@ -1285,7 +1285,7 @@ class Siswa
     public function getSiswaKelasAktif()
     {
         foreach ($this->getSiswaKelas() as $siswakelas) {
-            if ($siswakelas->getTahunAkademik()->getAktif() === true) {
+            if ($siswakelas->getTahunAkademik()->getAktif() === true && $siswakelas->getAktif()) {
                 return $siswakelas;
             }
         }
