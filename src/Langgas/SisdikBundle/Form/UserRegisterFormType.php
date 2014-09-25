@@ -94,6 +94,7 @@ class UserRegisterFormType extends BaseType
                 if ($keys == 'ROLE_USER'
                         || $keys == 'ROLE_SUPER_ADMIN'
                         || $keys == 'ROLE_SISWA'
+                        || $keys == 'ROLE_WALI_KELAS'
                         || $keys == 'ROLE_PANITIA_PSB'
                         || $keys == 'ROLE_KETUA_PANITIA_PSB') {
                     continue;
