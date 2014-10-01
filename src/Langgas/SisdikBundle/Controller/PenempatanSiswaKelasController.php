@@ -105,11 +105,9 @@ class PenempatanSiswaKelasController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = array();
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom') {
+                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
                             $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
+                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && ($cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif' || $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif-bahaya')) {
                             // baris yang tak perlu dibaca
                         } else {
                             $cellContent[] = $cell['data'];
@@ -553,84 +551,85 @@ class PenempatanSiswaKelasController extends Controller
     }
 
     /**
-     *
-     * @param  array                                  $content
-     * @param  array                                  $fieldnames
+     * @param  array                                     $content
+     * @param  array                                     $fieldnames
      * @param  Langgas\SisdikBundle\Entity\Sekolah       $sekolah
      * @param  Langgas\SisdikBundle\Entity\TahunAkademik $tahunAkademik
      * @param  Langgas\SisdikBundle\Entity\Kelas         $kelas
-     * @param  boolean                                $andFlush
+     * @param  boolean                                   $andFlush
      * @throws \Exception
      */
-    private function menempatkanSiswa($content, $fieldnames, $sekolah, $tahunAkademik, $kelas,
-            $andFlush = false) {
+    private function menempatkanSiswa($content, $fieldnames, $sekolah, $tahunAkademik, $kelas, $andFlush = false) {
         $em = $this->getDoctrine()->getManager();
 
         $keyNomorIndukSistem = array_search('nomorIndukSistem', $fieldnames);
         if (is_int($keyNomorIndukSistem)) {
-            $siswakelas = new SiswaKelas();
-
             $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
-                    ->findOneBy(
-                            array(
-                                'nomorIndukSistem' => $content[$keyNomorIndukSistem], 'sekolah' => $sekolah
-                            ));
+                ->findOneBy([
+                    'nomorIndukSistem' => $content[$keyNomorIndukSistem],
+                    'sekolah' => $sekolah,
+                ])
+            ;
             if (!$siswa && !($siswa instanceof Siswa)) {
                 return;
             }
 
-            $siswakelas->setSiswa($siswa);
-            $siswakelas->setTahunAkademik($tahunAkademik);
-            $siswakelas->setKelas($kelas);
+            $siswaKelas = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
+                ->findOneBy([
+                    'siswa' => $siswa,
+                    'tahunAkademik' => $tahunAkademik,
+                    'kelas' => $kelas,
+                ])
+            ;
+
+            if (!($siswaKelas instanceof SiswaKelas)) {
+                $siswaKelas = new SiswaKelas;
+
+                $siswaKelas->setSiswa($siswa);
+                $siswaKelas->setTahunAkademik($tahunAkademik);
+                $siswaKelas->setKelas($kelas);
+            }
 
             $keyKodeJurusan = array_search('kodeJurusan', $fieldnames);
             if (is_int($keyKodeJurusan)) {
                 $penjurusan = $em->getRepository('LanggasSisdikBundle:Penjurusan')
-                        ->findOneBy(
-                                array(
-                                    'kode' => $content[$keyKodeJurusan], 'sekolah' => $sekolah->getId()
-                                ));
+                    ->findOneBy([
+                        'kode' => $content[$keyKodeJurusan],
+                        'sekolah' => $sekolah,
+                    ])
+                ;
 
                 if (!$penjurusan) {
-                    $siswakelas->setPenjurusan(null);
+                    $siswaKelas->setPenjurusan(null);
                 } else {
-                    $siswakelas->setPenjurusan($penjurusan);
+                    $siswaKelas->setPenjurusan($penjurusan);
                 }
-            }
-
-            $keyAktif = array_search('aktif', $fieldnames);
-            if (is_int($keyAktif)) {
-                // siswa hanya boleh berstatus aktif di satu kelas dalam satu tahun akademik aktif
-                $aktif = $content[$keyAktif];
-                if ($aktif == 1) {
-                    $obj = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
-                            ->findOneBy(
-                                    array(
-                                            'siswa' => $siswa->getId(),
-                                            'tahunAkademik' => $tahunAkademik->getId(), 'aktif' => $aktif
-                                    ));
-                    if ($obj) {
-                        $siswakelas->setAktif(false);
-                    } else {
-                        $siswakelas->setAktif($content[$keyAktif]);
-                    }
-                }
-            } else {
-                throw $this->createNotFoundException('Status aktif/non-aktif harus ditentukan.');
             }
 
             $keyKeterangan = array_search('keterangan', $fieldnames);
             if (is_int($keyKeterangan)) {
-                $siswakelas->setKeterangan($content[$keyKeterangan]);
+                $siswaKelas->setKeterangan($content[$keyKeterangan]);
             }
 
-            $em->persist($siswakelas);
+            $keyAktif = array_search('aktif', $fieldnames);
+            if (is_int($keyAktif)) {
+                $siswaKelas->setAktif($content[$keyAktif]);
+            } else {
+                throw $this->createNotFoundException('Status aktif/non-aktif siswa di suatu kelas harus ditentukan.');
+            }
+
+            $keyHapus = array_search('hapus', $fieldnames);
+            if (is_int($keyHapus) && $content[$keyHapus] == 1) {
+                $em->remove($siswaKelas);
+            } else {
+                $em->persist($siswaKelas);
+            }
 
             $this->siswaDitempatkanJumlah++;
 
             if ($andFlush) {
                 $em->flush();
-                $em->clear($siswakelas);
+                $em->clear($siswaKelas);
             }
         }
     }

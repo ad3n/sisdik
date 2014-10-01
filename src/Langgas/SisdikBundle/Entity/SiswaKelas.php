@@ -26,7 +26,7 @@ class SiswaKelas
      *
      * @var boolean
      */
-    private $aktif;
+    private $aktif = false;
 
     /**
      * @ORM\Column(name="keterangan", type="string", length=400, nullable=true)

@@ -31,6 +31,9 @@
         <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
             <style:table-column-properties fo:break-before="auto" style:column-width="1.8in"/>
         </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1in"/>
+        </style:style>
         <style:style style:name="ro1" style:family="table-row">
             <style:table-row-properties style:row-height="0.178in" fo:break-before="auto" style:use-optimal-row-height="true"/>
         </style:style>
@@ -44,6 +47,7 @@
         {% for datakelas in kelas %}
             <table:table table:name="{{ datakelas.tahunAkademik.nama }}, {{ datakelas.nama }}" table:style-name="ta1">
                 {% set fieldnum = 0 %}
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
@@ -74,6 +78,9 @@
                     <table:table-cell table:style-name="nama-kolom" office:value-type="string">
                         <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:keterangan</text:p>
                     </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:hapus</text:p>
+                    </table:table-cell>
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
@@ -97,6 +104,9 @@
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
                         <text:p>{{ 'label.keterangan'|trans }}</text:p>
                     </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif-bahaya" office:value-type="string">
+                        <text:p>{{ 'label.hapus'|trans }}</text:p>
+                    </table:table-cell>
                 </table:table-row>
                 {% set key = loop.index0 %}
             {% for entity in entities[key] %}
@@ -117,7 +127,7 @@
                         <text:p>{% if entity.penjurusan is not null %}{{ entity.penjurusan.kode }}{% endif %}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ entity.aktif }}</text:p>
+                        <text:p>{% if entity.aktif == false %}0{% else %}{{ entity.aktif }}{% endif %}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.keterangan }}</text:p>
@@ -146,6 +156,11 @@
                     </table:table-cell>
                 </table:table-row>
             {% endfor %}
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
+                        <text:p>Kolom hapus bisa diisi 1 jika ingin menghapus data siswa di kelas tersebut</text:p>
+                    </table:table-cell>
+                </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
                         <text:p>Hapus keterangan ketika akan mengimpor informasi penempatan kelas</text:p>
