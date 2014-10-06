@@ -274,7 +274,7 @@ class TingkatController extends Controller
         $translator = $this->get('translator');
 
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$translator->trans('headings.academic', [], 'navigations')][$translator->trans('links.tingkat', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.setting', [], 'navigations')][$translator->trans('links.tingkat', [], 'navigations')]->setCurrent(true);
     }
 
     /**

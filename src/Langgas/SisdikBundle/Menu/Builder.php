@@ -90,6 +90,7 @@ class Builder extends ContainerAware
 
             $settings->addChild($translator->trans('links.user', [], 'navigations'), ['route' => 'settings_user_inschool_list']);
             $settings->addChild($translator->trans('links.school', [], 'navigations'), ['route' => 'settings_specsch']);
+            $settings->addChild($translator->trans('links.tingkat', [], 'navigations'), ['route' => 'tingkat-kelas']);
             $settings->addChild($translator->trans('links.placement', [], 'navigations'), ['route' => 'settings_placement']);
             $settings->addChild($translator->trans('links.year', [], 'navigations'), ['route' => 'settings_year']);
             $settings->addChild($translator->trans('links.admissiongroup', [], 'navigations'), ['route' => 'settings_admissiongroup']);
@@ -142,14 +143,13 @@ class Builder extends ContainerAware
 
         $roleakademik = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH")';
         if ($securityContext->isGranted([
-            new Expression($roleakademik), ]
-        )) {
+            new Expression($roleakademik),
+        ])) {
             $academic = $menu->addChild($translator->trans('headings.academic', [], 'navigations'), [
                 'dropdown' => true,
             ]);
 
             $academic->addChild($translator->trans('links.data.academiccalendar', [], 'navigations'), ['route' => 'kalender-akademik']);
-            $academic->addChild($translator->trans('links.tingkat', [], 'navigations'), ['route' => 'tingkat-kelas']);
             $academic->addChild($translator->trans('links.data.class', [], 'navigations'), ['route' => 'data_class']);
             $academic->addChild($translator->trans('links.data.classguardian', [], 'navigations'), ['route' => 'data_classguardian']);
             $academic->addChild($translator->trans('links.siswa', [], 'navigations'), ['route' => 'siswa']);
