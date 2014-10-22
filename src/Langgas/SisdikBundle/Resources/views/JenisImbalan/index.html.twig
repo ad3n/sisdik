@@ -16,11 +16,11 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.reward.type.name'|trans, 't.nama') }}
+            <th class="{% if pagination.isSorted('jenisImbalan.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.reward.type.name'|trans, 'jenisImbalan.nama') }}
             </th>
-            <th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
+            <th class="{% if pagination.isSorted('jenisImbalan.keterangan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 'jenisImbalan.keterangan') }}
             </th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
@@ -40,5 +40,3 @@
 </table>
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}
-
-

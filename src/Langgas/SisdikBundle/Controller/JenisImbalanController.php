@@ -1,62 +1,62 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Langgas\SisdikBundle\Entity\JenisImbalan;
-use Langgas\SisdikBundle\Form\JenisImbalanType;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * JenisImbalan controller.
- *
- * @Route("/rewardtype")
+ * @Route("/jenis-imbalan")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
  */
 class JenisImbalanController extends Controller
 {
     /**
-     * Lists all JenisImbalan entities.
-     *
      * @Route("/", name="rewardtype")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')
-                    ->from('LanggasSisdikBundle:JenisImbalan', 't')->where('t.sekolah = :sekolah')
-                    ->orderBy('t.nama', 'ASC')->setParameter('sekolah', $sekolah->getId());
-        }
+        $querybuilder = $em->createQueryBuilder()
+            ->select('jenisImbalan')
+            ->from('LanggasSisdikBundle:JenisImbalan', 'jenisImbalan')
+            ->where('jenisImbalan.sekolah = :sekolah')
+            ->orderBy('jenisImbalan.nama', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination
-        );
+        return [
+            'pagination' => $pagination,
+        ];
     }
 
     /**
-     * Finds and displays a JenisImbalan entity.
-     *
      * @Route("/{id}/show", name="rewardtype_show")
      * @Template()
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
@@ -67,42 +67,42 @@ class JenisImbalanController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new JenisImbalan entity.
-     *
      * @Route("/new", name="rewardtype_new")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $entity = new JenisImbalan();
-        $form = $this->createForm(new JenisImbalanType($this->container), $entity);
+        $entity = new JenisImbalan;
+        $form = $this->createForm('sisdik_jenisimbalan', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new JenisImbalan entity.
-     *
      * @Route("/create", name="rewardtype_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:JenisImbalan:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $entity = new JenisImbalan();
-        $form = $this->createForm(new JenisImbalanType($this->container), $entity);
+        $entity = new JenisImbalan;
+        $form = $this->createForm('sisdik_jenisimbalan', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -112,43 +112,40 @@ class JenisImbalanController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.reward.type.inserted',
-                                                array(
-                                                    '%rewardtype%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.reward.type.inserted', [
+                        '%rewardtype%' => $entity->getNama(),
+                    ]))
+                ;
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.rewardtype');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('rewardtype_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('rewardtype_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing JenisImbalan entity.
-     *
      * @Route("/{id}/edit", name="rewardtype_edit")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
@@ -157,26 +154,27 @@ class JenisImbalanController extends Controller
             throw $this->createNotFoundException('Entity JenisImbalan tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new JenisImbalanType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_jenisimbalan', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing JenisImbalan entity.
-     *
      * @Route("/{id}/update", name="rewardtype_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:JenisImbalan:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
@@ -186,55 +184,51 @@ class JenisImbalanController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new JenisImbalanType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_jenisimbalan', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.reward.type.updated',
-                                                array(
-                                                    '%rewardtype%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.reward.type.updated', [
+                        '%rewardtype%' => $entity->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.rewardtype');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('rewardtype_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('rewardtype_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a JenisImbalan entity.
-     *
      * @Route("/{id}/delete", name="rewardtype_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
-        $this->isRegisteredToSchool();
+    public function deleteAction(Request $request, $id)
+    {
+        $this->getSekolah();
 
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
         if ($form->isValid()) {
+            /* @var $em EntityManager */
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('LanggasSisdikBundle:JenisImbalan')->find($id);
 
@@ -246,13 +240,13 @@ class JenisImbalanController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.reward.type.deleted',
-                                                array(
-                                                    '%rewardtype%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.reward.type.deleted', [
+                        '%rewardtype%' => $entity->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
@@ -262,27 +256,29 @@ class JenisImbalanController extends Controller
         return $this->redirect($this->generateUrl('rewardtype'));
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.reward.type', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.fee', [], 'navigations')][$translator->trans('links.reward.type', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
