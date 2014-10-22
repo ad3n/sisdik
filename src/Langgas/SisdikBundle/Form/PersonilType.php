@@ -46,6 +46,6 @@ class PersonilType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_personiltype';
+        return 'sisdik_personil';
     }
 }

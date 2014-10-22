@@ -1,79 +1,83 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
-use Symfony\Component\Form\FormError;
-use Langgas\SisdikBundle\Entity\Tahun;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\HttpFoundation\Response;
-use Langgas\SisdikBundle\Entity\User;
+
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Entity\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
-use Langgas\SisdikBundle\Form\PanitiaPendaftaranType;
 use Langgas\SisdikBundle\Entity\Personil;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Tahun;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * PanitiaPendaftaran controller.
- *
- * @Route("/regcommittee")
+ * @Route("/panitia-pendaftaran")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
 class PanitiaPendaftaranController extends Controller
 {
     /**
-     * Lists all PanitiaPendaftaran entities.
-     *
      * @Route("/", name="regcommittee")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm('sisdik_caritahun');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('LanggasSisdikBundle:PanitiaPendaftaran', 't')->leftJoin('t.tahun', 't2')
-                ->where('t.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC');
-        $querybuilder->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('panitia')
+            ->from('LanggasSisdikBundle:PanitiaPendaftaran', 'panitia')
+            ->leftJoin('panitia.tahun', 'tahun')
+            ->where('panitia.sekolah = :sekolah')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            if ($searchdata['tahun'] instanceof Tahun) {
+                $querybuilder->andWhere('panitia.tahun = :tahun');
+                $querybuilder->setParameter('tahun', $searchdata['tahun']);
             }
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination, 'searchform' => $searchform->createView()
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+        ];
     }
 
     /**
-     * Finds and displays a PanitiaPendaftaran entity.
-     *
      * @Route("/{id}/show", name="regcommittee_show")
      * @Template()
      */
-    public function showAction($id) {
-        $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
+        $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
@@ -84,9 +88,10 @@ class PanitiaPendaftaranController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
@@ -94,10 +99,12 @@ class PanitiaPendaftaranController extends Controller
      *
      * @Route("/{id}/activate", name="regcommittee_activate")
      */
-    public function activateAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function activateAction($id)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
@@ -107,18 +114,24 @@ class PanitiaPendaftaranController extends Controller
         }
 
         $results = $em->getRepository('LanggasSisdikBundle:Tahun')
-                ->findBy(array(
-                    'sekolah' => $sekolah->getId()
-                ));
-        $daftarTahun = array();
+            ->findBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
+        $daftarTahun = [];
         foreach ($results as $tahun) {
             if (is_object($tahun) && $tahun instanceof Tahun) {
                 $daftarTahun[] = $tahun->getId();
             }
         }
 
-        $query = $em->createQueryBuilder()->update('LanggasSisdikBundle:PanitiaPendaftaran', 't')
-                ->set('t.aktif', '0')->where('t.tahun IN (?1)')->setParameter(1, $daftarTahun)->getQuery();
+        $query = $em->createQueryBuilder()
+            ->update('LanggasSisdikBundle:PanitiaPendaftaran', 'panitia')
+            ->set('panitia.aktif', '0')
+            ->where('panitia.tahun IN (?1)')
+            ->setParameter(1, $daftarTahun)
+            ->getQuery()
+        ;
         $query->execute();
 
         $entity->setAktif(1);
@@ -126,47 +139,40 @@ class PanitiaPendaftaranController extends Controller
         $em->persist($entity);
         $em->flush();
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('regcommittee',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('regcommittee'));
     }
 
     /**
-     * Displays a form to create a new PanitiaPendaftaran entity.
-     *
      * @Route("/new", name="regcommittee_new")
      * @Template()
      */
-    public function newAction() {
-        $this->isRegisteredToSchool();
+    public function newAction()
+    {
+        $this->getSekolah();
         $this->setCurrentMenu();
 
-        $entity = new PanitiaPendaftaran();
+        $entity = new PanitiaPendaftaran;
 
-        $form = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
+        $form = $this->createForm('sisdik_panitiapendaftaran', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new PanitiaPendaftaran entity.
-     *
      * @Route("/create", name="regcommittee_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PanitiaPendaftaran:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
+        $this->getSekolah();
         $this->setCurrentMenu();
 
-        $entity = new PanitiaPendaftaran();
-        $form = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
+        $entity = new PanitiaPendaftaran;
+        $form = $this->createForm('sisdik_panitiapendaftaran', $entity);
         $form->submit($request);
 
         // prevent or remove empty personil to be inserted to database.
@@ -187,23 +193,23 @@ class PanitiaPendaftaranController extends Controller
         }
 
         if ($form->isValid()) {
+            /* @var $em EntityManager */
             $em = $this->getDoctrine()->getManager();
 
             try {
                 $em->persist($entity);
 
                 // give user the necessary role
+                /* @var $em EntityManager */
                 $userManager = $this->container->get('fos_user.user_manager');
                 $daftarPersonil = $entity->getDaftarPersonil();
                 if ($daftarPersonil instanceof ArrayCollection) {
                     foreach ($daftarPersonil as $personil) {
                         if ($personil instanceof Personil) {
                             if ($personil->getId() !== NULL) {
-                                $user = $userManager
-                                        ->findUserBy(
-                                                array(
-                                                    'id' => $personil->getId()
-                                                ));
+                                $user = $userManager->findUserBy([
+                                    'id' => $personil->getId(),
+                                ]);
 
                                 $user->addRole('ROLE_PANITIA_PSB');
                                 $userManager->updateUser($user);
@@ -212,56 +218,49 @@ class PanitiaPendaftaranController extends Controller
                     }
                 }
 
-                $user = $userManager
-                        ->findUserBy(
-                                array(
-                                    'id' => $entity->getKetuaPanitia()->getId()
-                                ));
+                $user = $userManager->findUserBy([
+                    'id' => $entity->getKetuaPanitia()->getId()
+                ]);
                 $user->addRole('ROLE_KETUA_PANITIA_PSB');
                 $userManager->updateUser($user);
 
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.registration.committee.inserted',
-                                                array(
-                                                    '%year%' => $entity->getTahun()->getTahun()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.registration.committee.inserted', [
+                        '%year%' => $entity->getTahun()->getTahun(),
+                    ]))
+                ;
             } catch (DBALException $e) {
-                $message = $this->get('translator')
-                        ->trans('exception.unique.registration.committee',
-                                array(
-                                    '%year%' => $entity->getTahun()->getTahun()
-                                ));
+                $message = $this->get('translator')->trans('exception.unique.registration.committee', [
+                    '%year%' => $entity->getTahun()->getTahun(),
+                ]);
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('regcommittee_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('regcommittee_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing PanitiaPendaftaran entity.
-     *
      * @Route("/{id}/edit", name="regcommittee_edit")
      * @Template()
      */
-    public function editAction($id) {
-        $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
+        $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
@@ -270,26 +269,27 @@ class PanitiaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity PanitiaPendaftaran tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_panitiapendaftaran', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing PanitiaPendaftaran entity.
-     *
      * @Route("/{id}/update", name="regcommittee_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PanitiaPendaftaran:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
+        $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
@@ -302,7 +302,7 @@ class PanitiaPendaftaranController extends Controller
 
         $entity->setPanitia(''); // prevent form generation read from database
 
-        $editForm = $this->createForm(new PanitiaPendaftaranType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_panitiapendaftaran', $entity);
         $editForm->submit($request);
 
         // prevent or remove empty personil to be inserted to database.
@@ -323,22 +323,20 @@ class PanitiaPendaftaranController extends Controller
         }
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
 
                 // give user the necessary role
+                /* @var $userManager UserManager */
                 $userManager = $this->container->get('fos_user.user_manager');
                 $daftarPersonil = $entity->getDaftarPersonil();
                 if ($daftarPersonil instanceof ArrayCollection) {
                     foreach ($daftarPersonil as $personil) {
                         if ($personil instanceof Personil) {
                             if ($personil->getId() !== NULL) {
-                                $user = $userManager
-                                        ->findUserBy(
-                                                array(
-                                                    'id' => $personil->getId()
-                                                ));
+                                $user = $userManager->findUserBy([
+                                    'id' => $personil->getId(),
+                                ]);
 
                                 if ($user instanceof User) {
                                     $user->addRole('ROLE_PANITIA_PSB');
@@ -349,61 +347,56 @@ class PanitiaPendaftaranController extends Controller
                     }
                 }
 
-                $user = $userManager
-                        ->findUserBy(
-                                array(
-                                    'id' => $entity->getKetuaPanitia()->getId()
-                                ));
+                $user = $userManager->findUserBy([
+                    'id' => $entity->getKetuaPanitia()->getId()
+                ]);
                 $user->addRole('ROLE_KETUA_PANITIA_PSB');
                 $userManager->updateUser($user);
 
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.registration.committee.updated',
-                                                array(
-                                                    '%year%' => $entity->getTahun()->getTahun()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.registration.committee.updated', [
+                        '%year%' => $entity->getTahun()->getTahun(),
+                    ]))
+                ;
 
             } catch (DBALException $e) {
                 $message = $this->get('translator')
-                        ->trans('exception.unique.registration.committee',
-                                array(
-                                    '%year%' => $entity->getTahun()->getTahun()
-                                ));
+                    ->trans('exception.unique.registration.committee', [
+                        '%year%' => $entity->getTahun()->getTahun(),
+                    ])
+                ;
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('regcommittee_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('regcommittee_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a PanitiaPendaftaran entity.
-     *
      * @Route("/{id}/delete", name="regcommittee_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
-        $this->isRegisteredToSchool();
+    public function deleteAction(Request $request, $id)
+    {
+        $this->getSekolah();
 
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
         if ($form->isValid()) {
+            /* @var $em EntityManager */
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->find($id);
 
@@ -414,33 +407,32 @@ class PanitiaPendaftaranController extends Controller
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.registration.committee.deleted',
-                                            array(
-                                                '%year%' => $entity->getTahun()->getTahun()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.registration.committee.deleted', [
+                    '%year%' => $entity->getTahun()->getTahun(),
+                ]))
+            ;
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.registration.committee.fail.delete',
-                                            array(
-                                                '%year%' => $entity->getTahun()->getTahun()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.registration.committee.fail.delete', [
+                    '%year%' => $entity->getTahun()->getTahun(),
+                ]))
+            ;
         }
 
         return $this->redirect($this->generateUrl('regcommittee'));
     }
 
     /**
-     * Finds a name of a username
-     *
      * @Route("/name/{id}", name="regcommittee_getname")
      */
-    public function getNameAction($id) {
-        $this->isRegisteredToSchool();
+    public function getNameAction($id)
+    {
+        $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('LanggasSisdikBundle:User')->find($id);
@@ -455,82 +447,92 @@ class PanitiaPendaftaranController extends Controller
     }
 
     /**
-     * Get username through autocomplete box
-     *
      * @param Request $request
      * @Route("/ajax/ambilusername", name="regcommittee_ajax_get_username")
      */
-    public function ajaxGetUsername(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function ajaxGetUsername(Request $request)
+    {
+        $sekolah = $this->getSekolah();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $filter = $this->getRequest()->query->get('filter');
         $id = $this->getRequest()->query->get('id');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:User', 't')
-                ->where('t.sekolah IS NOT NULL')->andWhere('t.sekolah = :sekolah')
-                ->andWhere('t.siswa IS NULL')->orderBy('t.name', 'ASC')
-                ->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('user')
+            ->from('LanggasSisdikBundle:User', 'user')
+            ->where('user.sekolah IS NOT NULL')
+            ->andWhere('user.sekolah = :sekolah')
+            ->andWhere('user.siswa IS NULL')
+            ->orderBy('user.name', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         if ($id != '') {
-            $querybuilder->andWhere('t.id = :id');
+            $querybuilder->andWhere('user.id = :id');
             $querybuilder->setParameter('id', $id);
         } else {
-            $querybuilder->andWhere('t.username LIKE ?1 OR t.name LIKE ?2');
+            $querybuilder->andWhere('user.username LIKE ?1 OR user.name LIKE ?2');
             $querybuilder->setParameter(1, "%$filter%");
             $querybuilder->setParameter(2, "%$filter%");
         }
 
         $results = $querybuilder->getQuery()->getResult();
 
-        $retval = array();
+        $retval = [];
         foreach ($results as $result) {
             if ($result instanceof User) {
-                $retval[] = array(
-                        'source' => 'user', // user property of Personil
-                        'target' => 'id', // id property of Personil
-                        'id' => $result->getId(),
-                        'label' => /** @Ignore */ $result->getName() . " ({$result->getUsername()})",
-                        'value' => $result->getName(), // . $result->getId() . ':' . $result->getUsername(),
-                );
+                $retval[] = [
+                    'source' => 'user', // user property of Personil
+                    'target' => 'id', // id property of Personil
+                    'id' => $result->getId(),
+                    'label' => /** @Ignore */ $result->getName() . " ({$result->getUsername()})",
+                    'value' => $result->getName(), // . $result->getId() . ':' . $result->getUsername(),
+                ];
             }
         }
 
         if (count($retval) == 0) {
-            $label = $this->container->get('translator')->trans("label.username.undefined");
-            $retval[] = array(
-                'source' => 'user', 'target' => 'id', 'id' => $id, 'label' => /** @Ignore */ $label, 'value' => $label
-            );
+            $label = $this->get('translator')->trans("label.username.undefined");
+            $retval[] = [
+                'source' => 'user',
+                'target' => 'id',
+                'id' => $id,
+                'label' => /** @Ignore */ $label,
+                'value' => $label,
+            ];
         }
 
-        return new Response(json_encode($retval), 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
+        return new Response(json_encode($retval), 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.regcommittee', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.pendaftaran', [], 'navigations')][$translator->trans('links.regcommittee', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }

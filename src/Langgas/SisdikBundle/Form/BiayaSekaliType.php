@@ -120,9 +120,11 @@ class BiayaSekaliType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Langgas\SisdikBundle\Entity\BiayaSekali'
-        ));
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Langgas\SisdikBundle\Entity\BiayaSekali',
+            ])
+        ;
     }
 
     public function getName()
