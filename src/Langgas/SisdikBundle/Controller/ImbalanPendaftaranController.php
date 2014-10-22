@@ -3,6 +3,7 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -30,6 +31,7 @@ class ImbalanPendaftaranController extends Controller
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm('sisdik_caritahun');
@@ -39,7 +41,6 @@ class ImbalanPendaftaranController extends Controller
             ->from('LanggasSisdikBundle:ImbalanPendaftaran', 'imbalanPendaftaran')
             ->leftJoin('imbalanPendaftaran.tahun', 'tahun')
             ->leftJoin('imbalanPendaftaran.gelombang', 'gelombang')
-            ->leftJoin('imbalanPendaftaran.jenisImbalan', 't4')
             ->where('tahun.sekolah = :sekolah')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'ASC')
