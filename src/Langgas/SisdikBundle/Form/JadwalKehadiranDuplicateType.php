@@ -2,8 +2,8 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -14,113 +14,32 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class JadwalKehadiranDuplicateType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var integer
-     */
-    private $sekolahSrc;
-
-    /**
-     * @var integer|NULL
-     */
-    private $tahunAkademikSrc = NULL;
-
-    /**
-     * @var integer|NULL
-     */
-    private $kelasSrc = NULL;
-
-    /**
-     * @var string|NULL
-     */
-    private $perulanganSrc = NULL;
-
-    /**
-     * @var string|NULL
-     */
-    private $requestUri = NULL;
-
-    /**
-     * @var integer|NULL
-     */
-    private $mingguanHariKeSrc = NULL;
-
-    /**
-     * @var integer|NULL
-     */
-    private $bulananHariKeSrc = NULL;
-
-    /**
-     * @param ContainerInterface $container
-     * @param integer            $sekolah
-     * @param integer            $tahunAkademik
-     * @param integer            $kelas
-     * @param string             $perulangan
-     * @param string             $requestUri
-     * @param integer            $mingguanHariKe
-     * @param integer            $bulananHariKe
-     */
-    public function __construct(
-        ContainerInterface $container,
-        $sekolah,
-        $tahunAkademik = NULL,
-        $kelas = NULL,
-        $perulangan = NULL,
-        $requestUri = NULL,
-        $mingguanHariKe = NULL,
-        $bulananHariKe = NULL
-    )
-    {
-        $this->container = $container;
-        $this->sekolahSrc = $sekolah;
-        $this->tahunAkademikSrc = $tahunAkademik;
-        $this->kelasSrc = $kelas;
-        $this->perulanganSrc = $perulangan;
-        $this->requestUri = $requestUri;
-        $this->mingguanHariKeSrc = $mingguanHariKe;
-        $this->bulananHariKeSrc = $bulananHariKe;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
+        $sekolah = $options['sekolahSrc'];
 
         $builder
             ->add('sekolahSrc', 'hidden', [
-                'data' => $this->sekolahSrc,
+                'data' => $options['sekolahSrc'],
             ])
             ->add('tahunAkademikSrc', 'hidden', [
-                'data' => $this->tahunAkademikSrc,
+                'data' => $options['tahunAkademikSrc'],
             ])
             ->add('kelasSrc', 'hidden', [
-                'data' => $this->kelasSrc,
+                'data' => $options['kelasSrc'],
             ])
             ->add('perulanganSrc', 'hidden', [
-                'data' => $this->perulanganSrc,
+                'data' => $options['perulanganSrc'],
             ])
             ->add('requestUri', 'hidden', [
-                'data' => $this->requestUri,
+                'data' => $options['requestUri'],
             ])
             ->add('mingguanHariKeSrc', 'hidden', [
-                'data' => $this->mingguanHariKeSrc,
+                'data' => $options['mingguanHariKeSrc'],
             ])
             ->add('bulananHariKeSrc', 'hidden', [
-                'data' => $this->bulananHariKeSrc,
+                'data' => $options['bulananHariKeSrc'],
             ])
-        ;
-
-        $querybuilder1 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:TahunAkademik', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.urutan', 'DESC')
-            ->setParameter('sekolah', $this->sekolahSrc)
-        ;
-        $builder
             ->add('tahunAkademik', 'entity', [
                 'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
@@ -128,25 +47,21 @@ class JadwalKehadiranDuplicateType extends AbstractType
                 'expanded' => false,
                 'property' => 'nama',
                 'required' => true,
-                'query_builder' => $querybuilder1,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tahunAkademik')
+                        ->where('tahunAkademik.sekolah = :sekolah')
+                        ->orderBy('tahunAkademik.urutan', 'DESC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium selectyearduplicate',
                 ],
                 'label_render' => false,
                 'horizontal' => false,
             ])
-        ;
-
-        $querybuilder2 = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:Kelas', 't')
-            ->leftJoin('t.tingkat', 't2')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t2.urutan', 'ASC')
-            ->addOrderBy('t.urutan')
-            ->setParameter('sekolah', $this->sekolahSrc)
-        ;
-        $builder
             ->add('kelas', 'entity', [
                 'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
@@ -154,16 +69,23 @@ class JadwalKehadiranDuplicateType extends AbstractType
                 'expanded' => false,
                 'property' => 'nama',
                 'required' => true,
-                'query_builder' => $querybuilder2,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('kelas')
+                        ->leftJoin('kelas.tingkat', 'tingkat')
+                        ->where('kelas.sekolah = :sekolah')
+                        ->orderBy('tingkat.urutan', 'ASC')
+                        ->addOrderBy('kelas.urutan')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium selectclassduplicate',
                 ],
                 'label_render' => false,
                 'horizontal' => false,
             ])
-        ;
-
-        $builder
             ->add('perulangan', 'choice', [
                 'choices' => JadwalKehadiran::getDaftarPerulangan(),
                 'label' => 'label.selectrepetition',
@@ -208,12 +130,19 @@ class JadwalKehadiranDuplicateType extends AbstractType
         $resolver
             ->setDefaults([
                 'csrf_protection' => false,
+                'sekolahSrc' => null,
+                'tahunAkademikSrc' => null,
+                'kelasSrc' => null,
+                'perulanganSrc' => null,
+                'requestUri' => null,
+                'mingguanHariKeSrc' => null,
+                'bulananHariKeSrc' => null,
             ])
         ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_jadwalkehadiranduplicatetype';
+        return 'sisdik_jadwalkehadiran_salin';
     }
 }

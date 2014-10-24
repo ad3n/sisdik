@@ -2,12 +2,16 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,45 +19,42 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class JadwalKehadiranType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container
-            ->get('security.context')
-            ->getToken()
-            ->getUser()
-        ;
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
         $em = $this->container->get('doctrine')->getManager();
 
         $builder
-            ->add('sekolah', new EntityHiddenType($em), [
+            ->add('sekolah', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
-        ;
-
-        $querybuilder1 = $em->createQueryBuilder()
-            ->select('tahunAkademik')
-            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
-            ->where('tahunAkademik.sekolah = :sekolah')
-            ->orderBy('tahunAkademik.urutan', 'DESC')
-            ->setParameter('sekolah', $sekolah)
-        ;
-        $builder
             ->add('tahunAkademik', 'entity', [
                 'class' => 'LanggasSisdikBundle:TahunAkademik',
                 'label' => 'label.year.entry',
@@ -61,23 +62,19 @@ class JadwalKehadiranType extends AbstractType
                 'expanded' => false,
                 'property' => 'nama',
                 'required' => true,
-                'query_builder' => $querybuilder1,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tahunAkademik')
+                        ->where('tahunAkademik.sekolah = :sekolah')
+                        ->orderBy('tahunAkademik.urutan', 'DESC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium selectyear',
                 ],
             ])
-        ;
-
-        $querybuilder2 = $em->createQueryBuilder()
-            ->select('kelas')
-            ->from('LanggasSisdikBundle:Kelas', 'kelas')
-            ->leftJoin('kelas.tingkat', 'tingkat')
-            ->where('kelas.sekolah = :sekolah')
-            ->orderBy('tingkat.urutan', 'ASC')
-            ->addOrderBy('kelas.urutan')
-            ->setParameter('sekolah', $sekolah)
-        ;
-        $builder
             ->add('kelas', 'entity', [
                 'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
@@ -85,7 +82,17 @@ class JadwalKehadiranType extends AbstractType
                 'expanded' => false,
                 'property' => 'nama',
                 'required' => true,
-                'query_builder' => $querybuilder2,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('kelas')
+                        ->leftJoin('kelas.tingkat', 'tingkat')
+                        ->where('kelas.sekolah = :sekolah')
+                        ->orderBy('tingkat.urutan', 'ASC')
+                        ->addOrderBy('kelas.urutan')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'large selectclass',
                 ],
@@ -169,16 +176,6 @@ class JadwalKehadiranType extends AbstractType
                     'class' => 'mini',
                 ],
             ])
-        ;
-
-        $querybuilder4 = $em->createQueryBuilder()
-            ->select('template')
-            ->from('LanggasSisdikBundle:Templatesms', 'template')
-            ->where('template.sekolah = :sekolah')
-            ->orderBy('template.nama', 'ASC')
-            ->setParameter('sekolah', $sekolah)
-        ;
-        $builder
             ->add('templatesms', 'entity', [
                 'class' => 'LanggasSisdikBundle:Templatesms',
                 'label' => 'label.sms.template.entry',
@@ -186,7 +183,15 @@ class JadwalKehadiranType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'property' => 'optionLabel',
-                'query_builder' => $querybuilder4,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('template')
+                        ->where('template.sekolah = :sekolah')
+                        ->orderBy('template.nama', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'xlarge',
                 ],
@@ -212,13 +217,15 @@ class JadwalKehadiranType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults([
-            'data_class' => 'Langgas\SisdikBundle\Entity\JadwalKehadiran',
-        ]);
+        $resolver
+            ->setDefaults([
+                'data_class' => 'Langgas\SisdikBundle\Entity\JadwalKehadiran',
+            ])
+        ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_jadwalkehadirantype';
+        return 'sisdik_jadwalkehadiran';
     }
 }

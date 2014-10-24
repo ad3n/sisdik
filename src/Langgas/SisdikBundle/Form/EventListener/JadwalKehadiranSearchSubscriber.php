@@ -2,30 +2,19 @@
 
 namespace Langgas\SisdikBundle\Form\EventListener;
 
-use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
  * Membentuk pilihan pencarian perulangan jadwal kehadiran
+ *
+ * @FormType
  */
 class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /**
-     * @param EntityManager $em
-     */
-    public function __construct(EntityManager $em)
-    {
-        $this->em = $em;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -95,5 +84,10 @@ class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
                 ;
             }
         }
+    }
+
+    public function getName()
+    {
+        return 'sisdik_jadwalkehadiransubscriber';
     }
 }
