@@ -4,7 +4,7 @@ namespace Langgas\SisdikBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Form\EventListener\JadwalKehadiranSearchSubscriber;
+use Langgas\SisdikBundle\Form\EventListener\JadwalSearchSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -16,7 +16,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class JadwalKehadiranSearchType extends AbstractType
+class JadwalSearchType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -24,22 +24,22 @@ class JadwalKehadiranSearchType extends AbstractType
     private $securityContext;
 
     /**
-     * @var JadwalKehadiranSearchSubscriber
+     * @var JadwalSearchSubscriber
      */
-    private $jadwalKehadiranSearchSubscriber;
+    private $jadwalSearchSubscriber;
 
     /**
      * @InjectParams({
      *     "securityContext" = @Inject("security.context"),
-     *     "jadwalKehadiranSearchSubscriber" = @Inject("langgas.sisdik_bundle.form.event_listener.jadwal_kehadiran_search_subscriber")
+     *     "jadwalSearchSubscriber" = @Inject("langgas.sisdik_bundle.form.event_listener.jadwal_search_subscriber")
      * })
      *
      * @param SecurityContext $securityContext
      */
-    public function __construct(SecurityContext $securityContext, JadwalKehadiranSearchSubscriber $jadwalKehadiranSearchSubscriber)
+    public function __construct(SecurityContext $securityContext, JadwalSearchSubscriber $jadwalSearchSubscriber)
     {
         $this->securityContext = $securityContext;
-        $this->jadwalKehadiranSearchSubscriber = $jadwalKehadiranSearchSubscriber;
+        $this->jadwalSearchSubscriber = $jadwalSearchSubscriber;
     }
 
     /**
@@ -103,7 +103,7 @@ class JadwalKehadiranSearchType extends AbstractType
             ])
         ;
 
-        $builder->addEventSubscriber($this->jadwalKehadiranSearchSubscriber);
+        $builder->addEventSubscriber($this->jadwalSearchSubscriber);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -117,6 +117,6 @@ class JadwalKehadiranSearchType extends AbstractType
 
     public function getName()
     {
-        return 'sisdik_carijadwalkehadiran';
+        return 'sisdik_carijadwal';
     }
 }

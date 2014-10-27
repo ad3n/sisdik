@@ -12,7 +12,7 @@ use JMS\DiExtraBundle\Annotation\FormType;
 /**
  * @FormType
  */
-class JadwalKehadiranDuplicateType extends AbstractType
+class JadwalDuplicateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -143,6 +143,6 @@ class JadwalKehadiranDuplicateType extends AbstractType
 
     public function getName()
     {
-        return 'sisdik_jadwalkehadiran_salin';
+        return 'sisdik_salinjadwal';
     }
 }

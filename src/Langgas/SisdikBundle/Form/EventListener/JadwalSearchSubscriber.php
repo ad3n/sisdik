@@ -9,11 +9,11 @@ use Symfony\Component\Form\FormEvent;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
- * Membentuk pilihan pencarian perulangan jadwal kehadiran
+ * Membentuk pilihan pencarian perulangan jadwal kehadiran dan kepulangan
  *
  * @FormType
  */
-class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
+class JadwalSearchSubscriber implements EventSubscriberInterface
 {
     /**
      * {@inheritdoc}
@@ -88,6 +88,6 @@ class JadwalKehadiranSearchSubscriber implements EventSubscriberInterface
 
     public function getName()
     {
-        return 'sisdik_jadwalkehadiransubscriber';
+        return 'sisdik_jadwalsubscriber';
     }
 }

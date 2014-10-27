@@ -4,7 +4,6 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use FOS\RestBundle\Controller\FOSRestController as Controller;
-use Langgas\SisdikBundle\Form\JadwalKehadiranType;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\TokenSekolah;
@@ -46,14 +45,11 @@ class JadwalKehadiranController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm('sisdik_carijadwalkehadiran', ['perulangan' => $perulangan]);
+        $searchform = $this->createForm('sisdik_carijadwal', ['perulangan' => $perulangan]);
 
         $querybuilder = $em->createQueryBuilder()
             ->select('jadwalKehadiran')
             ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwalKehadiran')
-            ->leftJoin('jadwalKehadiran.tahunAkademik', 'tahunAkademik')
-            ->leftJoin('jadwalKehadiran.kelas', 'kelas')
-            ->leftJoin('jadwalKehadiran.templatesms', 'templatesms')
             ->where('jadwalKehadiran.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
             ->addOrderBy('jadwalKehadiran.permulaan', 'DESC')
@@ -69,13 +65,13 @@ class JadwalKehadiranController extends Controller
             $searchdata = $searchform->getData();
 
             if ($searchdata['tahunAkademik'] instanceof TahunAkademik) {
-                $querybuilder->andWhere('tahunAkademik.id = :tahunAkademik');
-                $querybuilder->setParameter('tahunAkademik', $searchdata['tahunAkademik']->getId());
+                $querybuilder->andWhere('jadwalKehadiran.tahunAkademik = :tahunAkademik');
+                $querybuilder->setParameter('tahunAkademik', $searchdata['tahunAkademik']);
                 $data['tahunAkademik'] = $searchdata['tahunAkademik'];
             }
             if ($searchdata['kelas'] instanceof Kelas) {
-                $querybuilder->andWhere('kelas.id = :kelas');
-                $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
+                $querybuilder->andWhere('jadwalKehadiran.kelas = :kelas');
+                $querybuilder->setParameter('kelas', $searchdata['kelas']);
                 $data['kelas'] = $searchdata['kelas'];
             }
             if ($searchdata['perulangan'] != '') {
@@ -132,7 +128,7 @@ class JadwalKehadiranController extends Controller
                 'bulananHariKeSrc' => null,
             ];
         }
-        $duplicateform = $this->createForm('sisdik_jadwalkehadiran_salin', null, $options);
+        $duplicateform = $this->createForm('sisdik_salinjadwal', null, $options);
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -176,7 +172,7 @@ class JadwalKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $form = $this->createForm('sisdik_jadwalkehadiran_salin', null, ['sekolahSrc' => $sekolah->getId()]);
+        $form = $this->createForm('sisdik_salinjadwal', null, ['sekolahSrc' => $sekolah->getId()]);
 
         $querybuilder = $em->createQueryBuilder()
             ->select('jadwalKehadiran')

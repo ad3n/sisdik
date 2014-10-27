@@ -47,8 +47,6 @@ class JadwalKehadiranType extends AbstractType
     {
         $sekolah = $this->getSekolah();
 
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
             ->add('sekolah', 'sisdik_entityhidden', [
                 'required' => true,
