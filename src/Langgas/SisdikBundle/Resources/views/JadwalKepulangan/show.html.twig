@@ -1,0 +1,91 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}jadwal.kepulangan.rincian{% endtrans %}{% endblock %}
+{% block content %}
+<ul class="nav nav-pills pull-right">
+    <li>
+        <a href="{{ path('jadwal_kepulangan_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.jadwal.kepulangan.tambah'|trans }}
+        </a>
+    </li>
+</ul>
+
+<dl>
+    <dt>{{ 'label.school'|trans }}</dt>
+    <dd>{{ entity.tahunAkademik.sekolah.nama }}</dd>
+    <dt>{{ 'label.year.entry'|trans }}</dt>
+    <dd>{{ entity.tahunAkademik.nama }}</dd>
+    <dt>{{ 'label.class.entry'|trans }}</dt>
+    <dd>{{ entity.kelas.nama }}</dd>
+    <dt>{{ 'label.perulangan'|trans }}</dt>
+    <dd>{{ daftarPerulangan[entity.perulangan] }}</dd>
+    <dt>{{ 'label.day'|trans }}</dt>
+    <dd>{% if entity.mingguanHariKe is empty %}&mdash;{% else %}{{ daftarNamaHari[entity.mingguanHariKe]|trans }}{% endif %}</dd>
+    <dt>{{ 'label.monthday'|trans }}</dt>
+    <dd>{% if entity.bulananHariKe is empty %}&mdash;{% else %}{{ entity.bulananHariKe }}{% endif %}</dd>
+    <dt>{{ 'label.status.kepulangan'|trans }}</dt>
+    <dd>{{ entity.daftarStatusKepulangan[entity.statusKepulangan]|trans }}</dd>
+    <dt>{{ 'label.paramstatusfrom'|trans }}</dt>
+    <dd>{% if entity.paramstatusDariJam is empty %}&mdash;{% else %}{{ entity.paramstatusDariJam(false) }}{% endif %}</dd>
+    <dt>{{ 'label.paramstatusto'|trans }}</dt>
+    <dd>{% if entity.paramstatusHinggaJam is empty %}&mdash;{% else %}{{ entity.paramstatusHinggaJam(false) }}{% endif %}</dd>
+    <dt>{{ 'label.kirim.sms'|trans }}</dt>
+    <dd>
+        {% if entity.kirimSms is empty %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+        {% else %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
+        {% endif %}
+    </dd>
+    <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
+    <dd>{% if entity.smsJam is empty %}&mdash;{% else %}{{ entity.smsJam(false) }}{% endif %}</dd>
+    <dt>{{ 'label.sms.template.entry'|trans }}</dt>
+    <dd>{% if entity.templatesms is not null %}{{ entity.templatesms.nama }} » {{ entity.templatesms.teks }}{% endif %}</dd>
+    <dt>{{ 'label.terhubung.mesin.kehadiran'|trans }}</dt>
+    <dd>
+        {% if entity.otomatisTerhubungMesin is empty %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+        {% else %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
+        {% endif %}
+    </dd>
+    <dt>{{ 'label.awal.kepulangan'|trans }}</dt>
+    <dd>
+        {% if entity.permulaan == 1 %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
+        {% else %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+        {% endif %}
+    </dd>
+</dl>
+
+<div class="clearfix"></div>
+
+<form id="delete-form" action="{{ path('jadwal_kepulangan_delete', {'id': entity.id}) }}" method="post" class="pull-right">
+    {{ form_widget(delete_form) }}
+    <div class="form-actions">
+        <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
+    </div>
+</form>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('jadwal_kepulangan_list') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+    <li>
+        <a href="{{ path('jadwal_kepulangan_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $("#delete-form").submit(function(){
+        var confirmtext = "{{ 'confirm.drop.jadwal.kepulangan'|trans }}";
+        confirmtext = confirmtext.replace(/&#039;/g, "'");
+        return confirmDropButton(confirmtext);
+    });
+});
+</script>
+{% endblock javascripts_custom %}

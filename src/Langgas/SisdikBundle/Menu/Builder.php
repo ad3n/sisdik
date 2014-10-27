@@ -188,6 +188,7 @@ class Builder extends ContainerAware
             ])) {
                 $kehadiran->addChild($translator->trans('links.attendancemachine', [], 'navigations'), ['route' => 'attendancemachine']);
                 $kehadiran->addChild($translator->trans('links.jadwal.kehadiran', [], 'navigations'), ['route' => 'jadwal_kehadiran']);
+                $kehadiran->addChild($translator->trans('links.jadwal.kepulangan', [], 'navigations'), ['route' => 'jadwal_kepulangan']);
                 /* $kehadiran->addChild($translator->trans('links.mesin.wakil', [], 'navigations'), ['route' => 'mesinproxy']); */
             }
 

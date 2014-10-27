@@ -1,0 +1,59 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}jadwal.kepulangan.pembuatan{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.form-horizontal .checkbox {
+    padding-top: 0;
+}
+</style>
+
+<form action="{{ path('jadwal_kepulangan_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
+    </div>
+</form>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('jadwal_kepulangan_list') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    var url = "{{ path('data_class_ajax_updateclass') }}";
+    $.get(url, {tahunAkademik: $(".selectyear").val()}, function(data) {
+        var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".selectclass").html(options);
+    });
+
+    $(".selectyear").change(function() {
+        // clear class select box content
+        $(".selectclass").empty();
+        $(".selectclass").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".selectclass").html(options);
+        });
+    });
+});
+</script>
+{% endblock javascripts_custom %}
