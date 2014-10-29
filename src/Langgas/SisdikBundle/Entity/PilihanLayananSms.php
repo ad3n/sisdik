@@ -97,6 +97,19 @@ class PilihanLayananSms
     }
 
     /**
+     * Daftar layanan sms kepulangan.
+     *
+     * @return array
+     */
+    public static function getDaftarLayananKepulangan()
+    {
+        return [
+            'u-kepulangan-tercatat' => 'layanan.sms.kepulangan.tercatat',
+            'v-kepulangan-tak-tercatat' => 'layanan.sms.kepulangan.tak.tercatat',
+        ];
+    }
+
+    /**
      * @param string $jenisLayanan
      */
     public function setJenisLayanan($jenisLayanan)
