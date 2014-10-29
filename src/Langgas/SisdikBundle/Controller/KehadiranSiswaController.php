@@ -3,9 +3,6 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Langgas\SisdikBundle\Form\KehadiranSiswaSmsType;
-use Langgas\SisdikBundle\Form\KehadiranSiswaInisiasiType;
-use Langgas\SisdikBundle\Form\KehadiranSiswaType;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\SiswaKelas;
@@ -19,8 +16,8 @@ use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Entity\MesinKehadiran;
+use Langgas\SisdikBundle\Entity\Tingkat;
 use Langgas\SisdikBundle\Util\Messenger;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,7 +26,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\TranslationBundle\Annotation\Ignore;
-use Doctrine\ORM\Query\Parameter;
 
 /**
  * @Route("/kehadiran-siswa")
@@ -45,7 +41,7 @@ class KehadiranSiswaController extends Controller
      */
     public function indexAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         /* @var $em EntityManager */
@@ -87,7 +83,7 @@ class KehadiranSiswaController extends Controller
      */
     public function editAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -102,7 +98,7 @@ class KehadiranSiswaController extends Controller
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('kelas.kode')
             ->addOrderBy('siswa.namaLengkap')
-            ->setParameter('sekolah', $sekolah->getId())
+            ->setParameter('sekolah', $sekolah)
         ;
 
         $searchform->submit($this->getRequest());
@@ -115,7 +111,7 @@ class KehadiranSiswaController extends Controller
             $kbmAktif = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
                 ->findOneBy([
                     'kbm' => true,
-                    'sekolah' => $sekolah->getId(),
+                    'sekolah' => $sekolah,
                     'tanggal' => $searchdata['tanggal']
                 ])
             ;
@@ -130,7 +126,7 @@ class KehadiranSiswaController extends Controller
                 return $this->redirect($this->generateUrl('kehadiran-siswa'));
             }
 
-            if ($searchdata['tanggal'] != '') {
+            if ($searchdata['tanggal'] instanceof \DateTime) {
                 $querybuilder->andWhere('kehadiran.tanggal = :tanggal');
                 $querybuilder->setParameter('tanggal', $searchdata['tanggal']);
 
@@ -149,18 +145,18 @@ class KehadiranSiswaController extends Controller
                 $buildparam['searchkey'] = '';
             }
 
-            if ($searchdata['tingkat'] != '') {
+            if ($searchdata['tingkat'] instanceof Tingkat) {
                 $querybuilder->andWhere("kelas.tingkat = :tingkat");
-                $querybuilder->setParameter('tingkat', $searchdata['tingkat']->getId());
+                $querybuilder->setParameter('tingkat', $searchdata['tingkat']);
 
                 $buildparam['tingkat'] = $searchdata['tingkat']->getId();
             } else {
                 $buildparam['tingkat'] = '';
             }
 
-            if ($searchdata['kelas'] != '') {
+            if ($searchdata['kelas'] instanceof Kelas) {
                 $querybuilder->andWhere("kelas.id = :kelas");
-                $querybuilder->setParameter('kelas', $searchdata['kelas']->getId());
+                $querybuilder->setParameter('kelas', $searchdata['kelas']);
 
                 $kelas = $em->getRepository('LanggasSisdikBundle:Kelas')->find($searchdata['kelas']->getId());
 
@@ -180,27 +176,35 @@ class KehadiranSiswaController extends Controller
 
             $entities = $querybuilder->getQuery()->getResult();
 
-            $students = $this->createForm(new KehadiranSiswaType($this->container, $buildparam));
+            $students = $this->createForm('sisdik_kehadiransiswa', null, ['buildparam' => $buildparam]);
 
             $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
                 ->findOneBy([
                     'aktif' => true,
-                    'sekolah' => $sekolah->getId(),
+                    'sekolah' => $sekolah,
                 ])
             ;
 
             $prosesKehadiranSiswa = null;
             $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                 ->findOneBy([
-                    'sekolah' => $sekolah->getId(),
-                    'tahunAkademik' => $tahunAkademik->getId(),
-                    'kelas' => $kelas->getId(),
+                    'sekolah' => $sekolah,
+                    'tahunAkademik' => $tahunAkademik,
+                    'kelas' => $kelas,
                     'tanggal' => $searchdata['tanggal'],
                 ])
             ;
 
-            $formInisiasi = $this->createForm(new KehadiranSiswaInisiasiType($this->container, $kelas, $searchdata['tanggal']->format('Y-m-d')));
-            $formSms = $this->createForm(new KehadiranSiswaSmsType($this->container, $kelas, $searchdata['tanggal']->format('Y-m-d'), $entities));
+            $formInisiasi = $this->createForm('sisdik_kehadiransiswainisiasi', null, [
+                'kelas' => $kelas,
+                'tanggal' => $searchdata['tanggal']->format('Y-m-d'),
+            ]);
+
+            $formSms = $this->createForm('sisdik_kehadiransiswasms', null, [
+                'kelas' => $kelas,
+                'tanggal' => $searchdata['tanggal']->format('Y-m-d'),
+                'kehadiran' => $entities,
+            ]);
 
             return [
                 'kelas' => $kelas,
@@ -266,7 +270,7 @@ class KehadiranSiswaController extends Controller
             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                 $prosesKehadiranSiswa->setBerhasilValidasi(true);
             } else {
-                $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
+                $prosesKehadiranSiswa = new ProsesKehadiranSiswa;
                 $prosesKehadiranSiswa->setSekolah($kehadiran->getSekolah());
                 $prosesKehadiranSiswa->setTahunAkademik($kehadiran->getTahunAkademik());
                 $prosesKehadiranSiswa->setKelas($kehadiran->getKelas());
@@ -298,21 +302,26 @@ class KehadiranSiswaController extends Controller
      */
     public function inisiasiAction($kelas_id, $tanggal)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
+
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
-                'sekolah' => $sekolah->getId(),
+                'sekolah' => $sekolah,
             ])
         ;
 
         $kelas = $em->getRepository('LanggasSisdikBundle:Kelas')->find($kelas_id);
 
-        $formInisiasi = $this->createForm(new KehadiranSiswaInisiasiType($this->container, $kelas, $tanggal));
-        $formInisiasi->submit($this->getRequest());
+        $formInisiasi = $this->createForm('sisdik_kehadiransiswainisiasi', null, [
+                'kelas' => $kelas,
+                'tanggal' => $tanggal,
+            ])
+            ->submit($this->getRequest())
+        ;
 
         if ($formInisiasi->isValid()) {
             $statusKehadiran = $formInisiasi->get('statusKehadiran')->getData();
@@ -324,12 +333,13 @@ class KehadiranSiswaController extends Controller
                 ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
                 ->andWhere('kehadiran.kelas = :kelas')
                 ->andWhere('kehadiran.tanggal = :tanggal')
-                ->setParameter('sekolah', $sekolah->getId())
-                ->setParameter('tahunAkademik', $tahunAkademik->getId())
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunAkademik', $tahunAkademik)
                 ->setParameter('kelas', $kelas)
                 ->setParameter('tanggal', $tanggal)
             ;
             $entities = $qbKehadiran->getQuery()->getResult();
+
             if (count($entities) > 0) {
                 foreach ($entities as $kehadiran) {
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
@@ -351,11 +361,12 @@ class KehadiranSiswaController extends Controller
                     ->where('siswaKelas.tahunAkademik = :tahunakademik')
                     ->andWhere('siswaKelas.kelas = :kelas')
                     ->andWhere('siswaKelas.aktif = :aktif')
-                    ->setParameter('tahunakademik', $tahunAkademik->getId())
-                    ->setParameter('kelas', $kelas->getId())
+                    ->setParameter('tahunakademik', $tahunAkademik)
+                    ->setParameter('kelas', $kelas)
                     ->setParameter('aktif', true)
                 ;
                 $entitiesSiswaKelas = $qbSiswaKelas->getQuery()->getResult();
+
                 foreach ($entitiesSiswaKelas as $siswaKelas) {
                     if (!(is_object($siswaKelas) && $siswaKelas instanceof SiswaKelas)) {
                         continue;
@@ -367,16 +378,17 @@ class KehadiranSiswaController extends Controller
                         ->where('kehadiran.sekolah = :sekolah')
                         ->andWhere('kehadiran.siswa = :siswa')
                         ->andWhere('kehadiran.tanggal = :tanggal')
-                        ->setParameter('sekolah', $sekolah->getId())
-                        ->setParameter('siswa', $siswaKelas->getSiswa()->getId())
+                        ->setParameter('sekolah', $sekolah)
+                        ->setParameter('siswa', $siswaKelas->getSiswa())
                         ->setParameter('tanggal', $tanggal)
                     ;
                     $entityKehadiran = $qbKehadiran->getQuery()->getResult();
+
                     if (count($entityKehadiran) >= 1) {
                         continue;
                     }
 
-                    $kehadiran = new KehadiranSiswa();
+                    $kehadiran = new KehadiranSiswa;
                     $kehadiran->setSekolah($sekolah);
                     $kehadiran->setTahunAkademik($tahunAkademik);
                     $kehadiran->setKelas($kelas);
@@ -385,7 +397,7 @@ class KehadiranSiswaController extends Controller
                     $kehadiran->setPermulaan(true);
                     $kehadiran->setTervalidasi(false);
                     $kehadiran->setTanggal(new \DateTime($tanggal));
-                    $jam = new \DateTime();
+                    $jam = new \DateTime;
                     $kehadiran->setJam($jam->format('H:i') . ':00');
                     $kehadiran->setSmsTerproses(false);
 
@@ -404,7 +416,7 @@ class KehadiranSiswaController extends Controller
             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                 $prosesKehadiranSiswa->setBerhasilInisiasi(true);
             } else {
-                $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
+                $prosesKehadiranSiswa = new ProsesKehadiranSiswa;
                 $prosesKehadiranSiswa->setSekolah($sekolah);
                 $prosesKehadiranSiswa->setTahunAkademik($tahunAkademik);
                 $prosesKehadiranSiswa->setKelas($kelas);
@@ -442,7 +454,8 @@ class KehadiranSiswaController extends Controller
      */
     public function kirimSmsAction($kelas_id, $tanggal)
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $translator = $this->get('translator');
@@ -477,7 +490,11 @@ class KehadiranSiswaController extends Controller
         ;
         $kehadiranSiswa = $qbKehadiranSiswa->getQuery()->getResult();
 
-        $formKirimSms = $this->createForm(new KehadiranSiswaSmsType($this->container, $kelas, $tanggal, $kehadiranSiswa));
+        $formKirimSms = $this->createForm('sisdik_kehadiransiswasms', null, [
+            'kelas' => $kelas,
+            'tanggal' => $tanggal,
+            'kehadiran' => $kehadiranSiswa,
+        ]);
         $formKirimSms->submit($this->getRequest());
 
         if ($formKirimSms->isValid()) {
@@ -707,7 +724,7 @@ class KehadiranSiswaController extends Controller
      */
     public function pembaruanManualAction($urutan = 0, $daftarJadwal = "0")
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -719,7 +736,7 @@ class KehadiranSiswaController extends Controller
 
         $daftarStatusKehadiran = JadwalKehadiran::getDaftarStatusKehadiran();
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
-        $waktuSekarang = new \DateTime();
+        $waktuSekarang = new \DateTime;
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
         $jam = $waktuSekarang->format('H:i') . ':00';
         $mingguanHariKe = $waktuSekarang->format('w');
@@ -1035,21 +1052,17 @@ class KehadiranSiswaController extends Controller
 
     private function setCurrentMenu()
     {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.presence', [], 'navigations')][$this->get('translator')->trans('links.kehadiran.siswa', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.presence', [], 'navigations')][$translator->trans('links.kehadiran.siswa', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }
