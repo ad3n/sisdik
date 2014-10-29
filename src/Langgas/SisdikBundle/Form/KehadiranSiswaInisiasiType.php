@@ -3,10 +3,10 @@
 namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -14,37 +14,8 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class KehadiranSiswaInisiasiType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var Kelas
-     */
-    private $kelas;
-
-    /**
-     * @var string
-     */
-    private $tanggal;
-
-    /**
-     * @param ContainerInterface $container
-     * @param Kelas              $kelas
-     * @param string             $tanggal
-     */
-    public function __construct(ContainerInterface $container, Kelas $kelas, $tanggal)
-    {
-        $this->container = $container;
-        $this->kelas = $kelas;
-        $this->tanggal = $tanggal;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
             ->add('statusKehadiran', 'choice', [
                 'required' => true,
@@ -55,19 +26,29 @@ class KehadiranSiswaInisiasiType extends AbstractType
                     'class' => 'medium',
                 ],
             ])
-            ->add('kelas', new EntityHiddenType($em), [
+            ->add('kelas', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Kelas',
-                'data' => $this->kelas->getId(),
+                'data' => $options['kelas']->getId(),
             ])
             ->add('tanggal', 'hidden', [
-                'data' => $this->tanggal,
+                'data' => $options['tanggal'],
+            ])
+        ;
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'kelas' => null,
+                'tanggal' => null,
             ])
         ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_kehadiransiswainisiasitype';
+        return 'sisdik_kehadiransiswainisiasi';
     }
 }

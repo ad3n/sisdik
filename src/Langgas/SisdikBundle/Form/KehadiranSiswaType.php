@@ -2,12 +2,16 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\KehadiranSiswa;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,32 +19,44 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class KehadiranSiswaType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @var array
+     * @var EntityManager
      */
-    private $buildparam = [];
+    private $entityManager;
 
     /**
-     * @param ContainerInterface $container
-     * @param array              $buildparam
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context"),
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param SecurityContext $securityContext
+     * @param EntityManager   $entityManager
      */
-    public function __construct(ContainerInterface $container, $buildparam = [])
+    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
     {
-        $this->container = $container;
-        $this->buildparam = $buildparam;
+        $this->securityContext = $securityContext;
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-        $em = $this->container->get('doctrine')->getManager();
+        $sekolah = $this->getSekolah();
 
-        $querybuilder = $em->createQueryBuilder()
+        $querybuilder = $this->entityManager
+            ->createQueryBuilder()
             ->select('kehadiran, siswa')
             ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
             ->leftJoin('kehadiran.kelas', 'kelas')
@@ -48,29 +64,29 @@ class KehadiranSiswaType extends AbstractType
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('kelas.kode')
             ->addOrderBy('siswa.namaLengkap')
-            ->setParameter('sekolah', $sekolah->getId())
+            ->setParameter('sekolah', $sekolah)
         ;
 
-        if ($this->buildparam['tanggal'] != '') {
+        if ($options['buildparam']['tanggal'] != '') {
             $querybuilder->andWhere('kehadiran.tanggal = :tanggal');
-            $querybuilder->setParameter('tanggal', $this->buildparam['tanggal']);
+            $querybuilder->setParameter('tanggal', $options['buildparam']['tanggal']);
         }
-        if ($this->buildparam['searchkey'] != '') {
+        if ($options['buildparam']['searchkey'] != '') {
             $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem = :searchkey2");
-            $querybuilder->setParameter('searchkey', '%' . $this->buildparam['searchkey'] . '%');
-            $querybuilder->setParameter('searchkey2', $this->buildparam['searchkey']);
+            $querybuilder->setParameter('searchkey', '%' . $options['buildparam']['searchkey'] . '%');
+            $querybuilder->setParameter('searchkey2', $options['buildparam']['searchkey']);
         }
-        if ($this->buildparam['tingkat'] != '') {
+        if ($options['buildparam']['tingkat'] != '') {
             $querybuilder->andWhere("kelas.tingkat = :tingkat");
-            $querybuilder->setParameter('tingkat', $this->buildparam['tingkat']);
+            $querybuilder->setParameter('tingkat', $options['buildparam']['tingkat']);
         }
-        if ($this->buildparam['kelas'] != '') {
-            $querybuilder->andWhere("kelas.id = :kelas");
-            $querybuilder->setParameter('kelas', $this->buildparam['kelas']);
+        if ($options['buildparam']['kelas'] != '') {
+            $querybuilder->andWhere("kehadiran.kelas = :kelas");
+            $querybuilder->setParameter('kelas', $options['buildparam']['kelas']);
         }
-        if ($this->buildparam['statusKehadiran'] != '') {
+        if ($options['buildparam']['statusKehadiran'] != '') {
             $querybuilder->andWhere("kehadiran.statusKehadiran = :statusKehadiran");
-            $querybuilder->setParameter('statusKehadiran', $this->buildparam['statusKehadiran']);
+            $querybuilder->setParameter('statusKehadiran', $options['buildparam']['statusKehadiran']);
         }
         $entities = $querybuilder->getQuery()->getResult();
 
@@ -98,6 +114,15 @@ class KehadiranSiswaType extends AbstractType
                 ;
             }
         }
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'buildparam' => [],
+            ])
+        ;
     }
 
     public function getName()

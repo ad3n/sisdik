@@ -2,12 +2,13 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -15,47 +16,8 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class KehadiranSiswaSmsType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var Kelas
-     */
-    private $kelas;
-
-    /**
-     * @var string
-     */
-    private $tanggal;
-
-    /**
-     * @var array
-     */
-    private $entitiesKehadiran;
-
-    /**
-     * @param ContainerInterface $container
-     * @param Kelas              $kelas
-     * @param array              $tanggal
-     * @param array              $entitiesKehadiran
-     */
-    public function __construct(ContainerInterface $container, Kelas $kelas, $tanggal, $entitiesKehadiran)
-    {
-        $this->container = $container;
-        $this->kelas = $kelas;
-        $this->tanggal = $tanggal;
-        $this->entitiesKehadiran = $entitiesKehadiran;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
             ->add('statusKehadiran', 'choice', [
                 'required' => true,
@@ -67,31 +29,24 @@ class KehadiranSiswaSmsType extends AbstractType
                 ],
                 'empty_value' => 'label.pilih.status.kehadiran',
             ])
-            ->add('kelas', new EntityHiddenType($em), [
+            ->add('kelas', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Kelas',
-                'data' => $this->kelas->getId(),
+                'data' => $options['kelas']->getId(),
             ])
             ->add('tanggal', 'hidden', [
-                'data' => $this->tanggal,
+                'data' => $options['tanggal'],
             ])
         ;
 
         $siswa = [];
-        foreach ($this->entitiesKehadiran as $kehadiran) {
+        foreach ($options['kehadiran'] as $kehadiran) {
             if ($kehadiran instanceof KehadiranSiswa) {
                 $siswa[] = $kehadiran->getSiswa()->getId();
             }
         }
 
         if (count($siswa) > 0) {
-            $querybuilder1 = $em->createQueryBuilder()
-                ->select('siswa')
-                ->from('LanggasSisdikBundle:Siswa', 'siswa')
-                ->where('siswa.id IN (:id)')
-                ->orderBy('siswa.namaLengkap', 'ASC')
-                ->setParameter('id', $siswa)
-            ;
             $builder
                 ->add('siswa', 'entity', [
                     'class' => 'LanggasSisdikBundle:Siswa',
@@ -100,7 +55,15 @@ class KehadiranSiswaSmsType extends AbstractType
                     'expanded' => false,
                     'required' => false,
                     'property' => 'namaLengkap',
-                    'query_builder' => $querybuilder1,
+                    'query_builder' => function (EntityRepository $repository) use ($siswa) {
+                        $qb = $repository->createQueryBuilder('siswa')
+                            ->where('siswa.id IN (:id)')
+                            ->orderBy('siswa.namaLengkap', 'ASC')
+                            ->setParameter('id', $siswa)
+                        ;
+
+                        return $qb;
+                    },
                     'attr' => [
                         'class' => 'xlarge',
                     ],
@@ -110,8 +73,19 @@ class KehadiranSiswaSmsType extends AbstractType
         }
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'kelas' => null,
+                'tanggal' => null,
+                'kehadiran' => null,
+            ])
+        ;
+    }
+
     public function getName()
     {
-        return 'langgas_sisdikbundle_kehadiransiswasmstype';
+        return 'sisdik_kehadiransiswasms';
     }
 }
