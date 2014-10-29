@@ -49,7 +49,7 @@ class KehadiranSiswaController extends Controller
 
         $searchform = $this->createForm('sisdik_kehadiransiswasearch');
 
-        $hariIni = new \DateTime();
+        $hariIni = new \DateTime;
         $searchform->get('tanggal')->setData($hariIni);
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
