@@ -49,7 +49,7 @@ class KehadiranSiswaController extends Controller
 
         $searchform = $this->createForm('sisdik_kehadiransiswasearch');
 
-        $hariIni = new \DateTime;
+        $hariIni = new \DateTime();
         $searchform->get('tanggal')->setData($hariIni);
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
@@ -270,7 +270,7 @@ class KehadiranSiswaController extends Controller
             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                 $prosesKehadiranSiswa->setBerhasilValidasi(true);
             } else {
-                $prosesKehadiranSiswa = new ProsesKehadiranSiswa;
+                $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
                 $prosesKehadiranSiswa->setSekolah($kehadiran->getSekolah());
                 $prosesKehadiranSiswa->setTahunAkademik($kehadiran->getTahunAkademik());
                 $prosesKehadiranSiswa->setKelas($kehadiran->getKelas());
@@ -388,7 +388,7 @@ class KehadiranSiswaController extends Controller
                         continue;
                     }
 
-                    $kehadiran = new KehadiranSiswa;
+                    $kehadiran = new KehadiranSiswa();
                     $kehadiran->setSekolah($sekolah);
                     $kehadiran->setTahunAkademik($tahunAkademik);
                     $kehadiran->setKelas($kelas);
@@ -397,7 +397,7 @@ class KehadiranSiswaController extends Controller
                     $kehadiran->setPermulaan(true);
                     $kehadiran->setTervalidasi(false);
                     $kehadiran->setTanggal(new \DateTime($tanggal));
-                    $jam = new \DateTime;
+                    $jam = new \DateTime();
                     $kehadiran->setJam($jam->format('H:i') . ':00');
                     $kehadiran->setSmsTerproses(false);
 
@@ -416,7 +416,7 @@ class KehadiranSiswaController extends Controller
             if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                 $prosesKehadiranSiswa->setBerhasilInisiasi(true);
             } else {
-                $prosesKehadiranSiswa = new ProsesKehadiranSiswa;
+                $prosesKehadiranSiswa = new ProsesKehadiranSiswa();
                 $prosesKehadiranSiswa->setSekolah($sekolah);
                 $prosesKehadiranSiswa->setTahunAkademik($tahunAkademik);
                 $prosesKehadiranSiswa->setKelas($kelas);
@@ -736,7 +736,7 @@ class KehadiranSiswaController extends Controller
 
         $daftarStatusKehadiran = JadwalKehadiran::getDaftarStatusKehadiran();
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
-        $waktuSekarang = new \DateTime;
+        $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
         $jam = $waktuSekarang->format('H:i') . ':00';
         $mingguanHariKe = $waktuSekarang->format('w');
