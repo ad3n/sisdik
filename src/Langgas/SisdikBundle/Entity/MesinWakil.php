@@ -29,11 +29,25 @@ class MesinWakil
     private $urlKehadiranManual;
 
     /**
+     * @ORM\Column(name="url_kepulangan_manual", type="string", length=200, nullable=false, options={"default"="http://192.168.1.99/ambil-kepulangan-manual.php"})
+     *
+     * @var string
+     */
+    private $urlKepulanganManual;
+
+    /**
      * @ORM\Column(name="url_jadwal_kehadiran", type="string", length=200, nullable=false, options={"default"="http://192.168.1.99/pembaruan-jadwal-kehadiran.php"})
      *
      * @var string
      */
     private $urlJadwalKehadiran;
+
+    /**
+     * @ORM\Column(name="url_jadwal_kepulangan", type="string", length=200, nullable=false, options={"default"="http://192.168.1.99/pembaruan-jadwal-kepulangan.php"})
+     *
+     * @var string
+     */
+    private $urlJadwalKepulangan;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
@@ -70,6 +84,22 @@ class MesinWakil
     }
 
     /**
+     * @param string $urlKepulanganManual
+     */
+    public function setUrlKepulanganManual($urlKepulanganManual)
+    {
+        $this->urlKepulanganManual = $urlKepulanganManual;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlKepulanganManual()
+    {
+        return $this->urlKepulanganManual;
+    }
+
+    /**
      * @param string $urlJadwalKehadiran
      */
     public function setUrlJadwalKehadiran($urlJadwalKehadiran)
@@ -83,6 +113,22 @@ class MesinWakil
     public function getUrlJadwalKehadiran()
     {
         return $this->urlJadwalKehadiran;
+    }
+
+    /**
+     * @param string $urlJadwalKepulangan
+     */
+    public function setUrlJadwalKepulangan($urlJadwalKepulangan)
+    {
+        $this->urlJadwalKepulangan = $urlJadwalKepulangan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlJadwalKepulangan()
+    {
+        return $this->urlJadwalKepulangan;
     }
 
     /**
