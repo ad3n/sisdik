@@ -1,0 +1,476 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.kepulangan.siswa{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+#searchform .control-group, #form-inisiasi .control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.nav .active > a {
+}
+.nav a:hover, .nav .active a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+.nav > li > a:hover, .nav > li.active > a:hover {
+    text-decoration: none;
+}
+.form-inline .checked label {
+    color: #ff0000;
+}
+.accordion-toggle:hover {
+    text-decoration: none;
+}
+.arrow-down-lanjut {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
+}
+#proses-kepulangan {
+    display: none;
+}
+#anchor-proses-kepulangan {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-proses-kepulangan {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-proses-kepulangan-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-proses-kepulangan, .anchor-proses-kepulangan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-proses-kepulangan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-proses-kepulangan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-proses-kepulangan-sel:hover {
+    color: #222;
+}
+.accordion a:focus {
+    outline: none;
+}
+#form-inisiasi {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+.ajax-loader {
+    color: #003EB0;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
+.accordion-body .accordion-inner {
+    margin-top: 5px;
+}
+#form-kepulangan .radio {
+    margin-left: 20px;
+}
+#form-kepulangan .radio label {
+    padding-left: 20px;
+}
+#form-kepulangan .radio input {
+    margin-left: -20px;
+}
+.keterangan-kepulangan {
+    margin-left: 20px;
+}
+dt, dd {
+    margin-bottom: 15px;
+}
+dt {
+    max-width: 20%;
+}
+dd {
+    width: auto;
+    min-width: 60%;
+}
+.info-pelengkap-siswa {
+    font-weight: normal;
+    line-height: 1em;
+}
+</style>
+
+<div class="filter-section">
+    <form id="searchform" method="get" action="{{ path('kepulangan-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('kepulangan-siswa') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix" style="margin-top: 10px;"></div>
+
+<h4>{{ 'kepulangan'|trans }} {{ 'di'|trans }} {{ 'kelas'|trans }} {{ kelas.nama }} {{ 'tanggal'|trans }} {{ tanggal|date('d/m/Y') }}</h4>
+
+<a href="#" id="anchor-proses-kepulangan" class="anchor-proses-kepulangan" onclick="return false;">{{ 'link.rincian.proses.kepulangan'|trans }}<span class="arrow-down-lanjut"></span></a>
+
+<div id="proses-kepulangan">
+    <div class="accordion" id="proses-kepulangan-accordion">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kepulangan-accordion" href="#collapseOne">
+                            <i
+                            {% if prosesKepulanganSiswa is not null %}
+                                {% if prosesKepulanganSiswa.berhasilInisiasi == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.inisiasi.kepulangan'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="collapseOne" class="accordion-body collapse">
+                <div class="accordion-inner well">
+                {% if prosesKepulanganSiswa is not null %}
+                    {% if prosesKepulanganSiswa.berhasilInisiasi == 1 %}
+                        {{ 'info.pesan.piket.inisiasi.berhasil'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
+                    {% else %}
+                        {{ 'info.pesan.piket.inisiasi.gagal'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
+                    {% endif %}
+                {% else %}
+                    {{ 'info.pesan.piket.inisiasi.lainnya'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}
+                {% endif %}
+                    <form
+                        id="form-inisiasi"
+                        method="post"
+                        action="{{ path('kepulangan-siswa_inisiasi', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formInisiasi) }}
+                        class="form-horizontal">
+                        {{ form_widget(formInisiasi) }}
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                                <button type="submit"
+                            {% if prosesKepulanganSiswa is not null %}
+                                {% if prosesKepulanganSiswa.berhasilInisiasi == 1 %}
+                                    class="btn danger alternative icon play"
+                                    {% set labelInisiasi = 'label.inisiasi.ulang'|trans %}
+                                {% else %}
+                                    class="btn success alternative icon play"
+                                    {% set labelInisiasi = 'label.inisiasi'|trans %}
+                                {% endif %}
+                            {% else %}
+                                    {% set labelInisiasi = 'label.inisiasi'|trans %}
+                                class="btn success alternative icon play"
+                            {% endif %}
+                                >
+                                    {{ labelInisiasi }}
+                                </button>
+                                <div id="loader-inisiasi" class="ajax-loader"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kepulangan-accordion" href="#collapseTwo">
+                            <i
+                            {% if prosesKepulanganSiswa is not null %}
+                                {% if prosesKepulanganSiswa.berhasilDiperbaruiMesin == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.pembaruan.dari.mesin.kehadiran'|trans }}
+                </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner well">
+                    <span>{{ 'info.pembaruan.kepulangan.siswa.secara.manual'|trans }} <a href="{{ path('kepulangan-siswa') }}"><i class="fa fa-external-link fa-1x"></i></a></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kepulangan-accordion" href="#collapseThree">
+                            <i id="warna-validasi"
+                            {% if prosesKepulanganSiswa is not null %}
+                                {% if prosesKepulanganSiswa.berhasilValidasi == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.validasi.kepulangan'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="collapseThree" class="accordion-body collapse">
+                <div class="accordion-inner well">
+                    {{ 'info.cara.validasi.kepulangan'|trans }}
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <ul class="nav nav-pills">
+                    <li>
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#proses-kepulangan-accordion" href="#collapseFour">
+                            <i id="warna-kirim-sms"
+                            {% if prosesKepulanganSiswa is not null %}
+                                {% if prosesKepulanganSiswa.berhasilKirimSms == 1 %}
+                                    class="fa fa-check fa-fw" style="color: green"
+                                {% else %}
+                                    class="fa fa-warning fa-fw" style="color: red"
+                                {% endif %}
+                            {% else %}
+                                class="fa fa-warning fa-fw" style="color: red"
+                            {% endif %}
+                            ></i> {{ 'info.sms.kepulangan'|trans }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="collapseFour" class="accordion-body collapse">
+                <div class="accordion-inner well">
+                {% if prosesKepulanganSiswa is not null %}
+                    {% if prosesKepulanganSiswa.berhasilKirimSms %}
+                        {% set statusSms = "berhasil" %}
+                    {% else %}
+                        {% set statusSms = "tidak berhasil atau belum" %}
+                    {% endif %}
+                    {{ 'help.sms.kepulangan'|trans({'%status_sms%': statusSms})|raw }}
+                {% endif %}
+
+                    <div class="clearfix" style="margin-bottom: 2em;"></div>
+
+                    <form
+                        id="form-kirim-sms"
+                        method="post"
+                        action="{{ path('kepulangan-siswa_kirimsms', {kelas_id: kelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSms) }}
+                        class="form-horizontal">
+                        {{ form_widget(formSms) }}
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                                <button type="submit" id="tombol-kirim-sms"
+                            {% if prosesKepulanganSiswa is not null %}
+                                {% if prosesKepulanganSiswa.berhasilKirimSms == 1 %}
+                                    {% set labelKirimSMS = 'label.kirim.sms.ulang'|trans %}
+                                    class="btn danger alternative icon play"
+                                {% else %}
+                                    {% set labelKirimSMS = 'label.kirim.sms'|trans %}
+                                    class="btn success alternative icon play"
+                                {% endif %}
+                            {% else %}
+                                    {% set labelKirimSMS = 'label.kirim.sms'|trans %}
+                                class="btn success alternative icon play"
+                            {% endif %}
+                                >
+                                    {{ labelKirimSMS }}
+                                </button>
+                                <div id="loader-kirim-sms" class="ajax-loader"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix" style="margin-bottom: 10px; margin-top: 10px;"></div>
+
+{% if entities %}
+<form method="post" action="{{ path('kepulangan-siswa_update') }}" class="form-inline" id="form-kepulangan">
+<dl>
+{% for kepulangan in entities %}
+    <dt>
+        {{ kepulangan.siswa.namaLengkap }}
+        <br><i class="fa fa-info-circle fa-fw"></i> <span class="info-pelengkap-siswa info-id">{{ kepulangan.siswa.nomorIndukSistem }}</span>{% if kepulangan.siswa.nomorInduk %}<span class="info-pelengkap-siswa">, {{ kepulangan.siswa.nomorInduk }}</span>{% endif %}
+        <br><i class="fa fa-phone fa-fw"></i> <span class="info-pelengkap-siswa">{% if kepulangan.siswa.orangtuaWaliAktif != null %}{{ kepulangan.siswa.orangtuaWaliAktif.nama }} &raquo; {{ kepulangan.siswa.orangtuaWaliAktif.ponsel }} {% endif %}</span>
+    </dt>
+    <dd>
+        {{ form_widget(form['kepulangan_' ~ kepulangan.id]) }}
+        {{ form_widget(form['kepulangan_keterangan_' ~ kepulangan.id]) }}
+    </dd>
+{% endfor %}
+</dl>
+{{ form_rest(form) }}
+<div class="clearfix"></div>
+<div style="padding-top: 10px;">
+    <button type="submit" class="btn primary alternative icon approve">{{ 'label.save'|trans }}</button>
+    <div id="output" class="ajax-loader"></div>
+</div>
+</form>
+{% else %}
+<p class="shortinfo">{{ 'shortinfo.tidak.ada.data.kepulangan.siswa'|trans({'%tanggal%': tanggal|date('d/m/Y')}) }}</p>
+{% endif %}
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+var duration = 300;
+
+$(document).ready(function() {
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy'
+    });
+
+    $("#anchor-proses-kepulangan").click(function(){
+        if ($("#proses-kepulangan").is(":visible")) {
+            $("#proses-kepulangan").hide(duration);
+            $(this).removeClass("anchor-proses-kepulangan-sel");
+            $(this).addClass("anchor-proses-kepulangan");
+        } else {
+            $("#proses-kepulangan").show(duration);
+            $(this).addClass("anchor-proses-kepulangan-sel");
+            $(this).removeClass("anchor-proses-kepulangan");
+        }
+        return false;
+    });
+
+    var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+
+    $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".pilih-kelas").html(options);
+    });
+
+    $(".pilih-tingkat").change(function() {
+        var kelasval = $(".pilih-kelas").val();
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
+    });
+
+    $("#form-kepulangan").submit(function() {
+        var url = $(this).attr("action");
+
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#output').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
+        {% endimage %}
+
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200) {
+                $('#output').html(data.responseText);
+                if (data.berhasilValidasi == 1) {
+                    $('#warna-validasi').removeClass('fa-warning');
+                    $('#warna-validasi').addClass('fa-check');
+                    $('#warna-validasi').css({'color': 'green'});
+                }
+            } else {
+                // if we got to this point we know that the controller
+                // did not return a json_encoded array. We can assume that
+                // an unexpected PHP error occured
+                // alert("An unexpected error occured.");
+                $('#output').html("An unexpected error occured");
+            }
+        });
+
+        return false;
+    });
+
+    $("#form-inisiasi").submit(function() {
+        var url = $(this).attr("action");
+
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#loader-inisiasi').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
+        {% endimage %}
+
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200) {
+                $('#loader-inisiasi').html(data.responseText);
+                location.reload();
+            } else {
+                $('#loader-inisiasi').html("An unexpected error occured.");
+            }
+        });
+
+        return false;
+    });
+
+    $("#form-kirim-sms").submit(function() {
+        var url = $(this).attr("action");
+
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#loader-kirim-sms').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
+        {% endimage %}
+
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200 || data.responseCode == 400) {
+                $('#loader-kirim-sms').html(data.responseText);
+                if (data.berhasilKirimSms == 1) {
+                    $('#warna-kirim-sms').removeClass('fa-warning');
+                    $('#warna-kirim-sms').addClass('fa-check');
+                    $('#warna-kirim-sms').css({'color': 'green'});
+                    $('#tombol-kirim-sms').removeClass('success');
+                    $('#tombol-kirim-sms').addClass('danger');
+                    $('#tombol-kirim-sms').html('{{ 'label.kirim.sms.ulang'|trans }}');
+                }
+            } else {
+                $('#loader-kirim-sms').html("An unexpected error occured.");
+            }
+        });
+
+        return false;
+    });
+});
+</script>
+{% endblock javascripts_custom %}

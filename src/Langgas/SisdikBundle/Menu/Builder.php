@@ -193,6 +193,7 @@ class Builder extends ContainerAware
             }
 
             $kehadiran->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => 'kehadiran-siswa']);
+            $kehadiran->addChild($translator->trans('links.kepulangan.siswa', [], 'navigations'), ['route' => 'kepulangan-siswa']);
             $kehadiran->addChild($translator->trans('links.laporan.kehadiran.siswa', [], 'navigations'), ['route' => 'laporan-kehadiran-siswa']);
         }
 

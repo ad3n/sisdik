@@ -1,0 +1,161 @@
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.kepulangan.siswa{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.nav .active > a {
+}
+.nav a:hover, .nav .active a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+.nav > li > a:hover, .nav > li.active > a:hover {
+    text-decoration: none;
+    background-color: yellow;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
+.pesan {
+    line-height: 1.5em;
+    min-height: 10px;
+    min-width: 5em;
+    color: #dd5500;
+}
+.loading {
+    padding-top: 1em;
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left top no-repeat;
+    {% endimage %}
+}
+.icon-proses {
+    color: #dd5500;
+    vertical-align: middle;
+}
+.help-block {
+    margin-bottom: 2px;
+}
+</style>
+
+<div class="filter-section">
+    <form method="get" action="{{ path('kepulangan-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon log">{{ 'label.view'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('kepulangan-siswa') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix" style="margin-top: 50px;"></div>
+
+<div>
+    <h4>{{ 'pembaruan.kepulangan.manual'|trans({}, 'headings') }}:</h4>
+    <div class="form-group" style="margin-bottom: 20px;">
+        <i class="fa fa-upload fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pengiriman-berkas" class="btn primary" sisdik-url="{% if mesinWakil %}{{ mesinWakil.urlKepulanganManual }}{% endif %}">{{ 'ambil.dan.kirim.log.mesin.kepulangan'|trans }}</button>
+        <p class="help-block">{{ 'bantuan.ambil.dan.kirim.log.mesin.kepulangan'|trans }}</p>
+        <div class="pesan" id="pesan-proses-pengiriman"></div>
+    </div>
+    <div class="form-group">
+        <i class="fa fa-pie-chart fa-fw fa-2x icon-proses"></i> <button id="tombol-proses-pembaruan-manual" class="btn primary" sisdik-url="{{ path('kepulangan-siswa_manual') }}">{{ 'perbarui.kepulangan.manual'|trans }}</button>
+        <p class="help-block">{{ 'bantuan.perbarui.kepulangan.manual'|trans }}</p>
+        <div class="pesan" id="pesan-proses-pembaruan"></div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy'
+    });
+
+    var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+
+    $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".pilih-kelas").html(options);
+    });
+
+    $(".pilih-tingkat").change(function() {
+        var kelasval = $(".pilih-kelas").val();
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
+    });
+
+    $("#tombol-proses-pengiriman-berkas").click(function() {
+        var proxyUrl = $(this).attr("sisdik-url"), text = '';
+
+        if (proxyUrl == "") {
+            alert("{{ 'url.kepulangan.manual.kosong'|trans }}");
+            return false;
+        }
+
+        $(this).attr('disabled', 'disabled');
+        $("#pesan-proses-pengiriman").html("").addClass("loading");
+
+        $.get(proxyUrl, function(response) {
+            for (i = 0; i < response.pesan.length; i++) {
+                text += response.pesan[i] + "<br>";
+            }
+            $("#pesan-proses-pengiriman").html(text).removeClass("loading");
+            $("#tombol-proses-pengiriman-berkas").removeAttr('disabled');
+        });
+    });
+
+    function prosesPembaruanManual(prosesKepulangan, textOutput, urutan, daftarJadwal) {
+        var urlProses = $("#tombol-proses-pembaruan-manual").attr("sisdik-url") + '/' + urutan + '/' + daftarJadwal;
+        $("#pesan-proses-pembaruan").html(textOutput).addClass("loading");
+
+        $.get(urlProses, function(response) {
+            console.log(response);
+            if (response.pesan) {
+                for (i = 0; i < response.pesan.length; i++) {
+                    textOutput += response.pesan[i] + "<br>";
+                }
+            }
+            if (response.selesai == 1) {
+                prosesKepulangan = false;
+                $("#pesan-proses-pembaruan").html(textOutput).removeClass("loading");
+                $("#tombol-proses-pembaruan-manual").removeAttr('disabled');
+            } else {
+                prosesPembaruanManual(prosesKepulangan, textOutput, response.urutan, response.daftarJadwal);
+            }
+        });
+    }
+
+    $("#tombol-proses-pembaruan-manual").click(function() {
+        $("#tombol-proses-pembaruan-manual").attr('disabled', 'disabled');
+
+        prosesPembaruanManual(true, '', 0, '0');
+    });
+});
+</script>
+{% endblock javascripts_custom %}
