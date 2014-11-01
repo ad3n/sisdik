@@ -80,7 +80,8 @@ class PilihanLayananSmsSearchType extends AbstractType
             ['' => 'label.semua.layanan'],
             PilihanLayananSms::getDaftarLayananPendaftaran(),
             PilihanLayananSms::getDaftarLayananLaporan(),
-            PilihanLayananSms::getDaftarLayananKehadiran()
+            PilihanLayananSms::getDaftarLayananKehadiran(),
+            PilihanLayananSms::getDaftarLayananKepulangan()
         );
 
         return $choices;
