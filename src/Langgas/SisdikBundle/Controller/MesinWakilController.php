@@ -65,7 +65,7 @@ class MesinWakilController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new MesinWakil;
+        $entity = new MesinWakil();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -118,8 +118,7 @@ class MesinWakilController extends Controller
      */
     public function newAction()
     {
-        $entity = new MesinWakil;
-        $entity->setUrlKehadiranManual("http://192.168.1.99/ambil-kehadiran-manual.php");
+        $entity = new MesinWakil();
         $form = $this->createCreateForm($entity);
 
         return [

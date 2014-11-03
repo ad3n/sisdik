@@ -26,28 +26,28 @@ class MesinWakil
      *
      * @var string
      */
-    private $urlKehadiranManual;
+    private $urlKehadiranManual = "http://192.168.1.99/ambil-kehadiran-manual.php";
 
     /**
      * @ORM\Column(name="url_kepulangan_manual", type="string", length=200, nullable=false, options={"default"="http://192.168.1.99/ambil-kepulangan-manual.php"})
      *
      * @var string
      */
-    private $urlKepulanganManual;
+    private $urlKepulanganManual = "http://192.168.1.99/ambil-kepulangan-manual.php";
 
     /**
      * @ORM\Column(name="url_jadwal_kehadiran", type="string", length=200, nullable=false, options={"default"="http://192.168.1.99/pembaruan-jadwal-kehadiran.php"})
      *
      * @var string
      */
-    private $urlJadwalKehadiran;
+    private $urlJadwalKehadiran = "http://192.168.1.99/pembaruan-jadwal-kehadiran.php";
 
     /**
      * @ORM\Column(name="url_jadwal_kepulangan", type="string", length=200, nullable=false, options={"default"="http://192.168.1.99/pembaruan-jadwal-kepulangan.php"})
      *
      * @var string
      */
-    private $urlJadwalKepulangan;
+    private $urlJadwalKepulangan = "http://192.168.1.99/pembaruan-jadwal-kepulangan.php";
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
