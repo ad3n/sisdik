@@ -33,6 +33,10 @@ class EntityExtractor implements FileVisitorInterface, \PHPParser_NodeVisitor
             return;
         }
 
+        if (preg_match('/^http/', $id)) {
+            return;
+        }
+
         if (preg_match('/.*\./', $id)) {
             $domain = 'messages';
             $message = new Message($id, $domain);
