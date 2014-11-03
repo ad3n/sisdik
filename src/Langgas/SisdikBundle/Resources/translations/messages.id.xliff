@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-11-03T18:00:15Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-11-04T00:07:10Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -276,7 +276,7 @@
       <trans-unit id="96b13cbeeefe076d06e73d0ff9201861ca09d88d" resname="ambil.dan.kirim.log.mesin.kepulangan">
         <jms:reference-file line="63">views/KepulanganSiswa/index.html.twig</jms:reference-file>
         <source>ambil.dan.kirim.log.mesin.kepulangan</source>
-        <target>Ambil dan Kirim Log Kepulangan dari Mesin Kehadiran</target>
+        <target>Ambil dan Kirim Log Kepulangan</target>
       </trans-unit>
       <trans-unit id="c8df190635d37c6e9590812012497ade69e51a5c" resname="app.keterangan">
         <jms:reference-file line="3">views/Security/login.html.twig</jms:reference-file>
@@ -5711,7 +5711,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="6dc499a606ba567c2fb92ba1f754e0550cfe138c" resname="perbarui.kepulangan.manual">
         <jms:reference-file line="68">views/KepulanganSiswa/index.html.twig</jms:reference-file>
         <source>perbarui.kepulangan.manual</source>
-        <target>Perbarui Kehadiran</target>
+        <target>Perbarui Kepulangan</target>
       </trans-unit>
       <trans-unit id="2f9495fdf9ce43adda5513f923ded835dfbebaaf" resname="peringatan.impor.baru">
         <jms:reference-file line="40">views/Siswa/impor-baru.html.twig</jms:reference-file>
