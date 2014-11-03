@@ -752,6 +752,7 @@ class KehadiranSiswaController extends Controller
         ;
 
         if (!(is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan)) {
+            $retval['selesai'] = 1;
             $retval['pesan'][] = "Hari sekarang bukan hari yang ditandai sebagai KBM aktif";
             $response->setContent(json_encode($retval));
 
