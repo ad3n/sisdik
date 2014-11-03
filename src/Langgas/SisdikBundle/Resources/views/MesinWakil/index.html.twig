@@ -32,8 +32,8 @@
     <thead>
         <tr>
             <th>{{ 'label.school'|trans }}</th>
-            <th>{{ 'label.url.kehadiran.manual'|trans }}</th>
-            <th>{{ 'label.url.jadwal.kehadiran'|trans }}</th>
+            <th>{{ 'label.url.kehadiran.manual'|trans }}<br>{{ 'label.url.jadwal.kehadiran'|trans }}</th>
+            <th>{{ 'label.url.kepulangan.manual'|trans }}<br>{{ 'label.url.jadwal.kepulangan'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
     </thead>
@@ -41,8 +41,8 @@
     {% for entity in pagination %}
         <tr>
             <td data-title="{{ 'label.school'|trans }}">{% if entity.sekolah is defined %}{{ entity.sekolah.nama }}{% endif %}</td>
-            <td data-title="{{ 'label.url.kehadiran.manual'|trans }}">{{ entity.urlKehadiranManual }}</td>
-            <td data-title="{{ 'label.url.jadwal.kehadiran'|trans }}">{{ entity.urlJadwalKehadiran }}</td>
+            <td data-title="{{ 'label.url.kehadiran.manual'|trans }}, {{ 'label.url.jadwal.kehadiran'|trans }}">{{ entity.urlKehadiranManual }}<br>{{ entity.urlJadwalKehadiran }}</td>
+            <td data-title="{{ 'label.url.kepulangan.manual'|trans }}, {{ 'label.url.jadwal.kepulangan'|trans }}">{{ entity.urlKepulanganManual }}<br>{{ entity.urlJadwalKepulangan }}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 <a href="{{ path('mesin-wakil_edit', {'id': entity.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
             </td>
