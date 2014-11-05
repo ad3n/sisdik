@@ -243,8 +243,8 @@ class PembaruanKepulanganCommand extends ContainerAwareCommand
                                                 $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
 
                                                 if ($input->getOption('paksa')) {
-                                                    $kepulanganSiswa->setStatusKepulangan('b-hadir-telat');
-                                                    print "[paksa]: memaksa menjadi hadir telat\n";
+                                                    $kepulanganSiswa->setStatusKepulangan('b-pulang-tak-tercatat');
+                                                    print "[paksa]: memaksa menjadi pulang tak tercatat\n";
                                                 }
 
                                                 $em->persist($kepulanganSiswa);
@@ -329,8 +329,8 @@ class PembaruanKepulanganCommand extends ContainerAwareCommand
                                                     $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
 
                                                     if ($input->getOption('paksa')) {
-                                                        $kepulanganSiswa->setStatusKepulangan('b-hadir-telat');
-                                                        print "[paksa]: memaksa menjadi hadir telat\n";
+                                                        $kepulanganSiswa->setStatusKepulangan('b-pulang-tak-tercatat');
+                                                        print "[paksa]: memaksa menjadi pulang tak tercatat\n";
                                                     }
 
                                                     $em->persist($kepulanganSiswa);

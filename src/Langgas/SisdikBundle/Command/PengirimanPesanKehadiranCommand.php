@@ -121,7 +121,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                         ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwal')
                         ->leftJoin('jadwal.tahunAkademik', 'tahunAkademik')
                         ->where('jadwal.sekolah = :sekolah')
-                        ->andWhere('jadwal.smsJam = :jam')
+                        ->andWhere('jadwal.smsJam <= :jam')
                         ->andWhere('jadwal.perulangan = :perulangan')
                         ->andWhere('jadwal.kirimSms = :kirimsms')
                         ->andWhere('tahunAkademik.aktif = :aktif')
