@@ -773,7 +773,7 @@ class KehadiranSiswaController extends Controller
         $jadwalTotal = $qbJadwalTotal->getQuery()->getSingleScalarResult();
         if ($urutan >= $jadwalTotal) {
             $retval['selesai'] = 1;
-            $retval['pesan'][] = "Selesai memperbarui jadwal kehadiran";
+            $retval['pesan'][] = "Selesai memperbarui kehadiran siswa";
             $response->setContent(json_encode($retval));
 
             return $response;
