@@ -357,21 +357,26 @@ class KepulanganSiswaController extends Controller
                     }
                 }
             } else {
-                $qbSiswaKelas = $em->createQueryBuilder()
-                    ->select('siswaKelas')
-                    ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
-                    ->where('siswaKelas.tahunAkademik = :tahunakademik')
-                    ->andWhere('siswaKelas.kelas = :kelas')
-                    ->andWhere('siswaKelas.aktif = :aktif')
-                    ->setParameter('tahunakademik', $tahunAkademik)
+                $qbKehadiran = $em->createQueryBuilder()
+                    ->select('kehadiran')
+                    ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
+                    ->where('kehadiran.sekolah = :sekolah')
+                    ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
+                    ->andWhere('kehadiran.kelas = :kelas')
+                    ->andWhere('kehadiran.tanggal = :tanggal')
+                    ->andWhere('kehadiran.statusKehadiran = :tepat OR kehadiran.statusKehadiran = :telat')
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('tahunAkademik', $tahunAkademik)
                     ->setParameter('kelas', $kelas)
-                    ->setParameter('aktif', true)
+                    ->setParameter('tanggal', $tanggal)
+                    ->setParameter('tepat', 'a-hadir-tepat')
+                    ->setParameter('telat', 'b-hadir-telat')
                 ;
-                $entitiesSiswaKelas = $qbSiswaKelas->getQuery()->getResult();
+                $entitiesKehadiran = $qbKehadiran->getQuery()->getResult();
 
                 $jam = new \DateTime();
-                foreach ($entitiesSiswaKelas as $siswaKelas) {
-                    if (!(is_object($siswaKelas) && $siswaKelas instanceof SiswaKelas)) {
+                foreach ($entitiesKehadiran as $kehadiran) {
+                    if (!$kehadiran instanceof KehadiranSiswa) {
                         continue;
                     }
 
@@ -382,7 +387,7 @@ class KepulanganSiswaController extends Controller
                         ->andWhere('kepulangan.siswa = :siswa')
                         ->andWhere('kepulangan.tanggal = :tanggal')
                         ->setParameter('sekolah', $sekolah)
-                        ->setParameter('siswa', $siswaKelas->getSiswa())
+                        ->setParameter('siswa', $kehadiran->getSiswa())
                         ->setParameter('tanggal', $tanggal)
                     ;
                     $entityKepulangan = $qbKepulangan->getQuery()->getResult();
@@ -395,28 +400,16 @@ class KepulanganSiswaController extends Controller
                     $kepulangan->setSekolah($sekolah);
                     $kepulangan->setTahunAkademik($tahunAkademik);
                     $kepulangan->setKelas($kelas);
-                    $kepulangan->setSiswa($siswaKelas->getSiswa());
+                    $kepulangan->setSiswa($kehadiran->getSiswa());
                     $kepulangan->setStatusKepulangan($statusKepulangan);
                     $kepulangan->setPermulaan(true);
                     $kepulangan->setTervalidasi(false);
                     $kepulangan->setTanggal(new \DateTime($tanggal));
                     $kepulangan->setJam($jam->format('H:i') . ':00');
                     $kepulangan->setSmsTerproses(false);
+                    $kepulangan->setKehadiranSiswa($kehadiran);
 
-                    $kehadiran = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')
-                        ->findOneBy([
-                            'sekolah' => $sekolah,
-                            'tahunAkademik' => $tahunAkademik,
-                            'kelas' => $kelas,
-                            'siswa' => $siswaKelas->getSiswa(),
-                            'tanggal' => new \DateTime($tanggal),
-                        ])
-                    ;
-
-                    if ($kehadiran instanceof KehadiranSiswa) {
-                        $kepulangan->setKehadiranSiswa($kehadiran);
-                        $em->persist($kepulangan);
-                    }
+                    $em->persist($kepulangan);
                 }
             }
 
@@ -759,6 +752,7 @@ class KepulanganSiswaController extends Controller
         ;
 
         if (!(is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan)) {
+            $retval['selesai'] = 1;
             $retval['pesan'][] = "Hari sekarang bukan hari yang ditandai sebagai KBM aktif";
             $response->setContent(json_encode($retval));
 
@@ -846,6 +840,8 @@ class KepulanganSiswaController extends Controller
                 . 'manual'
                 . DIRECTORY_SEPARATOR
                 . $tanggalSekarang
+                . DIRECTORY_SEPARATOR
+                . 'pulang'
             ;
             if (!is_dir($logDirectory)) {
                 continue;
