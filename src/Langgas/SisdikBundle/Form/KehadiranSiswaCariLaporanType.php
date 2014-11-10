@@ -14,7 +14,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class KehadiranSiswaReportSearchType extends AbstractType
+class KehadiranSiswaCariLaporanType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -131,6 +131,6 @@ class KehadiranSiswaReportSearchType extends AbstractType
 
     public function getName()
     {
-        return 'sisdik_kehadiransiswareportsearch';
+        return 'sisdik_kehadiransiswa_carilaporan';
     }
 }
