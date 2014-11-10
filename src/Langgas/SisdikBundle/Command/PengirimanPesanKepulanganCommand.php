@@ -11,6 +11,7 @@ use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\JadwalKepulangan;
 use Langgas\SisdikBundle\Entity\ProsesKepulanganSiswa;
 use Langgas\SisdikBundle\Entity\VendorSekolah;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -80,6 +81,17 @@ class PengirimanPesanKepulanganCommand extends ContainerAwareCommand
                         'aktif' => true,
                     ])
                 ;
+
+                $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'tanggal' => $waktuSekarang,
+                        'kbm' => true,
+                    ])
+                ;
+                if (!(is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan)) {
+                    continue;
+                }
 
                 $qbKepulanganSemua = $em->createQueryBuilder()
                     ->select('COUNT(kepulangan.id)')
