@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * @Route("/laporan-kehadiran-siswa")
  * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
  */
-class KehadiranSiswaReportController extends Controller
+class KehadiranSiswaLaporanController extends Controller
 {
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
