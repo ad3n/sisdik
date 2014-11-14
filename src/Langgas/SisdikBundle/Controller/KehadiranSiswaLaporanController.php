@@ -7,7 +7,6 @@ use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -31,11 +30,11 @@ class KehadiranSiswaLaporanController extends Controller
     /**
      * @Route("/", name="laporan-kehadiran-siswa")
      * @Method("GET")
-     * @Template("LanggasSisdikBundle:KehadiranSiswa:laporan.html.twig")
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:cari-laporan.html.twig")
      */
     public function indexAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -48,7 +47,7 @@ class KehadiranSiswaLaporanController extends Controller
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
-                'sekolah' => $sekolah->getId(),
+                'sekolah' => $sekolah,
             ])
         ;
 
@@ -63,12 +62,21 @@ class KehadiranSiswaLaporanController extends Controller
     }
 
     /**
+     * @Route("/lihat", name="laporan-kehadiran-siswa_lihat")
+     * @Method("POST")
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:lihat-laporan.html.twig")
+     */
+    public function lihatAction()
+    {
+    }
+
+    /**
      * @Route("/ekspor", name="laporan-kehadiran-siswa_ekspor")
      * @Method("POST")
      */
     public function eksporAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -203,7 +211,7 @@ class KehadiranSiswaLaporanController extends Controller
      */
     public function unduhAction($filename, $type = 'ods')
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
 
         $filetarget = $filename;
         $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
@@ -234,17 +242,11 @@ class KehadiranSiswaLaporanController extends Controller
         $menu[$this->get('translator')->trans('headings.presence', array(), 'navigations')][$this->get('translator')->trans('links.laporan.kehadiran.siswa', array(), 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+        return $this->getUser()->getSekolah();
     }
 }

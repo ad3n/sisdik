@@ -40,9 +40,9 @@
 </style>
 
 <div class="filter-section">
-    <form id="export-form" method="post" action="{{ path('laporan-kehadiran-siswa_ekspor') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+    <form id="search-form" method="post" action="{{ path('laporan-kehadiran-siswa_lihat') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
         {{ form_widget(searchform) }}
-        <button type="submit" class="btn success alternative icon log">{{ 'label.download'|trans }}</button>
+        <button type="submit" class="btn primary alternative icon log">{{ 'label.lihat.laporan'|trans }}</button>
         <button class="btn" type="reset" onclick="window.location.href='{{ path('laporan-kehadiran-siswa') }}'">{{ 'label.reset'|trans }}</button>
     </form>
     <div class="clearfix"></div>
