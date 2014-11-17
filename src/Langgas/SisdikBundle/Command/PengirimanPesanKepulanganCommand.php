@@ -22,7 +22,7 @@ class PengirimanPesanKepulanganCommand extends ContainerAwareCommand
 {
     const LOCK_FILE = "pengiriman-pesan-kepulangan.lock";
     const LOCK_DIR = "lock";
-    const BEDA_WAKTU_MAKS = 1830;
+    const BEDA_WAKTU_MAKS = 610;
 
     protected function configure()
     {
