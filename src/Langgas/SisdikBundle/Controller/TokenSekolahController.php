@@ -72,7 +72,7 @@ class TokenSekolahController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('token-sekolah_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('token-sekolah_show', ['id' => $entity->getId()]));
         }
 
         return [

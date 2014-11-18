@@ -1,6 +1,6 @@
 {% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}penyedia.jasa.sms{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}menambah.vendor.sekolah{% endtrans %}{% endblock %}
 
 {% block content %}
 <style type="text/css">
@@ -18,6 +18,12 @@
     </div>
     {{ form_rest(form) }}
 {{ form_end(form) }}
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('vendor_sekolah') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
 {% endblock content %}
 
 {% block javascripts_custom %}

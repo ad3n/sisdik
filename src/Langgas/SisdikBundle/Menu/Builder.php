@@ -70,6 +70,7 @@ class Builder extends ContainerAware
             $supersettings->addChild($translator->trans('links.layanansms', [], 'navigations'), ['route' => 'layanansms']);
             $supersettings->addChild($translator->trans('links.token.sekolah', [], 'navigations'), ['route' => 'token-sekolah']);
             $supersettings->addChild($translator->trans('links.mesin.wakil', [], 'navigations'), ['route' => 'mesin-wakil']);
+            $supersettings->addChild($translator->trans('links.vendor.sekolah', [], 'navigations'), ['route' => 'vendor_sekolah']);
         }
 
         if ($securityContext->isGranted([
@@ -96,7 +97,6 @@ class Builder extends ContainerAware
             $settings->addChild($translator->trans('links.academicyear', [], 'navigations'), ['route' => 'academicyear']);
             $settings->addChild($translator->trans('links.smstemplate', [], 'navigations'), ['route' => 'sms_template']);
             $settings->addChild($translator->trans('links.smspendaftaran', [], 'navigations'), ['route' => 'smspendaftaran']);
-            $settings->addChild($translator->trans('links.penyedia.jasa.sms', [], 'navigations'), ['route' => 'vendor_sekolah']);
             $settings->addChild($translator->trans('links.jenisdokumensiswa', [], 'navigations'), ['route' => 'jenisdokumensiswa']);
         }
 

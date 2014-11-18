@@ -2,13 +2,11 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -16,44 +14,12 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class VendorSekolahType extends AbstractType
 {
     /**
-     * @var SecurityContext
-     */
-    private $securityContext;
-
-    /**
-     * @InjectParams({
-     *     "securityContext" = @Inject("security.context")
-     * })
-     *
-     * @param SecurityContext $securityContext
-     */
-    public function __construct(SecurityContext $securityContext)
-    {
-        $this->securityContext = $securityContext;
-    }
-
-    /**
-     * @return Sekolah
-     */
-    private function getSekolah()
-    {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $sekolah = $this->getSekolah();
-
         $builder
-            ->add('sekolah', 'sisdik_entityhidden', [
-                'required' => true,
-                'class' => 'LanggasSisdikBundle:Sekolah',
-                'data' => $sekolah->getId(),
-            ])
             ->add('jenis', 'choice', [
                 'choices' => [
                     'standar' => 'label.vendor.sms.standar.sisdik',
@@ -77,6 +43,22 @@ class VendorSekolahType extends AbstractType
                     'class' => 'url-vendor-sms',
                 ],
                 'help_block' => 'help.url.pengirim.pesan.sms',
+            ])
+            ->add('sekolah', 'entity', [
+                'class' => 'LanggasSisdikBundle:Sekolah',
+                'label' => 'label.school',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'empty_value' => false,
+                'required' => true,
+                'query_builder' => function (EntityRepository $repository) {
+                    $qb = $repository->createQueryBuilder('sekolah')
+                        ->orderBy('sekolah.nama', 'ASC')
+                    ;
+
+                    return $qb;
+                },
             ])
         ;
     }

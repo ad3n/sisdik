@@ -11,9 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * @Route("/penyedia-jasa")
+ * @Route("/vendor-sekolah")
+ * @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
  */
 class VendorSekolahController extends Controller
 {
@@ -24,34 +26,37 @@ class VendorSekolahController extends Controller
      */
     public function indexAction()
     {
-        $sekolah = $this->getSekolah();
+        $this->setCurrentMenu();
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        $searchform = $this->createForm('sisdik_cari_sekolah');
+
         $querybuilder = $em->createQueryBuilder()
             ->select('vendorSekolah')
             ->from('LanggasSisdikBundle:VendorSekolah', 'vendorSekolah')
-            ->where('vendorSekolah.sekolah = :sekolah')
-            ->setParameter('sekolah', $sekolah)
-            ->setMaxResults(1)
+            ->leftJoin('vendorSekolah.sekolah', 'sekolah')
+            ->orderBy('sekolah.nama', 'ASC')
         ;
-        $results = $querybuilder->getQuery()->getResult();
 
-        $entity = false;
-        foreach ($results as $result) {
-            if (is_object($result) && $result instanceof VendorSekolah) {
-                $entity = $result;
+        $searchform->submit($this->getRequest());
+        if ($searchform->isValid()) {
+            $searchdata = $searchform->getData();
+
+            if ($searchdata['sekolah'] != '') {
+                $querybuilder->where('vendorSekolah.sekolah = :sekolah');
+                $querybuilder->setParameter("sekolah", $searchdata['sekolah']);
             }
         }
 
-        if (!$entity) {
-            return $this->redirect($this->generateUrl('vendor_sekolah_new'));
-        } else {
-            return $this->redirect($this->generateUrl('vendor_sekolah_edit', [
-                'id' => $entity->getId(),
-            ]));
-        }
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
+
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+        ];
     }
 
     /**
@@ -63,7 +68,7 @@ class VendorSekolahController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new VendorSekolah;
+        $entity = new VendorSekolah();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -84,12 +89,14 @@ class VendorSekolahController extends Controller
                 throw new DBALException($message);
             }
 
-            return $this->redirect($this->generateUrl('vendor_sekolah'));
+            return $this->redirect($this->generateUrl('vendor_sekolah_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
         return [
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ];
     }
 
@@ -116,12 +123,37 @@ class VendorSekolahController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new VendorSekolah;
+        $entity = new VendorSekolah();
         $form   = $this->createCreateForm($entity);
 
         return [
             'entity' => $entity,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/{id}", name="vendor_sekolah_show")
+     * @Method("GET")
+     * @Template()
+     */
+    public function showAction($id)
+    {
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Entity VendorSekolah tak ditemukan.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
         ];
     }
 
@@ -143,10 +175,12 @@ class VendorSekolahController extends Controller
         }
 
         $editForm = $this->createEditForm($entity);
+        $deleteForm = $this->createDeleteForm($id);
 
         return [
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
         ];
     }
 
@@ -209,9 +243,55 @@ class VendorSekolahController extends Controller
         }
 
         return [
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
         ];
+    }
+
+    /**
+     * @Route("/{id}", name="vendor_sekolah_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $form = $this->createDeleteForm($id);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('LanggasSisdikBundle:VendorSekolah')->find($id);
+
+            if (!$entity) {
+                throw $this->createNotFoundException('Entity VendorSekolah tak ditemukan.');
+            }
+
+            $em->remove($entity);
+            $em->flush();
+        }
+
+        return $this->redirect($this->generateUrl('vendor_sekolah'));
+    }
+
+    /**
+     * @param mixed $id
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('vendor_sekolah_delete', [
+                'id' => $id,
+            ]))
+            ->setMethod('DELETE')
+            ->add('submit', 'submit', [
+                'label' => 'label.delete',
+                'attr' => [
+                    'class' => 'btn alternative icon danger remove',
+                ],
+            ])
+            ->getForm()
+        ;
     }
 
     private function setCurrentMenu()
@@ -219,14 +299,6 @@ class VendorSekolahController extends Controller
         $translator = $this->get('translator');
 
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$translator->trans('headings.setting', [], 'navigations')][$translator->trans('links.penyedia.jasa.sms', [], 'navigations')]->setCurrent(true);
-    }
-
-    /**
-     * @return Sekolah
-     */
-    private function getSekolah()
-    {
-        return $this->getUser()->getSekolah();
+        $menu[$translator->trans('headings.pengaturan.sisdik', [], 'navigations')][$translator->trans('links.vendor.sekolah', [], 'navigations')]->setCurrent(true);
     }
 }

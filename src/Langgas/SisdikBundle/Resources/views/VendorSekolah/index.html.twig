@@ -1,41 +1,60 @@
-{% extends '::base.html.twig' %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>VendorSekolah list</h1>
+{% block page_heading %}{% trans from "headings" %}daftar.vendor.sekolah{% endtrans %}{% endblock %}
 
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Urlpengirimpesan</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('vendor_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.urlPengirimPesan }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('vendor_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('vendor_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
 
-        <ul>
-        <li>
-            <a href="{{ path('vendor_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+<div class="filter-section">
+    <form method="GET" action="{{ path('vendor_sekolah') }}" class="form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('vendor_sekolah') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('vendor_sekolah_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.tambah.vendor.sekolah'|trans }}
+        </a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.school'|trans }}</th>
+            <th>{{ 'label.jenis.vendor'|trans }}</th>
+            <th>{{ 'label.url.pengirim.pesan'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for entity in pagination %}
+        <tr>
+            <td data-title="{{ 'label.school'|trans }}">{% if entity.sekolah is defined %}{{ entity.sekolah.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.jenis.vendor'|trans }}">
+            {% if entity.jenis == 'standar' %}
+                {{ 'label.vendor.standar.sisdik'|trans }}
+            {% else %}
+                {{ 'label.vendor.khusus'|trans }}
+            {% endif %}
+            </td>
+            <td data-title="{{ 'label.url.pengirim.pesan'|trans }}">{{ entity.urlPengirimPesan }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('vendor_sekolah_edit', {'id': entity.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
