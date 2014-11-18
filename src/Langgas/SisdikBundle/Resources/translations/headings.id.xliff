@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-11-01T14:04:38Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-11-18T15:01:20Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -316,14 +316,14 @@
         <target>Daftar Jenis Biaya</target>
       </trans-unit>
       <trans-unit id="fe003554de05d274ac4670afb01df2f0cae200fc" resname="informasi.kehadiran.siswa">
-        <jms:reference-file line="65">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="67">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="112">Dashboard/TabulasiKehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="65">views/Default/pengelola.html.twig</jms:reference-file>
         <source>Informasi Kehadiran</source>
         <target>Informasi Kehadiran Siswa</target>
       </trans-unit>
       <trans-unit id="d7161b54b5c50edbcd8c75dcdc34d6a4b20520ed" resname="informasi.kehadiran.siswa.total">
-        <jms:reference-file line="72">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="74">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="72">views/Default/pengelola.html.twig</jms:reference-file>
         <source>Informasi Kehadiran Total</source>
         <target>Informasi Kehadiran Siswa Keseluruhan</target>
@@ -636,6 +636,12 @@
         <jms:reference-file line="3">views/PanitiaPendaftaran/index.html.twig</jms:reference-file>
         <source>registration.committee.list</source>
         <target>Daftar Panitia Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="4bd404e3539f5b88ef4502a4d030a465ddcce661" resname="rekap.kehadiran.siswa">
+        <jms:reference-file line="79">views/KehadiranSiswa/laporan.html.twig</jms:reference-file>
+        <source>rekap.kehadiran.siswa</source>
+        <target><![CDATA[Rekapitulasi Kehadiran Siswa Kelas %kelas%
+<br>Tanggal %tanggal%]]></target>
       </trans-unit>
       <trans-unit id="7ace7e6162c357711ada34f14080b2561dd79f1b" resname="reward.amount.creation">
         <jms:reference-file line="3">views/ImbalanPendaftaran/new.html.twig</jms:reference-file>
