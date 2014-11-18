@@ -103,6 +103,8 @@ class TokenSekolahController extends Controller
      */
     public function newAction()
     {
+        $this->setCurrentMenu();
+
         $entity = new TokenSekolah();
         $form   = $this->createCreateForm($entity);
 
@@ -119,6 +121,8 @@ class TokenSekolahController extends Controller
      */
     public function showAction($id)
     {
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
@@ -142,6 +146,8 @@ class TokenSekolahController extends Controller
      */
     public function editAction($id)
     {
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
