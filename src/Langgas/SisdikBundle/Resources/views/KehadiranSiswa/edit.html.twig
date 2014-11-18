@@ -90,7 +90,7 @@
 .accordion-body .accordion-inner {
     margin-top: 5px;
 }
-#form-kehadiran .radio {
+#form-kehadiran .radio, #form-kehadiran .clearfix {
     margin-left: 20px;
 }
 #form-kehadiran .radio label {
@@ -332,6 +332,7 @@ dd {
     <dd>
         {{ form_widget(form['kehadiran_' ~ kehadiran.id]) }}
         {{ form_widget(form['kehadiran_keterangan_' ~ kehadiran.id]) }}
+        {% if kehadiran.jam != '' %}<div class="clearfix" style="margin-top: 0; font-style: italic;"><i class="fa fa-clock-o fa-fw"></i> {{ kehadiran.jam(false) }}</div>{% endif %}
     </dd>
 {% endfor %}
 </dl>

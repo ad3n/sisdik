@@ -91,10 +91,11 @@ class KehadiranSiswaController extends Controller
         $searchform = $this->createForm('sisdik_kehadiransiswasearch');
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('kehadiran')
+            ->select('kehadiran, siswa, orangtuaWali')
             ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
             ->leftJoin('kehadiran.kelas', 'kelas')
             ->leftJoin('kehadiran.siswa', 'siswa')
+            ->leftJoin('siswa.orangtuaWali', 'orangtuaWali')
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('kelas.kode')
             ->addOrderBy('siswa.namaLengkap')
