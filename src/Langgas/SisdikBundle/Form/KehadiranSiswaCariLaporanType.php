@@ -2,7 +2,8 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,31 +23,21 @@ class KehadiranSiswaCariLaporanType extends AbstractType
     private $securityContext;
 
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
-     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     *     "securityContext" = @Inject("security.context")
      * })
      *
      * @param SecurityContext $securityContext
-     * @param EntityManager   $entityManager
      */
-    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+    public function __construct(SecurityContext $securityContext)
     {
         $this->securityContext = $securityContext;
-        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $this->securityContext->getToken()->getUser();
         $sekolah = $user->getSekolah();
-
-        $em = $this->entityManager;
 
         $builder
             ->add('dariTanggal', 'date', [
@@ -73,16 +64,6 @@ class KehadiranSiswaCariLaporanType extends AbstractType
                 'label_render' => false,
                 'horizontal' => false,
             ])
-        ;
-
-        $querybuilder = $em->createQueryBuilder()
-            ->select('tingkat')
-            ->from('LanggasSisdikBundle:Tingkat', 'tingkat')
-            ->where('tingkat.sekolah = :sekolah')
-            ->orderBy('tingkat.kode')
-            ->setParameter('sekolah', $sekolah)
-        ;
-        $builder
             ->add('tingkat', 'entity', [
                 'class' => 'LanggasSisdikBundle:Tingkat',
                 'label' => 'label.class.entry',
@@ -90,28 +71,22 @@ class KehadiranSiswaCariLaporanType extends AbstractType
                 'expanded' => false,
                 'required' => true,
                 'property' => 'optionLabel',
-                'query_builder' => $querybuilder,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tingkat')
+                        ->where('tingkat.sekolah = :sekolah')
+                        ->orderBy('tingkat.urutan')
+                        ->addOrderBy('tingkat.kode')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium pilih-tingkat',
                 ],
                 'label_render' => false,
                 'horizontal' => false,
             ])
-        ;
-
-        $querybuilder = $em->createQueryBuilder()
-            ->select('kelas')
-            ->from('LanggasSisdikBundle:Kelas', 'kelas')
-            ->leftJoin('kelas.tingkat', 'tingkat')
-            ->leftJoin('kelas.tahunAkademik', 'tahunAkademik')
-            ->where('kelas.sekolah = :sekolah')
-            ->andWhere('tahunAkademik.aktif = :aktif')
-            ->orderBy('tingkat.urutan', 'ASC')
-            ->addOrderBy('kelas.urutan')
-            ->setParameter('sekolah', $sekolah)
-            ->setParameter('aktif', true)
-        ;
-        $builder
             ->add('kelas', 'entity', [
                 'class' => 'LanggasSisdikBundle:Kelas',
                 'label' => 'label.class.entry',
@@ -119,11 +94,47 @@ class KehadiranSiswaCariLaporanType extends AbstractType
                 'expanded' => false,
                 'property' => 'nama',
                 'required' => true,
-                'query_builder' => $querybuilder,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('kelas')
+                        ->leftJoin('kelas.tingkat', 'tingkat')
+                        ->leftJoin('kelas.tahunAkademik', 'tahunAkademik')
+                        ->where('kelas.sekolah = :sekolah')
+                        ->andWhere('tahunAkademik.aktif = :aktif')
+                        ->orderBy('tingkat.urutan')
+                        ->addOrderBy('kelas.urutan')
+                        ->setParameter('sekolah', $sekolah)
+                        ->setParameter('aktif', true)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium pilih-kelas',
                 ],
                 'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('searchkey', null, [
+                'label' => 'label.searchkey',
+                'required' => false,
+                'attr' => [
+                    'class' => 'search-query medium',
+                    'placeholder' => 'label.searchkey',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('statusKehadiran', 'choice', [
+                'choices' => JadwalKehadiran::getDaftarStatusKehadiran(),
+                'label' => 'label.presence.status.entry',
+                'multiple' => false,
+                'expanded' => false,
+                'required' => false,
+                'label_render' => false,
+                'attr' => [
+                    'class' => 'medium'
+                ],
+                'empty_value' => 'label.presencestatus',
                 'horizontal' => false,
             ])
         ;
