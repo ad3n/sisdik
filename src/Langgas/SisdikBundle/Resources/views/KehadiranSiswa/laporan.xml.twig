@@ -10,7 +10,10 @@
     </office:font-face-decls>
     <office:automatic-styles>
         <style:style style:name="co1" style:family="table-column">
-            <style:table-column-properties fo:break-before="auto" style:column-width="0.8925in"/>
+            <style:table-column-properties fo:break-before="auto" style:column-width="2.5in"/>
+        </style:style>
+        <style:style style:name="co2" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
         </style:style>
         <style:style style:name="ro1" style:family="table-row">
             <style:table-row-properties style:row-height="0.178in" fo:break-before="auto" style:use-optimal-row-height="true"/>
@@ -24,33 +27,46 @@
     </office:automatic-styles>
     <office:body>
         <office:spreadsheet>
+        {% if dariTanggal %}
+            {% set infoTanggal = dariTanggal|date('d/m/Y') ~ ' — ' ~ hinggaTanggal|date('d/m/Y') %}
+        {% else %}
+            {% set infoTanggal = hinggaTanggal|date('d/m/Y') %}
+        {% endif %}
+        {% if kehadiranSiswa|length == 0 %}
             <table:table table:name="Sheet1" table:style-name="ta1">
                 <table:table-row table:style-name="ro1">
                     <table:table-cell table:style-name="ce-custom" office:value-type="string">
-                        <text:p>{{ 'kehadiran.siswa.laporan'|trans({}, 'headings') }}</text:p>
+                        <text:p>{{ 'tidak.ada.data.laporan.kehadiran.siswa'|trans({'%tanggal%': infoTanggal}) }}</text:p>
+                    </table:table-cell>
+                </table:table-row>
+            </table:table>
+        {% else %}
+            <table:table table:name="Sheet1" table:style-name="ta1">
+                <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co2" table:default-cell-style-name="Default"/>
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell table:style-name="ce-custom" office:value-type="string">
+                        <text:p>{{ 'rekap.kehadiran.siswa.kelas'|trans({'%kelas%': kelas.nama}) }}</text:p>
                     </table:table-cell>
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell table:style-name="ce-custom" office:value-type="string">
-                        <text:p>{{ 'label.academicyear.entry'|trans }} {{ tahunAkademik.nama }}, {{ 'label.class.entry'|trans }} {{ kelas.nama }}</text:p>
+                        <text:p>{{ 'dari.hingga.tanggal'|trans({'%tanggal%': infoTanggal}) }}</text:p>
                     </table:table-cell>
                 </table:table-row>
+                {% if searchkey != "" %}
+                    {% set row = 6 %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell table:style-name="ce-custom" office:value-type="string">
-                        <text:p>{% if dariTanggal %}{{ 'label.dari.tanggal'|trans }} {{ dariTanggal|date('d/m/Y') }} {{ 'hingga'|trans }} {% endif %}{{ 'tanggal'|trans }} {{ hinggaTanggal|date('d/m/Y') }}</text:p>
+                        <text:p>{{ 'kata.pencarian'|trans }}: {{ searchkey }}</text:p>
                     </table:table-cell>
                 </table:table-row>
-            {% set tanggalTerakhir = date() %}
-            {% for kehadiran in kehadiranSiswa %}
-                {% if tanggalTerakhir|date('Ymd') != kehadiran.tanggal|date('Ymd') %}
+                {% else %}
+                    {% set row = 5 %}
+                {% endif %}
                 <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell table:style-name="ce-custom" office:value-type="string">
                         <text:p></text:p>
-                    </table:table-cell>
-                </table:table-row>
-                <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'tanggal'|trans }} {{ kehadiran.tanggal|date('d/m/Y') }}</text:p>
                     </table:table-cell>
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
@@ -60,21 +76,21 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.nomor.induk'|trans }}</text:p>
                     </table:table-cell>
+                {% for key,value in daftarStatusKehadiran %}
+                    {% set status = key %}
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.status.kehadiran'|trans }}</text:p>
+                        <text:p>{{ value|trans }}</text:p>
+                    </table:table-cell>
+                {% endfor %}
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ 'label.jumlah.hadir'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jam'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.keterangan'|trans }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.sms.kehadiran.terproses'|trans }}</text:p>
+                        <text:p>{{ 'label.jumlah.tidak.hadir'|trans }}</text:p>
                     </table:table-cell>
                 </table:table-row>
-                    {% set tanggalTerakhir = kehadiran.tanggal %}
-                {% endif %}
+                {% set counter = 0 %}
+            {% for kehadiran in kehadiranSiswa %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
                         <text:p>{{ kehadiran.siswa.namaLengkap }}</text:p>
@@ -82,21 +98,23 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ kehadiran.siswa.nomorInduk }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ daftarStatusKehadiran[kehadiran.statusKehadiran]|trans }}</text:p>
+                {% for key,value in daftarStatusKehadiran %}
+                    {% set status = key %}
+                    <table:table-cell office:value-type="float" office:value="{{ kehadiran[status] }}" calcext:value-type="float">
+                        <text:p>{{ kehadiran[status] }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ kehadiran.getJam(false) }}</text:p>
+                {% endfor %}
+                    <table:table-cell table:formula="of:=SUM([.C{{ row + counter }}:.D{{ row + counter }}])" office:value-type="float" office:value="{{ kehadiran.jumlahHadir }}" calcext:value-type="float">
+                        <text:p>{{ kehadiran.jumlahHadir }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{{ kehadiran.keteranganStatus }}</text:p>
-                    </table:table-cell>
-                    <table:table-cell office:value-type="string">
-                        <text:p>{% if kehadiran.smsTerproses == 1 %}{{ 'label.terproses'|trans }}{% else %}-{% endif %}</text:p>
+                    <table:table-cell table:formula="of:=SUM([.E{{ row + counter }}:.G{{ row + counter }}])" office:value-type="float" office:value="{{ kehadiran.jumlahTidakHadir }}" calcext:value-type="float">
+                        <text:p>{{ kehadiran.jumlahTidakHadir }}</text:p>
                     </table:table-cell>
                 </table:table-row>
+                {% set counter = counter + 1 %}
             {% endfor %}
             </table:table>
+        {% endif %}
         </office:spreadsheet>
     </office:body>
 </office:document-content>

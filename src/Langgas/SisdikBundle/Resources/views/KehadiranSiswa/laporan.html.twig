@@ -68,7 +68,9 @@
 <div class="filter-section">
     <form id="search-form" method="get" action="{{ path('laporan-kehadiran-siswa_lihat') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
         {{ form_widget(searchform) }}
+        <div class="clearfix" style="margin-top: 3px;"></div>
         <button type="submit" class="btn primary alternative icon log">{{ 'label.lihat.laporan'|trans }}</button>
+        <button type="submit" class="btn success alternative icon log" id="tombol-unduh">{{ 'label.download'|trans }}</button>
         <button class="btn" type="reset" onclick="window.location.href='{{ path('laporan-kehadiran-siswa') }}'">{{ 'label.reset'|trans }}</button>
     </form>
     <div class="clearfix"></div>
@@ -190,11 +192,14 @@ $(document).ready(function() {
         });
     });
 
-    $("#export-form").submit(function() {
-        var url = $(this).attr("action");
+    $("#tombol-unduh").click(function() {
+        var url = "{{ path('laporan-kehadiran-siswa_ekspor') }}";
+
+        $(this).attr('disabled', 'disabled');
         $("#filename").html("");
         $("#filename").addClass("loading");
-        $.post(url, $(this).serialize(), function(response) {
+
+        $.post(url, $("#search-form").serialize(), function(response) {
             if (response.redirectUrl) {
                 window.location.href = response.redirectUrl;
                 $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
@@ -203,6 +208,7 @@ $(document).ready(function() {
                 $("#filename").html(response.error);
             }
             $("#filename").removeClass("loading");
+            $("#tombol-unduh").removeAttr('disabled');
         });
         return false;
     });

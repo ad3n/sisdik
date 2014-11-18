@@ -258,10 +258,11 @@ class KehadiranSiswaLaporanController extends Controller
         }
 
         $siswaKelas = $em->createQueryBuilder()
-            ->select('siswaKelas, siswa')
+            ->select('siswaKelas, siswa, orangtuaWali')
             ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
             ->leftJoin('siswaKelas.tahunAkademik', 'tahunAkademik')
             ->leftJoin('siswaKelas.siswa', 'siswa')
+            ->leftJoin('siswa.orangtuaWali', 'orangtuaWali')
             ->where('tahunAkademik.sekolah = :sekolah')
             ->andWhere('siswaKelas.tahunAkademik = :tahunAkademik')
             ->setParameter('sekolah', $sekolah)
@@ -275,7 +276,6 @@ class KehadiranSiswaLaporanController extends Controller
             ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiranSiswa')
             ->where('kehadiranSiswa.sekolah = :sekolah')
             ->andWhere('kehadiranSiswa.tahunAkademik = :tahunAkademik')
-            ->andWhere('kehadiranSiswa.siswa = :siswa')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunAkademik', $tahunAkademik)
         ;
@@ -288,6 +288,11 @@ class KehadiranSiswaLaporanController extends Controller
             if ($searchdata['kelas'] instanceof Kelas) {
                 $siswaKelas
                     ->andWhere('siswaKelas.kelas = :kelas')
+                    ->setParameter('kelas', $searchdata['kelas'])
+                ;
+
+                $kehadiranSiswa
+                    ->andWhere('kehadiranSiswa.kelas = :kelas')
                     ->setParameter('kelas', $searchdata['kelas'])
                 ;
             }
@@ -313,6 +318,21 @@ class KehadiranSiswaLaporanController extends Controller
                     ->setParameter('hinggaTanggal', $hariIni->format("Y-m-d"))
                 ;
             }
+
+            if ($searchdata['searchkey'] != '') {
+                $siswaKelas
+                    ->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem = :searchkey2")
+                    ->setParameter('searchkey', "%{$searchdata['searchkey']}%")
+                    ->setParameter('searchkey2', $searchdata['searchkey'])
+                ;
+            }
+
+            if ($searchdata['statusKehadiran'] != '') {
+                $kehadiranSiswa
+                    ->andWhere("kehadiranSiswa.statusKehadiran = :statusKehadiran")
+                    ->setParameter('statusKehadiran', $searchdata['statusKehadiran'])
+                ;
+            }
         } else {
             $return = [
                 "error" => $this->get('translator')->trans('parameter.pencarian.laporan.tidak.boleh.kosong'),
@@ -333,7 +353,10 @@ class KehadiranSiswaLaporanController extends Controller
             $tmpKehadiran = [];
             if ($siswaDiKelas instanceof SiswaKelas) {
                 $tmpKehadiran['siswa'] = $siswaDiKelas->getSiswa();
-                $kehadiranSiswa->setParameter('siswa', $siswaDiKelas->getSiswa());
+                $kehadiranSiswa
+                    ->andWhere('kehadiranSiswa.siswa = :siswa')
+                    ->setParameter('siswa', $siswaDiKelas->getSiswa())
+                ;
                 $kehadiranPerSiswa = $kehadiranSiswa->getQuery()->getResult();
 
                 foreach ($daftarStatusKehadiran as $key => $value) {
@@ -353,10 +376,6 @@ class KehadiranSiswaLaporanController extends Controller
                 $daftarKehadiran[] = $tmpKehadiran;
             }
         }
-
-        return [
-            'searchform' => $searchform->createView(),
-        ];
 
         $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
@@ -381,6 +400,7 @@ class KehadiranSiswaLaporanController extends Controller
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
                 $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:KehadiranSiswa:laporan.xml.twig", [
+                        'searchkey' => $searchdata['searchkey'],
                         'kelas' => $searchdata['kelas'],
                         'tahunAkademik' => $tahunAkademik,
                         'dariTanggal' => $searchdata['dariTanggal'],
