@@ -1,0 +1,235 @@
+{% from 'MopaBootstrapBundle::flash.html.twig' import session_flash %}
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{{ 'kehadiran.siswa.laporan'|trans({}, 'headings') }}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+.nav a:hover, .nav .active a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+.nav > li > a:hover, .nav > li.active > a:hover {
+    text-decoration: none;
+    background-color: yellow;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
+#filename {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
+.loading {
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
+.clearfix {
+    margin: 5px 0;
+}
+.grafik-container-total {
+    border: 1px solid #ddd;
+    padding: 5px;
+    margin: 10px auto;
+    width: 430px;
+    height: 215px;
+}
+#grafik-kehadiran-siswa-total {
+    margin: 0 auto;
+    width: 400px;
+    height: 200px;
+}
+#grafik-kehadiran-siswa-total .legendLabel {
+    padding: 4px;
+}
+@media screen and (max-width: 320px) {
+    .grafik-container-total {
+        width: 280px;
+        height: 150px;
+    }
+    #grafik-kehadiran-siswa-total {
+        width: 260px;
+        height: 130px;
+    }
+}
+
+</style>
+
+<div class="filter-section">
+    <form id="search-form" method="get" action="{{ path('laporan-kehadiran-siswa_lihat') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon log">{{ 'label.lihat.laporan'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('laporan-kehadiran-siswa') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+    <div class="clearfix"></div>
+    <div id="filename"></div>
+</div>
+
+{% if kehadiranSiswa is defined %}
+    {% if dariTanggal %}
+        {% set infoTanggal = dariTanggal|date('d/m/Y') ~ ' — ' ~ hinggaTanggal|date('d/m/Y') %}
+    {% else %}
+        {% set infoTanggal = hinggaTanggal|date('d/m/Y') %}
+    {% endif %}
+    {% if kehadiranSiswa|length == 0 %}
+        <p class="shortinfo">{{ 'tidak.ada.data.laporan.kehadiran.siswa'|trans({'%tanggal%': infoTanggal}) }}</p>
+    {% else %}
+    <h4 style="text-align: center;">
+        {{ 'rekap.kehadiran.siswa'|trans({'%kelas%': kelas.nama, '%tanggal%': infoTanggal}, 'headings')|raw }}
+        {% if searchkey != "" %}<br>{{ 'kata.pencarian'|trans }}: {{ searchkey }}{% endif %}
+    </h4>
+    <div class="grafik-container-total">
+        <div id="grafik-kehadiran-siswa-total"></div>
+    </div>
+    <table class="table zebra-striped bordered-table" id="no-more-tables">
+        <thead>
+            <tr>
+                <th>{{ 'label.nama.siswa'|trans }}</th>
+                {% for key,value in daftarStatusKehadiran %}
+                    {% set status = key %}
+                <th>{{ value|trans }}</th>
+                {% endfor %}
+                <th>{{ 'label.jumlah.hadir'|trans }}</th>
+                <th>{{ 'label.jumlah.tidak.hadir'|trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for kehadiran in kehadiranSiswa %}
+            <tr>
+                <td data-title="{{ 'label.nama.siswa'|trans }}">
+                    {{ kehadiran.siswa.namaLengkap }}
+                    <br><i class="fa fa-info-circle fa-fw"></i> <span class="info-pelengkap-siswa info-id">{{ kehadiran.siswa.nomorIndukSistem }}</span>{% if kehadiran.siswa.nomorInduk %}<span class="info-pelengkap-siswa">, {{ kehadiran.siswa.nomorInduk }}</span>{% endif %}
+                    <br><i class="fa fa-phone fa-fw"></i> <span class="info-pelengkap-siswa">{% if kehadiran.siswa.orangtuaWaliAktif != null %}{{ kehadiran.siswa.orangtuaWaliAktif.nama }} &raquo; {{ kehadiran.siswa.orangtuaWaliAktif.ponsel }} {% endif %}</span>
+                </td>
+                {% for key,value in daftarStatusKehadiran %}
+                    {% set status = key %}
+                <td data-title="{{ value|trans }}">{{ kehadiran[status] }}</td>
+                {% endfor %}
+                <td data-title="{{ 'label.jumlah.hadir'|trans }}">{{ kehadiran.jumlahHadir }}</td>
+                <td data-title="{{ 'label.jumlah.tidak.hadir'|trans }}">{{ kehadiran.jumlahTidakHadir }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+{% endif %}
+{% endblock content %}
+
+{% block javascripts_custom %}
+{% javascripts
+    '@LanggasSisdikBundle/Resources/public/js/libraries/flot/jquery.flot.min.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/flot/jquery.flot.pie.min.js'
+%}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script language="javascript" type="text/javascript">
+function getLabelColor(key) {
+    switch (key) {
+        case 'a-hadir-tepat':
+            return 'green';
+        case 'b-hadir-telat':
+            return 'magenta';
+        case 'c-alpa':
+            return 'red';
+        case 'd-izin':
+            return 'purple';
+        case 'e-sakit':
+            return 'orange';
+        default:
+            return 'red';
+    }
+}
+
+$(document).ready(function() {
+    $('.date1').datepicker({
+        dateFormat: 'dd/mm/yy'
+    });
+    $('.date2').datepicker({
+        dateFormat: 'dd/mm/yy'
+    });
+
+    var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+
+    $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".pilih-kelas").html(options);
+    });
+
+    $(".pilih-tingkat").change(function() {
+        var kelasval = $(".pilih-kelas").val();
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), kelas: kelasval}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
+    });
+
+    $("#export-form").submit(function() {
+        var url = $(this).attr("action");
+        $("#filename").html("");
+        $("#filename").addClass("loading");
+        $.post(url, $(this).serialize(), function(response) {
+            if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            } else {
+                $("#filename").html(response.error);
+            }
+            $("#filename").removeClass("loading");
+        });
+        return false;
+    });
+
+{% if kehadiranSiswa is defined and kehadiranSiswaTotal|length > 0 %}
+    var dataGrafikTotal = [];
+    var jumlahStatusKehadiran = {{ daftarStatusKehadiran|length }};
+
+    {% for key,value in daftarStatusKehadiran %}
+    dataGrafikTotal.push({
+        label: "{{ value|trans }} ({{ kehadiranSiswaTotal[key] }})",
+        data: {{ kehadiranSiswaTotal[key] }},
+        color: getLabelColor("{{ key }}")
+    });
+    {% endfor %}
+
+    $.plot($("#grafik-kehadiran-siswa-total"), dataGrafikTotal, {
+        series: {
+            pie: {
+                show: true
+            }
+        },
+        grid: {
+            hoverable: true
+        }
+    });
+{% endif %}
+});
+</script>
+{% endblock javascripts_custom %}
