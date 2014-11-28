@@ -2,9 +2,11 @@
 
 namespace Langgas\SisdikBundle\Controller\Dashboard;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\JadwalKepulangan;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,6 +24,7 @@ class GrafikKehadiranSiswaController extends Controller
     {
         $sekolah = $this->getSekolah();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademikAktif = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
@@ -37,6 +40,7 @@ class GrafikKehadiranSiswaController extends Controller
         $tanggalTampil->modify('-1 day');
 
         $daftarStatusKehadiran = JadwalKehadiran::getDaftarStatusKehadiran();
+        $daftarStatusKepulangan = JadwalKepulangan::getDaftarStatusKepulangan();
 
         $daftarTingkat = $em->getRepository('LanggasSisdikBundle:Tingkat')
             ->findBy([
@@ -57,7 +61,9 @@ class GrafikKehadiranSiswaController extends Controller
         ;
 
         $kehadiranSiswaTotal = null;
+        $kepulanganSiswaTotal = null;
         $kehadiran = [];
+        $kepulangan = [];
         if (is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan) {
             foreach ($daftarStatusKehadiran as $key => $val) {
                 $result = $em->createQueryBuilder()
@@ -72,18 +78,44 @@ class GrafikKehadiranSiswaController extends Controller
                     ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                     ->setParameter('statusKehadiran', $key)
                     ->getQuery()
+                    ->useResultCache(true, 3600)
                     ->getSingleScalarResult()
                 ;
                 $kehadiran[$key] = $result;
+            }
+
+            foreach ($daftarStatusKepulangan as $key => $val) {
+                $result = $em->createQueryBuilder()
+                    ->select('COUNT(kepulanganSiswa.id)')
+                    ->from('LanggasSisdikBundle:KepulanganSiswa', 'kepulanganSiswa')
+                    ->where('kepulanganSiswa.sekolah = :sekolah')
+                    ->andWhere('kepulanganSiswa.tahunAkademik = :tahunAkademik')
+                    ->andWhere('kepulanganSiswa.tanggal = :tanggal')
+                    ->andWhere('kepulanganSiswa.statusKepulangan = :statusKepulangan')
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('tahunAkademik', $tahunAkademikAktif)
+                    ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
+                    ->setParameter('statusKepulangan', $key)
+                    ->getQuery()
+                    ->useResultCache(true, 3600)
+                    ->getSingleScalarResult()
+                ;
+                $kepulangan[$key] = $result;
             }
         } else {
             foreach ($daftarStatusKehadiran as $key => $val) {
                 $kehadiran[$key] = 0;
             }
+
+            foreach ($daftarStatusKepulangan as $key => $val) {
+                $kepulangan[$key] = 0;
+            }
         }
         $kehadiranSiswaTotal = $kehadiran;
+        $kepulanganSiswaTotal = $kepulangan;
 
         $kehadiranSiswaPerKelas = [];
+        $kepulanganSiswaPerKelas = [];
         foreach ($daftarTingkat as $tingkat) {
             $daftarKelas = $em->getRepository('LanggasSisdikBundle:Kelas')
                 ->findBy([
@@ -102,6 +134,7 @@ class GrafikKehadiranSiswaController extends Controller
             foreach ($daftarKelas as $kelas) {
                 if ($kelas instanceof Kelas) {
                     $kehadiran = [];
+                    $kepulangan = [];
                     if (is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan) {
                         foreach ($daftarStatusKehadiran as $key => $val) {
                             $result = $em->createQueryBuilder()
@@ -118,16 +151,43 @@ class GrafikKehadiranSiswaController extends Controller
                                 ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                                 ->setParameter('statusKehadiran', $key)
                                 ->getQuery()
+                                ->useResultCache(true, 3600)
                                 ->getSingleScalarResult()
                             ;
                             $kehadiran[$key] = $result;
+                        }
+
+                        foreach ($daftarStatusKepulangan as $key => $val) {
+                            $result = $em->createQueryBuilder()
+                                ->select('COUNT(kepulanganSiswa.id)')
+                                ->from('LanggasSisdikBundle:KepulanganSiswa', 'kepulanganSiswa')
+                                ->where('kepulanganSiswa.sekolah = :sekolah')
+                                ->andWhere('kepulanganSiswa.tahunAkademik = :tahunAkademik')
+                                ->andWhere('kepulanganSiswa.kelas = :kelas')
+                                ->andWhere('kepulanganSiswa.tanggal = :tanggal')
+                                ->andWhere('kepulanganSiswa.statusKepulangan = :statusKepulangan')
+                                ->setParameter('sekolah', $sekolah)
+                                ->setParameter('tahunAkademik', $tahunAkademikAktif)
+                                ->setParameter('kelas', $kelas)
+                                ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
+                                ->setParameter('statusKepulangan', $key)
+                                ->getQuery()
+                                ->useResultCache(true, 3600)
+                                ->getSingleScalarResult()
+                            ;
+                            $kepulangan[$key] = $result;
                         }
                     } else {
                         foreach ($daftarStatusKehadiran as $key => $val) {
                             $kehadiran[$key] = 0;
                         }
+
+                        foreach ($daftarStatusKepulangan as $key => $val) {
+                            $kepulangan[$key] = 0;
+                        }
                     }
                     $kehadiranSiswaPerKelas[$kelas->getId()] = $kehadiran;
+                    $kepulanganSiswaPerKelas[$kelas->getId()] = $kepulangan;
                 }
             }
         }
@@ -141,10 +201,13 @@ class GrafikKehadiranSiswaController extends Controller
             'tanggalSebelumnya' => $tanggalSebelumnya,
             'tanggalBerikutnya' => $tanggalBerikutnya,
             'daftarStatusKehadiran' => $daftarStatusKehadiran,
+            'daftarStatusKepulangan' => $daftarStatusKepulangan,
             'daftarTingkat' => $daftarTingkat,
             'daftarKelasPerTingkat' => $daftarKelasPerTingkat,
             'kehadiranSiswaTotal' => $kehadiranSiswaTotal,
+            'kepulanganSiswaTotal' => $kepulanganSiswaTotal,
             'kehadiranSiswaPerKelas' => $kehadiranSiswaPerKelas,
+            'kepulanganSiswaPerKelas' => $kepulanganSiswaPerKelas,
             'searchform' => $searchform->createView(),
         ];
     }

@@ -12,34 +12,42 @@ h3 {
     padding: 0;
     text-align: center;
 }
-.grafik-container-total {
+.info-kehadiran-kelas {
+    display: inline-block;
+}
+.hari {
+    margin: 0 2em;
+}
+#grafik-container-total {
     border: 1px solid #ddd;
     padding: 5px;
     margin: 0 auto;
     width: 430px;
     height: 215px;
 }
-#grafik-kehadiran-siswa-total {
+.grafik-total-slides {
+    display: none
+}
+#grafik-kehadiran-siswa-total,
+#grafik-kepulangan-siswa-total {
     margin: 0 auto;
     width: 400px;
     height: 200px;
 }
-#grafik-kehadiran-siswa-total .legendLabel {
+#grafik-kehadiran-siswa-total .legendLabel,
+#grafik-kepulangan-siswa-total .legendLabel {
     padding: 4px;
 }
 @media screen and (max-width: 320px) {
-    .grafik-container-total {
+    #grafik-container-total {
         width: 280px;
         height: 150px;
     }
-    #grafik-kehadiran-siswa-total {
+    #grafik-kehadiran-siswa-total,
+    #grafik-kepulangan-siswa-total {
         width: 260px;
         height: 130px;
     }
-}
-
-.info-kehadiran-kelas {
-    display: inline-block;
 }
 .grafik-container-perkelas {
     border: 1px solid #ddd;
@@ -48,17 +56,55 @@ h3 {
     height: 110px;
     margin-right: 5px;
 }
-.grafik-kehadiran-siswa-perkelas {
+.grafik-kehadiran-siswa-perkelas,
+.grafik-kepulangan-siswa-perkelas {
     width: 200px;
     height: 95px;
 }
-.grafik-kehadiran-siswa-perkelas .legendLabel {
+.grafik-kehadiran-siswa-perkelas .legendLabel,
+.grafik-kepulangan-siswa-perkelas .legendLabel {
     padding: 2px;
 }
-.link-info-tabulasi {
+.grafik-total-slides a:link,
+.grafik-total-slides a:visited {
+    color: #333;
 }
-.hari {
-    margin: 0 2em;
+.grafik-total-slides .slidesjs-navigation {
+    margin-top:3px;
+}
+.slidesjs-pagination {
+    margin: 6px 0 0;
+    float: right;
+    list-style: none;
+}
+.slidesjs-pagination li {
+    float: left;
+    margin: 0 3px;
+    cursor: pointer;
+}
+.slidesjs-pagination li a {
+    background-color: transparent;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px black inset;
+    transition: background 0.3s ease 0s;
+    display: block;
+    float: left;
+    height: 0;
+    overflow: hidden;
+    padding-top: 10px;
+    width: 10px;
+}
+.slidesjs-pagination li a.active,
+.slidesjs-pagination li a:hover.active {
+    background-color: #000;
+}
+.slidesjs-pagination li a:hover {
+}
+.grafik-total-slides a:link,
+.grafik-total-slides a:visited {
+}
+.grafik-total-slides a:hover,
+.grafik-total-slides a:active {
 }
 </style>
 
@@ -70,8 +116,11 @@ h3 {
 </h3>
 
 <h4 style="text-align: center;">{{ 'informasi.kehadiran.siswa.total'|trans({}, 'headings')|desc("Informasi Kehadiran Total") }}</h4>
-<div class="grafik-container-total">
-    <div id="grafik-kehadiran-siswa-total"></div>
+<div id="grafik-container-total">
+    <div class="grafik-total-slides">
+        <div id="grafik-kehadiran-siswa-total"></div>
+        <div id="grafik-kepulangan-siswa-total"></div>
+    </div>
 </div>
 
 {% for key,daftarKelas in daftarKelasPerTingkat %}
@@ -82,16 +131,19 @@ h3 {
         <div class="info-kehadiran-kelas">
             <div class="nama-kelas">{{ kelas.nama }}</div>
             <div class="grafik-container-perkelas">
-                <div class="grafik-kehadiran-siswa-perkelas" id="grafik-kehadiran-siswa-perkelas-{{ kelas.id }}"></div>
+                <div class="grafik-perkelas-slides">
+                    <div class="grafik-kehadiran-siswa-perkelas" id="grafik-kehadiran-siswa-perkelas-{{ kelas.id }}"></div>
+                    <div class="grafik-kepulangan-siswa-perkelas" id="grafik-kepulangan-siswa-perkelas-{{ kelas.id }}"></div>
+                </div>
             </div>
-            <span class="link-info-tabulasi"><a href="{{ path('kehadiran-siswa_edit') }}" class="lihat-tabulasi" data-tingkat="{{ kelas.tingkat.id }}" data-kelas="{{ kelas.id }}">lihat tabulasi</a></span>
+            <span class="link-info-tabulasi"><a href="{{ path('kehadiran-siswa_edit') }}" class="lihat-tabulasi" data-tingkat="{{ kelas.tingkat.id }}" data-kelas="{{ kelas.id }}"><i class="fa fa-list-ul fa-fw"></i></a></span>
         </div>
     {% endfor %}
     <div class="clearfix"></div>
 {% endfor %}
 
 <div style="display: none;">
-    <form id="form-kehadiran" method="get" action="{{ path('kehadiran-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline">
+    <form id="form-kehadiran" method="get" action="{{ path('kehadiran-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline" target="_blank">
         {{ form_widget(searchform) }}
     </form>
 </div>
@@ -102,6 +154,7 @@ h3 {
 {% javascripts
     '@LanggasSisdikBundle/Resources/public/js/libraries/flot/jquery.flot.min.js'
     '@LanggasSisdikBundle/Resources/public/js/libraries/flot/jquery.flot.pie.min.js'
+    '@LanggasSisdikBundle/Resources/public/js/libraries/slidejs/jquery.slides.min.js'
 %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
@@ -119,63 +172,135 @@ function getLabelColor(key) {
             return 'purple';
         case 'e-sakit':
             return 'orange';
+        case 'a-pulang-tercatat':
+            return '#86D3FF';
+        case 'b-pulang-tak-tercatat':
+            return '#0040FF';
         default:
             return 'red';
     }
 }
 
+function labelFormatter(label, series) {
+    return "<div style='font-size:11px; text-align:center; padding:2px; color:#333;'>" + label + "<br/></div>";
+}
+
 $(function () {
-    var dataGrafikTotal = [];
+    var dataGrafikTotalKehadiran = [];
+    var dataGrafikTotalKepulangan = [];
     var jumlahStatusKehadiran = {{ daftarStatusKehadiran|length }};
+    var jumlahStatusKepulangan = {{ daftarStatusKepulangan|length }};
 
     {% for key,value in daftarStatusKehadiran %}
-    dataGrafikTotal.push({
+    dataGrafikTotalKehadiran.push({
         label: "{{ value|trans }} ({{ kehadiranSiswaTotal[key] }})",
         data: {{ kehadiranSiswaTotal[key] }},
         color: getLabelColor("{{ key }}")
     });
     {% endfor %}
 
-    $.plot($("#grafik-kehadiran-siswa-total"), dataGrafikTotal, {
+    {% for key,value in daftarStatusKepulangan %}
+    dataGrafikTotalKepulangan.push({
+        label: "{{ value|trans }} ({{ kepulanganSiswaTotal[key] }})",
+        data: {{ kepulanganSiswaTotal[key] }},
+        color: getLabelColor("{{ key }}")
+    });
+    {% endfor %}
+
+    $.plot($("#grafik-kehadiran-siswa-total"), dataGrafikTotalKehadiran, {
+        series: {
+            pie: {
+                show: true
+            }
+        }
+    });
+
+    $.plot($("#grafik-kepulangan-siswa-total"), dataGrafikTotalKepulangan, {
         series: {
             pie: {
                 show: true
             }
         },
-        grid: {
-            hoverable: true
+        legend: {
+            show: true
         }
     });
 
-    {% for daftarKelas in daftarKelasPerTingkat %}
-        {% for kelas in daftarKelas %}
-        var dataGrafikKelas_{{ kelas.id }} = [];
-            {% for key,value in daftarStatusKehadiran %}
-                dataGrafikKelas_{{ kelas.id }}.push({
-                    label: "{{ value|trans }} ({{ kehadiranSiswaPerKelas[kelas.id][key] }})",
-                    data: {{ kehadiranSiswaPerKelas[kelas.id][key] }},
-                    color: getLabelColor("{{ key }}")
-                });
-            {% endfor %}
+{% for daftarKelas in daftarKelasPerTingkat %}
+    {% for kelas in daftarKelas %}
 
-        $.plot($("#grafik-kehadiran-siswa-perkelas-{{ kelas.id }}"), dataGrafikKelas_{{ kelas.id }}, {
-            series: {
-                pie: {
-                    show: true
-                }
-            },
-            grid: {
-                hoverable: true
-            }
-        });
-        {% endfor %}
+    var dataGrafikKehadiranKelas_{{ kelas.id }} = [];
+    {% for key,value in daftarStatusKehadiran %}
+    dataGrafikKehadiranKelas_{{ kelas.id }}.push({
+        label: "{{ value|trans }} ({{ kehadiranSiswaPerKelas[kelas.id][key] }})",
+        data: {{ kehadiranSiswaPerKelas[kelas.id][key] }},
+        color: getLabelColor("{{ key }}")
+    });
     {% endfor %}
 
-    $(".lihat-tabulasi").click(function(){
+    var dataGrafikKepulanganKelas_{{ kelas.id }} = [];
+    {% for key,value in daftarStatusKepulangan %}
+    dataGrafikKepulanganKelas_{{ kelas.id }}.push({
+        label: "{{ value|trans }} ({{ kepulanganSiswaPerKelas[kelas.id][key] }})",
+        data: {{ kepulanganSiswaPerKelas[kelas.id][key] }},
+        color: getLabelColor("{{ key }}")
+    });
+    {% endfor %}
+
+    $.plot($("#grafik-kehadiran-siswa-perkelas-{{ kelas.id }}"), dataGrafikKehadiranKelas_{{ kelas.id }}, {
+        series: {
+            pie: {
+                show: true
+            }
+        }
+    });
+
+    $.plot($("#grafik-kepulangan-siswa-perkelas-{{ kelas.id }}"), dataGrafikKepulanganKelas_{{ kelas.id }}, {
+        series: {
+            pie: {
+                show: true,
+                radius: 1,
+                label: {
+                    show: true,
+                    radius: 3/4,
+                    formatter: labelFormatter,
+                    background: {
+                        color: "#ffffff",
+                        opacity: 0.5
+                    }
+                }
+            }
+        },
+        legend: {
+            show: false
+        }
+    });
+
+    {% endfor %}
+{% endfor %}
+
+    $(".lihat-tabulasi").click(function(e){
         $("#sisdik_kehadiransiswasearch_tingkat").val($(this).attr("data-tingkat"));
         $("#sisdik_kehadiransiswasearch_kelas").val($(this).attr("data-kelas"));
         $("#form-kehadiran").submit();
         return false;
+    });
+
+    $(".grafik-total-slides").slidesjs({
+        width: 430,
+        height: 215,
+        navigation: false
+    });
+
+    $(".grafik-perkelas-slides").slidesjs({
+        width: 220,
+        height: 110,
+        navigation: false
+    });
+
+    $('ol li').bind('click', function(){
+        $(".grafik-total-slides").removeClass("active");
+        $(this).addClass("active");
     });
 });
 </script>
