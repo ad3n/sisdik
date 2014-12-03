@@ -111,9 +111,9 @@ label {
 
 <h3>{{ 'informasi.kehadiran.siswa'|trans({}, 'headings')|desc("Informasi Kehadiran") }}</h3>
 <h3 style="margin-top: 0;">
-    <a href="{{ path('siswa__kehadiran', {'year': tanggalTerpilih|date('Y'), 'month': bulanSebelumnya}) }}"><i class="fa fa-arrow-circle-left"></i></a>
+    <a href="{{ path('siswa__kehadiran', {'year': tahunBulanSebelumnya, 'month': bulanSebelumnya}) }}"><i class="fa fa-arrow-circle-left"></i></a>
     <span class="bulan">{{ calendar.months[calendar.month] }}, {{ calendar.year }}</span>
-    <a href="{{ path('siswa__kehadiran', {'year': tanggalTerpilih|date('Y'), 'month': bulanBerikutnya}) }}"><i class="fa fa-arrow-circle-right"></i></a>
+    <a href="{{ path('siswa__kehadiran', {'year': tahunBulanBerikutnya, 'month': bulanBerikutnya}) }}"><i class="fa fa-arrow-circle-right"></i></a>
 </h3>
 <table class="bordered-table" id="no-more-tables">
     <thead>

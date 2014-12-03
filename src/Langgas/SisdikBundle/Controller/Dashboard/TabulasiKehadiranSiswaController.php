@@ -76,8 +76,13 @@ class TabulasiKehadiranSiswaController extends Controller
             ->getResult()
         ;
 
-        $bulanSebelumnya = $tanggalTerpilih->modify('first day of -1 month')->format('m');
-        $bulanBerikutnya = $tanggalTerpilih->modify('first day of +2 month')->format('m');
+        $tanggalTerpilih->modify('first day of -1 month');
+        $tahunBulanSebelumnya = $tanggalTerpilih->format('Y');
+        $bulanSebelumnya = $tanggalTerpilih->format('m');
+
+        $tanggalTerpilih->modify('first day of +2 month');
+        $tahunBulanBerikutnya = $tanggalTerpilih->format('Y');
+        $bulanBerikutnya = $tanggalTerpilih->format('m');
 
         return [
             'tahunAkademik' => $tahunAkademik,
@@ -87,7 +92,9 @@ class TabulasiKehadiranSiswaController extends Controller
             'daftarStatusKehadiran' => JadwalKehadiran::getDaftarStatusKehadiran(),
             'calendar' => $calendar,
             'tanggalTerpilih' => $tanggalTerpilih,
+            'tahunBulanSebelumnya' => $tahunBulanSebelumnya,
             'bulanSebelumnya' => $bulanSebelumnya,
+            'tahunBulanBerikutnya' => $tahunBulanBerikutnya,
             'bulanBerikutnya' => $bulanBerikutnya,
         ];
     }
