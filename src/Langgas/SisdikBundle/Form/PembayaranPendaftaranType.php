@@ -6,7 +6,6 @@ use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -14,33 +13,15 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class PembayaranPendaftaranType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
-            ->add('siswa', new EntityHiddenType($em), [
+            ->add('siswa', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Siswa',
             ])
             ->add('daftarBiayaPendaftaran', 'collection', [
-                'type' => new DaftarBiayaPendaftaranType($this->container),
+                'type' => 'sisdik_daftarbiayapendaftaran',
                 'required' => true,
                 'allow_add' => true,
                 'allow_delete' => false,
@@ -93,7 +74,7 @@ class PembayaranPendaftaranType extends AbstractType
                 'label' => 'label.discount.amount',
             ])
             ->add('transaksiPembayaranPendaftaran', 'collection', [
-                'type' => new TransaksiPembayaranPendaftaranType($this->container),
+                'type' => 'sisdik_transaksipembayaranpendaftaran',
                 'by_reference' => false,
                 'attr' => [
                     'class' => 'large',
@@ -129,6 +110,6 @@ class PembayaranPendaftaranType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_pembayaranpendaftarantype';
+        return 'sisdik_pembayaranpendaftaran';
     }
 }

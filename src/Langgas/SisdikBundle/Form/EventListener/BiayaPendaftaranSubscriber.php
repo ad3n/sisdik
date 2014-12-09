@@ -2,7 +2,7 @@
 
 namespace Langgas\SisdikBundle\Form\EventListener;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,16 +15,16 @@ use Symfony\Component\Form\FormEvents;
 class BiayaPendaftaranSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ObjectManager
+     * @var EntityManager
      */
-    private $objectManager;
+    private $entityManager;
 
     /**
-     * @param ObjectManager $objectManager
+     * @param EntityManager $entityManager
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -74,7 +74,7 @@ class BiayaPendaftaranSubscriber implements EventSubscriberInterface
         $data = $event->getData();
 
         $biayaPendaftaran = $this
-            ->objectManager
+            ->entityManager
             ->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
             ->find($data['biayaPendaftaran'])
         ;
@@ -99,5 +99,4 @@ class BiayaPendaftaranSubscriber implements EventSubscriberInterface
             ;
         }
     }
-
 }

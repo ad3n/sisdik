@@ -2,11 +2,15 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -14,32 +18,50 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class TransaksiPembayaranPendaftaranType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return User
+     */
+    private function getUser()
+    {
+        return $this->securityContext->getToken()->getUser();
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
+        $sekolah = $this->getSekolah();
+        $user = $this->getUser();
 
         $builder
-            ->add('sekolah', new EntityHiddenType($em), [
+            ->add('sekolah', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Sekolah',
                 'data' => $sekolah->getId(),
             ])
-            ->add('dibuatOleh', new EntityHiddenType($em), [
+            ->add('dibuatOleh', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:User',
                 'data' => $user->getId(),
@@ -77,6 +99,6 @@ class TransaksiPembayaranPendaftaranType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_transaksipembayaranpendaftarantype';
+        return 'sisdik_transaksipembayaranpendaftaran';
     }
 }

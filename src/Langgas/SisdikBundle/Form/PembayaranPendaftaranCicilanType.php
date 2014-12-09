@@ -2,11 +2,9 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -14,26 +12,11 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class PembayaranPendaftaranCicilanType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
         $builder
             ->add('transaksiPembayaranPendaftaran', 'collection', [
-                'type' => new TransaksiPembayaranPendaftaranType($this->container),
+                'type' => 'sisdik_transaksipembayaranpendaftaran',
                 'by_reference' => false,
                 'attr' => [
                     'class' => 'large',
@@ -61,6 +44,6 @@ class PembayaranPendaftaranCicilanType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_pembayaranpendaftarantype';
+        return 'sisdik_pembayaranpendaftarancicilan';
     }
 }
