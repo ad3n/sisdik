@@ -57,8 +57,10 @@ class SiswaController extends Controller
         $qbtotal = $em->createQueryBuilder()
             ->select('COUNT(siswa.id)')
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
-            ->andWhere('siswa.sekolah = :sekolah')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.calonSiswa = :calon')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('calon', false)
         ;
         $siswaTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
@@ -169,8 +171,8 @@ class SiswaController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new Siswa;
-        $orangtuaWali = new OrangtuaWali;
+        $entity = new Siswa();
+        $orangtuaWali = new OrangtuaWali();
         $entity->getOrangtuaWali()->add($orangtuaWali);
 
         $form = $this->createForm('sisdik_siswa', $entity, ['mode' => 'new']);
@@ -194,7 +196,7 @@ class SiswaController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $entity = new Siswa;
+        $entity = new Siswa();
         $form = $this->createForm('sisdik_siswa', $entity, ['mode' => 'new']);
 
         $form->submit($this->getRequest());
@@ -648,7 +650,7 @@ class SiswaController extends Controller
         $filesource = $filenameoutput . $extensionsource;
         $filetarget = $filenameoutput . $extensiontarget;
 
-        $fs = new Filesystem;
+        $fs = new Filesystem();
         if (!$fs->exists($outputdir . $sekolah->getId())) {
             $fs->mkdir($outputdir . $sekolah->getId());
         }
@@ -658,7 +660,7 @@ class SiswaController extends Controller
 
         if ($outputfiletype == 'ods') {
             if (copy($documentbase, $documenttarget) === TRUE) {
-                $ziparchive = new \ZipArchive;
+                $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
                 $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
                 $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
@@ -724,7 +726,7 @@ class SiswaController extends Controller
             $filesource = $filenameoutput . $extensionsource;
             $filetarget = $filenameoutput . $extensiontarget;
 
-            $fs = new Filesystem;
+            $fs = new Filesystem();
             if (!$fs->exists($outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $formdata['tahun']->getTahun())) {
                 $fs->mkdir($outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $formdata['tahun']->getTahun());
             }
@@ -746,7 +748,7 @@ class SiswaController extends Controller
 
             if ($outputfiletype == 'ods') {
                 if (copy($documentbase, $documenttarget) === TRUE) {
-                    $ziparchive = new \ZipArchive;
+                    $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
                     $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
                     $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
@@ -838,7 +840,7 @@ class SiswaController extends Controller
         }
         if (!$atleastone) return;
 
-        $entity = new Siswa;
+        $entity = new Siswa();
 
         $reflectionClass = new \ReflectionClass('Langgas\SisdikBundle\Entity\Siswa');
         $entityFields = [];
@@ -846,8 +848,8 @@ class SiswaController extends Controller
             $entityFields[] = $property->getName();
         }
 
-        $orangtuaWali = new ArrayCollection;
-        $ortu = new OrangtuaWali;
+        $orangtuaWali = new ArrayCollection();
+        $ortu = new OrangtuaWali();
         $sekolahAsal = null;
 
         foreach ($fieldnames as $keyfield => $valuefield) {
@@ -882,7 +884,7 @@ class SiswaController extends Controller
                             if (count($resultSekolahAsal) >= 1) {
                                 $sekolahAsal = $resultSekolahAsal[0];
                             } else {
-                                $sekolahAsal = new SekolahAsal;
+                                $sekolahAsal = new SekolahAsal();
                                 $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
                                 $sekolahAsal->setSekolah($sekolah);
                             }
@@ -1011,7 +1013,7 @@ class SiswaController extends Controller
                                         if (count($resultSekolahAsal) >= 1) {
                                             $sekolahAsal = $resultSekolahAsal[0];
                                         } else {
-                                            $sekolahAsal = new SekolahAsal;
+                                            $sekolahAsal = new SekolahAsal();
                                             $sekolahAsal->setSekolah($entity->getSekolah());
                                             $sekolahAsal->{'set' . ucfirst($childfield)}($value);
                                         }
