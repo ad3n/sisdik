@@ -26,6 +26,7 @@ class TransaksiPembayaranPendaftaran
     /**
      * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */

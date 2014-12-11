@@ -52,6 +52,8 @@ class PembayaranPendaftaran
 
     /**
      * @ORM\Column(name="persen_potongan", type="smallint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
+     * @Assert\LessThanOrEqual(value=100)
      *
      * @var integer
      */

@@ -389,10 +389,26 @@ $(document).ready(function() {
     });
     // end of find and display discounted fee
 
+    $(".percentage-discount").on('keyup', function (e) {
+        if (e.which === 46 || e.which === 44) return false;
+    }).on('input', function () {
+        var self = this;
+        setTimeout(function () {
+            if (self.value.indexOf('.') != -1) self.value = parseInt(self.value, 10);
+            if (self.value.indexOf(',') != -1) self.value = parseInt(self.value, 10);
+        }, 0);
+    });
+
     $("#pay-form").submit(function() {
         $(this).find(':submit').attr('disabled','disabled');
 
         var payamount = parseInt($(".pay-amount").val().split('.').join(''));
+
+        if (payamount < 0) {
+            alert("{{ 'info.singkat.bayar.negatif.tak.dibolehkan'|trans }}");
+            $(this).find(':submit').removeAttr('disabled');
+            return false;
+        }
 
         total = 0;
         $(".fee-item").each(getTotalFee);
