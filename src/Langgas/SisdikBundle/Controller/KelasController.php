@@ -1,77 +1,82 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
+use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Langgas\SisdikBundle\Entity\Kelas;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Kelas;
-use Langgas\SisdikBundle\Form\KelasType;
-use Langgas\SisdikBundle\Form\KelasSearchType;
-use Langgas\SisdikBundle\Form\KelasDuplicateType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Kelas controller.
- *
- * @Route("/data/class")
+ * @Route("/kelas")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_GURU', 'ROLE_GURU_PIKET')")
  */
 class KelasController extends Controller
 {
     /**
-     * Lists all Kelas entities.
-     *
      * @Route("/", name="data_class")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
+
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new KelasSearchType($this->container));
+        $searchform = $this->createForm('sisdik_carikelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')->leftJoin('t.tahunAkademik', 't3')
-                ->where('t.sekolah = :sekolah')->orderBy('t3.urutan DESC, t2.urutan ASC, t.urutan', 'ASC')
-                ->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
+            ->leftJoin('kelas.tingkat', 'tingkat')
+            ->leftJoin('kelas.tahunAkademik', 'tahunAkademik')
+            ->where('kelas.sekolah = :sekolah')
+            ->orderBy('tahunAkademik.urutan', 'DESC')
+            ->addOrderBy('tingkat.urutan', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahunAkademik'] != '') {
-                $querybuilder->andWhere('t.tahunAkademik = :tahunAkademik');
-                $querybuilder->setParameter('tahunAkademik', $searchdata['tahunAkademik']->getId());
+            if ($searchdata['tahunAkademik'] instanceof TahunAkademik) {
+                $querybuilder
+                    ->andWhere('kelas.tahunAkademik = :tahunAkademik')
+                    ->setParameter('tahunAkademik', $searchdata['tahunAkademik'])
+                ;
             }
         }
 
-        $duplicateform = $this->createForm(new KelasDuplicateType($this->container));
+        $duplicateform = $this->createForm('sisdik_duplikatkelas');
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-                'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'duplicateform' => $duplicateform->createView()
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'duplicateform' => $duplicateform->createView(),
+        ];
     }
 
     /**
-     * Finds and displays a Kelas entity.
-     *
      * @Route("/{id}/show", name="data_class_show")
      * @Template()
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -84,42 +89,40 @@ class KelasController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new Kelas entity.
-     *
      * @Route("/new", name="data_class_new")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
         $entity = new Kelas();
-        $form = $this->createForm(new KelasType($this->container), $entity);
+        $form = $this->createForm('sisdik_kelas', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new Kelas entity.
-     *
      * @Route("/create", name="data_class_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Kelas:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
         $this->setCurrentMenu();
 
         $entity = new Kelas();
-        $form = $this->createForm(new KelasType($this->container), $entity);
+        $form = $this->createForm('sisdik_kelas', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -129,41 +132,36 @@ class KelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.class.inserted',
-                                                array(
-                                                        '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahunAkademik()->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.class.inserted', [
+                        '%class%' => $entity->getNama(),
+                        '%year%' => $entity->getTahunAkademik()->getNama(),
+                    ]))
+                ;
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('data_class_show',
-                                                array(
-                                                    'id' => $entity->getId()
-                                                )));
+                return $this->redirect($this->generateUrl('data_class_show', [
+                    'id' => $entity->getId(),
+                ]));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.class.year.school');
                 throw new DBALException($exception);
             }
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing Kelas entity.
-     *
      * @Route("/{id}/edit", name="data_class_edit")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -174,24 +172,23 @@ class KelasController extends Controller
             throw $this->createNotFoundException('Entity Kelas tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new KelasType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_kelas', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing Kelas entity.
-     *
      * @Route("/{id}/update", name="data_class_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Kelas:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -203,57 +200,51 @@ class KelasController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new KelasType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_kelas', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.class.updated',
-                                                array(
-                                                        '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahunAkademik()->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.class.updated', [
+                        '%class%' => $entity->getNama(),
+                        '%year%' => $entity->getTahunAkademik()->getNama(),
+                    ]))
+                ;
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('data_class_edit',
-                                                array(
-                                                    'id' => $id, 'page' => $this->getRequest()->get('page')
-                                                )));
+                return $this->redirect($this->generateUrl('data_class_edit', [
+                    'id' => $id,
+                ]));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.class.year.school');
                 throw new DBALException($exception);
             }
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a Kelas entity.
-     *
      * @Route("/{id}/delete", name="data_class_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction(Request $request, $id)
+    {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $entity = $em->getRepository('LanggasSisdikBundle:Kelas')->find($id);
 
             if (!$entity) {
@@ -264,43 +255,40 @@ class KelasController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.class.deleted',
-                                                array(
-                                                        '%class%' => $entity->getNama(),
-                                                        '%year%' => $entity->getTahunAkademik()->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.class.deleted', [
+                        '%class%' => $entity->getNama(),
+                        '%year%' => $entity->getTahunAkademik()->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.data.class.fail.delete'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.data.class.fail.delete'))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('data_class',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('data_class'));
     }
 
     /**
-     * Duplicates classes from one academic year to another
+     * Menggandakan kelas-kelas dari satu tahun akademik ke yg lainnya
      *
      * @Route("/duplicate", name="data_class_duplicate")
      * @Method("POST")
      */
-    public function duplicateClassAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function duplicateClassAction(Request $request)
+    {
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new KelasDuplicateType($this->container));
+        $form = $this->createForm('sisdik_duplikatkelas');
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -313,10 +301,10 @@ class KelasController extends Controller
 
             // get all classes from the source academic year
             $entities = $em->getRepository('LanggasSisdikBundle:Kelas')
-                    ->findBy(
-                            array(
-                                'tahunAkademik' => $tahunAkademikSource->getId()
-                            ));
+                ->findBy([
+                    'tahunAkademik' => $tahunAkademikSource,
+                ])
+            ;
 
             foreach ($entities as $entity) {
                 $kelas = new Kelas();
@@ -336,64 +324,72 @@ class KelasController extends Controller
                 }
             }
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.data.class.duplicated',
-                                            array(
-                                                    '%yearfrom%' => $tahunAkademikSource->getNama(),
-                                                    '%yearto%' => $tahunAkademikTarget->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.data.class.duplicated', [
+                    '%yearfrom%' => $tahunAkademikSource->getNama(),
+                    '%yearto%' => $tahunAkademikTarget->getNama(),
+                ]))
+            ;
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('success', $this->get('translator')->trans('flash.data.class.fail.duplicate'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.data.class.fail.duplicate'))
+            ;
         }
 
         return $this->redirect($this->generateUrl('data_class'));
     }
 
     /**
-     * Update class select box
-     *
      * @Route("/ajax/updateclass", name="data_class_ajax_updateclass")
      */
-    public function ajaxUpdateclassAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function ajaxUpdateclassAction(Request $request)
+    {
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $kelas = $this->getRequest()->query->get('kelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')
-                ->andWhere('t.tahunAkademik = :tahunAkademik')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah->getId())
-                ->setParameter('tahunAkademik', $tahunAkademik);
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
+            ->leftJoin('kelas.tingkat', 'tingkat')
+            ->where('kelas.sekolah = :sekolah')
+            ->andWhere('kelas.tahunAkademik = :tahunAkademik')
+            ->orderBy('tingkat.urutan', 'ASC')
+            ->addOrderBy('kelas.urutan')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunAkademik', $tahunAkademik)
+        ;
         $results = $querybuilder->getQuery()->getResult();
 
-        $retval = array();
+        $retval = [];
         foreach ($results as $result) {
-            $retval[] = array(
-                    'optionValue' => $result->getId(), 'optionDisplay' => $result->getNama(),
-                    'optionSelected' => $kelas == $result->getId() ? 'selected' : ''
-            );
+            $retval[] = [
+                'optionValue' => $result->getId(),
+                'optionDisplay' => $result->getNama(),
+                'optionSelected' => $kelas == $result->getId() ? 'selected' : '',
+            ];
         }
 
         $return = json_encode($retval);
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
+
+        return new Response($return, 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 
     /**
-     * Update class select box based on tingkat
-     *
      * @Route("/ajax/updateclass-bylevel", name="data_class_ajax_updateclass_bylevel")
      */
-    public function ajaxUpdateclassByLevelAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function ajaxUpdateclassByLevelAction(Request $request)
+    {
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -401,83 +397,99 @@ class KelasController extends Controller
         $tingkat = $this->getRequest()->query->get('tingkat');
         $kelas = $this->getRequest()->query->get('kelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('kelas')->from('LanggasSisdikBundle:Kelas', 'kelas')
-                ->leftJoin('kelas.tingkat', 'tingkat')->where('kelas.sekolah = :sekolah')
-                ->andWhere('kelas.tahunAkademik = :tahunAkademik')
-                ->setParameter('tahunAkademik', $tahunAkademik)->andWhere('tingkat.id = :tingkat')
-                ->setParameter('tingkat', $tingkat)->orderBy('tingkat.urutan', 'ASC')
-                ->addOrderBy('kelas.urutan')->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
+            ->leftJoin('kelas.tingkat', 'tingkat')
+            ->where('kelas.sekolah = :sekolah')
+            ->andWhere('kelas.tahunAkademik = :tahunAkademik')
+            ->andWhere('kelas.tingkat = :tingkat')
+            ->orderBy('tingkat.urutan', 'ASC')
+            ->addOrderBy('kelas.urutan')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunAkademik', $tahunAkademik)
+            ->setParameter('tingkat', $tingkat)
+        ;
         $entities = $querybuilder->getQuery()->getResult();
 
-        $retval = array();
+        $retval = [];
         foreach ($entities as $entity) {
-            $retval[] = array(
-                    'optionValue' => $entity->getId(), 'optionDisplay' => $entity->getNama(),
-                    'optionSelected' => $kelas == $entity->getId() ? 'selected' : ''
-            );
+            $retval[] = [
+                'optionValue' => $entity->getId(),
+                'optionDisplay' => $entity->getNama(),
+                'optionSelected' => $kelas == $entity->getId() ? 'selected' : '',
+            ];
         }
 
         $return = json_encode($retval);
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
+
+        return new Response($return, 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 
     /**
-     * Update class select box for predefined school
-     *
      * @Route("/ajax/updateclass/schooldefined/{sekolah}", name="data_class_ajax_updateclass_schooldefined")
      */
-    public function ajaxUpdateclassSchoolDefinedAction(Request $request, $sekolah) {
+    public function ajaxUpdateclassSchoolDefinedAction(Request $request, $sekolah)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $kelas = $this->getRequest()->query->get('kelas');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Kelas', 't')
-                ->leftJoin('t.tingkat', 't2')->where('t.sekolah = :sekolah')
-                ->andWhere('t.tahunAkademik = :tahunAkademik')->orderBy('t2.urutan', 'ASC')
-                ->addOrderBy('t.urutan')->setParameter('sekolah', $sekolah)
-                ->setParameter('tahunAkademik', $tahunAkademik);
+        $querybuilder = $em->createQueryBuilder()
+            ->select('kelas')
+            ->from('LanggasSisdikBundle:Kelas', 'kelas')
+            ->leftJoin('kelas.tingkat', 'tingkat')
+            ->where('kelas.sekolah = :sekolah')
+            ->andWhere('kelas.tahunAkademik = :tahunAkademik')
+            ->orderBy('tingkat.urutan', 'ASC')
+            ->addOrderBy('kelas.urutan')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunAkademik', $tahunAkademik)
+        ;
         $results = $querybuilder->getQuery()->getResult();
 
-        $retval = array();
+        $retval = [];
         foreach ($results as $result) {
-            $retval[] = array(
-                    'optionValue' => $result->getId(), 'optionDisplay' => $result->getNama(),
-                    'optionSelected' => $kelas == $result->getId() ? 'selected' : ''
-            );
+            $retval[] = [
+                'optionValue' => $result->getId(),
+                'optionDisplay' => $result->getNama(),
+                'optionSelected' => $kelas == $result->getId() ? 'selected' : '',
+            ];
         }
 
         $return = json_encode($retval);
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
+
+        return new Response($return, 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.data.class', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.academic', [], 'navigations')][$translator->trans('links.data.class', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }

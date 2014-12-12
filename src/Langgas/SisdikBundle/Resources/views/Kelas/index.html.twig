@@ -34,17 +34,17 @@
     <thead>
         <tr>
             <th>{{ 'label.year.entry'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.class.name'|trans, 't.nama') }}
+            <th class="{% if pagination.isSorted('kelas.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.class.name'|trans, 'kelas.nama') }}
             </th>
-            <th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
+            <th class="{% if pagination.isSorted('kelas.kode') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 'kelas.kode') }}
             </th>
-            <th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
+            <th class="{% if pagination.isSorted('kelas.keterangan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 'kelas.keterangan') }}
             </th>
-            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
+            <th class="{% if pagination.isSorted('kelas.urutan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 'kelas.urutan') }}
             </th>
             <th>{{ 'label.tingkat'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
