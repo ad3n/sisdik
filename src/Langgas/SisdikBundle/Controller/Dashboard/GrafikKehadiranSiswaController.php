@@ -78,7 +78,6 @@ class GrafikKehadiranSiswaController extends Controller
                     ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                     ->setParameter('statusKehadiran', $key)
                     ->getQuery()
-                    ->useResultCache(true, 3600)
                     ->getSingleScalarResult()
                 ;
                 $kehadiran[$key] = $result;
@@ -97,7 +96,6 @@ class GrafikKehadiranSiswaController extends Controller
                     ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                     ->setParameter('statusKepulangan', $key)
                     ->getQuery()
-                    ->useResultCache(true, 3600)
                     ->getSingleScalarResult()
                 ;
                 $kepulangan[$key] = $result;
@@ -151,7 +149,6 @@ class GrafikKehadiranSiswaController extends Controller
                                 ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                                 ->setParameter('statusKehadiran', $key)
                                 ->getQuery()
-                                ->useResultCache(true, 3600)
                                 ->getSingleScalarResult()
                             ;
                             $kehadiran[$key] = $result;
@@ -172,7 +169,6 @@ class GrafikKehadiranSiswaController extends Controller
                                 ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                                 ->setParameter('statusKepulangan', $key)
                                 ->getQuery()
-                                ->useResultCache(true, 3600)
                                 ->getSingleScalarResult()
                             ;
                             $kepulangan[$key] = $result;

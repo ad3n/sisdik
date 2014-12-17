@@ -149,7 +149,6 @@ class DefaultController extends Controller
                     ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                     ->setParameter('statusKepulangan', $key)
                     ->getQuery()
-                    ->useResultCache(true, 3600)
                     ->getSingleScalarResult()
                 ;
                 $kepulangan[$key] = $result;
@@ -223,7 +222,6 @@ class DefaultController extends Controller
                                 ->setParameter('tanggal', $tanggalTampil->format("Y-m-d"))
                                 ->setParameter('statusKepulangan', $key)
                                 ->getQuery()
-                                ->useResultCache(true, 3600)
                                 ->getSingleScalarResult()
                             ;
                             $kepulangan[$key] = $result;
