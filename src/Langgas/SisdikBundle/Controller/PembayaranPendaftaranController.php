@@ -3,6 +3,7 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
 use Langgas\SisdikBundle\Entity\Gelombang;
 use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
@@ -14,6 +15,7 @@ use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,22 +26,146 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * @Route("/pembayaran-pendaftaran/{sid}")
+ * @Route("/pembayaran-biaya-pendaftaran")
  * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR')")
  */
 class PembayaranPendaftaranController extends Controller
 {
     /**
-     * @Route("/", name="payment_registrationfee")
-     * @Method("GET")
+     * @Route("/", name="pembayaran_biaya_pendaftaran__daftar")
      * @Template()
      */
-    public function indexAction($sid)
+    public function indexAction()
     {
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         /* @var $em EntityManager */
+        $em = $this->getDoctrine()->getManager();
+        $qbe = $em->createQueryBuilder();
+
+        $searchkey = '';
+        $tampilkanTercari = false;
+
+        $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
+
+        $pendaftarTotal = $em->createQueryBuilder()
+            ->select('COUNT(siswa.id)')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->andWhere('siswa.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        $querybuilder = $em->createQueryBuilder()
+            ->select('siswa')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->leftJoin('siswa.gelombang', 'gelombang')
+            ->leftJoin('siswa.sekolahAsal', 'sekolahasal')
+            ->andWhere('siswa.sekolah = :sekolah')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->addOrderBy('gelombang.urutan', 'DESC')
+            ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
+            ->setParameter('sekolah', $sekolah)
+        ;
+
+        $searchform->submit($this->getRequest());
+        if ($searchform->isValid()) {
+            $searchdata = $searchform->getData();
+
+            $querybuilder
+                ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
+                ->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi')
+            ;
+
+            if ($searchdata['tahun'] instanceof Tahun) {
+                $querybuilder
+                    ->andWhere('tahun.id = :tahun')
+                    ->setParameter('tahun', $searchdata['tahun'])
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            if ($searchdata['searchkey'] != '') {
+                $searchkey = $searchdata['searchkey'];
+
+                $querybuilder
+                    ->andWhere(
+                        'siswa.namaLengkap LIKE :namalengkap '
+                        . ' OR siswa.nomorPendaftaran LIKE :nomorpendaftaran '
+                        . ' OR siswa.keterangan LIKE :keterangan '
+                        . ' OR sekolahasal.nama LIKE :sekolahasal '
+                        . ' OR transaksi.nomorTransaksi = :nomortransaksi '
+                    )
+                    ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
+                    ->setParameter('nomorpendaftaran', "%{$searchdata['searchkey']}%")
+                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
+                    ->setParameter('sekolahasal', "%{$searchdata['searchkey']}%")
+                    ->setParameter('nomortransaksi', $searchdata['searchkey'])
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            if ($searchdata['nopayment'] == true) {
+                $querybuilder
+                    ->andWhere("transaksi.nominalPembayaran IS NULL")
+                    ->andWhere('siswa.gelombang IS NOT NULL')
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            if ($searchdata['todayinput'] == true) {
+                $currentdate = new \DateTime();
+
+                $querybuilder
+                    ->andWhere("siswa.waktuSimpan BETWEEN :datefrom AND :dateto")
+                    ->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00')
+                    ->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59')
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            if ($searchdata['notsettled'] == true) {
+                $querybuilder
+                    ->andWhere('siswa.sisaBiayaPendaftaran = -999 OR siswa.sisaBiayaPendaftaran != 0')
+                    ->andWhere('siswa.gelombang IS NOT NULL')
+                ;
+
+                $tampilkanTercari = true;
+            }
+        }
+
+        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
+
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'pendaftarTotal' => $pendaftarTotal,
+            'pendaftarTercari' => $pendaftarTercari,
+            'tampilkanTercari' => $tampilkanTercari,
+            'searchkey' => $searchkey,
+        ];
+    }
+
+    /**
+     * @Route("/{sid}", name="payment_registrationfee")
+     * @Method("GET")
+     * @Template()
+     */
+    public function summaryAction($sid)
+    {
+        $sekolah = $this->getSekolah();
+        $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
@@ -92,7 +218,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * @Route("/", name="payment_registrationfee_create")
+     * @Route("/{sid}", name="payment_registrationfee_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranPendaftaran:index.html.twig")
      */
@@ -475,7 +601,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * @Route("/{id}/show", name="payment_registrationfee_show")
+     * @Route("/{sid}/{id}/show", name="payment_registrationfee_show")
      * @Template()
      */
     public function showAction($sid, $id)
@@ -539,7 +665,7 @@ class PembayaranPendaftaranController extends Controller
     /**
      * Mengelola cicilan pembayaran biaya pendaftaran
      *
-     * @Route("/{id}/edit", name="payment_registrationfee_edit")
+     * @Route("/{sid}/{id}/edit", name="payment_registrationfee_edit")
      * @Template()
      */
     public function editAction($sid, $id)
@@ -604,7 +730,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * @Route("/{id}/update", name="payment_registrationfee_update")
+     * @Route("/{sid}/{id}/update", name="payment_registrationfee_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranPendaftaran:edit.html.twig")
      */
