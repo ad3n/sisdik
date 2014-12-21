@@ -164,7 +164,7 @@ class Builder extends ContainerAware
                 'dropdown' => true,
             ]);
 
-            $payments->addChild($translator->trans('links.applicant.payment', [], 'navigations'), ['route' => 'pembayaran_biaya_pendaftaran__daftar']);
+            $payments->addChild($translator->trans('links.pembayaran.biaya.pendaftaran', [], 'navigations'), ['route' => 'pembayaran_biaya_pendaftaran__daftar']);
 
             if ($securityContext->isGranted([
                 new Expression("hasAnyRole('ROLE_BENDAHARA')")

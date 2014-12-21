@@ -1114,7 +1114,7 @@ class PembayaranPendaftaranController extends Controller
         $translator = $this->get('translator');
 
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$translator->trans('headings.payments', [], 'navigations')][$translator->trans('links.applicant.payment', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.payments', [], 'navigations')][$translator->trans('links.pembayaran.biaya.pendaftaran', [], 'navigations')]->setCurrent(true);
     }
 
     /**
