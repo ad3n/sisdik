@@ -3,7 +3,6 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Langgas\SisdikBundle\Form\SiswaApplicantPaymentSearchType;
 use Langgas\SisdikBundle\Entity\Gelombang;
 use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
@@ -47,7 +46,7 @@ class PembayaranPendaftaranController extends Controller
         $searchkey = '';
         $tampilkanTercari = false;
 
-        $searchform = $this->createForm(new SiswaApplicantPaymentSearchType($this->container));
+        $searchform = $this->createForm('sisdik_caripembayarbiayapendaftaran');
 
         $pendaftarTotal = $em->createQueryBuilder()
             ->select('COUNT(siswa.id)')
