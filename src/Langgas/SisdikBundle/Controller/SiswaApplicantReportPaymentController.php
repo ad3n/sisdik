@@ -8,7 +8,6 @@ use Langgas\SisdikBundle\Util\Messenger;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Langgas\SisdikBundle\Form\ReportSummaryType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Langgas\SisdikBundle\Entity\Referensi;
@@ -203,7 +202,7 @@ class SiswaApplicantReportPaymentController extends Controller
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
 
-        $summaryform = $this->createForm(new ReportSummaryType());
+        $summaryform = $this->createForm('sisdik_ringkasanlaporan');
 
         return array(
                 'pagination' => $pagination, 'searchform' => $searchform->createView(),
@@ -483,7 +482,7 @@ class SiswaApplicantReportPaymentController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $summaryform = $this->createForm(new ReportSummaryType());
+        $summaryform = $this->createForm('sisdik_ringkasanlaporan');
         $summaryform->submit($this->getRequest());
         $summarydata = $summaryform->getData();
 

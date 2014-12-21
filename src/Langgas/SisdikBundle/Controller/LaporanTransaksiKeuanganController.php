@@ -1,30 +1,20 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
-use Langgas\SisdikBundle\Util\Messenger;
-use Langgas\SisdikBundle\Entity\PilihanLayananSms;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Langgas\SisdikBundle\Form\ReportSummaryType;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Langgas\SisdikBundle\Entity\Referensi;
-use Symfony\Component\Form\FormError;
-use Langgas\SisdikBundle\Entity\Gelombang;
-use Langgas\SisdikBundle\Form\TransaksiKeuanganSearchType;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use Langgas\SisdikBundle\Entity\VendorSekolah;
 
 /**
- * Siswa laporan-transaksi-keuangan controller.
- *
  * @Route("/laporan-transaksi-keuangan")
  * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
@@ -34,20 +24,19 @@ class LaporanTransaksiKeuanganController extends Controller
     const BASEFILE = "base.ods";
     const STYLEFILE = "styles.xml";
     const OUTPUTFILE = "laporan-transaksi-keuangan.";
-    const OUTPUTSUMMARYFILE = "ringkasan-laporan-transaksi-keuangan.";
     const DOCUMENTS_OUTPUTDIR = "uploads/sekolah/laporan-transaksi-keuangan/";
 
     /**
-     * Laporan transaksi keuangan
-     *
      * @Route("/", name="laporan-transaksi-keuangan")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
         $qbe = $em->createQueryBuilder();
 
@@ -56,45 +45,52 @@ class LaporanTransaksiKeuanganController extends Controller
         $pencarianJumlahBayar = false;
         $searchkey = '';
 
-        $searchform = $this->createForm(new TransaksiKeuanganSearchType($this->container));
+        $searchform = $this->createForm('sisdik_caritransaksi');
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-                ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
+        $qbtotal = $em->createQueryBuilder()
+            ->select($qbe->expr()->countDistinct('transaksi.id'))
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->andWhere('transaksi.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+        ;
         $transaksiTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-                ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-                ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa');
+        $qbsearchnum = $em->createQueryBuilder()
+            ->select($qbe->expr()->countDistinct('transaksi.id'))
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
+            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->andWhere('transaksi.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
-        $querybuilder = $em->createQueryBuilder()->select('transaksi')
-                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-                ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-                ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa')->addOrderBy('transaksi.waktuSimpan', 'DESC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('transaksi')
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
+            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->andWhere('transaksi.sekolah = :sekolah')
+            ->addOrderBy('transaksi.waktuSimpan', 'DESC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         if ($searchform->isValid()) {
-
             if ($searchdata['searchkey'] != '') {
                 $searchkey = $searchdata['searchkey'];
 
                 $querybuilder
-                        ->andWhere(
-                                'transaksi.nomorTransaksi LIKE :nomortransaksi '
-                                        . ' OR transaksi.keterangan LIKE :keterangan ');
-                $querybuilder->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                    ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
+                    ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
+                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
+                ;
 
                 $qbsearchnum
-                        ->andWhere(
-                                'transaksi.nomorTransaksi LIKE :nomortransaksi '
-                                        . ' OR transaksi.keterangan LIKE :keterangan ');
-                $qbsearchnum->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                    ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
+                    ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
+                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
+                ;
 
                 $tampilkanTercari = true;
             }
@@ -102,31 +98,43 @@ class LaporanTransaksiKeuanganController extends Controller
             $dariTanggal = $searchdata['dariTanggal'];
             $hinggaTanggal = $searchdata['hinggaTanggal'];
             if ($dariTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+                $querybuilder
+                    ->andWhere('transaksi.waktuSimpan >= :daritanggal')
+                    ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
+                ;
 
-                $qbsearchnum->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+                $qbsearchnum
+                    ->andWhere('transaksi.waktuSimpan >= :daritanggal')
+                    ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
+                ;
 
                 $tampilkanTercari = true;
             }
             if ($hinggaTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
+                $querybuilder
+                    ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
+                    ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
+                ;
 
-                $qbsearchnum->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
+                $qbsearchnum
+                    ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
+                    ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
+                ;
 
                 $tampilkanTercari = true;
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
             if ($searchdata['jumlahBayar'] != "") {
-                $querybuilder->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
-                $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
+                $querybuilder
+                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
+                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                ;
 
-                $qbsearchnum->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
-                $qbsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
+                $qbsearchnum
+                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
+                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                ;
 
                 $tampilkanTercari = true;
             }
@@ -138,22 +146,27 @@ class LaporanTransaksiKeuanganController extends Controller
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-                'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'transaksiTotal' => $transaksiTotal, 'transaksiTercari' => $transaksiTercari,
-                'tampilkanTercari' => $tampilkanTercari, 'searchkey' => $searchkey,
-                'searchdata' => $searchdata, 'tanggalSekarang' => new \DateTime(),
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'transaksiTotal' => $transaksiTotal,
+            'transaksiTercari' => $transaksiTercari,
+            'tampilkanTercari' => $tampilkanTercari,
+            'searchkey' => $searchkey,
+            'searchdata' => $searchdata,
+            'tanggalSekarang' => new \DateTime(),
+        ];
     }
 
     /**
-     * ekspor data laporan transaksi keuangan
+     * Ekspor data laporan transaksi keuangan
      *
      * @Route("/export", name="laporan-transaksi-keuangan_export")
      * @Method("POST")
      */
-    public function exportAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function exportAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -165,74 +178,88 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchkey = '';
         $judulLaporan = $this->get('translator')->trans('heading.laporan.transaksi.keuangan');
 
-        $searchform = $this->createForm(new TransaksiKeuanganSearchType($this->container));
+        $searchform = $this->createForm('sisdik_caritransaksi');
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-                ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId());
+        $qbtotal = $em->createQueryBuilder()
+            ->select($qbe->expr()->countDistinct('transaksi.id'))
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->andWhere('transaksi.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+        ;
         $transaksiTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $qbsearchnum = $em->createQueryBuilder()->select($qbe->expr()->countDistinct('transaksi.id'))
-                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-                ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-                ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa');
+        $qbsearchnum = $em->createQueryBuilder()
+            ->select($qbe->expr()->countDistinct('transaksi.id'))
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
+            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->andWhere('transaksi.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
-        $querybuilder = $em->createQueryBuilder()->select('transaksi')
-                ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-                ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-                ->andWhere('transaksi.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->leftJoin('pembayaran.siswa', 'siswa')->addOrderBy('transaksi.waktuSimpan', 'DESC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('transaksi')
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
+            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->andWhere('transaksi.sekolah = :sekolah')
+            ->addOrderBy('transaksi.waktuSimpan', 'DESC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         if ($searchform->isValid()) {
-
             $dariTanggal = $searchdata['dariTanggal'];
             $hinggaTanggal = $searchdata['hinggaTanggal'];
+
             if ($dariTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $querybuilder->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+                $querybuilder
+                    ->andWhere('transaksi.waktuSimpan >= :daritanggal')
+                    ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
+                ;
 
-                $qbsearchnum->andWhere('transaksi.waktuSimpan >= :daritanggal');
-                $qbsearchnum->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"));
+                $qbsearchnum
+                    ->andWhere('transaksi.waktuSimpan >= :daritanggal')
+                    ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
+                ;
 
                 $tampilkanTercari = true;
-                $judulLaporan .= " " . $this->get('translator')->trans('dari.tanggal') . " "
-                        . $dariTanggal->format("Y-m-d 00:00:00");
+                $judulLaporan .= " " . $this->get('translator')->trans('dari.tanggal') . " " . $dariTanggal->format("Y-m-d 00:00:00");
             }
-            if ($hinggaTanggal instanceof \DateTime) {
-                $querybuilder->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $querybuilder->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
 
-                $qbsearchnum->andWhere('transaksi.waktuSimpan <= :hinggatanggal');
-                $qbsearchnum->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"));
+            if ($hinggaTanggal instanceof \DateTime) {
+                $querybuilder
+                    ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
+                    ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
+                ;
+
+                $qbsearchnum
+                    ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
+                    ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
+                ;
 
                 $tampilkanTercari = true;
-                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " "
-                        . $hinggaTanggal->format("Y-m-d 24:00:00");
+                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " " . $hinggaTanggal->format("Y-m-d 24:00:00");
             } else {
                 $sekarang = new \DateTime();
-                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " "
-                        . $sekarang->format("Y-m-d H:i:s");
+                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " " . $sekarang->format("Y-m-d H:i:s");
             }
 
             if ($searchdata['searchkey'] != '') {
                 $searchkey = $searchdata['searchkey'];
 
                 $querybuilder
-                        ->andWhere(
-                                'transaksi.nomorTransaksi LIKE :nomortransaksi '
-                                        . ' OR transaksi.keterangan LIKE :keterangan ');
-                $querybuilder->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                    ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
+                    ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
+                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
+                ;
 
                 $qbsearchnum
-                        ->andWhere(
-                                'transaksi.nomorTransaksi LIKE :nomortransaksi '
-                                        . ' OR transaksi.keterangan LIKE :keterangan ');
-                $qbsearchnum->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
+                    ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
+                    ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
+                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
+                ;
 
                 $tampilkanTercari = true;
                 $judulLaporan .= ", " . $this->get('translator')->trans('kata.pencarian') . " " . $searchkey;
@@ -240,17 +267,23 @@ class LaporanTransaksiKeuanganController extends Controller
 
             $pembandingBayar = $searchdata['pembandingBayar'];
             if ($searchdata['jumlahBayar'] != "") {
-                $querybuilder->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
-                $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
+                $querybuilder
+                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
+                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                ;
 
-                $qbsearchnum->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar");
-                $qbsearchnum->setParameter('jumlahbayar', $searchdata['jumlahBayar']);
+                $qbsearchnum
+                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
+                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                ;
 
                 $tampilkanTercari = true;
-                $judulLaporan .= ", " . $this->get('translator')->trans('jumlah.pembayaran')
-                        . " $pembandingBayar " . number_format($searchdata['jumlahBayar'], 0, ',', '.');
+                $judulLaporan .= ", "
+                    . $this->get('translator')->trans('jumlah.pembayaran')
+                    . " $pembandingBayar "
+                    . number_format($searchdata['jumlahBayar'], 0, ',', '.')
+                ;
             }
-
         } else {
             // TODO error response
         }
@@ -282,50 +315,41 @@ class LaporanTransaksiKeuanganController extends Controller
             if (copy($documentbase, $documenttarget) === TRUE) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
-                $ziparchive
-                        ->addFromString('styles.xml',
-                                $this
-                                        ->renderView(
-                                                "LanggasSisdikBundle:LaporanTransaksiKeuangan:styles.xml.twig"));
-                $ziparchive
-                        ->addFromString('content.xml',
-                                $this
-                                        ->renderView(
-                                                "LanggasSisdikBundle:LaporanTransaksiKeuangan:report.xml.twig",
-                                                array(
-                                                        'entities' => $entities,
-                                                        'transaksiTercari' => $transaksiTercari,
-                                                        'transaksiTotal' => $transaksiTotal,
-                                                        'judulLaporan' => $judulLaporan,
-                                                )));
+                $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:LaporanTransaksiKeuangan:styles.xml.twig"));
+                $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:LaporanTransaksiKeuangan:report.xml.twig", [
+                    'entities' => $entities,
+                    'transaksiTercari' => $transaksiTercari,
+                    'transaksiTotal' => $transaksiTotal,
+                    'judulLaporan' => $judulLaporan,
+                ]));
+
                 if ($ziparchive->close() === TRUE) {
-                    $return = array(
-                            "redirectUrl" => $this
-                                    ->generateUrl("laporan-transaksi-keuangan_download",
-                                            array(
-                                                'filename' => $filetarget
-                                            )), "filename" => $filetarget,
-                    );
+                    $return = [
+                        "redirectUrl" => $this->generateUrl("laporan-transaksi-keuangan_download", [
+                            'filename' => $filetarget,
+                        ]),
+                        "filename" => $filetarget,
+                    ];
 
                     $return = json_encode($return);
 
-                    return new Response($return, 200,
-                            array(
-                                'Content-Type' => 'application/json'
-                            ));
+                    return new Response($return, 200, [
+                        'Content-Type' => 'application/json',
+                    ]);
                 }
             }
         }
     }
 
     /**
-     * download the generated file report
+     * Download the generated file report
      *
      * @Route("/download/{filename}/{type}", name="laporan-transaksi-keuangan_download")
      * @Method("GET")
      */
-    public function downloadReportFileAction($filename, $type = 'ods') {
-        $sekolah = $this->isRegisteredToSchool();
+    public function downloadReportFileAction($filename, $type = 'ods')
+    {
+        $sekolah = $this->getSekolah();
 
         $filetarget = $filename;
         $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
@@ -350,200 +374,19 @@ class LaporanTransaksiKeuanganController extends Controller
         return $response;
     }
 
-    /**
-     * download the generated file report
-     *
-     * @Route("/ringkasan", name="laporan-transaksi-keuangan_summary")
-     * @Method("POST")
-     */
-    public function summaryAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
 
-        $em = $this->getDoctrine()->getManager();
-
-        $summaryform = $this->createForm(new ReportSummaryType());
-        $summaryform->submit($this->getRequest());
-        $summarydata = $summaryform->getData();
-
-        if ($summarydata['output'] === 'sms' && $summarydata['nomorPonsel'] === null) {
-            $message = $this->get('translator')->trans('errorinfo.nomor.ponsel.tak.boleh.kosong');
-            $summaryform->get('nomorPonsel')->addError(new FormError($message));
-        }
-
-        if ($summaryform->isValid()) {
-            if ($summarydata['output'] == 'pdf') {
-                $filename = self::OUTPUTSUMMARYFILE . '-' . date("m-d-h-i") . ".sisdik.pdf";
-                $outputdir = self::DOCUMENTS_OUTPUTDIR;
-
-                $fs = new Filesystem();
-                if (!$fs->exists($outputdir . $sekolah->getId() . '/')) {
-                    $fs->mkdir($outputdir . $sekolah->getId() . '/');
-                }
-
-                $documenttarget = $outputdir . $sekolah->getId() . '/' . $filename;
-
-                $facade = $this->get('ps_pdf.facade');
-                $tmpResponse = new Response();
-
-                $this
-                        ->render('LanggasSisdikBundle:SiswaApplicantReport:summary.pdf.twig',
-                                array(
-                                    'sekolah' => $sekolah, 'teks' => $summarydata['teksTerformat'],
-                                ), $tmpResponse);
-                $xml = $tmpResponse->getContent();
-                $content = $facade->render($xml);
-
-                $fp = fopen($documenttarget, "w");
-
-                if (!$fp) {
-                    throw new IOException($translator->trans("exception.open.file.pdf"));
-                } else {
-                    fwrite($fp, $content);
-                    fclose($fp);
-                }
-
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('laporan-transaksi-keuangan_download',
-                                                array(
-                                                    'filename' => $filename, 'type' => 'pdf',
-                                                )));
-            } elseif ($summarydata['output'] == 'sms') {
-                $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
-                        ->findBy(
-                                array(
-                                    'sekolah' => $sekolah, 'jenisLayanan' => 'e-laporan-ringkasan',
-                                ));
-
-                $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
-                    ->findOneBy([
-                        'sekolah' => $sekolah,
-                    ])
-                ;
-
-                foreach ($pilihanLayananSms as $pilihan) {
-                    if ($pilihan instanceof PilihanLayananSms) {
-                        if ($pilihan->getStatus()) {
-                            $nomorponsel = preg_split("/[\s,\/]+/", $summarydata['nomorPonsel']);
-                            foreach ($nomorponsel as $ponsel) {
-                                $messenger = $this->get('sisdik.messenger');
-                                if ($messenger instanceof Messenger) {
-                                    if ($vendorSekolah instanceof VendorSekolah) {
-                                        if ($vendorSekolah->getJenis() == 'khusus') {
-                                            $messenger->setUseVendor(true);
-                                            $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
-                                        }
-                                    }
-                                    $messenger->setPhoneNumber($ponsel);
-                                    $messenger->setMessage($summarydata['teksTerformat']);
-                                    $messenger->sendMessage($sekolah);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.ringkasan.laporan.transaksi.sms.berhasil.dikirim'));
-            }
-        } elseif ($summarydata['output'] == 'sms' && $summarydata['nomorPonsel'] === null) {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('errorinfo.nomor.ponsel.tak.boleh.kosong'));
-        } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')->trans('flash.ringkasan.laporan.transaksi.gagal.dibuat'));
-        }
-
-        return $this->redirect($this->generateUrl('laporan-transaksi-keuangan'));
-    }
-
-    /**
-     * format template
-     *
-     * @Route("/format", name="laporan-transaksi-keuangan_format")
-     * @Method("GET")
-     */
-    public function formatTemplateAction() {
-        $this->isRegisteredToSchool();
-
-        $teks = $this->getRequest()->query->get('teks');
-        $teks = $this
-                ->formatTemplate($teks, $this->getRequest()->query->get('gelombang'),
-                        $this->getRequest()->query->get('dariTanggal'),
-                        $this->getRequest()->query->get('hinggaTanggal'),
-                        $this->getRequest()->query->get('sekolahAsal'),
-                        $this->getRequest()->query->get('pembandingBayar'),
-                        $this->getRequest()->query->get('jumlahBayar'),
-                        $this->getRequest()->query->get('referensi'),
-                        $this->getRequest()->query->get('transaksiTotal'),
-                        $this->getRequest()->query->get('transaksiTercari'),
-                        $this->getRequest()->query->get('tanggalSekarang'));
-
-        $return = array(
-            'teksterformat' => $teks
-        );
-        $return = json_encode($return);
-
-        return new Response($return, 200,
-                array(
-                    'Content-Type' => 'application/json'
-                ));
-    }
-
-    /**
-     * memformat teks template
-     *
-     * @param  string $teks
-     * @param  string $gelombang
-     * @param  string $dariTanggal
-     * @param  string $hinggaTanggal
-     * @param  string $sekolahAsal
-     * @param  string $pembandingBayar
-     * @param  string $jumlahBayar
-     * @param  string $referensi
-     * @param  string $transaksiTotal
-     * @param  string $transaksiTercari
-     * @param  string $tanggalSekarang
-     * @return string $teks
-     */
-    private function formatTemplate($teks, $gelombang = '', $dariTanggal = '', $hinggaTanggal = '',
-            $sekolahAsal = '', $pembandingBayar = '', $jumlahBayar = '', $referensi = '',
-            $transaksiTotal = '', $transaksiTercari = '', $tanggalSekarang = '') {
-        $teks = str_replace("%gelombang%", $gelombang, $teks);
-        $teks = str_replace("%dari-tanggal%", $dariTanggal, $teks);
-        $teks = str_replace("%hingga-tanggal%", $hinggaTanggal, $teks);
-        $teks = str_replace("%sekolah-asal%", $sekolahAsal, $teks);
-
-        $teks = str_replace("%pembanding-bayar%", $pembandingBayar, $teks);
-        $teks = str_replace("%jumlah-bayar%", $jumlahBayar, $teks);
-
-        $teks = str_replace("%perujuk%", $referensi, $teks);
-        $teks = str_replace("%jumlah-total%", $transaksiTotal, $teks);
-        $teks = str_replace("%jumlah-tercari%", $transaksiTercari, $teks);
-        $teks = str_replace("%tanggal-sekarang%", $tanggalSekarang, $teks);
-
-        return $teks;
-    }
-
-    private function setCurrentMenu() {
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.laporan.transaksi.keuangan', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.payments', [], 'navigations')][$translator->trans('links.laporan.transaksi.keuangan', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }

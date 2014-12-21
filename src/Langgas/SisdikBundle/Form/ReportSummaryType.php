@@ -67,6 +67,6 @@ class ReportSummaryType extends AbstractType
 
     public function getName()
     {
-        return 'siswaapplicantreportsummary';
+        return 'sisdik_ringkasanlaporan';
     }
 }

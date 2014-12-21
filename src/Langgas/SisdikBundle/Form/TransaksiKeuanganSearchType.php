@@ -2,11 +2,13 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -14,22 +16,24 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class TransaksiKeuanganSearchType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var Translator
      */
-    private $container;
+    private $translator;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "translator" = @Inject("translator")
+     * })
+     *
+     * @param Translator $translator
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(Translator $translator)
     {
-        $this->container = $container;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
-
         $builder
             ->add('dariTanggal', 'date', [
                 'widget' => 'single_text',
@@ -87,8 +91,7 @@ class TransaksiKeuanganSearchType extends AbstractType
                 'label_render' => false,
                 'required' => false,
                 'error_bubbling' => true,
-                'invalid_message' => /** @Ignore */ $this->container
-                    ->get('translator')
+                'invalid_message' => /** @Ignore */ $this->translator
                     ->trans('pencarian.nominal.tidak.sah', [], 'validators'),
                 'horizontal' => false,
             ])
@@ -106,6 +109,6 @@ class TransaksiKeuanganSearchType extends AbstractType
 
     public function getName()
     {
-        return 'searchform';
+        return 'sisdik_caritransaksi';
     }
 }
