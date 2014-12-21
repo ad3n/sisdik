@@ -41,7 +41,6 @@ class PembayaranPendaftaranController extends Controller
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
-        $qbe = $em->createQueryBuilder();
 
         $searchkey = '';
         $tampilkanTercari = false;
