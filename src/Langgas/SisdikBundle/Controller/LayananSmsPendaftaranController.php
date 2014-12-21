@@ -1,93 +1,84 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
-use Langgas\SisdikBundle\Form\LayananSmsPendaftaranType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * LayananSmsPendaftaran controller.
- *
- * @Route("/smspendaftaran")
+ * @Route("/sms-pendaftaran")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
  */
 class LayananSmsPendaftaranController extends Controller
 {
-
     /**
-     * Lists all LayananSmsPendaftaran entities.
-     *
      * @Route("/", name="smspendaftaran")
      * @Method("GET")
      * @Template()
      */
     public function indexAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:LayananSmsPendaftaran', 't')
-            ->where('t.sekolah = :sekolah')
-            ->orderBy('t.jenisLayanan', 'ASC')
-            ->setParameter('sekolah', $sekolah->getId());
+            ->select('layananSmsPendaftaran')
+            ->from('LanggasSisdikBundle:LayananSmsPendaftaran', 'layananSmsPendaftaran')
+            ->where('layananSmsPendaftaran.sekolah = :sekolah')
+            ->orderBy('layananSmsPendaftaran.jenisLayanan', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
+        return [
             'pagination' => $pagination,
-            'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayananPendaftaran()
-        );
+            'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayananPendaftaran(),
+        ];
     }
 
     /**
-     * Displays a form to create a new LayananSmsPendaftaran entity.
-     *
      * @Route("/new", name="smspendaftaran_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new LayananSmsPendaftaran();
-        $form = $this->createForm(new LayananSmsPendaftaranType($this->container), $entity);
+        $form = $this->createForm('sisdik_layanansmspendaftaran', $entity);
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView()
-        );
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new LayananSmsPendaftaran entity.
-     *
      * @Route("/create", name="smspendaftaran_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:LayananSmsPendaftaran:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $entity = new LayananSmsPendaftaran();
-        $form = $this->createForm(new LayananSmsPendaftaranType($this->container), $entity);
+        $form = $this->createForm('sisdik_layanansmspendaftaran', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -97,65 +88,60 @@ class LayananSmsPendaftaranController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
+                $this
+                    ->get('session')
                     ->getFlashBag()
-                    ->add('success', $this->get('translator')
-                    ->trans('flash.smspendaftaran.tersimpan'));
+                    ->add('success', $this->get('translator')->trans('flash.smspendaftaran.tersimpan'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unik.smspendaftaran');
                 throw new DBALException($message);
             }
 
-            return $this->redirect($this->generateUrl('smspendaftaran_show', array(
-                'id' => $entity->getId()
-            )));
+            return $this->redirect($this->generateUrl('smspendaftaran_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
+        return [
             'entity' => $entity,
-            'form' => $form->createView()
-        );
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Finds and displays a LayananSmsPendaftaran entity.
-     *
      * @Route("/{id}", name="smspendaftaran_show")
      * @Method("GET")
      * @Template()
      */
     public function showAction($id)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
-        if (! $entity) {
+        if (!$entity) {
             throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return [
             'entity' => $entity,
             'delete_form' => $deleteForm->createView(),
-            'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayananPendaftaran()
-        );
+            'daftarJenisLayanan' => PilihanLayananSms::getDaftarLayananPendaftaran(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing LayananSmsPendaftaran entity.
-     *
      * @Route("/{id}/edit", name="smspendaftaran_edit")
      * @Method("GET")
      * @Template()
      */
     public function editAction($id)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -166,77 +152,70 @@ class LayananSmsPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new LayananSmsPendaftaranType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_layanansmspendaftaran', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
+        return [
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView()
-        );
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing LayananSmsPendaftaran entity.
-     *
      * @Route("/{id}/update", name="smspendaftaran_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:LayananSmsPendaftaran:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
-        $sekolah = $this->isRegisteredToSchool();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
-        if (! $entity) {
+        if (!$entity) {
             throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new LayananSmsPendaftaranType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_layanansmspendaftaran', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')
+                $this
+                    ->get('session')
                     ->getFlashBag()
-                    ->add('success', $this->get('translator')
-                    ->trans('flash.smspendaftaran.terbarui'));
+                    ->add('success', $this->get('translator')->trans('flash.smspendaftaran.terbarui'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unik.smspendaftaran');
                 throw new DBALException($message);
             }
 
-            return $this->redirect($this->generateUrl('smspendaftaran_edit', array(
-                'id' => $id
-            )));
+            return $this->redirect($this->generateUrl('smspendaftaran_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
+        return [
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView()
-        );
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a LayananSmsPendaftaran entity.
-     *
      * @Route("/{id}/delete", name="smspendaftaran_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id)
     {
-        $this->isRegisteredToSchool();
-
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
@@ -244,62 +223,57 @@ class LayananSmsPendaftaranController extends Controller
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')->find($id);
 
-            if (! $entity) {
+            if (!$entity) {
                 throw $this->createNotFoundException('Entity LayananSmsPendaftaran tak ditemukan.');
             }
 
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')
+            $this
+                ->get('session')
                 ->getFlashBag()
-                ->add('success', $this->get('translator')
-                ->trans('flash.smspendaftaran.terhapus'));
+                ->add('success', $this->get('translator')->trans('flash.smspendaftaran.terhapus'))
+            ;
         } else {
-            $this->get('session')
+            $this
+                ->get('session')
                 ->getFlashBag()
-                ->add('error', $this->get('translator')
-                ->trans('flash.smspendaftaran.gagal.dihapus'));
+                ->add('error', $this->get('translator')->trans('flash.smspendaftaran.gagal.dihapus'))
+            ;
         }
 
         return $this->redirect($this->generateUrl('smspendaftaran'));
     }
 
     /**
-     * Creates a form to delete a LayananSmsPendaftaran entity by id.
-     *
-     * @param mixed $id
-     *            The entity id
+     * @param mixed $id The entity id
      *
      * @return Symfony\Component\Form\Form The form
      */
     private function createDeleteForm($id)
     {
-        return $this->createFormBuilder(array(
-            'id' => $id
-        ))
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
             ->add('id', 'hidden')
-            ->getForm();
+            ->getForm()
+        ;
     }
 
     private function setCurrentMenu()
     {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.setting', array(), 'navigations')][$this->get('translator')->trans('links.smspendaftaran', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.setting', [], 'navigations')][$translator->trans('links.smspendaftaran', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool()
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
     {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else
-            if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-                throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-            } else {
-                throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-            }
+        return $this->getUser()->getSekolah();
     }
 }

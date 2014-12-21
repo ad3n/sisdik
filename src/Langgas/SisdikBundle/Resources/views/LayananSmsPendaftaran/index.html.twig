@@ -16,8 +16,8 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('t.jenisLayanan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.layanansms.jenis'|trans, 't.jenisLayanan') }}
+            <th class="{% if pagination.isSorted('layananSmsPendaftaran.jenisLayanan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.layanansms.jenis'|trans, 'layananSmsPendaftaran.jenisLayanan') }}
             </th>
             <th>{{ 'label.sms.template.entry'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
