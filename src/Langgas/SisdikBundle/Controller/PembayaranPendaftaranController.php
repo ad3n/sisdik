@@ -986,8 +986,10 @@ class PembayaranPendaftaranController extends Controller
 
     private function setCurrentMenu()
     {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.payments', [], 'navigations')][$this->get('translator')->trans('links.applicant.payment', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.payments', [], 'navigations')][$translator->trans('links.applicant.payment', [], 'navigations')]->setCurrent(true);
     }
 
     /**
