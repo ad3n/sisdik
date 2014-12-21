@@ -14,6 +14,10 @@ class OrangtuaWaliType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+            ->add('siswa', 'sisdik_entityhidden', [
+                'required' => true,
+                'class' => 'LanggasSisdikBundle:Siswa',
+            ])
             ->add('nama', null, [
                 'label_render' => true,
                 'required' => true,
@@ -139,6 +143,6 @@ class OrangtuaWaliType extends AbstractType
     }
 
     public function getName() {
-        return 'langgas_sisdikbundle_orangtuawalitype';
+        return 'sisdik_orangtuawali';
     }
 }
