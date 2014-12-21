@@ -96,6 +96,6 @@ class SekolahSearchType extends AbstractType
 
     public function getName()
     {
-        return 'sisdik_cari_sekolah';
+        return 'sisdik_carisekolah';
     }
 }

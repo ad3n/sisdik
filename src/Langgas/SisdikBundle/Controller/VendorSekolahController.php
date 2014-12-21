@@ -31,7 +31,7 @@ class VendorSekolahController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm('sisdik_cari_sekolah');
+        $searchform = $this->createForm('sisdik_carisekolah');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('vendorSekolah')
