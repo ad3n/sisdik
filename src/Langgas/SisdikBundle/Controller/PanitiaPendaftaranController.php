@@ -6,6 +6,11 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Entity\UserManager;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
+use Langgas\SisdikBundle\Entity\Personil;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -13,11 +18,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
-use Langgas\SisdikBundle\Entity\Personil;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\User;
-use Langgas\SisdikBundle\Entity\Tahun;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -95,7 +95,7 @@ class PanitiaPendaftaranController extends Controller
     }
 
     /**
-     * Activate a panitia entity, and deactivate the rests.
+     * Mengaktifkan satu panitia, dan meniraktifkan yg lainnya.
      *
      * @Route("/{id}/activate", name="regcommittee_activate")
      */
@@ -125,14 +125,14 @@ class PanitiaPendaftaranController extends Controller
             }
         }
 
-        $query = $em->createQueryBuilder()
+        $em->createQueryBuilder()
             ->update('LanggasSisdikBundle:PanitiaPendaftaran', 'panitia')
             ->set('panitia.aktif', '0')
             ->where('panitia.tahun IN (?1)')
             ->setParameter(1, $daftarTahun)
             ->getQuery()
+            ->execute()
         ;
-        $query->execute();
 
         $entity->setAktif(1);
         $entity->setDaftarPersonil($entity->getDaftarPersonil());
@@ -148,10 +148,9 @@ class PanitiaPendaftaranController extends Controller
      */
     public function newAction()
     {
-        $this->getSekolah();
         $this->setCurrentMenu();
 
-        $entity = new PanitiaPendaftaran;
+        $entity = new PanitiaPendaftaran();
 
         $form = $this->createForm('sisdik_panitiapendaftaran', $entity);
 
@@ -168,10 +167,9 @@ class PanitiaPendaftaranController extends Controller
      */
     public function createAction(Request $request)
     {
-        $this->getSekolah();
         $this->setCurrentMenu();
 
-        $entity = new PanitiaPendaftaran;
+        $entity = new PanitiaPendaftaran();
         $form = $this->createForm('sisdik_panitiapendaftaran', $entity);
         $form->submit($request);
 
@@ -257,7 +255,6 @@ class PanitiaPendaftaranController extends Controller
      */
     public function editAction($id)
     {
-        $this->getSekolah();
         $this->setCurrentMenu();
 
         /* @var $em EntityManager */
@@ -286,7 +283,6 @@ class PanitiaPendaftaranController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $this->getSekolah();
         $this->setCurrentMenu();
 
         /* @var $em EntityManager */
@@ -390,8 +386,6 @@ class PanitiaPendaftaranController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
-        $this->getSekolah();
-
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
@@ -432,8 +426,6 @@ class PanitiaPendaftaranController extends Controller
      */
     public function getNameAction($id)
     {
-        $this->getSekolah();
-
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('LanggasSisdikBundle:User')->find($id);
 
