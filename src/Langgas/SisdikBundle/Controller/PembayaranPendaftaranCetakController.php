@@ -19,7 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * @Route("/payment/registrationfee/{sid}")
+ * @Route("/cetak-pembayaran-biaya-pendaftaran/{sid}")
  * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR')")
  */
 class PembayaranPendaftaranCetakController extends Controller
