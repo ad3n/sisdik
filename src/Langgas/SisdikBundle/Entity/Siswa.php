@@ -1427,7 +1427,50 @@ class Siswa
     public function getPembayaranSekali()
     {
         return $this->pembayaranSekali;
+    }
 
+    /**
+     * @return array of DaftarBiayaSekali
+     */
+    public function getDaftarBiayaSekali()
+    {
+        $daftar = [];
+
+        foreach ($this->getPembayaranSekali() as $pembayaran) {
+            $daftar[] = $pembayaran->getDaftarBiayaSekali();
+        }
+
+        return $daftar;
+    }
+
+    /**
+     * @return array of TransaksiPembayaranSekali
+     */
+    public function getTransaksiPembayaranSekali()
+    {
+        $daftar = [];
+
+        foreach ($this->getPembayaranSekali() as $pembayaran) {
+            $daftar[] = $pembayaran->getTransaksiPembayaranSekali();
+        }
+
+        return $daftar;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getTotalNominalBiayaSekali()
+    {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranSekali() as $pembayaran) {
+            foreach ($pembayaran->getDaftarBiayaSekali() as $daftar) {
+                $jumlah += $daftar->getNominal();
+            }
+        }
+
+        return $jumlah;
     }
 
     /**
@@ -1441,6 +1484,20 @@ class Siswa
             foreach ($pembayaran->getTransaksiPembayaranSekali() as $transaksi) {
                 $jumlah += $transaksi->getNominalPembayaran();
             }
+        }
+
+        return $jumlah;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getTotalPotonganPembayaranSekali()
+    {
+        $jumlah = 0;
+
+        foreach ($this->getPembayaranSekali() as $pembayaran) {
+            $jumlah += $pembayaran->getNominalPotongan() + $pembayaran->getPersenPotonganDinominalkan();
         }
 
         return $jumlah;
