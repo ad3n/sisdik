@@ -1,12 +1,12 @@
 {% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}smspendaftaran.daftar{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}daftar.pengaturan.layanan.sms{% endtrans %}{% endblock %}
 
 {% block content %}
 <ul class="nav nav-pills">
     <li>
-        <a href="{{ path('smspendaftaran_new') }}" class="add-link-a">
-            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.smspendaftaran.tambah'|trans }}
+        <a href="{{ path('layanan_sms_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.tambah.layanan.sms'|trans }}
         </a>
     </li>
 </ul>
@@ -16,8 +16,8 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('layananSmsPendaftaran.jenisLayanan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.layanansms.jenis'|trans, 'layananSmsPendaftaran.jenisLayanan') }}
+            <th class="{% if pagination.isSorted('layananSms.jenisLayanan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.layanansms.jenis'|trans, 'layananSms.jenisLayanan') }}
             </th>
             <th>{{ 'label.sms.template.entry'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
@@ -29,8 +29,8 @@
             <td data-title="{{ 'label.layanansms.jenis'|trans }}">{{ daftarJenisLayanan[data.jenisLayanan]|trans }}</td>
             <td data-title="{{ 'label.sms.template.entry'|trans }}">{{ data.templatesms.nama }} &raquo; {{ data.templatesms.teks }}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('smspendaftaran_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
-                <a href="{{ path('smspendaftaran_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+                <a href="{{ path('layanan_sms_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('layanan_sms_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
             </td>
         </tr>
     {% endfor %}

@@ -110,6 +110,19 @@ class PilihanLayananSms
     }
 
     /**
+     * Daftar layanan sms biaya sekali bayar yang mungkin digunakan.
+     *
+     * @return array
+     */
+    public static function getDaftarLayananBiayaSekaliBayar()
+    {
+        return [
+            'aa-biaya-sekali-bayar' => 'layanan.sms.bayar.biaya.sekali',
+            'ab-biaya-sekali-bayar-lunas' => 'layanan.sms.lunas.bayar.biaya.sekali',
+        ];
+    }
+
+    /**
      * @param string $jenisLayanan
      */
     public function setJenisLayanan($jenisLayanan)

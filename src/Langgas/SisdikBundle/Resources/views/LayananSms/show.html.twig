@@ -1,11 +1,11 @@
 {% extends 'LanggasSisdikBundle::layout.html.twig' %}
 
-{% block page_heading %}{% trans from "headings" %}smspendaftaran.detail{% endtrans %}{% endblock %}
+{% block page_heading %}{% trans from "headings" %}detail.layanan.sms{% endtrans %}{% endblock %}
 {% block content %}
 <ul class="nav nav-pills pull-right">
     <li>
-        <a href="{{ path('smspendaftaran_new') }}" class="add-link-a">
-            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.smspendaftaran.tambah'|trans }}
+        <a href="{{ path('layanan_sms_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.tambah.layanan.sms'|trans }}
         </a>
     </li>
 </ul>
@@ -21,7 +21,7 @@
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('smspendaftaran_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
+<form id="delete-form" action="{{ path('layanan_sms_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -30,10 +30,10 @@
 
 <ul class="nav nav-pills">
     <li>
-        <a href="{{ path('smspendaftaran') }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('layanan_sms') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('smspendaftaran_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('layanan_sms_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}
@@ -42,7 +42,7 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     $("#delete-form").submit(function(){
-        var confirmtext = "{{ 'confirm.drop.smspendaftaran'|trans }}";
+        var confirmtext = "{{ 'confirm.drop.layanan.sms'|trans }}";
         confirmtext = confirmtext.replace(/&#039;/g, "'");
         return confirmDropButton(confirmtext);
     });

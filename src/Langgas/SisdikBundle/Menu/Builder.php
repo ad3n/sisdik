@@ -96,7 +96,7 @@ class Builder extends ContainerAware
             $settings->addChild($translator->trans('links.admissiongroup', [], 'navigations'), ['route' => 'settings_admissiongroup']);
             $settings->addChild($translator->trans('links.academicyear', [], 'navigations'), ['route' => 'academicyear']);
             $settings->addChild($translator->trans('links.smstemplate', [], 'navigations'), ['route' => 'sms_template']);
-            $settings->addChild($translator->trans('links.smspendaftaran', [], 'navigations'), ['route' => 'smspendaftaran']);
+            $settings->addChild($translator->trans('links.layanan.sms', [], 'navigations'), ['route' => 'layanan_sms']);
             $settings->addChild($translator->trans('links.jenisdokumensiswa', [], 'navigations'), ['route' => 'jenisdokumensiswa']);
         }
 

@@ -16,7 +16,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class LayananSmsPendaftaranType extends AbstractType
+class LayananSmsType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -54,7 +54,10 @@ class LayananSmsPendaftaranType extends AbstractType
                 'data' => $sekolah->getId(),
             ])
             ->add('jenisLayanan', 'choice', [
-                'choices' => PilihanLayananSms::getDaftarLayananPendaftaran(),
+                'choices' => array_merge(
+                    PilihanLayananSms::getDaftarLayananPendaftaran(),
+                    PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+                ),
                 'required' => true,
                 'label' => 'label.layanansms.jenis',
             ])
@@ -85,13 +88,13 @@ class LayananSmsPendaftaranType extends AbstractType
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Langgas\SisdikBundle\Entity\LayananSmsPendaftaran',
+                'data_class' => 'Langgas\SisdikBundle\Entity\LayananSms',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'sisdik_layanansmspendaftaran';
+        return 'sisdik_layanansms';
     }
 }

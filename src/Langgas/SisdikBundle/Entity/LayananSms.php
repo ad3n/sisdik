@@ -5,12 +5,12 @@ namespace Langgas\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="layanan_sms_pendaftaran", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="sms_pendaftaran_UNIQUE", columns={"sekolah_id", "jenis_layanan"})
+ * @ORM\Table(name="layanan_sms", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="layanan_sms_UNIQUE", columns={"sekolah_id", "jenis_layanan"})
  * })
  * @ORM\Entity
  */
-class LayananSmsPendaftaran
+class LayananSms
 {
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
