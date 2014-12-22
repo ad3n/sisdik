@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Gelombang;
 use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
-use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Langgas\SisdikBundle\Entity\LayananSms;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
@@ -365,14 +365,14 @@ class PembayaranPendaftaranController extends Controller
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
-                            $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
+                            $layananSms = $em->getRepository('LanggasSisdikBundle:LayananSms')
                                 ->findBy([
                                     'sekolah' => $sekolah,
                                     'jenisLayanan' => 'b-pendaftaran-bayar-pertama',
                                 ])
                             ;
-                            foreach ($layananSmsPendaftaran as $layanan) {
-                                if ($layanan instanceof LayananSmsPendaftaran) {
+                            foreach ($layananSms as $layanan) {
+                                if ($layanan instanceof LayananSms) {
                                     $tekstemplate = $layanan->getTemplatesms()->getTeks();
 
                                     $namaOrtuWali = "";
@@ -426,14 +426,14 @@ class PembayaranPendaftaranController extends Controller
             foreach ($pilihanLayananSms as $pilihan) {
                 if ($pilihan instanceof PilihanLayananSms) {
                     if ($pilihan->getStatus()) {
-                        $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
+                        $layananSms = $em->getRepository('LanggasSisdikBundle:LayananSms')
                             ->findBy([
                                 'sekolah' => $sekolah,
                                 'jenisLayanan' => 'c-pendaftaran-bayar',
                             ])
                         ;
-                        foreach ($layananSmsPendaftaran as $layanan) {
-                            if ($layanan instanceof LayananSmsPendaftaran) {
+                        foreach ($layananSms as $layanan) {
+                            if ($layanan instanceof LayananSms) {
                                 $tekstemplate = $layanan->getTemplatesms()->getTeks();
 
                                 $namaOrtuWali = "";
@@ -514,14 +514,14 @@ class PembayaranPendaftaranController extends Controller
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
-                            $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
+                            $layananSms = $em->getRepository('LanggasSisdikBundle:LayananSms')
                                 ->findBy([
                                     'sekolah' => $sekolah,
                                     'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
                                 ])
                             ;
-                            foreach ($layananSmsPendaftaran as $layanan) {
-                                if ($layanan instanceof LayananSmsPendaftaran) {
+                            foreach ($layananSms as $layanan) {
+                                if ($layanan instanceof LayananSms) {
                                     $tekstemplate = $layanan->getTemplatesms()->getTeks();
 
                                     $namaOrtuWali = "";
@@ -850,14 +850,14 @@ class PembayaranPendaftaranController extends Controller
             foreach ($pilihanLayananSms as $pilihan) {
                 if ($pilihan instanceof PilihanLayananSms) {
                     if ($pilihan->getStatus()) {
-                        $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
+                        $layananSms = $em->getRepository('LanggasSisdikBundle:LayananSms')
                             ->findBy([
                                 'sekolah' => $sekolah,
                                 'jenisLayanan' => 'c-pendaftaran-bayar',
                             ])
                         ;
-                        foreach ($layananSmsPendaftaran as $layanan) {
-                            if ($layanan instanceof LayananSmsPendaftaran) {
+                        foreach ($layananSms as $layanan) {
+                            if ($layanan instanceof LayananSms) {
                                 $tekstemplate = $layanan->getTemplatesms()->getTeks();
 
                                 $namaOrtuWali = "";
@@ -932,14 +932,14 @@ class PembayaranPendaftaranController extends Controller
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
-                            $layananSmsPendaftaran = $em->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
+                            $layananSms = $em->getRepository('LanggasSisdikBundle:LayananSms')
                                 ->findBy([
                                     'sekolah' => $sekolah,
                                     'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
                                 ])
                             ;
-                            foreach ($layananSmsPendaftaran as $layanan) {
-                                if ($layanan instanceof LayananSmsPendaftaran) {
+                            foreach ($layananSms as $layanan) {
+                                if ($layanan instanceof LayananSms) {
                                     $tekstemplate = $layanan->getTemplatesms()->getTeks();
 
                                     $namaOrtuWali = "";

@@ -2,7 +2,6 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

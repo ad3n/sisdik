@@ -7,7 +7,7 @@ use Langgas\SisdikBundle\Form\SiswaApplicantSearchType;
 use Langgas\SisdikBundle\Entity\SekolahAsal;
 use Langgas\SisdikBundle\Entity\Referensi;
 use Langgas\SisdikBundle\Util\Messenger;
-use Langgas\SisdikBundle\Entity\LayananSmsPendaftaran;
+use Langgas\SisdikBundle\Entity\LayananSms;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Symfony\Component\HttpFoundation\Response;
@@ -216,15 +216,15 @@ class SiswaApplicantController extends Controller
                 foreach ($pilihanLayananSms as $pilihan) {
                     if ($pilihan instanceof PilihanLayananSms) {
                         if ($pilihan->getStatus()) {
-                            $layananSmsPendaftaran = $em
-                                    ->getRepository('LanggasSisdikBundle:LayananSmsPendaftaran')
+                            $layananSms = $em
+                                    ->getRepository('LanggasSisdikBundle:LayananSms')
                                     ->findBy(
                                             array(
                                                     'sekolah' => $sekolah,
                                                     'jenisLayanan' => 'a-pendaftaran-tercatat'
                                             ));
-                            foreach ($layananSmsPendaftaran as $layanan) {
-                                if ($layanan instanceof LayananSmsPendaftaran) {
+                            foreach ($layananSms as $layanan) {
+                                if ($layanan instanceof LayananSms) {
                                     $tekstemplate = $layanan->getTemplatesms()->getTeks();
 
                                     $namaOrtuWali = "";

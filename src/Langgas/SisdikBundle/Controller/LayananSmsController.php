@@ -34,10 +34,10 @@ class LayananSmsController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('layananSmsPendaftaran')
-            ->from('LanggasSisdikBundle:LayananSms', 'layananSmsPendaftaran')
-            ->where('layananSmsPendaftaran.sekolah = :sekolah')
-            ->orderBy('layananSmsPendaftaran.jenisLayanan', 'ASC')
+            ->select('layananSms')
+            ->from('LanggasSisdikBundle:LayananSms', 'layananSms')
+            ->where('layananSms.sekolah = :sekolah')
+            ->orderBy('layananSms.jenisLayanan', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
 
