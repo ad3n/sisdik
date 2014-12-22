@@ -117,8 +117,8 @@ class PilihanLayananSms
     public static function getDaftarLayananBiayaSekaliBayar()
     {
         return [
-            'aa-biaya-sekali-bayar' => 'layanan.sms.bayar.biaya.sekali',
-            'ab-biaya-sekali-bayar-lunas' => 'layanan.sms.lunas.bayar.biaya.sekali',
+            'za-biaya-sekali-bayar' => 'layanan.sms.bayar.biaya.sekali',
+            'zb-biaya-sekali-bayar-lunas' => 'layanan.sms.lunas.bayar.biaya.sekali',
         ];
     }
 

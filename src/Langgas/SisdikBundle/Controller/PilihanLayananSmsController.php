@@ -63,7 +63,8 @@ class PilihanLayananSmsController extends Controller
                 'daftarJenisLayanan' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
                         PilihanLayananSms::getDaftarLayananLaporan(),
                         PilihanLayananSms::getDaftarLayananKehadiran(),
-                        PilihanLayananSms::getDaftarLayananKepulangan())
+                        PilihanLayananSms::getDaftarLayananKepulangan(),
+                        PilihanLayananSms::getDaftarLayananBiayaSekaliBayar())
         );
     }
 
@@ -157,7 +158,8 @@ class PilihanLayananSmsController extends Controller
                 'daftarJenisLayanan' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
                         PilihanLayananSms::getDaftarLayananLaporan(),
                         PilihanLayananSms::getDaftarLayananKehadiran(),
-                        PilihanLayananSms::getDaftarLayananKepulangan())
+                        PilihanLayananSms::getDaftarLayananKepulangan(),
+                        PilihanLayananSms::getDaftarLayananBiayaSekaliBayar())
         );
     }
 
