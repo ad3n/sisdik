@@ -1010,7 +1010,7 @@ class Siswa
     /**
      * @return boolean
      */
-    public function getLunasBiayaPendaftaran()
+    public function isLunasBiayaPendaftaran()
     {
         return $this->lunasBiayaPendaftaran;
     }

@@ -332,7 +332,14 @@ class PembayaranPendaftaranController extends Controller
             $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran() + $currentPaymentAmount;
             $totalDiscount = $siswa->getTotalPotonganPembayaranPendaftaran() + $currentDiscount;
 
-            if (($payableAmountRemain + $payableAmountDue) == ($totalPayment + $totalDiscount)) {
+            $totalInfoResponse = $this->forward('LanggasSisdikBundle:BiayaPendaftaran:getFeeInfoTotal', [
+                'tahun' => $siswa->getTahun()->getId(),
+                'gelombang' => $siswa->getGelombang()->getId(),
+                'json' => 1,
+            ]);
+            $totalFee = json_decode($totalInfoResponse->getContent());
+
+            if (($payableAmountRemain + $payableAmountDue) == ($totalPayment + $totalDiscount) || $totalFee->biaya == ($totalPayment + $totalDiscount)) {
                 $siswa->setLunasBiayaPendaftaran(true);
             }
             $siswa->setSisaBiayaPendaftaran($payableAmountRemain);
@@ -503,7 +510,7 @@ class PembayaranPendaftaranController extends Controller
                 }
             }
 
-            if ($siswa->getLunasBiayaPendaftaran()) {
+            if ($siswa->isLunasBiayaPendaftaran()) {
                 $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                     ->findBy([
                         'sekolah' => $sekolah,
@@ -921,7 +928,7 @@ class PembayaranPendaftaranController extends Controller
                 }
             }
 
-            if ($siswa->getLunasBiayaPendaftaran()) {
+            if ($siswa->isLunasBiayaPendaftaran()) {
                 $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
                     ->findBy([
                         'sekolah' => $sekolah,
