@@ -67,7 +67,21 @@ class BiayaSekaliType extends AbstractType
                 'attr' => [
                     'class' => 'small',
                 ],
+                'read_only' => $options['mode'] == 'edit' ? true : false,
+                'horizontal_input_wrapper_class' => 'col-sm-4 col-md-3 col-lg-2',
             ])
+        ;
+
+        if ($options['mode'] == 'edit') {
+            $builder
+                ->add('nominalSebelumnya', 'hidden', [
+                    'required' => false,
+                    'data' => $options['nominal'],
+                ])
+            ;
+        }
+
+        $builder
             ->add('jenisbiaya', 'entity', [
                 'class' => 'LanggasSisdikBundle:Jenisbiaya',
                 'label' => 'label.fee.type.entry',
@@ -97,6 +111,7 @@ class BiayaSekaliType extends AbstractType
                 'attr' => [
                     'class' => 'large',
                 ],
+                'horizontal_input_wrapper_class' => 'col-sm-6 col-md-5 col-lg-4',
             ])
             ->add('urutan', 'choice', [
                 'choices' => $this->buildOrderChoices(),
@@ -106,8 +121,25 @@ class BiayaSekaliType extends AbstractType
                 'attr' => [
                     'class' => 'small',
                 ],
+                'horizontal_input_wrapper_class' => 'col-sm-3 col-md-2 col-lg-1',
             ])
         ;
+
+        if ($options['nominal'] !== null) {
+            $builder
+                ->add('captcha', 'captcha', [
+                    'attr' => [
+                        'class' => 'medium',
+                        'placeholder' => 'help.type.captcha',
+                        'autocomplete' => 'off',
+                    ],
+                    'as_url' => true,
+                    'reload' => true,
+                    'help_block' => 'help.captcha.penjelasan.ubah.biaya',
+                    'horizontal_input_wrapper_class' => 'col-sm-6 col-md-5 col-lg-4',
+                ])
+            ;
+        }
     }
 
     /**
@@ -123,6 +155,8 @@ class BiayaSekaliType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\BiayaSekali',
+                'mode' => 'new',
+                'nominal' => null,
             ])
         ;
     }

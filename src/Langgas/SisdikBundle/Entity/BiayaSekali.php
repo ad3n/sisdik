@@ -29,6 +29,11 @@ class BiayaSekali
     private $nominal;
 
     /**
+     * @var integer
+     */
+    private $nominalSebelumnya;
+
+    /**
      * @ORM\Column(name="urutan", type="smallint", nullable=true)
      *
      * @var integer
@@ -84,6 +89,22 @@ class BiayaSekali
     public function getNominal()
     {
         return $this->nominal;
+    }
+
+    /**
+     * @param integer $nominalSebelumnya
+     */
+    public function setNominalSebelumnya($nominalSebelumnya)
+    {
+        $this->nominalSebelumnya = $nominalSebelumnya;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNominalSebelumnya()
+    {
+        return $this->nominalSebelumnya;
     }
 
     /**
