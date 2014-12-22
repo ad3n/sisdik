@@ -23,18 +23,55 @@ class PembayaranSekali
     private $id;
 
     /**
-     * @ORM\Column(name="daftar_biaya_sekali", type="array", nullable=true)
-     *
-     * @var array
-     */
-    private $daftarBiayaSekali;
-
-    /**
-     * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_total_transaksi", type="bigint", nullable=false, options={"default" = 0})
      *
      * @var integer
      */
-    private $nominalTotal;
+    private $nominalTotalTransaksi;
+
+    /**
+     * @ORM\Column(name="nominal_total_biaya", type="bigint", nullable=false, options={"default" = 0})
+     *
+     * @var integer
+     */
+    private $nominalTotalBiaya;
+
+    /**
+     * @ORM\Column(name="ada_potongan", type="boolean", nullable=true, options={"default" = 0})
+     *
+     * @var boolean
+     */
+    private $adaPotongan = false;
+
+    /**
+     * @ORM\Column(name="jenis_potongan", type="string", length=45, nullable=true)
+     *
+     * @var string
+     */
+    private $jenisPotongan;
+
+    /**
+     * @ORM\Column(name="persen_potongan", type="smallint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
+     * @Assert\LessThanOrEqual(value=100)
+     *
+     * @var integer
+     */
+    private $persenPotongan;
+
+    /**
+     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=false, options={"default" = 0})
+     *
+     * @var integer
+     */
+    private $persenPotonganDinominalkan = 0;
+
+    /**
+     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=false, options={"default" = 0})
+     *
+     * @var integer
+     */
+    private $nominalPotongan = 0;
 
     /**
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
@@ -78,9 +115,19 @@ class PembayaranSekali
      */
     private $transaksiPembayaranSekali;
 
+    /**
+     * @ORM\OneToMany(targetEntity="DaftarBiayaSekali", mappedBy="pembayaranSekali", cascade={"persist"})
+     * @ORM\OrderBy({"nama" = "ASC"})
+     * @Assert\Valid
+     *
+     * @var DaftarBiayaSekali
+     */
+    private $daftarBiayaSekali;
+
     public function __construct()
     {
         $this->transaksiPembayaranSekali = new ArrayCollection();
+        $this->daftarBiayaSekali = new ArrayCollection();
     }
 
     /**
@@ -92,35 +139,115 @@ class PembayaranSekali
     }
 
     /**
-     * @param array $daftarBiayaSekali
+     * @param integer $nominalTotalTransaksi
      */
-    public function setDaftarBiayaSekali($daftarBiayaSekali)
+    public function setNominalTotalTransaksi($nominalTotalTransaksi)
     {
-        $this->daftarBiayaSekali = $daftarBiayaSekali;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDaftarBiayaSekali()
-    {
-        return $this->daftarBiayaSekali;
-    }
-
-    /**
-     * @param integer $nominalTotal
-     */
-    public function setNominalTotal($nominalTotal)
-    {
-        $this->nominalTotal = $nominalTotal;
+        $this->nominalTotalTransaksi = $nominalTotalTransaksi;
     }
 
     /**
      * @return integer
      */
-    public function getNominalTotal()
+    public function getNominalTotalTransaksi()
     {
-        return $this->nominalTotal;
+        return $this->nominalTotalTransaksi;
+    }
+
+    /**
+     * @param integer $nominalTotalBiaya
+     */
+    public function setNominalTotalBiaya($nominalTotalBiaya)
+    {
+        $this->nominalTotalBiaya = $nominalTotalBiaya;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNominalTotalBiaya()
+    {
+        return $this->nominalTotalBiaya;
+    }
+
+    /**
+     * @param boolean $adaPotongan
+     */
+    public function setAdaPotongan($adaPotongan)
+    {
+        $this->adaPotongan = $adaPotongan;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAdaPotongan()
+    {
+        return $this->adaPotongan;
+    }
+
+    /**
+     * @param string $jenisPotongan
+     */
+    public function setJenisPotongan($jenisPotongan)
+    {
+        $this->jenisPotongan = $jenisPotongan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJenisPotongan()
+    {
+        return $this->jenisPotongan;
+    }
+
+    /**
+     * @param integer $persenPotongan
+     */
+    public function setPersenPotongan($persenPotongan)
+    {
+        $this->persenPotongan = $persenPotongan;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPersenPotongan()
+    {
+        return $this->persenPotongan;
+    }
+
+    /**
+     * @param integer $persenPotonganDinominalkan
+     */
+    public function setPersenPotonganDinominalkan($persenPotonganDinominalkan)
+    {
+        $this->persenPotonganDinominalkan = $persenPotonganDinominalkan;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPersenPotonganDinominalkan()
+    {
+        return $this->persenPotonganDinominalkan;
+    }
+
+    /**
+     * @param integer $nominalPotongan
+     */
+    public function setNominalPotongan($nominalPotongan)
+    {
+        $this->nominalPotongan = $nominalPotongan;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNominalPotongan()
+    {
+        return $this->nominalPotongan;
     }
 
     /**
@@ -203,10 +330,66 @@ class PembayaranSekali
     }
 
     /**
-     * @return TransaksiPembayaranSekali
+     * @return ArrayCollection TransaksiPembayaranSekali
      */
     public function getTransaksiPembayaranSekali()
     {
         return $this->transaksiPembayaranSekali;
+    }
+
+    /**
+     * Menentukan daftar biaya sekali.
+     * Type hinting ArrayCollection dihapus agar bisa melakukan pengubahan.
+     *
+     * @param ArrayCollection $daftarBiayaSekali
+     */
+    public function setDaftarBiayaSekali($daftarBiayaSekali)
+    {
+        foreach ($daftarBiayaSekali as $transaksi) {
+            $transaksi->setPembayaranSekali($this);
+        }
+
+        $this->daftarBiayaSekali = $daftarBiayaSekali;
+    }
+
+    /**
+     * @return ArrayCollection DaftarBiayaSekali
+     */
+    public function getDaftarBiayaSekali()
+    {
+        return $this->daftarBiayaSekali;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalNominalTransaksiPembayaranSekali()
+    {
+        $jumlah = 0;
+
+        foreach ($this->getTransaksiPembayaranSekali() as $transaksi) {
+            $jumlah += $transaksi->getNominalPembayaran();
+        }
+
+        return $jumlah;
+    }
+
+    /**
+     * Mengambil total nominal transaksi pembayaran sekali hingga transaksi terpilih.
+     *
+     * @param  array $nomorTransaksi
+     * @return int
+     */
+    public function getTotalNominalTransaksiPembayaranSekaliHinggaTransaksiTerpilih($nomorTransaksi)
+    {
+        $jumlah = 0;
+
+        foreach ($this->getTransaksiPembayaranSekali() as $transaksi) {
+            if (array_key_exists($transaksi->getNomorTransaksi(), $nomorTransaksi)) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
+        }
+
+        return $jumlah;
     }
 }

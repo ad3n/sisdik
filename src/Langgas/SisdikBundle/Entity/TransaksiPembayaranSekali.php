@@ -12,6 +12,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class TransaksiPembayaranSekali
 {
+    const tandakwitansi = 'S';
+
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,20 +24,13 @@ class TransaksiPembayaranSekali
     private $id;
 
     /**
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
-     * @Assert\Length(min=5)
+     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
-    private $nominalPembayaran;
-
-    /**
-     * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
-     *
-     * @var string
-     */
-    private $keterangan;
+    private $nominalPembayaran = 0;
 
     /**
      * @ORM\Column(name="nomor_urut_transaksi_perbulan", type="smallint", nullable=true, options={"unsigned"=true})
@@ -52,12 +47,29 @@ class TransaksiPembayaranSekali
     private $nomorTransaksi;
 
     /**
+     * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
+     *
+     * @var string
+     */
+    private $keterangan;
+
+    /**
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
      */
     private $waktuSimpan;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     *
+     * @var Sekolah
+     */
+    private $sekolah;
 
     /**
      * @ORM\ManyToOne(targetEntity="PembayaranSekali", inversedBy="transaksiPembayaranSekali")
@@ -68,6 +80,16 @@ class TransaksiPembayaranSekali
      * @var PembayaranSekali
      */
     private $pembayaranSekali;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     * })
+     *
+     * @var User
+     */
+    private $dibuatOleh;
 
     /**
      * @return integer
@@ -158,6 +180,22 @@ class TransaksiPembayaranSekali
     }
 
     /**
+     * @param Sekolah $sekolah
+     */
+    public function setSekolah(Sekolah $sekolah = null)
+    {
+        $this->sekolah = $sekolah;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    public function getSekolah()
+    {
+        return $this->sekolah;
+    }
+
+    /**
      * @param PembayaranSekali $pembayaranSekali
      */
     public function setPembayaranSekali(PembayaranSekali $pembayaranSekali = null)
@@ -171,5 +209,21 @@ class TransaksiPembayaranSekali
     public function getPembayaranSekali()
     {
         return $this->pembayaranSekali;
+    }
+
+    /**
+     * @param User $dibuatOleh
+     */
+    public function setDibuatOleh(User $dibuatOleh = null)
+    {
+        $this->dibuatOleh = $dibuatOleh;
+    }
+
+    /**
+     * @return User
+     */
+    public function getDibuatOleh()
+    {
+        return $this->dibuatOleh;
     }
 }

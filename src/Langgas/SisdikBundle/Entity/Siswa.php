@@ -292,6 +292,20 @@ class Siswa
     private $sisaBiayaPendaftaran = -999;
 
     /**
+     * @ORM\Column(name="lunas_biaya_sekali", type="boolean", nullable=false, options={"default" = 0})
+     *
+     * @var boolean
+     */
+    private $lunasBiayaSekali = false;
+
+    /**
+     * @ORM\Column(name="sisa_biaya_sekali", type="bigint", nullable=false, options={"default" = -999})
+     *
+     * @var integer
+     */
+    private $sisaBiayaSekali = -999;
+
+    /**
      * @ORM\Column(name="keterangan", type="text", nullable=true)
      *
      * @var string
@@ -1015,6 +1029,38 @@ class Siswa
     public function getSisaBiayaPendaftaran()
     {
         return $this->sisaBiayaPendaftaran;
+    }
+
+    /**
+     * @param boolean $lunasBiayaSekali
+     */
+    public function setLunasBiayaSekali($lunasBiayaSekali)
+    {
+        $this->lunasBiayaSekali = $lunasBiayaSekali;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLunasBiayaSekali()
+    {
+        return $this->lunasBiayaSekali;
+    }
+
+    /**
+     * @param boolean $sisaBiayaSekali
+     */
+    public function setSisaBiayaSekali($sisaBiayaSekali)
+    {
+        $this->sisaBiayaSekali = $sisaBiayaSekali;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getSisaBiayaSekali()
+    {
+        return $this->sisaBiayaSekali;
     }
 
     /**
