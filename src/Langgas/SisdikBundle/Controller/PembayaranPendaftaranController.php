@@ -80,7 +80,7 @@ class PembayaranPendaftaranController extends Controller
 
             if ($searchdata['tahun'] instanceof Tahun) {
                 $querybuilder
-                    ->andWhere('tahun.id = :tahun')
+                    ->andWhere('siswa.tahun = :tahun')
                     ->setParameter('tahun', $searchdata['tahun'])
                 ;
 

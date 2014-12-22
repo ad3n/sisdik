@@ -85,15 +85,9 @@
             <td data-title="{{ 'label.gender'|trans }}">{% if data.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
             <td data-title="{{ 'label.kelas.aktif'|trans }}">{% if data.siswaKelasAktif %}{{ data.siswaKelasAktif.kelas.nama }}{% endif %}</td>
             <td data-title="{{ 'label.ortuwali.entri'|trans }}">
-            {% if data.orangtuaWali %}
-                {% for orangtua in data.orangtuaWali %}
-                    {% if orangtua %}
-                        {% if orangtua.aktif == 1 %}
-                            {% if orangtua.nama != "" %}{{ orangtua.nama }},{% endif %}
-                            {{ orangtua.ponsel }}
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
+            {% if data.orangtuaWaliAktif %}
+                {% if data.orangtuaWaliAktif.nama != "" %}{{ data.orangtuaWaliAktif.nama }},{% endif %}
+                {{ data.orangtuaWaliAktif.ponsel }}
             {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
