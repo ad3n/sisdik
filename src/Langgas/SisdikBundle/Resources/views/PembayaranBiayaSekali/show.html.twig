@@ -1,0 +1,100 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}transaksi.pembayaran.biaya.sekali.bayar{% endtrans %}{% endblock %}
+{% block content %}
+<style type="text/css">
+.extra-margin-top {
+    margin-top: 1.5em;
+}
+.extra-margin-bottom {
+    margin-bottom: 1em;
+}
+</style>
+
+<dl>
+    <dt>{{ 'label.identitas.sisdik'|trans }}</dt>
+    <dd class="info-id">{{ siswa.nomorIndukSistem }}</dd>
+    <dt>{{ 'label.year.entry'|trans }}</dt>
+    <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.nomor.induk'|trans }}</dt>
+    <dd>{{ siswa.nomorInduk }}</dd>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ siswa.namaLengkap }}</dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<h4>{{ 'label.detail.transaksi.pembayaran.biaya.sekali.bayar'|trans }}</h4>
+
+<dl>
+    <dt>{{ 'label.biaya.sekali.bayar'|trans }}</dt>
+    <dd>
+        <ul>
+        {% for biaya in entity.daftarBiayaSekali %}
+            <li>
+                {{ biaya.nama }}, {{ currencySymbol(locale) }}. {% if biaya %}{{ biaya.nominal|number_format(0, ',', '.') }}{% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    </dd>
+{% if adaPotongan == 1 %}
+    {% if jenisPotongan == 'nominal' %}
+        <dt>{{ 'label.discount.amount'|trans }}</dt>
+        <dd><span class="icon-gift" style="margin: 0;" title="{{ 'label.discount.fee'|trans }}"></span> {{ nominalPotongan|number_format(0, ',', '.') }}</dd>
+    {% elseif jenisPotongan == 'persentase' %}
+        <dt>{{ 'label.discount.percentage'|trans }}</dt>
+        <dd><span class="icon-gift" style="margin: 0;" title="{{ 'label.discount.fee'|trans }}"></span> {{ persenPotongan }}% ({{ nominalPotongan|number_format(0, ',', '.') }})</dd>
+    {% endif %}
+{% endif %}
+    <dt>{{ 'shortinfo.total.paid'|trans }}</dt>
+    <dd>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</dd>
+
+    <dt>{{ 'label.payment.remains.total'|trans }}</dt>
+    <dd>{{ currencySymbol(locale) }}. {{ (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya)|number_format(0, ',', '.') }}</dd>
+
+{% for transaksi in transaksiPembayaran %}
+    {% if loop.length > 1 %}
+        <dt class="extra-margin-top">{{ 'label.payment.number'|trans }} #{{ loop.index }}</dt>
+        <dd class="extra-margin-top">
+            {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
+            <a href="{{ path('pembayaran_biaya_sekali__cetaknota', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+        </dd>
+        <dt>{{ 'label.payment.date'|trans }} #{{ loop.index }}</dt>
+        <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
+        <dt>{{ 'label.pay.amount'|trans }} #{{ loop.index }}</dt>
+        <dd>{{ currencySymbol(locale) }}. {{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</dd>
+        <dt>{{ 'label.payment.description'|trans }} #{{ loop.index }}</dt>
+        <dd class="extra-margin-bottom">{{ transaksi.keterangan }}</dd>
+    {% else %}
+        <dt class="extra-margin-top">{{ 'label.payment.number'|trans }}</dt>
+        <dd class="extra-margin-top">
+            {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
+            <a href="{{ path('pembayaran_biaya_sekali__cetaknota', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+        </dd>
+        <dt>{{ 'label.payment.date'|trans }}</dt>
+        <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
+        <dt>{{ 'label.pay.amount'|trans }}</dt>
+        <dd>{{ currencySymbol(locale) }}. {{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</dd>
+        <dt>{{ 'label.payment.description'|trans }}</dt>
+        <dd>{{ transaksi.keterangan }}</dd>
+    {% endif %}
+{% endfor %}
+</dl>
+
+<div class="clearfix extra-margin-bottom"></div>
+
+{% if (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya) > 0 %}
+    <a href="{{ path('pembayaran_biaya_sekali__edit', { 'sid': siswa.id, 'id': entity.id }) }}" title="{{ 'tip.cicilan.pembayaran.biaya.sekali.bayar'|trans }}">
+        <span class="icon-shopping-cart"></span>
+        {{ 'label.tambah.cicilan'|trans }}
+    </a>
+
+    <div class="clearfix extra-margin-bottom"></div>
+{% endif %}
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('pembayaran_biaya_sekali__summary', { 'sid': siswa.id }) }}">{{ 'link.kembali.ke.ringkasan.pembayaran.biaya.sekali.bayar'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

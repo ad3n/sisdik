@@ -165,6 +165,7 @@ class Builder extends ContainerAware
             ]);
 
             $payments->addChild($translator->trans('links.pembayaran.biaya.pendaftaran', [], 'navigations'), ['route' => 'pembayaran_biaya_pendaftaran__daftar']);
+            $payments->addChild($translator->trans('links.pembayaran.biaya.sekali.bayar', [], 'navigations'), ['route' => 'pembayaran_biaya_sekali__daftar']);
 
             if ($securityContext->isGranted([
                 new Expression("hasAnyRole('ROLE_BENDAHARA')")

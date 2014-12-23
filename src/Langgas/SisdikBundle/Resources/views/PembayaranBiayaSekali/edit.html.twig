@@ -1,0 +1,167 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}pembayaran.cicilan.biaya.sekali.bayar{% endtrans %}<br>{{ siswa.namaLengkap }}{% endblock %}
+{% block content %}
+<style type="text/css">
+.controls {
+    margin-left: 0;
+}
+#payable-amount-remains {
+    cursor: pointer;
+}
+.error-info .help-inline {
+    color: #B94A48;
+}
+.keterangan-pembayaran:after {
+    content: "{{ 'label.keterangan'|trans }}";
+}
+</style>
+
+        <div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran" style="min-width: 80%;">{{ siswa.keterangan }}</div><div class="clearfix"></div>{% endif %}
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-8">
+            <dl>
+                <dt>{{ 'label.identitas.sisdik'|trans }}</dt>
+                <dd class="info-id">{{ siswa.nomorIndukSistem }}</dd>
+                <dt>{{ 'label.year.entry'|trans }}</dt>
+                <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+                <dt>{{ 'label.nomor.induk'|trans }}</dt>
+                <dd>{{ siswa.nomorInduk }}</dd>
+                <dt>{{ 'label.name.full'|trans }}</dt>
+                <dd>{{ siswa.namaLengkap }}</dd>
+                <dt>{{ 'label.gender'|trans }}</dt>
+                <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
+                <dt>{{ 'label.religion'|trans }}</dt>
+                <dd>{{ siswa.agama|title }}</dd>
+                <dt>{{ 'label.address'|trans }}</dt>
+                <dd>{{ siswa.alamat }}</dd>
+                {% if siswa.orangtuaWaliAktif %}
+                    <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                    <dd>{{ siswa.orangtuaWaliAktif.nama }}</dd>
+                    <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                    <dd>{{ siswa.orangtuaWaliAktif.ponsel }}</dd>
+                {% endif %}
+                </dd>
+            </dl>
+        </div>
+
+<div class="clearfix" style="margin-bottom: 2em;"></div>
+
+<form id="pay-form" action="{{ path('pembayaran_biaya_sekali__update', { 'sid': siswa.id, 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+    <div id="payment-info" style="margin-bottom: 18px; margin-top: 0.5em;">
+    <h4>{{ entity.daftarBiayaSekali[0].nama }}</h4>
+    {% if adaPotongan == 1 %}
+        {% if jenisPotongan == 'nominal' %}
+            {{ 'label.discount.amount'|trans }} {{ currencySymbol(locale) }}. {{ nominalPotongan|number_format(0, ',', '.') }}<br />
+        {% elseif jenisPotongan == 'persentase' %}
+            {{ 'label.discount.percentage'|trans }} {{ persenPotongan }}% ({{ nominalPotongan|number_format(0, ',', '.') }})<br />
+        {% endif %}
+    {% endif %}
+        {{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (nominalBiaya - nominalPotongan)|number_format(0, ',', '.') }}</span></b><br />
+        {{ 'shortinfo.total.paid'|trans }} <b>{{ currencySymbol(locale) }}. {{ totalNominalTransaksiSebelumnya|number_format(0, ',', '.') }}</b><br />
+        {{ 'label.payment.remains.total'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ (nominalBiaya - nominalPotongan - totalNominalTransaksiSebelumnya)|number_format(0, ',', '.') }}</span></b>
+    </div>
+    {% for transaksi in edit_form.transaksiPembayaranSekali %}
+        {% if loop.length > 1 %}
+            {% if not loop.last %}
+                <div class="form-group">
+                    {% set labelPayAmount = 'label.pay.amount'|trans %}
+                    {{ form_label(transaksi.nominalPembayaran, labelPayAmount ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.nominalPembayaran, { 'attr': {'readonly': 'readonly'} }) }}
+                        <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {% set labelPaymentDescription = 'label.payment.description'|trans %}
+                    {{ form_label(transaksi.keterangan, labelPaymentDescription ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.keterangan, { 'attr': {'readonly': 'readonly'} }) }}
+                        <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="form-group">
+                    {% set labelPayAmount = 'label.pay.amount'|trans %}
+                    {{ form_label(transaksi.nominalPembayaran, labelPayAmount ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.nominalPembayaran) }}
+                        <span class="error-info">{{ form_errors(transaksi.nominalPembayaran) }}</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {% set labelPaymentDescription = 'label.payment.description'|trans %}
+                    {{ form_label(transaksi.keterangan, labelPaymentDescription ~ ' #' ~ loop.index) }}
+                    <div class="col-sm-8 col-md-7 col-lg-7">
+                        {{ form_widget(transaksi.keterangan) }}
+                        <span class="error-info">{{ form_errors(transaksi.keterangan) }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            {{ form_row(transaksi) }}
+        {% endif %}
+    {% endfor %}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
+    </div>
+    {{ form_rest(edit_form) }}
+</form>
+
+<div class="clearfix"></div>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('pembayaran_biaya_sekali__summary', { 'sid': siswa.id }) }}">{{ 'link.kembali.ke.ringkasan.pembayaran.biaya.sekali.bayar'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+var total = 0;
+var paidamount = {{ totalNominalTransaksiSebelumnya }};
+
+$(document).ready(function() {
+    $("#payable-amount-remains").click(function() {
+        $(".pay-amount:last").val($(this).text());
+    });
+
+    $("#pay-form").submit(function() {
+        $(this).find(':submit').attr('disabled','disabled');
+
+        var payamount = 0;
+        var feeamount = parseInt($.trim($("#payable-amount").text().split('.').join('')));
+
+        total = 0;
+
+        $(".pay-amount").each(function() {
+            var num = 0;
+
+            str = $.trim($(this).val().split('.').join(''));
+            num = str.match(/\d+/);
+            total += parseInt(num);
+        });
+
+        payamount = parseInt(total);
+
+        if (payamount > feeamount) {
+            alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
+            $(this).find(':submit').removeAttr('disabled');
+            return false;
+        } else if (payamount == paidamount) {
+            alert("{{ 'shortinfo.pay.nozero'|trans }}");
+            $(this).find(':submit').removeAttr('disabled');
+            return false;
+        }
+
+        return true;
+    });
+});
+</script>
+{% endblock javascripts_custom %}

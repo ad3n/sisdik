@@ -1,0 +1,131 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.pembayaran.biaya.sekali.bayar{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.form-inline .form-group {
+    display: inline-block;
+    margin-right: 0.8em;
+    margin-bottom: 7px;
+}
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline #persen-bayar {
+    display: inline;
+    padding: 0;
+    font-weight: normal;
+    margin: 0;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('pembayaran_biaya_sekali__daftar') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('pembayaran_biaya_sekali__daftar') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix" style="margin-top: 10px;"></div>
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ pendaftarTotal }}
+</div>
+
+<div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<i class="fa fa-refresh fa-fw"></i></a>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.identitas.sisdik'|trans }}</th>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
+            </th>
+            <th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
+            </th>
+            <th>{{ 'label.paid.amount'|trans }}</th>
+            <th>{{ 'label.payment.remains'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.identitas.sisdik'|trans }}" class="info-id">{{ data.nomorIndukSistem }}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+            <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
+            <td data-title="{{ 'label.paid.amount'|trans }}">
+                {% set totalBayar = 0 %}
+                {% set totalBiayaMasuk = 0 %}
+                {% set totalPotongan = 0 %}
+                {% set totalBiayaSisa = 0 %}
+                {% set totalBiaya = 0 %}
+                {% set biayaTersimpan = '' %}
+
+                {% for pembayaran in data.pembayaranSekali %}
+                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+                    {% for biaya in pembayaran.daftarBiayaSekali %}
+                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+                        {% set biayaTersimpan = biaya.biayaSekali.id ~ ',' ~ biayaTersimpan %}
+                    {% endfor %}
+                    {% for transaksi in pembayaran.transaksiPembayaranSekali %}
+                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% if biayaTersimpan != '' %}
+                    {% set remainInfo %}
+                        {% render url('fee_once_remains', {'tahun': data.tahun.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% else %}
+                    {% set remainInfo %}
+                        {% render url('fee_once_totalinfo', {'tahun': data.tahun.id, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% endif %}
+                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+
+                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {% if totalPotongan > 0 %}
+                <i class="fa fa-gift"></i>
+                {% endif %}
+                {{ totalBiaya|number_format(0, ',', '.') }}
+            </td>
+            <td data-title="{{ 'label.payment.remains'|trans }}">
+                {% if (totalBiaya - totalBayar) == 0 %}
+                    ({{ 'paidoff'|trans }})
+                {% else %}
+                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('pembayaran_biaya_sekali__summary', {'sid': data.id}) }}" title="{{ 'tip.pembayaran.biaya.sekali.bayar'|trans }}"><i class="fa fa-shopping-cart"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
