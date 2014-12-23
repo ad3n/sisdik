@@ -57,7 +57,12 @@
         <dt class="extra-margin-top">{{ 'label.payment.number'|trans }} #{{ loop.index }}</dt>
         <dd class="extra-margin-top">
             {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
-            <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+            <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}">
+                <span class="fa-stack">
+                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                    <i class="fa fa-print fa-stack-1x"></i>
+                </span>
+            </a>
         </dd>
         <dt>{{ 'label.payment.date'|trans }} #{{ loop.index }}</dt>
         <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
@@ -69,7 +74,12 @@
         <dt class="extra-margin-top">{{ 'label.payment.number'|trans }}</dt>
         <dd class="extra-margin-top">
             {{ transaksi.nomorTransaksi }}&nbsp;&nbsp;
-            <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}" class="icon-print"></a>
+            <a href="{{ path('payment_registrationfee_printreceipt', { 'sid': siswa.id, 'pid': entity.id, 'id': transaksi.id }) }}" title="{{ 'tip.print.receipt'|trans }}">
+                <span class="fa-stack">
+                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                    <i class="fa fa-print fa-stack-1x"></i>
+                </span>
+            </a>
         </dd>
         <dt>{{ 'label.payment.date'|trans }}</dt>
         <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
