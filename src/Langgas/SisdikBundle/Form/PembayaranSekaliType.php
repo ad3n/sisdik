@@ -2,11 +2,9 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Langgas\SisdikBundle\Entity\BiayaSekali;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
@@ -14,83 +12,90 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class PembayaranSekaliType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @var integer
-     */
-    private $siswaId;
-
-    /**
-     * @param ContainerInterface $container
-     * @param string             $siswaId
-     */
-    public function __construct(ContainerInterface $container, $siswaId)
-    {
-        $this->container = $container;
-        $this->siswaId = $siswaId;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($this->siswaId);
-
-        $querybuilder = $em->createQueryBuilder()
-            ->select('biaya')
-            ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
-            ->where('biaya.tahun = :tahun')
-            ->andWhere('biaya.gelombang = :gelombang')
-            ->orderBy('biaya.urutan', 'ASC')
-            ->setParameter('tahun', $siswa->getTahun())
-            ->setParameter('gelombang', $siswa->getGelombang())
-        ;
-        $results = $querybuilder->getQuery()->getResult();
-
-        $availableFees = [];
-        foreach ($results as $entity) {
-            if (is_object($entity) && $entity instanceof BiayaSekali) {
-                $availableFees[$entity->getId()] =
-                    (
-                        strlen($entity->getJenisBiaya()->getNama()) > 25 ? substr($entity->getJenisbiaya()->getNama(), 0, 22) . '...' : $entity->getJenisbiaya()->getNama()
-                    )
-                    . ', '
-                    . number_format($entity->getNominal(), 0, ',', '.')
-                ;
-            }
-        }
-
         $builder
-            ->add('daftarBiayaSekali', 'choice', [
-                'choices' => $availableFees,
-                'expanded' => false,
-                'multiple' => true,
-                'attr' => array(
-                    'class' => 'multiselect',
-                ),
+            ->add('siswa', 'sisdik_entityhidden', [
+                'required' => true,
+                'class' => 'LanggasSisdikBundle:Siswa',
+            ])
+            ->add('daftarBiayaSekali', 'collection', [
+                'type' => 'sisdik_daftarbiayasekali',
+                'required' => true,
+                'allow_add' => true,
+                'allow_delete' => false,
+                'by_reference' => false,
+                'options' => [
+                    'widget_form_group' => false,
+                    'label_render' => false,
+                ],
                 'label_render' => false,
+                'widget_form_group' => false,
+            ])
+            ->add('adaPotongan', 'checkbox', [
+                'label' => 'label.discount',
+                'required' => false,
+                'attr' => [
+                    'class' => 'discount-check',
+                ],
+                'widget_checkbox_label' => 'widget',
+            ])
+            ->add('jenisPotongan', 'choice', [
+                'label' => 'label.discount',
+                'required' => true,
+                'choices' => $this->buildJenisPotongan(),
+                'expanded' => true,
+                'multiple' => false,
+                'label_render' => false,
+                'attr' => [
+                    'class' => 'discount-type',
+                ],
+            ])
+            ->add('persenPotongan', 'percent', [
+                'type' => 'integer',
+                'required' => false,
+                'precision' => 0,
+                'attr' => [
+                    'class' => 'small percentage-discount',
+                    'autocomplete' => 'off',
+                ],
+                'label' => 'label.discount.percentage',
+            ])
+            ->add('nominalPotongan', 'money', [
+                'currency' => 'IDR',
+                'required' => false,
+                'precision' => 0,
+                'grouping' => 3,
+                'attr' => [
+                    'class' => 'medium nominal-discount',
+                    'autocomplete' => 'off',
+                ],
+                'label' => 'label.discount.amount',
             ])
             ->add('transaksiPembayaranSekali', 'collection', [
-                'type' => new TransaksiPembayaranSekaliType(),
+                'type' => 'sisdik_transaksipembayaransekali',
                 'by_reference' => false,
                 'attr' => [
                     'class' => 'large',
                 ],
-                'label' => 'label.applicant.oncefee.transaction',
+                'label' => 'label.fee.registration.transaction',
                 'options' => [
+                    'widget_form_group' => false,
                     'label_render' => false,
                 ],
                 'label_render' => false,
                 'allow_add' => true,
-                'allow_delete' => true,
+                'allow_delete' => false,
             ])
         ;
+    }
+
+    public function buildJenisPotongan()
+    {
+        return [
+            'nominal' => 'nominal',
+            'persentase' => 'persentase',
+        ];
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -104,6 +109,6 @@ class PembayaranSekaliType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_pembayaransekalitype';
+        return 'sisdik_pembayaransekali';
     }
 }
