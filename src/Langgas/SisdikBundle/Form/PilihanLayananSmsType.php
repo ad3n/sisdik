@@ -53,7 +53,8 @@ class PilihanLayananSmsType extends AbstractType
                     PilihanLayananSms::getDaftarLayananPendaftaran(),
                     PilihanLayananSms::getDaftarLayananLaporan(),
                     PilihanLayananSms::getDaftarLayananKehadiran(),
-                    PilihanLayananSms::getDaftarLayananKepulangan()
+                    PilihanLayananSms::getDaftarLayananKepulangan(),
+                    PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
                 ),
                 'required' => true,
                 'label' => 'label.layanansms.jenis',
