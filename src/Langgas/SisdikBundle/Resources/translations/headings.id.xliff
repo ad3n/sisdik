@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-11-18T19:31:00Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-12-23T20:04:31Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -79,6 +79,11 @@
         <source>biaya.pendaftaran.konfirmasi.ubah</source>
         <target>Konfirmasi Pengubahan Biaya Pendaftaran</target>
       </trans-unit>
+      <trans-unit id="f5877400908a9d62f4b6ecf7b503be2637e6db7e" resname="biaya.sekali.bayar.konfirmasi.ubah">
+        <jms:reference-file line="3">views/BiayaSekali/edit.confirm.html.twig</jms:reference-file>
+        <source>biaya.sekali.bayar.konfirmasi.ubah</source>
+        <target>Konfirmasi Pengubahan Biaya Sekali Bayar</target>
+      </trans-unit>
       <trans-unit id="9ed0e2f8749d0a3ed0372ff56262ef94d75efa76" resname="daftar.kepulangan.siswa">
         <jms:reference-file line="3">views/KepulanganSiswa/edit.html.twig</jms:reference-file>
         <jms:reference-file line="4">views/KepulanganSiswa/index.html.twig</jms:reference-file>
@@ -89,6 +94,16 @@
         <jms:reference-file line="3">views/MesinWakil/index.html.twig</jms:reference-file>
         <source>daftar.mesin.wakil</source>
         <target>Daftar Mesin Wakil</target>
+      </trans-unit>
+      <trans-unit id="de33213cd8c35dec795ea1dd733a7904dd2b4f3a" resname="daftar.pembayaran.biaya.sekali.bayar">
+        <jms:reference-file line="3">views/PembayaranBiayaSekali/index.html.twig</jms:reference-file>
+        <source>daftar.pembayaran.biaya.sekali.bayar</source>
+        <target>Daftar Pembayaran Biaya Sekali Bayar</target>
+      </trans-unit>
+      <trans-unit id="a4393a425cee4c9c437932704fcab9b6344cb027" resname="daftar.pengaturan.layanan.sms">
+        <jms:reference-file line="3">views/LayananSms/index.html.twig</jms:reference-file>
+        <source>daftar.pengaturan.layanan.sms</source>
+        <target>Daftar Pengaturan Layanan SMS</target>
       </trans-unit>
       <trans-unit id="caeee085ad6bc0295c8a91442a91dd6d432f8c6a" resname="daftar.vendor.sekolah">
         <jms:reference-file line="3">views/VendorSekolah/index.html.twig</jms:reference-file>
@@ -215,6 +230,11 @@
         <source>data.studentclass.list</source>
         <target>Riwayat Kelas</target>
       </trans-unit>
+      <trans-unit id="fd63cb380c348c99361c45e4861ba4370c5ff334" resname="detail.layanan.sms">
+        <jms:reference-file line="3">views/LayananSms/show.html.twig</jms:reference-file>
+        <source>detail.layanan.sms</source>
+        <target>Detail Layanan SMS</target>
+      </trans-unit>
       <trans-unit id="4e2645387f58fab436b4d6ab595b79e1a7c559d3" resname="detail.mesin.wakil">
         <jms:reference-file line="3">views/MesinWakil/show.html.twig</jms:reference-file>
         <source>detail.mesin.wakil</source>
@@ -326,15 +346,15 @@
         <target>Daftar Jenis Biaya</target>
       </trans-unit>
       <trans-unit id="fe003554de05d274ac4670afb01df2f0cae200fc" resname="informasi.kehadiran.siswa">
-        <jms:reference-file line="65">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="111">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="112">Dashboard/TabulasiKehadiranSiswa/index.html.twig</jms:reference-file>
-        <jms:reference-file line="65">views/Default/pengelola.html.twig</jms:reference-file>
+        <jms:reference-file line="111">views/Default/pengelola.html.twig</jms:reference-file>
         <source>Informasi Kehadiran</source>
         <target>Informasi Kehadiran Siswa</target>
       </trans-unit>
       <trans-unit id="d7161b54b5c50edbcd8c75dcdc34d6a4b20520ed" resname="informasi.kehadiran.siswa.total">
-        <jms:reference-file line="72">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
-        <jms:reference-file line="72">views/Default/pengelola.html.twig</jms:reference-file>
+        <jms:reference-file line="118">Dashboard/GrafikKehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="118">views/Default/pengelola.html.twig</jms:reference-file>
         <source>Informasi Kehadiran Total</source>
         <target>Informasi Kehadiran Siswa Keseluruhan</target>
       </trans-unit>
@@ -438,6 +458,11 @@
         <source>layanansms.pembuatan</source>
         <target>Membuat Pilihan Layanan SMS</target>
       </trans-unit>
+      <trans-unit id="82e29b7b162df723f10d491e79c265ea2fda851b" resname="membuat.pengaturan.layanan.sms">
+        <jms:reference-file line="3">views/LayananSms/new.html.twig</jms:reference-file>
+        <source>membuat.pengaturan.layanan.sms</source>
+        <target>Membuat Pengaturan Layanan SMS</target>
+      </trans-unit>
       <trans-unit id="ceffded997b82e9f1aaeb918d27ac22759d23e19" resname="menambah.vendor.sekolah">
         <jms:reference-file line="3">views/VendorSekolah/new.html.twig</jms:reference-file>
         <source>menambah.vendor.sekolah</source>
@@ -447,6 +472,11 @@
         <jms:reference-file line="3">views/MesinWakil/edit.html.twig</jms:reference-file>
         <source>mengubah.mesin.wakil</source>
         <target>Mengubah Mesin Wakil</target>
+      </trans-unit>
+      <trans-unit id="731a93f4a320bf12f999a347dcee0759a0bce1df" resname="mengubah.pengaturan.layanan.sms">
+        <jms:reference-file line="3">views/LayananSms/edit.html.twig</jms:reference-file>
+        <source>mengubah.pengaturan.layanan.sms</source>
+        <target>Mengubah Pengaturan Layanan SMS</target>
       </trans-unit>
       <trans-unit id="c90ebade95347cf56dd4920e6b3f644213a5a0c2" resname="mengubah.vendor.sekolah">
         <jms:reference-file line="3">views/VendorSekolah/edit.html.twig</jms:reference-file>
@@ -479,12 +509,12 @@
         <target>Menambah Data Orang Tua/Wali</target>
       </trans-unit>
       <trans-unit id="b513782a2b10409e682fa95381d2a3dfaa249062" resname="payment.registrationfee.entry">
-        <jms:reference-file line="3">views/PembayaranPendaftaran/index.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PembayaranPendaftaran/summary.html.twig</jms:reference-file>
         <source>payment.registrationfee.entry</source>
         <target>Pembayaran Biaya Pendaftaran</target>
       </trans-unit>
       <trans-unit id="0a154ce19a4aae546db5dd09a6c1e29be29128b0" resname="payment.registrationfee.list">
-        <jms:reference-file line="3">views/SiswaApplicantPayment/index.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PembayaranPendaftaran/index.html.twig</jms:reference-file>
         <source>payment.registrationfee.list</source>
         <target>Daftar Pembayaran Biaya Pendaftaran</target>
       </trans-unit>
@@ -514,6 +544,11 @@
         <jms:reference-file line="61">views/KepulanganSiswa/index.html.twig</jms:reference-file>
         <source>pembaruan.kepulangan.manual</source>
         <target>Pembaruan Kepulangan Manual</target>
+      </trans-unit>
+      <trans-unit id="2bae0c8271ec4ea6072511bb0e844f9e96310d00" resname="pembayaran.cicilan.biaya.sekali.bayar">
+        <jms:reference-file line="3">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
+        <source>pembayaran.cicilan.biaya.sekali.bayar</source>
+        <target>Cicilan Pembayaran Biaya Sekali Bayar</target>
       </trans-unit>
       <trans-unit id="76f5bbbce0ec96552ffffac64ac3267339ee9a46" resname="pembuatan.mesin.wakil">
         <jms:reference-file line="3">views/MesinWakil/new.html.twig</jms:reference-file>
@@ -699,6 +734,11 @@
         <jms:reference-file line="3">views/JenisImbalan/index.html.twig</jms:reference-file>
         <source>reward.type.list</source>
         <target>Daftar Jenis Imbalan</target>
+      </trans-unit>
+      <trans-unit id="ae028fc6f2ed6f1fbcddaa33ebb088060d84abdc" resname="ringkasan.pembayaran.biaya.sekali.bayar">
+        <jms:reference-file line="3">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
+        <source>ringkasan.pembayaran.biaya.sekali.bayar</source>
+        <target>Pembayaran Biaya Sekali Bayar</target>
       </trans-unit>
       <trans-unit id="f8b22c88638173d0d1e0d7acbe7dc0fc86ea8416" resname="riwayat.penyakit.daftar">
         <jms:reference-file line="3">views/PenyakitSiswa/index.html.twig</jms:reference-file>
@@ -926,6 +966,11 @@
         <jms:reference-file line="3">views/TokenSekolah/new.html.twig</jms:reference-file>
         <source>token.sekolah.pembuatan</source>
         <target>Membuat Token Sekolah</target>
+      </trans-unit>
+      <trans-unit id="c6f8b212fe82e7fdca18ad159026cd1c9b67669c" resname="transaksi.pembayaran.biaya.sekali.bayar">
+        <jms:reference-file line="3">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
+        <source>transaksi.pembayaran.biaya.sekali.bayar</source>
+        <target>Transaksi Pembayaran Biaya Sekali Bayar</target>
       </trans-unit>
       <trans-unit id="e837c430c4a76d1526d0f367a5c68ff2ed5721af" resname="warning.removal">
         <jms:reference-file line="10">views/Siswa/deleteconfirm.html.twig</jms:reference-file>
