@@ -16,28 +16,20 @@
         </placeholders>
         <table margin-left="30px" font-size="11px" line-height="16px">
             <tr>
-                <td width="130px" border-type="none">{{ 'identitas.sisdik'|trans({}, 'printing') }}</td>
+                <td width="130px" border-type="none">{{ 'identitas.sisdik'|trans({}, 'printing') }} / {{ 'nomor.induk'|trans({}, 'printing') }}</td>
                 <td width="10px" border-type="none">:</td>
-                <td border-type="none">{{ siswa.nomorIndukSistem }}</td>
+                <td border-type="none">{{ siswa.nomorIndukSistem }} / {{ siswa.nomorInduk }}</td>
                 <td width="110px" border-type="none">{{ 'receiptnum'|trans({}, 'printing') }}</td>
                 <td width="10px" border-type="none">:</td>
                 <td width="130px" border-type="none">{{ transaksi.nomorTransaksi }}</td>
             </tr>
             <tr>
-                <td border-type="none">{{ 'nomor.induk'|trans({}, 'printing') }}</td>
-                <td border-type="none">:</td>
-                <td border-type="none">{{ siswa.nomorInduk }}</td>
-                <td border-type="none">{{ 'date'|trans({}, 'printing') }}</td>
-                <td border-type="none">:</td>
-                <td border-type="none">{{ transaksi.waktuSimpan|localeDate('long') }}</td>
-            </tr>
-            <tr>
                 <td width="130px" border-type="none">{{ 'nama.siswa'|trans({}, 'printing') }}</td>
                 <td width="10px" border-type="none">:</td>
                 <td border-type="none">{{ siswa.namaLengkap }}</td>
-                <td width="110px" border-type="none"></td>
-                <td width="10px" border-type="none"></td>
-                <td width="130px" border-type="none"></td>
+                <td border-type="none">{{ 'date'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none">{{ transaksi.waktuSimpan|localeDate('long') }}</td>
             </tr>
         </table>
 
