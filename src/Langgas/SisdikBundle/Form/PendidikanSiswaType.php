@@ -114,6 +114,6 @@ class PendidikanSiswaType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_pendidikansiswatype';
+        return 'sisdik_pendidikansiswa';
     }
 }

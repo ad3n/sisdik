@@ -1,95 +1,94 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
-use Langgas\SisdikBundle\Util\RuteAsal;
+
+use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Langgas\SisdikBundle\Entity\PendidikanSiswa;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Util\RuteAsal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\PendidikanSiswa;
-use Langgas\SisdikBundle\Form\PendidikanSiswaType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * PendidikanSiswa controller.
- *
  * @Route("/{sid}/pendidikan-sebelumnya", requirements={"sid"="\d+"})
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_WALI_KELAS', 'ROLE_PANITIA_PSB')")
  */
 class PendidikanSiswaController extends Controller
 {
     /**
-     * Lists all PendidikanSiswa entities.
-     *
      * @Route("/pendaftar", name="pendidikan-sebelumnya-pendaftar")
      * @Route("/siswa", name="pendidikan-sebelumnya-siswa")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction($sid) {
-        $this->isRegisteredToSchool();
+    public function indexAction($sid)
+    {
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:PendidikanSiswa', 't')
-                ->where('t.siswa = :siswa')->orderBy('t.jenjang', 'ASC')->setParameter('siswa', $sid);
+        $querybuilder = $em->createQueryBuilder()
+            ->select('pendidikanSiswa')
+            ->from('LanggasSisdikBundle:PendidikanSiswa', 'pendidikanSiswa')
+            ->where('pendidikanSiswa.siswa = :siswa')
+            ->orderBy('pendidikanSiswa.jenjang', 'ASC')
+            ->setParameter('siswa', $sid)
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-                'pagination' => $pagination,
-                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
-                'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
+        return [
+            'pagination' => $pagination,
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
+            'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
+            'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        ];
     }
 
     /**
-     * Displays a form to create a new PendidikanSiswa entity.
-     *
      * @Route("/pendaftar/new", name="pendidikan-sebelumnya-pendaftar_new")
      * @Route("/siswa/new", name="pendidikan-sebelumnya-siswa_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction($sid) {
-        $this->isRegisteredToSchool();
+    public function newAction($sid)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = new PendidikanSiswa();
-        $form = $this->createForm(new PendidikanSiswaType(), $entity);
+        $form = $this->createForm('sisdik_pendidikansiswa', $entity);
 
-        return array(
-                'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
+            'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        ];
     }
 
     /**
-     * Creates a new PendidikanSiswa entity.
-     *
      * @Route("/pendaftar", name="pendidikan-sebelumnya-pendaftar_create")
      * @Route("/siswa", name="pendidikan-sebelumnya-siswa_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PendidikanSiswa:new.html.twig")
      */
-    public function createAction(Request $request, $sid) {
-        $this->isRegisteredToSchool();
+    public function createAction(Request $request, $sid)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $entity = new PendidikanSiswa();
-        $form = $this->createForm(new PendidikanSiswaType(), $entity);
+        $form = $this->createForm('sisdik_pendidikansiswa', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -98,45 +97,41 @@ class PendidikanSiswaController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.pendidikan.sebelumnya.tersimpan',
-                                            array(
-                                                    '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
-                                                    '%nama%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.pendidikan.sebelumnya.tersimpan', [
+                        '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
+                        '%nama%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl(
-                                            RuteAsal::ruteAsalSiswaPendaftar(
-                                                    $this->getRequest()->getPathInfo()) == 'pendaftar' ? 'pendidikan-sebelumnya-pendaftar_show'
-                                                    : 'pendidikan-sebelumnya-siswa_show',
-                                            array(
-                                                'sid' => $sid, 'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl(
+                RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar' ? 'pendidikan-sebelumnya-pendaftar_show' : 'pendidikan-sebelumnya-siswa_show',
+                [
+                    'sid' => $sid,
+                    'id' => $entity->getId(),
+                ]
+            ));
         }
 
-        return array(
-                'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
-                'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
+            'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
+            'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        ];
     }
 
     /**
-     * Finds and displays a PendidikanSiswa entity.
-     *
      * @Route("/pendaftar/{id}", name="pendidikan-sebelumnya-pendaftar_show")
      * @Route("/siswa/{id}", name="pendidikan-sebelumnya-siswa_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($sid, $id) {
-        $this->isRegisteredToSchool();
+    public function showAction($sid, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -149,23 +144,22 @@ class PendidikanSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+            'daftarPilihanJenjangSekolah' => PendidikanSiswa::daftarPilihanJenjangSekolah(),
+            'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing PendidikanSiswa entity.
-     *
      * @Route("/pendaftar/{id}/edit", name="pendidikan-sebelumnya-pendaftar_edit")
      * @Route("/siswa/{id}/edit", name="pendidikan-sebelumnya-siswa_edit")
      * @Method("GET")
      * @Template()
      */
-    public function editAction($sid, $id) {
-        $this->isRegisteredToSchool();
+    public function editAction($sid, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -176,27 +170,26 @@ class PendidikanSiswaController extends Controller
             throw $this->createNotFoundException('Entity PendidikanSiswa tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new PendidikanSiswaType(), $entity);
+        $editForm = $this->createForm('sisdik_pendidikansiswa', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
+            'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        ];
     }
 
     /**
-     * Edits an existing PendidikanSiswa entity.
-     *
      * @Route("/pendaftar/{id}", name="pendidikan-sebelumnya-pendaftar_update")
      * @Route("/siswa/{id}", name="pendidikan-sebelumnya-siswa_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PendidikanSiswa:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id) {
-        $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $sid, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -208,7 +201,7 @@ class PendidikanSiswaController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new PendidikanSiswaType(), $entity);
+        $editForm = $this->createForm('sisdik_pendidikansiswa', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
@@ -223,45 +216,40 @@ class PendidikanSiswaController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.pendidikan.sebelumnya.terbarui',
-                                            array(
-                                                    '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
-                                                    '%nama%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.pendidikan.sebelumnya.terbarui', [
+                    '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
+                    '%nama%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl(
-                                            RuteAsal::ruteAsalSiswaPendaftar(
-                                                    $this->getRequest()->getPathInfo()) == 'pendaftar' ? 'pendidikan-sebelumnya-pendaftar_edit'
-                                                    : 'pendidikan-sebelumnya-siswa_edit',
-                                            array(
-                                                'sid' => $sid, 'id' => $id
-                                            )));
+            return $this->redirect($this->generateUrl(
+                RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar' ? 'pendidikan-sebelumnya-pendaftar_edit' : 'pendidikan-sebelumnya-siswa_edit',
+                [
+                    'sid' => $sid,
+                    'id' => $id,
+                ]
+            ));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-                'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
-                'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid),
+            'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
+        ];
     }
 
     /**
-     * Deletes a PendidikanSiswa entity.
-     *
      * @Route("/pendaftar/{id}/delete", name="pendidikan-sebelumnya-pendaftar_delete")
      * @Route("/siswa/{id}/delete", name="pendidikan-sebelumnya-siswa_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $sid, $id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction(Request $request, $sid, $id)
+    {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
@@ -277,73 +265,61 @@ class PendidikanSiswaController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.pendidikan.sebelumnya.terhapus',
-                                                array(
-                                                        '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
-                                                        '%nama%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.pendidikan.sebelumnya.terhapus', [
+                        '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
+                        '%nama%' => $entity->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.pendidikan.sebelumnya.gagal.dihapus',
-                                            array(
-                                                    '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
-                                                    '%nama%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.pendidikan.sebelumnya.gagal.dihapus', [
+                    '%siswa%' => $entity->getSiswa()->getNamaLengkap(),
+                    '%nama%' => $entity->getNama(),
+                ]))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl(
-                                        RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo())
-                                                == 'pendaftar' ? 'pendidikan-sebelumnya-pendaftar'
-                                                : 'pendidikan-sebelumnya-siswa',
-                                        array(
-                                            'sid' => $sid,
-                                        )));
+        return $this->redirect($this->generateUrl(
+            RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar' ? 'pendidikan-sebelumnya-pendaftar' : 'pendidikan-sebelumnya-siswa',
+            [
+                'sid' => $sid,
+            ]
+        ));
     }
 
     /**
-     * Creates a form to delete a PendidikanSiswa entity by id.
-     *
-     * @param mixed $id The entity id
+     * @param mixed $id
      *
      * @return Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
         if (RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) == 'pendaftar') {
-            $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
+            $menu[$translator->trans('headings.pendaftaran', [], 'navigations')][$translator->trans('links.registration', [], 'navigations')]->setCurrent(true);
         } else {
-            $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
-        }
-    }
-
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
+            $menu[$translator->trans('headings.academic', [], 'navigations')][$translator->trans('links.siswa', [], 'navigations')]->setCurrent(true);
         }
     }
 }
