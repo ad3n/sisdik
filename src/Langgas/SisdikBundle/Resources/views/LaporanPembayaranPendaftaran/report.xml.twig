@@ -36,6 +36,11 @@
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
+                        <text:p></text:p>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.tahun'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
@@ -52,6 +57,9 @@
                         <text:p>{{ biaya.jenisBiaya.nama }}</text:p>
                     </table:table-cell>
                 {% endfor %}
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ 'label.paid.amount.total'|trans }}</text:p>
+                    </table:table-cell>
                 </table:table-row>
             {% set baris = 2 %}
             {% for entity in entities %}
@@ -132,12 +140,12 @@
             {% endfor %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}</text:p>
+                        <text:p>{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</text:p>
                     </table:table-cell>
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</text:p>
+                        <text:p>{{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}</text:p>
                     </table:table-cell>
                 </table:table-row>
             </table:table>
