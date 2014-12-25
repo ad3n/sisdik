@@ -3,8 +3,8 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaran;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -51,7 +51,7 @@ class LaporanTransaksiKeuanganController extends Controller
 
         $qbtotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
@@ -59,18 +59,14 @@ class LaporanTransaksiKeuanganController extends Controller
 
         $qbsearchnum = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
 
         $querybuilder = $em->createQueryBuilder()
             ->select('transaksi')
-            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->addOrderBy('transaksi.waktuSimpan', 'DESC')
             ->setParameter('sekolah', $sekolah)
@@ -138,7 +134,6 @@ class LaporanTransaksiKeuanganController extends Controller
 
                 $tampilkanTercari = true;
             }
-
         }
 
         $transaksiTercari = intval($qbsearchnum->getQuery()->getSingleScalarResult());
@@ -159,8 +154,6 @@ class LaporanTransaksiKeuanganController extends Controller
     }
 
     /**
-     * Ekspor data laporan transaksi keuangan
-     *
      * @Route("/export", name="laporan-transaksi-keuangan_export")
      * @Method("POST")
      */
@@ -184,7 +177,7 @@ class LaporanTransaksiKeuanganController extends Controller
 
         $qbtotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
@@ -192,18 +185,14 @@ class LaporanTransaksiKeuanganController extends Controller
 
         $qbsearchnum = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
 
         $querybuilder = $em->createQueryBuilder()
             ->select('transaksi')
-            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
-            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
-            ->leftJoin('pembayaran.siswa', 'siswa')
+            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->addOrderBy('transaksi.waktuSimpan', 'DESC')
             ->setParameter('sekolah', $sekolah)
@@ -225,7 +214,7 @@ class LaporanTransaksiKeuanganController extends Controller
                 ;
 
                 $tampilkanTercari = true;
-                $judulLaporan .= " " . $this->get('translator')->trans('dari.tanggal') . " " . $dariTanggal->format("Y-m-d 00:00:00");
+                $judulLaporan .= " ".$this->get('translator')->trans('dari.tanggal')." ".$dariTanggal->format("Y-m-d 00:00:00");
             }
 
             if ($hinggaTanggal instanceof \DateTime) {
@@ -240,10 +229,10 @@ class LaporanTransaksiKeuanganController extends Controller
                 ;
 
                 $tampilkanTercari = true;
-                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " " . $hinggaTanggal->format("Y-m-d 24:00:00");
+                $judulLaporan .= " ".$this->get('translator')->trans('hingga.tanggal')." ".$hinggaTanggal->format("Y-m-d 24:00:00");
             } else {
                 $sekarang = new \DateTime();
-                $judulLaporan .= " " . $this->get('translator')->trans('hingga.tanggal') . " " . $sekarang->format("Y-m-d H:i:s");
+                $judulLaporan .= " ".$this->get('translator')->trans('hingga.tanggal')." ".$sekarang->format("Y-m-d H:i:s");
             }
 
             if ($searchdata['searchkey'] != '') {
@@ -262,7 +251,7 @@ class LaporanTransaksiKeuanganController extends Controller
                 ;
 
                 $tampilkanTercari = true;
-                $judulLaporan .= ", " . $this->get('translator')->trans('kata.pencarian') . " " . $searchkey;
+                $judulLaporan .= ", ".$this->get('translator')->trans('kata.pencarian')." ".$searchkey;
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
@@ -279,9 +268,9 @@ class LaporanTransaksiKeuanganController extends Controller
 
                 $tampilkanTercari = true;
                 $judulLaporan .= ", "
-                    . $this->get('translator')->trans('jumlah.pembayaran')
-                    . " $pembandingBayar "
-                    . number_format($searchdata['jumlahBayar'], 0, ',', '.')
+                    .$this->get('translator')->trans('jumlah.pembayaran')
+                    ." $pembandingBayar "
+                    .number_format($searchdata['jumlahBayar'], 0, ',', '.')
                 ;
             }
         } else {
@@ -290,29 +279,29 @@ class LaporanTransaksiKeuanganController extends Controller
 
         $transaksiTercari = intval($qbsearchnum->getQuery()->getSingleScalarResult());
 
-        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
-        $stylebase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::STYLEFILE;
+        $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
+        $stylebase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::STYLEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-        $filenameoutput = self::OUTPUTFILE . date("Y-m-d-h-i") . ".sisdik";
+        $filenameoutput = self::OUTPUTFILE.date("Y-m-d-h-i").".sisdik";
 
         $outputfiletype = "ods";
         $extensiontarget = $extensionsource = ".$outputfiletype";
-        $filesource = $filenameoutput . $extensionsource;
-        $filetarget = $filenameoutput . $extensiontarget;
+        $filesource = $filenameoutput.$extensionsource;
+        $filetarget = $filenameoutput.$extensiontarget;
 
         $fs = new Filesystem();
-        if (!$fs->exists($outputdir . $sekolah->getId() . '/')) {
-            $fs->mkdir($outputdir . $sekolah->getId() . '/');
+        if (!$fs->exists($outputdir.$sekolah->getId().'/')) {
+            $fs->mkdir($outputdir.$sekolah->getId().'/');
         }
 
-        $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
-        $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
+        $documentsource = $outputdir.$sekolah->getId().'/'.$filesource;
+        $documenttarget = $outputdir.$sekolah->getId().'/'.$filetarget;
 
         $entities = $querybuilder->getQuery()->getResult();
 
         if ($outputfiletype == 'ods') {
-            if (copy($documentbase, $documenttarget) === TRUE) {
+            if (copy($documentbase, $documenttarget) === true) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
                 $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:LaporanTransaksiKeuangan:styles.xml.twig"));
@@ -323,7 +312,7 @@ class LaporanTransaksiKeuanganController extends Controller
                     'judulLaporan' => $judulLaporan,
                 ]));
 
-                if ($ziparchive->close() === TRUE) {
+                if ($ziparchive->close() === true) {
                     $return = [
                         "redirectUrl" => $this->generateUrl("laporan-transaksi-keuangan_download", [
                             'filename' => $filetarget,
@@ -342,9 +331,7 @@ class LaporanTransaksiKeuanganController extends Controller
     }
 
     /**
-     * Download the generated file report
-     *
-     * @Route("/download/{filename}/{type}", name="laporan-transaksi-keuangan_download")
+     * @Route("/unduh/{filename}/{type}", name="laporan-transaksi-keuangan_download")
      * @Method("GET")
      */
     public function downloadReportFileAction($filename, $type = 'ods')
@@ -352,12 +339,12 @@ class LaporanTransaksiKeuanganController extends Controller
         $sekolah = $this->getSekolah();
 
         $filetarget = $filename;
-        $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
+        $documenttarget = self::DOCUMENTS_OUTPUTDIR.$sekolah->getId().'/'.$filetarget;
 
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
         $response->headers->set('Content-Disposition', $doc);
-        $response->headers->set('Content-Description', 'Laporan Keuangan Pendaftaran');
+        $response->headers->set('Content-Description', 'Laporan Keuangan Transaksi Keuangan');
 
         if ($type == 'ods') {
             $response->headers->set('Content-Type', 'application/vnd.oasis.opendocument.spreadsheet');
