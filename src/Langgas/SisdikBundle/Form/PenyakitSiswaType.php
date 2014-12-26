@@ -63,6 +63,6 @@ class PenyakitSiswaType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_penyakitsiswatype';
+        return 'sisdik_penyakitsiswa';
     }
 }
