@@ -1,103 +1,110 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
+use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
-use Langgas\SisdikBundle\Form\PilihanLayananSmsSearchType;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\PilihanLayananSms;
-use Langgas\SisdikBundle\Form\PilihanLayananSmsType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * PilihanLayananSms controller.
- *
- * @Route("/layanansms")
+ * @Route("/pilihan-layanan-sms")
  * @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
  */
 class PilihanLayananSmsController extends Controller
 {
-
     /**
-     * Lists all PilihanLayananSms entities.
-     *
      * @Route("/", name="layanansms")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new PilihanLayananSmsSearchType($this->container));
+        $searchform = $this->createForm('sisdik_carilayanansms');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('LanggasSisdikBundle:PilihanLayananSms', 't')->leftJoin('t.sekolah', 't2')
-                ->orderBy('t2.nama', 'ASC')->addOrderBy('t.jenisLayanan', 'ASC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('pilihanLayananSms')
+            ->from('LanggasSisdikBundle:PilihanLayananSms', 'pilihanLayananSms')
+            ->leftJoin('pilihanLayananSms.sekolah', 'sekolah')
+            ->orderBy('sekolah.nama', 'ASC')
+            ->addOrderBy('pilihanLayananSms.jenisLayanan', 'ASC')
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
             if ($searchdata['sekolah'] != '') {
-                $querybuilder->where('t.sekolah = :sekolah');
-                $querybuilder->setParameter("sekolah", $searchdata['sekolah']);
+                $querybuilder
+                    ->where('pilihanLayananSms.sekolah = :sekolah')
+                    ->setParameter("sekolah", $searchdata['sekolah'])
+                ;
             }
 
             if ($searchdata['jenisLayanan'] != '') {
-                $querybuilder->andWhere('t.jenisLayanan = :jenis');
-                $querybuilder->setParameter("jenis", $searchdata['jenisLayanan']);
+                $querybuilder
+                    ->andWhere('t.jenisLayanan = :jenis')
+                    ->setParameter("jenis", $searchdata['jenisLayanan'])
+                ;
             }
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-                'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'daftarJenisLayanan' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
-                        PilihanLayananSms::getDaftarLayananLaporan(),
-                        PilihanLayananSms::getDaftarLayananKehadiran(),
-                        PilihanLayananSms::getDaftarLayananKepulangan(),
-                        PilihanLayananSms::getDaftarLayananBiayaSekaliBayar())
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'daftarJenisLayanan' => array_merge(
+                PilihanLayananSms::getDaftarLayananPendaftaran(),
+                PilihanLayananSms::getDaftarLayananLaporan(),
+                PilihanLayananSms::getDaftarLayananKehadiran(),
+                PilihanLayananSms::getDaftarLayananKepulangan(),
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+            ),
+        ];
     }
 
     /**
-     * Displays a form to create a new PilihanLayananSms entity.
-     *
      * @Route("/new", name="layanansms_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction() {
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
         $entity = new PilihanLayananSms();
-        $form = $this->createForm(new PilihanLayananSmsType($this->container), $entity);
+        $form = $this->createForm('sisdik_pilihanlayanansms', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new PilihanLayananSms entity.
-     *
      * @Route("/create", name="layanansms_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PilihanLayananSms:new.html.twig")
      */
-    public function createAction(Request $request) {
+    public function createAction(Request $request)
+    {
         $this->setCurrentMenu();
 
         $entity = new PilihanLayananSms();
-        $form = $this->createForm(new PilihanLayananSmsType($this->container), $entity);
+        $form = $this->createForm('sisdik_pilihanlayanansms', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -107,40 +114,36 @@ class PilihanLayananSmsController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.layanansms.tersimpan',
-                                                array(
-                                                    '%sekolah%' => $entity->getSekolah()->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.layanansms.tersimpan', [
+                        '%sekolah%' => $entity->getSekolah()->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unik.layanansms');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('layanansms_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('layanansms_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Finds and displays a PilihanLayananSms entity.
-     *
      * @Route("/{id}", name="layanansms_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id) {
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -153,24 +156,26 @@ class PilihanLayananSmsController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-                'daftarJenisLayanan' => array_merge(PilihanLayananSms::getDaftarLayananPendaftaran(),
-                        PilihanLayananSms::getDaftarLayananLaporan(),
-                        PilihanLayananSms::getDaftarLayananKehadiran(),
-                        PilihanLayananSms::getDaftarLayananKepulangan(),
-                        PilihanLayananSms::getDaftarLayananBiayaSekaliBayar())
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+            'daftarJenisLayanan' => array_merge(
+                PilihanLayananSms::getDaftarLayananPendaftaran(),
+                PilihanLayananSms::getDaftarLayananLaporan(),
+                PilihanLayananSms::getDaftarLayananKehadiran(),
+                PilihanLayananSms::getDaftarLayananKepulangan(),
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+            ),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing PilihanLayananSms entity.
-     *
      * @Route("/{id}/edit", name="layanansms_edit")
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id) {
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -181,23 +186,23 @@ class PilihanLayananSmsController extends Controller
             throw $this->createNotFoundException('Entity PilihanLayananSms tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new PilihanLayananSmsType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_pilihanlayanansms', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing PilihanLayananSms entity.
-     *
      * @Route("/{id}/update", name="layanansms_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PilihanLayananSms:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
+    public function updateAction(Request $request, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -209,7 +214,7 @@ class PilihanLayananSmsController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new PilihanLayananSmsType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_pilihanlayanansms', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
@@ -217,40 +222,36 @@ class PilihanLayananSmsController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.layanansms.terbarui',
-                                                array(
-                                                    '%sekolah%' => $entity->getSekolah()->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.layanansms.terbarui', [
+                        '%sekolah%' => $entity->getSekolah()->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unik.layanansms');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('layanansms_edit',
-                                            array(
-                                                'id' => $id
-                                            )));
+            return $this->redirect($this->generateUrl('layanansms_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a PilihanLayananSms entity.
-     *
      * @Route("/{id}/delete", name="layanansms_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
+    public function deleteAction(Request $request, $id)
+    {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
@@ -265,41 +266,46 @@ class PilihanLayananSmsController extends Controller
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.layanansms.terhapus',
-                                            array(
-                                                '%sekolah%' => $entity->getSekolah()->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.layanansms.terhapus', [
+                    '%sekolah%' => $entity->getSekolah()->getNama(),
+                ]))
+            ;
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.layanansms.gagal.dihapus',
-                                            array(
-                                                '%sekolah%' => $entity->getSekolah()->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.layanansms.gagal.dihapus', [
+                    '%sekolah%' => $entity->getSekolah()->getNama(),
+                ]))
+            ;
         }
 
         return $this->redirect($this->generateUrl('layanansms'));
     }
 
     /**
-     * Creates a form to delete a PilihanLayananSms entity by id.
+     * @param mixed $id
      *
-     * @param mixed $id The entity id
-     *
-     * @return Symfony\Component\Form\Form The form
+     * @return Symfony\Component\Form\Form
      */
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', array(), 'navigations')][$this->get('translator')->trans('links.layanansms', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.pengaturan.sisdik', [], 'navigations')][$translator->trans('links.layanansms', [], 'navigations')]->setCurrent(true);
     }
 }

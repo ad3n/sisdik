@@ -2,9 +2,9 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -15,28 +15,8 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class PilihanLayananSmsType extends AbstractType
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
-
-        $querybuilder = $em->createQueryBuilder()
-            ->select('sekolah')
-            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
-            ->orderBy('sekolah.nama', 'ASC')
-        ;
         $builder
             ->add('sekolah', 'entity', [
                 'class' => 'LanggasSisdikBundle:Sekolah',
@@ -46,7 +26,13 @@ class PilihanLayananSmsType extends AbstractType
                 'property' => 'nama',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder,
+                'query_builder' => function (EntityRepository $repository) {
+                    $qb = $repository->createQueryBuilder('sekolah')
+                        ->orderBy('sekolah.nama', 'ASC')
+                    ;
+
+                    return $qb;
+                },
             ])
             ->add('jenisLayanan', 'choice', [
                 'choices' => array_merge(
@@ -79,6 +65,6 @@ class PilihanLayananSmsType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_pilihanlayanansmstype';
+        return 'sisdik_pilihanlayanansms';
     }
 }

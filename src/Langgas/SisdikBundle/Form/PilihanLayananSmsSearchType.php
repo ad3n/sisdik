@@ -2,13 +2,15 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -16,16 +18,20 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class PilihanLayananSmsSearchType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var EntityManager
      */
-    private $container;
+    private $entityManager;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param EntityManager $entityManager
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -37,7 +43,7 @@ class PilihanLayananSmsSearchType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'attr' => [
-                    'class' => 'large'
+                    'class' => 'large',
                 ],
                 'label_render' => false,
                 'horizontal' => false,
@@ -48,7 +54,7 @@ class PilihanLayananSmsSearchType extends AbstractType
                 'expanded' => false,
                 'required' => false,
                 'attr' => [
-                    'class' => 'large'
+                    'class' => 'large',
                 ],
                 'label_render' => false,
                 'horizontal' => false,
@@ -58,8 +64,11 @@ class PilihanLayananSmsSearchType extends AbstractType
 
     private function buildSchoolChoices()
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('LanggasSisdikBundle:Sekolah')->findBy([], ['nama' => 'ASC']);
+        $entities = $this->entityManager->getRepository('LanggasSisdikBundle:Sekolah')
+            ->findBy([], [
+                'nama' => 'ASC'
+            ])
+        ;
 
         $choices = [
             '' => 'label.allschool',
@@ -99,6 +108,6 @@ class PilihanLayananSmsSearchType extends AbstractType
 
     public function getName()
     {
-        return 'searchform';
+        return 'sisdik_carilayanansms';
     }
 }
