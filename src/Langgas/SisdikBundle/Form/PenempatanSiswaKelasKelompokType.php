@@ -4,10 +4,13 @@ namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Form\EventListener\PenempatanSiswaKelasSubscriber;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,28 +18,47 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class PenempatanSiswaKelasKelompokType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @var Translator
      */
-    public function __construct(ContainerInterface $container)
+    private $translator;
+
+    /**
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context"),
+     *     "translator" = @Inject("translator")
+     * })
+     *
+     * @param SecurityContext $securityContext
+     * @param Translator      $translator
+     */
+    public function __construct(SecurityContext $securityContext, Translator $translator)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+        $this->translator = $translator;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
-        $builder->addEventSubscriber(new PenempatanSiswaKelasSubscriber($this->container, $sekolah));
+        $builder->addEventSubscriber(new PenempatanSiswaKelasSubscriber($this->translator, $sekolah));
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_penempatansiswakelaskelompoktype';
+        return 'sisdik_penempatansiswakelaskelompok';
     }
 }

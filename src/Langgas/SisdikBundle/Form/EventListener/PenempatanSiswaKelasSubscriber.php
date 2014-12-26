@@ -2,12 +2,12 @@
 
 namespace Langgas\SisdikBundle\Form\EventListener;
 
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
  * Membentuk label bidang form penempatan siswa di suatu kelas
@@ -15,9 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ContainerInterface
+     * @var Translator
      */
-    private $container;
+    private $translator;
 
     /**
      * @var Sekolah
@@ -25,12 +25,12 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
     private $sekolah;
 
     /**
-     * @param ContainerInterface $container
-     * @param Sekolah $sekolah
+     * @param Translator $translator
+     * @param Sekolah    $sekolah
      */
-    public function __construct(ContainerInterface $container, Sekolah $sekolah)
+    public function __construct(Translator $translator, Sekolah $sekolah)
     {
-        $this->container = $container;
+        $this->translator = $translator;
         $this->sekolah = $sekolah;
     }
 
@@ -52,55 +52,40 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
     {
         $data = $event->getData();
         $form = $event->getForm();
-        $em = $this->container->get('doctrine')->getManager();
-        /* @var $translator Translator */
-        $translator = $this->container->get('translator');
+
+        $translator = $this->translator;
+        $sekolah = $this->sekolah;
 
         if (is_array($data)) {
             $label = $translator->trans('label.lembar.kerja')
-                . ' '
-                . ($data['index'] + 1)
-                . ': '
-                . $data['name']
-            ;
-
-            $qbTahunAkademik = $em
-                ->createQueryBuilder()
-                ->select('tahunAkademik')
-                ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
-                ->where('tahunAkademik.sekolah = :sekolah')
-                ->orderBy('tahunAkademik.urutan', 'DESC')
-                ->addOrderBy('tahunAkademik.nama', 'DESC')
-                ->setParameter('sekolah', $this->sekolah)
+                .' '
+                .($data['index'] + 1)
+                .': '
+                .$data['name']
             ;
 
             $form
                 ->add('tahunAkademik', 'entity', [
                     'class' => 'LanggasSisdikBundle:TahunAkademik',
-                    'label' => /** @Ignore */ $label,
+                    'label' =>/** @Ignore */ $label,
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'nama',
                     'required' => true,
-                    'query_builder' => $qbTahunAkademik,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('tahunAkademik')
+                            ->where('tahunAkademik.sekolah = :sekolah')
+                            ->orderBy('tahunAkademik.urutan', 'DESC')
+                            ->addOrderBy('tahunAkademik.nama', 'DESC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
                     'attr' => [
-                        'class' => 'medium selectyear' . $data['index'],
+                        'class' => 'medium selectyear'.$data['index'],
                     ],
                 ])
-            ;
-
-            $qbKelas = $em
-                ->createQueryBuilder()
-                ->select('kelas')
-                ->from('LanggasSisdikBundle:Kelas', 'kelas')
-                ->leftJoin('kelas.tingkat', 'tingkat')
-                ->where('kelas.sekolah = :sekolah')
-                ->orderBy('tingkat.urutan', 'ASC')
-                ->addOrderBy('kelas.urutan')
-                ->setParameter('sekolah', $this->sekolah)
-            ;
-
-            $form
                 ->add('kelas', 'entity', [
                     'class' => 'LanggasSisdikBundle:Kelas',
                     'label_render' => false,
@@ -108,9 +93,19 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
                     'expanded' => false,
                     'property' => 'nama',
                     'required' => true,
-                    'query_builder' => $qbKelas,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('kelas')
+                            ->leftJoin('kelas.tingkat', 'tingkat')
+                            ->where('kelas.sekolah = :sekolah')
+                            ->orderBy('tingkat.urutan', 'ASC')
+                            ->addOrderBy('kelas.urutan')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
                     'attr' => [
-                        'class' => 'medium selectclass' . $data['index'],
+                        'class' => 'medium selectclass'.$data['index'],
                     ],
                 ])
                 ->add('index', 'hidden', [
@@ -130,55 +125,40 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
     {
         $data = $event->getData();
         $form = $event->getForm();
-        $em = $this->container->get('doctrine')->getManager();
-        /* @var $translator Translator */
-        $translator = $this->container->get('translator');
+
+        $translator = $this->translator;
+        $sekolah = $this->sekolah;
 
         if (is_array($data)) {
             $label = $translator->trans('label.lembar.kerja')
-                . ' '
-                . ($data['index'] + 1)
-                . ': '
-                . $data['name']
-            ;
-
-            $qbTahunAkademik = $em
-                ->createQueryBuilder()
-                ->select('tahunAkademik')
-                ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
-                ->where('tahunAkademik.sekolah = :sekolah')
-                ->orderBy('tahunAkademik.urutan', 'DESC')
-                ->addOrderBy('tahunAkademik.nama', 'DESC')
-                ->setParameter('sekolah', $this->sekolah)
+                .' '
+                .($data['index'] + 1)
+                .': '
+                .$data['name']
             ;
 
             $form
                 ->add('tahunAkademik', 'entity', [
                     'class' => 'LanggasSisdikBundle:TahunAkademik',
-                    'label' => /** @Ignore */ $label,
+                    'label' =>/** @Ignore */ $label,
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'nama',
                     'required' => true,
-                    'query_builder' => $qbTahunAkademik,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('tahunAkademik')
+                            ->where('tahunAkademik.sekolah = :sekolah')
+                            ->orderBy('tahunAkademik.urutan', 'DESC')
+                            ->addOrderBy('tahunAkademik.nama', 'DESC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
                     'attr' => [
-                        'class' => 'medium selectyear' . $data['index'],
+                        'class' => 'medium selectyear'.$data['index'],
                     ],
                 ])
-            ;
-
-            $qbKelas = $em
-                ->createQueryBuilder()
-                ->select('kelas')
-                ->from('LanggasSisdikBundle:Kelas', 'kelas')
-                ->leftJoin('kelas.tingkat', 'tingkat')
-                ->where('kelas.sekolah = :sekolah')
-                ->orderBy('tingkat.urutan', 'ASC')
-                ->addOrderBy('kelas.urutan')
-                ->setParameter('sekolah', $this->sekolah)
-            ;
-
-            $form
                 ->add('kelas', 'entity', [
                     'class' => 'LanggasSisdikBundle:Kelas',
                     'label_render' => false,
@@ -186,9 +166,19 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
                     'expanded' => false,
                     'property' => 'nama',
                     'required' => true,
-                    'query_builder' => $qbKelas,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('kelas')
+                            ->leftJoin('kelas.tingkat', 'tingkat')
+                            ->where('kelas.sekolah = :sekolah')
+                            ->orderBy('tingkat.urutan', 'ASC')
+                            ->addOrderBy('kelas.urutan')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
                     'attr' => [
-                        'class' => 'medium selectclass' . $data['index'],
+                        'class' => 'medium selectclass'.$data['index'],
                     ],
                 ])
                 ->add('index', 'hidden', [

@@ -1,34 +1,28 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
-use Langgas\SisdikBundle\Form\PenempatanSiswaKelasKelompokType;
-use Symfony\Component\Form\FormError;
-use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Util\EasyCSV\Reader;
+use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
-use Langgas\SisdikBundle\Form\PenempatanSiswaKelasType;
-use Langgas\SisdikBundle\Form\SiswaKelasTemplateMapType;
-use Langgas\SisdikBundle\Form\SiswaKelasTemplateInitType;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\User;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Util\EasyCSV\Reader;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Siswa controller.
- *
  * @Route("/penempatan-siswa-kelas")
  * @PreAuthorize("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
@@ -43,42 +37,42 @@ class PenempatanSiswaKelasController extends Controller
     private $siswaDitempatkanJumlah = 0;
 
     /**
-     * Form untuk menempatkan
-     *
      * @Route("/", name="penempatan-siswa-kelas")
      * @Template()
      * @Method("GET")
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $form = $this->createForm(new PenempatanSiswaKelasType($this->container));
+        $form = $this->createForm('sisdik_penempatansiswakelas');
 
-        $dlform_initialization = $this->createForm(new SiswaKelasTemplateInitType($this->container));
-        $dlform_classmap = $this->createForm(new SiswaKelasTemplateMapType($this->container));
+        $dlform_initialization = $this->createForm('sisdik_siswakelastemplateinit');
+        $dlform_classmap = $this->createForm('sisdik_siswakelastemplatemap');
 
-        return array(
-                'form' => $form->createView(),
-                'dlform_initialization' => $dlform_initialization->createView(),
-                'dlform_classmap' => $dlform_classmap->createView(),
-        );
+        return [
+            'form' => $form->createView(),
+            'dlform_initialization' => $dlform_initialization->createView(),
+            'dlform_classmap' => $dlform_classmap->createView(),
+        ];
     }
 
     /**
-     * Penempatan siswa ke kelas
+     * Menempatkan siswa-siswa ke kelas
      *
      * @Route("/menempatkan", name="penempatan-siswa-kelas_menempatkan")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PenempatanSiswaKelas:index.html.twig")
      */
-    public function menempatkanAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function menempatkanAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new PenempatanSiswaKelasType($this->container));
+        $form = $this->createForm('sisdik_penempatansiswakelas');
         $form->submit($this->getRequest());
 
         if ($form->isValid()) {
@@ -88,22 +82,21 @@ class PenempatanSiswaKelasController extends Controller
             $tahunAkademik = $form['tahunAkademik']->getData();
             $kelas = $form['kelas']->getData();
 
-            $targetfilename = sha1(uniqid(mt_rand(), true)) . '_' . $file->getClientOriginalName();
+            $targetfilename = sha1(uniqid(mt_rand(), true)).'_'.$file->getClientOriginalName();
             if ($file->move(self::DOCUMENTS_OUTPUTDIR, $targetfilename)) {
-
-                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
+                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR.$targetfilename);
                 $sheets = $reader->Sheets();
                 if (count($sheets) > 1) {
                     // interface untuk menanyakan sheet mana masuk ke kelas mana
-                    // mudahkah cara ini? try!
                     $this->get('session')->set(self::PENEMPATAN_FILE, $targetfilename);
+
                     return $this->redirect($this->generateUrl('penempatan-siswa-kelas_tempatkan-kelompok'));
                 }
 
-                $fieldnames = array();
-                $content = array();
+                $fieldnames = [];
+                $content = [];
                 foreach ($reader as $row) {
-                    $cellContent = array();
+                    $cellContent = [];
                     foreach ($row as $cell) {
                         if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
                             $fieldnames[] = $cell['data'];
@@ -118,10 +111,9 @@ class PenempatanSiswaKelasController extends Controller
                     }
                 }
 
-                array_walk($fieldnames,
-                        array(
-                            &$this, "formatNamaField"
-                        ));
+                array_walk($fieldnames, [
+                    &$this, "formatNamaField",
+                ]);
 
                 foreach ($content as $value) {
                     $this->menempatkanSiswa($value, $fieldnames, $sekolah, $tahunAkademik, $kelas);
@@ -137,69 +129,70 @@ class PenempatanSiswaKelasController extends Controller
                     throw new \Exception($message);
                 }
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.studentclass.imported',
-                                                array(
-                                                        '%count%' => $this->siswaDitempatkanJumlah,
-                                                        '%year%' => $tahunAkademik->getNama(),
-                                                        '%class%' => $kelas->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.studentclass.imported', [
+                        '%count%' => $this->siswaDitempatkanJumlah,
+                        '%year%' => $tahunAkademik->getNama(),
+                        '%class%' => $kelas->getNama(),
+                    ]))
+                ;
 
                 return $this->redirect($this->generateUrl('penempatan-siswa-kelas'));
             }
         }
 
-        $dlform_initialization = $this->createForm(new SiswaKelasTemplateInitType($this->container));
-        $dlform_classmap = $this->createForm(new SiswaKelasTemplateMapType($this->container));
+        $dlform_initialization = $this->createForm('sisdik_siswakelastemplateinit');
+        $dlform_classmap = $this->createForm('sisdik_siswakelastemplatemap');
 
-        return array(
-                'form' => $form->createView(),
-                'dlform_initialization' => $dlform_initialization->createView(),
-                'dlform_classmap' => $dlform_classmap->createView(),
-        );
+        return [
+            'form' => $form->createView(),
+            'dlform_initialization' => $dlform_initialization->createView(),
+            'dlform_classmap' => $dlform_classmap->createView(),
+        ];
     }
 
     /**
-     * Form untuk menempatkan kelompok siswa ke kelas-kelas
+     * Form untuk menempatkan lebih dari satu kelompok siswa ke kelas-kelas
      *
      * @Route("/tempatkan-kelompok", name="penempatan-siswa-kelas_tempatkan-kelompok")
      * @Method("GET")
      * @Template("LanggasSisdikBundle:PenempatanSiswaKelas:tempatkan-kelompok.html.twig")
      */
-    public function tempatkanKelompokAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function tempatkanKelompokAction()
+    {
         $this->setCurrentMenu();
 
         $filename = $this->get('session')->get(self::PENEMPATAN_FILE);
 
-        $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $filename);
+        $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR.$filename);
         $sheets = $reader->Sheets();
 
         $sheetCollection = new ArrayCollection();
         foreach ($sheets as $index => $name) {
-            $sheetCollection
-                    ->add(
-                            array(
-                                'index' => $index, 'name' => $name
-                            ));
+            $sheetCollection->add([
+                'index' => $index,
+                'name' => $name,
+            ]);
         }
 
-        $form = $this
-                ->createForm('collection', $sheetCollection,
-                        array(
-                                'type' => new PenempatanSiswaKelasKelompokType($this->container),
-                                'required' => true, 'allow_add' => true, 'allow_delete' => true,
-                                'by_reference' => false,
-                                'options' => array(
-                                    'label_render' => false,
-                                ), 'label_render' => false,
-                        ));
+        $form = $this->createForm('collection', $sheetCollection, [
+            'type' => 'sisdik_penempatansiswakelaskelompok',
+            'required' => true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'options' => [
+                'label_render' => false,
+            ],
+            'label_render' => false,
+        ]);
 
-        return array(
-            'form' => $form->createView(), 'sheetCollection' => $sheetCollection
-        );
+        return [
+            'form' => $form->createView(),
+            'sheetCollection' => $sheetCollection,
+        ];
     }
 
     /**
@@ -209,48 +202,47 @@ class PenempatanSiswaKelasController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PenempatanSiswaKelas:tempatkan-kelompok.html.twig")
      */
-    public function menempatkanKelompokAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function menempatkanKelompokAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $filename = $this->get('session')->get(self::PENEMPATAN_FILE);
 
-        $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $filename);
+        $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR.$filename);
         $sheets = $reader->Sheets();
 
         $sheetCollection = new ArrayCollection();
 
-        $form = $this
-                ->createForm('collection', $sheetCollection,
-                        array(
-                                'type' => new PenempatanSiswaKelasKelompokType($this->container),
-                                'required' => true, 'allow_add' => true, 'allow_delete' => true,
-                                'by_reference' => false,
-                                'options' => array(
-                                    'label_render' => false,
-                                ), 'label_render' => false,
-                        ));
+        $form = $this->createForm('collection', $sheetCollection, [
+            'type' => 'sisdik_penempatansiswakelaskelompok',
+            'required' => true,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
+            'options' => [
+                'label_render' => false,
+            ],
+            'label_render' => false,
+        ]);
 
         $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $formdata = $form->getData();
             foreach ($formdata as $data) {
-
                 $reader->ChangeSheet($data['index']);
 
-                $fieldnames = array();
-                $content = array();
+                $fieldnames = [];
+                $content = [];
                 foreach ($reader as $row) {
-                    $cellContent = array();
+                    $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom') {
+                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
                             $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes'])
-                                && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
+                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
                             // baris yang tak perlu dibaca
                         } else {
                             $cellContent[] = $cell['data'];
@@ -261,15 +253,12 @@ class PenempatanSiswaKelasController extends Controller
                     }
                 }
 
-                array_walk($fieldnames,
-                        array(
-                            &$this, "formatNamaField"
-                        ));
+                array_walk($fieldnames, [
+                    &$this, "formatNamaField",
+                ]);
 
                 foreach ($content as $value) {
-                    $this
-                            ->menempatkanSiswa($value, $fieldnames, $sekolah, $data['tahunAkademik'],
-                                    $data['kelas']);
+                    $this->menempatkanSiswa($value, $fieldnames, $sekolah, $data['tahunAkademik'], $data['kelas']);
                 }
 
                 try {
@@ -283,35 +272,35 @@ class PenempatanSiswaKelasController extends Controller
                 }
             }
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.data.studentclass.imported.group',
-                                            array(
-                                                '%count%' => $this->siswaDitempatkanJumlah,
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.data.studentclass.imported.group', [
+                    '%count%' => $this->siswaDitempatkanJumlah,
+                ]))
+            ;
 
             return $this->redirect($this->generateUrl('penempatan-siswa-kelas'));
         }
 
-        return array(
-            'form' => $form->createView(), 'sheetCollection' => $sheetCollection
-        );
-
+        return [
+            'form' => $form->createView(),
+            'sheetCollection' => $sheetCollection,
+        ];
     }
 
     /**
-     * Unduh file template untuk inisialisasi penempatan siswa di kelas
-     * Menggunakan tahun masuk
+     * Unduh file template untuk inisialisasi penempatan siswa di kelas menggunakan tahun masuk
      *
      * @Route("/dl-templateinit", name="penempatan-siswa-kelas_templateinit")
      * @Method("POST")
      */
-    public function downloadTemplateInitAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function downloadTemplateInitAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaKelasTemplateInitType($this->container));
+        $form = $this->createForm('sisdik_siswakelastemplateinit');
 
         $form->submit($this->getRequest());
 
@@ -319,76 +308,73 @@ class PenempatanSiswaKelasController extends Controller
             $formdata = $form->getData();
             $em = $this->getDoctrine()->getManager();
 
-            $querybuilder = $em->createQueryBuilder()->select('siswa')
-                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->leftJoin('siswa.siswaKelas', 'siswakelas')
-                    ->where('siswa.tahun = :tahun')->andWhere('siswa.sekolah = :sekolah')
-                    ->andWhere('siswa.calonSiswa = :calon')->andWhere('siswakelas.id IS NULL')
-                    ->setParameter('tahun', $formdata['tahun']->getId())
-                    ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false);
+            $querybuilder = $em->createQueryBuilder()
+                ->select('siswa')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
+                ->leftJoin('siswa.siswaKelas', 'siswakelas')
+                ->where('siswa.tahun = :tahun')
+                ->andWhere('siswa.sekolah = :sekolah')
+                ->andWhere('siswa.calonSiswa = :calon')
+                ->andWhere('siswakelas.id IS NULL')
+                ->setParameter('tahun', $formdata['tahun'])
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('calon', false)
+            ;
             $entities = $querybuilder->getQuery()->getResult();
 
-            $qbjurusan = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Penjurusan', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.root ASC, t.lft', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
+            $qbjurusan = $em->createQueryBuilder()
+                ->select('penjurusan')
+                ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
+                ->where('penjurusan.sekolah = :sekolah')
+                ->orderBy('penjurusan.root', 'ASC')
+                ->addOrderBy('penjurusan.lft', 'ASC')
+                ->setParameter('sekolah', $sekolah)
+            ;
             $penjurusan = $qbjurusan->getQuery()->getResult();
 
-            $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+            $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
             $patterns = ['/\s+/', '/\//'];
             $replacements = ['', '_'];
-            $filenameoutput = self::OUTPUTFILE . preg_replace($patterns, $replacements, $formdata['tahun']->getTahun()) . ".sisdik";
+            $filenameoutput = self::OUTPUTFILE.preg_replace($patterns, $replacements, $formdata['tahun']->getTahun()).".sisdik";
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";
-            $filesource = $filenameoutput . $extensionsource;
-            $filetarget = $filenameoutput . $extensiontarget;
+            $filesource = $filenameoutput.$extensionsource;
+            $filetarget = $filenameoutput.$extensiontarget;
 
             $fs = new Filesystem();
-            if (!$fs->exists($outputdir . $sekolah->getId())) {
-                $fs->mkdir($outputdir . $sekolah->getId());
+            if (!$fs->exists($outputdir.$sekolah->getId())) {
+                $fs->mkdir($outputdir.$sekolah->getId());
             }
 
-            $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
-            $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
+            $documentsource = $outputdir.$sekolah->getId().'/'.$filesource;
+            $documenttarget = $outputdir.$sekolah->getId().'/'.$filetarget;
 
             if ($outputfiletype == 'ods') {
-                if (copy($documentbase, $documenttarget) === TRUE) {
+                if (copy($documentbase, $documenttarget) === true) {
                     $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
-                    $ziparchive
-                            ->addFromString('styles.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
-                    $ziparchive
-                            ->addFromString('settings.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:settings.xml.twig"));
-                    $ziparchive
-                            ->addFromString('content.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:siswakelas-awal.xml.twig",
-                                                    array(
-                                                        'entities' => $entities, 'penjurusan' => $penjurusan
-                                                    )));
-                    if ($ziparchive->close() === TRUE) {
-                        $return = array(
-                                "redirectUrl" => $this
-                                        ->generateUrl("penempatan-siswa-kelas_unduh",
-                                                array(
-                                                    'filename' => $filetarget
-                                                )), "filename" => $filetarget,
-                        );
+                    $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
+                    $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:PenempatanSiswaKelas:settings.xml.twig"));
+                    $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:PenempatanSiswaKelas:siswakelas-awal.xml.twig", [
+                        'entities' => $entities, 'penjurusan' => $penjurusan,
+                    ]));
+
+                    if ($ziparchive->close() === true) {
+                        $return = [
+                            "redirectUrl" => $this->generateUrl("penempatan-siswa-kelas_unduh", [
+                                'filename' => $filetarget,
+                            ]),
+                            "filename" => $filetarget,
+                        ];
 
                         $return = json_encode($return);
 
-                        return new Response($return, 200,
-                                array(
-                                    'Content-Type' => 'application/json'
-                                ));
+                        return new Response($return, 200, [
+                            'Content-Type' => 'application/json',
+                        ]);
                     }
                 }
             }
@@ -396,17 +382,17 @@ class PenempatanSiswaKelasController extends Controller
     }
 
     /**
-     * Unduh file untuk kenaikan kelas
-     * Menggunakan tahun akademik dan tingkat kelas
+     * Unduh file untuk kenaikan kelas menggunakan tahun akademik dan tingkat kelas
      *
      * @Route("/dl-templatemap", name="penempatan-siswa-kelas_templatemap")
      * @Method("POST")
      */
-    public function downloadTemplateMapAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function downloadTemplateMapAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $form = $this->createForm(new SiswaKelasTemplateMapType($this->container));
+        $form = $this->createForm('sisdik_siswakelastemplatemap');
 
         $form->submit($this->getRequest());
 
@@ -415,98 +401,101 @@ class PenempatanSiswaKelasController extends Controller
 
             $em = $this->getDoctrine()->getManager();
 
-            $qbkelas = $em->createQueryBuilder()->select('kelas')->from('LanggasSisdikBundle:Kelas', 'kelas')
-                    ->where('kelas.sekolah = :sekolah')->andWhere('kelas.tahunAkademik = :tahunakademik')
-                    ->andWhere('kelas.tingkat = :tingkat')->orderBy('kelas.urutan', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId())
-                    ->setParameter('tahunakademik', $formdata['tahunAkademik']->getId())
-                    ->setParameter('tingkat', $formdata['tingkat']->getId());
+            $qbkelas = $em->createQueryBuilder()
+                ->select('kelas')
+                ->from('LanggasSisdikBundle:Kelas', 'kelas')
+                ->where('kelas.sekolah = :sekolah')
+                ->andWhere('kelas.tahunAkademik = :tahunakademik')
+                ->andWhere('kelas.tingkat = :tingkat')
+                ->orderBy('kelas.urutan', 'ASC')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunakademik', $formdata['tahunAkademik'])
+                ->setParameter('tingkat', $formdata['tingkat'])
+            ;
             $kelas = $qbkelas->getQuery()->getResult();
 
-            $entities = array();
+            $entities = [];
             foreach ($kelas as $data) {
-                $querybuilder = $em->createQueryBuilder()->select('siswakelas')
-                        ->from('LanggasSisdikBundle:SiswaKelas', 'siswakelas')
-                        ->leftJoin('siswakelas.siswa', 'siswa')->leftJoin('siswakelas.kelas', 'kelas')
-                        ->where('siswakelas.tahunAkademik = :tahunAkademik')
-                        ->andWhere('siswa.sekolah = :sekolah')->andWhere('siswa.calonSiswa = :calon')
-                        ->andWhere('siswakelas.kelas = :kelas')->orderBy('kelas.urutan', 'ASC')
-                        ->addOrderBy('siswa.nomorInduk', 'ASC')
-                        ->setParameter('tahunAkademik', $formdata['tahunAkademik']->getId())
-                        ->setParameter('sekolah', $sekolah->getId())->setParameter('calon', false)
-                        ->setParameter('kelas', $data->getId());
+                $querybuilder = $em->createQueryBuilder()
+                    ->select('siswakelas')
+                    ->from('LanggasSisdikBundle:SiswaKelas', 'siswakelas')
+                    ->leftJoin('siswakelas.siswa', 'siswa')
+                    ->leftJoin('siswakelas.kelas', 'kelas')
+                    ->where('siswakelas.tahunAkademik = :tahunAkademik')
+                    ->andWhere('siswa.sekolah = :sekolah')
+                    ->andWhere('siswa.calonSiswa = :calon')
+                    ->andWhere('siswakelas.kelas = :kelas')
+                    ->orderBy('kelas.urutan', 'ASC')
+                    ->addOrderBy('siswa.nomorInduk', 'ASC')
+                    ->setParameter('tahunAkademik', $formdata['tahunAkademik'])
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('calon', false)
+                    ->setParameter('kelas', $data)
+                ;
                 $entities[] = $querybuilder->getQuery()->getResult();
             }
 
-            $qbjurusan = $em->createQueryBuilder()->select('penjurusan')
-                    ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
-                    ->where('penjurusan.sekolah = :sekolah')
-                    ->orderBy('penjurusan.root ASC, penjurusan.lft', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
+            $qbjurusan = $em->createQueryBuilder()
+                ->select('penjurusan')
+                ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
+                ->where('penjurusan.sekolah = :sekolah')
+                ->orderBy('penjurusan.root', 'ASC')
+                ->addOrderBy('penjurusan.lft', 'ASC')
+                ->setParameter('sekolah', $sekolah)
+            ;
             $penjurusan = $qbjurusan->getQuery()->getResult();
 
-            $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+            $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
             $patterns = ['/\s+/', '/\//'];
             $replacements = ['', '_'];
-            $filenameoutput = self::OUTPUTFILE . preg_replace($patterns, $replacements, $formdata['tahunAkademik']->getNama()) . '.'
-                    . preg_replace($patterns, $replacements, $formdata['tingkat']->getKode()) . ".sisdik";
+            $filenameoutput = self::OUTPUTFILE
+                .preg_replace($patterns, $replacements, $formdata['tahunAkademik']->getNama())
+                .'.'
+                .preg_replace($patterns, $replacements, $formdata['tingkat']->getKode())
+                .".sisdik"
+            ;
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";
-            $filesource = $filenameoutput . $extensionsource;
-            $filetarget = $filenameoutput . $extensiontarget;
+            $filesource = $filenameoutput.$extensionsource;
+            $filetarget = $filenameoutput.$extensiontarget;
 
             $fs = new Filesystem();
-            if (!$fs->exists($outputdir . $sekolah->getId())) {
-                $fs->mkdir($outputdir . $sekolah->getId());
+            if (!$fs->exists($outputdir.$sekolah->getId())) {
+                $fs->mkdir($outputdir.$sekolah->getId());
             }
 
-            $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
-            $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
+            $documentsource = $outputdir.$sekolah->getId().'/'.$filesource;
+            $documenttarget = $outputdir.$sekolah->getId().'/'.$filetarget;
 
             if ($outputfiletype == 'ods') {
-                if (copy($documentbase, $documenttarget) === TRUE) {
+                if (copy($documentbase, $documenttarget) === true) {
                     $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
-                    $ziparchive
-                            ->addFromString('styles.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
-                    $ziparchive
-                            ->addFromString('settings.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:settings.multipage.xml.twig",
-                                                    array(
-                                                        'kelas' => $kelas
-                                                    )));
-                    $ziparchive
-                            ->addFromString('content.xml',
-                                    $this
-                                            ->renderView(
-                                                    "LanggasSisdikBundle:PenempatanSiswaKelas:siswakelas-kenaikan.xml.twig",
-                                                    array(
-                                                            'kelas' => $kelas, 'entities' => $entities,
-                                                            'penjurusan' => $penjurusan
-                                                    )));
-                    if ($ziparchive->close() === TRUE) {
-                        $return = array(
-                                "redirectUrl" => $this
-                                        ->generateUrl("penempatan-siswa-kelas_unduh",
-                                                array(
-                                                    'filename' => $filetarget
-                                                )), "filename" => $filetarget,
-                        );
+                    $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:PenempatanSiswaKelas:styles.xml.twig"));
+                    $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:PenempatanSiswaKelas:settings.multipage.xml.twig", [
+                        'kelas' => $kelas,
+                    ]));
+                    $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:PenempatanSiswaKelas:siswakelas-kenaikan.xml.twig", [
+                        'kelas' => $kelas,
+                        'entities' => $entities,
+                        'penjurusan' => $penjurusan,
+                    ]));
+                    if ($ziparchive->close() === true) {
+                        $return = [
+                            "redirectUrl" => $this->generateUrl("penempatan-siswa-kelas_unduh", [
+                                'filename' => $filetarget,
+                            ]),
+                            "filename" => $filetarget,
+                        ];
 
                         $return = json_encode($return);
 
-                        return new Response($return, 200,
-                                array(
-                                    'Content-Type' => 'application/json'
-                                ));
+                        return new Response($return, 200, [
+                            'Content-Type' => 'application/json',
+                        ]);
                     }
                 }
             }
@@ -514,16 +503,17 @@ class PenempatanSiswaKelasController extends Controller
     }
 
     /**
-     * download the generated file
+     * Unduh berkas yang telah dibuat
      *
      * @Route("/unduh/{filename}/{type}", name="penempatan-siswa-kelas_unduh")
      * @Method("GET")
      */
-    public function downloadFileAction($filename, $type = 'ods') {
-        $sekolah = $this->isRegisteredToSchool();
+    public function downloadFileAction($filename, $type = 'ods')
+    {
+        $sekolah = $this->getSekolah();
 
         $filetarget = $filename;
-        $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
+        $documenttarget = self::DOCUMENTS_OUTPUTDIR.$sekolah->getId().'/'.$filetarget;
 
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);
@@ -545,21 +535,23 @@ class PenempatanSiswaKelasController extends Controller
         return $response;
     }
 
-    private function formatNamaField(&$item, $key) {
+    private function formatNamaField(&$item, $key)
+    {
         preg_match("/(\d+:)(.+)/", $item, $matches);
         $item = $matches[2];
     }
 
     /**
-     * @param  array                                     $content
-     * @param  array                                     $fieldnames
-     * @param  Langgas\SisdikBundle\Entity\Sekolah       $sekolah
-     * @param  Langgas\SisdikBundle\Entity\TahunAkademik $tahunAkademik
-     * @param  Langgas\SisdikBundle\Entity\Kelas         $kelas
-     * @param  boolean                                   $andFlush
+     * @param  array         $content
+     * @param  array         $fieldnames
+     * @param  Sekolah       $sekolah
+     * @param  TahunAkademik $tahunAkademik
+     * @param  Kelas         $kelas
+     * @param  boolean       $andFlush
      * @throws \Exception
      */
-    private function menempatkanSiswa($content, $fieldnames, $sekolah, $tahunAkademik, $kelas, $andFlush = false) {
+    private function menempatkanSiswa($content, $fieldnames, $sekolah, $tahunAkademik, $kelas, $andFlush = false)
+    {
         $em = $this->getDoctrine()->getManager();
 
         $keyNomorIndukSistem = array_search('nomorIndukSistem', $fieldnames);
@@ -583,7 +575,7 @@ class PenempatanSiswaKelasController extends Controller
             ;
 
             if (!($siswaKelas instanceof SiswaKelas)) {
-                $siswaKelas = new SiswaKelas;
+                $siswaKelas = new SiswaKelas();
 
                 $siswaKelas->setSiswa($siswa);
                 $siswaKelas->setTahunAkademik($tahunAkademik);
@@ -634,22 +626,19 @@ class PenempatanSiswaKelasController extends Controller
         }
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.penempatan.siswa.kelas', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.academic', [], 'navigations')][$translator->trans('links.penempatan.siswa.kelas', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.useadmin.or.headmaster'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
