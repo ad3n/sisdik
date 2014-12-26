@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-12-23T20:04:31Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-12-26T10:34:03Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -423,8 +423,13 @@
         <source>kehadiran.siswa.laporan</source>
         <target>Laporan Kehadiran Siswa</target>
       </trans-unit>
+      <trans-unit id="3f03714b3f416ca5d1f55045d8fd8774a6087302" resname="laporan.pembayaran.biaya.sekali.bayar">
+        <jms:reference-file line="3">views/LaporanPembayaranBiayaSekali/index.html.twig</jms:reference-file>
+        <source>laporan.pembayaran.biaya.sekali.bayar</source>
+        <target>Laporan Pembayaran Biaya Sekali Bayar</target>
+      </trans-unit>
       <trans-unit id="a7531ee557989bea55af5cfbd8f4b652647f1e8e" resname="laporan.pembayaran.pendaftaran">
-        <jms:reference-file line="3">views/SiswaApplicantReportPayment/index.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/LaporanPembayaranPendaftaran/index.html.twig</jms:reference-file>
         <source>laporan.pembayaran.pendaftaran</source>
         <target>Laporan Pembayaran Pendaftaran</target>
       </trans-unit>

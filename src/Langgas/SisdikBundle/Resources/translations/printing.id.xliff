@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-12-24T19:00:05Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-12-26T10:39:50Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -8,24 +8,19 @@
     <body>
       <trans-unit id="3cb78b9eac0970ef91a02fc0355cb7602aca427c" resname="applicant.name">
         <jms:reference-file line="185">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="183">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="706">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="175">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="703">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>applicant.name</source>
         <target>Nama Pendaftar</target>
       </trans-unit>
       <trans-unit id="f64836ee621cad7ca32146f3d28388077bd323d8" resname="applicantname">
         <jms:reference-file line="19">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="175">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="172">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>applicantname</source>
         <target>Nama Pendaftar</target>
       </trans-unit>
       <trans-unit id="6623a6a9fdfa9c3b1bb9a2795c22135fad69a2e8" resname="applicationnum">
         <jms:reference-file line="27">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="184">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="403">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="484">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="181">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="400">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="481">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -34,23 +29,23 @@
       </trans-unit>
       <trans-unit id="c2dee940613be7e16db76a122ac0ece0979a677c" resname="cashier.or.treasurer">
         <jms:reference-file line="186">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="184">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="710">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="176">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="720">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="707">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>cashier.or.treasurer</source>
         <target>Kasir/Bendahara</target>
       </trans-unit>
       <trans-unit id="55c22d1330aa0133c82b0c9c0ad8dadb9580381a" resname="continue.to.pagetwo">
-        <jms:reference-file line="379">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="470">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="378">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="474">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="376">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="467">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>continue.to.pagetwo</source>
         <target>berlanjut ke halaman 2...</target>
       </trans-unit>
       <trans-unit id="7fd26b6ca4df80395973fc67a1c8c83e3b8fccf5" resname="continued.from.pageone">
-        <jms:reference-file line="420">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="500">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="424">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="510">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="417">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="497">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>continued.from.pageone</source>
@@ -68,11 +63,11 @@
         <jms:reference-file line="84">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="143">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="169">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="92">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="141">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="167">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="84">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="133">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="159">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="269">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="590">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="600">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="266">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="587">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>description</source>
@@ -81,10 +76,10 @@
       <trans-unit id="c467ca0fa21477fee3cde75a140b2963307388a7" resname="discount">
         <jms:reference-file line="55">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="152">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="63">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="150">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="55">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="142">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="233">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="627">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="637">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="230">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="624">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>discount</source>
@@ -95,7 +90,6 @@
         <jms:reference-file line="11">views/LaporanTransaksiKeuangan/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="11">views/SiswaApplicantReport/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="11">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="11">views/SiswaApplicantReportPayment/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="160">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="161">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="157">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -105,12 +99,15 @@
       </trans-unit>
       <trans-unit id="856c942edd0ac659f51d2aa43fc081c6794cf9d6" resname="identitas.sisdik">
         <jms:reference-file line="19">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="184">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="402">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="488">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <source>identitas.sisdik</source>
         <target>ID</target>
       </trans-unit>
       <trans-unit id="b068a4224a3e77fab2986469aae2099cad32bb29" resname="itemprice">
         <jms:reference-file line="48">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="56">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="48">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="224">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="221">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>itemprice</source>
@@ -119,26 +116,30 @@
       <trans-unit id="cd93e3c6b374a361b0c11fb4a9d4b3400c02c5f0" resname="nama.pelapor">
         <jms:reference-file line="32">views/LaporanTransaksiKeuangan/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="32">views/SiswaApplicantReport/summary.pdf.twig</jms:reference-file>
-        <jms:reference-file line="32">views/SiswaApplicantReportPayment/summary.pdf.twig</jms:reference-file>
         <source>nama.pelapor</source>
         <target>Nama Pelapor</target>
       </trans-unit>
       <trans-unit id="55da4662f99b0b651c1f4424b93bb26b17610cb1" resname="nama.siswa">
-        <jms:reference-file line="35">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="27">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="175">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="716">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <source>nama.siswa</source>
         <target>Nama Siswa</target>
       </trans-unit>
       <trans-unit id="0ffd767cd91f7403ebc5399c631f054e6aa5634f" resname="nomor.induk">
-        <jms:reference-file line="27">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="19">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="184">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="404">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="490">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <source>nomor.induk</source>
         <target>No. Induk</target>
       </trans-unit>
       <trans-unit id="9c6c337ee51971e973c9fdc9f4140c220df7f249" resname="num">
         <jms:reference-file line="114">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="122">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="325">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="424">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="504">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="114">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="324">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="428">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="514">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="322">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="421">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="501">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -146,10 +147,10 @@
         <target>No</target>
       </trans-unit>
       <trans-unit id="767013ce0ee0f6d7a07587912eba3104cfaabc15" resname="page">
-        <jms:reference-file line="395">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="476">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="728">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="730">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="394">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="480">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="738">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="740">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="392">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="473">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="725">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -159,7 +160,7 @@
       </trans-unit>
       <trans-unit id="ea578068ab01355e5c34331d19075f8ed512f05b" resname="paymentamount">
         <jms:reference-file line="78">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="86">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="78">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="262">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="259">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>paymentamount</source>
@@ -168,12 +169,12 @@
       <trans-unit id="bd6132bb4b3e3113bb5485650bee5a06a5df21ab" resname="paymentitem">
         <jms:reference-file line="43">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="115">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="51">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="123">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="43">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="115">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="219">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="329">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="428">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="508">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="328">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="432">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="518">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="216">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="326">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="425">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -183,7 +184,7 @@
       </trans-unit>
       <trans-unit id="8921c3fd160e046518b24ea28db6b39b278bd959" resname="paymentnum">
         <jms:reference-file line="72">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="80">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="72">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="257">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="254">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>paymentnum</source>
@@ -191,10 +192,10 @@
       </trans-unit>
       <trans-unit id="2097c33723b61c7e24d3d7d27840469989b61b49" resname="price">
         <jms:reference-file line="116">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="124">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="333">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="432">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="512">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="116">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="332">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="436">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="522">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="330">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="429">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="509">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -205,8 +206,8 @@
         <jms:reference-file line="22">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="22">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="171">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="399">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="480">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="398">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="484">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="168">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="396">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="477">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
@@ -216,22 +217,21 @@
       <trans-unit id="7fcfb028c5e958e4d2c5f5875b1e21d6f12a4312" resname="ringkasan.laporan">
         <jms:reference-file line="22">views/LaporanTransaksiKeuangan/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="22">views/SiswaApplicantReport/summary.pdf.twig</jms:reference-file>
-        <jms:reference-file line="22">views/SiswaApplicantReportPayment/summary.pdf.twig</jms:reference-file>
         <source>ringkasan.laporan</source>
         <target>Ringkasan Laporan</target>
       </trans-unit>
       <trans-unit id="45807bf2eca8459ac5eb6e74ab273b85abf0c840" resname="settled">
         <jms:reference-file line="103">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="111">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="293">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="103">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="292">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="290">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>settled</source>
         <target>lunas</target>
       </trans-unit>
       <trans-unit id="a3c99eec2777061b7130b042d6d6c5e560f3a71e" resname="subtotal">
         <jms:reference-file line="146">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="144">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="600">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="136">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="610">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="597">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>subtotal</source>
         <target>Sub Total</target>
@@ -241,7 +241,6 @@
         <jms:reference-file line="10">views/LaporanTransaksiKeuangan/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="10">views/SiswaApplicantReport/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="10">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="10">views/SiswaApplicantReportPayment/summary.pdf.twig</jms:reference-file>
         <jms:reference-file line="155">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="152">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>telephone</source>
@@ -250,10 +249,10 @@
       <trans-unit id="5a537e209151ae5fcccd6326b34b5622bcfb0578" resname="total">
         <jms:reference-file line="161">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="172">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="159">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="170">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="641">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
-        <jms:reference-file line="670">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="151">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="162">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="651">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="680">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="638">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="667">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>total</source>
@@ -261,15 +260,15 @@
       </trans-unit>
       <trans-unit id="9a934e0c9d5b062a4671fd3875fc866ccd470aa9" resname="totalpaidamount">
         <jms:reference-file line="92">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="100">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="282">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="92">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="281">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="279">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>totalpaidamount</source>
         <target>Total Sudah Bayar</target>
       </trans-unit>
       <trans-unit id="ef4180d028ab3400f157e8941e111650eba5aa4f" resname="totalprice">
         <jms:reference-file line="63">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="71">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="63">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
         <jms:reference-file line="248">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="245">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>totalprice</source>
@@ -277,8 +276,8 @@
       </trans-unit>
       <trans-unit id="f652e98d398fe065365181779baacba8a3a4df50" resname="unpaidamount">
         <jms:reference-file line="98">views/PembayaranPendaftaran/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="106">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
-        <jms:reference-file line="289">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
+        <jms:reference-file line="98">views/PembayaranBiayaSekali/receipts.pdf.twig</jms:reference-file>
+        <jms:reference-file line="288">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="286">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>unpaidamount</source>
         <target>Sisa Biaya</target>
