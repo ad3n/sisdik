@@ -1,95 +1,79 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
+use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Langgas\SisdikBundle\Entity\PilihanCetakKwitansi;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\PilihanCetakKwitansi;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Form\PilihanCetakKwitansiType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * PilihanCetakKwitansi controller.
- *
- * @Route("/printreceiptsoption")
+ * @Route("/pilihan-cetak-kwitansi")
  * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_KASIR')")
  */
 class PilihanCetakKwitansiController extends Controller
 {
     /**
-     * Decide whether display new or edit form
-     *
      * @Route("/", name="printreceiptsoption")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('t')
-                ->from('LanggasSisdikBundle:PilihanCetakKwitansi', 't')->where('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->setMaxResults(1);
-        $results = $querybuilder->getQuery()->getResult();
-        $entity = false;
-        foreach ($results as $result) {
-            if (is_object($result) && $result instanceof PilihanCetakKwitansi) {
-                $entity = $result;
-            } else {
-                $entity = false;
-            }
-        }
+        $pilihanCetak = $em->getRepository('LanggasSisdikBundle:PilihanCetakKwitansi')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
 
-        if (!$entity) {
+        if (!($pilihanCetak instanceof PilihanCetakKwitansi)) {
             return $this->redirect($this->generateUrl('printreceiptsoption_new'));
         } else {
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('printreceiptsoption_edit',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('printreceiptsoption_edit', [
+                'id' => $pilihanCetak->getId(),
+            ]));
         }
     }
 
     /**
-     * Displays a form to create a new PilihanCetakKwitansi entity.
-     *
      * @Route("/new", name="printreceiptsoption_new")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
         $entity = new PilihanCetakKwitansi();
-        $form = $this->createForm(new PilihanCetakKwitansiType($this->container), $entity);
+        $form = $this->createForm('sisdik_pilihancetakkwitansi', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new PilihanCetakKwitansi entity.
-     *
      * @Route("/create", name="printreceiptsoption_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PilihanCetakKwitansi:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
         $this->setCurrentMenu();
 
         $entity = new PilihanCetakKwitansi();
-        $form = $this->createForm(new PilihanCetakKwitansiType($this->container), $entity);
+        $form = $this->createForm('sisdik_pilihancetakkwitansi', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -99,8 +83,11 @@ class PilihanCetakKwitansiController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success', $this->get('translator')->trans('flash.printreceiptsoption.saved'));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.printreceiptsoption.saved'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.printreceiptsoption');
                 throw new DBALException($message);
@@ -109,19 +96,18 @@ class PilihanCetakKwitansiController extends Controller
             return $this->redirect($this->generateUrl('printreceiptsoption'));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing PilihanCetakKwitansi entity.
-     *
      * @Route("/{id}/edit", name="printreceiptsoption_edit")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -132,22 +118,21 @@ class PilihanCetakKwitansiController extends Controller
             throw $this->createNotFoundException('Entity PilihanCetakKwitansi tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new PilihanCetakKwitansiType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_pilihancetakkwitansi', $entity);
 
-        return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing PilihanCetakKwitansi entity.
-     *
      * @Route("/{id}/update", name="printreceiptsoption_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PilihanCetakKwitansi:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -158,51 +143,48 @@ class PilihanCetakKwitansiController extends Controller
             throw $this->createNotFoundException('Entity PilihanCetakKwitansi tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new PilihanCetakKwitansiType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_pilihancetakkwitansi', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success', $this->get('translator')->trans('flash.printreceiptsoption.saved'));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.printreceiptsoption.saved'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.printreceiptsoption');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('printreceiptsoption_edit',
-                                            array(
-                                                'id' => $id
-                                            )));
+            return $this->redirect($this->generateUrl('printreceiptsoption_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+        ];
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.payments', array(), 'navigations')][$this->get('translator')->trans('links.printreceiptsoption', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.payments', [], 'navigations')][$translator->trans('links.printreceiptsoption', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
