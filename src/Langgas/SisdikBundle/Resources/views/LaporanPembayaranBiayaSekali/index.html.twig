@@ -1,0 +1,436 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}laporan.pembayaran.biaya.sekali.bayar{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.form-inline .form-group {
+    display: inline-block;
+    margin-right: 0.4em;
+    margin-bottom: 7px;
+}
+.ui-datepicker-month {
+    font-size: 0.9em;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 1em;
+}
+form .clearfix {
+    margin-bottom: 5px;
+}
+.arrow-down-lanjut {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
+}
+#cari-lanjutan {
+    display: none;
+}
+#anchor-lanjutan {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-cari-lanjutan {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-cari-lanjutan-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-cari-lanjutan, .anchor-cari-lanjutan-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-cari-lanjutan-sel:hover {
+    color: #222;
+}
+#cari-lanjutan .control-group {
+    margin-right: 0.4em;
+}
+.ui-autocomplete-loading {
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+    background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
+#cari-error {
+    margin-bottom: 5px;
+    color: #ff0000;
+}
+#cari-error .help-inline {
+    color: inherit;
+    margin-left: 0;
+    padding-left: 0;
+}
+.loading {
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
+#filename {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
+.input-group {
+    max-width: 200px;
+}
+#custom-dropkick {
+    padding: 0;
+}
+#custom-dropkick .dk_container {
+    width: 30px;
+}
+#custom-dropkick .dk_toggle {
+    max-width: 30px;
+    border-bottom: 0;
+    border-left: 0;
+    border-top: 0;
+    padding: 6px 4px;
+}
+.dk_options_inner {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline .input-group-addon {
+    padding: 6px 8px 0;
+}
+.form-inline #persen-bayar {
+    display: inline;
+    padding: 0;
+    font-weight: normal;
+    margin: 0;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('laporan-pembayaran-biaya-sekali') }}" class="form-search form-inline" id="search-form">
+        <div class="cari-standar">
+            {{ form_row(searchform.tahun) }}
+            {{ form_row(searchform.dariTanggal) }}
+            {{ form_row(searchform.hinggaTanggal) }}
+        </div>
+        <div class="clearfix"></div>
+        <div class="cari-standar">
+            <div class="form-group">
+                {% spaceless %}
+                    <div class="input-group">
+                        <div id="custom-dropkick" class="input-group-addon">{{ form_widget(searchform.pembandingBayar) }}</div>
+                        {{ form_widget(searchform.jumlahBayar) }}
+                        <span class="input-group-addon">{{ form_widget(searchform.persenBayar) }}</span>
+                    </div>
+                {% endspaceless %}
+            </div>
+            {{ form_row(searchform.searchkey) }}
+            <a href="" id="anchor-lanjutan" class="anchor-cari-lanjutan" onclick="return false;">{{ 'label.pencarian.lanjutan'|trans }}<span class="arrow-down-lanjut"></span></a>
+        </div>
+        <div class="clearfix"></div>
+        <div id="cari-lanjutan">
+            {{ form_rest(searchform) }}
+        </div>
+        {% if form_errors(searchform) %}
+        <div id="cari-error">
+            {{ form_errors(searchform) }}
+        </div>
+        {% endif %}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('laporan-pembayaran-biaya-sekali') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<div class="clearfix" style="margin-top: 10px;"></div>
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ siswaTotal }}
+</div>
+
+<div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ siswaTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<i class="fa fa-refresh fa-fw"></i></a>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('siswa.nomorIndukSistem') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.identitas.sisdik'|trans, 'siswa.nomorIndukSistem') }}
+            </th>
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
+            </th>
+            <th>{{ 'label.paid.amount'|trans }}</th>
+            <th>{{ 'label.payment.remains'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">
+                {% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}
+            </td>
+            <td data-title="{{ 'label.identitas.sisdik'|trans }}">{{ highlightResult(data.nomorIndukSistem, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.paid.amount'|trans }}">
+                {% set totalBayar = 0 %}
+                {% set totalBiayaMasuk = 0 %}
+                {% set totalPotongan = 0 %}
+                {% set totalBiayaSisa = 0 %}
+                {% set totalBiaya = 0 %}
+                {% set biayaTersimpan = '' %}
+
+                {% for pembayaran in data.pembayaranSekali %}
+                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+                    {% for biaya in pembayaran.daftarBiayaSekali %}
+                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+                        {% set biayaTersimpan = biaya.biayaSekali.id ~ ',' ~ biayaTersimpan %}
+                    {% endfor %}
+                    {% for transaksi in pembayaran.transaksiPembayaranSekali %}
+                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+                    {% endfor %}
+                {% endfor %}
+
+                {% if biayaTersimpan != '' %}
+                    {% set remainInfo %}
+                        {% render url('fee_once_remains', {'tahun': data.tahun.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% else %}
+                    {% set remainInfo %}
+                        {% render url('fee_once_totalinfo', {'tahun': data.tahun.id, 'json': 1}) %}
+                    {% endset %}
+                    {% set remainInfo = remainInfo|json_decode %}
+                    {% set totalBiayaSisa = remainInfo.biaya %}
+                {% endif %}
+                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+
+                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {% if totalPotongan > 0 %}
+                <i class="fa fa-gift"></i>
+                {% endif %}
+                {{ totalBiaya|number_format(0, ',', '.') }}
+            </td>
+            <td data-title="{{ 'label.payment.remains'|trans }}">
+                {% if (totalBiaya - totalBayar) == 0 %}
+                    ({{ 'paidoff'|trans }})
+                {% else %}
+                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+                {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('pembayaran_biaya_sekali__summary', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+
+<div class="row-fluid">
+
+    {% if searchdata.tahun is not null %}
+    <div class="span6 export-section pull-left">
+        <form method="GET" action="{{ path("laporan-pembayaran-biaya-sekali_export") }}" class="form-search form-inline" id="export-form">
+            <button type="submit" class="btn success alternative icon share">{{ 'label.ekspor.ke.spreadsheet'|trans }}</button>
+            <div id="filename"></div>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
+
+{% block javascripts_custom %}
+{% javascripts '@LanggasSisdikBundle/Resources/public/js/libraries/jquery.dropkick-1.0.0.js' %}
+<script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
+<script language="javascript" type="text/javascript">
+var duration = 300;
+var pencarianLanjutan = {% if pencarianLanjutan %}1{% else %}0{% endif %};
+
+$(document).ready(function() {
+    var options1 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-sekolah-asal").val("");
+        },
+        select: function(event, ui) {
+              $(".id-sekolah-asal").val(ui.item.id);
+        }
+    };
+
+    var options2 = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("referensi_ajax_ambilnama") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-referensi").val("");
+        },
+        select: function(event, ui) {
+            $(".id-referensi").val(ui.item.id);
+        }
+    };
+
+    $(".nama-sekolah-asal").autocomplete(options1);
+
+    $(".nama-referensi").autocomplete(options2);
+
+    $(".nama-sekolah-asal").addClass("ui-autocomplete-loading");
+    if ($(".id-sekolah-asal").val() != "") {
+        $.ajax({
+            url: "{{ path("sekolahasal_ajax_ambilnama") }}",
+            data: {id: $(".id-sekolah-asal").val()},
+            success: function(data) {
+                $(".nama-sekolah-asal").val(data[0].value);
+                  $(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+        $(".nama-sekolah-asal").removeClass("ui-autocomplete-loading");
+    }
+
+    $(".nama-referensi").addClass("ui-autocomplete-loading");
+    if ($(".id-referensi").val() != "") {
+        $.ajax({
+            url: "{{ path("referensi_ajax_ambilnama") }}",
+            data: {id: $(".id-referensi").val()},
+            success: function(data) {
+                $(".nama-referensi").val(data[0].value);
+                $(".nama-referensi").removeClass("ui-autocomplete-loading");
+            }
+        });
+    } else {
+        $(".nama-referensi").removeClass("ui-autocomplete-loading");
+    }
+
+    $(".pembanding-bayar").dropkick();
+
+    $("#cari-lanjutan").hide(duration);
+
+    $(".anchor-cari-lanjutan").click(function(){
+        if ($("#cari-lanjutan").is(":visible")) {
+            $("#cari-lanjutan").hide(duration);
+            $(this).removeClass("anchor-cari-lanjutan-sel");
+            $(this).addClass("anchor-cari-lanjutan");
+        } else {
+            $("#cari-lanjutan").show(duration);
+            $(this).addClass("anchor-cari-lanjutan-sel");
+            $(this).removeClass("anchor-cari-lanjutan");
+        }
+        return false;
+    });
+
+    $(".anchor-ringkasan").click(function(){
+        if ($("#ringkasan").is(":visible")) {
+            $("#ringkasan").hide(duration);
+            $(this).removeClass("anchor-ringkasan-sel");
+            $(this).addClass("anchor-ringkasan");
+        } else {
+            $("#ringkasan").show(duration, function() {
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+            });
+            $(this).addClass("anchor-ringkasan-sel");
+            $(this).removeClass("anchor-ringkasan");
+        }
+        return false;
+    });
+
+    $('.date').datepicker({
+        dateFormat: 'dd/mm/yy',
+        changeYear: false,
+        maxDate: 0
+    });
+
+    if (pencarianLanjutan != 0) {
+        $("#cari-lanjutan").css("display", "block");
+        $(".anchor-cari-lanjutan").addClass("anchor-cari-lanjutan-sel");
+        $(".anchor-cari-lanjutan").removeClass("anchor-cari-lanjutan");
+    }
+
+    $("#export-form").submit(function() {
+        var url = $(this).attr("action");
+        $("#filename").html("");
+        $("#filename").addClass("loading");
+        $.post(url, $("#search-form").serialize(), function(response) {
+            if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a>'
+                        + '<br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+                $("#filename").removeClass("loading");
+            }
+        });
+        return false;
+    });
+});
+</script>
+{% endblock javascripts_custom %}

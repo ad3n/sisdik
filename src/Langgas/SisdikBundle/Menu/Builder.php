@@ -32,8 +32,7 @@ class Builder extends ContainerAware
     public function __construct(
         FactoryInterface $factory,
         ContainerInterface $container
-    )
-    {
+    ) {
         $this->factory = $factory;
         $this->container = $container;
     }
@@ -56,7 +55,7 @@ class Builder extends ContainerAware
         $menu->setChildrenAttribute('class', 'nav navbar-nav navbar-right');
 
         if ($securityContext->isGranted([
-            new Expression('hasRole("ROLE_SUPER_ADMIN")')
+            new Expression('hasRole("ROLE_SUPER_ADMIN")'),
         ])) {
             $supersettings = $menu->addChild(
                 $translator->trans('headings.pengaturan.sisdik', [], 'navigations'),
@@ -74,13 +73,13 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')
+            new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")'),
         ])) {
             $menu->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => 'siswa__kehadiran']);
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasRole("ROLE_ADMIN")')
+            new Expression('hasRole("ROLE_ADMIN")'),
         ])) {
             $settings = $menu->addChild(
                 $translator->trans('headings.setting', [], 'navigations'),
@@ -101,7 +100,7 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasAnyRole("ROLE_BENDAHARA")')
+            new Expression('hasAnyRole("ROLE_BENDAHARA")'),
         ])) {
             $fees = $menu->addChild($translator->trans('headings.fee', [], 'navigations'), [
                 'dropdown' => true,
@@ -117,14 +116,14 @@ class Builder extends ContainerAware
 
         $rolependaftaran = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB", "ROLE_KETUA_PANITIA_PSB")';
         if ($securityContext->isGranted([
-            new Expression($rolependaftaran)
+            new Expression($rolependaftaran),
         ])) {
             $pendaftaran = $menu->addChild($translator->trans('headings.pendaftaran', [], 'navigations'), [
                 'dropdown' => true,
             ]);
 
             if ($securityContext->isGranted([
-                new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
+                new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')"),
             ])) {
                 $pendaftaran->addChild($translator->trans('links.regcommittee', [], 'navigations'), ['route' => 'regcommittee']);
             }
@@ -135,7 +134,7 @@ class Builder extends ContainerAware
             $pendaftaran->addChild($translator->trans('links.referensi', [], 'navigations'), ['route' => 'referensi']);
 
             if ($securityContext->isGranted([
-                new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")')
+                new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_KETUA_PANITIA_PSB")'),
             ])) {
                 $pendaftaran->addChild($translator->trans('links.tahkik', [], 'navigations'), ['route' => 'tahkik']);
             }
@@ -143,7 +142,7 @@ class Builder extends ContainerAware
 
         $roleakademik = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH")';
         if ($securityContext->isGranted([
-            new Expression($roleakademik)]
+            new Expression($roleakademik), ]
         )) {
             $academic = $menu->addChild($translator->trans('headings.academic', [], 'navigations'), [
                 'dropdown' => true,
@@ -158,7 +157,7 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasAnyRole("ROLE_BENDAHARA", "ROLE_KASIR")')
+            new Expression('hasAnyRole("ROLE_BENDAHARA", "ROLE_KASIR")'),
         ])) {
             $payments = $menu->addChild($translator->trans('headings.payments', [], 'navigations'), [
                 'dropdown' => true,
@@ -168,24 +167,25 @@ class Builder extends ContainerAware
             $payments->addChild($translator->trans('links.pembayaran.biaya.sekali.bayar', [], 'navigations'), ['route' => 'pembayaran_biaya_sekali__daftar']);
 
             if ($securityContext->isGranted([
-                new Expression("hasAnyRole('ROLE_BENDAHARA')")
+                new Expression("hasAnyRole('ROLE_BENDAHARA')"),
             ])) {
                 $payments->addChild($translator->trans('links.laporan.transaksi.keuangan', [], 'navigations'), ['route' => 'laporan-transaksi-keuangan']);
             }
 
             $payments->addChild($translator->trans('links.laporan.pembayaran.pendaftaran', [], 'navigations'), ['route' => 'laporan-pembayaran-pendaftaran']);
+            $payments->addChild($translator->trans('links.laporan.pembayaran.biaya.sekali.bayar', [], 'navigations'), ['route' => 'laporan-pembayaran-biaya-sekali']);
             $payments->addChild($translator->trans('links.printreceiptsoption', [], 'navigations'), ['route' => 'printreceiptsoption']);
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_GURU", "ROLE_GURU_PIKET")')
+            new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_GURU", "ROLE_GURU_PIKET")'),
         ])) {
             $kehadiran = $menu->addChild($translator->trans('headings.presence', [], 'navigations'), [
                 'dropdown' => true,
             ]);
 
             if ($securityContext->isGranted([
-                new Expression('hasRole("ROLE_ADMIN")')
+                new Expression('hasRole("ROLE_ADMIN")'),
             ])) {
                 $kehadiran->addChild($translator->trans('links.attendancemachine', [], 'navigations'), ['route' => 'attendancemachine']);
                 $kehadiran->addChild($translator->trans('links.jadwal.kehadiran', [], 'navigations'), ['route' => 'jadwal_kehadiran']);
