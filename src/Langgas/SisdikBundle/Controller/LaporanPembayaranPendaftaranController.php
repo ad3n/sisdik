@@ -153,7 +153,7 @@ class LaporanPembayaranPendaftaranController extends Controller
 
             if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
                 $querybuilder
-                    ->andWhere('sekolahasal.id = :sekolahasal')
+                    ->andWhere('siswa.sekolahAsal = :sekolahasal')
                     ->setParameter('sekolahasal', $searchdata['sekolahAsal'])
                 ;
 
@@ -350,8 +350,8 @@ class LaporanPembayaranPendaftaranController extends Controller
 
             if ($searchdata['sekolahAsal'] instanceof SekolahAsal) {
                 $querybuilder
-                    ->andWhere('sekolahasal.id = :sekolahasal')
-                    ->setParameter('sekolahasal', $searchdata['sekolahAsal']->getId())
+                    ->andWhere('siswa.sekolahAsal = :sekolahasal')
+                    ->setParameter('sekolahasal', $searchdata['sekolahAsal'])
                 ;
 
                 $judulLaporan .= ", ".$this->get('translator')->trans('sekolah.asal')." ".$searchdata['sekolahAsal']->getNama();
