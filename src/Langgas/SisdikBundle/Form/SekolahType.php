@@ -99,6 +99,6 @@ class SekolahType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_sekolahtype';
+        return 'sisdik_sekolah';
     }
 }
