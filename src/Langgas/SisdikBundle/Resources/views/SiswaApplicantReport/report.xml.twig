@@ -24,6 +24,16 @@
             <table:table table:name="Sheet1" table:style-name="ta1">
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
+                        <text:p>{{ judulLaporan }}</text:p>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
+                        <text:p></text:p>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.gelombang'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
@@ -204,27 +214,15 @@
             {% endfor %}
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}</text:p>
+                        <text:p>{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</text:p>
                     </table:table-cell>
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</text:p>
+                        <text:p>{{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}</text:p>
                     </table:table-cell>
                 </table:table-row>
             </table:table>
-{#             <table:table table:name="Sheet2" table:style-name="ta1">#}
-{#                 <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>#}
-{#                 <table:table-row table:style-name="ro1">#}
-{#                     <table:table-cell/>#}
-{#                 </table:table-row>#}
-{#             </table:table>#}
-{#             <table:table table:name="Sheet3" table:style-name="ta1">#}
-{#                 <table:table-column table:style-name="co1" table:default-cell-style-name="Default"/>#}
-{#                 <table:table-row table:style-name="ro1">#}
-{#                     <table:table-cell/>#}
-{#                 </table:table-row>#}
-{#             </table:table>#}
         </office:spreadsheet>
     </office:body>
 </office:document-content>
