@@ -352,7 +352,7 @@ class SettingsUserController extends Controller
         $searchcondition = '';
         $searchkey = '';
 
-        $searchform = $this->createForm('cari');
+        $searchform = $this->createForm('sisdik_cari');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('u')
