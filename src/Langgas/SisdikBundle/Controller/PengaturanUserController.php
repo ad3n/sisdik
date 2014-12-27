@@ -97,7 +97,10 @@ class PengaturanUserController extends Controller
             'id' => $id,
         ]);
 
-        $form = $this->createForm('sisdik_useredit', $user, ['mode' => 1]);
+        $form = $this->createForm('sisdik_useredit', $user, [
+            'mode' => 1,
+            'role_hierarchy' => $this->container->getParameter('security.role_hierarchy.roles'),
+        ]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
@@ -181,7 +184,10 @@ class PengaturanUserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $form = $this->createForm('sisdik_registeruser', $user, ['mode' => 1]);
+        $form = $this->createForm('sisdik_registeruser', $user, [
+            'mode' => 1,
+            'role_hierarchy' => $this->container->getParameter('security.role_hierarchy.roles'),
+        ]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
@@ -231,12 +237,15 @@ class PengaturanUserController extends Controller
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
 
-        $form = $this->createForm('sisdik_registeruser', $user, ['mode' => 2]);
+        $form = $this->createForm('sisdik_registeruser', $user, [
+            'mode' => 2,
+            'role_hierarchy' => $this->container->getParameter('security.role_hierarchy.roles'),
+        ]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);
-
             $data = $form->getData();
+
             if (is_numeric($data->getUsername())) {
                 $message = $this->get('translator')->trans('alert.username.numeric.forstudent');
                 $form->get('username')->addError(new FormError($message));
@@ -441,7 +450,10 @@ class PengaturanUserController extends Controller
             }
         }
 
-        $form = $this->createForm('sisdik_useredit', $user, ['mode' => $mode]);
+        $form = $this->createForm('sisdik_useredit', $user, [
+            'mode' => $mode,
+            'role_hierarchy' => $this->container->getParameter('security.role_hierarchy.roles'),
+        ]);
 
         if ($request->getMethod() == 'POST') {
             $form->submit($request);

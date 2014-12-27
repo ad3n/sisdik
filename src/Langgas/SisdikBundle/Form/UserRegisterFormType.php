@@ -4,9 +4,9 @@ namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -17,39 +17,32 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class UserRegisterFormType extends BaseType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
-
-    /**
-     * @var integer
-     */
-    private $mode;
+    private $securityContext;
 
     /**
      * @InjectParams({
-     *     "container" = @Inject("service_container")
+     *     "securityContext" = @Inject("security.context")
      * })
      *
-     * @param ContainerInterface $container
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
     }
 
     /**
-     * @param integer $mode
+     * @return Sekolah
      */
-    public function setMode($mode)
+    private function getSekolah()
     {
-        $this->mode = $mode;
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->setMode($options['mode']);
-
         $builder
             ->add('username', null, [
                 'required' => true,
@@ -81,9 +74,6 @@ class UserRegisterFormType extends BaseType
                     ],
                 ],
             ])
-        ;
-
-        $builder
             ->add('name', null, [
                 'required' => true,
                 'label' => 'label.name.full',
@@ -93,8 +83,8 @@ class UserRegisterFormType extends BaseType
             ])
         ;
 
-        foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
-            if ($this->mode == 1) {
+        foreach ($options['role_hierarchy'] as $keys => $values) {
+            if ($options['mode'] == 1) {
                 // registration type 1, no school, only for super admin
                 if (!($keys == 'ROLE_USER' || $keys == 'ROLE_SUPER_ADMIN')) {
                     continue;
@@ -126,8 +116,8 @@ class UserRegisterFormType extends BaseType
             ])
         ;
 
-        if ($this->mode != 1) {
-            if (($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN'))) {
+        if ($options['mode'] != 1) {
+            if (($this->securityContext->isGranted('ROLE_SUPER_ADMIN'))) {
                 $builder
                     ->add('sekolah', 'entity', [
                         'class' => 'LanggasSisdikBundle:Sekolah',
@@ -139,20 +129,15 @@ class UserRegisterFormType extends BaseType
                     ])
                 ;
             } else {
-                $user = $this->container->get('security.context')->getToken()->getUser();
-                $sekolah = $user->getSekolah();
+                $sekolah = $this->getSekolah();
 
-                if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-                    $em = $this->container->get('doctrine')->getManager();
-
-                    $builder
-                        ->add('sekolah', new EntityHiddenType($em), [
-                            'required' => true,
-                            'class' => 'LanggasSisdikBundle:Sekolah',
-                            'data' => $sekolah->getId(),
-                        ])
-                    ;
-                }
+                $builder
+                    ->add('sekolah', 'sisdik_entityhidden', [
+                        'required' => true,
+                        'class' => 'LanggasSisdikBundle:Sekolah',
+                        'data' => $sekolah->getId(),
+                    ])
+                ;
             }
         }
 
@@ -175,6 +160,7 @@ class UserRegisterFormType extends BaseType
                     'Registration',
                 ],
                 'mode' => 1,
+                'role_hierarchy' => [],
             ])
         ;
     }

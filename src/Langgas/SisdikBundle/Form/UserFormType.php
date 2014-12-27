@@ -3,10 +3,10 @@
 namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -17,39 +17,32 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class UserFormType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
-
-    /**
-     * @var integer
-     */
-    private $mode;
+    private $securityContext;
 
     /**
      * @InjectParams({
-     *     "container" = @Inject("service_container")
+     *     "securityContext" = @Inject("security.context")
      * })
      *
-     * @param ContainerInterface $container
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
     }
 
     /**
-     * @param integer $mode
+     * @return Sekolah
      */
-    public function setMode($mode)
+    private function getSekolah()
     {
-        $this->mode = $mode;
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->setMode($options['mode']);
-
         $builder
             ->add('username', null, [
                 'required' => true,
@@ -75,9 +68,9 @@ class UserFormType extends AbstractType
             ])
         ;
 
-        if ($this->mode == 1) {
+        if ($options['mode'] == 1) {
             // role user and super admin, not registered to any school
-            foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
+            foreach ($options['role_hierarchy'] as $keys => $values) {
                 if (!($keys == 'ROLE_USER' || $keys == 'ROLE_SUPER_ADMIN')) {
                     continue;
                 }
@@ -93,10 +86,10 @@ class UserFormType extends AbstractType
                     'expanded' => true,
                 ])
             ;
-        } elseif ($this->mode == 2) {
+        } elseif ($options['mode'] == 2) {
             // role siswa, nothing
-        } elseif ($this->mode == 3) {
-            foreach ($this->container->getParameter('security.role_hierarchy.roles') as $keys => $values) {
+        } elseif ($options['mode'] == 3) {
+            foreach ($options['role_hierarchy'] as $keys => $values) {
                 if ($keys == 'ROLE_USER'
                         || $keys == 'ROLE_SISWA'
                         || $keys == 'ROLE_SUPER_ADMIN'
@@ -122,8 +115,8 @@ class UserFormType extends AbstractType
             ;
         }
 
-        if ($this->mode > 1) {
-            if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($options['mode'] > 1) {
+            if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
                 $builder
                     ->add('sekolah', 'entity', [
                         'class' => 'LanggasSisdikBundle:Sekolah',
@@ -135,42 +128,31 @@ class UserFormType extends AbstractType
                     ])
                 ;
             } else {
-                $user = $this->container->get('security.context')->getToken()->getUser();
-                $sekolah = $user->getSekolah();
+                $sekolah = $this->getSekolah();
 
-                if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-                    $em = $this->container->get('doctrine')->getManager();
-                    $querybuilder = $em->createQueryBuilder()
-                        ->select('t')
-                        ->from('LanggasSisdikBundle:Sekolah', 't')
-                        ->where('t.id = :sekolah')
-                        ->setParameter('sekolah', $sekolah)
-                    ;
-
-                    $builder
-                        ->add('sekolah', new EntityHiddenType($em), [
-                            'required' => true,
-                            'class' => 'LanggasSisdikBundle:Sekolah',
-                            'data' => $sekolah->getId(),
-                        ])
-                        ->add('plainPassword', 'repeated', [
-                            'type' => 'password',
-                            'invalid_message' => 'fos_user.password.notequal',
-                            'first_options' => [
-                                'label' => 'label.password',
-                                'attr' => [
-                                    'class' => 'medium',
-                                ],
+                $builder
+                    ->add('sekolah', 'sisdik_entityhidden', [
+                        'required' => true,
+                        'class' => 'LanggasSisdikBundle:Sekolah',
+                        'data' => $sekolah->getId(),
+                    ])
+                    ->add('plainPassword', 'repeated', [
+                        'type' => 'password',
+                        'invalid_message' => 'fos_user.password.notequal',
+                        'first_options' => [
+                            'label' => 'label.password',
+                            'attr' => [
+                                'class' => 'medium',
                             ],
-                            'second_options' => [
-                                'label' => 'label.repassword',
-                                'attr' => [
-                                    'class' => 'medium',
-                                ],
+                        ],
+                        'second_options' => [
+                            'label' => 'label.repassword',
+                            'attr' => [
+                                'class' => 'medium',
                             ],
-                        ])
-                    ;
-                }
+                        ],
+                    ])
+                ;
             }
         }
 
@@ -190,6 +172,7 @@ class UserFormType extends AbstractType
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\User',
                 'mode' => 0,
+                'role_hierarchy' => [],
             ])
         ;
     }
