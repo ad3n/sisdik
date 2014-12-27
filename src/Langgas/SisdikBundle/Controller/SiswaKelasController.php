@@ -15,7 +15,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * @Route("/riwayat-kelas-siswa/{idsiswa}", requirements={"idsiswa"="\d+"})
- * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
 class SiswaKelasController extends Controller
 {
