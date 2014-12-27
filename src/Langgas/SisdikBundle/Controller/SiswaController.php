@@ -216,7 +216,7 @@ class SiswaController extends Controller
             $nomorUrutPersekolah++;
 
             $entity->setNomorUrutPersekolah($nomorUrutPersekolah);
-            $entity->setNomorIndukSistem($nomorUrutPersekolah . $sekolah->getNomorUrut());
+            $entity->setNomorIndukSistem($nomorUrutPersekolah.$sekolah->getNomorUrut());
             $entity->setCalonSiswa(false);
             $entity->setGelombang(null);
 
@@ -436,7 +436,6 @@ class SiswaController extends Controller
 
         $filedata = $form['file']->getData();
         if ($filedata instanceof UploadedFile) {
-
             $reader = new SpreadsheetReader($filedata->getPathname(), false, $filedata->getClientMimeType());
             $sheets = $reader->Sheets();
             if (count($sheets) > 1) {
@@ -444,7 +443,6 @@ class SiswaController extends Controller
                 $form->get('file')->addError(new FormError($message));
             }
             unset($reader);
-
         }
 
         if ($form->isValid()) {
@@ -455,8 +453,7 @@ class SiswaController extends Controller
 
             $targetfilename = $file->getClientOriginalName();
             if ($file->move(self::DOCUMENTS_OUTPUTDIR, $targetfilename)) {
-
-                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
+                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR.$targetfilename);
 
                 $fieldnames = [];
                 $content = [];
@@ -505,7 +502,6 @@ class SiswaController extends Controller
                 ;
 
                 return $this->redirect($this->generateUrl('siswa_imporbaru'));
-
             }
         }
 
@@ -551,7 +547,6 @@ class SiswaController extends Controller
 
         $filedata = $form['file']->getData();
         if ($filedata instanceof UploadedFile) {
-
             $reader = new SpreadsheetReader($filedata->getPathname(), false, $filedata->getClientMimeType());
             $sheets = $reader->Sheets();
             if (count($sheets) > 1) {
@@ -559,7 +554,6 @@ class SiswaController extends Controller
                 $form->get('file')->addError(new FormError($message));
             }
             unset($reader);
-
         }
 
         if ($form->isValid()) {
@@ -569,8 +563,7 @@ class SiswaController extends Controller
 
             $targetfilename = $file->getClientOriginalName();
             if ($file->move(self::DOCUMENTS_OUTPUTDIR, $targetfilename)) {
-
-                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR . $targetfilename);
+                $reader = new SpreadsheetReader(self::DOCUMENTS_OUTPUTDIR.$targetfilename);
 
                 $fieldnames = [];
                 $content = [];
@@ -640,32 +633,32 @@ class SiswaController extends Controller
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+        $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-        $filenameoutput = self::TEMPLATE_OUTPUTFILE . "sisdik";
+        $filenameoutput = self::TEMPLATE_OUTPUTFILE."sisdik";
 
         $outputfiletype = "ods";
         $extensiontarget = $extensionsource = ".$outputfiletype";
-        $filesource = $filenameoutput . $extensionsource;
-        $filetarget = $filenameoutput . $extensiontarget;
+        $filesource = $filenameoutput.$extensionsource;
+        $filetarget = $filenameoutput.$extensiontarget;
 
         $fs = new Filesystem();
-        if (!$fs->exists($outputdir . $sekolah->getId())) {
-            $fs->mkdir($outputdir . $sekolah->getId());
+        if (!$fs->exists($outputdir.$sekolah->getId())) {
+            $fs->mkdir($outputdir.$sekolah->getId());
         }
 
-        $documentsource = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $filesource;
-        $documenttarget = $outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $filetarget;
+        $documentsource = $outputdir.$sekolah->getId().DIRECTORY_SEPARATOR.$filesource;
+        $documenttarget = $outputdir.$sekolah->getId().DIRECTORY_SEPARATOR.$filetarget;
 
         if ($outputfiletype == 'ods') {
-            if (copy($documentbase, $documenttarget) === TRUE) {
+            if (copy($documentbase, $documenttarget) === true) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
                 $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
                 $ziparchive->addFromString('settings.xml', $this->renderView("LanggasSisdikBundle:Siswa:settings.xml.twig"));
                 $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:Siswa:template-file.xml.twig"));
-                if ($ziparchive->close() === TRUE) {
+                if ($ziparchive->close() === true) {
                     $return = [
                         "redirectUrl" => $this->generateUrl("siswa_downloadfile", [
                             'filename' => $filetarget
@@ -714,40 +707,40 @@ class SiswaController extends Controller
             ;
             $entities = $querybuilder->getQuery()->getResult();
 
-            $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+            $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
             $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
             $patterns = ['/\s+/', '/\//'];
             $replacements = ['', '_'];
-            $filenameoutput = self::DATASISWA_OUTPUTFILE . preg_replace($patterns, $replacements, $formdata['tahun']->getTahun()) . ".sisdik";
+            $filenameoutput = self::DATASISWA_OUTPUTFILE.preg_replace($patterns, $replacements, $formdata['tahun']->getTahun()).".sisdik";
 
             $outputfiletype = "ods";
             $extensiontarget = $extensionsource = ".$outputfiletype";
-            $filesource = $filenameoutput . $extensionsource;
-            $filetarget = $filenameoutput . $extensiontarget;
+            $filesource = $filenameoutput.$extensionsource;
+            $filetarget = $filenameoutput.$extensiontarget;
 
             $fs = new Filesystem();
-            if (!$fs->exists($outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $formdata['tahun']->getTahun())) {
-                $fs->mkdir($outputdir . $sekolah->getId() . DIRECTORY_SEPARATOR . $formdata['tahun']->getTahun());
+            if (!$fs->exists($outputdir.$sekolah->getId().DIRECTORY_SEPARATOR.$formdata['tahun']->getTahun())) {
+                $fs->mkdir($outputdir.$sekolah->getId().DIRECTORY_SEPARATOR.$formdata['tahun']->getTahun());
             }
 
             $documentsource = $outputdir
-                . $sekolah->getId()
-                . DIRECTORY_SEPARATOR
-                . $formdata['tahun']->getTahun()
-                . DIRECTORY_SEPARATOR
-                . $filesource
+                .$sekolah->getId()
+                .DIRECTORY_SEPARATOR
+                .$formdata['tahun']->getTahun()
+                .DIRECTORY_SEPARATOR
+                .$filesource
             ;
             $documenttarget = $outputdir
-                . $sekolah->getId()
-                . DIRECTORY_SEPARATOR
-                . $formdata['tahun']->getTahun()
-                . DIRECTORY_SEPARATOR
-                . $filetarget
+                .$sekolah->getId()
+                .DIRECTORY_SEPARATOR
+                .$formdata['tahun']->getTahun()
+                .DIRECTORY_SEPARATOR
+                .$filetarget
             ;
 
             if ($outputfiletype == 'ods') {
-                if (copy($documentbase, $documenttarget) === TRUE) {
+                if (copy($documentbase, $documenttarget) === true) {
                     $ziparchive = new \ZipArchive();
                     $ziparchive->open($documenttarget);
                     $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:Siswa:styles.xml.twig"));
@@ -756,7 +749,7 @@ class SiswaController extends Controller
                         'entities' => $entities,
                         'jumlahSiswa' => count($entities),
                     ]));
-                    if ($ziparchive->close() === TRUE) {
+                    if ($ziparchive->close() === true) {
                         $return = [
                             "redirectUrl" => $this->generateUrl("siswa_downloadfile", [
                                 'filename' => $filetarget,
@@ -788,8 +781,8 @@ class SiswaController extends Controller
 
         $filetarget = $filename;
         $documenttarget = $tahun != ''
-            ? self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR . $tahun . DIRECTORY_SEPARATOR . $filetarget
-            : self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . DIRECTORY_SEPARATOR . $filetarget
+            ? self::DOCUMENTS_OUTPUTDIR.$sekolah->getId().DIRECTORY_SEPARATOR.$tahun.DIRECTORY_SEPARATOR.$filetarget
+            : self::DOCUMENTS_OUTPUTDIR.$sekolah->getId().DIRECTORY_SEPARATOR.$filetarget
         ;
 
         $response = new Response(file_get_contents($documenttarget), 200);
@@ -838,7 +831,9 @@ class SiswaController extends Controller
                 $atleastone = true;
             }
         }
-        if (!$atleastone) return;
+        if (!$atleastone) {
+            return;
+        }
 
         $entity = new Siswa();
 
@@ -853,7 +848,6 @@ class SiswaController extends Controller
         $sekolahAsal = null;
 
         foreach ($fieldnames as $keyfield => $valuefield) {
-
             if (preg_match("/(.+)\.(.+)/", $valuefield, $matches)) {
                 $valuefield = $matches[1];
                 $childfield = $matches[2];
@@ -862,7 +856,6 @@ class SiswaController extends Controller
             $key = array_search($valuefield, $entityFields);
             if (is_int($key)) {
                 if (array_key_exists($keyfield, $content)) {
-
                     $value = $content[$keyfield];
                     if ($value == "0" || $value == "") {
                         $value = null;
@@ -870,7 +863,7 @@ class SiswaController extends Controller
 
                     if ($valuefield == 'orangtuaWali') {
                         $ortu->setAktif(true);
-                        $ortu->{'set' . ucfirst($childfield)}(trim($value));
+                        $ortu->{'set'.ucfirst($childfield)}(trim($value));
                     } elseif ($valuefield == 'sekolahAsal') {
                         if (trim($value) != '') {
                             $querySekolahAsal = $em->createQueryBuilder()
@@ -885,17 +878,17 @@ class SiswaController extends Controller
                                 $sekolahAsal = $resultSekolahAsal[0];
                             } else {
                                 $sekolahAsal = new SekolahAsal();
-                                $sekolahAsal->{'set' . ucfirst($childfield)}(trim($value));
+                                $sekolahAsal->{'set'.ucfirst($childfield)}(trim($value));
                                 $sekolahAsal->setSekolah($sekolah);
                             }
                         }
                     } elseif ($valuefield == 'tanggalLahir') {
                         if ($value) {
-                            $entity->{'set' . ucfirst($valuefield)}(new \DateTime($value));
+                            $entity->{'set'.ucfirst($valuefield)}(new \DateTime($value));
                         }
                     } else {
                         $value = $value !== null ? trim($value) : $value;
-                        $entity->{'set' . ucfirst($valuefield)}($value);
+                        $entity->{'set'.ucfirst($valuefield)}($value);
                     }
                 }
             }
@@ -919,7 +912,7 @@ class SiswaController extends Controller
         }
 
         $entity->setNomorUrutPersekolah($this->nomorUrutPersekolah);
-        $entity->setNomorIndukSistem($this->nomorUrutPersekolah . $sekolah->getNomorUrut());
+        $entity->setNomorIndukSistem($this->nomorUrutPersekolah.$sekolah->getNomorUrut());
         $entity->setCalonSiswa(false);
         $entity->setSekolah($sekolah);
         $entity->setTahun($tahun);
@@ -973,7 +966,6 @@ class SiswaController extends Controller
                 }
 
                 foreach ($fieldnames as $keyfield => $valuefield) {
-
                     if (preg_match("/(.+)\.(.+)/", $valuefield, $matches)) {
                         $valuefield = $matches[1];
                         $childfield = $matches[2];
@@ -982,7 +974,6 @@ class SiswaController extends Controller
                     $key = array_search($valuefield, $entityFields);
                     if (is_int($key)) {
                         if (array_key_exists($keyfield, $content)) {
-
                             $value = $content[$keyfield];
                             if ($value == "0" || $value == "") {
                                 $value = null;
@@ -998,7 +989,7 @@ class SiswaController extends Controller
                                             ])
                                         ;
                                         if (is_object($ortu) && $ortu instanceof OrangtuaWali) {
-                                            $ortu->{'set' . ucfirst($childfield)}($value);
+                                            $ortu->{'set'.ucfirst($childfield)}($value);
                                             $em->persist($ortu);
                                         }
                                     }
@@ -1015,17 +1006,17 @@ class SiswaController extends Controller
                                         } else {
                                             $sekolahAsal = new SekolahAsal();
                                             $sekolahAsal->setSekolah($entity->getSekolah());
-                                            $sekolahAsal->{'set' . ucfirst($childfield)}($value);
+                                            $sekolahAsal->{'set'.ucfirst($childfield)}($value);
                                         }
                                         $entity->setSekolahAsal($sekolahAsal);
                                     }
                                 } elseif ($valuefield == 'tanggalLahir') {
                                     if ($value) {
-                                        $entity->{'set' . ucfirst($valuefield)}(new \DateTime($value));
+                                        $entity->{'set'.ucfirst($valuefield)}(new \DateTime($value));
                                     }
                                 } else {
                                     $value = $value !== null ? trim($value) : $value;
-                                    $entity->{'set' . ucfirst($valuefield)}($value);
+                                    $entity->{'set'.ucfirst($valuefield)}($value);
                                 }
                             }
                         }
@@ -1058,8 +1049,7 @@ class SiswaController extends Controller
 
     private function createDeleteForm($id)
     {
-        return $this
-            ->createFormBuilder([
+        return $this->createFormBuilder([
                 'id' => $id,
             ])
             ->add('id', 'hidden')
