@@ -28,7 +28,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/laporan-pendaftaran")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_PANITIA_PSB')")
  */
-class SiswaApplicantReportController extends Controller
+class LaporanSiswaPendaftarController extends Controller
 {
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
@@ -440,7 +440,7 @@ class SiswaApplicantReportController extends Controller
             if (copy($documentbase, $documenttarget) === true) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
-                $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:SiswaApplicantReport:report.xml.twig", [
+                $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:LaporanSiswaPendaftar:report.xml.twig", [
                     'entities' => $entities,
                     'pendaftarTercari' => $pendaftarTercari,
                     'pendaftarTotal' => $pendaftarTotal,
@@ -533,7 +533,7 @@ class SiswaApplicantReportController extends Controller
                 $tmpResponse = new Response();
 
                 $this
-                    ->render('LanggasSisdikBundle:SiswaApplicantReport:summary.pdf.twig', [
+                    ->render('LanggasSisdikBundle:LaporanSiswaPendaftar:summary.pdf.twig', [
                         'sekolah' => $sekolah,
                         'teks' => $summarydata['teksTerformat'],
                     ], $tmpResponse)

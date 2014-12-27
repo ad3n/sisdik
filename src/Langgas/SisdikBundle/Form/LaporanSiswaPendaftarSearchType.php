@@ -17,7 +17,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class SiswaApplicantReportSearchType extends AbstractType
+class LaporanSiswaPendaftarSearchType extends AbstractType
 {
     /**
      * @var SecurityContext
