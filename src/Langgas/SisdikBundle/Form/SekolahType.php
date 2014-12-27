@@ -25,9 +25,9 @@ class SekolahType extends AbstractType
             ->add('kode', null, [
                 'required' => true,
                 'label' => 'label.code',
-                'attr' => array(
+                'attr' => [
                     'class' => 'mini',
-                )
+                ],
             ])
             ->add('alamat', 'textarea', [
                 'label' => 'label.address',
