@@ -30,7 +30,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/pendaftar")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_PANITIA_PSB')")
  */
-class SiswaApplicantController extends Controller
+class SiswaPendaftarController extends Controller
 {
     /**
      * @Route("/", name="applicant")
@@ -146,7 +146,7 @@ class SiswaApplicantController extends Controller
     /**
      * @Route("/", name="applicant_create")
      * @Method("POST")
-     * @Template("LanggasSisdikBundle:SiswaApplicant:new.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaPendaftar:new.html.twig")
      */
     public function createAction(Request $request)
     {
@@ -396,7 +396,7 @@ class SiswaApplicantController extends Controller
     /**
      * @Route("/{id}", name="applicant_update")
      * @Method("POST")
-     * @Template("LanggasSisdikBundle:SiswaApplicant:edit.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaPendaftar:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -525,7 +525,7 @@ class SiswaApplicantController extends Controller
     /**
      * @Route("/{id}/editregphoto", name="applicant_editregphoto")
      * @Method("GET")
-     * @Template("LanggasSisdikBundle:SiswaApplicant:editregphoto.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaPendaftar:editregphoto.html.twig")
      */
     public function editRegistrationPhotoAction($id)
     {
@@ -564,7 +564,7 @@ class SiswaApplicantController extends Controller
     /**
      * @Route("/{id}/updateregphoto", name="applicant_updateregphoto")
      * @Method("POST")
-     * @Template("LanggasSisdikBundle:SiswaApplicant:editregphoto.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaPendaftar:editregphoto.html.twig")
      */
     public function updateRegistrationPhotoAction(Request $request, $id)
     {
@@ -628,7 +628,7 @@ class SiswaApplicantController extends Controller
      * Menghapus hanya bisa dilakukan terhadap data yang belum memiliki data pembayaran
      *
      * @Route("/{id}/remove", name="applicant_delete_confirm")
-     * @Template("LanggasSisdikBundle:SiswaApplicant:delete.confirm.html.twig")
+     * @Template("LanggasSisdikBundle:SiswaPendaftar:delete.confirm.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KETUA_PANITIA_PSB")
      */
     public function deleteConfirmAction($id)
