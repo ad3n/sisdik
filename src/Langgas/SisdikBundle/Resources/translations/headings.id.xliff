@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-12-26T10:34:03Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2014-12-27T19:34:22Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -13,22 +13,22 @@
         <target>Kalender Akademik</target>
       </trans-unit>
       <trans-unit id="21c6dc59acd3fe08d7c4ec4a8b290c058a1618d1" resname="applicant.creation">
-        <jms:reference-file line="3">views/SiswaApplicant/new.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaPendaftar/new.html.twig</jms:reference-file>
         <source>applicant.creation</source>
         <target>Mendaftarkan Siswa</target>
       </trans-unit>
       <trans-unit id="27548c563a2497539437a12842f8ed8986249db7" resname="applicant.detail">
-        <jms:reference-file line="3">views/SiswaApplicant/show.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaPendaftar/show.html.twig</jms:reference-file>
         <source>applicant.detail</source>
         <target>Detail Pendaftar</target>
       </trans-unit>
       <trans-unit id="460a47aca735c9b78f615718045736cba37548ac" resname="applicant.edit">
-        <jms:reference-file line="3">views/SiswaApplicant/edit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaPendaftar/edit.html.twig</jms:reference-file>
         <source>applicant.edit</source>
         <target>Mengubah Pendaftar</target>
       </trans-unit>
       <trans-unit id="1450738ede8799985ecb3e6227815fc215c1192d" resname="applicant.edit.regphoto">
-        <jms:reference-file line="3">views/SiswaApplicant/editregphoto.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaPendaftar/editregphoto.html.twig</jms:reference-file>
         <source>applicant.edit.regphoto</source>
         <target>Mengubah Foto Pendaftar</target>
       </trans-unit>
@@ -39,7 +39,7 @@
         <target>applicant.fee.once</target>
       </trans-unit>
       <trans-unit id="eb7a6ce2a2b19093e84044f482b978a1003ba2ef" resname="applicant.list">
-        <jms:reference-file line="3">views/SiswaApplicant/index.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaPendaftar/index.html.twig</jms:reference-file>
         <source>applicant.list</source>
         <target>Pendaftar</target>
       </trans-unit>
@@ -425,6 +425,7 @@
       </trans-unit>
       <trans-unit id="3f03714b3f416ca5d1f55045d8fd8774a6087302" resname="laporan.pembayaran.biaya.sekali.bayar">
         <jms:reference-file line="3">views/LaporanPembayaranBiayaSekali/index.html.twig</jms:reference-file>
+        <jms:reference-file line="210">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
         <source>laporan.pembayaran.biaya.sekali.bayar</source>
         <target>Laporan Pembayaran Biaya Sekali Bayar</target>
       </trans-unit>
@@ -437,6 +438,11 @@
         <jms:reference-file line="3">views/SiswaApplicantReport/index.html.twig</jms:reference-file>
         <source>laporan.pendaftaran.daftar</source>
         <target>Laporan Pendaftaran</target>
+      </trans-unit>
+      <trans-unit id="2cd4aed433af5b04d5cb41c56b3ec2eb7381e743" resname="laporan.pendaftaran.siswa">
+        <jms:reference-file line="254">SisdikBundle/Controller/SiswaApplicantReportController.php</jms:reference-file>
+        <source>laporan.pendaftaran.siswa</source>
+        <target>Laporan Pendaftaran Siswa</target>
       </trans-unit>
       <trans-unit id="ab4ab1dbf812f3cbf31a927b64a0f7c10268257f" resname="laporan.transaksi.keuangan">
         <jms:reference-file line="3">views/LaporanTransaksiKeuangan/index.html.twig</jms:reference-file>
@@ -566,7 +572,7 @@
         <target>Penahkikan Siswa</target>
       </trans-unit>
       <trans-unit id="5b491faf9ead01eee05d9c76192eada188f10976" resname="pendaftar.konfirmasi.hapus">
-        <jms:reference-file line="3">views/SiswaApplicant/delete.confirm.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaPendaftar/delete.confirm.html.twig</jms:reference-file>
         <source>pendaftar.konfirmasi.hapus</source>
         <target>Konfirmasi Penghapusan Data Pendaftar</target>
       </trans-unit>
@@ -826,13 +832,13 @@
         <target>Info Penjurusan</target>
       </trans-unit>
       <trans-unit id="fb6b8a26013a47f185f6f002bec5bad84c1cc983" resname="settings.school.add">
-        <jms:reference-file line="3">views/SettingsSchool/add.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanSekolah/add.html.twig</jms:reference-file>
         <source>settings.school.add</source>
         <target>Tambah Sekolah</target>
       </trans-unit>
       <trans-unit id="168b3073affd43f56f62750bdfd482c6e926a52a" resname="settings.school.edit">
         <jms:reference-file line="3">views/Sekolah/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="3">views/SettingsSchool/edit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanSekolah/edit.html.twig</jms:reference-file>
         <source>settings.school.edit</source>
         <target>Ubah Sekolah</target>
       </trans-unit>
@@ -842,33 +848,33 @@
         <target>Data Sekolah</target>
       </trans-unit>
       <trans-unit id="f19ffe9cc5fa6e718f781aaf9833d007550158d0" resname="settings.school.list">
-        <jms:reference-file line="3">views/SettingsSchool/list.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanSekolah/list.html.twig</jms:reference-file>
         <source>settings.school.list</source>
         <target>Daftar Sekolah</target>
       </trans-unit>
       <trans-unit id="11c37489e0d3ce774e8ea9eca19fe52d4a3b0c04" resname="settings.user.add">
-        <jms:reference-file line="3">views/SettingsUser/register.ns.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanUser/register.ns.html.twig</jms:reference-file>
         <source>settings.user.add</source>
         <target>Tambah User</target>
       </trans-unit>
       <trans-unit id="a9c5fe72974eb8d1b28f276361a4cac97c7233d2" resname="settings.user.add.inschool">
-        <jms:reference-file line="5">views/SettingsUser/register.ws.html.twig</jms:reference-file>
+        <jms:reference-file line="5">views/PengaturanUser/register.ws.html.twig</jms:reference-file>
         <source>settings.user.add.inschool</source>
         <target>Tambah User di Sekolah</target>
       </trans-unit>
       <trans-unit id="d28de797f133923b638ff52b594fd3f2410c38e3" resname="settings.user.edit">
-        <jms:reference-file line="3">views/SettingsUser/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="3">views/SettingsUser/inschoolEdit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanUser/edit.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanUser/inschoolEdit.html.twig</jms:reference-file>
         <source>settings.user.edit</source>
         <target>Ubah User</target>
       </trans-unit>
       <trans-unit id="745a5d40f25ad1fec34d54b9f4d41a94cb62b5c0" resname="settings.user.list.main">
-        <jms:reference-file line="3">views/SettingsUser/index.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanUser/index.html.twig</jms:reference-file>
         <source>settings.user.list.main</source>
         <target>Daftar User</target>
       </trans-unit>
       <trans-unit id="9e64e5fc712cc29e403974911971b77f9db0547b" resname="settings.user.list.modify">
-        <jms:reference-file line="3">views/SettingsUser/inschoolList.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/PengaturanUser/inschoolList.html.twig</jms:reference-file>
         <source>settings.user.list.modify</source>
         <target>Pengaturan User</target>
       </trans-unit>
