@@ -22,7 +22,11 @@
 
 <ul class="nav nav-pills">
     <li>
+    {% if is_expr_granted("hasRole('ROLE_SUPER_ADMIN')") %}
         <a href="{{ path('settings_user') }}">{{ 'link.backtolist'|trans }}</a>
+    {% elseif is_expr_granted("hasRole('ROLE_ADMIN')") %}
+        <a href="{{ path('settings_user_inschool_list') }}">{{ 'link.backtolist'|trans }}</a>
+    {% endif %}
     </li>
 </ul>
 {% endblock content %}

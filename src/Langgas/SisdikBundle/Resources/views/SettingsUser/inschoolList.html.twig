@@ -29,18 +29,16 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('u.name') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'u.name') }}
+            <th class="{% if pagination.isSorted('user.name') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'user.name') }}
             </th>
-            <th class="{% if pagination.isSorted('u.username') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.username'|trans, 'u.username') }}
+            <th class="{% if pagination.isSorted('user.username') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.username'|trans, 'user.username') }}
             </th>
-            <th class="{% if pagination.isSorted('u.email') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.email'|trans, 'u.email') }}
+            <th class="{% if pagination.isSorted('user.email') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.email'|trans, 'user.email') }}
             </th>
-            <th class="{% if pagination.isSorted('u.roles') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.roles'|trans, 'u.roles') }}
-            </th>
+            <th>{{ 'label.roles'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
     </thead>
