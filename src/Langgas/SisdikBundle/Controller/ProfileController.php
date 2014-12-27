@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as FOSProfileController;
@@ -81,7 +82,7 @@ class ProfileController extends FOSProfileController
 
         return $this->container
             ->get('templating')
-            ->renderResponse('FOSUserBundle:Profile:edit.html.' . $this->container->getParameter('fos_user.template.engine'), [
+            ->renderResponse('FOSUserBundle:Profile:edit.html.'.$this->container->getParameter('fos_user.template.engine'), [
                 'form' => $form->createView(),
             ])
         ;
