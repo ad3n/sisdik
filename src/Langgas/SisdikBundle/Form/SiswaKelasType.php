@@ -2,14 +2,15 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Langgas\SisdikBundle\Entity\Kelas;
-use Langgas\SisdikBundle\Entity\TahunAkademik;
-use Langgas\SisdikBundle\Entity\Penjurusan;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityRepository;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -17,50 +18,33 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SiswaKelasType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContexto
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
-
-        $em = $this->container->get('doctrine')->getManager();
-
-        $querybuilder = $em->createQueryBuilder()
-            ->select('tahunAkademik')
-            ->from('LanggasSisdikBundle:TahunAkademik', 'tahunAkademik')
-            ->where('tahunAkademik.sekolah = :sekolah')
-            ->orderBy('tahunAkademik.urutan', 'DESC')
-            ->setParameter('sekolah', $sekolah)
-        ;
-
-        $querybuilder2 = $em->createQueryBuilder()
-            ->select('kelas')
-            ->from('LanggasSisdikBundle:Kelas', 'kelas')
-            ->leftJoin('kelas.tingkat', 'tingkat')
-            ->where('kelas.sekolah = :sekolah')
-            ->orderBy('tingkat.urutan', 'ASC')
-            ->addOrderBy('kelas.urutan')
-            ->setParameter('sekolah', $sekolah)
-        ;
-
-        $querybuilder3 = $em->createQueryBuilder()
-            ->select('penjurusan')
-            ->from('LanggasSisdikBundle:Penjurusan', 'penjurusan')
-            ->where('penjurusan.sekolah = :sekolah')
-            ->orderBy('penjurusan.root, penjurusan.lvl', 'ASC')
-            ->setParameter('sekolah', $sekolah)
-        ;
+        $sekolah = $this->getSekolah();
 
         $builder
             ->add('tahunAkademik', 'entity', [
@@ -71,7 +55,15 @@ class SiswaKelasType extends AbstractType
                 'property' => 'nama',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('tahunAkademik')
+                        ->where('tahunAkademik.sekolah = :sekolah')
+                        ->orderBy('tahunAkademik.urutan', 'DESC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium selectyear',
                 ],
@@ -84,7 +76,17 @@ class SiswaKelasType extends AbstractType
                 'property' => 'nama',
                 'empty_value' => false,
                 'required' => true,
-                'query_builder' => $querybuilder2,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('kelas')
+                        ->leftJoin('kelas.tingkat', 'tingkat')
+                        ->where('kelas.sekolah = :sekolah')
+                        ->orderBy('tingkat.urutan', 'ASC')
+                        ->addOrderBy('kelas.urutan')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'large selectclass',
                 ],
@@ -96,7 +98,16 @@ class SiswaKelasType extends AbstractType
                 'expanded' => false,
                 'property' => 'optionLabel',
                 'required' => true,
-                'query_builder' => $querybuilder3,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('penjurusan')
+                        ->where('penjurusan.sekolah = :sekolah')
+                        ->orderBy('penjurusan.root', 'ASC')
+                        ->addOrderBy('penjurusan.lvl', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'xlarge',
                 ],
@@ -112,7 +123,7 @@ class SiswaKelasType extends AbstractType
                     'class' => 'xlarge',
                 ],
             ])
-            ->add('siswa', new EntityHiddenType($em), [
+            ->add('siswa', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:Siswa',
             ])
         ;
@@ -129,6 +140,6 @@ class SiswaKelasType extends AbstractType
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_siswakelastype';
+        return 'sisdik_siswakelas';
     }
 }

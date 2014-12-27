@@ -1,84 +1,87 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\SiswaKelas;
-use Langgas\SisdikBundle\Form\SiswaKelasType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * SiswaKelas controller.
- *
- * @Route("/siswa-kelas/{idsiswa}", requirements={"idsiswa"="\d+"})
+ * @Route("/riwayat-kelas-siswa/{idsiswa}", requirements={"idsiswa"="\d+"})
  * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
  */
 class SiswaKelasController extends Controller
 {
     /**
-     * Lists all SiswaKelas entities.
-     *
      * @Route("/", name="siswa-kelas")
      * @Template()
      */
-    public function indexAction($idsiswa) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction($idsiswa)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $querybuilder = $em->createQueryBuilder()->select('siswakelas')
-                ->from('LanggasSisdikBundle:SiswaKelas', 'siswakelas')
-                ->leftJoin('siswakelas.tahunAkademik', 'tahunAkademik')
-                ->leftJoin('siswakelas.kelas', 'kelas')->where('siswakelas.siswa = :siswa')
-                ->orderBy('tahunAkademik.urutan', 'DESC')->addOrderBy('tahunAkademik.nama', 'DESC')
-                ->addOrderBy('kelas.urutan', 'ASC')->addOrderBy('siswakelas.aktif', 'ASC')
-                ->setParameter('siswa', $idsiswa)->getQuery();
+        $querybuilder = $em->createQueryBuilder()
+            ->select('siswakelas')
+            ->from('LanggasSisdikBundle:SiswaKelas', 'siswakelas')
+            ->leftJoin('siswakelas.tahunAkademik', 'tahunAkademik')
+            ->leftJoin('siswakelas.kelas', 'kelas')
+            ->where('siswakelas.siswa = :siswa')
+            ->orderBy('tahunAkademik.urutan', 'DESC')
+            ->addOrderBy('tahunAkademik.nama', 'DESC')
+            ->addOrderBy('kelas.urutan', 'ASC')
+            ->addOrderBy('siswakelas.aktif', 'ASC')
+            ->setParameter('siswa', $idsiswa)
+        ;
 
-        $results = $querybuilder->getResult();
+        $results = $querybuilder->getQuery()->getResult();
 
-        return array(
-            'results' => $results, 'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa)
-        );
+        return [
+            'results' => $results,
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa),
+        ];
     }
 
     /**
-     * Displays a form to create a new SiswaKelas entity.
-     *
      * @Route("/new", name="siswa-kelas_new")
      * @Template()
      */
-    public function newAction($idsiswa) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction($idsiswa)
+    {
         $this->setCurrentMenu();
+
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
 
         $entity = new SiswaKelas();
         $entity->setSiswa($siswa);
-        $form = $this->createForm(new SiswaKelasType($this->container), $entity);
+        $form = $this->createForm('sisdik_siswakelas', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(), 'siswa' => $siswa,
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+            'siswa' => $siswa,
+        ];
     }
 
     /**
-     * Creates a new SiswaKelas entity.
-     *
      * @Route("/create", name="siswa-kelas_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaKelas:new.html.twig")
      */
-    public function createAction(Request $request, $idsiswa) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request, $idsiswa)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -86,23 +89,23 @@ class SiswaKelasController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
 
         $entity = new SiswaKelas();
-        $form = $this->createForm(new SiswaKelasType($this->container), $entity);
+        $form = $this->createForm('sisdik_siswakelas', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            // permit only one active status in a year
+            // hanya boleh ada satu status aktif di tahun akademik yang sama
             $aktif = $form->get('aktif')->getData();
             if ($aktif == 1) {
-                $obj = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
-                        ->findOneBy(
-                                array(
-                                        'siswa' => $siswa->getId(),
-                                        'tahunAkademik' => $form->get('tahunAkademik')->getData()->getId(),
-                                        'aktif' => $aktif
-                                ));
-                if ($obj) {
+                $kelasAktif = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
+                    ->findOneBy([
+                        'siswa' => $siswa,
+                        'tahunAkademik' => $form->get('tahunAkademik')->getData(),
+                        'aktif' => $aktif,
+                    ])
+                ;
+                if ($kelasAktif) {
                     $exception = $this->get('translator')->trans('exception.unique.studentclass.active');
                     throw new \Exception($exception);
                 }
@@ -112,42 +115,35 @@ class SiswaKelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.studentclass.inserted',
-                                                array(
-                                                    '%student%' => $siswa->getNamaLengkap()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.studentclass.inserted', [
+                        '%student%' => $siswa->getNamaLengkap(),
+                    ]))
+                ;
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('siswa-kelas',
-                                                array(
-                                                    'idsiswa' => $idsiswa
-                                                )));
+                return $this->redirect($this->generateUrl('siswa-kelas', [
+                    'idsiswa' => $idsiswa,
+                ]));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.studentclass');
                 throw new DBALException($exception);
             }
         }
 
-        return array(
-                'entity' => $entity, 'form' => $form->createView(),
-                'siswa' => $this->getDoctrine()->getManager()->getRepository('LanggasSisdikBundle:Siswa')
-                        ->find($idsiswa)
-        );
+        return [
+            'entity' => $entity, 'form' => $form->createView(),
+            'siswa' => $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing SiswaKelas entity.
-     *
      * @Route("/{id}/edit", name="siswa-kelas_edit")
      * @Template()
      */
-    public function editAction($idsiswa, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($idsiswa, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -159,24 +155,24 @@ class SiswaKelasController extends Controller
             throw $this->createNotFoundException('Entity SiswaKelas tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new SiswaKelasType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_siswakelas', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(), 'siswa' => $siswa,
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'siswa' => $siswa,
+        ];
     }
 
     /**
-     * Edits an existing SiswaKelas entity.
-     *
      * @Route("/{id}/update", name="siswa-kelas_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaKelas:edit.html.twig")
      */
-    public function updateAction(Request $request, $idsiswa, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $idsiswa, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -189,22 +185,21 @@ class SiswaKelasController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new SiswaKelasType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_siswakelas', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
-            // permit only one active status in a year
+            // hanya boleh ada satu status aktif di tahun akademik yang sama
             $aktif = $editForm->get('aktif')->getData();
             if ($aktif == 1) {
-                $obj = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
-                        ->findOneBy(
-                                array(
-                                        'siswa' => $siswa->getId(),
-                                        'tahunAkademik' => $editForm->get('tahunAkademik')->getData()
-                                                ->getId(), 'aktif' => $aktif
-                                ));
-                if (is_object($obj) && $obj instanceof SiswaKelas && ($obj->getId() != $entity->getId())) {
+                $kelasAktif = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
+                    ->findOneBy([
+                        'siswa' => $siswa,
+                        'tahunAkademik' => $editForm->get('tahunAkademik')->getData(),
+                        'aktif' => $aktif,
+                    ])
+                ;
+                if (is_object($kelasAktif) && $kelasAktif instanceof SiswaKelas && ($kelasAktif->getId() != $entity->getId())) {
                     $exception = $this->get('translator')->trans('exception.unique.studentclass.active');
                     throw new \Exception($exception);
                 }
@@ -214,42 +209,38 @@ class SiswaKelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.data.studentclass.updated',
-                                                array(
-                                                    '%student%' => $siswa->getNamaLengkap()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.data.studentclass.updated', [
+                        '%student%' => $siswa->getNamaLengkap(),
+                    ]))
+                ;
 
-                return $this
-                        ->redirect(
-                                $this
-                                        ->generateUrl('siswa-kelas',
-                                                array(
-                                                    'idsiswa' => $idsiswa
-                                                )));
-
+                return $this->redirect($this->generateUrl('siswa-kelas', [
+                    'idsiswa' => $idsiswa,
+                ]));
             } catch (DBALException $e) {
                 $exception = $this->get('translator')->trans('exception.unique.studentclass');
                 throw new DBALException($exception);
             }
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(), 'siswa' => $siswa,
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'siswa' => $siswa,
+        ];
     }
 
     /**
-     * Deletes a SiswaKelas entity.
-     *
      * @Route("/{id}/delete", name="siswa-kelas_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $idsiswa, $id) {
-        $this->isRegisteredToSchool();
+    public function deleteAction(Request $request, $idsiswa, $id)
+    {
+        $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
 
@@ -268,55 +259,53 @@ class SiswaKelasController extends Controller
             $em->remove($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.data.studentclass.deleted',
-                                            array(
-                                                    '%student%' => $siswa->getNamaLengkap(),
-                                                    '%class%' => $entity->getKelas()->getNama(),
-                                                    '%year%' => $entity->getTahunAkademik()->getNama(),
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.data.studentclass.deleted', [
+                    '%student%' => $siswa->getNamaLengkap(),
+                    '%class%' => $entity->getKelas()->getNama(),
+                    '%year%' => $entity->getTahunAkademik()->getNama(),
+                ]))
+            ;
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')
-                                    ->trans('flash.data.studentclass.fail.delete',
-                                            array(
-                                                '%student%' => $siswa->getNamaLengkap()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.data.studentclass.fail.delete', [
+                    '%student%' => $siswa->getNamaLengkap(),
+                ]))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('siswa-kelas',
-                                        array(
-                                            'idsiswa' => $idsiswa
-                                        )));
+        return $this->redirect($this->generateUrl('siswa-kelas', [
+            'idsiswa' => $idsiswa,
+        ]));
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.siswa', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.academic', [], 'navigations')][$translator->trans('links.siswa', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
