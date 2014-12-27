@@ -2,6 +2,7 @@
 
 namespace Langgas\SisdikBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -25,6 +26,7 @@ class SekolahController extends Controller
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('LanggasSisdikBundle:Sekolah')->find($sekolah->getId());

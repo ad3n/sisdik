@@ -8,6 +8,7 @@
             {{ form_widget(form.searchkey, {'attr': {'class':'input-medium search-query'}}) }}
             {{ form_rest(form) }}
             <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+            <button class="btn" type="reset" onclick="window.location.href='{{ path('settings_school_list') }}'">{{ 'label.reset'|trans }}</button>
         </form>
     </div>
 </div>
@@ -54,7 +55,7 @@
                 <dl>
                     <dt>{{ 'label.actions'|trans }}</dt>
                     <dd>
-                        <a href="{{ path('settings_school_edit', {'id': data.id, 'page': pagination.paginationData.current}) }}" title="{% trans %}tip.edit{% endtrans %}" class="fa fa-pencil"></a> &nbsp;&nbsp;
+                        <a href="{{ path('settings_school_edit', {'id': data.id}) }}" title="{% trans %}tip.edit{% endtrans %}" class="fa fa-pencil"></a> &nbsp;&nbsp;
                         <a href="{{ path('settings_school_delete', {'id': data.id}) }}" title="{% trans %}tip.delete{% endtrans %}" class="fa fa-times" onclick='return confirmDrop(this, "{{ 'confirm.drop.school'|trans({'%schoolname%': data.nama}) }}");'></a>
                     </dd>
                 </dl>
