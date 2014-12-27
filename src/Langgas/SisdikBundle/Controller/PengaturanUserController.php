@@ -24,7 +24,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/user")
  * @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN', 'ROLE_ADMIN')")
  */
-class SettingsUserController extends Controller
+class PengaturanUserController extends Controller
 {
     /**
      * @Route("/", name="settings_user")
@@ -169,7 +169,7 @@ class SettingsUserController extends Controller
 
     /**
      * @Route("/register/tanpa-sekolah", name="settings_user_register_noschool")
-     * @Template("LanggasSisdikBundle:SettingsUser:register.ns.html.twig")
+     * @Template("LanggasSisdikBundle:PengaturanUser:register.ns.html.twig")
      * @Secure(roles="ROLE_SUPER_ADMIN")
      */
     public function registerNoSchoolAction(Request $request)
@@ -216,7 +216,7 @@ class SettingsUserController extends Controller
 
     /**
      * @Route("/register/di-sekolah", name="settings_user_register_withschool")
-     * @Template("LanggasSisdikBundle:SettingsUser:register.ws.html.twig")
+     * @Template("LanggasSisdikBundle:PengaturanUser:register.ws.html.twig")
      */
     public function registerWithSchoolAction(Request $request)
     {
