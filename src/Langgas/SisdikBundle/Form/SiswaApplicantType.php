@@ -2,12 +2,16 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,83 +19,80 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SiswaApplicantType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @var integer
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    private $tahunAktif;
-
-    /**
-     * @var string
-     */
-    private $mode;
-
-    /**
-     * @param ContainerInterface $container
-     * @param integer            $tahunAktif
-     * @param string             $mode
-     */
-    public function __construct(ContainerInterface $container, $tahunAktif, $mode = 'new')
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
-        $this->tahunAktif = $tahunAktif;
-        $this->mode = $mode;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return User
+     */
+    private function getUser()
+    {
+        return $this->securityContext->getToken()->getUser();
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
-        $em = $this->container->get('doctrine')->getManager();
-
-        if ($this->mode != 'editregphoto') {
-            if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-                $builder
-                    ->add('sekolah', new EntityHiddenType($em), [
-                        'required' => true,
-                        'class' => 'LanggasSisdikBundle:Sekolah',
-                        'data' => $sekolah->getId(),
-                    ])
-                    ->add('tahun', new EntityHiddenType($em), [
-                        'required' => true,
-                        'class' => 'LanggasSisdikBundle:Tahun',
-                        'data' => $this->tahunAktif,
-                    ])
-                ;
-            }
+        if ($options['mode'] != 'editregphoto') {
+            $builder
+                ->add('sekolah', 'sisdik_entityhidden', [
+                    'required' => true,
+                    'class' => 'LanggasSisdikBundle:Sekolah',
+                    'data' => $sekolah->getId(),
+                ])
+                ->add('tahun', 'sisdik_entityhidden', [
+                    'required' => true,
+                    'class' => 'LanggasSisdikBundle:Tahun',
+                    'data' => $options['tahun_aktif'],
+                ])
+            ;
         }
 
-        if ($this->mode == 'new') {
-            if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-                $querybuilder2 = $em->createQueryBuilder()
-                    ->select('gelombang')
-                    ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
-                    ->where('gelombang.sekolah = :sekolah')
-                    ->orderBy('gelombang.urutan', 'ASC')
-                    ->setParameter('sekolah', $sekolah)
-                ;
-                $builder
-                    ->add('gelombang', 'entity', [
-                        'class' => 'LanggasSisdikBundle:Gelombang',
-                        'label' => 'label.admissiongroup.entry',
-                        'multiple' => false,
-                        'expanded' => false,
-                        'property' => 'nama',
-                        'empty_value' => false,
-                        'required' => true,
-                        'query_builder' => $querybuilder2,
-                        'attr' => [
-                            'class' => 'medium'
-                        ],
-                    ])
-                ;
-            }
-
+        if ($options['mode'] == 'new') {
             $builder
+                ->add('gelombang', 'entity', [
+                    'class' => 'LanggasSisdikBundle:Gelombang',
+                    'label' => 'label.admissiongroup.entry',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'nama',
+                    'empty_value' => false,
+                    'required' => true,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('gelombang')
+                            ->where('gelombang.sekolah = :sekolah')
+                            ->orderBy('gelombang.urutan', 'ASC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
+                    'attr' => [
+                        'class' => 'medium',
+                    ],
+                ])
                 ->add('namaLengkap', null, [
                     'required' => true,
                     'attr' => [
@@ -122,7 +123,7 @@ class SiswaApplicantType extends AbstractType
                     'widget_checkbox_label' => 'widget',
                     'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
                 ])
-                ->add('referensi', new EntityHiddenType($em), [
+                ->add('referensi', 'sisdik_entityhidden', [
                     'class' => 'LanggasSisdikBundle:Referensi',
                     'label_render' => false,
                     'required' => false,
@@ -138,34 +139,27 @@ class SiswaApplicantType extends AbstractType
                     ],
                     'label' => 'label.perujuk',
                 ])
-                ->add('dibuatOleh', new EntityHiddenType($em), [
+                ->add('dibuatOleh', 'sisdik_entityhidden', [
                     'required' => true,
                     'class' => 'LanggasSisdikBundle:User',
-                    'data' => $user->getId(),
+                    'data' => $this->getUser()->getId(),
                 ])
             ;
-        } elseif ($this->mode == 'editregphoto') {
+        } elseif ($options['mode'] == 'editregphoto') {
             $builder
                 ->add('fotoPendaftaran', 'hidden', [
                     'attr' => [
                         'class' => 'foto-pendaftaran',
                     ],
                 ])
-                ->add('diubahOleh', new EntityHiddenType($em), [
+                ->add('diubahOleh', 'sisdik_entityhidden', [
                     'required' => true,
                     'class' => 'LanggasSisdikBundle:User',
-                    'data' => $user->getId(),
+                    'data' => $this->getUser()->getId(),
                 ])
             ;
         } else {
-            if ($this->container->get('security.context')->isGranted('ROLE_KETUA_PANITIA_PSB')) {
-                $querybuilder2 = $em->createQueryBuilder()
-                    ->select('gelombang')
-                    ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
-                    ->where('gelombang.sekolah = :sekolah')
-                    ->orderBy('gelombang.urutan', 'ASC')
-                    ->setParameter('sekolah', $sekolah)
-                ;
+            if ($this->securityContext->isGranted('ROLE_KETUA_PANITIA_PSB')) {
                 $builder
                     ->add('gelombang', 'entity', [
                         'class' => 'LanggasSisdikBundle:Gelombang',
@@ -175,7 +169,15 @@ class SiswaApplicantType extends AbstractType
                         'property' => 'nama',
                         'empty_value' => false,
                         'required' => true,
-                        'query_builder' => $querybuilder2,
+                        'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                            $qb = $repository->createQueryBuilder('gelombang')
+                                ->where('gelombang.sekolah = :sekolah')
+                                ->orderBy('gelombang.urutan', 'ASC')
+                                ->setParameter('sekolah', $sekolah)
+                            ;
+
+                            return $qb;
+                        },
                         'attr' => [
                             'class' => 'medium',
                         ],
@@ -191,7 +193,7 @@ class SiswaApplicantType extends AbstractType
                     ],
                     'label' => 'label.name.full',
                 ])
-                ->add('referensi', new EntityHiddenType($em), [
+                ->add('referensi', 'sisdik_entityhidden', [
                     'class' => 'LanggasSisdikBundle:Referensi',
                     'label_render' => false,
                     'required' => false,
@@ -207,7 +209,7 @@ class SiswaApplicantType extends AbstractType
                     ],
                     'label' => 'label.perujuk',
                 ])
-                ->add('sekolahAsal', new EntityHiddenType($em), [
+                ->add('sekolahAsal', 'sisdik_entityhidden', [
                     'class' => 'LanggasSisdikBundle:SekolahAsal',
                     'label_render' => false,
                     'required' => false,
@@ -382,10 +384,10 @@ class SiswaApplicantType extends AbstractType
                         'class' => 'mini',
                     ],
                 ])
-                ->add('diubahOleh', new EntityHiddenType($em), [
+                ->add('diubahOleh', 'sisdik_entityhidden', [
                     'required' => true,
                     'class' => 'LanggasSisdikBundle:User',
-                    'data' => $user->getId(),
+                    'data' => $this->getUser()->getId(),
                 ])
             ;
         }
@@ -396,12 +398,14 @@ class SiswaApplicantType extends AbstractType
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\Siswa',
+                'tahun_aktif' => null,
+                'mode' => 'new',
             ])
         ;
     }
 
     public function getName()
     {
-        return 'langgas_sisdikbundle_siswaapplicanttype';
+        return 'sisdik_siswapendaftar';
     }
 }

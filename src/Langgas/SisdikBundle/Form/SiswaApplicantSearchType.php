@@ -2,12 +2,15 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -15,52 +18,58 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SiswaApplicantSearchType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context")
+     * })
+     *
+     * @param SecurityContext $securityContext
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
-        $em = $this->container->get('doctrine')->getManager();
+        $builder
+            ->add('gelombang', 'entity', [
+                'class' => 'LanggasSisdikBundle:Gelombang',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'empty_value' => 'label.selectadmissiongroup',
+                'required' => false,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('gelombang')
+                        ->where('gelombang.sekolah = :sekolah')
+                        ->orderBy('gelombang.urutan', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder1 = $em->createQueryBuilder()
-                ->select('t')
-                ->from('LanggasSisdikBundle:Gelombang', 't')
-                ->where('t.sekolah = :sekolah')
-                ->orderBy('t.urutan', 'ASC')
-                ->setParameter('sekolah', $sekolah->getId())
-            ;
-            $builder
-                ->add('gelombang', 'entity', [
-                    'class' => 'LanggasSisdikBundle:Gelombang',
-                    'multiple' => false,
-                    'expanded' => false,
-                    'property' => 'nama',
-                    'empty_value' => 'label.selectadmissiongroup',
-                    'required' => false,
-                    'query_builder' => $querybuilder1,
-                    'attr' => [
-                        'class' => 'medium',
-                    ],
-                    'label_render' => false,
-                    'horizontal' => false,
-                ])
-            ;
-        }
-
-        $builder->add('searchkey', null, [
+                    return $qb;
+                },
+                'attr' => [
+                    'class' => 'medium',
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('searchkey', null, [
             'required' => false,
             'attr' => [
                 'class' => 'medium search-query',
@@ -82,6 +91,6 @@ class SiswaApplicantSearchType extends AbstractType
 
     public function getName()
     {
-        return 'searchform';
+        return 'sisdik_caripendaftar';
     }
 }

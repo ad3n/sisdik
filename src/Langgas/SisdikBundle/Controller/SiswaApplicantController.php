@@ -2,89 +2,93 @@
 
 namespace Langgas\SisdikBundle\Controller;
 
-use Langgas\SisdikBundle\Form\ConfirmationType;
-use Langgas\SisdikBundle\Form\SiswaApplicantSearchType;
-use Langgas\SisdikBundle\Entity\SekolahAsal;
-use Langgas\SisdikBundle\Entity\Referensi;
-use Langgas\SisdikBundle\Util\Messenger;
-use Langgas\SisdikBundle\Entity\LayananSms;
-use Langgas\SisdikBundle\Entity\PilihanLayananSms;
-use Langgas\SisdikBundle\Entity\OrangtuaWali;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Filesystem\Filesystem;
-use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\LayananSms;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Referensi;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\SekolahAsal;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
+use Langgas\SisdikBundle\Util\Messenger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Form\SiswaApplicantType;
-use Langgas\SisdikBundle\Entity\Sekolah;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
-use Langgas\SisdikBundle\Entity\VendorSekolah;
 
 /**
- * Siswa applicant controller.
- *
- * @Route("/applicant")
+ * @Route("/pendaftar")
  * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_PANITIA_PSB')")
  */
 class SiswaApplicantController extends Controller
 {
     /**
-     * Lists all Siswa (applicant only) entities.
-     *
      * @Route("/", name="applicant")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
         $searchkey = '';
 
-        $searchform = $this->createForm(new SiswaApplicantSearchType($this->container));
+        $searchform = $this->createForm('sisdik_caripendaftar');
 
-        $qbtotal = $em->createQueryBuilder()->select('COUNT(t.id)')->from('LanggasSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->where('t.calonSiswa = :calon')->setParameter('calon', true)
-                ->andWhere('t.sekolah = :sekolah')->setParameter('sekolah', $sekolah->getId())
-                ->andWhere('t2.id = ?1')->setParameter(1, $panitiaAktif[2]);
+        $qbtotal = $em->createQueryBuilder()
+            ->select('COUNT(siswa.id)')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->where('siswa.calonSiswa = :calon')
+            ->andWhere('siswa.sekolah = :sekolah')
+            ->andWhere('tahun.id = ?1')
+            ->setParameter('calon', true)
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter(1, $panitiaAktif[2])
+        ;
         $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $qbsearchnum = $em->createQueryBuilder()->select('COUNT(t.id)')->from('LanggasSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
-                ->setParameter(1, $panitiaAktif[2]);
-
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Siswa', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.sekolahAsal', 't4')
-                ->leftJoin('t.orangtuaWali', 'orangtua')->where('t.calonSiswa = :calon')
-                ->setParameter('calon', true)->andWhere('orangtua.aktif = :ortuaktif')
-                ->setParameter('ortuaktif', true)->andWhere('t.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId())->andWhere('t2.id = ?1')
-                ->setParameter(1, $panitiaAktif[2])->orderBy('t2.tahun', 'DESC')
-                ->addOrderBy('t3.urutan', 'DESC')->addOrderBy('t.nomorUrutPendaftaran', 'DESC');
+        $querybuilder = $em->createQueryBuilder()
+            ->select('siswa')
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->leftJoin('siswa.gelombang', 'gelombang')
+            ->leftJoin('siswa.sekolahAsal', 'sekolahAsal')
+            ->leftJoin('siswa.orangtuaWali', 'orangtua')
+            ->where('siswa.calonSiswa = :calon')
+            ->andWhere('orangtua.aktif = :ortuaktif')
+            ->andWhere('siswa.sekolah = :sekolah')
+            ->andWhere('tahun.id = ?1')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->addOrderBy('gelombang.urutan', 'DESC')
+            ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
+            ->setParameter('calon', true)
+            ->setParameter('ortuaktif', true)
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter(1, $panitiaAktif[2])
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
@@ -92,12 +96,12 @@ class SiswaApplicantController extends Controller
 
             $tampilkanTercari = false;
 
-            if ($searchdata['gelombang'] != '') {
-                $querybuilder->andWhere('t.gelombang = :gelombang');
-                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
+            if ($searchdata['gelombang'] instanceof Gelombang) {
+                $querybuilder
+                    ->andWhere('siswa.gelombang = :gelombang')
+                    ->setParameter('gelombang', $searchdata['gelombang'])
+                ;
 
-                $qbsearchnum->andWhere('t.gelombang = :gelombang');
-                $qbsearchnum->setParameter('gelombang', $searchdata['gelombang']->getId());
                 $tampilkanTercari = true;
             }
 
@@ -105,74 +109,66 @@ class SiswaApplicantController extends Controller
                 $searchkey = $searchdata['searchkey'];
 
                 $querybuilder
-                        ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
-                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
-                                        . ' OR orangtua.nama LIKE :namaortu '
-                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
-                $querybuilder->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('nomor', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('namaortu', "%{$searchdata['searchkey']}%");
-                $querybuilder->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
-
-                $qbsearchnum
-                        ->andWhere(
-                                't.namaLengkap LIKE :namalengkap OR t.nomorPendaftaran LIKE :nomor '
-                                        . ' OR t.keterangan LIKE :keterangan OR t.alamat LIKE :alamat '
-                                        . ' OR orangtua.nama LIKE :namaortu '
-                                        . ' OR orangtua.ponsel LIKE :ponselortu ');
-                $qbsearchnum->setParameter('namalengkap', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('nomor', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('keterangan', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('alamat', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('namaortu', "%{$searchdata['searchkey']}%");
-                $qbsearchnum->setParameter('ponselortu', "%{$searchdata['searchkey']}%");
+                    ->andWhere('siswa.namaLengkap LIKE :namalengkap'
+                        .' OR siswa.nomorPendaftaran LIKE :nomor '
+                        .' OR siswa.keterangan LIKE :keterangan '
+                        .' OR siswa.alamat LIKE :alamat '
+                        .' OR orangtua.nama LIKE :namaortu '
+                        .' OR orangtua.ponsel LIKE :ponselortu ')
+                    ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
+                    ->setParameter('nomor', "%{$searchdata['searchkey']}%")
+                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
+                    ->setParameter('alamat', "%{$searchdata['searchkey']}%")
+                    ->setParameter('namaortu', "%{$searchdata['searchkey']}%")
+                    ->setParameter('ponselortu', "%{$searchdata['searchkey']}%")
+                ;
 
                 $tampilkanTercari = true;
             }
-
         }
 
-        $pendaftarTercari = $qbsearchnum->getQuery()->getSingleScalarResult();
+        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-                'pagination' => $pagination, 'searchform' => $searchform->createView(),
-                'panitiaAktif' => $panitiaAktif, 'pendaftarTotal' => $pendaftarTotal,
-                'pendaftarTercari' => $pendaftarTercari, 'tampilkanTercari' => $tampilkanTercari,
-                'searchkey' => $searchkey,
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'panitiaAktif' => $panitiaAktif,
+            'pendaftarTotal' => $pendaftarTotal,
+            'pendaftarTercari' => $pendaftarTercari,
+            'tampilkanTercari' => $tampilkanTercari,
+            'searchkey' => $searchkey,
+        ];
     }
 
     /**
-     * Creates a new Siswa applicant entity.
-     *
      * @Route("/", name="applicant_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaApplicant:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $entity = new Siswa();
-        $form = $this->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'new'), $entity);
+
+        $form = $this->createForm('sisdik_siswapendaftar', $entity, [
+            'tahun_aktif' => $panitiaAktif[2],
+            'mode' => 'new',
+        ]);
+
         $form->submit($request);
 
         if ($form->isValid()) {
@@ -180,20 +176,25 @@ class SiswaApplicantController extends Controller
 
             $entity->setCalonSiswa(true);
 
-            $qbmaxnum = $em->createQueryBuilder()->select('MAX(siswa.nomorUrutPendaftaran)')
-                    ->from('LanggasSisdikBundle:Siswa', 'siswa')->where("siswa.tahun = :tahun")
-                    ->setParameter('tahun', $entity->getTahun())->andWhere('siswa.sekolah = :sekolah')
-                    ->setParameter('sekolah', $entity->getSekolah());
+            $qbmaxnum = $em->createQueryBuilder()
+                ->select('MAX(siswa.nomorUrutPendaftaran)')
+                ->from('LanggasSisdikBundle:Siswa', 'siswa')
+                ->where("siswa.tahun = :tahun")
+                ->setParameter('tahun', $entity->getTahun())
+                ->andWhere('siswa.sekolah = :sekolah')
+                ->setParameter('sekolah', $entity->getSekolah())
+            ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
             $nomormax++;
-            $entity->setNomorUrutPendaftaran($nomormax);
-            $entity->setNomorPendaftaran($entity->getTahun()->getTahun() . $nomormax);
 
-            if ($form['adaReferensi']->getData() === true && $form['referensi']->getData() === null
-                    && $form['namaReferensi']->getData() != "") {
+            $entity->setNomorUrutPendaftaran($nomormax);
+            $entity->setNomorPendaftaran($entity->getTahun()->getTahun().$nomormax);
+
+            if ($form['adaReferensi']->getData() === true && $form['referensi']->getData() === null && $form['namaReferensi']->getData() != "") {
                 $referensi = new Referensi();
                 $referensi->setNama($form['namaReferensi']->getData());
                 $referensi->setSekolah($sekolah);
+
                 $entity->setReferensi($referensi);
             }
 
@@ -202,10 +203,11 @@ class SiswaApplicantController extends Controller
                 $em->flush();
 
                 $pilihanLayananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
-                        ->findBy(
-                                array(
-                                    'sekolah' => $sekolah, 'jenisLayanan' => 'a-pendaftaran-tercatat',
-                                ));
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'jenisLayanan' => 'a-pendaftaran-tercatat',
+                    ])
+                ;
 
                 $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
                     ->findOneBy([
@@ -213,57 +215,44 @@ class SiswaApplicantController extends Controller
                     ])
                 ;
 
-                foreach ($pilihanLayananSms as $pilihan) {
-                    if ($pilihan instanceof PilihanLayananSms) {
-                        if ($pilihan->getStatus()) {
-                            $layananSms = $em
-                                    ->getRepository('LanggasSisdikBundle:LayananSms')
-                                    ->findBy(
-                                            array(
-                                                    'sekolah' => $sekolah,
-                                                    'jenisLayanan' => 'a-pendaftaran-tercatat'
-                                            ));
-                            foreach ($layananSms as $layanan) {
-                                if ($layanan instanceof LayananSms) {
-                                    $tekstemplate = $layanan->getTemplatesms()->getTeks();
+                if ($pilihanLayananSms instanceof PilihanLayananSms) {
+                    if ($pilihanLayananSms->getStatus()) {
+                        $layananSms = $em->getRepository('LanggasSisdikBundle:LayananSms')
+                            ->findOneBy([
+                                'sekolah' => $sekolah,
+                                'jenisLayanan' => 'a-pendaftaran-tercatat',
+                            ])
+                        ;
+                        if ($layananSms instanceof LayananSms) {
+                            $tekstemplate = $layananSms->getTemplatesms()->getTeks();
 
-                                    $namaOrtuWali = "";
-                                    $ponselOrtuWali = "";
-                                    foreach ($entity->getOrangtuaWali() as $orangtuaWali) {
-                                        if ($orangtuaWali instanceof OrangtuaWali) {
-                                            if ($orangtuaWali->isAktif()) {
-                                                $namaOrtuWali = $orangtuaWali->getNama();
-                                                $ponselOrtuWali = $orangtuaWali->getPonsel();
-                                                break;
+                            $namaOrtuWali = "";
+                            $ponselOrtuWali = "";
+                            $orangtuaWaliAktif = $entity->getOrangtuaWaliAktif();
+                            if ($orangtuaWaliAktif instanceof OrangtuaWali) {
+                                $namaOrtuWali = $orangtuaWaliAktif->getNama();
+                                $ponselOrtuWali = $orangtuaWaliAktif->getPonsel();
+                            }
+
+                            $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali, $tekstemplate);
+                            $tekstemplate = str_replace("%nama-calonsiswa%", $entity->getNamaLengkap(), $tekstemplate);
+                            $tekstemplate = str_replace("%tahun%", $entity->getTahun()->getTahun(), $tekstemplate);
+                            $tekstemplate = str_replace("%gelombang%", $entity->getGelombang()->getNama(), $tekstemplate);
+
+                            if ($ponselOrtuWali != "") {
+                                $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
+                                foreach ($nomorponsel as $ponsel) {
+                                    $messenger = $this->get('sisdik.messenger');
+                                    if ($messenger instanceof Messenger) {
+                                        if ($vendorSekolah instanceof VendorSekolah) {
+                                            if ($vendorSekolah->getJenis() == 'khusus') {
+                                                $messenger->setUseVendor(true);
+                                                $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
                                             }
                                         }
-                                    }
-
-                                    $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali,
-                                            $tekstemplate);
-                                    $tekstemplate = str_replace("%nama-calonsiswa%",
-                                            $entity->getNamaLengkap(), $tekstemplate);
-                                    $tekstemplate = str_replace("%tahun%", $entity->getTahun()->getTahun(),
-                                            $tekstemplate);
-                                    $tekstemplate = str_replace("%gelombang%",
-                                            $entity->getGelombang()->getNama(), $tekstemplate);
-
-                                    if ($ponselOrtuWali != "") {
-                                        $nomorponsel = preg_split("/[\s,\/]+/", $ponselOrtuWali);
-                                        foreach ($nomorponsel as $ponsel) {
-                                            $messenger = $this->get('sisdik.messenger');
-                                            if ($messenger instanceof Messenger) {
-                                                if ($vendorSekolah instanceof VendorSekolah) {
-                                                    if ($vendorSekolah->getJenis() == 'khusus') {
-                                                        $messenger->setUseVendor(true);
-                                                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
-                                                    }
-                                                }
-                                                $messenger->setPhoneNumber($ponsel);
-                                                $messenger->setMessage($tekstemplate);
-                                                $messenger->sendMessage($sekolah);
-                                            }
-                                        }
+                                        $messenger->setPhoneNumber($ponsel);
+                                        $messenger->setMessage($tekstemplate);
+                                        $messenger->sendMessage($sekolah);
                                     }
                                 }
                             }
@@ -271,88 +260,78 @@ class SiswaApplicantController extends Controller
                     }
                 }
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.applicant.inserted',
-                                                array(
-                                                    '%name%' => $entity->getNamaLengkap()
-                                                )));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.applicant.inserted', [
+                        '%name%' => $entity->getNamaLengkap(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.applicant');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('applicant_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('applicant_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new Siswa applicant entity.
-     *
      * @Route("/new", name="applicant_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $entity = new Siswa();
         $orangtuaWali = new OrangtuaWali();
         $entity->getOrangtuaWali()->add($orangtuaWali);
 
-        $form = $this->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'new'), $entity);
+        $form = $this->createForm('sisdik_siswapendaftar', $entity, [
+            'tahun_aktif' => $panitiaAktif[2],
+            'mode' => 'new',
+        ]);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Finds and displays a Siswa applicant entity.
-     *
      * @Route("/{id}", name="applicant_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -365,32 +344,29 @@ class SiswaApplicantController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(), 'panitiaAktif' => $panitiaAktif,
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+            'panitiaAktif' => $panitiaAktif,
+        ];
     }
 
     /**
-     * Displays a form to edit an existing Siswa applicant entity.
-     *
      * @Route("/{id}/edit", name="applicant_edit")
      * @Method("GET")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -403,37 +379,37 @@ class SiswaApplicantController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this
-                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'edit'), $entity);
+        $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
+            'tahun_aktif' => $panitiaAktif[2],
+            'mode' => 'edit',
+        ]);
+
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing Siswa applicant entity.
-     *
      * @Route("/{id}", name="applicant_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaApplicant:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -447,26 +423,28 @@ class SiswaApplicantController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this
-                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'edit'), $entity);
+
+        $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
+            'tahun_aktif' => $panitiaAktif[2],
+            'mode' => 'edit',
+        ]);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
-
                 if ($editForm['referensi']->getData() === null && $editForm['namaReferensi']->getData() != "") {
                     $referensi = new Referensi();
                     $referensi->setNama($editForm['namaReferensi']->getData());
                     $referensi->setSekolah($sekolah);
+
                     $entity->setReferensi($referensi);
                 }
 
-                if ($editForm['sekolahAsal']->getData() === null
-                        && $editForm['namaSekolahAsal']->getData() != "") {
+                if ($editForm['sekolahAsal']->getData() === null && $editForm['namaSekolahAsal']->getData() != "") {
                     $sekolahAsal = new SekolahAsal();
                     $sekolahAsal->setNama($editForm['namaSekolahAsal']->getData());
                     $sekolahAsal->setSekolah($sekolah);
+
                     $entity->setSekolahAsal($sekolahAsal);
                 }
 
@@ -479,32 +457,28 @@ class SiswaApplicantController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.applicant.updated',
-                                                array(
-                                                    '%name%' => $entity->getNamaLengkap(),
-                                                )));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.applicant.updated', [
+                        '%name%' => $entity->getNamaLengkap(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.applicant');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('applicant_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('applicant_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
@@ -513,67 +487,57 @@ class SiswaApplicantController extends Controller
      * @Route("/webcamupload/{tahun}", name="applicant_webcam_uploadhandler")
      * @Method("POST")
      */
-    public function webcamUploadHandlerAction(Request $request, $tahun) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function webcamUploadHandlerAction(Request $request, $tahun)
+    {
+        $sekolah = $this->getSekolah();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $fs = new Filesystem();
-        if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun)) {
-            $fs->mkdir(Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun);
+        if (!$fs->exists(Siswa::WEBCAMPHOTO_DIR.$sekolah->getId().'/'.$tahun)) {
+            $fs->mkdir(Siswa::WEBCAMPHOTO_DIR.$sekolah->getId().'/'.$tahun);
         }
 
-        $filename = date('YmdHis') . '.jpg';
-        $targetfile = Siswa::WEBCAMPHOTO_DIR . $sekolah->getId() . '/' . $tahun . '/' . $filename;
+        $filename = date('YmdHis').'.jpg';
+        $targetfile = Siswa::WEBCAMPHOTO_DIR.$sekolah->getId().'/'.$tahun.'/'.$filename;
 
         $output = $filename;
 
         $result = file_put_contents($targetfile, file_get_contents('php://input'));
         if (!$result) {
-            $output = $this->get('translator')
-                    ->trans('errorinfo.cannot.writefile',
-                            array(
-                                'filename' => $filename
-                            ));
+            $output = $this->get('translator')->trans('errorinfo.cannot.writefile', [
+                'filename' => $filename,
+            ]);
         }
 
-        return new Response($output, 200,
-                array(
-                    'Content-Type' => 'text/plain'
-                ));
+        return new Response($output, 200, [
+            'Content-Type' => 'text/plain',
+        ]);
     }
 
     /**
-     * Displays a form to edit only registration photo of Siswa applicant entity.
-     *
      * @Route("/{id}/editregphoto", name="applicant_editregphoto")
      * @Method("GET")
      * @Template("LanggasSisdikBundle:SiswaApplicant:editregphoto.html.twig")
      */
-    public function editRegistrationPhotoAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editRegistrationPhotoAction($id)
+    {
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -586,36 +550,33 @@ class SiswaApplicantController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this
-                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'editregphoto'),
-                        $entity);
+        $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
+            'tahun_aktif' => $panitiaAktif[2],
+            'mode' => 'editregphoto',
+        ]);
 
-        return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing Siswa applicant entity.
-     *
      * @Route("/{id}/updateregphoto", name="applicant_updateregphoto")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaApplicant:editregphoto.html.twig")
      */
-    public function updateRegistrationPhotoAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateRegistrationPhotoAction(Request $request, $id)
+    {
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -628,66 +589,59 @@ class SiswaApplicantController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        $editForm = $this
-                ->createForm(new SiswaApplicantType($this->container, $panitiaAktif[2], 'editregphoto'),
-                        $entity);
+        $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
+            'tahun_aktif' => $panitiaAktif[2],
+            'mode' => 'editregphoto',
+        ]);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.applicant.regphoto.updated',
-                                                array(
-                                                    '%name%' => $entity->getNamaLengkap(),
-                                                )));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.applicant.regphoto.updated', [
+                        '%name%' => $entity->getNamaLengkap(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.applicant');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('applicant_show',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('applicant_show', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'edit_form' => $editForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+        ];
     }
 
     /**
-     * Displays a confirmation form to delete a applicant
-     * menghapus hanya bisa dilakukan terhadap data yang belum memiliki data pembayaran
+     * Menampilkan form konfirmasi untuk menghapus pendaftar
+     * Menghapus hanya bisa dilakukan terhadap data yang belum memiliki data pembayaran
      *
      * @Route("/{id}/remove", name="applicant_delete_confirm")
      * @Template("LanggasSisdikBundle:SiswaApplicant:delete.confirm.html.twig")
      * @Secure(roles="ROLE_ADMIN, ROLE_KETUA_PANITIA_PSB")
      */
-    public function deleteConfirmAction($id) {
-        $this->isRegisteredToSchool();
+    public function deleteConfirmAction($id)
+    {
         $this->setCurrentMenu();
 
         $panitiaAktif = $this->getPanitiaAktif();
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
-        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0]))
-                || $panitiaAktif[1] == $this->getUser()->getId())) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.register.as.committee'));
+        if (!((is_array($panitiaAktif[0]) && in_array($this->getUser()->getId(), $panitiaAktif[0])) || $panitiaAktif[1] == $this->getUser()->getId())) {
+            throw new AccessDeniedException($this->get('translator')->trans('exception.register.as.committee'));
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -698,16 +652,15 @@ class SiswaApplicantController extends Controller
         }
 
         if (count($entity->getPembayaranPendaftaran()) > 0) {
-            $this->get('session')->getFlashBag()
-                    ->add('error',
-                            $this->get('translator')->trans('alert.pendaftar.sudah.melakukan.pembayaran'));
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('applicant_show',
-                                            array(
-                                                'id' => $id,
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('alert.pendaftar.sudah.melakukan.pembayaran'))
+            ;
+
+            return $this->redirect($this->generateUrl('applicant_show', [
+                'id' => $id,
+            ]));
         }
 
         $form = $this->createForm('sisdik_confirm', null, [
@@ -718,19 +671,17 @@ class SiswaApplicantController extends Controller
         if ($request->getMethod() == "POST") {
             $form->submit($request);
             if ($form->isValid()) {
-
                 try {
                     $em->remove($entity);
                     $em->flush();
 
-                    $this->get('session')->getFlashBag()
-                            ->add('success',
-                                    $this->get('translator')
-                                            ->trans('flash.applicant.deleted',
-                                                    array(
-                                                        '%name%' => $entity->getNamaLengkap(),
-                                                    )));
-
+                    $this
+                        ->get('session')
+                        ->getFlashBag()
+                        ->add('success', $this->get('translator')->trans('flash.applicant.deleted', [
+                            '%name%' => $entity->getNamaLengkap(),
+                        ]))
+                    ;
                 } catch (DBALException $e) {
                     $message = $this->get('translator')->trans('exception.delete.restrict');
                     throw new DBALException($message);
@@ -738,90 +689,91 @@ class SiswaApplicantController extends Controller
 
                 return $this->redirect($this->generateUrl('applicant'));
             } else {
-                $this->get('session')->getFlashBag()
-                        ->add('error',
-                                $this->get('translator')
-                                        ->trans('flash.applicant.fail.delete',
-                                                array(
-                                                    '%name%' => $entity->getNamaLengkap(),
-                                                )));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.applicant.fail.delete', [
+                        '%name%' => $entity->getNamaLengkap(),
+                    ]))
+                ;
             }
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
     /**
      * Mencari panitia pendaftaran aktif
-     * Fungsi ini mengembalikan array berisi
-     * index 0: daftar id panitia aktif
-     * index 1: id ketua panitia aktif
-     * index 2: id tahun panitia aktif
-     * index 3: string tahun panitia aktif
+     *
+     * Mengembalikan array berisi
+     * index 0: daftar id panitia aktif,
+     * index 1: id ketua panitia aktif,
+     * index 2: id tahun panitia aktif,
+     * index 3: string tahun panitia aktif.
      *
      * @return array panitiaaktif
      */
-    public function getPanitiaAktif() {
-        $sekolah = $this->isRegisteredToSchool();
+    private function getPanitiaAktif()
+    {
+        $sekolah = $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
 
-        $qb0 = $em->createQueryBuilder()->select('panitia')
-                ->from('LanggasSisdikBundle:PanitiaPendaftaran', 'panitia')->leftJoin('panitia.tahun', 'tahun')
-                ->where('panitia.sekolah = :sekolah')->andWhere('panitia.aktif = 1')
-                ->orderBy('tahun.tahun', 'DESC')->setParameter('sekolah', $sekolah->getId())
-                ->setMaxResults(1);
-        $results = $qb0->getQuery()->getResult();
-        $panitiaaktif = array();
-        foreach ($results as $entity) {
-            if (is_object($entity) && $entity instanceof PanitiaPendaftaran) {
-                $panitiaaktif[0] = $entity->getPanitia();
-                $panitiaaktif[1] = $entity->getKetuaPanitia()->getId();
-                $panitiaaktif[2] = $entity->getTahun()->getId();
-                $panitiaaktif[3] = $entity->getTahun()->getTahun();
-            }
+        $entityPanitiaAktif = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')->findOneBy([
+            'sekolah' => $sekolah,
+            'aktif' => 1,
+        ]);
+
+        $panitia = [];
+        if (is_object($entityPanitiaAktif) && $entityPanitiaAktif instanceof PanitiaPendaftaran) {
+            $panitia[0] = $entityPanitiaAktif->getPanitia();
+            $panitia[1] = $entityPanitiaAktif->getKetuaPanitia()->getId();
+            $panitia[2] = $entityPanitiaAktif->getTahun()->getId();
+            $panitia[3] = $entityPanitiaAktif->getTahun()->getTahun();
         }
 
-        return $panitiaaktif;
+        return $panitia;
     }
 
-    private function verifyTahun($tahun) {
+    private function verifyTahun($tahun)
+    {
         $panitiaAktif = $this->getPanitiaAktif();
+
         if (!is_array($panitiaAktif) || count($panitiaAktif) <= 0) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
+            throw new AccessDeniedException($this->get('translator')->trans('exception.tidak.ada.panitia.pendaftaran'));
         }
 
         if ($panitiaAktif[3] != $tahun) {
-            throw new AccessDeniedException(
-                    $this->get('translator')->trans('cannot.alter.applicant.inactive.year'));
+            throw new AccessDeniedException($this->get('translator')->trans('cannot.alter.applicant.inactive.year'));
         }
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.pendaftaran', array(), 'navigations')][$this->get('translator')->trans('links.registration', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.pendaftaran', [], 'navigations')][$translator->trans('links.registration', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } elseif ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
