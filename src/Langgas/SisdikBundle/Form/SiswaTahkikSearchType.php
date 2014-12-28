@@ -2,13 +2,17 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Langgas\SisdikBundle\Entity\Sekolah;
+use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -16,32 +20,42 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SiswaTahkikSearchType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var SecurityContext
      */
-    private $container;
+    private $securityContext;
 
     /**
-     * @param ContainerInterface $container
+     * @var Translator
      */
-    public function __construct(ContainerInterface $container)
+    private $translator;
+
+    /**
+     * @InjectParams({
+     *     "securityContext" = @Inject("security.context"),
+     *     "translator" = @Inject("translator")
+     * })
+     *
+     * @param SecurityContext $securityContext
+     * @param Translator      $translator
+     */
+    public function __construct(SecurityContext $securityContext, Translator $translator)
     {
-        $this->container = $container;
+        $this->securityContext = $securityContext;
+        $this->translator = $translator;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
-        $em = $this->container->get('doctrine')->getManager();
-
-        $querybuilder1 = $em->createQueryBuilder()
-            ->select('gelombang')
-            ->from('LanggasSisdikBundle:Gelombang', 'gelombang')
-            ->where('gelombang.sekolah = :sekolah')
-            ->orderBy('gelombang.urutan', 'ASC')
-            ->setParameter('sekolah', $sekolah->getId())
-        ;
         $builder
             ->add('gelombang', 'entity', [
                 'class' => 'LanggasSisdikBundle:Gelombang',
@@ -49,7 +63,15 @@ class SiswaTahkikSearchType extends AbstractType
                 'expanded' => false,
                 'property' => 'nama',
                 'empty_value' => 'label.selectadmissiongroup',
-                'query_builder' => $querybuilder1,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('gelombang')
+                        ->where('gelombang.sekolah = :sekolah')
+                        ->orderBy('gelombang.urutan', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
                 'attr' => [
                     'class' => 'medium',
                 ],
@@ -101,7 +123,7 @@ class SiswaTahkikSearchType extends AbstractType
                 'empty_value' => 'label.gender.empty.select',
                 'horizontal' => false,
             ])
-            ->add('sekolahAsal', new EntityHiddenType($em), [
+            ->add('sekolahAsal', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:SekolahAsal',
                 'attr' => [
                     'class' => 'id-sekolah-asal',
@@ -119,7 +141,7 @@ class SiswaTahkikSearchType extends AbstractType
                 'label_render' => false,
                 'horizontal' => false,
             ])
-            ->add('referensi', new EntityHiddenType($em), [
+            ->add('referensi', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:Referensi',
                 'attr' => [
                     'class' => 'large id-referensi',
@@ -153,7 +175,7 @@ class SiswaTahkikSearchType extends AbstractType
 //             ])
 //         ;
 
-        $builder->addEventSubscriber(new JumlahBayarSubscriber($this->container->get('translator')));
+        $builder->addEventSubscriber(new JumlahBayarSubscriber($this->translator));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -167,6 +189,6 @@ class SiswaTahkikSearchType extends AbstractType
 
     public function getName()
     {
-        return 'searchform';
+        return 'sisdik_caritahkik';
     }
 }

@@ -2,11 +2,14 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Siswa;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 
 /**
  * @FormType
@@ -14,42 +17,39 @@ use JMS\DiExtraBundle\Annotation\FormType;
 class SiswaTahkikType extends AbstractType
 {
     /**
-     * @var ContainerInterface
+     * @var EntityManager
      */
-    private $container;
+    private $entityManager;
 
     /**
-     * @var string
+     * @InjectParams({
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     * })
+     *
+     * @param EntityManager $entityManager
      */
-    private $idsiswa = '';
-
-    /**
-     * @param ContainerInterface $container
-     * @param string             $idsiswa
-     */
-    public function __construct(ContainerInterface $container, $idsiswa = '')
+    public function __construct(EntityManager $entityManager)
     {
-        $this->container = $container;
-        $this->idsiswa = $idsiswa;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $entities = $em->getRepository('LanggasSisdikBundle:Siswa')
+        $entities = $this->entityManager
+            ->getRepository('LanggasSisdikBundle:Siswa')
             ->findBy([
-                'id' => preg_split('/:/', $this->idsiswa),
+                'id' => preg_split('/:/', $options['idsiswa']),
             ])
         ;
 
         foreach ($entities as $entity) {
             if (is_object($entity) && $entity instanceof Siswa) {
                 $builder
-                    ->add('siswa_' . $entity->getId(), 'checkbox', [
+                    ->add('siswa_'.$entity->getId(), 'checkbox', [
                         'required' => false,
                         'label_render' => false,
                         'attr' => [
-                            'class' => 'calon-siswa-check siswa-' . $entity->getId(),
+                            'class' => 'calon-siswa-check siswa-'.$entity->getId(),
                         ],
                     ])
                 ;
@@ -57,8 +57,17 @@ class SiswaTahkikType extends AbstractType
         }
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver
+            ->setDefaults([
+                'idsiswa' => [],
+            ])
+        ;
+    }
+
     public function getName()
     {
-        return 'langgas_sisdikbundle_siswatahkiktype';
+        return 'sisdik_tahkik';
     }
 }

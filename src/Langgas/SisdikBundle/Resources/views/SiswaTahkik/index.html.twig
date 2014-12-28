@@ -185,8 +185,8 @@ form .clearfix {
     <thead>
         <tr>
             <th>{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.namaLengkap') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 't.namaLengkap') }}
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
             </th>
             <th>{{ 'label.ortuwali.entri'|trans }}</th>
             <th>{{ 'label.paid.amount'|trans }}</th>
@@ -247,7 +247,7 @@ form .clearfix {
                 <span class="icon-gift" style="margin: 0;"></span>
                 {% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
-                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pendaftar'|trans }}" style="margin: 0 8px;" target="_blank">
+                <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
             </td>
