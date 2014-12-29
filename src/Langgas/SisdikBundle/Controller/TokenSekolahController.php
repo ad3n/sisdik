@@ -1,13 +1,15 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\TokenSekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\TokenSekolah;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -25,24 +27,27 @@ class TokenSekolahController extends Controller
     {
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm('sisdik_carisekolah');
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('t')
-            ->from('LanggasSisdikBundle:TokenSekolah', 't')
-            ->leftJoin('t.sekolah', 't2')
-            ->orderBy('t2.nama', 'ASC')
+            ->select('tokenSekolah')
+            ->from('LanggasSisdikBundle:TokenSekolah', 'tokenSekolah')
+            ->leftJoin('tokenSekolah.sekolah', 'sekolah')
+            ->orderBy('sekolah.nama', 'ASC')
         ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['sekolah'] != '') {
-                $querybuilder->where('t.sekolah = :sekolah');
-                $querybuilder->setParameter("sekolah", $searchdata['sekolah']);
+            if ($searchdata['sekolah'] instanceof Sekolah) {
+                $querybuilder
+                    ->where('t.sekolah = :sekolah')
+                    ->setParameter("sekolah", $searchdata['sekolah'])
+                ;
             }
         }
 
@@ -68,6 +73,7 @@ class TokenSekolahController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $entity->setMesinProxy($entity->generateRandomToken());
             $em->persist($entity);
             $em->flush();
@@ -230,6 +236,7 @@ class TokenSekolahController extends Controller
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $entity = $em->getRepository('LanggasSisdikBundle:TokenSekolah')->find($id);
 
             if (!$entity) {
@@ -267,7 +274,9 @@ class TokenSekolahController extends Controller
 
     private function setCurrentMenu()
     {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.pengaturan.sisdik', [], 'navigations')][$this->get('translator')->trans('links.token.sekolah', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.pengaturan.sisdik', [], 'navigations')][$translator->trans('links.token.sekolah', [], 'navigations')]->setCurrent(true);
     }
 }
