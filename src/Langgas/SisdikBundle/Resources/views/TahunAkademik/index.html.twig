@@ -21,20 +21,20 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.academicyear.name'|trans, 't.nama') }}
+            <th class="{% if pagination.isSorted('tahunakademik.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.academicyear.name'|trans, 'tahunakademik.nama') }}
             </th>
-            <th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
+            <th class="{% if pagination.isSorted('tahunakademik.kode') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 'tahunakademik.kode') }}
             </th>
-            <th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
+            <th class="{% if pagination.isSorted('tahunakademik.keterangan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 'tahunakademik.keterangan') }}
             </th>
-            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
+            <th class="{% if pagination.isSorted('tahunakademik.urutan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 'tahunakademik.urutan') }}
             </th>
-            <th class="{% if pagination.isSorted('t.aktif') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.activeyear'|trans, 't.aktif') }}
+            <th class="{% if pagination.isSorted('tahunakademik.aktif') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.activeyear'|trans, 'tahunakademik.aktif') }}
             </th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
