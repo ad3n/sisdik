@@ -14,7 +14,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class SiswaGenerateUsernameType extends AbstractType
+class SiswaGenerateUserType extends AbstractType
 {
     /**
      * @var SecurityContext

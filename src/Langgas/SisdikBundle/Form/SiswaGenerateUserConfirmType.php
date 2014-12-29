@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @FormType
  */
-class SiswaGenerateUsernameConfirmType extends AbstractType
+class SiswaGenerateUserConfirmType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

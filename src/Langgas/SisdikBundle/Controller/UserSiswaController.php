@@ -23,7 +23,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * @Route("/membuat-username-siswa")
  * @PreAuthorize("hasRole('ROLE_ADMIN')")
  */
-class SiswaUsernameController extends Controller
+class UserSiswaController extends Controller
 {
     const DOCUMENTS_DIR = "/documents/";
     const BASEFILE = "base.ods";
@@ -36,7 +36,7 @@ class SiswaUsernameController extends Controller
      * @Route("/", name="siswa_generate_username")
      * @Template("LanggasSisdikBundle:Siswa:generate.username.html.twig")
      */
-    public function generateUsernameAction()
+    public function generateUserAction()
     {
         $this->setCurrentMenu();
 
@@ -75,7 +75,7 @@ class SiswaUsernameController extends Controller
      * @Route("/konfirmasi/{file}.{type}/{regenerate}", name="siswa_generate_username_confirm")
      * @Template("LanggasSisdikBundle:Siswa:generate.username.confirm.html.twig")
      */
-    public function generateUsernameConfirmAction($file, $type, $regenerate = '')
+    public function generateUserConfirmAction($file, $type, $regenerate = '')
     {
         $this->setCurrentMenu();
 
@@ -148,7 +148,7 @@ class SiswaUsernameController extends Controller
      *
      * @Route("/ajax/periksa", name="siswa_ajax_generated_username")
      */
-    public function ajaxCheckGeneratedUsernameAction(Request $request)
+    public function ajaxCheckGeneratedUserAction(Request $request)
     {
         $sekolah = $this->getSekolah();
 
