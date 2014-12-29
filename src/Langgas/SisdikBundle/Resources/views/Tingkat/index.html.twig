@@ -16,14 +16,14 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.tingkat.kelas.nama'|trans, 't.nama') }}
+            <th class="{% if pagination.isSorted('tingkat.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.tingkat.kelas.nama'|trans, 'tingkat.nama') }}
             </th>
-            <th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
+            <th class="{% if pagination.isSorted('tingkat.kode') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 'tingkat.kode') }}
             </th>
-            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
+            <th class="{% if pagination.isSorted('tingkat.urutan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 'tingkat.urutan') }}
             </th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>

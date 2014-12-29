@@ -1,60 +1,58 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\Tingkat;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Tingkat;
-use Langgas\SisdikBundle\Form\TingkatType;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * Tingkat controller.
- *
  * @Route("/tingkat-kelas")
- * @PreAuthorize("hasRole('ROLE_KEPALA_SEKOLAH')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH')")
  */
 class TingkatController extends Controller
 {
     /**
-     * Lists all Tingkat entities.
-     *
      * @Route("/", name="tingkat-kelas")
      * @Template()
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:Tingkat', 't')
-                    ->where('t.sekolah = :sekolah')->orderBy('t.kode', 'ASC')
-                    ->setParameter('sekolah', $sekolah->getId());
-        }
+        $querybuilder = $em->createQueryBuilder()
+            ->select('tingkat')
+            ->from('LanggasSisdikBundle:Tingkat', 'tingkat')
+            ->where('tingkat.sekolah = :sekolah')
+            ->orderBy('tingkat.kode', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination
-        );
+        return [
+            'pagination' => $pagination,
+        ];
     }
 
     /**
-     * Finds and displays a Tingkat entity.
-     *
      * @Route("/{id}/show", name="tingkat-kelas_show")
      * @Template()
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -67,19 +65,19 @@ class TingkatController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Displays a form to create a new Tingkat entity.
-     *
      * @Route("/new", name="tingkat-kelas_new")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -87,72 +85,70 @@ class TingkatController extends Controller
         $entity = new Tingkat();
 
         $qbe = $em->createQueryBuilder();
-        $queryUrutan = $em->createQueryBuilder()->select($qbe->expr()->max('tingkat.urutan'))
-                ->from('LanggasSisdikBundle:Tingkat', 'tingkat')->where('tingkat.sekolah = :sekolah')
-                ->setParameter('sekolah', $sekolah->getId());
+        $queryUrutan = $em->createQueryBuilder()
+            ->select($qbe->expr()->max('tingkat.urutan'))
+            ->from('LanggasSisdikBundle:Tingkat', 'tingkat')
+            ->where('tingkat.sekolah = :sekolah')
+            ->setParameter('sekolah', $sekolah)
+        ;
         $nomorUrut = $queryUrutan->getQuery()->getSingleScalarResult();
         $nomorUrut = $nomorUrut === null ? 0 : $nomorUrut;
         $nomorUrut++;
 
         $entity->setUrutan($nomorUrut);
 
-        $form = $this->createForm(new TingkatType($this->container), $entity);
+        $form = $this->createForm('sisdik_tingkat', $entity);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new Tingkat entity.
-     *
      * @Route("/create", name="tingkat-kelas_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Tingkat:new.html.twig")
      */
-    public function createAction(Request $request) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction(Request $request)
+    {
         $this->setCurrentMenu();
 
         $entity = new Tingkat();
-        $form = $this->createForm(new TingkatType($this->container), $entity);
+        $form = $this->createForm('sisdik_tingkat', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.tingkat.kelas.tersimpan',
-                                            array(
-                                                '%nama%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.tingkat.kelas.tersimpan', [
+                    '%nama%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('tingkat-kelas_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
+            return $this->redirect($this->generateUrl('tingkat-kelas_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing Tingkat entity.
-     *
      * @Route("/{id}/edit", name="tingkat-kelas_edit")
      * @Template()
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -163,24 +159,23 @@ class TingkatController extends Controller
             throw $this->createNotFoundException('Entity Tingkat tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new TingkatType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_tingkat', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Edits an existing Tingkat entity.
-     *
      * @Route("/{id}/update", name="tingkat-kelas_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Tingkat:edit.html.twig")
      */
-    public function updateAction(Request $request, $id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction(Request $request, $id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -192,45 +187,39 @@ class TingkatController extends Controller
         }
 
         $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm(new TingkatType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_tingkat', $entity);
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
 
-            $this->get('session')->getFlashBag()
-                    ->add('success',
-                            $this->get('translator')
-                                    ->trans('flash.tingkat.kelas.terbarui',
-                                            array(
-                                                '%nama%' => $entity->getNama()
-                                            )));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $this->get('translator')->trans('flash.tingkat.kelas.terbarui', [
+                    '%nama%' => $entity->getNama(),
+                ]))
+            ;
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('tingkat-kelas_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('tingkat-kelas_edit', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a Tingkat entity.
-     *
      * @Route("/{id}/delete", name="tingkat-kelas_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction(Request $request, $id)
+    {
         $form = $this->createDeleteForm($id);
         $form->submit($request);
 
@@ -246,52 +235,53 @@ class TingkatController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success',
-                                $this->get('translator')
-                                        ->trans('flash.tingkat.kelas.terhapus',
-                                                array(
-                                                    '%nama%' => $entity->getNama()
-                                                )));
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.tingkat.kelas.terhapus', [
+                        '%nama%' => $entity->getNama(),
+                    ]))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.tingkat.kelas.gagal.dihapus'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.tingkat.kelas.gagal.dihapus'))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('tingkat-kelas',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('tingkat-kelas', [
+            'page' => $this->getRequest()->get('page'),
+        ]));
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.academic', array(), 'navigations')][$this->get('translator')->trans('links.tingkat', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.academic', [], 'navigations')][$translator->trans('links.tingkat', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
