@@ -22,11 +22,11 @@ class WaliKelas
     private $id;
 
     /**
-     * @ORM\Column(name="nama", type="string", length=45, nullable=true)
+     * @ORM\Column(name="keterangan", type="string", length=255, nullable=true)
      *
      * @var string
      */
-    private $nama;
+    private $keterangan;
 
     /**
      * @ORM\ManyToOne(targetEntity="Kelas")
@@ -49,6 +49,21 @@ class WaliKelas
     private $tahunAkademik;
 
     /**
+     * @var string
+     */
+    private $namaUser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var User
+     */
+    private $user;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -57,19 +72,19 @@ class WaliKelas
     }
 
     /**
-     * @param string $nama
+     * @param string $keterangan
      */
-    public function setNama($nama)
+    public function setKeterangan($keterangan)
     {
-        $this->nama = $nama;
+        $this->keterangan = $keterangan;
     }
 
     /**
      * @return string
      */
-    public function getNama()
+    public function getKeterangan()
     {
-        return $this->nama;
+        return $this->keterangan;
     }
 
     /**
@@ -102,5 +117,37 @@ class WaliKelas
     public function getTahunAkademik()
     {
         return $this->tahunAkademik;
+    }
+
+    /**
+     * @param string $namaUser
+     */
+    public function setNamaUser($namaUser)
+    {
+        $this->namaUser = $namaUser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamaUser()
+    {
+        return $this->namaUser;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user = null)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
