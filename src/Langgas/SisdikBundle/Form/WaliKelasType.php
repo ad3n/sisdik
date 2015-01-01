@@ -93,11 +93,24 @@ class WaliKelasType extends AbstractType
                     'class' => 'large selectclass',
                 ],
             ])
-            ->add('nama', null, [
-                'required' => true,
+            ->add('user', 'sisdik_entityhidden', [
+                'class' => 'LanggasSisdikBundle:User',
+                'label_render' => false,
+                'required' => false,
                 'attr' => [
-                    'class' => 'large',
+                    'class' => 'large id-user',
                 ],
+            ])
+            ->add('namaUser', 'text', [
+                'required' => false,
+                'attr' => [
+                    'class' => 'xlarge nama-user ketik-pilih-tambah',
+                    'placeholder' => 'label.ketik-pilih',
+                ],
+                'label' => 'label.user.wali.kelas',
+            ])
+            ->add('keterangan', 'text', [
+                'required' => false,
             ])
         ;
     }
