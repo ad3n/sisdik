@@ -4,11 +4,14 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
+use FOS\UserBundle\Doctrine\UserManager;
 use Langgas\SisdikBundle\Entity\WaliKelas;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
+use Langgas\SisdikBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -22,7 +25,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 class WaliKelasController extends Controller
 {
     /**
-     * @Route("/", name="data_classguardian")
+     * @Route("/", name="walikelas")
      * @Template()
      */
     public function indexAction()
@@ -40,9 +43,9 @@ class WaliKelasController extends Controller
             ->from('LanggasSisdikBundle:WaliKelas', 'waliKelas')
             ->leftJoin('waliKelas.kelas', 'kelas')
             ->leftJoin('waliKelas.tahunAkademik', 'tahunAkademik')
+            ->leftJoin('waliKelas.user', 'user')
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
-            ->addOrderBy('kelas.urutan', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
 
@@ -58,7 +61,7 @@ class WaliKelasController extends Controller
             }
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
-                    ->andWhere("waliKelas.nama LIKE :searchkey")
+                    ->andWhere("user.name LIKE :searchkey OR user.username LIKE :searchkey")
                     ->setParameter('searchkey', "%{$searchdata['searchkey']}%")
                 ;
             }
@@ -74,7 +77,7 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @Route("/{id}/show", name="data_classguardian_show")
+     * @Route("/{id}/show", name="walikelas_show")
      * @Template()
      */
     public function showAction($id)
@@ -98,7 +101,7 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @Route("/new", name="data_classguardian_new")
+     * @Route("/new", name="walikelas_new")
      * @Template()
      */
     public function newAction()
@@ -115,7 +118,7 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @Route("/create", name="data_classguardian_create")
+     * @Route("/create", name="walikelas_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:WaliKelas:new.html.twig")
      */
@@ -134,15 +137,27 @@ class WaliKelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
+                /* @var $userManager UserManager */
+                $userManager = $this->container->get('fos_user.user_manager');
+                $user = $userManager->findUserBy([
+                    'id' => $entity->getUser()->getId(),
+                ]);
+
+                if ($user instanceof User) {
+                    $user->addRole('ROLE_WALI_KELAS');
+                    $userManager->updateUser($user);
+                }
+
                 $this
                     ->get('session')
                     ->getFlashBag()
                     ->add('success', $this->get('translator')->trans('flash.data.classguardian.inserted', [
-                        '%classguardian%' => $entity->getNama()
+                        '%tahun-akademik%' => $entity->getTahunAkademik()->getNama(),
+                        '%kelas%' => $entity->getKelas()->getNama(),
                     ]))
                 ;
 
-                return $this->redirect($this->generateUrl('data_classguardian_show', [
+                return $this->redirect($this->generateUrl('walikelas_show', [
                     'id' => $entity->getId(),
                 ]));
             } catch (DBALException $e) {
@@ -158,7 +173,7 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @Route("/{id}/edit", name="data_classguardian_edit")
+     * @Route("/{id}/edit", name="walikelas_edit")
      * @Template()
      */
     public function editAction($id)
@@ -167,6 +182,7 @@ class WaliKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        /* @var $entity WaliKelas */
         $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
         if (!$entity) {
@@ -184,7 +200,7 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @Route("/{id}/update", name="data_classguardian_update")
+     * @Route("/{id}/update", name="walikelas_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:WaliKelas:edit.html.twig")
      */
@@ -209,15 +225,26 @@ class WaliKelasController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
+                $userManager = $this->container->get('fos_user.user_manager');
+                $user = $userManager->findUserBy([
+                    'id' => $entity->getUser()->getId(),
+                ]);
+
+                if ($user instanceof User) {
+                    $user->addRole('ROLE_WALI_KELAS');
+                    $userManager->updateUser($user);
+                }
+
                 $this
                     ->get('session')
                     ->getFlashBag()
                     ->add('success', $this->get('translator')->trans('flash.data.classguardian.updated', [
-                        '%classguardian%' => $entity->getNama(),
+                        '%tahun-akademik%' => $entity->getTahunAkademik()->getNama(),
+                        '%kelas%' => $entity->getKelas()->getNama(),
                     ]))
                 ;
 
-                return $this->redirect($this->generateUrl('data_classguardian_edit', [
+                return $this->redirect($this->generateUrl('walikelas_edit', [
                     'id' => $id,
                 ]));
             } catch (DBALException $e) {
@@ -234,7 +261,7 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @Route("/{id}/delete", name="data_classguardian_delete")
+     * @Route("/{id}/delete", name="walikelas_delete")
      * @Method("POST")
      */
     public function deleteAction(Request $request, $id)
@@ -257,7 +284,8 @@ class WaliKelasController extends Controller
                 ->get('session')
                 ->getFlashBag()
                 ->add('success', $this->get('translator')->trans('flash.data.classguardian.deleted', [
-                    '%classguardian%' => $entity->getNama(),
+                    '%tahun-akademik%' => $entity->getTahunAkademik()->getNama(),
+                    '%kelas%' => $entity->getKelas()->getNama(),
                 ]))
             ;
         } else {
@@ -268,7 +296,59 @@ class WaliKelasController extends Controller
             ;
         }
 
-        return $this->redirect($this->generateUrl('data_classguardian'));
+        return $this->redirect($this->generateUrl('walikelas'));
+    }
+
+    /**
+     * @param Request $request
+     * @Route("/ajax/ambiluser", name="walikelas_ambiluser")
+     * @Method("GET")
+     */
+    public function ajaxGetUserAction(Request $request)
+    {
+        $sekolah = $this->getSekolah();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $filter = $this->getRequest()->query->get('filter');
+        $id = $this->getRequest()->query->get('id');
+
+        $querybuilder = $em->createQueryBuilder()
+            ->select('user')
+            ->from('LanggasSisdikBundle:User', 'user')
+            ->where('user.sekolah = :sekolah')
+            ->orderBy('user.name', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
+
+        if ($id != '') {
+            $querybuilder
+                ->andWhere('user.id = :id')
+                ->setParameter('id', $id)
+            ;
+        } else {
+            $querybuilder
+                ->andWhere('user.name LIKE :filter OR user.username LIKE :filter')
+                ->setParameter('filter', "%$filter%")
+            ;
+        }
+
+        $results = $querybuilder->getQuery()->getResult();
+
+        $retval = [];
+        foreach ($results as $result) {
+            if ($result instanceof User) {
+                $retval[] = [
+                    'id' => $result->getId(),
+                    'label' =>/** @Ignore */ $result->getName(),
+                    'value' => $result->getName(),
+                ];
+            }
+        }
+
+        return new Response(json_encode($retval), 200, [
+            'Content-Type' => 'application/json',
+        ]);
     }
 
     private function createDeleteForm($id)

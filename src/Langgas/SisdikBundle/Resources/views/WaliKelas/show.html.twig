@@ -4,7 +4,7 @@
 {% block content %}
 <ul class="nav nav-pills pull-right">
     <li>
-        <a href="{{ path('data_classguardian_new') }}" class="add-link-a">
+        <a href="{{ path('walikelas_new') }}" class="add-link-a">
             <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.classguardian.add'|trans }}
         </a>
     </li>
@@ -18,12 +18,12 @@
     <dt>{{ 'label.class.entry'|trans }}</dt>
     <dd>{{ entity.kelas.nama }}</dd>
     <dt>{{ 'label.classguardian.name'|trans }}</dt>
-    <dd>{{ entity.nama }}</dd>
+    <dd>{% if entity.user %}{{ entity.user.name }}{% else %}{{ 'label.username.undefined'|trans }}{% endif %}</dd>
 </dl>
 
 <div class="clearfix"></div>
 
-<form id="delete-form" action="{{ path('data_classguardian_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
+<form id="delete-form" action="{{ path('walikelas_delete', {'id': entity.id}) }}" method="post" class="form-inline pull-right">
     {{ form_widget(delete_form) }}
     <div class="form-actions">
         <button type="submit" class="btn alternative icon danger remove">{{ 'label.delete'|trans }}</button>
@@ -32,10 +32,10 @@
 
 <ul class="nav nav-pills">
     <li>
-        <a href="{{ path('data_classguardian') }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('walikelas') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('data_classguardian_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('walikelas_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}
@@ -44,7 +44,7 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     $("#delete-form").submit(function(){
-        var confirmtext = "{{ 'confirm.drop.classguardian'|trans({ '%name%': entity.nama }) }}";
+        var confirmtext = "{{ 'confirm.drop.classguardian'|trans({ '%tahun-akademik%': entity.tahunAkademik.nama, '%kelas%': entity.kelas.nama }) }}";
         confirmtext = confirmtext.replace(/&#039;/g, "'");
         return confirmDropButton(confirmtext);
     });

@@ -3,7 +3,30 @@
 {% block page_heading %}{% trans from "headings" %}data.classguardian.creation{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('data_classguardian_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+<style type="text/css">
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
+.ui-autocomplete-loading {
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+    background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
+</style>
+<form action="{{ path('walikelas_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_widget(form) }}
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
@@ -14,7 +37,7 @@
 
 <ul class="nav nav-pills">
     <li>
-        <a href="{{ path('data_classguardian') }}">{{ 'link.backtolist'|trans }}</a>
+        <a href="{{ path('walikelas') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
 </ul>
 {% endblock content %}
@@ -44,6 +67,38 @@ $(document).ready(function() {
             $(".selectclass").html(options);
         });
     });
+
+    var options = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("walikelas_ambiluser") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id
+                        }
+                    }));
+                }
+            });
+        },
+        open: function(event, ui) {
+            $(".id-user").val("");
+        },
+        change: function(event, ui) {},
+        search: function(event, ui) {
+            $(".id-user").val("");
+        },
+        select: function(event, ui) {
+            $(".id-user").val(ui.item.id);
+        }
+    };
+
+    $(".nama-user").autocomplete(options);
 });
 </script>
 {% endblock javascripts_custom %}

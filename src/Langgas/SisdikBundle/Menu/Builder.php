@@ -151,7 +151,7 @@ class Builder extends ContainerAware
 
             $academic->addChild($translator->trans('links.data.academiccalendar', [], 'navigations'), ['route' => 'kalender-akademik']);
             $academic->addChild($translator->trans('links.data.class', [], 'navigations'), ['route' => 'data_class']);
-            $academic->addChild($translator->trans('links.data.classguardian', [], 'navigations'), ['route' => 'data_classguardian']);
+            $academic->addChild($translator->trans('links.data.classguardian', [], 'navigations'), ['route' => 'walikelas']);
             $academic->addChild($translator->trans('links.siswa', [], 'navigations'), ['route' => 'siswa']);
             $academic->addChild($translator->trans('links.penempatan.siswa.kelas', [], 'navigations'), ['route' => 'penempatan-siswa-kelas']);
         }
