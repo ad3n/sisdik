@@ -144,8 +144,10 @@ class WaliKelasController extends Controller
                 ]);
 
                 if ($user instanceof User) {
-                    $user->addRole('ROLE_WALI_KELAS');
-                    $userManager->updateUser($user);
+                    if (!$user->hasRole('ROLE_SISWA')) {
+                        $user->addRole('ROLE_WALI_KELAS');
+                        $userManager->updateUser($user);
+                    }
                 }
 
                 $this
@@ -304,7 +306,7 @@ class WaliKelasController extends Controller
      * @Route("/ajax/ambiluser", name="walikelas_ambiluser")
      * @Method("GET")
      */
-    public function ajaxGetUserAction(Request $request)
+    public function ajaxGetWaliKelasAction(Request $request)
     {
         $sekolah = $this->getSekolah();
 
@@ -317,6 +319,8 @@ class WaliKelasController extends Controller
             ->select('user')
             ->from('LanggasSisdikBundle:User', 'user')
             ->where('user.sekolah = :sekolah')
+            ->andWhere('user.siswa IS NULL')
+            //->andWhere("REGEXP('^[0-9]+$', user.username) = false")
             ->orderBy('user.name', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
@@ -340,7 +344,7 @@ class WaliKelasController extends Controller
             if ($result instanceof User) {
                 $retval[] = [
                     'id' => $result->getId(),
-                    'label' =>/** @Ignore */ $result->getName(),
+                    'label' =>/** @Ignore */ $result->getName().' ('.$result->getUsername().')',
                     'value' => $result->getName(),
                 ];
             }

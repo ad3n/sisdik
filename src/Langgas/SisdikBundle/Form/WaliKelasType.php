@@ -96,7 +96,7 @@ class WaliKelasType extends AbstractType
             ->add('user', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:User',
                 'label_render' => false,
-                'required' => false,
+                'required' => true,
                 'attr' => [
                     'class' => 'large id-user',
                 ],

@@ -3,6 +3,7 @@
 namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="wali_kelas", uniqueConstraints={
@@ -58,6 +59,7 @@ class WaliKelas
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      * })
+     * @Assert\NotNull(message="Wali Kelas (User) tidak boleh kosong")
      *
      * @var User
      */
