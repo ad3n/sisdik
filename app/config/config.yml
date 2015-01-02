@@ -108,6 +108,7 @@ doctrine:
                     datetime_functions:
                         MONTH: DoctrineExtensions\Query\Mysql\Month
                         YEAR: DoctrineExtensions\Query\Mysql\Year
+                        REGEXP: Langgas\SisdikBundle\DoctrineFunctions\RegExp
                 # gedmo/tree
                 mappings:
                     gedmo_tree:
