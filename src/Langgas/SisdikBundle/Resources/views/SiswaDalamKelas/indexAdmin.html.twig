@@ -1,0 +1,151 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.siswa.dalam.kelas{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+#filename {
+    line-height: 1.5em;
+    min-width: 5em;
+    min-height: 15px;
+}
+.loading {
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
+</style>
+
+<div class="filter-section">
+    <form id="search-form" method="GET" action="{{ path('siswa_dalam_kelas__admin') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.lihat'|trans }}</button>
+        <button type="submit" class="btn success alternative icon log" id="tombol-unduh">{{ 'label.download'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('siswa_dalam_kelas') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+    <div style="margin-top: 5px;" class="clearfix"></div>
+    <div id="filename"></div>
+</div>
+
+<div style="margin-top: 20px;" class="clearfix"></div>
+
+{% if tampilkanTercari %}
+
+<h4 style="text-align: center;">
+    {{ 'daftar.siswa.tahun.akademik.kelas'|trans({'%tahun-akademik%': searchdata.tahunAkademik.nama, '%kelas%': searchdata.kelas.nama}, 'headings') }}
+    {% if searchdata.searchkey != '' %}<br>{{ 'kata.pencarian'|trans }} "{{ searchdata.searchkey }}"{% endif %}
+</h4>
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ siswaTotal }}
+</div>
+
+<div class="pull-right info-jumlah">
+    {{ 'label.jumlah.siswa.tercari'|trans }}: {{ siswaTercari }}
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.identitas.sisdik'|trans }}</th>
+            <th>{{ 'label.academicyear.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
+            </th>
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
+            </th>
+            <th class="{% if pagination.isSorted('siswa.jenisKelamin') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.gender'|trans, 'siswa.jenisKelamin') }}
+            </th>
+            <th>{{ 'label.class.entry'|trans }}</th>
+            <th>{{ 'label.ortuwali.entri'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.identitas.sisdik'|trans }}" class="info-id">{{ data.siswa.nomorIndukSistem }}</td>
+            <td data-title="{{ 'label.academicyear.entry'|trans }}">{% if data.tahunAkademik is defined %}{{ data.tahunAkademik.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.idnumber'|trans }}">{{ data.siswa.nomorInduk }}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ data.siswa.namaLengkap }}</td>
+            <td data-title="{{ 'label.gender'|trans }}">{% if data.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
+            <td data-title="{{ 'label.class.entry'|trans }}">{% if data.siswa.siswaKelasAktif %}{{ data.siswa.siswaKelasAktif.kelas.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.ortuwali.entri'|trans }}">
+            {% if data.siswa.orangtuaWaliAktif %}
+                {% if data.siswa.orangtuaWaliAktif.nama != "" %}{{ data.siswa.orangtuaWaliAktif.nama }},{% endif %}
+                {{ data.siswa.orangtuaWaliAktif.ponsel }}
+            {% endif %}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.siswa'|trans }}"><i class="fa fa-external-link"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endif %}
+
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    var url = "{{ path('data_class_ajax_updateclass') }}";
+
+    $.get(url, {tahunAkademik: $(".pilih-tahun").val(), kelas: $(".pilih-kelas").val()}, function(data) {
+        var options = '';
+        for (var i = 0; i < data.length; i++) {
+            options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+        }
+        $(".pilih-kelas").html(options);
+    });
+
+    $(".pilih-tahun").change(function() {
+        // clear class select box content
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: $(this).val()}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                    + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                    + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
+    });
+
+    $("#tombol-unduh").click(function() {
+        var url = "{{ path('siswa_dalam_kelas__eksporadmin') }}";
+
+        $(this).attr('disabled', 'disabled');
+        $("#filename").html("");
+        $("#filename").addClass("loading");
+
+        $.post(url, $("#search-form").serialize(), function(response) {
+            if (response.redirectUrl) {
+                window.location.href = response.redirectUrl;
+                $("#filename").html('<a href="' + response.redirectUrl + '">' + response.filename + '</a><br>({{ 'label.klik.jika.tak.otomatis'|trans }})');
+            } else {
+                $("#filename").html(response.error);
+            }
+            $("#filename").removeClass("loading");
+            $("#tombol-unduh").removeAttr('disabled');
+        });
+        return false;
+    });
+});
+</script>
+{% endblock javascripts_custom %}
