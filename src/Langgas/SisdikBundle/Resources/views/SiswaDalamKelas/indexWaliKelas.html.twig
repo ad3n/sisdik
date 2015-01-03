@@ -85,7 +85,7 @@
             {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                <a href="{{ path('siswa_show', {'id': data.id}) }}" title="{{ 'tip.lihat.data.siswa'|trans }}"><i class="fa fa-external-link"></i></a>
+                <a href="{{ path('siswa_show', {'id': data.siswa.id}) }}" title="{{ 'tip.lihat.data.siswa'|trans }}"><i class="fa fa-external-link"></i></a>
             </td>
         </tr>
     {% endfor %}
