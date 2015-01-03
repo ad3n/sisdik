@@ -29,10 +29,7 @@ class Builder extends ContainerAware
      * @param FactoryInterface   $factory
      * @param ContainerInterface $container
      */
-    public function __construct(
-        FactoryInterface $factory,
-        ContainerInterface $container
-    ) {
+    public function __construct(FactoryInterface $factory, ContainerInterface $container) {
         $this->factory = $factory;
         $this->container = $container;
     }
@@ -141,7 +138,7 @@ class Builder extends ContainerAware
             }
         }
 
-        $roleakademik = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH")';
+        $roleakademik = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_WALI_KELAS")';
         if ($securityContext->isGranted([
             new Expression($roleakademik),
         ])) {
@@ -149,11 +146,17 @@ class Builder extends ContainerAware
                 'dropdown' => true,
             ]);
 
-            $academic->addChild($translator->trans('links.data.academiccalendar', [], 'navigations'), ['route' => 'kalender-akademik']);
-            $academic->addChild($translator->trans('links.data.class', [], 'navigations'), ['route' => 'data_class']);
-            $academic->addChild($translator->trans('links.data.classguardian', [], 'navigations'), ['route' => 'walikelas']);
-            $academic->addChild($translator->trans('links.siswa', [], 'navigations'), ['route' => 'siswa']);
-            $academic->addChild($translator->trans('links.penempatan.siswa.kelas', [], 'navigations'), ['route' => 'penempatan-siswa-kelas']);
+            if ($securityContext->isGranted([
+                new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')"),
+            ])) {
+                $academic->addChild($translator->trans('links.data.academiccalendar', [], 'navigations'), ['route' => 'kalender-akademik']);
+                $academic->addChild($translator->trans('links.data.class', [], 'navigations'), ['route' => 'data_class']);
+                $academic->addChild($translator->trans('links.data.classguardian', [], 'navigations'), ['route' => 'walikelas']);
+                $academic->addChild($translator->trans('links.siswa', [], 'navigations'), ['route' => 'siswa']);
+                $academic->addChild($translator->trans('links.penempatan.siswa.kelas', [], 'navigations'), ['route' => 'penempatan-siswa-kelas']);
+            }
+
+            $academic->addChild($translator->trans('links.siswa.di.kelas', [], 'navigations'), ['route' => 'siswa_dalam_kelas']);
         }
 
         if ($securityContext->isGranted([
