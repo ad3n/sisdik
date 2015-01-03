@@ -23,6 +23,9 @@ use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
  */
 class DefaultController extends Controller
 {
+    /**
+     * @Route("/", name="homepage")
+     */
     public function indexAction()
     {
         $securityContext = $this->container->get('security.context');
