@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2014-12-27T19:34:22Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-03T17:44:01Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -104,6 +104,16 @@
         <jms:reference-file line="3">views/LayananSms/index.html.twig</jms:reference-file>
         <source>daftar.pengaturan.layanan.sms</source>
         <target>Daftar Pengaturan Layanan SMS</target>
+      </trans-unit>
+      <trans-unit id="4da84512c42f98ef5bce86cb1ba0449a3cb501c6" resname="daftar.siswa.dalam.kelas">
+        <jms:reference-file line="3">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
+        <source>daftar.siswa.dalam.kelas</source>
+        <target>Daftar Siswa Dalam Kelas</target>
+      </trans-unit>
+      <trans-unit id="03a37029d45b271f83b622991f5bf6999ac010b1" resname="daftar.siswa.tahun.akademik.kelas">
+        <jms:reference-file line="36">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
+        <source>daftar.siswa.tahun.akademik.kelas</source>
+        <target>Daftar Siswa Tahun Akademik "%tahun-akademik%" Kelas "%kelas%"</target>
       </trans-unit>
       <trans-unit id="caeee085ad6bc0295c8a91442a91dd6d432f8c6a" resname="daftar.vendor.sekolah">
         <jms:reference-file line="3">views/VendorSekolah/index.html.twig</jms:reference-file>
@@ -435,12 +445,12 @@
         <target>Laporan Pembayaran Pendaftaran</target>
       </trans-unit>
       <trans-unit id="27fea03f4d5e1c0410139e6fe23c0cae237cdd18" resname="laporan.pendaftaran.daftar">
-        <jms:reference-file line="3">views/SiswaApplicantReport/index.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/LaporanSiswaPendaftar/index.html.twig</jms:reference-file>
         <source>laporan.pendaftaran.daftar</source>
         <target>Laporan Pendaftaran</target>
       </trans-unit>
       <trans-unit id="2cd4aed433af5b04d5cb41c56b3ec2eb7381e743" resname="laporan.pendaftaran.siswa">
-        <jms:reference-file line="254">SisdikBundle/Controller/SiswaApplicantReportController.php</jms:reference-file>
+        <jms:reference-file line="254">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>laporan.pendaftaran.siswa</source>
         <target>Laporan Pendaftaran Siswa</target>
       </trans-unit>
