@@ -11,6 +11,7 @@ use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\ProsesKepulanganSiswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Langgas\SisdikBundle\Entity\KepulanganSiswa;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\JadwalKepulangan;
@@ -26,12 +27,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\TranslationBundle\Annotation\Ignore;
-use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 
 /**
  * @Route("/kepulangan-siswa")
- * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
+ * @PreAuthorize("hasAnyRole('ROLE_GURU_PIKET', 'ROLE_GURU')")
  */
 class KepulanganSiswaController extends Controller
 {
@@ -236,6 +237,7 @@ class KepulanganSiswaController extends Controller
      *
      * @Route("/update", name="kepulangan-siswa_update")
      * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function updateAction(Request $request)
     {
@@ -301,6 +303,7 @@ class KepulanganSiswaController extends Controller
      *
      * @Route("/inisiasi/{kelas_id}/{tanggal}", name="kepulangan-siswa_inisiasi")
      * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function inisiasiAction($kelas_id, $tanggal)
     {
@@ -459,6 +462,7 @@ class KepulanganSiswaController extends Controller
      *
      * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="kepulangan-siswa_kirimsms")
      * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function kirimSmsAction($kelas_id, $tanggal)
     {
@@ -721,6 +725,7 @@ class KepulanganSiswaController extends Controller
      * Memperbarui kepulangan siswa berdasarkan data yang diambil secara manual
      *
      * @Route("/pembaruan-manual/{urutan}/{daftarJadwal}", name="kepulangan-siswa_manual")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function pembaruanManualAction($urutan = 0, $daftarJadwal = "0")
     {

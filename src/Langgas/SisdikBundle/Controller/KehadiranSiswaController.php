@@ -25,11 +25,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\TranslationBundle\Annotation\Ignore;
 
 /**
  * @Route("/kehadiran-siswa")
- * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
+ * @PreAuthorize("hasAnyRole('ROLE_GURU_PIKET', 'ROLE_GURU')")
  */
 class KehadiranSiswaController extends Controller
 {
@@ -235,6 +236,7 @@ class KehadiranSiswaController extends Controller
      *
      * @Route("/update", name="kehadiran-siswa_update")
      * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function updateAction(Request $request)
     {
@@ -300,6 +302,7 @@ class KehadiranSiswaController extends Controller
      *
      * @Route("/inisiasi/{kelas_id}/{tanggal}", name="kehadiran-siswa_inisiasi")
      * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function inisiasiAction($kelas_id, $tanggal)
     {
@@ -452,6 +455,7 @@ class KehadiranSiswaController extends Controller
      *
      * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="kehadiran-siswa_kirimsms")
      * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function kirimSmsAction($kelas_id, $tanggal)
     {
@@ -722,6 +726,7 @@ class KehadiranSiswaController extends Controller
      * Memperbarui kehadiran siswa berdasarkan data yang diambil secara manual
      *
      * @Route("/pembaruan-manual/{urutan}/{daftarJadwal}", name="kehadiran-siswa_manual")
+     * @Secure(roles="ROLE_GURU_PIKET")
      */
     public function pembaruanManualAction($urutan = 0, $daftarJadwal = "0")
     {
