@@ -28,7 +28,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/data-siswa")
- * @PreAuthorize("hasRole('ROLE_WAKIL_KEPALA_SEKOLAH')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
  */
 class SiswaController extends Controller
 {
