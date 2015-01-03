@@ -19,16 +19,18 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
 /**
  * @Route("/data-siswa")
- * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH', 'ROLE_WALI_KELAS')")
  */
 class SiswaController extends Controller
 {
@@ -49,7 +51,15 @@ class SiswaController extends Controller
     public function indexAction()
     {
         $sekolah = $this->getSekolah();
-        $this->setCurrentMenu();
+
+        /* @var $securityContext SecurityContext */
+        $securityContext = $this->container->get('security.context');
+
+        if ($securityContext->isGranted([
+            new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH') and not hasRole('ROLE_WALI_KELAS')"),
+        ])) {
+            $this->setCurrentMenu();
+        }
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
@@ -136,14 +146,18 @@ class SiswaController extends Controller
     }
 
     /**
-     * Finds and displays a Siswa entity.
-     *
      * @Route("/{id}/show", name="siswa_show")
      * @Template()
      */
     public function showAction($id)
     {
-        $this->setCurrentMenu();
+        $securityContext = $this->container->get('security.context');
+
+        if ($securityContext->isGranted([
+            new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH') and not hasRole('ROLE_WALI_KELAS')"),
+        ])) {
+            $this->setCurrentMenu();
+        }
 
         $em = $this->getDoctrine()->getManager();
 
@@ -162,10 +176,9 @@ class SiswaController extends Controller
     }
 
     /**
-     * Displays a form to create a new Siswa entity.
-     *
      * @Route("/new", name="siswa_new")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function newAction()
     {
@@ -187,6 +200,7 @@ class SiswaController extends Controller
      * @Route("/create", name="siswa_create")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:new.html.twig")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function createAction()
     {
@@ -250,6 +264,7 @@ class SiswaController extends Controller
     /**
      * @Route("/{id}/edit", name="siswa_edit")
      * @Template()
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function editAction($id)
     {
@@ -277,6 +292,7 @@ class SiswaController extends Controller
      * @Route("/{id}/update", name="siswa_update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:edit.html.twig")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function updateAction($id)
     {
@@ -334,6 +350,7 @@ class SiswaController extends Controller
      * @Route("/{id}/deleteconfirm", name="siswa_deleteconfirm")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:Siswa:deleteconfirm.html.twig")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function deleteConfirmAction($id)
     {
@@ -358,6 +375,7 @@ class SiswaController extends Controller
     /**
      * @Route("/{id}/delete", name="siswa_delete")
      * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function deleteAction($id)
     {
@@ -631,7 +649,6 @@ class SiswaController extends Controller
     public function fileTemplateAction()
     {
         $sekolah = $this->getSekolah();
-        $this->setCurrentMenu();
 
         $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
@@ -685,7 +702,6 @@ class SiswaController extends Controller
     public function exportAction()
     {
         $sekolah = $this->getSekolah();
-        $this->setCurrentMenu();
 
         $form = $this->createForm('sisdik_siswaexport');
 
