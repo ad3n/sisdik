@@ -296,6 +296,8 @@ class SiswaController extends Controller
 
         if ($editForm->isValid()) {
             try {
+                $entity->setWaktuUbah(new \DateTime());
+
                 $em->persist($entity);
                 $em->flush();
             } catch (DBALException $e) {
