@@ -33,8 +33,10 @@
 
 <div style="margin-top: 20px;" class="clearfix"></div>
 
+{% if tampilkanTercari %}
+
 <h4 style="text-align: center;">
-    {{ 'daftar.siswa.tahun.akademik.kelas'|trans({'%tahun-akademik%': tahunAkademik.nama, '%kelas%': kelas.nama}, 'headings') }}
+    {{ 'daftar.siswa.tahun.akademik.kelas'|trans({'%tahun-akademik%': tahunAkademik.nama, '%kelas%': searchdata.kelas.nama}, 'headings') }}
     {% if searchdata.searchkey != '' %}<br>{{ 'kata.pencarian'|trans }} "{{ searchdata.searchkey }}"{% endif %}
 </h4>
 
@@ -42,11 +44,9 @@
     {{ 'label.jumlah.siswa.total'|trans }}: {{ siswaTotal }}
 </div>
 
-{% if tampilkanTercari %}
 <div class="pull-right info-jumlah">
     {{ 'label.jumlah.siswa.tercari'|trans }}: {{ siswaTercari }}
 </div>
-{% endif %}
 
 <div class="clearfix">&nbsp;</div>
 
@@ -92,6 +92,8 @@
     </tbody>
 </table>
 {{ knp_pagination_render(pagination) }}
+
+{% endif %}
 
 {% endblock content %}
 

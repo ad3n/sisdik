@@ -46,53 +46,92 @@ class SiswaDalamKelasSearchType extends AbstractType
     {
         $sekolah = $this->getSekolah();
 
+        if ($options['mode_wali_kelas'] !== true) {
+            $builder
+                ->add('tahunAkademik', 'entity', [
+                    'class' => 'LanggasSisdikBundle:TahunAkademik',
+                    'label' => 'label.year.entry',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'nama',
+                    'required' => true,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('tahunAkademik')
+                            ->where('tahunAkademik.sekolah = :sekolah')
+                            ->orderBy('tahunAkademik.urutan', 'DESC')
+                            ->addOrderBy('tahunAkademik.nama', 'DESC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
+                    'attr' => [
+                        'class' => 'medium pilih-tahun',
+                    ],
+                    'label_render' => false,
+                    'horizontal' => false,
+                ])
+                ->add('kelas', 'entity', [
+                    'class' => 'LanggasSisdikBundle:Kelas',
+                    'label' => 'label.year.entry',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'nama',
+                    'required' => true,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('kelas')
+                            ->leftJoin('kelas.tingkat', 'tingkat')
+                            ->where('kelas.sekolah = :sekolah')
+                            ->orderBy('tingkat.urutan', 'ASC')
+                            ->addOrderBy('kelas.urutan', 'DESC')
+                            ->addOrderBy('kelas.nama', 'DESC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
+                    'attr' => [
+                        'class' => 'medium pilih-kelas',
+                    ],
+                    'label_render' => false,
+                    'horizontal' => false,
+                ])
+            ;
+        } else {
+            $kelas = $options['kelas_id'];
+
+            $builder
+                ->add('kelas', 'entity', [
+                    'class' => 'LanggasSisdikBundle:Kelas',
+                    'label' => 'label.year.entry',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'nama',
+                    'required' => true,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah, $kelas) {
+                        $qb = $repository->createQueryBuilder('kelas')
+                            ->leftJoin('kelas.tingkat', 'tingkat')
+                            ->where('kelas.sekolah = :sekolah')
+                            ->andWhere('kelas.id IN (?1)')
+                            ->orderBy('tingkat.urutan', 'ASC')
+                            ->addOrderBy('kelas.urutan', 'DESC')
+                            ->addOrderBy('kelas.nama', 'DESC')
+                            ->setParameter('sekolah', $sekolah)
+                            ->setParameter(1, $kelas)
+                        ;
+
+                        return $qb;
+                    },
+                    'attr' => [
+                        'class' => 'medium pilih-kelas',
+                    ],
+                    'label_render' => false,
+                    'horizontal' => false,
+                ])
+            ;
+        }
+
         $builder
-            ->add('tahunAkademik', 'entity', [
-                'class' => 'LanggasSisdikBundle:TahunAkademik',
-                'label' => 'label.year.entry',
-                'multiple' => false,
-                'expanded' => false,
-                'property' => 'nama',
-                'required' => true,
-                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
-                    $qb = $repository->createQueryBuilder('tahunAkademik')
-                        ->where('tahunAkademik.sekolah = :sekolah')
-                        ->orderBy('tahunAkademik.urutan', 'DESC')
-                        ->addOrderBy('tahunAkademik.nama', 'DESC')
-                        ->setParameter('sekolah', $sekolah)
-                    ;
-
-                    return $qb;
-                },
-                'attr' => [
-                    'class' => 'medium pilih-tahun',
-                ],
-                'label_render' => false,
-                'horizontal' => false,
-            ])
-            ->add('kelas', 'entity', [
-                'class' => 'LanggasSisdikBundle:Kelas',
-                'label' => 'label.year.entry',
-                'multiple' => false,
-                'expanded' => false,
-                'property' => 'nama',
-                'required' => true,
-                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
-                    $qb = $repository->createQueryBuilder('kelas')
-                        ->where('kelas.sekolah = :sekolah')
-                        ->orderBy('kelas.urutan', 'DESC')
-                        ->addOrderBy('kelas.nama', 'DESC')
-                        ->setParameter('sekolah', $sekolah)
-                    ;
-
-                    return $qb;
-                },
-                'attr' => [
-                    'class' => 'medium pilih-kelas',
-                ],
-                'label_render' => false,
-                'horizontal' => false,
-            ])
             ->add('searchkey', null, [
                 'label' => 'label.searchkey',
                 'required' => false,
@@ -111,6 +150,8 @@ class SiswaDalamKelasSearchType extends AbstractType
         $resolver
             ->setDefaults([
                 'csrf_protection' => false,
+                'mode_wali_kelas' => false,
+                'kelas_id' => [],
             ])
         ;
     }

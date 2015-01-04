@@ -92,8 +92,6 @@ class SiswaDalamKelasController extends Controller
                     ->andWhere('siswaKelas.tahunAkademik = :tahunAkademik')
                     ->setParameter('tahunAkademik', $searchdata['tahunAkademik'])
                 ;
-
-                $tampilkanTercari = true;
             }
 
             if ($searchdata['kelas'] instanceof Kelas) {
@@ -101,6 +99,8 @@ class SiswaDalamKelasController extends Controller
                     ->andWhere('siswaKelas.kelas = :kelas')
                     ->setParameter('kelas', $searchdata['kelas'])
                 ;
+
+                $tampilkanTercari = true;
             }
 
             $siswaTotal = count($querybuilder->getQuery()->getResult());
@@ -165,16 +165,22 @@ class SiswaDalamKelasController extends Controller
         }
 
         $waliKelasAktif = $em->getRepository('LanggasSisdikBundle:WaliKelas')
-            ->findOneBy([
+            ->findBy([
                 'tahunAkademik' => $tahunAkademikAktif,
                 'user' => $user,
             ])
         ;
 
-        if (!$waliKelasAktif instanceof WaliKelas) {
+        if (count($waliKelasAktif) <= 0) {
             throw $this->createNotFoundException($this->container->get('translator')->trans('user.bukan.wali.kelas.di.tahun.akademik.aktif', [
                 '%tahun-akademik%' => $tahunAkademikAktif->getNama(),
             ]));
+        }
+
+        $daftarKelas = [];
+        foreach ($waliKelasAktif as $waliKelas) {
+            /* @var $waliKelas WaliKelas */
+            $daftarKelas[] = $waliKelas->getKelas()->getId();
         }
 
         $querybuilder = $em->createQueryBuilder()
@@ -184,23 +190,35 @@ class SiswaDalamKelasController extends Controller
             ->leftJoin('siswaKelas.siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
             ->andWhere('siswaKelas.tahunAkademik = :tahunAkademik')
-            ->andWhere('siswaKelas.kelas = :kelas')
             ->andWhere('siswa.calonSiswa = :calon')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunAkademik', $tahunAkademikAktif)
-            ->setParameter('kelas', $waliKelasAktif->getKelas())
             ->setParameter('calon', false)
         ;
 
         $tampilkanTercari = false;
-        $siswaTotal = count($querybuilder->getQuery()->getResult());
+        $siswaTotal = 0;
         $siswaTercari = 0;
 
-        $searchform = $this->createForm('sisdik_cari');
+        $searchform = $this->createForm('sisdik_carisiswadikelas', null, [
+            'mode_wali_kelas' => true,
+            'kelas_id' => $daftarKelas,
+        ]);
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
+
+            if ($searchdata['kelas'] instanceof Kelas) {
+                $querybuilder
+                    ->andWhere('siswaKelas.kelas = :kelas')
+                    ->setParameter('kelas', $searchdata['kelas'])
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            $siswaTotal = count($querybuilder->getQuery()->getResult());
 
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
@@ -209,8 +227,9 @@ class SiswaDalamKelasController extends Controller
                 ;
 
                 $tampilkanTercari = true;
-                $siswaTercari = count($querybuilder->getQuery()->getResult());
             }
+
+            $siswaTercari = count($querybuilder->getQuery()->getResult());
         }
 
         if ($this->getRequest()->query->get('sort') == '') {
@@ -231,7 +250,6 @@ class SiswaDalamKelasController extends Controller
             'tampilkanTercari' => $tampilkanTercari,
             'siswaTercari' => $siswaTercari,
             'tahunAkademik' => $tahunAkademikAktif,
-            'kelas' => $waliKelasAktif->getKelas(),
         ];
     }
 
@@ -539,13 +557,13 @@ class SiswaDalamKelasController extends Controller
         }
 
         $waliKelasAktif = $em->getRepository('LanggasSisdikBundle:WaliKelas')
-            ->findOneBy([
+            ->findBy([
                 'tahunAkademik' => $tahunAkademikAktif,
                 'user' => $user,
             ])
         ;
 
-        if (!$waliKelasAktif instanceof WaliKelas) {
+        if (count($waliKelasAktif) <= 0) {
             $return = [
                 "error" => $this->container->get('translator')->trans('user.bukan.wali.kelas.di.tahun.akademik.aktif', [
                     '%tahun-akademik%' => $tahunAkademikAktif->getNama(),
@@ -559,6 +577,11 @@ class SiswaDalamKelasController extends Controller
             ]);
         }
 
+        $daftarKelas = [];
+        foreach ($waliKelasAktif as $waliKelas) {
+            $daftarKelas[] = $waliKelas->getKelas()->getId();
+        }
+
         $querybuilder = $em->createQueryBuilder()
             ->select('siswaKelas')
             ->from('LanggasSisdikBundle:SiswaKelas', 'siswaKelas')
@@ -566,30 +589,44 @@ class SiswaDalamKelasController extends Controller
             ->leftJoin('siswaKelas.siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
             ->andWhere('siswaKelas.tahunAkademik = :tahunAkademik')
-            ->andWhere('siswaKelas.kelas = :kelas')
             ->andWhere('siswa.calonSiswa = :calon')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->addOrderBy('siswa.namaLengkap', 'ASC')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunAkademik', $tahunAkademikAktif)
-            ->setParameter('kelas', $waliKelasAktif->getKelas())
             ->setParameter('calon', false)
         ;
 
-        $siswaTotal = count($querybuilder->getQuery()->getResult());
+        $siswaTotal = 0;
         $siswaTercari = 0;
 
-        $searchform = $this->createForm('sisdik_cari');
+        $searchform = $this->createForm('sisdik_carisiswadikelas', null, [
+            'mode_wali_kelas' => true,
+            'kelas_id' => $daftarKelas,
+        ]);
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
+
+            if ($searchdata['kelas'] instanceof Kelas) {
+                $querybuilder
+                    ->andWhere('siswaKelas.kelas = :kelas')
+                    ->setParameter('kelas', $searchdata['kelas'])
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            $siswaTotal = count($querybuilder->getQuery()->getResult());
 
             if ($searchdata['searchkey'] != '') {
                 $querybuilder
                     ->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem LIKE :searchkey")
                     ->setParameter('searchkey', "%{$searchdata['searchkey']}%")
                 ;
+
+                $tampilkanTercari = true;
             }
 
             $siswaTercari = count($querybuilder->getQuery()->getResult());
@@ -605,7 +642,7 @@ class SiswaDalamKelasController extends Controller
         $filenameoutput = self::OUTPUTFILE
             .preg_replace($patterns, $replacements, $tahunAkademikAktif->getNama())
             .'.'
-            .preg_replace($patterns, $replacements, $waliKelasAktif->getKelas()->getNama())
+            .preg_replace($patterns, $replacements, $searchdata['kelas']->getNama())
             .".sisdik"
         ;
 
@@ -631,7 +668,7 @@ class SiswaDalamKelasController extends Controller
                         'siswaTercari' => $siswaTercari,
                         'dataSiswa' => $dataSiswa,
                         'tahunAkademik' => $tahunAkademikAktif,
-                        'kelas' => $waliKelasAktif->getKelas(),
+                        'kelas' => $searchdata['kelas'],
                         'searchkey' => $searchdata['searchkey'],
                     ])
                 );
