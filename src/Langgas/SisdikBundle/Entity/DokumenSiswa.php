@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 use Langgas\SisdikBundle\Util\FileSizeFormatter;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * @ORM\Table(name="dokumen_siswa", uniqueConstraints={
@@ -216,9 +217,15 @@ class DokumenSiswa
      */
     public function getFilesizeNamaFileDisk($type = 'KB')
     {
-        $file = new File($this->getRelativePathNamaFileDisk());
+        try {
+            $file = new File($this->getRelativePathNamaFileDisk());
+        } catch (FileNotFoundException $err) {
+            return '? '.$type;
+        }
 
-        return FileSizeFormatter::formatBytes($file->getSize(), $type);
+        if ($file) {
+            return FileSizeFormatter::formatBytes($file->getSize(), $type);
+        }
     }
 
     /**
