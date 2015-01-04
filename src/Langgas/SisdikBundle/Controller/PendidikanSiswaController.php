@@ -37,7 +37,7 @@ class PendidikanSiswaController extends Controller
             ->select('pendidikanSiswa')
             ->from('LanggasSisdikBundle:PendidikanSiswa', 'pendidikanSiswa')
             ->where('pendidikanSiswa.siswa = :siswa')
-            ->orderBy('pendidikanSiswa.jenjang', 'ASC')
+            ->orderBy('pendidikanSiswa.jenjang', 'DESC')
             ->setParameter('siswa', $sid)
         ;
 
