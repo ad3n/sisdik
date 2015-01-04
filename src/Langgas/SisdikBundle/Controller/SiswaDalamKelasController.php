@@ -5,8 +5,14 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\WaliKelas;
+use Langgas\SisdikBundle\Entity\SiswaKelas;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\PendidikanSiswa;
+use Langgas\SisdikBundle\Entity\PenyakitSiswa;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,7 +24,6 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
-use Langgas\SisdikBundle\Entity\WaliKelas;
 
 /**
  * @Route("/siswa-dalam-kelas")
@@ -231,8 +236,152 @@ class SiswaDalamKelasController extends Controller
     }
 
     /**
+     * @Route("/profil-{id}", name="siswa_dalam_kelas__profil")
+     * @Method("GET")
+     * @Template()
+     */
+    public function profilAction($id)
+    {
+        $sekolah = $this->getSekolah();
+
+        /* @var $user User */
+        $user = $this->getUser();
+
+        $securityContext = $this->container->get('security.context');
+
+        $isWaliKelas = false;
+        if ($securityContext->isGranted([
+            new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')"),
+        ])) {
+            $isWaliKelas = false;
+        } elseif ($securityContext->isGranted([
+            new Expression("hasRole('ROLE_WALI_KELAS')"),
+        ])) {
+            $isWaliKelas = true;
+        }
+
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var $siswa Siswa */
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
+        if (!$siswa) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        $dalamPerwalian = false;
+
+        if ($isWaliKelas) {
+            $tahunAkademikAktif = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
+                ->findOneBy([
+                    'sekolah' => $sekolah,
+                    'aktif' => true,
+                ])
+            ;
+
+            if (!$tahunAkademikAktif instanceof TahunAkademik) {
+                throw $this->createNotFoundException($this->container->get('translator')->trans('tidak.ada.tahun.akademik.aktif'));
+            }
+
+            $waliKelasAktif = $em->getRepository('LanggasSisdikBundle:WaliKelas')
+                ->findBy([
+                    'tahunAkademik' => $tahunAkademikAktif,
+                    'user' => $user,
+                ])
+            ;
+
+            foreach ($waliKelasAktif as $waliKelas) {
+                if (!$waliKelas instanceof WaliKelas) {
+                    throw $this->createNotFoundException($this->container->get('translator')->trans('user.bukan.wali.kelas.di.tahun.akademik.aktif', [
+                        '%tahun-akademik%' => $tahunAkademikAktif->getNama(),
+                    ]));
+                }
+
+                $siswaDalamPerwalian = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
+                    ->findOneBy([
+                        'tahunAkademik' => $tahunAkademikAktif,
+                        'kelas' => $waliKelas->getKelas(),
+                        'siswa' => $siswa,
+                        'aktif' => true,
+                    ])
+                ;
+
+                if ($siswaDalamPerwalian instanceof SiswaKelas) {
+                    $dalamPerwalian = true;
+                    break;
+                }
+            }
+
+            if (!$dalamPerwalian) {
+                throw $this->createNotFoundException($this->container->get('translator')->trans('siswa.bukan.dalam.perwalian'));
+            }
+        }
+
+        $siswaKelas = $em->createQueryBuilder()
+            ->select('siswakelas')
+            ->from('LanggasSisdikBundle:SiswaKelas', 'siswakelas')
+            ->leftJoin('siswakelas.tahunAkademik', 'tahunAkademik')
+            ->leftJoin('siswakelas.kelas', 'kelas')
+            ->leftJoin('kelas.tingkat', 'tingkat')
+            ->where('siswakelas.siswa = :siswa')
+            ->orderBy('tahunAkademik.urutan', 'DESC')
+            ->addOrderBy('tahunAkademik.nama', 'DESC')
+            ->addOrderBy('tingkat.urutan', 'DESC')
+            ->addOrderBy('kelas.urutan', 'ASC')
+            ->addOrderBy('siswakelas.aktif', 'DESC')
+            ->setParameter('siswa', $siswa)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $orangtuaWali = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')
+            ->findBy([
+                'siswa' => $siswa,
+            ], [
+                'aktif' => 'DESC',
+            ])
+        ;
+
+        $dokumenSiswa = $em->createQueryBuilder()
+            ->select('dokumenSiswa')
+            ->from('LanggasSisdikBundle:DokumenSiswa', 'dokumenSiswa')
+            ->leftJoin('dokumenSiswa.jenisDokumenSiswa', 'jenisDokumenSiswa')
+            ->where('dokumenSiswa.siswa = :siswa')
+            ->orderBy('jenisDokumenSiswa.urutan', 'ASC')
+            ->setParameter('siswa', $siswa)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $pendidikanSiswa = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')
+            ->findBy([
+                'siswa' => $siswa,
+            ], [
+                'jenjang' => 'DESC',
+            ])
+        ;
+
+        $penyakitSiswa = $em->getRepository('LanggasSisdikBundle:PenyakitSiswa')
+            ->findBy([
+                'siswa' => $siswa,
+            ])
+        ;
+
+        return [
+            'siswa' => $siswa,
+            'siswaKelas' => $siswaKelas,
+            'orangtuaWali' => $orangtuaWali,
+            'dokumenSiswa' => $dokumenSiswa,
+            'pendidikanSiswa' => $pendidikanSiswa,
+            'penyakitSiswa' => $penyakitSiswa,
+        ];
+    }
+
+    /**
      * @Route("/ekspor-admin", name="siswa_dalam_kelas__eksporadmin")
      * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN, ROLE_KEPALA_SEKOLAH, ROLE_WAKIL_KEPALA_SEKOLAH")
      */
     public function eksporAdminAction()
     {
@@ -360,6 +509,7 @@ class SiswaDalamKelasController extends Controller
     /**
      * @Route("/ekspor-spesifik", name="siswa_dalam_kelas__eksporspesifik")
      * @Method("POST")
+     * @Secure(roles="ROLE_WALI_KELAS")
      */
     public function eksporSpesifikAction()
     {

@@ -1,0 +1,179 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}
+    {{ 'ringkasan.data.siswa'|trans({}, 'headings') }}
+    <br /><span class="emphasis">{{ siswa.namaLengkap }}{% if siswa.nomorInduk is not null %}, {{ siswa.nomorInduk }}{% endif %}</span>
+{% endblock %}
+
+{% block content %}
+<style type="text/css">
+h4 {
+    margin-top: 0.6em;
+}
+.info-berdaftar {
+    list-style-type: square;
+    margin: 0;
+    padding-left: 1em;
+}
+</style>
+
+
+<div class="col-lg-4 col-md-4 col-sm-4 pull-right">
+{% if siswa.webPathThumbnail != "" %}
+    <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webPathThumbnail }}" class="img-polaroid" />
+{% endif %}
+</div>
+
+<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+    <dl>
+        <dt>{{ 'label.school'|trans }}</dt>
+        <dd>{% if siswa.sekolah is not null %}{{ siswa.sekolah.nama }}{% endif %}</dd>
+        <dt>{{ 'label.tahun.masuk'|trans }}</dt>
+        <dd>{{ siswa.tahun.tahun }}</dd>
+        <dt>{{ 'label.identitas.sisdik'|trans }}</dt>
+        <dd class="info-id">{{ siswa.nomorIndukSistem }}</dd>
+        <dt>{{ 'label.idnumber'|trans }}</dt>
+        <dd>{{ siswa.nomorInduk }}</dd>
+        <dt>{{ 'label.name.full'|trans }}</dt>
+        <dd>{{ siswa.namaLengkap }}</dd>
+        <dt>{{ 'label.kelas.aktif'|trans }}</dt>
+        <dd>{% if siswa.siswaKelasAktif %}{{ siswa.siswaKelasAktif.kelas.nama }}{% endif %}</dd>
+    {% if siswa.orangtuaWaliAktif %}
+        <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+        <dd>{{ siswa.orangtuaWaliAktif.nama }}</dd>
+        <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+        <dd>{{ siswa.orangtuaWaliAktif.ponsel }}</dd>
+    {% endif %}
+    {% if siswa.referensi is not null %}
+        <dt>{{ 'label.perujuk'|trans }}</dt>
+        <dd>{{ siswa.referensi.nama }}</dd>
+    {% endif %}
+        <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+    {% if siswa.sekolahAsal is not null %}
+        <dd>{{ siswa.sekolahAsal.nama }}</dd>
+    {% else %}
+        <dd>&nbsp;</dd>
+    {% endif %}
+        <dt>{{ 'label.gender'|trans }}</dt>
+        <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% else %}&nbsp;{% endif %}</dd>
+        <dt>{{ 'label.religion'|trans }}</dt>
+        <dd>{{ siswa.agama|title }}</dd>
+        <dt>{{ 'label.address'|trans }}</dt>
+        <dd>{{ siswa.alamat }}</dd>
+        <dt>{{ 'label.birthplace'|trans }}</dt>
+        <dd>{{ siswa.tempatLahir }}</dd>
+        <dt>{{ 'label.birthday'|trans }}</dt>
+        <dd>{{ siswa.tanggalLahir|localeDate('long') }}</dd>
+        <dt>{{ 'label.email'|trans }}</dt>
+        <dd>{{ siswa.email }}</dd>
+        <dt>{{ 'label.nickname'|trans }}</dt>
+        <dd>{{ siswa.namaPanggilan }}</dd>
+        <dt>{{ 'label.nationality'|trans }}</dt>
+        <dd>{{ siswa.kewarganegaraan }}</dd>
+        <dt>{{ 'label.childno'|trans }}</dt>
+        <dd>{{ siswa.anakKe }}</dd>
+        <dt>{{ 'label.brothers.num'|trans }}</dt>
+        <dd>{{ siswa.jumlahSaudarakandung }}</dd>
+        <dt>{{ 'label.brothersinlaw.num'|trans }}</dt>
+        <dd>{{ siswa.jumlahSaudaratiri }}</dd>
+        <dt>{{ 'label.orphanstatus'|trans }}</dt>
+        <dd>{{ siswa.statusOrphan }}</dd>
+        <dt>{{ 'label.dailylanguage'|trans }}</dt>
+        <dd>{{ siswa.bahasaSeharihari }}</dd>
+        <dt>{{ 'label.postalcode'|trans }}</dt>
+        <dd>{{ siswa.kodepos }}</dd>
+        <dt>{{ 'label.phone'|trans }}</dt>
+        <dd>{{ siswa.telepon }}</dd>
+        <dt>{{ 'label.mobilephone.student'|trans }}</dt>
+        <dd>{{ siswa.ponselSiswa }}</dd>
+        <dt>{{ 'label.livein.whilestudy'|trans }}</dt>
+        <dd>{{ siswa.sekolahTinggaldi }}</dd>
+        <dt>{{ 'label.distance.toschool'|trans }}</dt>
+        <dd>{{ siswa.jarakTempat }}</dd>
+        <dt>{{ 'label.how.toschool'|trans }}</dt>
+        <dd>{{ siswa.caraKesekolah }}</dd>
+        <dt>{{ 'label.bodyweight'|trans }}</dt>
+        <dd>{{ siswa.beratbadan }}</dd>
+        <dt>{{ 'label.bodyheight'|trans }}</dt>
+        <dd>{{ siswa.tinggibadan }}</dd>
+        <dt>{{ 'label.bloodtype'|trans }}</dt>
+        <dd>{{ siswa.golongandarah }}</dd>
+        <dt>{{ 'label.keterangan'|trans }}</dt>
+        <dd>{{ siswa.keterangan }}</dd>
+    </dl>
+    <div class="clearfix"></div>
+</div>
+
+<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+    <h4>{{ 'data.studentclass.list'|trans({}, 'headings') }}</h4>
+    <ul class="info-berdaftar">
+    {% for kelas in siswaKelas %}
+        <li>
+            {{ kelas.tahunAkademik.nama }},
+            <span style="white-space: nowrap;">{{ kelas.kelas.nama }},
+            {% if kelas.aktif == 1 -%}
+                <i class="fa fa-check check" title="{{ 'label.aktif'|trans }}" style="cursor: default;"></i>
+            {%- else -%}
+                <i class="fa fa-times uncheck" title="{{ 'label.inactive'|trans }}" style="cursor: default;"></i>
+            {%- endif -%}
+            </span>
+            {%- if kelas.keterangan != '' -%}, {{ kelas.keterangan }}{%- endif -%}
+        </li>
+    {% endfor %}
+    </ul>
+    <h4>{{ 'ortuwali.daftar'|trans({}, 'headings') }}</h4>
+    <ul class="info-berdaftar">
+    {% for orangtua in orangtuaWali %}
+        <li>
+            {% if orangtua.hubunganDenganSiswa != '' %}{{ orangtua.hubunganDenganSiswa }},{% endif %}
+            {% if orangtua.nama != '' %}{{ orangtua.nama }},{% endif %}
+            {% if orangtua.ponsel != '' %}{{ orangtua.ponsel }}{% endif %}
+            {% if orangtua.aktif == 1 %}
+                <i class="fa fa-check check" title="{{ 'label.aktif'|trans }}" style="cursor: default;"></i>
+            {%- endif -%}
+        </li>
+    {% endfor %}
+    </ul>
+    <h4>{{ 'dokumen.siswa.daftar'|trans({}, 'headings') }}</h4>
+    <ul class="info-berdaftar">
+    {% for dokumen in dokumenSiswa %}
+        <li>
+            {{ dokumen.jenisDokumenSiswa.namaDokumen }},
+            {% if dokumen.lengkap == 1 %}{{ 'label.lengkap'|trans }}{% elseif dokumen.lengkap == 0 %}{{ 'label.tidak.lengkap'|trans }}{% endif %}
+            {%- if dokumen.namaFile != '' and dokumen.namaFileDisk != '' %},
+                <a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ dokumen.webPathNamaFileDisk }}" target="_blank" title="{{ 'label.download'|trans }}"><i class="fa fa-file"></i></a>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <h4>{{ 'pendidikan.sebelumnya.daftar'|trans({}, 'headings') }}</h4>
+    <ul class="info-berdaftar">
+    {% for pendidikan in pendidikanSiswa %}
+        <li>
+            {{ pendidikan.nama }}
+            {%- if pendidikan.ijazahNomor != '' %}, {{ pendidikan.ijazahNomor }}{% endif %}
+            {%- if pendidikan.kelulusanNomor != '' %}, {{ pendidikan.kelulusanNomor }}{% endif %}
+            {%- if pendidikan.ijazahFile != '' %},
+                <a href="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ pendidikan.webPathIjazahFileDisk }}" target="_blank" title="{{ 'label.download'|trans }}"><i class="fa fa-file"></i></a>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <h4>{{ 'riwayat.penyakit.siswa'|trans({}, 'headings') }}</h4>
+    <ul class="info-berdaftar">
+    {% for penyakit in penyakitSiswa %}
+        <li>
+            {{ penyakit.tahun }}, {{ penyakit.nama }}, {{ penyakit.lamasakit }}
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="clearfix"></div>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('siswa_dalam_kelas') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}
