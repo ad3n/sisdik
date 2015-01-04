@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-03T17:44:01Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-04T19:06:50Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -107,11 +107,14 @@
       </trans-unit>
       <trans-unit id="4da84512c42f98ef5bce86cb1ba0449a3cb501c6" resname="daftar.siswa.dalam.kelas">
         <jms:reference-file line="3">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
+        <jms:reference-file line="3">views/SiswaDalamKelas/indexWaliKelas.html.twig</jms:reference-file>
         <source>daftar.siswa.dalam.kelas</source>
         <target>Daftar Siswa Dalam Kelas</target>
       </trans-unit>
       <trans-unit id="03a37029d45b271f83b622991f5bf6999ac010b1" resname="daftar.siswa.tahun.akademik.kelas">
-        <jms:reference-file line="36">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
+        <jms:reference-file line="59">views/SiswaDalamKelas/siswadikelas.xml.twig</jms:reference-file>
+        <jms:reference-file line="39">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
+        <jms:reference-file line="37">views/SiswaDalamKelas/indexWaliKelas.html.twig</jms:reference-file>
         <source>daftar.siswa.tahun.akademik.kelas</source>
         <target>Daftar Siswa Tahun Akademik "%tahun-akademik%" Kelas "%kelas%"</target>
       </trans-unit>
@@ -186,6 +189,7 @@
         <target>Membuat Data Siswa</target>
       </trans-unit>
       <trans-unit id="45fcbd1b426a07bb9917ee1d3c322100c9e1c997" resname="data.student.detail">
+        <jms:reference-file line="4">views/Siswa/profil.html.twig</jms:reference-file>
         <jms:reference-file line="4">views/Siswa/show.html.twig</jms:reference-file>
         <source>data.student.detail</source>
         <target>Data Siswa</target>
@@ -236,6 +240,7 @@
         <target>Mengubah Kelas Siswa</target>
       </trans-unit>
       <trans-unit id="0b3ec5ee5154826b11a72a9504199234cf1c7c00" resname="data.studentclass.list">
+        <jms:reference-file line="101">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="4">views/SiswaKelas/index.html.twig</jms:reference-file>
         <source>data.studentclass.list</source>
         <target>Riwayat Kelas</target>
@@ -256,6 +261,7 @@
         <target>Detail Vendor Sekolah</target>
       </trans-unit>
       <trans-unit id="80d382e159da8ef94531afd52c37f8e41388c3c4" resname="dokumen.siswa.daftar">
+        <jms:reference-file line="128">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="3">views/DokumenSiswa/index.html.twig</jms:reference-file>
         <source>dokumen.siswa.daftar</source>
         <target>Dokumen Siswa</target>
@@ -510,6 +516,7 @@
         <target>Daftar Mesin Proxy</target>
       </trans-unit>
       <trans-unit id="0e84f46a24915e3ff0af1205a08edce6ddcbea09" resname="ortuwali.daftar">
+        <jms:reference-file line="115">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="3">views/OrangtuaWali/index.html.twig</jms:reference-file>
         <source>ortuwali.daftar</source>
         <target>Orang Tua/Wali</target>
@@ -588,6 +595,7 @@
       </trans-unit>
       <trans-unit id="fa021e93a6ab5b46b8bc57e24ea6e371750d9a53" resname="pendidikan.sebelumnya.daftar">
         <jms:reference-file line="3">views/PendidikanSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="140">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <source>pendidikan.sebelumnya.daftar</source>
         <target>Pendidikan Sebelumnya</target>
       </trans-unit>
@@ -756,6 +764,11 @@
         <source>reward.type.list</source>
         <target>Daftar Jenis Imbalan</target>
       </trans-unit>
+      <trans-unit id="48de346e8ded216fc274c75c7478d1d32b33eb22" resname="ringkasan.data.siswa">
+        <jms:reference-file line="4">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
+        <source>ringkasan.data.siswa</source>
+        <target>Ringkasan Data Siswa</target>
+      </trans-unit>
       <trans-unit id="ae028fc6f2ed6f1fbcddaa33ebb088060d84abdc" resname="ringkasan.pembayaran.biaya.sekali.bayar">
         <jms:reference-file line="3">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <source>ringkasan.pembayaran.biaya.sekali.bayar</source>
@@ -780,6 +793,11 @@
         <jms:reference-file line="3">views/PenyakitSiswa/new.html.twig</jms:reference-file>
         <source>riwayat.penyakit.pembuatan</source>
         <target>Menambah Info Riwayat Penyakit</target>
+      </trans-unit>
+      <trans-unit id="806c68443db9dee4cb82ce8f122b21db32229922" resname="riwayat.penyakit.siswa">
+        <jms:reference-file line="153">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
+        <source>riwayat.penyakit.siswa</source>
+        <target>Riwayat Penyakit</target>
       </trans-unit>
       <trans-unit id="4a8e7cedbb7f9b4c28af902587e40eca457cf305" resname="sekolah.asal.daftar">
         <jms:reference-file line="3">views/SekolahAsal/index.html.twig</jms:reference-file>
