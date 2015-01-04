@@ -222,7 +222,7 @@ services:
 jms_translation:
     configs:
         sisdik:
-            dirs: ["%kernel.root_dir%/../src/Langgas/SisdikBundle"]
+            dirs: ["%kernel.root_dir%/../src/Langgas/SisdikBundle", "%kernel.root_dir%/Resources/TwigBundle/views"]
             output_dir: "%kernel.root_dir%/../src/Langgas/SisdikBundle/Resources/translations"
             ignored_domains: [routes]
             excluded_names: ["*TestCase.php", "*Test.php"]
