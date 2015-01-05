@@ -113,7 +113,7 @@ class UserRegisterFormType extends BaseType
             ])
             ->add('nomorPonsel', 'text', [
                 'required' => false,
-                'help_block' => 'help.hanya.digunakan.untuk.peran.admin'
+                'label' => 'label.nomor.ponsel',
             ])
         ;
 

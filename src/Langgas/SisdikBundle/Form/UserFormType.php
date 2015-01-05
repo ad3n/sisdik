@@ -66,6 +66,10 @@ class UserFormType extends AbstractType
                     'class' => 'disabled xlarge',
                 ],
             ])
+            ->add('nomorPonsel', 'text', [
+                'required' => false,
+                'label' => 'label.nomor.ponsel',
+            ])
         ;
 
         if ($options['mode'] == 1) {
@@ -108,10 +112,6 @@ class UserFormType extends AbstractType
                     'label' => 'label.roles',
                     'multiple' => true,
                     'expanded' => true,
-                ])
-                ->add('nomorPonsel', 'text', [
-                    'required' => false,
-                    'help_block' => 'help.hanya.digunakan.untuk.peran.admin'
                 ])
             ;
         }

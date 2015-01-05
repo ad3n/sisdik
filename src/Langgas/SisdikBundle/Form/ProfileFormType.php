@@ -63,6 +63,10 @@ class ProfileFormType extends BaseType
                 'required' => true,
                 'label' => 'label.name.full',
             ])
+            ->add('nomorPonsel', 'text', [
+                'label' => 'label.nomor.ponsel',
+                'required' => true,
+            ])
         ;
 
         if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
@@ -101,11 +105,6 @@ class ProfileFormType extends BaseType
                     'label' => 'label.roles',
                     'multiple' => true,
                     'expanded' => true,
-                ])
-                ->add('nomorPonsel', 'text', [
-                    'label' => 'label.nomor.ponsel',
-                    'required' => true,
-                    'help_block' => 'help.hanya.digunakan.untuk.peran.admin'
                 ])
             ;
         }

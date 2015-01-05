@@ -69,7 +69,7 @@
                 {% endspaceless %}</div>
             </div>
             <div id="log-info">
-                &raquo; {{ app.user.username }}{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}, {{ app.user.nomorPonsel }}{% endif %}<br />
+                &raquo; {{ app.user.username }}{% if app.user.nomorPonsel != '' %}, {{ app.user.nomorPonsel }}{% endif %}<br />
                 <a href="{{ path("fos_user_profile_show") }}">{% trans from "navigations" %}user.myaccount{% endtrans %}</a> |
                 <a href="{{ path("logout") }}">{% trans from "navigations" %}user.logout{% endtrans %}</a>
                 {% if is_expr_granted("hasRole('ROLE_PREVIOUS_ADMIN')") %} | <a href="{{ path("homepage", {'_switch_user': '_exit'}) }}">Exit</a>{% endif %}
