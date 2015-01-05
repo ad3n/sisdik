@@ -7,8 +7,10 @@ use Doctrine\DBAL\DBALException;
 use FOS\UserBundle\Doctrine\UserManager;
 use Langgas\SisdikBundle\Entity\Staf;
 use Langgas\SisdikBundle\Entity\Guru;
+use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Entity\WaliKelas;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Config\Definition\Exception\Exception;
@@ -436,6 +438,8 @@ class PengaturanUserController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $userManager = $this->container->get('fos_user.user_manager');
+
+        /* @var $user User */
         $user = $userManager->findUserBy([
             'id' => $id,
         ]);
@@ -460,6 +464,36 @@ class PengaturanUserController extends Controller
 
             if ($form->isValid()) {
                 $roleSelected = $form->getData()->getRoles();
+
+                $ketuaPanitia = $em->getRepository('LanggasSisdikBundle:PanitiaPendaftaran')
+                    ->findOneBy([
+                        'ketuaPanitia' => $user,
+                    ])
+                ;
+                if ($ketuaPanitia instanceof PanitiaPendaftaran) {
+                    $user->addRole('ROLE_KETUA_PANITIA_PSB');
+                }
+
+                $panitiaPendaftaran = $em->createQueryBuilder()
+                    ->select('COUNT(panitiaPendaftaran.id)')
+                    ->from('LanggasSisdikBundle:PanitiaPendaftaran', 'panitiaPendaftaran')
+                    ->where("panitiaPendaftaran.panitia LIKE ?1")
+                    ->setParameter(1, '%"'.$user->getId().'"%')
+                    ->getQuery()
+                    ->getSingleScalarResult()
+                ;
+                if ($panitiaPendaftaran > 0) {
+                    $user->addRole('ROLE_PANITIA_PSB');
+                }
+
+                $waliKelas = $em->getRepository('LanggasSisdikBundle:WaliKelas')
+                    ->findOneBy([
+                        'user' => $user,
+                    ])
+                ;
+                if ($waliKelas instanceof WaliKelas) {
+                    $user->addRole('ROLE_WALI_KELAS');
+                }
 
                 if (!in_array('ROLE_SISWA', $roleSelected)) {
                     $user->setSiswa(null);
