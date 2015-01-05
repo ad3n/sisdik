@@ -91,7 +91,8 @@ class PilihanLayananSmsSearchType extends AbstractType
             PilihanLayananSms::getDaftarLayananLaporan(),
             PilihanLayananSms::getDaftarLayananKehadiran(),
             PilihanLayananSms::getDaftarLayananKepulangan(),
-            PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+            PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+            PilihanLayananSms::getDaftarLayananLain()
         );
 
         return $choices;

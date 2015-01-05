@@ -123,6 +123,18 @@ class PilihanLayananSms
     }
 
     /**
+     * Daftar layanan sms lain-lain yang tak perlu dikategorikan.
+     *
+     * @return array
+     */
+    public static function getDaftarLayananLain()
+    {
+        return [
+            'zza-ringkasan-kehadiran' => 'layanan.sms.ringkasan.kehadiran',
+        ];
+    }
+
+    /**
      * @param string $jenisLayanan
      */
     public function setJenisLayanan($jenisLayanan)

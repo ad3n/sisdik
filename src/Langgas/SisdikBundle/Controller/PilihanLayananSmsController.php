@@ -71,7 +71,8 @@ class PilihanLayananSmsController extends Controller
                 PilihanLayananSms::getDaftarLayananLaporan(),
                 PilihanLayananSms::getDaftarLayananKehadiran(),
                 PilihanLayananSms::getDaftarLayananKepulangan(),
-                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+                PilihanLayananSms::getDaftarLayananLain()
             ),
         ];
     }
@@ -164,7 +165,8 @@ class PilihanLayananSmsController extends Controller
                 PilihanLayananSms::getDaftarLayananLaporan(),
                 PilihanLayananSms::getDaftarLayananKehadiran(),
                 PilihanLayananSms::getDaftarLayananKepulangan(),
-                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+                PilihanLayananSms::getDaftarLayananLain()
             ),
         ];
     }
