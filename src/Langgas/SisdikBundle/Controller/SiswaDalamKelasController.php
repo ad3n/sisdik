@@ -74,8 +74,10 @@ class SiswaDalamKelasController extends Controller
             ->leftJoin('siswaKelas.tahunAkademik', 'tahunAkademik')
             ->leftJoin('siswaKelas.siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswaKelas.aktif = :aktif')
             ->andWhere('siswa.calonSiswa = :calon')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('aktif', true)
             ->setParameter('calon', false)
         ;
 
@@ -190,9 +192,11 @@ class SiswaDalamKelasController extends Controller
             ->leftJoin('siswaKelas.siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
             ->andWhere('siswaKelas.tahunAkademik = :tahunAkademik')
+            ->andWhere('siswaKelas.aktif = :aktif')
             ->andWhere('siswa.calonSiswa = :calon')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunAkademik', $tahunAkademikAktif)
+            ->setParameter('aktif', true)
             ->setParameter('calon', false)
         ;
 
@@ -415,10 +419,12 @@ class SiswaDalamKelasController extends Controller
             ->leftJoin('siswaKelas.tahunAkademik', 'tahunAkademik')
             ->leftJoin('siswaKelas.siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswaKelas.aktif = :aktif')
             ->andWhere('siswa.calonSiswa = :calon')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->addOrderBy('siswa.namaLengkap', 'ASC')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('aktif', true)
             ->setParameter('calon', false)
         ;
 
@@ -589,11 +595,13 @@ class SiswaDalamKelasController extends Controller
             ->leftJoin('siswaKelas.siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
             ->andWhere('siswaKelas.tahunAkademik = :tahunAkademik')
+            ->andWhere('siswaKelas.aktif = :aktif')
             ->andWhere('siswa.calonSiswa = :calon')
             ->orderBy('tahunAkademik.urutan', 'DESC')
             ->addOrderBy('siswa.namaLengkap', 'ASC')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunAkademik', $tahunAkademikAktif)
+            ->setParameter('aktif', true)
             ->setParameter('calon', false)
         ;
 
