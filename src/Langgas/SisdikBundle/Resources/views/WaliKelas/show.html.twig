@@ -19,7 +19,19 @@
     <dd>{{ entity.kelas.nama }}</dd>
     <dt>{{ 'label.classguardian.name'|trans }}</dt>
     <dd>{% if entity.user %}{{ entity.user.name }}{% else %}{{ 'label.username.undefined'|trans }}{% endif %}</dd>
-</dl>
+    <dt>{{ 'label.keterangan'|trans }}</dt>
+    <dd>{{ entity.keterangan }}</dd>
+    <dt>{{ 'label.kirim.sms.ringkasan.kehadiran'|trans }}</dt>
+    <dd>
+        {% if entity.kirimIkhtisarKehadiran is empty %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+        {% else %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
+        {% endif %}
+    </dd>
+    <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
+    <dd>{% if entity.jamKirimIkhtisarKehadiran is empty %}&mdash;{% else %}{{ entity.jamKirimIkhtisarKehadiran(false) }}{% endif %}</dd>
+    </dl>
 
 <div class="clearfix"></div>
 

@@ -112,6 +112,23 @@ class WaliKelasType extends AbstractType
             ->add('keterangan', 'text', [
                 'required' => false,
             ])
+            ->add('kirimIkhtisarKehadiran', 'checkbox', [
+                'label' => 'label.kirim.sms.ringkasan.kehadiran',
+                'required' => false,
+                'label_render' => true,
+                'widget_checkbox_label' => 'widget',
+                'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
+            ])
+            ->add('jamKirimIkhtisarKehadiran', 'time', [
+                'label' => 'label.kirim.sms.jam',
+                'required' => false,
+                'input' => 'string',
+                'widget' => 'single_text',
+                'with_seconds' => false,
+                'attr' => [
+                    'class' => 'mini',
+                ],
+            ])
         ;
     }
 

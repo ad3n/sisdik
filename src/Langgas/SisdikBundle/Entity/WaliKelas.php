@@ -30,6 +30,20 @@ class WaliKelas
     private $keterangan;
 
     /**
+     * @ORM\Column(name="kirim_ikhtisar_kehadiran", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
+     */
+    private $kirimIkhtisarKehadiran = false;
+
+    /**
+     * @ORM\Column(name="jam_kirim_ikhtisar_kehadiran", type="string", length=50, nullable=true)
+     *
+     * @var string
+     */
+    private $jamKirimIkhtisarKehadiran;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Kelas")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="kelas_id", referencedColumnName="id", nullable=false)
@@ -87,6 +101,38 @@ class WaliKelas
     public function getKeterangan()
     {
         return $this->keterangan;
+    }
+
+    /**
+     * @param boolean $kirimIkhtisarKehadiran
+     */
+    public function setKirimIkhtisarKehadiran($kirimIkhtisarKehadiran)
+    {
+        $this->kirimIkhtisarKehadiran = $kirimIkhtisarKehadiran;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isKirimIkhtisarKehadiran()
+    {
+        return $this->kirimIkhtisarKehadiran;
+    }
+
+    /**
+     * @param string $jamKirimIkhtisarKehadiran
+     */
+    public function setJamKirimIkhtisarKehadiran($jamKirimIkhtisarKehadiran)
+    {
+        $this->jamKirimIkhtisarKehadiran = $jamKirimIkhtisarKehadiran;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJamKirimIkhtisarKehadiran($withsecond = TRUE)
+    {
+        return !$withsecond ? substr($this->jamKirimIkhtisarKehadiran, 0, 5) : $this->jamKirimIkhtisarKehadiran;
     }
 
     /**
