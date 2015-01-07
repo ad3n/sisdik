@@ -71,7 +71,7 @@ class WaliKelas
     /**
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     *     @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * })
      * @Assert\NotNull(message="Wali Kelas (User) tidak boleh kosong")
      *
