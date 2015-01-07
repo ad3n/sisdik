@@ -54,7 +54,7 @@ class PilihanLayananSmsController extends Controller
 
             if ($searchdata['jenisLayanan'] != '') {
                 $querybuilder
-                    ->andWhere('t.jenisLayanan = :jenis')
+                    ->andWhere('pilihanLayananSms.jenisLayanan = :jenis')
                     ->setParameter("jenis", $searchdata['jenisLayanan'])
                 ;
             }
