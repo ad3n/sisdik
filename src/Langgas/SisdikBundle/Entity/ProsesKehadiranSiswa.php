@@ -55,6 +55,13 @@ class ProsesKehadiranSiswa
     private $berhasilKirimSms = false;
 
     /**
+     * @ORM\Column(name="berhasil_kirim_sms_ringkasan", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
+     */
+    private $berhasilKirimSmsRingkasan = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
@@ -170,6 +177,22 @@ class ProsesKehadiranSiswa
     public function isBerhasilKirimSms()
     {
         return $this->berhasilKirimSms;
+    }
+
+    /**
+     * @param boolean $berhasilKirimSmsRingkasan
+     */
+    public function setBerhasilKirimSmsRingkasan($berhasilKirimSmsRingkasan)
+    {
+        $this->berhasilKirimSmsRingkasan = $berhasilKirimSmsRingkasan;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isBerhasilKirimSmsRingkasan()
+    {
+        return $this->berhasilKirimSmsRingkasan;
     }
 
     /**
