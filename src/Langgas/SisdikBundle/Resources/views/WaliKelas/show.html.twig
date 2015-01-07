@@ -29,9 +29,11 @@
             <i class="fa fa-check fa-lg fa-fw check"></i>
         {% endif %}
     </dd>
-    <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
-    <dd>{% if entity.jamKirimIkhtisarKehadiran is empty %}&mdash;{% else %}{{ entity.jamKirimIkhtisarKehadiran(false) }}{% endif %}</dd>
-    </dl>
+    <dt>{{ 'label.jadwal.kirim.sms.ringkasan.kehadiran'|trans }}</dt>
+    <dd>{{ entity.jadwalKirimIkhtisarKehadiran }} {{ 'menit'|trans }}</dd>
+    <dt>{{ 'label.sms.template.entry'|trans }}</dt>
+    <dd>{% if entity.templatesmsIkhtisarKehadiran is not null %}{{ entity.templatesmsIkhtisarKehadiran.nama }} » {{ entity.templatesmsIkhtisarKehadiran.teks }}{% endif %}</dd>
+</dl>
 
 <div class="clearfix"></div>
 

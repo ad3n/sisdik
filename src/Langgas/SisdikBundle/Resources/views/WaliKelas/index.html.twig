@@ -53,10 +53,16 @@
                     <i class="fa fa-check fa-lg fa-fw check"></i>
                 {% endif %}
                 <span class="separator">|</span>
-                {% if data.jamKirimIkhtisarKehadiran is empty %}
+                {% if data.jadwalKirimIkhtisarKehadiran is empty %}
                     &mdash;
                 {% else %}
-                    {{ data.jamKirimIkhtisarKehadiran(false) }}
+                    {{ data.jadwalKirimIkhtisarKehadiran }} {{ 'menit'|trans }}
+                {% endif %}
+                <span class="separator">|</span>
+                {% if data.templatesmsIkhtisarKehadiran is empty %}
+                    &mdash;
+                {% else %}
+                    {{ data.templatesmsIkhtisarKehadiran.nama }}
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

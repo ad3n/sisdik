@@ -119,15 +119,37 @@ class WaliKelasType extends AbstractType
                 'widget_checkbox_label' => 'widget',
                 'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
             ])
-            ->add('jamKirimIkhtisarKehadiran', 'time', [
-                'label' => 'label.kirim.sms.jam',
-                'required' => false,
-                'input' => 'string',
-                'widget' => 'single_text',
-                'with_seconds' => false,
+            ->add('jadwalKirimIkhtisarKehadiran', 'choice', [
+                'choices' => $this->buatPilihanMenit(),
+                'required' => true,
+                'multiple' => false,
+                'expanded' => false,
                 'attr' => [
                     'class' => 'mini',
                 ],
+                'label' => 'label.jadwal.kirim.sms.ringkasan.kehadiran',
+                'help_block' => 'help.jadwal.kirim.sms.ringkasan.kehadiran',
+            ])
+            ->add('templatesmsIkhtisarKehadiran', 'entity', [
+                'class' => 'LanggasSisdikBundle:Templatesms',
+                'label' => 'label.sms.template.entry',
+                'multiple' => false,
+                'expanded' => false,
+                'required' => false,
+                'property' => 'optionLabel',
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('template')
+                        ->where('template.sekolah = :sekolah')
+                        ->orderBy('template.nama', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
+                'attr' => [
+                    'class' => 'xlarge',
+                ],
+                'empty_value' => 'label.pilih.template.sms',
             ])
         ;
     }
@@ -139,6 +161,15 @@ class WaliKelasType extends AbstractType
                 'data_class' => 'Langgas\SisdikBundle\Entity\WaliKelas',
             ])
         ;
+    }
+
+    private function buatPilihanMenit()
+    {
+        return array_combine([
+            -60, -30, -20, -15, -10, -5, 0, 5, 10, 15, 20, 30, 60
+        ], [
+            -60, -30, -20, -15, -10, -5, 0, 5, 10, 15, 20, 30, 60
+        ]);
     }
 
     public function getName()
