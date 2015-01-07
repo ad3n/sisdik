@@ -37,11 +37,11 @@ class WaliKelas
     private $kirimIkhtisarKehadiran = false;
 
     /**
-     * @ORM\Column(name="jam_kirim_ikhtisar_kehadiran", type="string", length=50, nullable=true)
+     * @ORM\Column(name="jadwal_kirim_ikhtisar_kehadiran", type="smallint", nullable=false, options={"default"="0"})
      *
      * @var string
      */
-    private $jamKirimIkhtisarKehadiran;
+    private $jadwalKirimIkhtisarKehadiran = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Kelas")
@@ -78,6 +78,16 @@ class WaliKelas
      * @var User
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Templatesms")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="templatesms_ikhtisar_kehadiran_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var Templatesms
+     */
+    private $templatesmsIkhtisarKehadiran;
 
     /**
      * @return integer
@@ -120,19 +130,19 @@ class WaliKelas
     }
 
     /**
-     * @param string $jamKirimIkhtisarKehadiran
+     * @param string $jadwalKirimIkhtisarKehadiran
      */
-    public function setJamKirimIkhtisarKehadiran($jamKirimIkhtisarKehadiran)
+    public function setJadwalKirimIkhtisarKehadiran($jadwalKirimIkhtisarKehadiran)
     {
-        $this->jamKirimIkhtisarKehadiran = $jamKirimIkhtisarKehadiran;
+        $this->jadwalKirimIkhtisarKehadiran = $jadwalKirimIkhtisarKehadiran;
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getJamKirimIkhtisarKehadiran($withsecond = TRUE)
+    public function getJadwalKirimIkhtisarKehadiran()
     {
-        return !$withsecond ? substr($this->jamKirimIkhtisarKehadiran, 0, 5) : $this->jamKirimIkhtisarKehadiran;
+        return $this->jadwalKirimIkhtisarKehadiran;
     }
 
     /**
@@ -197,5 +207,21 @@ class WaliKelas
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param Templatesms $templatesmsIkhtisarKehadiran
+     */
+    public function setTemplatesmsIkhtisarKehadiran(Templatesms $templatesmsIkhtisarKehadiran = null)
+    {
+        $this->templatesmsIkhtisarKehadiran = $templatesmsIkhtisarKehadiran;
+    }
+
+    /**
+     * @return Templatesms
+     */
+    public function getTemplatesmsIkhtisarKehadiran()
+    {
+        return $this->templatesmsIkhtisarKehadiran;
     }
 }
