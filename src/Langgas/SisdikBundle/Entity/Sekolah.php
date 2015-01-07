@@ -11,7 +11,7 @@ use Langgas\SisdikBundle\Util\FileSizeFormatter;
 
 /**
  * @ORM\Table(name="sekolah")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Langgas\SisdikBundle\Repository\SekolahRepository")
  * @ORM\HasLifecycleCallbacks
  * @ORM\ChangeTrackingPolicy("DEFERRED_EXPLICIT")
  */
