@@ -51,7 +51,7 @@ class WaliKelasType extends AbstractType
         $builder
             ->add('tahunAkademik', 'entity', [
                 'class' => 'LanggasSisdikBundle:TahunAkademik',
-                'label' => 'label.year.entry',
+                'label' => 'label.academicyear.entry',
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
