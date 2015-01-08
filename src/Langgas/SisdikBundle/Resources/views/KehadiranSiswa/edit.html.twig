@@ -273,6 +273,7 @@ dd {
             </div>
             <div id="collapseFour" class="accordion-body collapse">
                 <div class="accordion-inner well">
+                    <h5>{{ 'sms.untuk.orang.tua'|trans({}, 'headings') }}</h5>
                 {% if prosesKehadiranSiswa is not null %}
                     {% if prosesKehadiranSiswa.berhasilKirimSms %}
                         {% set statusSms = "berhasil" %}
@@ -306,11 +307,39 @@ dd {
                                 class="btn success alternative icon play"
                             {% endif %}
                                 >
-                                    {{ labelKirimSMS }}
+                                    {{- labelKirimSMS -}}
                                 </button>
                                 <div id="loader-kirim-sms" class="ajax-loader"></div>
                             </div>
                         </div>
+                    </form>
+
+                    <h5>{{ 'sms.ringkasan.untuk.wali.kelas'|trans({}, 'headings') }}</h5>
+
+                    <div class="clearfix" style="margin-bottom: 0.5em;"></div>
+
+                    <form
+                        id="form-kirim-sms-ringkasan"
+                        method="post"
+                        action="{{ path('kehadiran-siswa_kirimsmsringkasan', {wali_kelas_id: waliKelas.id, tanggal: tanggal|date('Y-m-d')}) }}" {{ form_enctype(formSmsRingkasan) }}
+                        class="form-inline">
+                        {{ form_widget(formSmsRingkasan) }}
+                        <button type="submit" id="tombol-kirim-sms-ringkasan"
+                            {% if prosesKehadiranSiswa is not null %}
+                                {% if prosesKehadiranSiswa.berhasilKirimSmsRingkasan == 1 %}
+                                    {% set labelKirimSMS = 'label.kirim.sms.ulang'|trans %}
+                                    class="btn danger alternative icon play"
+                                {% else %}
+                                    {% set labelKirimSMS = 'label.kirim.sms'|trans %}
+                                    class="btn success alternative icon play"
+                                {% endif %}
+                            {% else %}
+                                    {% set labelKirimSMS = 'label.kirim.sms'|trans %}
+                                class="btn success alternative icon play"
+                            {% endif %}
+                        >{{- labelKirimSMS -}}
+                        </button>
+                        <div id="loader-kirim-sms-ringkasan" class="ajax-loader"></div>
                     </form>
                 </div>
             </div>
@@ -449,6 +478,7 @@ $(document).ready(function() {
 
     $("#form-kirim-sms").submit(function() {
         var url = $(this).attr("action");
+        $('#tombol-kirim-sms').attr('disabled','disabled');
 
         {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
         $('#loader-kirim-sms').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
@@ -469,6 +499,34 @@ $(document).ready(function() {
                 $('#loader-kirim-sms').html("An unexpected error occured.");
             }
         });
+
+        $('#tombol-kirim-sms').removeAttr('disabled');
+
+        return false;
+    });
+
+    $("#form-kirim-sms-ringkasan").submit(function() {
+        var url = $(this).attr("action");
+        $('#tombol-kirim-sms-ringkasan').attr('disabled','disabled');
+
+        {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+        $('#loader-kirim-sms-ringkasan').html('<img src="{{ asset_url }}" />' + "  {{ 'alt.loading'|trans }}");
+        {% endimage %}
+
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.responseCode == 200 || data.responseCode == 400) {
+                $('#loader-kirim-sms-ringkasan').html(data.responseText);
+                if (data.berhasilKirimSmsRingkasan == 1) {
+                    $('#tombol-kirim-sms-ringkasan').removeClass('success');
+                    $('#tombol-kirim-sms-ringkasan').addClass('danger');
+                    $('#tombol-kirim-sms-ringkasan').html('{{ 'label.kirim.sms.ulang'|trans }}');
+                }
+            } else {
+                $('#loader-kirim-sms-ringkasan').html("An unexpected error occured.");
+            }
+        });
+
+        $('#tombol-kirim-sms-ringkasan').removeAttr('disabled');
 
         return false;
     });

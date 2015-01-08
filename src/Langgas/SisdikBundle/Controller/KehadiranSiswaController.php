@@ -17,10 +17,13 @@ use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Entity\MesinKehadiran;
 use Langgas\SisdikBundle\Entity\Tingkat;
+use Langgas\SisdikBundle\Entity\WaliKelas;
+use Langgas\SisdikBundle\Entity\Templatesms;
 use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -208,8 +211,21 @@ class KehadiranSiswaController extends Controller
                 'kehadiran' => $entities,
             ]);
 
+            $waliKelas = $em->getRepository('LanggasSisdikBundle:WaliKelas')
+                ->findOneBy([
+                    'tahunAkademik' => $tahunAkademik,
+                    'kelas' => $kelas,
+                ])
+            ;
+
+            $formSmsRingkasan = $this->createForm('sisdik_kehadiransiswasms_ringkasan', null, [
+                'wali_kelas' => $waliKelas,
+                'tanggal' => $searchdata['tanggal']->format('Y-m-d'),
+            ]);
+
             return [
                 'kelas' => $kelas,
+                'waliKelas' => $waliKelas,
                 'entities' => $entities,
                 'form' => $students->createView(),
                 'searchform' => $searchform->createView(),
@@ -219,6 +235,7 @@ class KehadiranSiswaController extends Controller
                 'tanggal' => $searchdata['tanggal'],
                 'formInisiasi' => $formInisiasi->createView(),
                 'formSms' => $formSms->createView(),
+                'formSmsRingkasan' => $formSmsRingkasan->createView(),
             ];
         } else {
             $this
@@ -463,6 +480,7 @@ class KehadiranSiswaController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
+        /* @var $translator Translator */
         $translator = $this->get('translator');
         $namaNamaHari = JadwalKehadiran::getNamaHari();
         $tanggalTerpilih = new \DateTime($tanggal);
@@ -473,7 +491,7 @@ class KehadiranSiswaController extends Controller
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
-                'sekolah' => $sekolah->getId(),
+                'sekolah' => $sekolah,
             ])
         ;
 
@@ -715,7 +733,222 @@ class KehadiranSiswaController extends Controller
             return new Response($return, 200, ['Content-Type' => 'application/json']);
         } else {
             $return['responseCode'] = 400;
-            $return['responseText'] = "form tidak valid";
+            $return['responseText'] = $translator->trans("error.form.tidak.valid");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+    }
+
+    /**
+     * @Route("/kirim-sms-ringkasan/{wali_kelas_id}/{tanggal}", name="kehadiran-siswa_kirimsmsringkasan")
+     * @Method("POST")
+     * @Secure(roles="ROLE_GURU_PIKET")
+     */
+    public function kirimSmsRingkasanAction($wali_kelas_id, $tanggal)
+    {
+        $sekolah = $this->getSekolah();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $translator = $this->get('translator');
+        $namaNamaHari = JadwalKehadiran::getNamaHari();
+        $tanggalTerpilih = new \DateTime($tanggal);
+
+        $vendorSekolah = $em->getRepository('LanggasSisdikBundle:VendorSekolah')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
+        if (!$vendorSekolah instanceof VendorSekolah) {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.vendor.sekolah.tidak.tersedia");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+
+        $layananSms = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'jenisLayanan' => 'zza-ringkasan-kehadiran',
+                'status' => true,
+            ])
+        ;
+        if (!$layananSms instanceof PilihanLayananSms) {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.layanan.sms.ringkasan.kehadiran.tidak.aktif");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
+            ->findOneBy([
+                'aktif' => true,
+                'sekolah' => $sekolah,
+            ])
+        ;
+        if (!$tahunAkademik instanceof TahunAkademik) {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.tahun.akademik.tidak.ada.yang.aktif");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+
+        $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'tanggal' => $tanggalTerpilih,
+                'kbm' => true,
+            ])
+        ;
+        if (!$kalenderPendidikan instanceof KalenderPendidikan) {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.bukan.hari.kbm.aktif");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+
+        $waliKelas = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($wali_kelas_id);
+        if (!$waliKelas instanceof WaliKelas) {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.wali.kelas.tidak.ada");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+        if (!$waliKelas->getTemplatesmsIkhtisarKehadiran() instanceof Templatesms) {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.template.sms.ringkasan.wali.kelas.tidak.tersedia");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+        if ($waliKelas->getUser()->getNomorPonsel() == '') {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.ponsel.wali.kelas.kosong");
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        }
+
+        $formKirimSmsRingkasan = $this->createForm('sisdik_kehadiransiswasms_ringkasan', null, [
+            'wali_kelas' => $waliKelas,
+            'tanggal' => $tanggal,
+        ]);
+        $formKirimSmsRingkasan->submit($this->getRequest());
+
+        if ($formKirimSmsRingkasan->isValid()) {
+            $kehadiranSiswa = $em->createQueryBuilder()
+                ->select('kehadiran')
+                ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
+                ->where('kehadiran.sekolah = :sekolah')
+                ->andWhere('kehadiran.tahunAkademik = :tahunakademik')
+                ->andWhere('kehadiran.kelas = :kelas')
+                ->andWhere('kehadiran.tanggal = :tanggal')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunakademik', $tahunAkademik)
+                ->setParameter('kelas', $waliKelas->getKelas())
+                ->setParameter('tanggal', $tanggalTerpilih->format("Y-m-d"))
+                ->getQuery()
+                ->useQueryCache(true)
+                ->getResult()
+            ;
+
+            if (count($kehadiranSiswa) <= 0) {
+                continue;
+            }
+
+            $jumlahTepat = 0;
+            $jumlahTelat = 0;
+            $jumlahAlpa = 0;
+            $jumlahIzin = 0;
+            $jumlahSakit = 0;
+
+            /* @var $kehadiran KehadiranSiswa */
+            foreach ($kehadiranSiswa as $kehadiran) {
+                switch ($kehadiran->getStatusKehadiran()) {
+                    case 'a-hadir-tepat':
+                        $jumlahTepat++;
+                        break;
+                    case 'b-hadir-telat':
+                        $jumlahTelat++;
+                        break;
+                    case 'c-alpa':
+                        $jumlahAlpa++;
+                        break;
+                    case 'd-izin':
+                        $jumlahIzin++;
+                        break;
+                    case 'e-sakit':
+                        $jumlahSakit++;
+                        break;
+                }
+            }
+
+            $teksRingkasan = $waliKelas->getTemplatesmsIkhtisarKehadiran()->getTeks();
+
+            $teksRingkasan = str_replace("%nama%", $waliKelas->getUser()->getName(), $teksRingkasan);
+            $teksRingkasan = str_replace("%kelas%", $waliKelas->getKelas()->getNama(), $teksRingkasan);
+
+            $indeksHari = $tanggalTerpilih->format('w') - 1 == -1 ? 7 : $tanggalTerpilih->format('w') - 1;
+            $teksRingkasan = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $teksRingkasan);
+
+            $teksRingkasan = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $teksRingkasan);
+            $teksRingkasan = str_replace("%jumlah-tepat%", $jumlahTepat, $teksRingkasan);
+            $teksRingkasan = str_replace("%jumlah-telat%", $jumlahTelat, $teksRingkasan);
+            $teksRingkasan = str_replace("%jumlah-alpa%", $jumlahAlpa, $teksRingkasan);
+            $teksRingkasan = str_replace("%jumlah-sakit%", $jumlahIzin, $teksRingkasan);
+            $teksRingkasan = str_replace("%jumlah-izin%", $jumlahSakit, $teksRingkasan);
+
+            $terkirim = false;
+            $nomorponsel = preg_split("/[\s,\/]+/", $waliKelas->getUser()->getNomorPonsel());
+            foreach ($nomorponsel as $ponsel) {
+                $messenger = $this->container->get('sisdik.messenger');
+                if ($messenger instanceof Messenger) {
+                    if ($vendorSekolah->getJenis() == 'khusus') {
+                        $messenger->setUseVendor(true);
+                        $messenger->setVendorURL($vendorSekolah->getUrlPengirimPesan());
+                    }
+                    $messenger->setPhoneNumber($ponsel);
+                    $messenger->setMessage($teksRingkasan);
+                    $messenger->sendMessage($sekolah);
+
+                    $terkirim = true;
+                }
+            }
+
+            if ($terkirim) {
+                $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'tahunAkademik' => $tahunAkademik,
+                        'kelas' => $waliKelas->getKelas(),
+                        'tanggal' => $tanggalTerpilih,
+                        'berhasilKirimSmsRingkasan' => false,
+                    ])
+                ;
+
+                if ($prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                    $prosesKehadiranSiswa->setBerhasilKirimSmsRingkasan(true);
+                    $em->persist($prosesKehadiranSiswa);
+                }
+            }
+
+            $em->flush();
+
+            $return['responseCode'] = 200;
+            $return['responseText'] = $translator->trans('flash.sms.ringkasan.kehadiran.terkirim');
+            $return['berhasilKirimSmsRingkasan'] = 1;
+            $return = json_encode($return);
+
+            return new Response($return, 200, ['Content-Type' => 'application/json']);
+        } else {
+            $return['responseCode'] = 400;
+            $return['responseText'] = $translator->trans("error.form.tidak.valid");
             $return = json_encode($return);
 
             return new Response($return, 200, ['Content-Type' => 'application/json']);
