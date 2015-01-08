@@ -1,0 +1,93 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.pengaturan.layanan.sms.periodik{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.start-icon {
+    color: #FF6900;
+}
+</style>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('layanan_smsperiodik_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.tambah.layanan.sms.periodik'|trans }}
+        </a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th class="{% if pagination.isSorted('layananSmsPeriodik.jenisLayanan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.layanansms.jenis'|trans, 'layananSmsPeriodik.jenisLayanan') }}
+            </th>
+            <th>{{ 'label.kirim.sms'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.layanansms.jenis'|trans }}">{{ daftarJenisLayanan[data.jenisLayanan]|trans }}</td>
+            <td data-title="{{ 'label.kirim.sms'|trans }}">
+                {% if data.aktif == 1 %}
+                    <i class="fa fa-check fa-lg fa-fw check"></i>
+                {% else %}
+                    <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+                {% endif %}
+                <span class="separator">|</span>
+                {% if data.tingkat %}
+                    {{ data.tingkat.optionLabel }}
+                {% else %}
+                    ∗
+                {% endif %}
+                <span class="separator">|</span>
+                {{ daftarPerulangan[data.perulangan] }}
+                <span class="separator">→</span>
+                {% if data.perulangan == 'b-mingguan' %}
+                    {% if data.mingguanHariKe %}
+                        {{ daftarHari[data.mingguanHariKe]|trans }}
+                    {% else %}
+                        ×
+                    {% endif %}
+                {% elseif data.perulangan == 'c-bulanan' or data.perulangan == 'd-triwulan' or data.perulangan == 'e-caturwulan' or data.perulangan == 'f-semester' or data.perulangan == 'g-tahunan' %}
+                    {% if data.perulangan == 'd-triwulan' or data.perulangan == 'e-caturwulan' or data.perulangan == 'f-semester' or data.perulangan == 'g-tahunan' %}
+                        {% if data.bulanAwal != '' %}
+                            <i class="fa fa-play start-icon"></i> {{ daftarBulan[data.bulanAwal]|trans }}
+                            <span class="separator">→</span>
+                        {% else %}
+                            ×
+                            <span class="separator">→</span>
+                        {% endif %}
+                    {% endif %}
+                    {% if data.bulananHariKe != '' %}
+                        {{ 'tanggal'|trans }} {{ data.bulananHariKe }}
+                    {% else %}
+                        ×
+                    {% endif %}
+                {% endif %}
+                {% if data.perulangan != 'a-harian' %}
+                    <span class="separator">→</span>
+                {% endif %}
+                {% if data.smsJam != '' %}
+                    {{ data.smsJam(false) }}
+                {% else %}
+                    ×
+                {% endif %}
+                <span class="separator">|</span>
+                {{ data.templatesms.nama }}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('layanan_smsperiodik_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('layanan_smsperiodik_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}

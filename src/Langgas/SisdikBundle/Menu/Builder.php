@@ -29,7 +29,8 @@ class Builder extends ContainerAware
      * @param FactoryInterface   $factory
      * @param ContainerInterface $container
      */
-    public function __construct(FactoryInterface $factory, ContainerInterface $container) {
+    public function __construct(FactoryInterface $factory, ContainerInterface $container)
+    {
         $this->factory = $factory;
         $this->container = $container;
     }
@@ -94,6 +95,7 @@ class Builder extends ContainerAware
             $settings->addChild($translator->trans('links.academicyear', [], 'navigations'), ['route' => 'academicyear']);
             $settings->addChild($translator->trans('links.smstemplate', [], 'navigations'), ['route' => 'sms_template']);
             $settings->addChild($translator->trans('links.layanan.sms', [], 'navigations'), ['route' => 'layanan_sms']);
+            $settings->addChild($translator->trans('links.layanan.sms.periodik', [], 'navigations'), ['route' => 'layanan_smsperiodik']);
             $settings->addChild($translator->trans('links.jenisdokumensiswa', [], 'navigations'), ['route' => 'jenisdokumensiswa']);
         }
 

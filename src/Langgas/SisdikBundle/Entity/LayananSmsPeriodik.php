@@ -3,11 +3,10 @@
 namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="layanan_sms_periodik", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="layanan_sms_UNIQUE", columns={"sekolah_id", "jenis_layanan"})
- * })
+ * @ORM\Table(name="layanan_sms_periodik")
  * @ORM\Entity
  */
 class LayananSmsPeriodik
@@ -30,6 +29,7 @@ class LayananSmsPeriodik
 
     /**
      * @ORM\Column(name="perulangan", type="string", length=100, nullable=false)
+     * @Assert\NotBlank
      *
      * @var string
      */
@@ -50,7 +50,15 @@ class LayananSmsPeriodik
     private $bulananHariKe;
 
     /**
+     * @ORM\Column(name="bulan_awal", type="smallint", nullable=true)
+     *
+     * @var integer
+     */
+    private $bulanAwal;
+
+    /**
      * @ORM\Column(name="sms_jam", type="string", length=50, nullable=true)
+     * @Assert\NotBlank
      *
      * @var string
      */
@@ -61,7 +69,7 @@ class LayananSmsPeriodik
      *
      * @var boolean
      */
-    private $aktif = 0;
+    private $aktif = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
@@ -82,6 +90,57 @@ class LayananSmsPeriodik
      * @var Templatesms
      */
     private $templatesms;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Tingkat")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="tingkat_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var Tingkat
+     */
+    private $tingkat;
+
+    /**
+     * Daftar perulangan yang mungkin digunakan untuk layanan sms periodik
+     *
+     * @return array
+     */
+    public static function getDaftarPerulangan()
+    {
+        return [
+            'a-harian' => 'Harian',
+            'b-mingguan' => 'Mingguan',
+            'c-bulanan' => 'Bulanan',
+            'd-triwulan' => 'Triwulan',
+            'e-caturwulan' => 'Caturwulan',
+            'f-semester' => 'Semester',
+            'g-tahunan' => 'Tahunan',
+        ];
+    }
+
+    /**
+     * Daftar nama-nama bulan dalam setahun
+     *
+     * @return array
+     */
+    public static function getDaftarNamaBulan()
+    {
+        return [
+            1 => 'label.januari',
+            'label.februari',
+            'label.maret',
+            'label.april',
+            'label.mei',
+            'label.juni',
+            'label.juli',
+            'label.agustus',
+            'label.september',
+            'label.oktober',
+            'label.november',
+            'label.desember',
+        ];
+    }
 
     /**
      * @return integer
@@ -156,6 +215,22 @@ class LayananSmsPeriodik
     }
 
     /**
+     * @param integer $bulanAwal
+     */
+    public function setBulanAwal($bulanAwal)
+    {
+        $this->bulanAwal = $bulanAwal;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getBulanAwal()
+    {
+        return $this->bulanAwal;
+    }
+
+    /**
      * @param string $smsJam
      */
     public function setSmsJam($smsJam)
@@ -166,9 +241,9 @@ class LayananSmsPeriodik
     /**
      * @return string
      */
-    public function getSmsJam()
+    public function getSmsJam($withsecond = true)
     {
-        return $this->smsJam;
+        return !$withsecond ? substr($this->smsJam, 0, 5) : $this->smsJam;
     }
 
     /**
@@ -217,5 +292,21 @@ class LayananSmsPeriodik
     public function getTemplatesms()
     {
         return $this->templatesms;
+    }
+
+    /**
+     * @param Tingkat $tingkat
+     */
+    public function setTingkat(Tingkat $tingkat = null)
+    {
+        $this->tingkat = $tingkat;
+    }
+
+    /**
+     * @return Tingkat
+     */
+    public function getTingkat()
+    {
+        return $this->tingkat;
     }
 }
