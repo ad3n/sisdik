@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-08T11:15:43Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-08T12:30:24Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -5818,7 +5818,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tahun</target>
       </trans-unit>
       <trans-unit id="a312a351197c17eb38ed547ffed6cd763f61280d" resname="layanan.sms.bayar.biaya.sekali">
-        <jms:reference-file line="120">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <jms:reference-file line="121">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
         <source>layanan.sms.bayar.biaya.sekali</source>
         <target>Membayar biaya sekali bayar</target>
       </trans-unit>
@@ -5848,12 +5848,12 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Siswa datang tepat waktu</target>
       </trans-unit>
       <trans-unit id="4c392d882be9d7d92e1c0e9b9cbac4307e84c5fe" resname="layanan.sms.kepulangan.tak.tercatat">
-        <jms:reference-file line="108">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <jms:reference-file line="109">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
         <source>layanan.sms.kepulangan.tak.tercatat</source>
         <target>Siswa pulang tak tercatat</target>
       </trans-unit>
       <trans-unit id="19b30f85a672dd07f8844c93d1334e97d0b8d7a5" resname="layanan.sms.kepulangan.tercatat">
-        <jms:reference-file line="107">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <jms:reference-file line="108">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
         <source>layanan.sms.kepulangan.tercatat</source>
         <target>Siswa pulang tercatat</target>
       </trans-unit>
@@ -5863,7 +5863,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Ringkasan laporan pendaftaran</target>
       </trans-unit>
       <trans-unit id="ab75aca1ef5dc7292b2dbcbf71c943d648c2ae88" resname="layanan.sms.lunas.bayar.biaya.sekali">
-        <jms:reference-file line="121">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <jms:reference-file line="122">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
         <source>layanan.sms.lunas.bayar.biaya.sekali</source>
         <target>Lunas membayar biaya sekali bayar</target>
       </trans-unit>
@@ -5887,8 +5887,13 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <source>layanan.sms.pendaftar.tercatat</source>
         <target>Pendaftar tercatat di database</target>
       </trans-unit>
+      <trans-unit id="cf6e1f310f4b0eb52a73629c76c5f3d84a139779" resname="layanan.sms.rekap.kehadiran.dan.kepulangan.mingguan">
+        <jms:reference-file line="96">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <source>layanan.sms.rekap.kehadiran.dan.kepulangan.mingguan</source>
+        <target>SMS rekap kehadiran dan kepulangan mingguan</target>
+      </trans-unit>
       <trans-unit id="8f3df4e9913d8a6b5753d05b1f29708c4e9c30de" resname="layanan.sms.ringkasan.kehadiran">
-        <jms:reference-file line="133">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
+        <jms:reference-file line="134">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
         <source>layanan.sms.ringkasan.kehadiran</source>
         <target>Ringkasan Kehadiran Siswa</target>
       </trans-unit>

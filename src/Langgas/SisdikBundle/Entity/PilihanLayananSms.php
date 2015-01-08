@@ -22,7 +22,7 @@ class PilihanLayananSms
     private $id;
 
     /**
-     * @ORM\Column(name="jenis_layanan", type="string", length=45, nullable=true)
+     * @ORM\Column(name="jenis_layanan", type="string", length=100, nullable=true)
      *
      * @var string
      */
@@ -119,6 +119,22 @@ class PilihanLayananSms
         return [
             'za-biaya-sekali-bayar' => 'layanan.sms.bayar.biaya.sekali',
             'zb-biaya-sekali-bayar-lunas' => 'layanan.sms.lunas.bayar.biaya.sekali',
+        ];
+    }
+
+    /**
+     * Daftar layanan sms yang biasanya dikirim secara periodik
+     * Contoh:<br>
+     *  - kehadiran mingguan, bulanan<br>
+     *  - info tanggal jatuh tempo bulanan<br>
+     *  - dll
+     *
+     * @return array
+     */
+    public static function getDaftarLayananPeriodik()
+    {
+        return [
+            'zca-kehadiran-kepulangan-rekap-mingguan' => 'layanan.sms.rekap.kehadiran.dan.kepulangan.mingguan',
         ];
     }
 

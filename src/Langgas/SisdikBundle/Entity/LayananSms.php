@@ -22,7 +22,7 @@ class LayananSms
     private $id;
 
     /**
-     * @ORM\Column(name="jenis_layanan", type="string", length=45, nullable=true)
+     * @ORM\Column(name="jenis_layanan", type="string", length=100, nullable=true)
      *
      * @var string
      */
