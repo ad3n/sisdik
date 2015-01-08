@@ -117,7 +117,7 @@ class KehadiranSiswaController extends Controller
                 ->findOneBy([
                     'kbm' => true,
                     'sekolah' => $sekolah,
-                    'tanggal' => $searchdata['tanggal']
+                    'tanggal' => $searchdata['tanggal'],
                 ])
             ;
 
@@ -262,14 +262,14 @@ class KehadiranSiswaController extends Controller
         $data = $request->request->get('sisdik_kehadiransiswa');
 
         foreach ($data as $keys => $values) {
-            if (preg_match('/kehadiran_(\d+)$/', $keys, $matches) !== FALSE) {
+            if (preg_match('/kehadiran_(\d+)$/', $keys, $matches) !== false) {
                 if (array_key_exists(1, $matches)) {
                     $kehadiran = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')->find($matches[1]);
                     if (is_object($kehadiran) && $kehadiran instanceof KehadiranSiswa) {
                         $kehadiran->setStatusKehadiran($values);
                         $kehadiran->setPermulaan(false);
                         $kehadiran->setTervalidasi(true);
-                        $kehadiran->setKeteranganStatus($data['kehadiran_keterangan_' . $matches[1]]);
+                        $kehadiran->setKeteranganStatus($data['kehadiran_keterangan_'.$matches[1]]);
                         $em->persist($kehadiran);
                     }
                 }
@@ -419,7 +419,7 @@ class KehadiranSiswaController extends Controller
                     $kehadiran->setTervalidasi(false);
                     $kehadiran->setTanggal(new \DateTime($tanggal));
                     $jam = new \DateTime();
-                    $kehadiran->setJam($jam->format('H:i') . ':00');
+                    $kehadiran->setJam($jam->format('H:i').':00');
                     $kehadiran->setSmsTerproses(false);
 
                     $em->persist($kehadiran);
@@ -613,7 +613,7 @@ class KehadiranSiswaController extends Controller
                         $tekstemplate = $jadwalKehadiran->getTemplatesms()->getTeks();
                         $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
                         $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
-                        $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                        $tekstemplate = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
                         $tekstemplate = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $tekstemplate);
                         $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
                         $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
@@ -675,7 +675,7 @@ class KehadiranSiswaController extends Controller
                                 $tekstemplate = $jadwalKehadiran->getTemplatesms()->getTeks();
                                 $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
                                 $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
-                                $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                                $tekstemplate = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
                                 $tekstemplate = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $tekstemplate);
                                 $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
                                 $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
@@ -977,7 +977,7 @@ class KehadiranSiswaController extends Controller
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
         $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
-        $jam = $waktuSekarang->format('H:i') . ':00';
+        $jam = $waktuSekarang->format('H:i').':00';
         $mingguanHariKe = $waktuSekarang->format('w');
         $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
         $bulananHariKe = $waktuSekarang->format('j');
@@ -1069,35 +1069,35 @@ class KehadiranSiswaController extends Controller
             $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
 
             $logDirectory = $this->container->get('kernel')->getRootDir()
-                . DIRECTORY_SEPARATOR
-                . "fingerprintlogs"
-                . DIRECTORY_SEPARATOR
-                . $sekolah->getId()
-                . DIRECTORY_SEPARATOR
-                . 'log'
-                . DIRECTORY_SEPARATOR
-                . 'manual'
-                . DIRECTORY_SEPARATOR
-                . $tanggalSekarang
+                .DIRECTORY_SEPARATOR
+                ."fingerprintlogs"
+                .DIRECTORY_SEPARATOR
+                .$sekolah->getId()
+                .DIRECTORY_SEPARATOR
+                .'log'
+                .DIRECTORY_SEPARATOR
+                .'manual'
+                .DIRECTORY_SEPARATOR
+                .$tanggalSekarang
             ;
             if (!is_dir($logDirectory)) {
                 continue;
             }
 
             $retval['pesan'][] = "Memproses kehadiran siswa untuk jadwal "
-                . $jadwal->getTahunAkademik()->getNama()
-                . ", "
-                . $jadwal->getKelas()->getNama()
-                . ", "
-                . $perulangan[$jadwal->getPerulangan()]
-                . ", "
-                . /** @Ignore */ $this->get('translator')->trans($daftarStatusKehadiran[$jadwal->getStatusKehadiran()])
-                . ", "
-                . $jadwal->getParamstatusDariJam(false)
-                . " - "
-                . $jadwal->getParamstatusHinggaJam(false)
+                .$jadwal->getTahunAkademik()->getNama()
+                .", "
+                .$jadwal->getKelas()->getNama()
+                .", "
+                .$perulangan[$jadwal->getPerulangan()]
+                .", "
+                ./** @Ignore */ $this->get('translator')->trans($daftarStatusKehadiran[$jadwal->getStatusKehadiran()])
+                .", "
+                .$jadwal->getParamstatusDariJam(false)
+                ." - "
+                .$jadwal->getParamstatusHinggaJam(false)
             ;
-            $retval['daftarJadwal'] = $daftarJadwal == '' ? $jadwal->getId() : $daftarJadwal . ',' . $jadwal->getId();
+            $retval['daftarJadwal'] = $daftarJadwal == '' ? $jadwal->getId() : $daftarJadwal.','.$jadwal->getId();
             $retval['urutan'] = ++$urutan;
 
             $mesinFingerprint = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')
@@ -1118,13 +1118,13 @@ class KehadiranSiswaController extends Controller
                 }
 
                 $logFile = exec("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
-                $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
+                $sourceFile = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
                 $targetFile = self::TMP_DIR
-                    . DIRECTORY_SEPARATOR
-                    . $sekolah->getId()
-                    . '-sisdik-'
-                    . uniqid(mt_rand(), true)
-                    . $logFile
+                    .DIRECTORY_SEPARATOR
+                    .$sekolah->getId()
+                    .'-sisdik-'
+                    .uniqid(mt_rand(), true)
+                    .$logFile
                 ;
 
                 if (!@copy($sourceFile, $targetFile)) {
@@ -1204,7 +1204,7 @@ class KehadiranSiswaController extends Controller
                 } else {
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
                     preg_match_all("/<([\w]+)[^>]*>.*?<\/\\1>/", $buffer, $matches, PREG_SET_ORDER);
-                    $xmlstring = "<?xml version='1.0'?>\n" . $matches[0][0];
+                    $xmlstring = "<?xml version='1.0'?>\n".$matches[0][0];
 
                     $xmlobject = simplexml_load_string($xmlstring);
 
