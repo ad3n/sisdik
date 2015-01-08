@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-08T12:30:24Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-08T15:02:02Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -5890,7 +5890,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="cf6e1f310f4b0eb52a73629c76c5f3d84a139779" resname="layanan.sms.rekap.kehadiran.dan.kepulangan.mingguan">
         <jms:reference-file line="96">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
         <source>layanan.sms.rekap.kehadiran.dan.kepulangan.mingguan</source>
-        <target>SMS rekap kehadiran dan kepulangan mingguan</target>
+        <target>Rekap kehadiran dan kepulangan mingguan</target>
       </trans-unit>
       <trans-unit id="8f3df4e9913d8a6b5753d05b1f29708c4e9c30de" resname="layanan.sms.ringkasan.kehadiran">
         <jms:reference-file line="134">SisdikBundle/Entity/PilihanLayananSms.php</jms:reference-file>
