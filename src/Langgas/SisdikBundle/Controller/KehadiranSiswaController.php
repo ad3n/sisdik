@@ -373,6 +373,7 @@ class KehadiranSiswaController extends Controller
                         $kehadiran->setSmsDlr(null);
                         $kehadiran->setSmsDlrtime(null);
                         $kehadiran->setSmsTerproses(false);
+                        $kehadiran->setJam(null);
                         $kehadiran->setStatusKehadiran($statusKehadiran);
 
                         $em->persist($kehadiran);
@@ -421,8 +422,6 @@ class KehadiranSiswaController extends Controller
                     $kehadiran->setPermulaan(true);
                     $kehadiran->setTervalidasi(false);
                     $kehadiran->setTanggal(new \DateTime($tanggal));
-                    $jam = new \DateTime();
-                    $kehadiran->setJam($jam->format('H:i').':00');
                     $kehadiran->setSmsTerproses(false);
 
                     $em->persist($kehadiran);
