@@ -169,6 +169,19 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                         $timestampWaktuJadwal = strtotime(date('Y-m-d')." ".$jadwalKehadiranTerawal->getSmsJam());
                         $bedaWaktu = abs($waktuSekarang->getTimestamp() - $timestampWaktuJadwal);
 
+                        $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
+                            ->findOneBy([
+                                'sekolah' => $sekolah,
+                                'tahunAkademik' => $tahunAkademikAktif,
+                                'kelas' => $waliKelas->getKelas(),
+                                'tanggal' => $waktuSekarang,
+                                'berhasilKirimSmsRingkasan' => false,
+                            ])
+                        ;
+                        if (!$prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
+                            continue;
+                        }
+
                         if ($input->getOption('paksa')) {
                             $bedaWaktu = 0;
                         }
@@ -265,16 +278,6 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                             }
 
                             if ($terkirim) {
-                                $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
-                                    ->findOneBy([
-                                        'sekolah' => $sekolah,
-                                        'tahunAkademik' => $tahunAkademikAktif,
-                                        'kelas' => $waliKelas->getKelas(),
-                                        'tanggal' => $waktuSekarang,
-                                        'berhasilKirimSmsRingkasan' => false,
-                                    ])
-                                ;
-
                                 if ($prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
                                     if (!$input->getOption('debug')) {
                                         $prosesKehadiranSiswa->setBerhasilKirimSmsRingkasan(true);
