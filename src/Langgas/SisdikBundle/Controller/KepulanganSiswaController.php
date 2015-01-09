@@ -345,6 +345,7 @@ class KepulanganSiswaController extends Controller
             ;
             $entities = $qbKepulangan->getQuery()->getResult();
 
+            $jam = new \DateTime();
             if (count($entities) > 0) {
                 foreach ($entities as $kepulangan) {
                     if (is_object($kepulangan) && $kepulangan instanceof KepulanganSiswa) {
@@ -353,6 +354,7 @@ class KepulanganSiswaController extends Controller
                         $kepulangan->setTervalidasi(false);
                         $kepulangan->setSmsDlr(null);
                         $kepulangan->setSmsDlrtime(null);
+                        $kepulangan->setJam($jam->format('H:i') . ':00');
                         $kepulangan->setSmsTerproses(false);
                         $kepulangan->setStatusKepulangan($statusKepulangan);
 
@@ -377,7 +379,6 @@ class KepulanganSiswaController extends Controller
                 ;
                 $entitiesKehadiran = $qbKehadiran->getQuery()->getResult();
 
-                $jam = new \DateTime();
                 foreach ($entitiesKehadiran as $kehadiran) {
                     if (!$kehadiran instanceof KehadiranSiswa) {
                         continue;
