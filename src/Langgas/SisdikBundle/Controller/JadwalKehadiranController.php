@@ -86,7 +86,7 @@ class JadwalKehadiranController extends Controller
             if ($searchdata['perulangan'] == 'b-mingguan' && array_key_exists('mingguanHariKe', $searchdata)) {
                 $querybuilder->andWhere("(jadwalKehadiran.mingguanHariKe = :mingguanHariKe)");
                 if ($searchdata['mingguanHariKe'] === null) {
-                    $searchdata['mingguanHariKe'] = 0;
+                    $searchdata['mingguanHariKe'] = 1;
                 }
                 $querybuilder->setParameter('mingguanHariKe', $searchdata['mingguanHariKe']);
                 $data['mingguanHariKe'] = $searchdata['mingguanHariKe'];

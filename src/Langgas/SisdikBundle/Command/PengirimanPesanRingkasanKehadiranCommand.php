@@ -48,8 +48,7 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
         $namaNamaHari = JadwalKehadiran::getNamaHari();
         $waktuSekarang = new \DateTime();
-        $mingguanHariKe = $waktuSekarang->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
         $semuaSekolah = $em->getRepository('LanggasSisdikBundle:Sekolah')->findAll();
@@ -243,7 +242,7 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                             $teksRingkasan = str_replace("%nama%", $waliKelas->getUser()->getName(), $teksRingkasan);
                             $teksRingkasan = str_replace("%kelas%", $waliKelas->getKelas()->getNama(), $teksRingkasan);
 
-                            $indeksHari = $waktuSekarang->format('w') - 1 == -1 ? 7 : $waktuSekarang->format('w') - 1;
+                            $indeksHari = $waktuSekarang->format('N');
                             $teksRingkasan = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $teksRingkasan);
 
                             $teksRingkasan = str_replace("%tanggal%", $waktuSekarang->format('d/m/Y'), $teksRingkasan);

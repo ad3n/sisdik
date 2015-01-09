@@ -407,14 +407,15 @@ class JadwalKehadiran
     }
 
     /**
-     * Nama-nama hari dalam satu minggu, dimulai dari senin, array berbasis 0
+     * Nama-nama hari dalam satu minggu
+     * Dimulai dari senin index array 1, mengikuti ISO-8601
      *
      * @return array
      */
     public static function getNamaHari()
     {
         return [
-            0 => 'label.senin',
+            1 => 'label.senin',
             'label.selasa',
             'label.rabu',
             'label.kamis',

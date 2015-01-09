@@ -40,15 +40,14 @@ class PembaruanKepulanganCommand extends ContainerAwareCommand
         $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
         $jam = $waktuSekarang->format('H:i') . ':00';
-        $mingguanHariKe = $waktuSekarang->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
         if ($input->getOption('paksa')) {
             $jamDari = '13:00:00';
             $jam = '14:00:00';
             $waktuSekarang = new \DateTime(date("Y-m-d $jam"));
-            $mingguanHariKe = 2; // 0 = senin
+            $mingguanHariKe = 2; // 1 = senin
             $bulananHariKe = 1;
 
             print "[paksa]: periksa jadwal jam:$jam, mingguanHariKe:$mingguanHariKe, bulananHariKe:$bulananHariKe\n";

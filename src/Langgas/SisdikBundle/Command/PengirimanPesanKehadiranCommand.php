@@ -47,14 +47,13 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
         $namaNamaHari = JadwalKehadiran::getNamaHari();
         $waktuSekarang = new \DateTime();
         $jam = $waktuSekarang->format('H:i') . ':00';
-        $mingguanHariKe = $waktuSekarang->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
         if ($input->getOption('paksa')) {
             $jam = '09:00:00';
             $waktuSekarang = new \DateTime(date("Y-m-d $jam"));
-            $mingguanHariKe = 0; // 0 = senin
+            $mingguanHariKe = 1; // 1 = senin
             $bulananHariKe = 1;
 
             print "[paksa]: periksa jadwal jam:$jam, mingguanHariKe:$mingguanHariKe, bulananHariKe:$bulananHariKe\n";
@@ -247,7 +246,7 @@ class PengirimanPesanKehadiranCommand extends ContainerAwareCommand
                                         $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
                                         $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
 
-                                        $indeksHari = $kehadiran->getTanggal()->format('w') - 1 == -1 ? 7 : $kehadiran->getTanggal()->format('w') - 1;
+                                        $indeksHari = $kehadiran->getTanggal()->format('N');
                                         $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $tekstemplate);
 
                                         $tekstemplate = str_replace("%tanggal%", $kehadiran->getTanggal()->format('d/m/Y'), $tekstemplate);

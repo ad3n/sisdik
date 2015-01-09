@@ -473,8 +473,7 @@ class KepulanganSiswaController extends Controller
         $translator = $this->get('translator');
         $namaNamaHari = JadwalKehadiran::getNamaHari();
         $tanggalTerpilih = new \DateTime($tanggal);
-        $mingguanHariKe = $tanggalTerpilih->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $tanggalTerpilih->format('N');
         $bulananHariKe = $tanggalTerpilih->format('j');
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
@@ -744,8 +743,7 @@ class KepulanganSiswaController extends Controller
         $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
         $jam = $waktuSekarang->format('H:i') . ':00';
-        $mingguanHariKe = $waktuSekarang->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
         $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')

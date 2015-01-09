@@ -484,8 +484,7 @@ class KehadiranSiswaController extends Controller
         $translator = $this->get('translator');
         $namaNamaHari = JadwalKehadiran::getNamaHari();
         $tanggalTerpilih = new \DateTime($tanggal);
-        $mingguanHariKe = $tanggalTerpilih->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $tanggalTerpilih->format('N');
         $bulananHariKe = $tanggalTerpilih->format('j');
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
@@ -894,7 +893,7 @@ class KehadiranSiswaController extends Controller
             $teksRingkasan = str_replace("%nama%", $waliKelas->getUser()->getName(), $teksRingkasan);
             $teksRingkasan = str_replace("%kelas%", $waliKelas->getKelas()->getNama(), $teksRingkasan);
 
-            $indeksHari = $tanggalTerpilih->format('w') - 1 == -1 ? 7 : $tanggalTerpilih->format('w') - 1;
+            $indeksHari = $tanggalTerpilih->format('N');
             $teksRingkasan = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $teksRingkasan);
 
             $teksRingkasan = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $teksRingkasan);
@@ -978,8 +977,7 @@ class KehadiranSiswaController extends Controller
         $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
         $jam = $waktuSekarang->format('H:i').':00';
-        $mingguanHariKe = $waktuSekarang->format('w');
-        $mingguanHariKe = $mingguanHariKe - 1 == -1 ? 7 : $mingguanHariKe - 1;
+        $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
         $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
