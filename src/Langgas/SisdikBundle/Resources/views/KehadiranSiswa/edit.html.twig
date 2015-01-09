@@ -314,6 +314,7 @@ dd {
                         </div>
                     </form>
 
+                    {% if waliKelas is not null %}
                     <h5>{{ 'sms.ringkasan.untuk.wali.kelas'|trans({}, 'headings') }}</h5>
 
                     <div class="clearfix" style="margin-bottom: 0.5em;"></div>
@@ -341,6 +342,7 @@ dd {
                         </button>
                         <div id="loader-kirim-sms-ringkasan" class="ajax-loader"></div>
                     </form>
+                    {% endif %}
                 </div>
             </div>
         </div>

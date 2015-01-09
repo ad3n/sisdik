@@ -20,6 +20,7 @@ use Langgas\SisdikBundle\Entity\Tingkat;
 use Langgas\SisdikBundle\Entity\WaliKelas;
 use Langgas\SisdikBundle\Entity\Templatesms;
 use Langgas\SisdikBundle\Util\Messenger;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -217,11 +218,13 @@ class KehadiranSiswaController extends Controller
                     'kelas' => $kelas,
                 ])
             ;
-
-            $formSmsRingkasan = $this->createForm('sisdik_kehadiransiswasms_ringkasan', null, [
-                'wali_kelas' => $waliKelas,
-                'tanggal' => $searchdata['tanggal']->format('Y-m-d'),
-            ]);
+            $formSmsRingkasan = null;
+            if ($waliKelas instanceof WaliKelas) {
+                $formSmsRingkasan = $this->createForm('sisdik_kehadiransiswasms_ringkasan', null, [
+                    'wali_kelas' => $waliKelas,
+                    'tanggal' => $searchdata['tanggal']->format('Y-m-d'),
+                ]);
+            }
 
             return [
                 'kelas' => $kelas,
@@ -235,7 +238,7 @@ class KehadiranSiswaController extends Controller
                 'tanggal' => $searchdata['tanggal'],
                 'formInisiasi' => $formInisiasi->createView(),
                 'formSms' => $formSms->createView(),
-                'formSmsRingkasan' => $formSmsRingkasan->createView(),
+                'formSmsRingkasan' => ($formSmsRingkasan instanceof Form) ? $formSmsRingkasan->createView() : $formSmsRingkasan,
             ];
         } else {
             $this
