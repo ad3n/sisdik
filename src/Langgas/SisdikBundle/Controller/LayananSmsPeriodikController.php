@@ -222,7 +222,7 @@ class LayananSmsPeriodikController extends Controller
                     ])
                 ;
 
-                if ($layanan instanceof LayananSmsPeriodik) {
+                if ($layanan instanceof LayananSmsPeriodik && $layanan->getId() != $entity->getId()) {
                     throw new DBALException();
                 }
 
