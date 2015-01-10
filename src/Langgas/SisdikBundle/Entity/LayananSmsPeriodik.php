@@ -143,6 +143,24 @@ class LayananSmsPeriodik
     }
 
     /**
+     * Daftar nama-nama hari disingkat
+     *
+     * @return array
+     */
+    public static function getDaftarNamaHariSingkat()
+    {
+        return [
+            1 => 'label.sen',
+            'label.sel',
+            'label.rab',
+            'label.kam',
+            'label.jum',
+            'label.sab',
+            'label.min',
+        ];
+    }
+
+    /**
      * @return integer
      */
     public function getId()
