@@ -1,4 +1,5 @@
 <?php
+
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
@@ -22,7 +23,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
  * @Route("/laporan-kehadiran-siswa")
  * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
  */
-class KehadiranSiswaLaporanController extends Controller
+class LaporanKehadiranSiswaController extends Controller
 {
     const DOCUMENTS_BASEDIR = "/documents/base/";
     const BASEFILE = "base.ods";
