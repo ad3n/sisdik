@@ -43,7 +43,7 @@ class LaporanKehadiranSiswaController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm('sisdik_kehadiransiswa_carilaporan');
+        $searchform = $this->createForm('sisdik_cari_laporankehadiransiswa');
 
         $hariIni = new \DateTime();
         $searchform->get('hinggaTanggal')->setData($hariIni);
@@ -118,7 +118,7 @@ class LaporanKehadiranSiswaController extends Controller
             ->setParameter('tahunAkademik', $tahunAkademik)
         ;
 
-        $searchform = $this->createForm('sisdik_kehadiransiswa_carilaporan');
+        $searchform = $this->createForm('sisdik_cari_laporankehadiransiswa');
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
@@ -281,7 +281,7 @@ class LaporanKehadiranSiswaController extends Controller
             ->setParameter('tahunAkademik', $tahunAkademik)
         ;
 
-        $searchform = $this->createForm('sisdik_kehadiransiswa_carilaporan');
+        $searchform = $this->createForm('sisdik_cari_laporankehadiransiswa');
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
