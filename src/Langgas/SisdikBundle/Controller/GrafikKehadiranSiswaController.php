@@ -1,6 +1,6 @@
 <?php
 
-namespace Langgas\SisdikBundle\Controller\Dashboard;
+namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Kelas;
