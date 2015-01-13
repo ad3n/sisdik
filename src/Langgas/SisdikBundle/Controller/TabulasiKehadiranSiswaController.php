@@ -1,6 +1,6 @@
 <?php
 
-namespace Langgas\SisdikBundle\Controller\Dashboard;
+namespace Langgas\SisdikBundle\Controller;
 
 use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
@@ -22,7 +22,7 @@ class TabulasiKehadiranSiswaController extends Controller
 {
     /**
      * @Route("/{year}/{month}", name="siswa__kehadiran")
-     * @Template()
+     * @Template("LanggasSisdikBundle:TabulasiKehadiranSiswa:index.html.twig")
      */
     public function indexAction($year = 0, $month = 0)
     {
