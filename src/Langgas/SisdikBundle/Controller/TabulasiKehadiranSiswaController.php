@@ -15,14 +15,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
- * @Route("/siswa/kehadiran")
+ * @Route("/tabulasi-kehadiran-siswa")
  * @PreAuthorize("hasRole('ROLE_SISWA')")
  */
 class TabulasiKehadiranSiswaController extends Controller
 {
     /**
      * @Route("/{year}/{month}", name="siswa__kehadiran")
-     * @Template("LanggasSisdikBundle:TabulasiKehadiranSiswa:index.html.twig")
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:tabulasi.html.twig")
      */
     public function indexAction($year = 0, $month = 0)
     {
