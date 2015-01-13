@@ -18,7 +18,7 @@ class GrafikKehadiranSiswaController extends Controller
 {
     /**
      * @Route("/{tanggal}", name="siswa__kehadiran_grafik")
-     * @Template()
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:grafik.html.twig")
      */
     public function indexAction($tanggal = null)
     {
