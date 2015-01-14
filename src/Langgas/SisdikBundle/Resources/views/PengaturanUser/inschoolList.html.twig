@@ -6,6 +6,16 @@
 .control-group {
     display: inline-block;
 }
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
 </style>
 
 <div class="filter-section" style="margin-bottom: 10px;">
@@ -35,9 +45,7 @@
             <th class="{% if pagination.isSorted('user.username') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.username'|trans, 'user.username') }}
             </th>
-            <th class="{% if pagination.isSorted('user.email') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.email'|trans, 'user.email') }}
-            </th>
+            <th>{{ 'label.email'|trans }}, {{ 'label.nomor.ponsel'|trans }}</th>
             <th>{{ 'label.roles'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
@@ -47,7 +55,7 @@
         <tr>
             <td data-title="{{ 'label.name.full'|trans }}">{{ user.name }}</td>
             <td data-title="{{ 'label.username'|trans }}">{{ user.username }}</td>
-            <td data-title="{{ 'label.email'|trans }}">{{ user.email }}</td>
+            <td data-title="{{ 'label.email'|trans }}, {{ 'label.nomor.ponsel'|trans }}">{{ user.email }}{% if user.nomorPonsel != '' %}, {{ user.nomorPonsel }}{% endif %}</td>
             <td data-title="{{ 'label.roles'|trans }}">
                 {% for role in user.roles %}
                     {{ role|replace({'ROLE_': ''})|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}

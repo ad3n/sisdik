@@ -55,9 +55,7 @@
             <th class="{% if pagination.isSorted('user.username') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.username'|trans, 'user.username') }}
             </th>
-            <th class="{% if pagination.isSorted('user.email') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.email'|trans, 'user.email') }}
-            </th>
+            <th>{{ 'label.email'|trans }}, {{ 'label.nomor.ponsel'|trans }}</th>
             <th>{{ 'label.roles'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
@@ -67,7 +65,7 @@
         <tr>
             <td data-title="{{ 'label.name.full'|trans }}">{{ user.name }}</td>
             <td data-title="{{ 'label.username'|trans }}"><a href="{{ path('_index') }}?_switch_user={{ user.username }}">{{ user.username }}</a></td>
-            <td data-title="{{ 'label.email'|trans }}">{{ user.email }}</td>
+            <td data-title="{{ 'label.email'|trans }}, {{ 'label.nomor.ponsel'|trans }}">{{ user.email }}{% if user.nomorPonsel != '' %}, {{ user.nomorPonsel }}{% endif %}</td>
             <td data-title="{{ 'label.roles'|trans }}">
                 {% for role in user.roles %}
                     {{ role|replace({'ROLE_': ''})|replace({'_': ' '}) }}{% if not loop.last %},{% endif %}
