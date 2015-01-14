@@ -34,10 +34,17 @@ class CariLaporanKehadiranSiswaType extends AbstractType
         $this->securityContext = $securityContext;
     }
 
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->securityContext->getToken()->getUser()->getSekolah();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->securityContext->getToken()->getUser();
-        $sekolah = $user->getSekolah();
+        $sekolah = $this->getSekolah();
 
         $builder
             ->add('dariTanggal', 'date', [
