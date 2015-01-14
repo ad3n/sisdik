@@ -312,11 +312,11 @@ class PengirimanPesanPeriodikCommand extends ContainerAwareCommand
                             $teksRekapitulasi = str_replace("%dari%", $dariTanggalFormatIndonesia, $teksRekapitulasi);
                             $teksRekapitulasi = str_replace("%hingga%", $waktuSekarang->format('d/m/Y'), $teksRekapitulasi);
 
-                            $stringHari = $translator->trans($daftarHari[$kehadiran->getTanggal()->format('N')]);
+                            $stringHari = /** @Ignore */ $translator->trans($daftarHari[$kehadiran->getTanggal()->format('N')]);
                             $stringStatusKehadiran = str_replace(' ', '',/** @Ignore */ $translator->trans($daftarStatusKehadiran[$kehadiran->getStatusKehadiran()]));
 
                             if ($kehadiran->getStatusKehadiran() == 'a-hadir-tepat' || $kehadiran->getStatusKehadiran() == 'b-hadir-telat') {
-                                $stringJamDatang = '***';
+                                $stringJamDatang = '*';
                                 if ($kehadiran->getJam(false) != '') {
                                     $stringJamDatang = $kehadiran->getJam(false);
                                 }
@@ -326,7 +326,7 @@ class PengirimanPesanPeriodikCommand extends ContainerAwareCommand
                                         'kehadiranSiswa' => $kehadiran,
                                     ])
                                 ;
-                                $stringJamPulang = '***';
+                                $stringJamPulang = '*';
                                 if ($kepulangan instanceof KepulanganSiswa) {
                                     if ($kehadiran->getJam(false) != '') {
                                         $stringJamPulang = $kepulangan->getJam(false);
