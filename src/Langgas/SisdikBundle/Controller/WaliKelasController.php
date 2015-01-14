@@ -42,10 +42,13 @@ class WaliKelasController extends Controller
             ->select('waliKelas')
             ->from('LanggasSisdikBundle:WaliKelas', 'waliKelas')
             ->leftJoin('waliKelas.kelas', 'kelas')
+            ->leftJoin('kelas.tingkat', 'tingkat')
             ->leftJoin('waliKelas.tahunAkademik', 'tahunAkademik')
             ->leftJoin('waliKelas.user', 'user')
             ->where('kelas.sekolah = :sekolah')
             ->orderBy('tahunAkademik.urutan', 'DESC')
+            ->addOrderBy('tingkat.urutan', 'ASC')
+            ->addOrderBy('kelas.urutan', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
 
