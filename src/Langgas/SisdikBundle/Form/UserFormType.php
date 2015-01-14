@@ -66,10 +66,6 @@ class UserFormType extends AbstractType
                     'class' => 'disabled xlarge',
                 ],
             ])
-            ->add('nomorPonsel', 'text', [
-                'required' => false,
-                'label' => 'label.nomor.ponsel',
-            ])
         ;
 
         if ($options['mode'] == 1) {
@@ -107,6 +103,10 @@ class UserFormType extends AbstractType
             }
 
             $builder
+                ->add('nomorPonsel', 'text', [
+                    'required' => false,
+                    'label' => 'label.nomor.ponsel',
+                ])
                 ->add('roles', 'choice', [
                     'choices' => $roles,
                     'label' => 'label.roles',
