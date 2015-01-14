@@ -71,6 +71,10 @@ class PengaturanUserController extends Controller
                     ->setParameter(3, "%{$searchdata['searchkey']}%")
                 ;
             }
+
+            if ($searchdata['nonSiswa'] === true) {
+                $querybuilder->andWhere('user.siswa IS NULL');
+            }
         }
 
         $paginator = $this->get('knp_paginator');

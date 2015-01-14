@@ -4,6 +4,7 @@ namespace Langgas\SisdikBundle\Form;
 
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -15,7 +16,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class SimpleUserSearchType extends AbstractType
+class CariUserType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -28,18 +29,26 @@ class SimpleUserSearchType extends AbstractType
     private $entityManager;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @InjectParams({
      *     "securityContext" = @Inject("security.context"),
-     *     "entityManager" = @Inject("doctrine.orm.entity_manager")
+     *     "entityManager" = @Inject("doctrine.orm.entity_manager"),
+     *     "translator" = @Inject("translator")
      * })
      *
      * @param SecurityContext $securityContext
      * @param EntityManager   $entityManager
+     * @param Translator      $translator
      */
-    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+    public function __construct(SecurityContext $securityContext, EntityManager $entityManager, Translator $translator)
     {
         $this->securityContext = $securityContext;
         $this->entityManager = $entityManager;
+        $this->translator = $translator;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -65,6 +74,14 @@ class SimpleUserSearchType extends AbstractType
                 'label_render' => false,
                 'horizontal' => false,
             ])
+            ->add('nonSiswa', 'checkbox', [
+                'required' => false,
+                'attr' => [],
+                'label_render' => true,
+                'label' => 'label.bukan.siswa',
+                'widget_checkbox_label' => 'widget',
+                'horizontal' => false,
+            ])
         ;
     }
 
@@ -74,7 +91,7 @@ class SimpleUserSearchType extends AbstractType
 
         $choices = [
             '' => 'label.all',
-            'unset' => 'label.unregistered.school',
+            'unset' => $this->translator->trans('label.tanpa.sekolah'),
         ];
 
         foreach ($entities as $entity) {
