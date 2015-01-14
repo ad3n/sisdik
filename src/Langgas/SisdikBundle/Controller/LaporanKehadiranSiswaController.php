@@ -10,8 +10,9 @@ use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\KehadiranSiswa;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\SiswaKelas;
-use Symfony\Component\HttpFoundation\Response;
+use Langgas\SisdikBundle\Util\Calendar;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -21,7 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * @Route("/laporan-kehadiran-siswa")
- * @PreAuthorize("hasRole('ROLE_GURU_PIKET') or hasRole('ROLE_GURU')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_WALI_KELAS', 'ROLE_GURU_PIKET')")
  */
 class LaporanKehadiranSiswaController extends Controller
 {
@@ -50,8 +51,8 @@ class LaporanKehadiranSiswaController extends Controller
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
-                'aktif' => true,
                 'sekolah' => $sekolah,
+                'aktif' => true,
             ])
         ;
 
@@ -75,13 +76,12 @@ class LaporanKehadiranSiswaController extends Controller
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
-        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
+                'sekolah' => $sekolah,
                 'aktif' => true,
-                'sekolah' => $sekolah->getId(),
             ])
         ;
 
@@ -225,6 +225,88 @@ class LaporanKehadiranSiswaController extends Controller
             'daftarStatusKehadiran' => $daftarStatusKehadiran,
             'kehadiranSiswa' => $daftarKehadiran,
             'kehadiranSiswaTotal' => $kehadiranSiswaTotal,
+        ];
+    }
+
+    /**
+     * @Route("/detail-siswa-{id}/{year}/{month}", name="laporan-kehadiran-siswa_detail")
+     * @Method("GET")
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:detail.html.twig")
+     */
+    public function detailPerSiswaAction($id, $year = 0, $month = 0)
+    {
+        $sekolah = $this->getSekolah();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
+
+        $waktuSekarang = new \DateTime();
+        $year = $year != 0 ? $year : $waktuSekarang->format('Y');
+        $month = $month != 0 ? $month : $waktuSekarang->format('m');
+
+        $tanggalTerpilih = new \DateTime("$year-$month-01");
+
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'aktif' => true,
+            ])
+        ;
+
+
+        $siswaKelas = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
+            ->findOneBy([
+                'siswa' => $siswa,
+                'tahunAkademik' => $tahunAkademik,
+                'aktif' => true,
+            ])
+        ;
+
+        $objectCalendar = new Calendar();
+        $calendar = $objectCalendar->createMonthlyCalendar($tanggalTerpilih->format('Y'), $tanggalTerpilih->format('m'));
+
+        $nextmonth = date('Y-m-d', mktime(0, 0, 0, $tanggalTerpilih->format('m') + 1, 1, $tanggalTerpilih->format('Y')));
+
+        $kehadiran = $em->createQueryBuilder()
+            ->select('kehadiran')
+            ->from('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
+            ->where('kehadiran.sekolah = :sekolah')
+            ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
+            ->andWhere('kehadiran.kelas = :kelas')
+            ->andWhere('kehadiran.siswa = :siswa')
+            ->andWhere('kehadiran.tanggal >= :firstday AND kehadiran.tanggal < :nextmonth')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunAkademik', $tahunAkademik)
+            ->setParameter('kelas', $siswaKelas->getKelas())
+            ->setParameter('siswa', $siswa)
+            ->setParameter('firstday', $tanggalTerpilih->format('Y-m-01'))
+            ->setParameter('nextmonth', $nextmonth)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $tanggalTerpilih->modify('first day of -1 month');
+        $tahunBulanSebelumnya = $tanggalTerpilih->format('Y');
+        $bulanSebelumnya = $tanggalTerpilih->format('m');
+
+        $tanggalTerpilih->modify('first day of +2 month');
+        $tahunBulanBerikutnya = $tanggalTerpilih->format('Y');
+        $bulanBerikutnya = $tanggalTerpilih->format('m');
+
+        return [
+            'tahunAkademik' => $tahunAkademik,
+            'kelas' => $siswaKelas,
+            'siswa' => $siswa,
+            'kehadiran' => $kehadiran,
+            'daftarStatusKehadiran' => JadwalKehadiran::getDaftarStatusKehadiran(),
+            'calendar' => $calendar,
+            'tanggalTerpilih' => $tanggalTerpilih,
+            'tahunBulanSebelumnya' => $tahunBulanSebelumnya,
+            'bulanSebelumnya' => $bulanSebelumnya,
+            'tahunBulanBerikutnya' => $tahunBulanBerikutnya,
+            'bulanBerikutnya' => $bulanBerikutnya,
         ];
     }
 

@@ -103,6 +103,7 @@
                 {% endfor %}
                 <th>{{ 'label.jumlah.hadir'|trans }}</th>
                 <th>{{ 'label.jumlah.tidak.hadir'|trans }}</th>
+                <th><i class="fa fa-calendar-o"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -119,6 +120,7 @@
                 {% endfor %}
                 <td data-title="{{ 'label.jumlah.hadir'|trans }}">{{ kehadiran.jumlahHadir }}</td>
                 <td data-title="{{ 'label.jumlah.tidak.hadir'|trans }}">{{ kehadiran.jumlahTidakHadir }}</td>
+                <td><a href="{{ path('laporan-kehadiran-siswa_detail', {id: kehadiran.siswa.id}) }}" title="{{ 'tip.lihat.detail.kehadiran.siswa'|trans }}"><i class="fa fa-calendar"></i></a></td>
             </tr>
         {% endfor %}
         </tbody>

@@ -183,7 +183,7 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_GURU", "ROLE_GURU_PIKET")'),
+            new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_GURU", "ROLE_GURU_PIKET", "ROLE_WALI_KELAS")'),
         ])) {
             $kehadiran = $menu->addChild($translator->trans('headings.presence', [], 'navigations'), [
                 'dropdown' => true,
@@ -195,12 +195,16 @@ class Builder extends ContainerAware
                 $kehadiran->addChild($translator->trans('links.attendancemachine', [], 'navigations'), ['route' => 'attendancemachine']);
                 $kehadiran->addChild($translator->trans('links.jadwal.kehadiran', [], 'navigations'), ['route' => 'jadwal_kehadiran']);
                 $kehadiran->addChild($translator->trans('links.jadwal.kepulangan', [], 'navigations'), ['route' => 'jadwal_kepulangan']);
-                /* $kehadiran->addChild($translator->trans('links.mesin.wakil', [], 'navigations'), ['route' => 'mesinproxy']); */
             }
 
             $kehadiran->addChild($translator->trans('links.kehadiran.siswa', [], 'navigations'), ['route' => 'kehadiran-siswa']);
             $kehadiran->addChild($translator->trans('links.kepulangan.siswa', [], 'navigations'), ['route' => 'kepulangan-siswa']);
-            $kehadiran->addChild($translator->trans('links.laporan.kehadiran.siswa', [], 'navigations'), ['route' => 'laporan-kehadiran-siswa']);
+
+            if ($securityContext->isGranted([
+                new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_GURU_PIKET", "ROLE_WALI_KELAS")'),
+            ])) {
+                $kehadiran->addChild($translator->trans('links.laporan.kehadiran.siswa', [], 'navigations'), ['route' => 'laporan-kehadiran-siswa']);
+            }
         }
 
         foreach ($menu as $key => $item) {
