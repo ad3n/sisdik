@@ -322,14 +322,13 @@ class LaporanKehadiranSiswaController extends Controller
     public function eksporAction()
     {
         $sekolah = $this->getSekolah();
-        $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
             ->findOneBy([
                 'aktif' => true,
-                'sekolah' => $sekolah->getId(),
+                'sekolah' => $sekolah,
             ])
         ;
 

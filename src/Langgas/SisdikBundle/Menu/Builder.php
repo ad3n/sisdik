@@ -207,6 +207,12 @@ class Builder extends ContainerAware
             }
         }
 
+        if ($securityContext->isGranted([
+            new Expression('hasAnyRole("ROLE_ADMIN")'),
+        ])) {
+            $logSms = $menu->addChild($translator->trans('log.sms.keluar', [], 'navigations'), ['route' => 'logsmskeluar']);
+        }
+
         foreach ($menu as $key => $item) {
             $item->setExtra('routes', [
                 'routes' => $key
