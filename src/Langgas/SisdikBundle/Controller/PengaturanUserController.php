@@ -40,7 +40,7 @@ class PengaturanUserController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm('sisdik_cariuser');
+        $searchform = $this->createForm('sisdik_cariuser', null, ['mode_superadmin' => true]);
 
         $querybuilder = $em->createQueryBuilder()
             ->select('user')
@@ -379,7 +379,7 @@ class PengaturanUserController extends Controller
         $searchcondition = '';
         $searchkey = '';
 
-        $searchform = $this->createForm('sisdik_cari');
+        $searchform = $this->createForm('sisdik_cariuser');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('user')
@@ -399,6 +399,10 @@ class PengaturanUserController extends Controller
                 ->setParameter(2, "%{$searchdata['searchkey']}%")
                 ->setParameter(3, "%{$searchdata['searchkey']}%")
             ;
+        }
+
+        if ($searchdata['nonSiswa'] === true) {
+            $querybuilder->andWhere('user.siswa IS NULL');
         }
 
         if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {

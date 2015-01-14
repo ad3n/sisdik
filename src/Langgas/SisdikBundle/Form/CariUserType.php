@@ -53,18 +53,22 @@ class CariUserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($options['mode_superadmin'] === true) {
+            $builder
+                ->add('searchoption', 'choice', [
+                    'choices' => $this->buildChoices(),
+                    'multiple' => false,
+                    'expanded' => false,
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'large',
+                    ],
+                    'label_render' => false,
+                    'horizontal' => false,
+                ])
+            ;
+        }
         $builder
-            ->add('searchoption', 'choice', [
-                'choices' => $this->buildChoices(),
-                'multiple' => false,
-                'expanded' => false,
-                'required' => false,
-                'attr' => [
-                    'class' => 'large',
-                ],
-                'label_render' => false,
-                'horizontal' => false,
-            ])
             ->add('searchkey', null, [
                 'label' => 'label.searchkey',
                 'required' => false,
@@ -108,6 +112,7 @@ class CariUserType extends AbstractType
         $resolver
             ->setDefaults([
                 'csrf_protection' => false,
+                'mode_superadmin' => false,
             ])
         ;
     }
