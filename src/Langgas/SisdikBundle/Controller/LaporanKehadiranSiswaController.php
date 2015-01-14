@@ -254,7 +254,9 @@ class LaporanKehadiranSiswaController extends Controller
                 'aktif' => true,
             ])
         ;
-
+        if (!$tahunAkademik instanceof TahunAkademik) {
+            throw $this->createNotFoundException($this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
+        }
 
         $siswaKelas = $em->getRepository('LanggasSisdikBundle:SiswaKelas')
             ->findOneBy([
@@ -263,6 +265,9 @@ class LaporanKehadiranSiswaController extends Controller
                 'aktif' => true,
             ])
         ;
+        if (!$siswaKelas instanceof SiswaKelas) {
+            throw $this->createNotFoundException($this->get('translator')->trans('flash.siswa.tidak.terdaftar.aktif.di.kelas'));
+        }
 
         $objectCalendar = new Calendar();
         $calendar = $objectCalendar->createMonthlyCalendar($tanggalTerpilih->format('Y'), $tanggalTerpilih->format('m'));
@@ -460,26 +465,26 @@ class LaporanKehadiranSiswaController extends Controller
             }
         }
 
-        $documentbase = $this->get('kernel')->getRootDir() . self::DOCUMENTS_BASEDIR . self::BASEFILE;
+        $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
 
-        $filenameoutput = self::OUTPUTFILE . date("Y-m-d h:i") . ".sisdik";
+        $filenameoutput = self::OUTPUTFILE.date("Y-m-d h:i").".sisdik";
 
         $outputfiletype = "ods";
         $extensiontarget = $extensionsource = ".$outputfiletype";
-        $filesource = $filenameoutput . $extensionsource;
-        $filetarget = $filenameoutput . $extensiontarget;
+        $filesource = $filenameoutput.$extensionsource;
+        $filetarget = $filenameoutput.$extensiontarget;
 
         $fs = new Filesystem();
-        if (!$fs->exists($outputdir . $sekolah->getId() . '/')) {
-            $fs->mkdir($outputdir . $sekolah->getId() . '/');
+        if (!$fs->exists($outputdir.$sekolah->getId().'/')) {
+            $fs->mkdir($outputdir.$sekolah->getId().'/');
         }
 
-        $documentsource = $outputdir . $sekolah->getId() . '/' . $filesource;
-        $documenttarget = $outputdir . $sekolah->getId() . '/' . $filetarget;
+        $documentsource = $outputdir.$sekolah->getId().'/'.$filesource;
+        $documenttarget = $outputdir.$sekolah->getId().'/'.$filetarget;
 
         if ($outputfiletype == 'ods') {
-            if (copy($documentbase, $documenttarget) === TRUE) {
+            if (copy($documentbase, $documenttarget) === true) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
                 $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:KehadiranSiswa:laporan.xml.twig", [
@@ -493,7 +498,7 @@ class LaporanKehadiranSiswaController extends Controller
                     ])
                 );
 
-                if ($ziparchive->close() === TRUE) {
+                if ($ziparchive->close() === true) {
                     $return = [
                         "redirectUrl" => $this->generateUrl("laporan-kehadiran-siswa_unduh", [
                             'filename' => $filetarget,
@@ -530,7 +535,7 @@ class LaporanKehadiranSiswaController extends Controller
         $sekolah = $this->getSekolah();
 
         $filetarget = $filename;
-        $documenttarget = self::DOCUMENTS_OUTPUTDIR . $sekolah->getId() . '/' . $filetarget;
+        $documenttarget = self::DOCUMENTS_OUTPUTDIR.$sekolah->getId().'/'.$filetarget;
 
         $response = new Response(file_get_contents($documenttarget), 200);
         $doc = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filetarget);

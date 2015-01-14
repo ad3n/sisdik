@@ -2,14 +2,12 @@
 
 namespace Langgas\SisdikBundle\Controller;
 
-use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Util\Calendar;
 use Langgas\SisdikBundle\Entity\SiswaKelas;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
@@ -42,6 +40,9 @@ class TabulasiKehadiranSiswaController extends Controller
                 'aktif' => true,
             ])
         ;
+        if (!$tahunAkademik instanceof TahunAkademik) {
+            throw $this->createNotFoundException($this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
+        }
 
         $siswa = $this->getUser()->getSiswa();
 
@@ -52,8 +53,11 @@ class TabulasiKehadiranSiswaController extends Controller
                 'aktif' => true,
             ])
         ;
+        if (!$siswaKelas instanceof SiswaKelas) {
+            throw $this->createNotFoundException($this->get('translator')->trans('flash.siswa.tidak.terdaftar.aktif.di.kelas'));
+        }
 
-        $objectCalendar = new Calendar;
+        $objectCalendar = new Calendar();
         $calendar = $objectCalendar->createMonthlyCalendar($tanggalTerpilih->format('Y'), $tanggalTerpilih->format('m'));
 
         $nextmonth = date('Y-m-d', mktime(0, 0, 0, $tanggalTerpilih->format('m') + 1, 1, $tanggalTerpilih->format('Y')));
