@@ -121,6 +121,10 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                     $jadwalKehadiranTerawal = null;
                     $jamTerawal = 0;
 
+                    if ($input->getOption('debug')) {
+                        print $waliKelas->getUser()->getName()."\n";
+                    }
+
                     foreach ($perulangan as $key => $value) {
                         $qbJadwalKehadiran = $em->createQueryBuilder()
                             ->select('jadwal')
@@ -166,7 +170,7 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
 
                     if ($jamTerawal != 0 || $jadwalKehadiranTerawal instanceof JadwalKehadiran) {
                         $timestampWaktuJadwal = strtotime(date('Y-m-d')." ".$jadwalKehadiranTerawal->getSmsJam());
-                        $bedaWaktu = abs($waktuSekarang->getTimestamp() - $timestampWaktuJadwal);
+                        $bedaWaktu = abs($waktuSekarang->getTimestamp() - $timestampWaktuJadwal - ($waliKelas->getJadwalKirimIkhtisarKehadiran() * 60));
 
                         $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
                             ->findOneBy([
@@ -186,7 +190,9 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                         }
 
                         if ($input->getOption('debug')) {
+                            print $waliKelas->getJadwalKirimIkhtisarKehadiran()."\n";
                             print $jadwalKehadiranTerawal->getSmsJam()."\n";
+                            print $bedaWaktu."\n";
                         }
 
                         if ($bedaWaktu <= self::BEDA_WAKTU_MAKS) {
