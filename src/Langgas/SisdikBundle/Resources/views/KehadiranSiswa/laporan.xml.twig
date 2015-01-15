@@ -92,22 +92,22 @@
                 {% set counter = 0 %}
             {% for kehadiran in kehadiranSiswa %}
                 <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if kehadiran.kelasAktif == false %} table:style-name="siswa-non-aktif"{% endif %}>
                         <text:p>{{ kehadiran.siswa.namaLengkap }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if kehadiran.kelasAktif == false %} table:style-name="siswa-non-aktif"{% endif %}>
                         <text:p>{{ kehadiran.siswa.nomorInduk }}</text:p>
                     </table:table-cell>
                 {% for key,value in daftarStatusKehadiran %}
                     {% set status = key %}
-                    <table:table-cell office:value-type="float" office:value="{{ kehadiran[status] }}" calcext:value-type="float">
+                    <table:table-cell office:value-type="float" office:value="{{ kehadiran[status] }}" calcext:value-type="float"{% if kehadiran.kelasAktif == false %} table:style-name="siswa-non-aktif"{% endif %}>
                         <text:p>{{ kehadiran[status] }}</text:p>
                     </table:table-cell>
                 {% endfor %}
-                    <table:table-cell table:formula="of:=SUM([.C{{ row + counter }}:.D{{ row + counter }}])" office:value-type="float" office:value="{{ kehadiran.jumlahHadir }}" calcext:value-type="float">
+                    <table:table-cell table:formula="of:=SUM([.C{{ row + counter }}:.D{{ row + counter }}])" office:value-type="float" office:value="{{ kehadiran.jumlahHadir }}" calcext:value-type="float"{% if kehadiran.kelasAktif == false %} table:style-name="siswa-non-aktif"{% endif %}>
                         <text:p>{{ kehadiran.jumlahHadir }}</text:p>
                     </table:table-cell>
-                    <table:table-cell table:formula="of:=SUM([.E{{ row + counter }}:.G{{ row + counter }}])" office:value-type="float" office:value="{{ kehadiran.jumlahTidakHadir }}" calcext:value-type="float">
+                    <table:table-cell table:formula="of:=SUM([.E{{ row + counter }}:.G{{ row + counter }}])" office:value-type="float" office:value="{{ kehadiran.jumlahTidakHadir }}" calcext:value-type="float"{% if kehadiran.kelasAktif == false %} table:style-name="siswa-non-aktif"{% endif %}>
                         <text:p>{{ kehadiran.jumlahTidakHadir }}</text:p>
                     </table:table-cell>
                 </table:table-row>

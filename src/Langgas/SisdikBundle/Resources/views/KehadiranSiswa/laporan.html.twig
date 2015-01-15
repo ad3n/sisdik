@@ -111,6 +111,7 @@
             <tr>
                 <td data-title="{{ 'label.nama.siswa'|trans }}">
                     {{ kehadiran.siswa.namaLengkap }}
+                    {% if kehadiran.kelasAktif == false %}<br><span style="font-style: italic;">{{ 'label.inactive'|trans }} {% if kehadiran.keteranganKelasAktif %}({{ kehadiran.keteranganKelasAktif }}){% endif %}</span>{% endif %}
                     <br><i class="fa fa-info-circle fa-fw"></i> <span class="info-pelengkap-siswa info-id">{{ kehadiran.siswa.nomorIndukSistem }}</span>{% if kehadiran.siswa.nomorInduk %}<span class="info-pelengkap-siswa">, {{ kehadiran.siswa.nomorInduk }}</span>{% endif %}
                     <br><i class="fa fa-phone fa-fw"></i> <span class="info-pelengkap-siswa">{% if kehadiran.siswa.orangtuaWaliAktif != null %}{{ kehadiran.siswa.orangtuaWaliAktif.nama }} &raquo; {{ kehadiran.siswa.orangtuaWaliAktif.ponsel }} {% endif %}</span>
                 </td>
@@ -120,7 +121,7 @@
                 {% endfor %}
                 <td data-title="{{ 'label.jumlah.hadir'|trans }}">{{ kehadiran.jumlahHadir }}</td>
                 <td data-title="{{ 'label.jumlah.tidak.hadir'|trans }}">{{ kehadiran.jumlahTidakHadir }}</td>
-                <td><a href="{{ path('laporan-kehadiran-siswa_detail', {id: kehadiran.siswa.id}) }}" title="{{ 'tip.lihat.detail.kehadiran.siswa'|trans }}"><i class="fa fa-calendar"></i></a></td>
+                <td>{% if kehadiran.kelasAktif == true %}<a href="{{ path('laporan-kehadiran-siswa_detail', {id: kehadiran.siswa.id}) }}" title="{{ 'tip.lihat.detail.kehadiran.siswa'|trans }}"><i class="fa fa-calendar"></i></a>{% endif %}</td>
             </tr>
         {% endfor %}
         </tbody>

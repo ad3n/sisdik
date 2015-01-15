@@ -209,6 +209,8 @@ class LaporanKehadiranSiswaController extends Controller
                     $kehadiranSiswaTotal[$key] = isset($kehadiranSiswaTotal[$key]) ? $kehadiranSiswaTotal[$key] + $tmpJumlahStatus : $tmpJumlahStatus;
                 }
 
+                $tmpKehadiran['kelasAktif'] = $siswaDiKelas->getAktif();
+                $tmpKehadiran['keteranganKelasAktif'] = $siswaDiKelas->getKeterangan();
                 $tmpKehadiran['jumlahHadir'] = $tmpKehadiran['a-hadir-tepat'] + $tmpKehadiran['b-hadir-telat'];
                 $tmpKehadiran['jumlahTidakHadir'] = $tmpKehadiran['c-alpa'] + $tmpKehadiran['d-izin'] + $tmpKehadiran['e-sakit'];
                 $daftarKehadiran[] = $tmpKehadiran;
@@ -458,6 +460,8 @@ class LaporanKehadiranSiswaController extends Controller
                     $tmpKehadiran[$key] = $tmpJumlahStatus;
                 }
 
+                $tmpKehadiran['kelasAktif'] = $siswaDiKelas->getAktif();
+                $tmpKehadiran['keteranganKelasAktif'] = $siswaDiKelas->getKeterangan();
                 $tmpKehadiran['jumlahHadir'] = $tmpKehadiran['a-hadir-tepat'] + $tmpKehadiran['b-hadir-telat'];
                 $tmpKehadiran['jumlahTidakHadir'] = $tmpKehadiran['c-alpa'] + $tmpKehadiran['d-izin'] + $tmpKehadiran['e-sakit'];
                 $daftarKehadiran[] = $tmpKehadiran;
@@ -486,6 +490,7 @@ class LaporanKehadiranSiswaController extends Controller
             if (copy($documentbase, $documenttarget) === true) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
+                $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:KehadiranSiswa:styles.xml.twig"));
                 $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:KehadiranSiswa:laporan.xml.twig", [
                         'searchkey' => $searchdata['searchkey'],
                         'kelas' => $searchdata['kelas'],
