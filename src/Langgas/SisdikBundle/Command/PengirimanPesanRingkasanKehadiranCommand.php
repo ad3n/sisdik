@@ -133,6 +133,7 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                             ->andWhere('jadwal.tahunAkademik = :tahunAkademik')
                             ->andWhere('jadwal.kelas = :kelas')
                             ->andWhere('jadwal.perulangan = :perulangan')
+                            ->andWhere('jadwal.kirimSms = 1')
                             ->andWhere('jadwal.smsJam IS NOT NULL')
                             ->andWhere("jadwal.smsJam <> ''")
                             ->setParameter('sekolah', $sekolah)
