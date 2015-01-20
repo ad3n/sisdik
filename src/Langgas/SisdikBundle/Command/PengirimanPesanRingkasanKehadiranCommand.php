@@ -256,8 +256,8 @@ class PengirimanPesanRingkasanKehadiranCommand extends ContainerAwareCommand
                             $teksRingkasan = str_replace("%jumlah-tepat%", $jumlahTepat, $teksRingkasan);
                             $teksRingkasan = str_replace("%jumlah-telat%", $jumlahTelat, $teksRingkasan);
                             $teksRingkasan = str_replace("%jumlah-alpa%", $jumlahAlpa, $teksRingkasan);
-                            $teksRingkasan = str_replace("%jumlah-sakit%", $jumlahIzin, $teksRingkasan);
-                            $teksRingkasan = str_replace("%jumlah-izin%", $jumlahSakit, $teksRingkasan);
+                            $teksRingkasan = str_replace("%jumlah-izin%", $jumlahIzin, $teksRingkasan);
+                            $teksRingkasan = str_replace("%jumlah-sakit%", $jumlahSakit, $teksRingkasan);
 
                             $terkirim = false;
                             $nomorponsel = preg_split("/[\s,\/]+/", $waliKelas->getUser()->getNomorPonsel());
