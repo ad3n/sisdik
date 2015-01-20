@@ -16,7 +16,6 @@ framework:
     session:
         save_path:   "%kernel.root_dir%/sessions/"
 
-# Twig Configuration
 twig:
     debug:             "%kernel.debug%"
     strict_variables:  "%kernel.debug%"
@@ -26,21 +25,19 @@ twig:
         proxypass:     "%proxypass%"
         proxypassname: "%proxypassname%"
 
-# Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    # java: /usr/bin/java
     filters:
         cssrewrite: ~
         less:
             node: /usr/bin/node
             node_paths: [/usr/lib/node, /usr/lib/node_modules]
             apply_to: "less$"
-        # closure:
-        #     jar: "%kernel.root_dir%/java/compiler.jar"
-        # yui_css:
-        #     jar: "%kernel.root_dir%/java/yuicompressor-2.4.2.jar"
+        uglifyjs2:
+            bin: /usr/bin/uglifyjs
+        uglifycss:
+            bin: /usr/bin/uglifycss
     assets:
         fontawesome:
             inputs:
@@ -115,7 +112,6 @@ assetic:
                 - "@LanggasSisdikBundle/Resources/public/font/iconic_stroke.woff"
             output: fonts/iconic_stroke.woff
 
-# Doctrine Configuration
 doctrine:
     dbal:
         driver:   "%database_driver%"
@@ -146,7 +142,6 @@ doctrine:
                         dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                         alias: GedmoTree # optional and will default to the name set for the mapping
 
-# Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
     host:      "%mailer_host%"

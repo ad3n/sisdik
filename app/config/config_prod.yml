@@ -29,3 +29,11 @@ framework:
         assets_base_urls:
             http: ["%assets_base_url_http%"]
             ssl: []
+
+
+assetic:
+    filters:
+        uglifyjs2:
+            apply_to: \.js$
+        uglifycss:
+            apply_to: \.css$
