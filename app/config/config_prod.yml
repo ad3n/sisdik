@@ -22,3 +22,10 @@ monolog:
             type:         stream
             path:         "%kernel.logs_dir%/%kernel.environment%_messenger.log"
             channels:     [messenger]
+
+framework:
+    templating:
+        engines: ['twig']
+        assets_base_urls:
+            http: ["%assets_base_url_http%"]
+            ssl: []

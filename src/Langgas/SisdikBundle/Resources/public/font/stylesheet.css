@@ -1,23 +1,23 @@
 @font-face {
-	font-family: 'QlassikBold';
-	src: url('qlassikbold_tb-webfont.eot');
-	src: url('qlassikbold_tb-webfont.eot?#iefix')
-		format('embedded-opentype'), url('qlassikbold_tb-webfont.woff')
-		format('woff'), url('qlassikbold_tb-webfont.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'QlassikBold';
+    src: url('/fonts/qlassikbold_tb-webfont.eot');
+    src: url('/fonts/qlassikbold_tb-webfont.eot?#iefix')
+        format('embedded-opentype'), url('/fonts/qlassikbold_tb-webfont.woff')
+        format('woff'), url('/fonts/qlassikbold_tb-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* TypographyXtra.less
  * Headings, body text, lists, code, and more for a versatile and durable typography system
  * ---------------------------------------------------------------------------------------- */
 @font-face {
-	font-family: "IconicStrokeRegular";
-	src: url('iconic_stroke.eot');
-	src: url('iconic_stroke.eot?#iefix') format('embedded-opentype'),
-		url('iconic_stroke.woff') format('woff'), url('iconic_stroke.ttf')
-		format('truetype'), url('iconic_stroke.svg#IconicStrokeRegular')
-		format('svg'), url("iconic_stroke.otf") format('opentype');
-	font-style: normal;
-	font-weight: normal;
+    font-family: "IconicStrokeRegular";
+    src: url('/fonts/iconic_stroke.eot');
+    src: url('/fonts/iconic_stroke.eot?#iefix') format('embedded-opentype'),
+        url('/fonts/iconic_stroke.woff') format('woff'), url('/fonts/iconic_stroke.ttf')
+        format('truetype'), url('/fonts/iconic_stroke.svg#IconicStrokeRegular')
+        format('svg'), url("/fonts/iconic_stroke.otf") format('opentype');
+    font-style: normal;
+    font-weight: normal;
 }

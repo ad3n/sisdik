@@ -11,7 +11,7 @@ framework:
     form:            true
     csrf_protection: true
     validation:      { enable_annotations: true }
-    templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
+    templating:      { engines: ['twig'] }
     default_locale:  "%locale%"
     session:
         save_path:   "%kernel.root_dir%/sessions/"
@@ -45,10 +45,11 @@ assetic:
         fontawesome:
             inputs:
                 - "%kernel.root_dir%/../vendor/fortawesome/font-awesome/less/font-awesome.less"
+                - "%kernel.root_dir%/../src/Langgas/SisdikBundle/Resources/public/font/stylesheet.css"
             filters:
                 - less
                 - cssrewrite
-            output: css/fontawesome.css
+            output: css/fonts.css
         fontawesome_otf:
             inputs:
                 - "%kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/FontAwesome.otf"
@@ -85,6 +86,34 @@ assetic:
             inputs:
                 - "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.woff"
             output: fonts/glyphicons-halflings-regular.woff
+        qlassikbold_eot:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/qlassikbold_tb-webfont.eot"
+            output: fonts/qlassikbold_tb-webfont.eot
+        qlassikbold_ttf:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/qlassikbold_tb-webfont.ttf"
+            output: fonts/qlassikbold_tb-webfont.ttf
+        qlassikbold_woff:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/qlassikbold_tb-webfont.woff"
+            output: fonts/qlassikbold_tb-webfont.woff
+        iconic_stroke_eot:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/iconic_stroke.eot"
+            output: fonts/iconic_stroke.eot
+        iconic_stroke_svg:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/iconic_stroke.svg"
+            output: fonts/iconic_stroke.svg
+        iconic_stroke_ttf:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/iconic_stroke.ttf"
+            output: fonts/iconic_stroke.ttf
+        iconic_stroke_woff:
+            inputs:
+                - "@LanggasSisdikBundle/Resources/public/font/iconic_stroke.woff"
+            output: fonts/iconic_stroke.woff
 
 # Doctrine Configuration
 doctrine:
