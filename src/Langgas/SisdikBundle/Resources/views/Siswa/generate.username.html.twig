@@ -31,6 +31,11 @@
 * html .ui-autocomplete {
     height: 7.4em;
 }
+.ui-autocomplete-loading {
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+    background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
 </style>
 
 <div id="username-info">&nbsp;</div>
