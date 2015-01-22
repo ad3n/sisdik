@@ -18,10 +18,11 @@ use Symfony\Component\Form\FormError;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/membuat-username-siswa")
- * @PreAuthorize("hasRole('ROLE_ADMIN')")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH')")
  */
 class UserSiswaController extends Controller
 {
@@ -35,6 +36,7 @@ class UserSiswaController extends Controller
     /**
      * @Route("/", name="siswa_generate_username")
      * @Template("LanggasSisdikBundle:Siswa:generate.username.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function generateUserAction()
     {
@@ -74,6 +76,7 @@ class UserSiswaController extends Controller
     /**
      * @Route("/konfirmasi/{file}.{type}/{regenerate}", name="siswa_generate_username_confirm")
      * @Template("LanggasSisdikBundle:Siswa:generate.username.confirm.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function generateUserConfirmAction($file, $type, $regenerate = '')
     {
@@ -114,6 +117,7 @@ class UserSiswaController extends Controller
      * Download the generated file contains username-password list
      *
      * @Route("/unduh/{file}.{type}", name="siswa_generate_username_download")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function downloadGeneratedFileAction($file, $type)
     {
@@ -147,6 +151,7 @@ class UserSiswaController extends Controller
      * Check if students username and password has already generated
      *
      * @Route("/ajax/periksa", name="siswa_ajax_generated_username")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function ajaxCheckGeneratedUserAction(Request $request)
     {
@@ -406,7 +411,6 @@ class UserSiswaController extends Controller
     }
 
     /**
-     *
      * @param Tahun   $tahun
      * @param int     $penyaring
      * @param string  $outputfiletype
