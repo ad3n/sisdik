@@ -147,6 +147,7 @@ class PilihanLayananSms
     {
         return [
             'zza-ringkasan-kehadiran' => 'layanan.sms.ringkasan.kehadiran',
+            'zzb-broadcast-sms' => 'layanan.sebar.sms',
         ];
     }
 
