@@ -1,0 +1,188 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}sebar.sms{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.nav-tabs {
+    margin-bottom: 20px;
+}
+.loading {
+    padding-top: 1em;
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left top no-repeat;
+    {% endimage %}
+}
+.pesan {
+    margin-top: 5px;
+    line-height: 1.5em;
+    min-height: 10px;
+    min-width: 5em;
+    color: #dd5500;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
+.ui-autocomplete-loading {
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+    background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
+</style>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#via-akademik" aria-controls="via-akademik" role="tab" data-toggle="tab">
+        {{- 'label.menggunakan.akademik'|trans -}}
+        </a>
+    </li>
+    <li role="presentation">
+        <a href="#via-tahun-masuk" aria-controls="via-tahun-masuk" role="tab" data-toggle="tab">
+        {{- 'label.menggunakan.tahun.masuk'|trans -}}
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="via-akademik">
+        {% if formSebarViaAkademik %}
+        <form action="{{ path('sebarpesan_akademik') }}" method="post" {{ form_enctype(formSebarViaAkademik) }} id="form-proses-akademik" class="form-horizontal">
+            {{ form_widget(formSebarViaAkademik) }}
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                    <button type="submit" id="tombol-proses-akademik" class="btn primary">{{ 'label.submit.sebar.sms'|trans }}</button>
+                    <div class="pesan" id="pesan-proses-akademik"></div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+            <span style="color: #ff0000;">{{ 'error.tahun.akademik.tidak.ada.yang.aktif'|trans }}</span>
+        {% endif %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="via-tahun-masuk">
+        <form action="{{ path('sebarpesan_tahunmasuk') }}" method="post" {{ form_enctype(formSebarViaTahunMasuk) }} id="form-proses-tahun-masuk" class="form-horizontal">
+            {{ form_widget(formSebarViaTahunMasuk) }}
+            <div class="form-group">
+                <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                    <button type="submit" id="tombol-proses-tahun-masuk" class="btn primary">{{ 'label.submit.sebar.sms'|trans }}</button>
+                    <div class="pesan" id="pesan-proses-tahun-masuk"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    var url = "{{ path('data_class_ajax_updateclass_bylevel') }}";
+
+{% if tahunAkademik %}
+    $(".pilih-tingkat").change(function() {
+        $(".pilih-kelas").empty();
+        $(".pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), bolehKosong: 1}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".pilih-kelas").html(options);
+        });
+    });
+
+    $(".saring-siswa-akademik").autocomplete({
+        minLength: 3,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("siswa_filter_pakai_tingkat_kelas") }}",
+                data: {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(".pilih-tingkat").val(), kelas: $(".pilih-kelas").val(), filter: $(".saring-siswa-akademik").val()},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label, value: item.value
+                        }
+                    }));
+                }
+            });
+        }
+    });
+{% endif %}
+
+    $(".saring-siswa-tahun-masuk").autocomplete({
+        minLength: 3,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("siswa_ajax_filter_student") }}",
+                data: {tahun: $(".pilih-tahun").val(), filter: $(".saring-siswa-tahun-masuk").val()},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label, value: item.value
+                        }
+                    }));
+                }
+            });
+        }
+    });
+
+    $("#form-proses-akademik").submit(function() {
+        $("#tombol-proses-akademik").attr('disabled', 'disabled');
+        $("#pesan-proses-akademik").html("").addClass("loading");
+
+        var url = $(this).attr("action");
+
+        $.post(url, $(this).serialize(), function(data) {
+            if (data.nextUrl != undefined) {
+                displayText = data.responseText + ' <a href="' + data.nextUrl + '">» {{ 'label.klik.lihat.log.sms.keluar'|trans }}</a>';
+            } else {
+                displayText = data.responseText;
+            }
+            $("#pesan-proses-akademik").removeClass("loading").html(displayText);
+
+            $("#tombol-proses-akademik").removeAttr('disabled');
+        });
+
+        return false;
+    });
+
+    $("#form-proses-tahun-masuk").submit(function() {
+        $("#tombol-proses-tahun-masuk").attr('disabled', 'disabled');
+        $("#pesan-proses-tahun-masuk").html("").addClass("loading");
+
+        var url = $(this).attr("action");
+
+        $.post(url, $(this).serialize(), function(data) {
+            console.log(data);
+
+            if (data.nextUrl != undefined) {
+                displayText = data.responseText + ' <a href="' + data.nextUrl + '">» {{ 'label.klik.lihat.log.sms.keluar'|trans }}</a>';
+            } else {
+                displayText = data.responseText;
+            }
+            $("#pesan-proses-tahun-masuk").removeClass("loading").html(displayText);
+
+            $("#tombol-proses-tahun-masuk").removeAttr('disabled');
+        });
+
+        return false;
+    });
+});
+</script>
+{% endblock javascripts_custom %}
