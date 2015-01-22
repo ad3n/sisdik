@@ -396,6 +396,7 @@ class KelasController extends Controller
         $tahunAkademik = $this->getRequest()->query->get('tahunAkademik');
         $tingkat = $this->getRequest()->query->get('tingkat');
         $kelas = $this->getRequest()->query->get('kelas');
+        $bolehKosong = $this->getRequest()->query->get('bolehKosong');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('kelas')
@@ -403,16 +404,30 @@ class KelasController extends Controller
             ->leftJoin('kelas.tingkat', 'tingkat')
             ->where('kelas.sekolah = :sekolah')
             ->andWhere('kelas.tahunAkademik = :tahunAkademik')
-            ->andWhere('kelas.tingkat = :tingkat')
             ->orderBy('tingkat.urutan', 'ASC')
             ->addOrderBy('kelas.urutan')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunAkademik', $tahunAkademik)
-            ->setParameter('tingkat', $tingkat)
         ;
-        $entities = $querybuilder->getQuery()->getResult();
+
+        if ($tingkat != '') {
+            $querybuilder
+                ->andWhere('kelas.tingkat = :tingkat')
+                ->setParameter('tingkat', $tingkat)
+            ;
+        }
 
         $retval = [];
+        if ($bolehKosong == 1) {
+            $retval[] = [
+                'optionValue' => '',
+                'optionDisplay' => $this->container->get('translator')->trans('label.seluruh.kelas'),
+                'optionSelected' => 'selected',
+            ];
+        }
+
+        $entities = $querybuilder->getQuery()->getResult();
+
         foreach ($entities as $entity) {
             $retval[] = [
                 'optionValue' => $entity->getId(),
