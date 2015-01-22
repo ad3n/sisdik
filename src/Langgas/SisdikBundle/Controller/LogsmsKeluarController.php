@@ -4,6 +4,7 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\LogsmsKeluar;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -11,9 +12,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * @Route("/log-sms")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH')")
  */
 class LogsmsKeluarController extends Controller
 {
@@ -333,7 +336,7 @@ class LogsmsKeluarController extends Controller
         $translator = $this->get('translator');
 
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$translator->trans('log.sms.keluar', [], 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.sms', [], 'navigations')][$translator->trans('links.log.sms.keluar', [], 'navigations')]->setCurrent(true);
     }
 
     /**
