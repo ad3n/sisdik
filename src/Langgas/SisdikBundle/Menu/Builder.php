@@ -208,9 +208,14 @@ class Builder extends ContainerAware
         }
 
         if ($securityContext->isGranted([
-            new Expression('hasAnyRole("ROLE_ADMIN")'),
+            new Expression('hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH")'),
         ])) {
-            $logSms = $menu->addChild($translator->trans('log.sms.keluar', [], 'navigations'), ['route' => 'logsmskeluar']);
+            $sms = $menu->addChild($translator->trans('headings.sms', [], 'navigations'), [
+                'dropdown' => true,
+            ]);
+
+            $sms->addChild($translator->trans('links.log.sms.keluar', [], 'navigations'), ['route' => 'logsmskeluar']);
+            $sms->addChild($translator->trans('links.sebar.sms', [], 'navigations'), ['route' => 'sebarsms']);
         }
 
         foreach ($menu as $key => $item) {
