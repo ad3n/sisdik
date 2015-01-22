@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-14T23:33:50Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-15T21:33:52Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -73,7 +73,7 @@
       </trans-unit>
       <trans-unit id="3a4f836e9bb89e8ee0df0225a356c147b579a7a9" resname="headings.presence">
         <jms:reference-file line="1065">SisdikBundle/Controller/KepulanganSiswaController.php</jms:reference-file>
-        <jms:reference-file line="563">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="567">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
         <jms:reference-file line="270">SisdikBundle/Controller/MesinKehadiranController.php</jms:reference-file>
         <jms:reference-file line="550">SisdikBundle/Controller/JadwalKehadiranController.php</jms:reference-file>
         <jms:reference-file line="1298">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
@@ -97,6 +97,12 @@
         <jms:reference-file line="83">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>headings.setting</source>
         <target>Pengaturan</target>
+      </trans-unit>
+      <trans-unit id="00346cfcdd26c3e1dd5179eea277b109ceea8294" resname="headings.sms">
+        <jms:reference-file line="338">SisdikBundle/Controller/LogsmsKeluarController.php</jms:reference-file>
+        <jms:reference-file line="213">SisdikBundle/Menu/Builder.php</jms:reference-file>
+        <source>headings.sms</source>
+        <target>SMS</target>
       </trans-unit>
       <trans-unit id="607570830efbefd5c3c248c7b355b691950f69c5" resname="headings.student">
         <source>headings.student</source>
@@ -221,7 +227,7 @@
         <target>Kepulangan Siswa</target>
       </trans-unit>
       <trans-unit id="c0fd7dad9e8ce3c353fb96e2f2ec06e1dde496b0" resname="links.laporan.kehadiran.siswa">
-        <jms:reference-file line="563">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="567">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
         <jms:reference-file line="206">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.laporan.kehadiran.siswa</source>
         <target>Laporan Kehadiran</target>
@@ -267,6 +273,12 @@
         <jms:reference-file line="67">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.layanansms</source>
         <target>Layanan SMS</target>
+      </trans-unit>
+      <trans-unit id="6f81c4d039eb20a01064cfc42f0552cad8bd60fc" resname="links.log.sms.keluar">
+        <jms:reference-file line="338">SisdikBundle/Controller/LogsmsKeluarController.php</jms:reference-file>
+        <jms:reference-file line="217">SisdikBundle/Menu/Builder.php</jms:reference-file>
+        <source>links.log.sms.keluar</source>
+        <target>Log SMS</target>
       </trans-unit>
       <trans-unit id="e9fea58bf220db0be5cfda4d699025c7fa00a553" resname="links.mesin.wakil">
         <jms:reference-file line="285">SisdikBundle/Controller/MesinWakilController.php</jms:reference-file>
@@ -366,6 +378,11 @@
         <source>links.schools</source>
         <target>Semua Sekolah</target>
       </trans-unit>
+      <trans-unit id="3ec2ef4fde680e847fe2a160f9e0bfe92441e82b" resname="links.sebar.sms">
+        <jms:reference-file line="218">SisdikBundle/Menu/Builder.php</jms:reference-file>
+        <source>links.sebar.sms</source>
+        <target>Broadcast SMS</target>
+      </trans-unit>
       <trans-unit id="ee852040cc069da687e1c9f5afc32651d9e83f9f" resname="links.sekolahasal">
         <jms:reference-file line="351">SisdikBundle/Controller/SekolahAsalController.php</jms:reference-file>
         <jms:reference-file line="133">SisdikBundle/Menu/Builder.php</jms:reference-file>
@@ -445,12 +462,6 @@
         <jms:reference-file line="93">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.year</source>
         <target>Tahun</target>
-      </trans-unit>
-      <trans-unit id="90dc60cf2b1d520932cb61d030e4fc93a4f8739b" resname="log.sms.keluar">
-        <jms:reference-file line="150">SisdikBundle/Controller/LogsmsKeluarController.php</jms:reference-file>
-        <jms:reference-file line="213">SisdikBundle/Menu/Builder.php</jms:reference-file>
-        <source>log.sms.keluar</source>
-        <target>Log SMS</target>
       </trans-unit>
       <trans-unit id="defcc279944f861bab07233d9ff4bf224af8ca32" resname="user.details">
         <jms:reference-file line="137">Resources/views/desktoponly.layout.html.twig</jms:reference-file>

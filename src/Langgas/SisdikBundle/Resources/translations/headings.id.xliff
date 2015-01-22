@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-14T23:33:50Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-21T20:00:32Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -501,6 +501,7 @@
         <target>Membuat Pilihan Layanan SMS</target>
       </trans-unit>
       <trans-unit id="90dc60cf2b1d520932cb61d030e4fc93a4f8739b" resname="log.sms.keluar">
+        <jms:reference-file line="57">views/LogsmsKeluar/index.xml.twig</jms:reference-file>
         <jms:reference-file line="4">views/LogsmsKeluar/index.html.twig</jms:reference-file>
         <source>log.sms.keluar</source>
         <target>Log SMS Keluar</target>
@@ -828,6 +829,11 @@
         <jms:reference-file line="162">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <source>riwayat.penyakit.siswa</source>
         <target>Riwayat Penyakit</target>
+      </trans-unit>
+      <trans-unit id="ccf95ab8f773683db106b1bc66e48d9dd4c6abe1" resname="sebar.sms">
+        <jms:reference-file line="3">views/SebarSms/index.html.twig</jms:reference-file>
+        <source>sebar.sms</source>
+        <target>Broadcast SMS</target>
       </trans-unit>
       <trans-unit id="4a8e7cedbb7f9b4c28af902587e40eca457cf305" resname="sekolah.asal.daftar">
         <jms:reference-file line="3">views/SekolahAsal/index.html.twig</jms:reference-file>
