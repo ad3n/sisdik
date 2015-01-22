@@ -3,6 +3,7 @@
 namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="orangtua_wali")
@@ -21,6 +22,7 @@ class OrangtuaWali
 
     /**
      * @ORM\Column(name="nama", type="string", length=300, nullable=true)
+     * @Assert\NotBlank
      *
      * @var string
      */
@@ -42,6 +44,7 @@ class OrangtuaWali
 
     /**
      * @ORM\Column(name="ponsel", type="string", length=100, nullable=true)
+     * @Assert\NotBlank
      *
      * @var string
      */
@@ -91,6 +94,7 @@ class OrangtuaWali
 
     /**
      * @ORM\Column(name="alamat", type="string", length=400, nullable=true)
+     * @Assert\NotBlank
      *
      * @var string
      */
