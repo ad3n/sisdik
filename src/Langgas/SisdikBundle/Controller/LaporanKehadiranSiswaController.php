@@ -189,31 +189,33 @@ class LaporanKehadiranSiswaController extends Controller
         foreach ($daftarSiswaDiKelas as $siswaDiKelas) {
             $tmpKehadiran = [];
             if ($siswaDiKelas instanceof SiswaKelas) {
-                $tmpKehadiran['siswa'] = $siswaDiKelas->getSiswa();
                 $kehadiranSiswa
                     ->andWhere('kehadiranSiswa.siswa = :siswa')
                     ->setParameter('siswa', $siswaDiKelas->getSiswa())
                 ;
                 $kehadiranPerSiswa = $kehadiranSiswa->getQuery()->getResult();
 
-                foreach ($daftarStatusKehadiran as $key => $value) {
-                    $tmpJumlahStatus = 0;
-                    foreach ($kehadiranPerSiswa as $kehadiran) {
-                        if ($kehadiran instanceof KehadiranSiswa) {
-                            if ($key == $kehadiran->getStatusKehadiran()) {
-                                $tmpJumlahStatus++;
+                if (count($kehadiranPerSiswa) > 0) {
+                    foreach ($daftarStatusKehadiran as $key => $value) {
+                        $tmpJumlahStatus = 0;
+                        foreach ($kehadiranPerSiswa as $kehadiran) {
+                            if ($kehadiran instanceof KehadiranSiswa) {
+                                if ($key == $kehadiran->getStatusKehadiran()) {
+                                    $tmpJumlahStatus++;
+                                }
                             }
                         }
+                        $tmpKehadiran[$key] = $tmpJumlahStatus;
+                        $kehadiranSiswaTotal[$key] = isset($kehadiranSiswaTotal[$key]) ? $kehadiranSiswaTotal[$key] + $tmpJumlahStatus : $tmpJumlahStatus;
                     }
-                    $tmpKehadiran[$key] = $tmpJumlahStatus;
-                    $kehadiranSiswaTotal[$key] = isset($kehadiranSiswaTotal[$key]) ? $kehadiranSiswaTotal[$key] + $tmpJumlahStatus : $tmpJumlahStatus;
-                }
 
-                $tmpKehadiran['kelasAktif'] = $siswaDiKelas->getAktif();
-                $tmpKehadiran['keteranganKelasAktif'] = $siswaDiKelas->getKeterangan();
-                $tmpKehadiran['jumlahHadir'] = $tmpKehadiran['a-hadir-tepat'] + $tmpKehadiran['b-hadir-telat'];
-                $tmpKehadiran['jumlahTidakHadir'] = $tmpKehadiran['c-alpa'] + $tmpKehadiran['d-izin'] + $tmpKehadiran['e-sakit'];
-                $daftarKehadiran[] = $tmpKehadiran;
+                    $tmpKehadiran['siswa'] = $siswaDiKelas->getSiswa();
+                    $tmpKehadiran['kelasAktif'] = $siswaDiKelas->getAktif();
+                    $tmpKehadiran['keteranganKelasAktif'] = $siswaDiKelas->getKeterangan();
+                    $tmpKehadiran['jumlahHadir'] = $tmpKehadiran['a-hadir-tepat'] + $tmpKehadiran['b-hadir-telat'];
+                    $tmpKehadiran['jumlahTidakHadir'] = $tmpKehadiran['c-alpa'] + $tmpKehadiran['d-izin'] + $tmpKehadiran['e-sakit'];
+                    $daftarKehadiran[] = $tmpKehadiran;
+                }
             }
         }
 
@@ -441,30 +443,32 @@ class LaporanKehadiranSiswaController extends Controller
         foreach ($daftarSiswaDiKelas as $siswaDiKelas) {
             $tmpKehadiran = [];
             if ($siswaDiKelas instanceof SiswaKelas) {
-                $tmpKehadiran['siswa'] = $siswaDiKelas->getSiswa();
                 $kehadiranSiswa
                     ->andWhere('kehadiranSiswa.siswa = :siswa')
                     ->setParameter('siswa', $siswaDiKelas->getSiswa())
                 ;
                 $kehadiranPerSiswa = $kehadiranSiswa->getQuery()->getResult();
 
-                foreach ($daftarStatusKehadiran as $key => $value) {
-                    $tmpJumlahStatus = 0;
-                    foreach ($kehadiranPerSiswa as $kehadiran) {
-                        if ($kehadiran instanceof KehadiranSiswa) {
-                            if ($key == $kehadiran->getStatusKehadiran()) {
-                                $tmpJumlahStatus++;
+                if (count($kehadiranPerSiswa) > 0) {
+                    foreach ($daftarStatusKehadiran as $key => $value) {
+                        $tmpJumlahStatus = 0;
+                        foreach ($kehadiranPerSiswa as $kehadiran) {
+                            if ($kehadiran instanceof KehadiranSiswa) {
+                                if ($key == $kehadiran->getStatusKehadiran()) {
+                                    $tmpJumlahStatus++;
+                                }
                             }
                         }
+                        $tmpKehadiran[$key] = $tmpJumlahStatus;
                     }
-                    $tmpKehadiran[$key] = $tmpJumlahStatus;
-                }
 
-                $tmpKehadiran['kelasAktif'] = $siswaDiKelas->getAktif();
-                $tmpKehadiran['keteranganKelasAktif'] = $siswaDiKelas->getKeterangan();
-                $tmpKehadiran['jumlahHadir'] = $tmpKehadiran['a-hadir-tepat'] + $tmpKehadiran['b-hadir-telat'];
-                $tmpKehadiran['jumlahTidakHadir'] = $tmpKehadiran['c-alpa'] + $tmpKehadiran['d-izin'] + $tmpKehadiran['e-sakit'];
-                $daftarKehadiran[] = $tmpKehadiran;
+                    $tmpKehadiran['siswa'] = $siswaDiKelas->getSiswa();
+                    $tmpKehadiran['kelasAktif'] = $siswaDiKelas->getAktif();
+                    $tmpKehadiran['keteranganKelasAktif'] = $siswaDiKelas->getKeterangan();
+                    $tmpKehadiran['jumlahHadir'] = $tmpKehadiran['a-hadir-tepat'] + $tmpKehadiran['b-hadir-telat'];
+                    $tmpKehadiran['jumlahTidakHadir'] = $tmpKehadiran['c-alpa'] + $tmpKehadiran['d-izin'] + $tmpKehadiran['e-sakit'];
+                    $daftarKehadiran[] = $tmpKehadiran;
+                }
             }
         }
 
