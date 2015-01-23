@@ -14,6 +14,7 @@ parameters:
     app_title: "SisDik"
     proxypass: "0"
     proxypassname: "sisdik"
+    assets_base_url_http: ""
 
     messenger_provider: "zenziva"
     messenger_scheme: "http"
