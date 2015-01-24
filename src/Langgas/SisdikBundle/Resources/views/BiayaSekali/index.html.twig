@@ -32,6 +32,7 @@
     <thead>
         <tr>
             <th>{{ 'label.year.entry'|trans }}</th>
+            <th>{{ 'label.placement.study'|trans }}</th>
             <th>{{ 'label.fee.type.entry'|trans }}</th>
             <th class="{% if pagination.isSorted('biayaSekali.nominal') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 'biayaSekali.nominal') }}
@@ -45,8 +46,9 @@
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
-            <td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahun.tahun }}</td>
+            <td data-title="{{ 'label.placement.study'|trans }}">{% if data.penjurusan %}{{ data.penjurusan.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.fee.type.entry'|trans }}">{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }})</td>
             <td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
             <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

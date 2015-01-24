@@ -71,6 +71,30 @@ class BiayaSekaliType extends AbstractType
                 'disabled' => $options['mode'] == 'edit' ? true : false,
                 'horizontal_input_wrapper_class' => 'col-sm-4 col-md-3 col-lg-2',
             ])
+            ->add('penjurusan', 'entity', [
+                'class' => 'LanggasSisdikBundle:Penjurusan',
+                'label' => 'label.placement.study',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'empty_value' => 'label.pilih.penjurusan.studi',
+                'required' => false,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('penjurusan')
+                        ->where('penjurusan.sekolah = :sekolah')
+                        ->orderBy('penjurusan.root', 'ASC')
+                        ->addOrderBy('penjurusan.lft', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
+                'attr' => [
+                    'class' => 'xlarge',
+                ],
+                'read_only' => $options['mode'] == 'edit' ? true : false,
+                'disabled' => $options['mode'] == 'edit' ? true : false,
+            ])
         ;
 
         if ($options['mode'] == 'edit') {

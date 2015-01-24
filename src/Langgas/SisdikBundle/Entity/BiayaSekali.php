@@ -3,11 +3,10 @@
 namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="biaya_sekali", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="biaya_sekali_UNIQUE", columns={"jenisbiaya_id", "tahun_id"})
- * })
+ * @ORM\Table(name="biaya_sekali")
  * @ORM\Entity
  */
 class BiayaSekali
@@ -23,6 +22,8 @@ class BiayaSekali
 
     /**
      * @ORM\Column(name="nominal", type="bigint", nullable=true)
+     * @Assert\NotBlank
+     * @Assert\Length(min=5)
      *
      * @var integer
      */
@@ -52,6 +53,7 @@ class BiayaSekali
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Tahun
      */
@@ -62,10 +64,21 @@ class BiayaSekali
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Jenisbiaya
      */
     private $jenisbiaya;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Penjurusan")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var Penjurusan
+     */
+    private $penjurusan;
 
     /**
      * @return integer
@@ -169,5 +182,21 @@ class BiayaSekali
     public function getJenisbiaya()
     {
         return $this->jenisbiaya;
+    }
+
+    /**
+     * @param Penjurusan $penjurusan
+     */
+    public function setPenjurusan(Penjurusan $penjurusan = null)
+    {
+        $this->penjurusan = $penjurusan;
+    }
+
+    /**
+     * @return Penjurusan
+     */
+    public function getPenjurusan()
+    {
+        return $this->penjurusan;
     }
 }
