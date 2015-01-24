@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-15T21:33:52Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-01-24T20:05:20Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -118,7 +118,7 @@
         <jms:reference-file line="262">SisdikBundle/Controller/GelombangController.php</jms:reference-file>
         <jms:reference-file line="94">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.admissiongroup</source>
-        <target>Gelombang</target>
+        <target>Tahap Pendaftaran</target>
       </trans-unit>
       <trans-unit id="ab8e9fa07923cdb2610bcc3b25519ca83e906395" resname="links.alluser">
         <jms:reference-file line="616">SisdikBundle/Controller/PengaturanUserController.php</jms:reference-file>
@@ -315,7 +315,7 @@
         <jms:reference-file line="291">SisdikBundle/Controller/PenjurusanController.php</jms:reference-file>
         <jms:reference-file line="92">SisdikBundle/Menu/Builder.php</jms:reference-file>
         <source>links.placement</source>
-        <target>Penjurusan</target>
+        <target>Penjurusan Studi</target>
       </trans-unit>
       <trans-unit id="ce56b7b2f9b23b8976ef3b1d010ccd9561aff843" resname="links.presenceschedule">
         <jms:reference-file line="464">SisdikBundle/Controller/JadwalKehadiranKepulanganSingleController.php</jms:reference-file>
