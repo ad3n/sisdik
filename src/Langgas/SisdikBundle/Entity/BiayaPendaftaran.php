@@ -55,6 +55,7 @@ class BiayaPendaftaran
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="jenisbiaya_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Jenisbiaya
      */
@@ -65,6 +66,7 @@ class BiayaPendaftaran
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Tahun
      */
@@ -75,6 +77,7 @@ class BiayaPendaftaran
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="gelombang_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Gelombang
      */
