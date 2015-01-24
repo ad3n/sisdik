@@ -72,6 +72,7 @@ class BiayaPendaftaranType extends AbstractType
                     'class' => 'small',
                 ],
                 'read_only' => $options['mode'] == 'edit' ? true : false,
+                'disabled' => $options['mode'] == 'edit' ? true : false,
                 'horizontal_input_wrapper_class' => 'col-sm-4 col-md-3 col-lg-2',
             ])
             ->add('gelombang', 'entity', [
@@ -95,6 +96,7 @@ class BiayaPendaftaranType extends AbstractType
                     'class' => 'xlarge',
                 ],
                 'read_only' => $options['mode'] == 'edit' ? true : false,
+                'disabled' => $options['mode'] == 'edit' ? true : false,
                 'horizontal_input_wrapper_class' => 'col-sm-5 col-md-4 col-lg-3',
             ])
         ;
@@ -130,6 +132,7 @@ class BiayaPendaftaranType extends AbstractType
                     'class' => 'xlarge',
                 ],
                 'read_only' => $options['mode'] == 'edit' ? true : false,
+                'disabled' => $options['mode'] == 'edit' ? true : false,
             ])
             ->add('nominal', 'money', [
                 'currency' => 'IDR',

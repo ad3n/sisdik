@@ -68,6 +68,7 @@ class BiayaSekaliType extends AbstractType
                     'class' => 'small',
                 ],
                 'read_only' => $options['mode'] == 'edit' ? true : false,
+                'disabled' => $options['mode'] == 'edit' ? true : false,
                 'horizontal_input_wrapper_class' => 'col-sm-4 col-md-3 col-lg-2',
             ])
         ;
@@ -102,6 +103,8 @@ class BiayaSekaliType extends AbstractType
                 'attr' => [
                     'class' => 'xlarge',
                 ],
+                'read_only' => $options['mode'] == 'edit' ? true : false,
+                'disabled' => $options['mode'] == 'edit' ? true : false,
             ])
             ->add('nominal', 'money', [
                 'currency' => 'IDR',
