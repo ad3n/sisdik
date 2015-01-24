@@ -40,6 +40,7 @@
 }
 </style>
 <form action="{{ path('applicant_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
     <div class="form-group">
         {{ form_label(form.gelombang) }}
         <div class="col-sm-8 col-md-7 col-lg-7">
