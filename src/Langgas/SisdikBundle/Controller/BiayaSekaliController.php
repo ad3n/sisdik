@@ -156,6 +156,18 @@ class BiayaSekaliController extends Controller
             ;
 
             try {
+                $biayaSekali = $em->getRepository('LanggasSisdikBundle:BiayaSekali')
+                    ->findOneBy([
+                        'tahun' => $entity->getTahun(),
+                        'jenisbiaya' => $entity->getJenisbiaya(),
+                        'penjurusan' => $entity->getPenjurusan(),
+                    ])
+                ;
+
+                if ($biayaSekali instanceof BiayaSekali) {
+                    throw new DBALException();
+                }
+
                 $em->persist($entity);
                 $em->flush();
 
