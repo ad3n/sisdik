@@ -92,11 +92,11 @@ class Builder extends ContainerAware
             $settings->addChild($translator->trans('links.placement', [], 'navigations'), ['route' => 'settings_placement']);
             $settings->addChild($translator->trans('links.year', [], 'navigations'), ['route' => 'settings_year']);
             $settings->addChild($translator->trans('links.admissiongroup', [], 'navigations'), ['route' => 'settings_admissiongroup']);
+            $settings->addChild($translator->trans('links.jenisdokumensiswa', [], 'navigations'), ['route' => 'jenisdokumensiswa']);
             $settings->addChild($translator->trans('links.academicyear', [], 'navigations'), ['route' => 'academicyear']);
             $settings->addChild($translator->trans('links.smstemplate', [], 'navigations'), ['route' => 'sms_template']);
             $settings->addChild($translator->trans('links.layanan.sms', [], 'navigations'), ['route' => 'layanan_sms']);
             $settings->addChild($translator->trans('links.layanan.sms.periodik', [], 'navigations'), ['route' => 'layanan_smsperiodik']);
-            $settings->addChild($translator->trans('links.jenisdokumensiswa', [], 'navigations'), ['route' => 'jenisdokumensiswa']);
         }
 
         if ($securityContext->isGranted([
