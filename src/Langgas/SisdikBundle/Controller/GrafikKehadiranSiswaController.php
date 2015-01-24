@@ -112,6 +112,7 @@ class GrafikKehadiranSiswaController extends Controller
         $kehadiranSiswaTotal = $kehadiran;
         $kepulanganSiswaTotal = $kepulangan;
 
+        $daftarKelasPerTingkat = [];
         $kehadiranSiswaPerKelas = [];
         $kepulanganSiswaPerKelas = [];
         foreach ($daftarTingkat as $tingkat) {
