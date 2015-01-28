@@ -414,6 +414,16 @@ class Siswa
     private $sekolahAsal;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Penjurusan")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var Penjurusan
+     */
+    private $penjurusan;
+
+    /**
      * @ORM\OneToMany(targetEntity="OrangtuaWali", mappedBy="siswa", cascade={"persist", "remove"})
      * @ORM\OrderBy({"aktif" = "DESC"})
      *
@@ -1269,6 +1279,22 @@ class Siswa
     public function getSekolahAsal()
     {
         return $this->sekolahAsal;
+    }
+
+    /**
+     * @param Penjurusan $penjurusan
+     */
+    public function setPenjurusan(Penjurusan $penjurusan = null)
+    {
+        $this->penjurusan = $penjurusan;
+    }
+
+    /**
+     * @return Penjurusan
+     */
+    public function getPenjurusan()
+    {
+        return $this->penjurusan;
     }
 
     /**
