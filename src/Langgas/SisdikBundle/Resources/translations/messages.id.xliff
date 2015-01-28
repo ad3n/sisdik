@@ -1014,7 +1014,7 @@
         <jms:reference-file line="182">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="380">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
         <source>exception.unique.fee.registration</source>
-        <target>Kombinasi tahun, tahap pendaftaran, dan jenis biaya sudah digunakan</target>
+        <target>Kombinasi tahun, tahap pendaftaran, penjurusan studi, dan jenis biaya sudah digunakan</target>
       </trans-unit>
       <trans-unit id="9f12c31007af1c65bc0f28233d4bc33915bedb29" resname="exception.unique.mesin.wakil">
         <jms:reference-file line="85">SisdikBundle/Controller/MesinWakilController.php</jms:reference-file>
