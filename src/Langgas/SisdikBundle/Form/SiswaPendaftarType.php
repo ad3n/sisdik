@@ -56,22 +56,18 @@ class SiswaPendaftarType extends AbstractType
     {
         $sekolah = $this->getSekolah();
 
-        if ($options['mode'] != 'editregphoto') {
-            $builder->addEventSubscriber(new SekolahSubscriber($sekolah));
-
-            $builder
-                ->add('sekolah', 'sisdik_entityhidden', [
-                    'required' => true,
-                    'class' => 'LanggasSisdikBundle:Sekolah',
-                    'data' => $sekolah->getId(),
-                ])
-                ->add('tahun', 'sisdik_entityhidden', [
-                    'required' => true,
-                    'class' => 'LanggasSisdikBundle:Tahun',
-                    'data' => $options['tahun_aktif'],
-                ])
-            ;
-        }
+        $builder
+            ->add('sekolah', 'sisdik_entityhidden', [
+                'required' => true,
+                'class' => 'LanggasSisdikBundle:Sekolah',
+                'data' => $sekolah->getId(),
+            ])
+            ->add('tahun', 'sisdik_entityhidden', [
+                'required' => true,
+                'class' => 'LanggasSisdikBundle:Tahun',
+                'data' => $options['tahun_aktif'],
+            ])
+        ;
 
         if ($options['mode'] == 'new') {
             $builder
@@ -142,6 +138,34 @@ class SiswaPendaftarType extends AbstractType
                     ],
                     'label' => 'label.perujuk',
                 ])
+                ->add('tentukanPenjurusan', 'checkbox', [
+                    'label' => 'label.tentukan.penjurusan.studi',
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'penjurusan-check',
+                    ],
+                    'widget_checkbox_label' => 'widget',
+                    'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
+                ])
+                ->add('penjurusan', 'entity', [
+                    'class' => 'LanggasSisdikBundle:Penjurusan',
+                    'label' => 'label.placement.study',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'nama',
+                    'empty_value' => 'label.tanpa.penjurusan.studi',
+                    'required' => false,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('penjurusan')
+                            ->where('penjurusan.sekolah = :sekolah')
+                            ->orderBy('penjurusan.root', 'ASC')
+                            ->addOrderBy('penjurusan.lft', 'ASC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
+                ])
                 ->add('dibuatOleh', 'sisdik_entityhidden', [
                     'required' => true,
                     'class' => 'LanggasSisdikBundle:User',
@@ -189,6 +213,25 @@ class SiswaPendaftarType extends AbstractType
             }
 
             $builder
+                ->add('penjurusan', 'entity', [
+                    'class' => 'LanggasSisdikBundle:Penjurusan',
+                    'label' => 'label.placement.study',
+                    'multiple' => false,
+                    'expanded' => false,
+                    'property' => 'nama',
+                    'empty_value' => 'label.tanpa.penjurusan.studi',
+                    'required' => false,
+                    'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                        $qb = $repository->createQueryBuilder('penjurusan')
+                            ->where('penjurusan.sekolah = :sekolah')
+                            ->orderBy('penjurusan.root', 'ASC')
+                            ->addOrderBy('penjurusan.lft', 'ASC')
+                            ->setParameter('sekolah', $sekolah)
+                        ;
+
+                        return $qb;
+                    },
+                ])
                 ->add('namaLengkap', null, [
                     'required' => true,
                     'attr' => [

@@ -10,11 +10,11 @@
 .collection-item .control-group {
 /*     margin-bottom: 0; */
 }
-#referensi-container {
+#referensi-container, #penjurusan-container {
     background-color: #F2F3C9;
     margin-bottom: 18px;
 }
-#referensi-container .control-group {
+#referensi-container .control-group, #penjurusan-container .control-group {
     margin-bottom: 0;
 }
 .ui-widget {
@@ -58,6 +58,11 @@
     {{ form_row(form.adaReferensi) }}
     <div id="referensi-container">
         {{ form_row(form.namaReferensi) }}
+    </div>
+
+    {{ form_row(form.tentukanPenjurusan) }}
+    <div id="penjurusan-container">
+        {{ form_row(form.penjurusan) }}
     </div>
 
     {{ form_rest(form) }}
@@ -123,6 +128,19 @@ $(document).ready(function() {
     };
 
     $(".nama-referensi").autocomplete(options);
+
+    $(".penjurusan-check").change(function(){
+        if ($(this).is(":checked")) {
+            $('#penjurusan-container').show('fade');
+        } else {
+            $('#penjurusan-container').hide('fade');
+        }
+    });
+    if ($(".penjurusan-check").is(":checked")) {
+        $('#penjurusan-container').show();
+    } else {
+        $('#penjurusan-container').hide();
+    }
 });
 </script>
 {% endblock javascripts_custom %}

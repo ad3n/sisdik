@@ -80,6 +80,25 @@ class SiswaType extends AbstractType
                     'class' => 'medium',
                 ],
             ])
+            ->add('penjurusan', 'entity', [
+                'class' => 'LanggasSisdikBundle:Penjurusan',
+                'label' => 'label.placement.study',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'empty_value' => 'label.tanpa.penjurusan.studi',
+                'required' => false,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('penjurusan')
+                        ->where('penjurusan.sekolah = :sekolah')
+                        ->orderBy('penjurusan.root', 'ASC')
+                        ->addOrderBy('penjurusan.lft', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
+            ])
             ->add('sekolah', 'sisdik_entityhidden', [
                 'required' => true,
                 'class' => 'LanggasSisdikBundle:Sekolah',

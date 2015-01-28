@@ -414,6 +414,11 @@ class Siswa
     private $sekolahAsal;
 
     /**
+     * @var boolean
+     */
+    protected $tentukanPenjurusan;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Penjurusan")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
@@ -1279,6 +1284,22 @@ class Siswa
     public function getSekolahAsal()
     {
         return $this->sekolahAsal;
+    }
+
+    /**
+     * @param boolean $tentukanPenjurusan
+     */
+    public function setTentukanPenjurusan($tentukanPenjurusan)
+    {
+        $this->tentukanPenjurusan = $tentukanPenjurusan;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTentukanPenjurusan()
+    {
+        return $this->tentukanPenjurusan;
     }
 
     /**

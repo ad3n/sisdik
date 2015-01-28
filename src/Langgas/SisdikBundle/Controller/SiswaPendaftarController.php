@@ -198,6 +198,10 @@ class SiswaPendaftarController extends Controller
                 $entity->setReferensi($referensi);
             }
 
+            if ($form['tentukanPenjurusan']->getData() !== true) {
+                $entity->setPenjurusan(null);
+            }
+
             try {
                 $em->persist($entity);
                 $em->flush();
