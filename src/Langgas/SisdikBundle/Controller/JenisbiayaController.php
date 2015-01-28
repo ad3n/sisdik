@@ -76,7 +76,7 @@ class JenisbiayaController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new Jenisbiaya;
+        $entity = new Jenisbiaya();
         $form = $this->createForm('sisdik_jenisbiaya', $entity);
 
         return [
@@ -94,7 +94,7 @@ class JenisbiayaController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new Jenisbiaya;
+        $entity = new Jenisbiaya();
 
         $form = $this->createForm('sisdik_jenisbiaya', $entity);
 
@@ -116,7 +116,6 @@ class JenisbiayaController extends Controller
             return $this->redirect($this->generateUrl('fee_type_show', [
                 'id' => $entity->getId(),
             ]));
-
         }
 
         return [
@@ -152,8 +151,6 @@ class JenisbiayaController extends Controller
     }
 
     /**
-     * Edits an existing Jenisbiaya entity.
-     *
      * @Route("/{id}/update", name="fee_type_update")
      * @Method("post")
      * @Template("LanggasSisdikBundle:Jenisbiaya:edit.html.twig")
@@ -246,7 +243,7 @@ class JenisbiayaController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder([
-                'id' => $id
+                'id' => $id,
             ])
             ->add('id', 'hidden')
             ->getForm()
