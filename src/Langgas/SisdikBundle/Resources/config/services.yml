@@ -54,3 +54,9 @@ services:
         class: Langgas\SisdikBundle\Translator\EntityExtractor
         tags:
             - { name: jms_translation.file_visitor }
+
+    sisdik.akses.keamanan.sekolah_voter:
+        class: Langgas\SisdikBundle\Security\Authorization\Voter\SekolahVoter
+        public: false
+        tags:
+           - { name: security.voter }
