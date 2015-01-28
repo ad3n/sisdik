@@ -47,7 +47,7 @@
     {% for data in pagination %}
         <tr>
             <td data-title="{{ 'label.year.entry'|trans }}">{{ data.tahun.tahun }}</td>
-            <td data-title="{{ 'label.placement.study'|trans }}">{% if data.penjurusan %}{{ data.penjurusan.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.placement.study'|trans }}">{% if data.penjurusan %}{{ data.penjurusan.nama }}{% else %}<i>{{ 'label.semua.penjurusan.studi'|trans }}</i>{% endif %}</td>
             <td data-title="{{ 'label.fee.type.entry'|trans }}">{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }})</td>
             <td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
             <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>

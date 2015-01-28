@@ -77,7 +77,7 @@ class BiayaSekaliType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
-                'empty_value' => 'label.pilih.penjurusan.studi',
+                'empty_value' => 'label.semua.penjurusan.studi',
                 'required' => false,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('penjurusan')
