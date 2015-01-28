@@ -84,6 +84,16 @@ class BiayaPendaftaran
     private $gelombang;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Penjurusan")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="penjurusan_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var Penjurusan
+     */
+    private $penjurusan;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -201,5 +211,21 @@ class BiayaPendaftaran
     public function getGelombang()
     {
         return $this->gelombang;
+    }
+
+    /**
+     * @param Penjurusan $penjurusan
+     */
+    public function setPenjurusan(Penjurusan $penjurusan = null)
+    {
+        $this->penjurusan = $penjurusan;
+    }
+
+    /**
+     * @return Penjurusan
+     */
+    public function getPenjurusan()
+    {
+        return $this->penjurusan;
     }
 }
