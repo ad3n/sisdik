@@ -32,6 +32,7 @@
     <thead>
         <tr>
             <th>{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}</th>
+            <th>{{ 'label.placement.study'|trans }}</th>
             <th>{{ 'label.fee.type.entry'|trans }}</th>
             <th class="{% if pagination.isSorted('biayaPendaftaran.nominal') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 'biayaPendaftaran.nominal') }}
@@ -46,6 +47,7 @@
     {% for data in pagination %}
         <tr>
             <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{{ data.tahun.tahun }}, {{ data.gelombang.nama }}</td>
+            <td data-title="{{ 'label.placement.study'|trans }}">{% if data.penjurusan %}{{ data.penjurusan.nama }}{% else %}<i>{{ 'label.semua.penjurusan.studi'|trans }}</i>{% endif %}</td>
             <td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
             <td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
             <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>

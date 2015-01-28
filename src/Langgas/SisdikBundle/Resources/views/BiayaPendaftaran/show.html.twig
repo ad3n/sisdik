@@ -17,6 +17,8 @@
     <dd>{{ entity.tahun.tahun }}</dd>
     <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
     <dd>{{ entity.gelombang.nama }}</dd>
+    <dt>{{ 'label.placement.study'|trans }}</dt>
+    <dd>{% if entity.penjurusan %}{{ entity.penjurusan.nama }}{% else %}<i>{{ 'label.semua.penjurusan.studi'|trans }}</i>{% endif %}</dd>
     <dt>{{ 'label.fee.type.entry'|trans }}</dt>
     <dd>{{ entity.jenisbiaya.nama }} ({{ entity.jenisbiaya.kode }})</dd>
     <dt>{{ 'label.nominal'|trans }}</dt>
