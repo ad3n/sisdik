@@ -1328,7 +1328,7 @@ class Siswa
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -1362,7 +1362,7 @@ class Siswa
             }
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -1575,26 +1575,26 @@ class Siswa
         if (
             !$fs->exists(
                 self::WEBCAMPHOTO_DIR
-                . $this->getSekolah()->getId()
-                . DIRECTORY_SEPARATOR
-                . $this->getTahun()->getTahun()
+                .$this->getSekolah()->getId()
+                .DIRECTORY_SEPARATOR
+                .$this->getTahun()->getTahun()
             )
         ) {
             $fs->mkdir(
                 self::WEBCAMPHOTO_DIR
-                . $this->getSekolah()->getId()
-                . DIRECTORY_SEPARATOR
-                . $this->getTahun()->getTahun()
+                .$this->getSekolah()->getId()
+                .DIRECTORY_SEPARATOR
+                .$this->getTahun()->getTahun()
             );
         }
 
         return null === $this->fotoPendaftaran ?
             null : self::WEBCAMPHOTO_DIR
-                . $this->getSekolah()->getId()
-                . DIRECTORY_SEPARATOR
-                . $this->getTahun()->getTahun()
-                . DIRECTORY_SEPARATOR
-                . $this->fotoPendaftaran
+                .$this->getSekolah()->getId()
+                .DIRECTORY_SEPARATOR
+                .$this->getTahun()->getTahun()
+                .DIRECTORY_SEPARATOR
+                .$this->fotoPendaftaran
         ;
     }
 
@@ -1619,7 +1619,7 @@ class Siswa
      */
     public function getWebPathFotoDisk()
     {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadDir().DIRECTORY_SEPARATOR.$this->fotoDisk;
     }
 
     /**
@@ -1627,7 +1627,7 @@ class Siswa
      */
     public function getRelativePathFotoDisk()
     {
-        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->fotoDisk;
     }
 
     /**
@@ -1635,7 +1635,7 @@ class Siswa
      */
     public function getRelativePathFotoDiskSebelumnya()
     {
-        return null === $this->fotoDiskSebelumnya ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDiskSebelumnya;
+        return null === $this->fotoDiskSebelumnya ? null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->fotoDiskSebelumnya;
     }
 
     /**
@@ -1644,7 +1644,7 @@ class Siswa
     public function getRelativePathFotoDiskThumbSebelumnya()
     {
         return null === $this->fotoDiskSebelumnya ?
-            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDiskSebelumnya
+            null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.self::THUMBNAIL_PREFIX.$this->fotoDiskSebelumnya
         ;
     }
 
@@ -1668,7 +1668,7 @@ class Siswa
         if (null !== $this->file) {
             $this->fotoDiskSebelumnya = $this->fotoDisk;
 
-            $this->fotoDisk = sha1(uniqid(mt_rand(), true)) . '_' . $this->file->getClientOriginalName();
+            $this->fotoDisk = sha1(uniqid(mt_rand(), true)).'_'.$this->file->getClientOriginalName();
 
             $this->foto = $this->file->getClientOriginalName();
         }
@@ -1686,7 +1686,7 @@ class Siswa
 
         if ($this->file->move($this->getUploadRootDir(), $this->fotoDisk)) {
             $targetfile = $this->getAbsolutePath();
-            $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDisk;
+            $thumbnailfile = $this->getUploadRootDir().DIRECTORY_SEPARATOR.self::THUMBNAIL_PREFIX.$this->fotoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
             if (is_numeric($type)) {
@@ -1766,7 +1766,7 @@ class Siswa
      */
     public function getAbsolutePath()
     {
-        return null === $this->fotoDisk ? null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->fotoDisk;
     }
 
     /**
@@ -1774,7 +1774,7 @@ class Siswa
      */
     public function getWebPath()
     {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadDir().DIRECTORY_SEPARATOR.$this->fotoDisk;
     }
 
     /**
@@ -1782,7 +1782,7 @@ class Siswa
      */
     public function getWebPathThumbnail()
     {
-        return null === $this->fotoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fotoDisk;
+        return null === $this->fotoDisk ? null : $this->getUploadDir().DIRECTORY_SEPARATOR.self::THUMBNAIL_PREFIX.$this->fotoDisk;
     }
 
     /**
@@ -1790,7 +1790,7 @@ class Siswa
      */
     protected function getUploadRootDir()
     {
-        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
     }
 
     /**
@@ -1802,19 +1802,19 @@ class Siswa
         if (
             !$fs->exists(
                 self::PHOTO_DIR
-                . $this->getSekolah()->getId()
-                . DIRECTORY_SEPARATOR
-                . $this->getTahun()->getTahun()
+                .$this->getSekolah()->getId()
+                .DIRECTORY_SEPARATOR
+                .$this->getTahun()->getTahun()
             )
         ) {
             $fs->mkdir(
                 self::PHOTO_DIR
-                . $this->getSekolah()->getId()
-                . DIRECTORY_SEPARATOR
-                . $this->getTahun()->getTahun()
+                .$this->getSekolah()->getId()
+                .DIRECTORY_SEPARATOR
+                .$this->getTahun()->getTahun()
             );
         }
 
-        return self::PHOTO_DIR . $this->getSekolah()->getId() . DIRECTORY_SEPARATOR . $this->getTahun()->getTahun();
+        return self::PHOTO_DIR.$this->getSekolah()->getId().DIRECTORY_SEPARATOR.$this->getTahun()->getTahun();
     }
 }
