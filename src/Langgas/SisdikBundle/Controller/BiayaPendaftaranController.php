@@ -168,6 +168,19 @@ class BiayaPendaftaranController extends Controller
             ;
 
             try {
+                $biayaPendaftaran = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
+                    ->findOneBy([
+                        'tahun' => $entity->getTahun(),
+                        'gelombang' => $entity->getGelombang(),
+                        'penjurusan' => $entity->getPenjurusan(),
+                        'jenisbiaya' => $entity->getJenisbiaya(),
+                    ])
+                ;
+
+                if ($biayaPendaftaran instanceof BiayaPendaftaran) {
+                    throw new DBALException();
+                }
+
                 $em->persist($entity);
                 $em->flush();
 

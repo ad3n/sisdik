@@ -6,9 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="biaya_pendaftaran", uniqueConstraints={
- *     @ORM\UniqueConstraint(name="biaya_pendaftaran_UNIQUE", columns={"jenisbiaya_id", "tahun_id", "gelombang_id"})
- * })
+ * @ORM\Table(name="biaya_pendaftaran")
  * @ORM\Entity
  */
 class BiayaPendaftaran
