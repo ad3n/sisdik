@@ -5,6 +5,7 @@ namespace Langgas\SisdikBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -46,6 +47,8 @@ class LayananSmsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $sekolah = $this->getSekolah();
+
+        $builder->addEventSubscriber(new SekolahSubscriber($sekolah));
 
         $builder
             ->add('sekolah', 'sisdik_entityhidden', [

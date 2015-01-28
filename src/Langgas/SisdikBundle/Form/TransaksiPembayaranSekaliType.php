@@ -4,6 +4,7 @@ namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -54,6 +55,8 @@ class TransaksiPembayaranSekaliType extends AbstractType
     {
         $sekolah = $this->getSekolah();
         $user = $this->getUser();
+
+        $builder->addEventSubscriber(new SekolahSubscriber($sekolah));
 
         $builder
             ->add('sekolah', 'sisdik_entityhidden', [

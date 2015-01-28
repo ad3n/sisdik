@@ -5,6 +5,7 @@ namespace Langgas\SisdikBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\User;
+use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -54,6 +55,8 @@ class SiswaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $sekolah = $this->getSekolah();
+
+        $builder->addEventSubscriber(new SekolahSubscriber($sekolah));
 
         $builder
             ->add('tahun', 'entity', [

@@ -3,6 +3,7 @@
 namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -130,6 +131,8 @@ class UserFormType extends AbstractType
                 ;
             } else {
                 $sekolah = $this->getSekolah();
+
+                $builder->addEventSubscriber(new SekolahSubscriber($sekolah));
 
                 $builder
                     ->add('sekolah', 'sisdik_entityhidden', [

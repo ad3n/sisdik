@@ -3,6 +3,7 @@
 namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -131,6 +132,8 @@ class UserRegisterFormType extends BaseType
                 ;
             } else {
                 $sekolah = $this->getSekolah();
+
+                $builder->addEventSubscriber(new SekolahSubscriber($sekolah));
 
                 $builder
                     ->add('sekolah', 'sisdik_entityhidden', [
