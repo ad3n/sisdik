@@ -2,14 +2,14 @@
 
 namespace Langgas\SisdikBundle\Entity;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Langgas\SisdikBundle\Util\FileSizeFormatter;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="siswa", uniqueConstraints={
@@ -343,6 +343,7 @@ class Siswa
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Tahun
      */
@@ -353,6 +354,7 @@ class Siswa
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var Sekolah
      */
@@ -363,6 +365,7 @@ class Siswa
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
      * })
+     * @Assert\NotNull
      *
      * @var User
      */

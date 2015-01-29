@@ -198,7 +198,7 @@ form .clearfix {
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}, {{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang %}{{ data.gelombang.nama }}, {% endif %}{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.full'|trans }}">
                 {{ highlightResult(data.namaLengkap, searchkey)|raw }}
                 {% image '@LanggasSisdikBundle/Resources/public/images/jump-link.png' %}
