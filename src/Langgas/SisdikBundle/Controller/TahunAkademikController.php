@@ -6,11 +6,12 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -99,6 +100,10 @@ class TahunAkademikController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -202,6 +207,10 @@ class TahunAkademikController extends Controller
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_tahunakademik', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -227,6 +236,10 @@ class TahunAkademikController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -277,6 +290,10 @@ class TahunAkademikController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity TahunAkademik tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

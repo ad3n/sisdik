@@ -5,10 +5,11 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Langgas\SisdikBundle\Entity\Jenisbiaya;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -58,6 +59,10 @@ class JenisbiayaController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -140,6 +145,10 @@ class JenisbiayaController extends Controller
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_jenisbiaya', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -165,6 +174,10 @@ class JenisbiayaController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_jenisbiaya', $entity);
@@ -212,6 +225,10 @@ class JenisbiayaController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Jenisbiaya tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

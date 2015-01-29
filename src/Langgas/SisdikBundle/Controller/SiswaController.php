@@ -12,6 +12,10 @@ use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Util\EasyCSV\Reader;
 use Langgas\SisdikBundle\Util\SpreadsheetReader\SpreadsheetReader;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -19,10 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -151,6 +152,10 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -259,6 +264,10 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_siswa', $entity, ['mode' => 'edit']);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -285,6 +294,10 @@ class SiswaController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_siswa', $entity, ['mode' => 'edit']);
@@ -345,6 +358,10 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -372,6 +389,10 @@ class SiswaController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

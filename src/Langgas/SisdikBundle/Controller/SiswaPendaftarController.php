@@ -342,6 +342,10 @@ class SiswaPendaftarController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -377,6 +381,10 @@ class SiswaPendaftarController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
@@ -420,6 +428,10 @@ class SiswaPendaftarController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -550,6 +562,10 @@ class SiswaPendaftarController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
             'tahun_aktif' => $panitiaAktif[2],
             'mode' => 'editregphoto',
@@ -587,6 +603,10 @@ class SiswaPendaftarController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_siswapendaftar', $entity, [
@@ -649,6 +669,10 @@ class SiswaPendaftarController extends Controller
         $entity = $em->getRepository('LanggasSisdikBundle:Siswa')->find($id);
         if (!$entity && !$entity instanceof Siswa) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         if (count($entity->getPembayaranPendaftaran()) > 0) {

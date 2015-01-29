@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -90,6 +91,10 @@ class PenjurusanController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -173,6 +178,10 @@ class PenjurusanController extends Controller
             throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_penjurusan', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -198,6 +207,10 @@ class PenjurusanController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -245,6 +258,10 @@ class PenjurusanController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Penjurusan tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

@@ -5,20 +5,20 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
 use FOS\UserBundle\Doctrine\UserManager;
-use Langgas\SisdikBundle\Entity\Staf;
 use Langgas\SisdikBundle\Entity\Guru;
 use Langgas\SisdikBundle\Entity\PanitiaPendaftaran;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Staf;
 use Langgas\SisdikBundle\Entity\User;
 use Langgas\SisdikBundle\Entity\WaliKelas;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -462,6 +462,10 @@ class PengaturanUserController extends Controller
             }
         }
 
+        if ($this->get('security.context')->isGranted('edit', $user) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $form = $this->createForm('sisdik_useredit', $user, [
             'mode' => $mode,
             'role_hierarchy' => $this->container->getParameter('security.role_hierarchy.roles'),
@@ -578,6 +582,11 @@ class PengaturanUserController extends Controller
         $username = $user->getUsername();
 
         if ($confirmed == 1) {
+
+            if ($this->get('security.context')->isGranted('delete', $user) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+            }
+
             try {
                 $userManager->deleteUser($user);
 

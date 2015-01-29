@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
@@ -229,7 +230,7 @@ class JadwalKehadiranController extends Controller
             $results = $querybuilder->getQuery()->getResult();
 
             foreach ($results as $result) {
-                $entity = new JadwalKehadiran;
+                $entity = new JadwalKehadiran();
 
                 $entity->setSekolah($sekolah);
                 $entity->setTahunAkademik($tahunAkademik);
@@ -239,8 +240,12 @@ class JadwalKehadiranController extends Controller
                 $entity->setStatusKehadiran($result->getStatusKehadiran());
 
                 $entity->setPerulangan($perulangan);
-                if ($perulangan == 'b-mingguan') $entity->setMingguanHariKe($mingguanHariKe);
-                if ($perulangan == 'c-bulanan') $entity->setBulananHariKe($bulananHariKe);
+                if ($perulangan == 'b-mingguan') {
+                    $entity->setMingguanHariKe($mingguanHariKe);
+                }
+                if ($perulangan == 'c-bulanan') {
+                    $entity->setBulananHariKe($bulananHariKe);
+                }
 
                 $entity->setParamstatusDariJam($result->getParamstatusDariJam());
                 $entity->setParamstatusHinggaJam($result->getParamstatusHinggaJam());
@@ -280,7 +285,7 @@ class JadwalKehadiranController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new JadwalKehadiran;
+        $entity = new JadwalKehadiran();
         $form = $this->createForm('sisdik_jadwalkehadiran', $entity);
         $form->submit($request);
 
@@ -320,7 +325,7 @@ class JadwalKehadiranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = new JadwalKehadiran;
+        $entity = new JadwalKehadiran();
         $form = $this->createForm('sisdik_jadwalkehadiran', $entity);
 
         return [
@@ -405,6 +410,10 @@ class JadwalKehadiranController extends Controller
             throw $this->createNotFoundException('Entity JadwalKehadiran tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm('sisdik_jadwalkehadiran', $entity);
         $editForm->submit($request);
@@ -448,6 +457,10 @@ class JadwalKehadiranController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity JadwalKehadiran tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             $em->remove($entity);
@@ -535,7 +548,7 @@ class JadwalKehadiranController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder([
-                'id' => $id
+                'id' => $id,
             ])
             ->add('id', 'hidden')
             ->getForm()

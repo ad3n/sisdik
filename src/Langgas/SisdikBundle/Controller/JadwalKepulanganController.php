@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
@@ -349,6 +350,10 @@ class JadwalKepulanganController extends Controller
             throw $this->createNotFoundException('Entity JadwalKepulangan tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -378,6 +383,10 @@ class JadwalKepulanganController extends Controller
             throw $this->createNotFoundException('Entity JadwalKepulangan tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_jadwalkepulangan', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -405,6 +414,10 @@ class JadwalKepulanganController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JadwalKepulangan tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -450,6 +463,10 @@ class JadwalKepulanganController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity JadwalKepulangan tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             $em->remove($entity);

@@ -5,11 +5,12 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -134,6 +135,10 @@ class JenisDokumenSiswaController extends Controller
             throw $this->createNotFoundException('Entity JenisDokumenSiswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -157,6 +162,10 @@ class JenisDokumenSiswaController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JenisDokumenSiswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_jenisdokumensiswa', $entity);
@@ -185,6 +194,10 @@ class JenisDokumenSiswaController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity JenisDokumenSiswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -230,6 +243,10 @@ class JenisDokumenSiswaController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity JenisDokumenSiswa tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

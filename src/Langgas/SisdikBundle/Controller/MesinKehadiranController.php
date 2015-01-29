@@ -8,9 +8,9 @@ use Langgas\SisdikBundle\Entity\Sekolah;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -77,6 +77,10 @@ class MesinKehadiranController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -157,6 +161,10 @@ class MesinKehadiranController extends Controller
             throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_mesinkehadiran', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -182,6 +190,10 @@ class MesinKehadiranController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -227,6 +239,10 @@ class MesinKehadiranController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity MesinKehadiran tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             $em->remove($entity);

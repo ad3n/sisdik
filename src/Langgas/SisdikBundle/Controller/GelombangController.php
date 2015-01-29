@@ -5,10 +5,11 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\DBAL\DBALException;
 use Langgas\SisdikBundle\Entity\Gelombang;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -60,6 +61,10 @@ class GelombangController extends Controller
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -76,7 +81,7 @@ class GelombangController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new Gelombang;
+        $entity = new Gelombang();
         $form = $this->createForm('sisdik_gelombang', $entity);
 
         return [
@@ -94,7 +99,7 @@ class GelombangController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new Gelombang;
+        $entity = new Gelombang();
 
         $form = $this->createForm('sisdik_gelombang', $entity);
 
@@ -141,6 +146,10 @@ class GelombangController extends Controller
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_gelombang', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -166,6 +175,10 @@ class GelombangController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_gelombang', $entity);
@@ -215,6 +228,10 @@ class GelombangController extends Controller
                 throw $this->createNotFoundException('Entity Gelombang tak ditemukan.');
             }
 
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+            }
+
             try {
                 $em->remove($entity);
                 $em->flush();
@@ -248,7 +265,7 @@ class GelombangController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder([
-                'id' => $id
+                'id' => $id,
             ])
             ->add('id', 'hidden')
             ->getForm()

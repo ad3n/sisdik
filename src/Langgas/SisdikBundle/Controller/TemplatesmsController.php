@@ -4,13 +4,14 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Templatesms;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\Templatesms;
-use Langgas\SisdikBundle\Entity\Sekolah;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -61,6 +62,10 @@ class TemplatesmsController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -141,6 +146,10 @@ class TemplatesmsController extends Controller
             throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_templatesms', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -166,6 +175,10 @@ class TemplatesmsController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -212,6 +225,10 @@ class TemplatesmsController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity Templatesms tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {
