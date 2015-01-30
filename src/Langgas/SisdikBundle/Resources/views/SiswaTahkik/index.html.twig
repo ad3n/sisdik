@@ -4,6 +4,10 @@
 
 {% block content %}
 <style type="text/css">
+.tertahkik td {
+    color: green;
+    font-style: italic;
+}
 .form-inline .form-group {
     display: inline-block;
     margin-right: 0.4em;
@@ -197,8 +201,11 @@ form .clearfix {
     </thead>
     <tbody>
     {% for data in pagination %}
-        <tr>
-            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang %}{{ data.gelombang.nama }}, {% endif %}{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+        <tr{% if data.calonSiswa == false %} class="tertahkik" title="{{ 'label.tertahkik'|trans }}"{% endif %}>
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">
+                {% if data.calonSiswa == false %}<i class="fa fa-thumbs-o-up" style="cursor: default;"></i>{% endif %}
+                {% if data.gelombang %}{{ data.gelombang.nama }}, {% endif %}{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}
+            </td>
             <td data-title="{{ 'label.name.full'|trans }}">
                 {{ highlightResult(data.namaLengkap, searchkey)|raw }}
                 {% image '@LanggasSisdikBundle/Resources/public/images/jump-link.png' %}
@@ -258,17 +265,21 @@ form .clearfix {
                 </a>
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+            {% if cariTertahkik == false %}
                 {% if data.melaluiProsesPendaftaran == 1 %}
                     {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
                 {% endif %}
+            {% endif %}
             </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
 
+{% if cariTertahkik == false %}
 {{ form_rest(tahkikform) }}
 <button type="submit" class="pull-right btn primary">{{ 'label.tahkikkan'|trans }}</button>
+{% endif %}
 </form>
 
 {{ knp_pagination_render(pagination) }}

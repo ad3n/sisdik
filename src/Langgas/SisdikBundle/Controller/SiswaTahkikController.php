@@ -258,6 +258,7 @@ class SiswaTahkikController extends Controller
             'pencarianLanjutan' => $pencarianLanjutan,
             'searchkey' => $searchkey,
             'idsiswa' => $idsiswa,
+            'cariTertahkik' => $searchdata['tertahkik'] === true ?: false,
         ];
     }
 
