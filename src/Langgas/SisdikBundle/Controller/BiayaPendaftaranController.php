@@ -159,7 +159,7 @@ class BiayaPendaftaranController extends Controller
                 ->update('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
                 ->leftJoin('pembayaran.daftarBiayaPendaftaran', 'daftar')
-                ->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal())
+                ->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran + '.$entity->getNominal())
                 ->where('siswa.tahun = :tahun')
                 ->andWhere('siswa.gelombang = :gelombang')
                 ->andWhere('siswa.sisaBiayaPendaftaran >= 0')
@@ -231,7 +231,6 @@ class BiayaPendaftaranController extends Controller
         if ($request->getMethod() == "POST") {
             $form->submit($request);
             if ($form->isValid()) {
-
                 $sessiondata = $form['sessiondata']->getData();
                 $this->get('session')->set('biaya_confirm', $sessiondata);
 
@@ -368,9 +367,9 @@ class BiayaPendaftaranController extends Controller
                 ;
 
                 if ($entity->getNominalSebelumnya() > $entity->getNominal()) {
-                    $qbsisabiaya->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran + ' . $entity->getNominal());
+                    $qbsisabiaya->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran + '.$entity->getNominal());
                 } elseif ($entity->getNominalSebelumnya() < $entity->getNominal()) {
-                    $qbsisabiaya->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran - ' . $entity->getNominal());
+                    $qbsisabiaya->set('siswa.sisaBiayaPendaftaran', 'siswa.sisaBiayaPendaftaran - '.$entity->getNominal());
                 }
             }
 
@@ -391,7 +390,7 @@ class BiayaPendaftaranController extends Controller
                 $this->get('session')->remove('biaya_confirm');
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.registration');
-                throw new DBALException($message . $e);
+                throw new DBALException($message.$e);
             }
 
             return $this->redirect($this->generateUrl('fee_registration_show', [
@@ -462,17 +461,40 @@ class BiayaPendaftaranController extends Controller
     }
 
     /**
-     * Finds total payables registration fee info
+     * Mencari info total biaya pendaftaran yang bisa dibayar
      *
-     * @Route("/totalinfo/{tahun}/{gelombang}/{json}", name="fee_registration_totalinfo", defaults={"json"=0})
+     * @Route("/totalinfo/{tahun}/{gelombang}/{penjurusan}/{json}", name="fee_registration_totalinfo")
      */
-    public function getFeeInfoTotalAction($tahun, $gelombang, $json)
+    public function getFeeInfoTotalAction($tahun, $gelombang, $penjurusan = -999, $json = 0)
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->findBy([
-            'tahun' => $tahun,
-            'gelombang' => $gelombang,
-        ]);
+
+        if ($penjurusan === -999) {
+            $entities = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->setParameter('tahun', $tahun)
+                ->setParameter('gelombang', $gelombang)
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $entities = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->setParameter('tahun', $tahun)
+                ->setParameter('gelombang', $gelombang)
+                ->setParameter('penjurusan', $penjurusan)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
         $total = 0;
         foreach ($entities as $entity) {
@@ -497,24 +519,43 @@ class BiayaPendaftaranController extends Controller
     /**
      * Finds total payment remains registration fee info
      *
-     * @Route("/remains/{tahun}/{gelombang}/{usedfee}/{json}", name="fee_registration_remains")
+     * @Route("/remains/{tahun}/{gelombang}/{usedfee}/{penjurusan}/{json}", name="fee_registration_remains")
      */
-    public function getFeeInfoRemainAction($tahun, $gelombang, $usedfee, $json = 0)
+    public function getFeeInfoRemainAction($tahun, $gelombang, $usedfee, $penjurusan = -999, $json = 0)
     {
         $em = $this->getDoctrine()->getManager();
         $usedfee = preg_replace('/,$/', '', $usedfee);
 
-        $querybuilder = $em->createQueryBuilder()
-            ->select('biaya')
-            ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
-            ->where('biaya.tahun = :tahun')
-            ->andWhere('biaya.gelombang = :gelombang')
-            ->setParameter("tahun", $tahun)
-            ->setParameter("gelombang", $gelombang)
-            ->andWhere('biaya.id NOT IN (:usedfee)')
-            ->setParameter("usedfee", preg_split('/,/', $usedfee))
-        ;
-        $entities = $querybuilder->getQuery()->getResult();
+        if ($penjurusan === -999) {
+            $entities = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->andWhere('biaya.id NOT IN (:usedfee)')
+                ->setParameter('tahun', $tahun)
+                ->setParameter('gelombang', $gelombang)
+                ->setParameter("usedfee", preg_split('/,/', $usedfee))
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $entities = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->andWhere('biaya.id NOT IN (:usedfee)')
+                ->setParameter('tahun', $tahun)
+                ->setParameter('gelombang', $gelombang)
+                ->setParameter('penjurusan', $penjurusan)
+                ->setParameter("usedfee", preg_split('/,/', $usedfee))
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
         $feeamount = 0;
         $counter = 1;
@@ -549,7 +590,7 @@ class BiayaPendaftaranController extends Controller
 
         if ($entity instanceof BiayaPendaftaran) {
             if ($type == 1) {
-                $info = $entity->getJenisbiaya()->getNama() . " (" . number_format($entity->getNominal(), 0, ',', '.') . ")";
+                $info = $entity->getJenisbiaya()->getNama()." (".number_format($entity->getNominal(), 0, ',', '.').")";
             } elseif ($type == 2) {
                 $info = $entity->getJenisbiaya()->getNama();
             } elseif ($type == 3) {
