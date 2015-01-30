@@ -8,6 +8,10 @@
     display: inline-block;
     margin-right: 0.4em;
 }
+.tertahkik td {
+    color: green;
+    font-style: italic;
+}
 </style>
 
 <div class="filter-section">
@@ -29,7 +33,8 @@
 <div class="clearfix"></div>
 
 <div class="pull-left info-jumlah">
-    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}
+    {{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}<br>
+    {{ 'label.jumlah.pendaftar.tertahkik'|trans }}: {{ pendaftarTertahkik }}
 </div>
 
 {% if tampilkanTercari %}
@@ -54,8 +59,11 @@
     </thead>
     <tbody>
     {% for data in pagination %}
-        <tr>
-            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">{% if data.gelombang %}{{ data.gelombang.nama }}, {% endif %}{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
+        <tr{% if data.calonSiswa == false %} class="tertahkik" title="{{ 'label.tertahkik'|trans }}"{% endif %}>
+            <td data-title="{{ 'label.admissiongroup.entry'|trans }}, {{ 'label.application.number'|trans }}">
+                {% if data.calonSiswa == false %}<i class="fa fa-thumbs-o-up" style="cursor: default;"></i>{% endif %}
+                {% if data.gelombang %}{{ data.gelombang.nama }}, {% endif %}{{ highlightResult(data.nomorPendaftaran, searchkey)|raw -}}
+            </td>
             <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.parent.or.guardian'|trans }}">{{ highlightResult(data.orangtuaWali[0].nama, searchkey)|raw }}</td>
             <td data-title="{{ 'label.mobilephone.parent'|trans }}">{{ highlightResult(data.orangtuaWali[0].ponsel, searchkey)|raw }}</td>

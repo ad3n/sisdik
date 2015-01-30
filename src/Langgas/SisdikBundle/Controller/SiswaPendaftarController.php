@@ -57,18 +57,35 @@ class SiswaPendaftarController extends Controller
 
         $searchform = $this->createForm('sisdik_caripendaftar');
 
-        $qbtotal = $em->createQueryBuilder()
-            ->select('COUNT(siswa.id)')
+        $pendaftarTotal = $em->createQueryBuilder()
+            ->select($em->createQueryBuilder()->expr()->count('siswa.id'))
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        $pendaftarTertahkik = $em->createQueryBuilder()
+            ->select($em->createQueryBuilder()->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
             ->where('siswa.calonSiswa = :calon')
             ->andWhere('siswa.sekolah = :sekolah')
-            ->andWhere('tahun.id = ?1')
-            ->setParameter('calon', true)
+            ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
+            ->setParameter('calon', false)
             ->setParameter('sekolah', $sekolah)
-            ->setParameter(1, $panitiaAktif[2])
+            ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -77,17 +94,17 @@ class SiswaPendaftarController extends Controller
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.sekolahAsal', 'sekolahAsal')
             ->leftJoin('siswa.orangtuaWali', 'orangtua')
-            ->where('siswa.calonSiswa = :calon')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('orangtua.aktif = :ortuaktif')
-            ->andWhere('siswa.sekolah = :sekolah')
-            ->andWhere('tahun.id = ?1')
+            ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
-            ->setParameter('calon', true)
-            ->setParameter('ortuaktif', true)
             ->setParameter('sekolah', $sekolah)
-            ->setParameter(1, $panitiaAktif[2])
+            ->setParameter('ortuaktif', true)
+            ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         $searchform->submit($this->getRequest());
@@ -127,7 +144,11 @@ class SiswaPendaftarController extends Controller
             }
         }
 
-        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = $qbTercari->select($em->createQueryBuilder()->expr()->count('siswa.id'))
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -137,6 +158,7 @@ class SiswaPendaftarController extends Controller
             'searchform' => $searchform->createView(),
             'panitiaAktif' => $panitiaAktif,
             'pendaftarTotal' => $pendaftarTotal,
+            'pendaftarTertahkik' => $pendaftarTertahkik,
             'pendaftarTercari' => $pendaftarTercari,
             'tampilkanTercari' => $tampilkanTercari,
             'searchkey' => $searchkey,
