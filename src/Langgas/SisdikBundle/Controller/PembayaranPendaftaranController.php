@@ -3,18 +3,19 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Langgas\SisdikBundle\Entity\Gelombang;
-use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
-use Langgas\SisdikBundle\Entity\OrangtuaWali;
-use Langgas\SisdikBundle\Entity\LayananSms;
-use Langgas\SisdikBundle\Entity\PilihanLayananSms;
-use Langgas\SisdikBundle\Entity\VendorSekolah;
-use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
-use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
-use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\LayananSms;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\Penjurusan;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Util\Messenger;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,8 +51,10 @@ class PembayaranPendaftaranController extends Controller
         $pendaftarTotal = $em->createQueryBuilder()
             ->select('COUNT(siswa.id)')
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
-            ->andWhere('siswa.sekolah = :sekolah')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('melaluiProsesPendaftaran', true)
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -62,11 +65,13 @@ class PembayaranPendaftaranController extends Controller
             ->leftJoin('siswa.tahun', 'tahun')
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.sekolahAsal', 'sekolahasal')
-            ->andWhere('siswa.sekolah = :sekolah')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         $searchform->submit($this->getRequest());
@@ -93,10 +98,10 @@ class PembayaranPendaftaranController extends Controller
                 $querybuilder
                     ->andWhere(
                         'siswa.namaLengkap LIKE :namalengkap '
-                        . ' OR siswa.nomorPendaftaran LIKE :nomorpendaftaran '
-                        . ' OR siswa.keterangan LIKE :keterangan '
-                        . ' OR sekolahasal.nama LIKE :sekolahasal '
-                        . ' OR transaksi.nomorTransaksi = :nomortransaksi '
+                        .' OR siswa.nomorPendaftaran LIKE :nomorpendaftaran '
+                        .' OR siswa.keterangan LIKE :keterangan '
+                        .' OR sekolahasal.nama LIKE :sekolahasal '
+                        .' OR transaksi.nomorTransaksi = :nomortransaksi '
                     )
                     ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
                     ->setParameter('nomorpendaftaran', "%{$searchdata['searchkey']}%")
@@ -122,8 +127,8 @@ class PembayaranPendaftaranController extends Controller
 
                 $querybuilder
                     ->andWhere("siswa.waktuSimpan BETWEEN :datefrom AND :dateto")
-                    ->setParameter('datefrom', $currentdate->format('Y-m-d') . ' 00:00:00')
-                    ->setParameter('dateto', $currentdate->format('Y-m-d') . ' 23:59:59')
+                    ->setParameter('datefrom', $currentdate->format('Y-m-d').' 00:00:00')
+                    ->setParameter('dateto', $currentdate->format('Y-m-d').' 23:59:59')
                 ;
 
                 $tampilkanTercari = true;
@@ -166,16 +171,19 @@ class PembayaranPendaftaranController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->findOneBy([
+            'id' => $sid,
+            'melaluiProsesPendaftaran' => true,
+        ]);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
+            throw $this->createNotFoundException('Entity Siswa yang diminta tak ditemukan.');
         }
 
         $entities = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->findBy(['siswa' => $siswa]);
 
         $itemBiaya = $this->getBiayaProperties($siswa);
 
-        if (count($itemBiaya['semua']) == count($itemBiaya['tersimpan']) && count($itemBiaya['tersimpan']) > 0) {
+        if (count($itemBiaya['semua']) == count($itemBiaya['tersimpan']) && count($itemBiaya['tersimpan']) > 0 && count($itemBiaya['tersisa']) <= 0) {
             return [
                 'entities' => $entities,
                 'siswa' => $siswa,
@@ -279,7 +287,7 @@ class PembayaranPendaftaranController extends Controller
                     $currentPaymentAmount = $transaksi->getNominalPembayaran();
                     $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
                     $transaksi->setNomorTransaksi(
-                        TransaksiPembayaranPendaftaran::tandakwitansi . $now->format('Y') . $now->format('m') . ($nomormax + 1)
+                        TransaksiPembayaranPendaftaran::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
                     );
                 }
             }
@@ -483,7 +491,7 @@ class PembayaranPendaftaranController extends Controller
                                 $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                                 $tekstemplate = str_replace(
                                     "%besar-pembayaran%",
-                                    $symbol . ". " . number_format($currentPaymentAmount, 0, ',', '.'),
+                                    $symbol.". ".number_format($currentPaymentAmount, 0, ',', '.'),
                                     $tekstemplate
                                 );
 
@@ -550,7 +558,7 @@ class PembayaranPendaftaranController extends Controller
                                     $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                                     $tekstemplate = str_replace(
                                         "%total-pembayaran%",
-                                        $symbol . ". " . number_format($totalPayment, 0, ',', '.'),
+                                        $symbol.". ".number_format($totalPayment, 0, ',', '.'),
                                         $tekstemplate
                                     );
 
@@ -811,7 +819,7 @@ class PembayaranPendaftaranController extends Controller
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
                 $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
                 $transaksi->setNomorTransaksi(
-                    TransaksiPembayaranPendaftaran::tandakwitansi . $now->format('Y') . $now->format('m') . ($nomormax + 1)
+                    TransaksiPembayaranPendaftaran::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
                 );
             }
             $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
@@ -901,7 +909,7 @@ class PembayaranPendaftaranController extends Controller
                                 $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                                 $tekstemplate = str_replace(
                                     "%besar-pembayaran%",
-                                    $symbol . ". " . number_format($currentPaymentAmount, 0, ',', '.'),
+                                    $symbol.". ".number_format($currentPaymentAmount, 0, ',', '.'),
                                     $tekstemplate
                                 );
 
@@ -968,7 +976,7 @@ class PembayaranPendaftaranController extends Controller
                                     $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                                     $tekstemplate = str_replace(
                                         "%total-pembayaran%",
-                                        $symbol . ". " . number_format($totalPayment, 0, ',', '.'),
+                                        $symbol.". ".number_format($totalPayment, 0, ',', '.'),
                                         $tekstemplate
                                     );
 
@@ -1040,14 +1048,34 @@ class PembayaranPendaftaranController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $biayaPendaftaran = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')
-            ->findBy([
-                'tahun' => $siswa->getTahun(),
-                'gelombang' => $siswa->getGelombang(),
-            ], [
-                'urutan' => 'ASC',
-            ])
-        ;
+        if ($siswa->getPenjurusan() instanceof Penjurusan) {
+            $biayaPendaftaran = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->orderBy('biaya.urutan', 'ASC')
+                ->setParameter('tahun', $siswa->getTahun())
+                ->setParameter('gelombang', $siswa->getGelombang())
+                ->setParameter('penjurusan', $siswa->getPenjurusan())
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $biayaPendaftaran = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.gelombang = :gelombang')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->orderBy('biaya.urutan', 'ASC')
+                ->setParameter('tahun', $siswa->getTahun())
+                ->setParameter('gelombang', $siswa->getGelombang())
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
         $idBiayaSemua = [];
         foreach ($biayaPendaftaran as $biaya) {
