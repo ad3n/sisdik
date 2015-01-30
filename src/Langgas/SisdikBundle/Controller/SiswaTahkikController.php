@@ -47,7 +47,7 @@ class SiswaTahkikController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbTotal = $em->createQueryBuilder()
+        $pendaftarTotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
@@ -57,10 +57,11 @@ class SiswaTahkikController extends Controller
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunaktif', $panitiaAktif[2])
             ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTotal = $qbTotal->getQuery()->getSingleScalarResult();
 
-        $qbTertahkik = $em->createQueryBuilder()
+        $pendaftarTertahkik = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
@@ -72,8 +73,9 @@ class SiswaTahkikController extends Controller
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunaktif', $panitiaAktif[2])
             ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTertahkik = $qbTertahkik->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -229,7 +231,8 @@ class SiswaTahkikController extends Controller
             $pencarianLanjutan = true;
         }
 
-        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('siswa.id')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
