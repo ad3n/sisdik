@@ -47,29 +47,33 @@ class SiswaTahkikController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $qbTotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
-            ->andWhere('siswa.sekolah = :sekolah')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
-        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
+        $pendaftarTotal = $qbTotal->getQuery()->getSingleScalarResult();
 
-        $qbtertahkik = $em->createQueryBuilder()
+        $qbTertahkik = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
-            ->andWhere('siswa.calonSiswa = :calon')
+            ->where('siswa.calonSiswa = :calon')
             ->andWhere('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->setParameter('calon', false)
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
-        $pendaftarTertahkik = $qbtertahkik->getQuery()->getSingleScalarResult();
+        $pendaftarTertahkik = $qbTertahkik->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -78,15 +82,17 @@ class SiswaTahkikController extends Controller
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.sekolahAsal', 'sekolahasal')
             ->leftJoin('siswa.orangtuaWali', 'orangtua')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('orangtua.aktif = :ortuaktif')
-            ->andWhere('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
-            ->setParameter('ortuaktif', true)
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('ortuaktif', true)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         if ($searchform->isValid()) {
@@ -286,6 +292,7 @@ class SiswaTahkikController extends Controller
             $entities = $em->getRepository('LanggasSisdikBundle:Siswa')
                 ->findBy([
                     'id' => preg_split('/:/', $idsiswa),
+                    'melaluiProsesPendaftaran' => true,
                 ])
             ;
             foreach ($entities as $entity) {

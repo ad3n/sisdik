@@ -229,13 +229,21 @@ form .clearfix {
 
                 {% if biayaTersimpan != '' %}
                     {% set remainInfo %}
-                        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                        {% if data.penjurusan %}
+                            {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'penjurusan': data.penjurusan.id, 'json': 1}) %}
+                        {% else %}
+                            {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                        {% endif %}
                     {% endset %}
                     {% set remainInfo = remainInfo|json_decode %}
                     {% set totalBiayaSisa = remainInfo.biaya %}
                 {% else %}
                     {% set remainInfo %}
-                        {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                        {% if data.penjurusan %}
+                            {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'penjurusan': data.penjurusan.id, 'json': 1}) %}
+                        {% else %}
+                            {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                        {% endif %}
                     {% endset %}
                     {% set remainInfo = remainInfo|json_decode %}
                     {% set totalBiayaSisa = remainInfo.biaya %}
@@ -243,16 +251,16 @@ form .clearfix {
                 {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
 
                 {{ totalBayar|number_format(0, ',', '.') }} &rarr;
-                {% if totalPotongan > 0 %}
-                <span class="icon-gift" style="margin: 0;"></span>
-                {% endif %}
+                {% if totalPotongan > 0 %}<i class="fa fa-gift"></i>{% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
                 <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
-                {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
+                {% if data.melaluiProsesPendaftaran == 1 %}
+                    {{ form_widget(tahkikform['siswa_' ~ data.id]) }}
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
