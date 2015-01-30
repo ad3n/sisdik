@@ -143,3 +143,21 @@
 
 {{ knp_pagination_render(pagination) }}
 {% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    $(".belum-bayar").change(function() {
+        if ($(this).is(':checked')) {
+            $(".belum-lunas").removeAttr("checked");
+        }
+    });
+
+    $(".belum-lunas").change(function() {
+        if ($(this).is(':checked')) {
+            $(".belum-bayar").removeAttr("checked");
+        }
+    });
+});
+</script>
+{% endblock javascripts_custom %}

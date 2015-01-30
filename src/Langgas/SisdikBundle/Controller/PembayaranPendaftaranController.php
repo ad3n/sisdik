@@ -136,15 +136,16 @@ class PembayaranPendaftaranController extends Controller
 
             if ($searchdata['notsettled'] == true) {
                 $querybuilder
-                    ->andWhere('siswa.sisaBiayaPendaftaran = -999 OR siswa.sisaBiayaPendaftaran != 0')
-                    ->andWhere('siswa.gelombang IS NOT NULL')
+                    ->groupBy('siswa.id')
+                    ->having("SUM(pembayaran.nominalTotalTransaksi) < (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
                 ;
 
                 $tampilkanTercari = true;
             }
         }
 
-        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
@@ -333,8 +334,10 @@ class PembayaranPendaftaranController extends Controller
 
             $payableAmountDue = $siswa->getTotalNominalBiayaPendaftaran();
             $payableAmountRemain = $this->getPayableFeesRemain(
-                $siswa->getTahun()->getId(), $siswa->getGelombang()->getId(),
-                array_diff($itemBiaya['tersisa'], $itemBiayaTerproses)
+                $siswa->getTahun(),
+                $siswa->getGelombang(),
+                array_diff($itemBiaya['tersisa'], $itemBiayaTerproses),
+                $siswa->getPenjurusan()
             );
 
             $totalPayment = $siswa->getTotalNominalPembayaranPendaftaran() + $currentPaymentAmount;
@@ -826,9 +829,10 @@ class PembayaranPendaftaranController extends Controller
 
             $payableAmountDue = $siswa->getTotalNominalBiayaPendaftaran();
             $payableAmountRemain = $this->getPayableFeesRemain(
-                $siswa->getTahun()->getId(),
-                $siswa->getGelombang()->getId(),
-                $itemBiaya['tersisa']
+                $siswa->getTahun(),
+                $siswa->getGelombang(),
+                $itemBiaya['tersisa'],
+                $siswa->getPenjurusan()
             );
 
             $totalPayment = $totalPayment + $currentPaymentAmount;
@@ -1112,32 +1116,55 @@ class PembayaranPendaftaranController extends Controller
 
     /**
      * Mengambil jumlah biaya pendaftaran yang tersisa
+     *
+     * @param  Tahun      $tahun
+     * @param  Gelombang  $gelombang
+     * @param  array      $remainfee
+     * @param  Penjurusan $penjurusan
+     *
+     * @return integer
      */
-    private function getPayableFeesRemain($tahun, $gelombang, $remainfee)
+    private function getPayableFeesRemain(Tahun $tahun, Gelombang $gelombang, array $remainfee, Penjurusan $penjurusan = null)
     {
         $em = $this->getDoctrine()->getManager();
 
+        $feeamount = 0;
+
         if (is_array($remainfee) && count($remainfee) > 0) {
-            $querybuilder = $em->createQueryBuilder()
-                ->select('biaya')
-                ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
-                ->where('biaya.tahun = :tahun')
-                ->andWhere('biaya.gelombang = :gelombang')
-                ->andWhere('biaya.id IN (?1)')
-                ->setParameter("tahun", $tahun)
-                ->setParameter("gelombang", $gelombang)
-                ->setParameter(1, $remainfee)
-            ;
+            if ($penjurusan instanceof Penjurusan) {
+                $querybuilder = $em->createQueryBuilder()
+                    ->select('biaya')
+                    ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                    ->where('biaya.tahun = :tahun')
+                    ->andWhere('biaya.gelombang = :gelombang')
+                    ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                    ->andWhere('biaya.id IN (?1)')
+                    ->setParameter("tahun", $tahun)
+                    ->setParameter("gelombang", $gelombang)
+                    ->setParameter('penjurusan', $penjurusan)
+                    ->setParameter(1, $remainfee)
+                ;
+            } else {
+                $querybuilder = $em->createQueryBuilder()
+                    ->select('biaya')
+                    ->from('LanggasSisdikBundle:BiayaPendaftaran', 'biaya')
+                    ->where('biaya.tahun = :tahun')
+                    ->andWhere('biaya.gelombang = :gelombang')
+                    ->andWhere('biaya.penjurusan IS NULL')
+                    ->andWhere('biaya.id IN (?1)')
+                    ->setParameter("tahun", $tahun)
+                    ->setParameter("gelombang", $gelombang)
+                    ->setParameter(1, $remainfee)
+                ;
+            }
+
             $entities = $querybuilder->getQuery()->getResult();
 
-            $feeamount = 0;
             foreach ($entities as $entity) {
                 if ($entity instanceof BiayaPendaftaran) {
                     $feeamount += $entity->getNominal();
                 }
             }
-        } else {
-            $feeamount = 0;
         }
 
         return $feeamount;

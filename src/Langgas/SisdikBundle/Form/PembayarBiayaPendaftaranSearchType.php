@@ -81,7 +81,9 @@ class PembayarBiayaPendaftaranSearchType extends AbstractType
             ])
             ->add('nopayment', 'checkbox', [
                 'required' => false,
-                'attr' => [],
+                'attr' => [
+                    'class' => 'belum-bayar'
+                ],
                 'label_render' => true,
                 'label' => 'label.search.notpaid',
                 'widget_checkbox_label' => 'widget',
@@ -97,7 +99,9 @@ class PembayarBiayaPendaftaranSearchType extends AbstractType
             ])
             ->add('notsettled', 'checkbox', [
                 'required' => false,
-                'attr' => [],
+                'attr' => [
+                    'class' => 'belum-lunas'
+                ],
                 'label_render' => true,
                 'label' => 'label.search.paymentnotcomplete',
                 'widget_checkbox_label' => 'widget',
