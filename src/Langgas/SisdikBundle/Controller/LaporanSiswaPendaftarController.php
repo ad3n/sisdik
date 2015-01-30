@@ -10,6 +10,7 @@ use Langgas\SisdikBundle\Entity\Referensi;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\SekolahAsal;
 use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Util\Messenger;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -61,18 +62,35 @@ class LaporanSiswaPendaftarController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $pendaftarTotal = $em->createQueryBuilder()
+            ->select($qbe->expr()->countDistinct('siswa.id'))
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        $pendaftarTertahkik = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
             ->where('siswa.calonSiswa = :calon')
             ->andWhere('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
-            ->setParameter('calon', true)
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
+            ->setParameter('calon', false)
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -80,17 +98,17 @@ class LaporanSiswaPendaftarController extends Controller
             ->leftJoin('siswa.tahun', 'tahun')
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.orangtuaWali', 'orangtua')
-            ->where('siswa.calonSiswa = :calon')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('orangtua.aktif = :ortuaktif')
-            ->andWhere('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
-            ->setParameter('calon', true)
-            ->setParameter('ortuaktif', true)
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('ortuaktif', true)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         if ($searchform->isValid()) {
@@ -215,7 +233,8 @@ class LaporanSiswaPendaftarController extends Controller
             $pencarianLanjutan = true;
         }
 
-        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -227,6 +246,7 @@ class LaporanSiswaPendaftarController extends Controller
             'searchform' => $searchform->createView(),
             'panitiaAktif' => $panitiaAktif,
             'pendaftarTotal' => $pendaftarTotal,
+            'pendaftarTertahkik' => $pendaftarTertahkik,
             'pendaftarTercari' => $pendaftarTercari,
             'tampilkanTercari' => $tampilkanTercari,
             'pencarianLanjutan' => $pencarianLanjutan,
@@ -253,24 +273,44 @@ class LaporanSiswaPendaftarController extends Controller
 
         $judulLaporan = $this->get('translator')->trans('laporan.pendaftaran.siswa', [], 'headings');
 
+        $tahun = $em->getRepository('LanggasSisdikBundle:Tahun')->find($panitiaAktif[2]);
+        $judulLaporan .= " ".$this->get('translator')->trans('label.tahun')." ".$tahun->getTahun();
+
         $pendaftarTercari = 0;
 
         $searchform = $this->createForm('sisdik_carilaporanpendaftar');
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $pendaftarTotal = $em->createQueryBuilder()
+            ->select($qbe->expr()->countDistinct('siswa.id'))
+            ->from('LanggasSisdikBundle:Siswa', 'siswa')
+            ->leftJoin('siswa.tahun', 'tahun')
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        $pendaftarTertahkik = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
             ->where('siswa.calonSiswa = :calon')
             ->andWhere('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
-            ->setParameter('calon', true)
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
+            ->setParameter('calon', false)
             ->setParameter('sekolah', $sekolah)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -278,17 +318,17 @@ class LaporanSiswaPendaftarController extends Controller
             ->leftJoin('siswa.tahun', 'tahun')
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.orangtuaWali', 'orangtua')
-            ->where('siswa.calonSiswa = :calon')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('orangtua.aktif = :ortuaktif')
-            ->andWhere('siswa.sekolah = :sekolah')
             ->andWhere('tahun.id = :tahunaktif')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
-            ->setParameter('calon', true)
-            ->setParameter('ortuaktif', true)
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('ortuaktif', true)
             ->setParameter('tahunaktif', $panitiaAktif[2])
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         if ($searchform->isValid()) {
@@ -413,8 +453,10 @@ class LaporanSiswaPendaftarController extends Controller
             // TODO: display error response
         }
 
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('siswa.id')->getQuery()->getResult());
+
         $entities = $querybuilder->getQuery()->getResult();
-        $pendaftarTercari = count($entities);
 
         $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;
@@ -440,9 +482,11 @@ class LaporanSiswaPendaftarController extends Controller
             if (copy($documentbase, $documenttarget) === true) {
                 $ziparchive = new \ZipArchive();
                 $ziparchive->open($documenttarget);
+                $ziparchive->addFromString('styles.xml', $this->renderView("LanggasSisdikBundle:LaporanSiswaPendaftar:styles.xml.twig"));
                 $ziparchive->addFromString('content.xml', $this->renderView("LanggasSisdikBundle:LaporanSiswaPendaftar:report.xml.twig", [
                     'entities' => $entities,
                     'pendaftarTercari' => $pendaftarTercari,
+                    'pendaftarTertahkik' => $pendaftarTertahkik,
                     'pendaftarTotal' => $pendaftarTotal,
                     'judulLaporan' => $judulLaporan,
                 ]));

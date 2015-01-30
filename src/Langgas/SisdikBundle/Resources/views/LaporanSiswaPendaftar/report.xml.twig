@@ -123,91 +123,91 @@
                 </table:table-row>
             {% for entity in entities %}
                 <table:table-row table:style-name="ro1">
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.gelombang.nama }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.nomorPendaftaran }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.namaLengkap }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.orangtuaWali[0].nama }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.orangtuaWali[0].ponsel }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{% if entity.sekolahAsal is not null %}{{ entity.sekolahAsal.nama }}{% endif %}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.jenisKelamin }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.agama }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.alamat }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.keterangan }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.tempatLahir }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.tanggalLahir|localeDate('long') }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.email }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.namaPanggilan }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.kewarganegaraan }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.anakKe }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.jumlahSaudarakandung }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.jumlahSaudaratiri }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.statusOrphan }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.bahasaSeharihari }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.kodepos }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.telepon }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.ponselSiswa }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.sekolahTinggaldi }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.jarakTempat }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.caraKesekolah }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.beratbadan }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.tinggibadan }}</text:p>
                     </table:table-cell>
-                    <table:table-cell office:value-type="string">
+                    <table:table-cell office:value-type="string"{% if entity.calonSiswa == false %} table:style-name="tertahkik"{% endif %}>
                         <text:p>{{ entity.golongandarah }}</text:p>
                     </table:table-cell>
                 </table:table-row>
@@ -220,6 +220,11 @@
                 <table:table-row table:style-name="ro1">
                     <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.jumlah.pendaftar.total'|trans }}: {{ pendaftarTotal }}</text:p>
+                    </table:table-cell>
+                </table:table-row>
+                <table:table-row table:style-name="ro1">
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ 'label.jumlah.pendaftar.tertahkik'|trans }}: {{ pendaftarTertahkik }}</text:p>
                     </table:table-cell>
                 </table:table-row>
             </table:table>
