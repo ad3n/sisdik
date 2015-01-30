@@ -278,6 +278,13 @@ class Siswa
     private $golongandarah;
 
     /**
+     * @ORM\Column(name="melalui_proses_pendaftaran", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
+     */
+    private $melaluiProsesPendaftaran = false;
+
+    /**
      * @ORM\Column(name="lunas_biaya_pendaftaran", type="boolean", nullable=false, options={"default" = 0})
      *
      * @var boolean
@@ -1015,6 +1022,22 @@ class Siswa
     public function getGolongandarah()
     {
         return $this->golongandarah;
+    }
+
+    /**
+     * @param boolean $melaluiProsesPendaftaran
+     */
+    public function setMelaluiProsesPendaftaran($melaluiProsesPendaftaran)
+    {
+        $this->melaluiProsesPendaftaran = $melaluiProsesPendaftaran;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isMelaluiProsesPendaftaran()
+    {
+        return $this->melaluiProsesPendaftaran;
     }
 
     /**
