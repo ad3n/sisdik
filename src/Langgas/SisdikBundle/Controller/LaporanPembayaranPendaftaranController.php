@@ -425,8 +425,6 @@ class LaporanPembayaranPendaftaranController extends Controller
             // TODO: display error response
         }
 
-        // TODO membagi potongan harga secara merata ke biaya yang dibayar lebih dari satu dalam satu transaksi
-
         $qbTercari = clone $querybuilder;
         $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 

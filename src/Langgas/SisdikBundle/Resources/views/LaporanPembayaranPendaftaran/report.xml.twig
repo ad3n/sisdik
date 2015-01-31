@@ -104,7 +104,7 @@
                         {% if biaya.id in idBiayaTersimpanLunas %}
                             {% for id in idBiayaTersimpanLunas %}
                                 {% if id == biaya.id %}
-                                    {% set jumlahBiaya = jumlahBiaya + biayaTersimpanLunas[loop.index0] %}
+                                    {% set jumlahBiaya = jumlahBiaya + biayaTersimpanLunas[loop.index0] - (biayaTersimpanLunas[loop.index0] / jumlahBiayaLunas[loop.index0] * jumlahPotonganLunas[loop.index0]) %}
                                     {% if jumlahPotonganLunas[loop.index0] != 0 and jumlahBiayaLunas[loop.index0] != 0 %}
                                         <table:table-cell table:style-name="ribuan" table:formula="of:={{ biayaTersimpanLunas[loop.index0] }}-({{ biayaTersimpanLunas[loop.index0] }}/{{ jumlahBiayaLunas[loop.index0] }}*{{ jumlahPotonganLunas[loop.index0] }})" office:value-type="float" office:value="{{ biayaTersimpanLunas[loop.index0] - ( biayaTersimpanLunas[loop.index0] / jumlahBiayaLunas[loop.index0] * jumlahPotonganLunas[loop.index0] ) }}">
                                             <text:p>{{ biayaTersimpanLunas[loop.index0] }}</text:p>
