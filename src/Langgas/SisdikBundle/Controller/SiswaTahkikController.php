@@ -194,15 +194,14 @@ class SiswaTahkikController extends Controller
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
-                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
-                    $querybuilder
-                        ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
-                        ->groupBy('siswa.id')
-                    ;
+            if (isset($searchdata['jumlahBayar']) && $searchdata['jumlahBayar'] >= 0) {
+                $querybuilder
+                    ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
+                    ->groupBy('siswa.id')
+                ;
 
+                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                     if ($pembandingBayar == '<' || $pembandingBayar == '<=' || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
-                        // masukkan pencarian untuk yg belum melakukan transaksi
                         $querybuilder
                             ->having("(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
                                 ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
@@ -217,12 +216,18 @@ class SiswaTahkikController extends Controller
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
                 } else {
-                    $querybuilder
-                        ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
-                        ->groupBy('siswa.id')
-                        ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
-                        ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                    ;
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<=' || (($pembandingBayar == '=' || $pembandingBayar == '>=') && $searchdata['jumlahBayar'] == 0)) {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                            ->orHaving("SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    } else {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    }
                 }
 
                 $tampilkanTercari = true;
