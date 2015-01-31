@@ -54,16 +54,16 @@ class LaporanPembayaranPendaftaranController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $pendaftarTotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
-            ->leftJoin('siswa.tahun', 'tahun')
-            ->where('siswa.calonSiswa = :calon')
-            ->andWhere('siswa.sekolah = :sekolah')
-            ->setParameter('calon', true)
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -72,15 +72,15 @@ class LaporanPembayaranPendaftaranController extends Controller
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.sekolahAsal', 'sekolahasal')
             ->leftJoin('siswa.orangtuaWali', 'orangtua')
-            ->where('siswa.calonSiswa = :calon')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('orangtua.aktif = :ortuaktif')
-            ->andWhere('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
-            ->setParameter('calon', true)
-            ->setParameter('ortuaktif', true)
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('ortuaktif', true)
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         if ($searchform->isValid()) {
@@ -106,8 +106,10 @@ class LaporanPembayaranPendaftaranController extends Controller
                 $searchkey = $searchdata['searchkey'];
 
                 $querybuilder
-                    ->andWhere('siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
-                        .' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
+                    ->andWhere('siswa.namaLengkap LIKE :namalengkap'
+                        .' OR siswa.nomorPendaftaran LIKE :nomor '
+                        .' OR siswa.keterangan LIKE :keterangan'
+                        .' OR siswa.alamat LIKE :alamat '
                         .' OR orangtua.nama LIKE :namaortu '
                         .' OR orangtua.ponsel LIKE :ponselortu ')
                     ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
@@ -172,15 +174,14 @@ class LaporanPembayaranPendaftaranController extends Controller
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
-                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
-                    $querybuilder
-                        ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
-                        ->groupBy('siswa.id')
-                    ;
+            if (isset($searchdata['jumlahBayar']) && $searchdata['jumlahBayar'] >= 0) {
+                $querybuilder
+                    ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
+                    ->groupBy('siswa.id')
+                ;
 
+                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                     if ($pembandingBayar == '<' || $pembandingBayar == '<=' || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
-                        // masukkan pencarian untuk yg belum melakukan transaksi
                         $querybuilder
                             ->having("(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
                                 ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
@@ -189,18 +190,24 @@ class LaporanPembayaranPendaftaranController extends Controller
                     } else {
                         $querybuilder
                             ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
-                                ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar")
+                               ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar")
                         ;
                     }
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
                 } else {
-                    $querybuilder
-                        ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
-                        ->groupBy('siswa.id')
-                        ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
-                        ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                    ;
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<=' || (($pembandingBayar == '=' || $pembandingBayar == '>=') && $searchdata['jumlahBayar'] == 0)) {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                            ->orHaving("SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    } else {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    }
                 }
 
                 $tampilkanTercari = true;
@@ -212,7 +219,8 @@ class LaporanPembayaranPendaftaranController extends Controller
             $pencarianLanjutan = true;
         }
 
-        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
@@ -252,16 +260,16 @@ class LaporanPembayaranPendaftaranController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $pendaftarTotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
-            ->leftJoin('siswa.tahun', 'tahun')
-            ->where('siswa.calonSiswa = :calon')
-            ->andWhere('siswa.sekolah = :sekolah')
-            ->setParameter('calon', true)
+            ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('melaluiProsesPendaftaran', true)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $pendaftarTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -270,15 +278,15 @@ class LaporanPembayaranPendaftaranController extends Controller
             ->leftJoin('siswa.gelombang', 'gelombang')
             ->leftJoin('siswa.sekolahAsal', 'sekolahasal')
             ->leftJoin('siswa.orangtuaWali', 'orangtua')
-            ->where('siswa.calonSiswa = :calon')
+            ->where('siswa.sekolah = :sekolah')
             ->andWhere('orangtua.aktif = :ortuaktif')
-            ->andWhere('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.melaluiProsesPendaftaran = :melaluiProsesPendaftaran')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('gelombang.urutan', 'DESC')
             ->addOrderBy('siswa.nomorUrutPendaftaran', 'DESC')
-            ->setParameter('calon', true)
-            ->setParameter('ortuaktif', true)
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('ortuaktif', true)
+            ->setParameter('melaluiProsesPendaftaran', true)
         ;
 
         if ($searchform->isValid()) {
@@ -304,8 +312,10 @@ class LaporanPembayaranPendaftaranController extends Controller
                 $searchkey = $searchdata['searchkey'];
 
                 $querybuilder
-                    ->andWhere('siswa.namaLengkap LIKE :namalengkap OR siswa.nomorPendaftaran LIKE :nomor '
-                        .' OR siswa.keterangan LIKE :keterangan OR siswa.alamat LIKE :alamat '
+                    ->andWhere('siswa.namaLengkap LIKE :namalengkap'
+                        .' OR siswa.nomorPendaftaran LIKE :nomor '
+                        .' OR siswa.keterangan LIKE :keterangan'
+                        .' OR siswa.alamat LIKE :alamat '
                         .' OR orangtua.nama LIKE :namaortu '
                         .' OR orangtua.ponsel LIKE :ponselortu ')
                     ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
@@ -367,7 +377,7 @@ class LaporanPembayaranPendaftaranController extends Controller
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
+            if (isset($searchdata['jumlahBayar']) && $searchdata['jumlahBayar'] >= 0) {
                 $judulLaporan .= ", "
                     .$this->get('translator')->trans('label.paid.amount.total')
                     ." "
@@ -376,15 +386,13 @@ class LaporanPembayaranPendaftaranController extends Controller
                     .$searchdata['jumlahBayar']
                 ;
 
-                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
-                    $judulLaporan .= "%";
-                    $querybuilder
-                        ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
-                        ->groupBy('siswa.id')
-                    ;
+                $querybuilder
+                    ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
+                    ->groupBy('siswa.id')
+                ;
 
+                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                     if ($pembandingBayar == '<' || $pembandingBayar == '<=' || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
-                        // masukkan pencarian untuk yg belum melakukan transaksi
                         $querybuilder
                             ->having("(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
                                 ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
@@ -393,26 +401,36 @@ class LaporanPembayaranPendaftaranController extends Controller
                     } else {
                         $querybuilder
                             ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
-                                ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar")
+                               ." (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar")
                         ;
                     }
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
                 } else {
-                    $querybuilder
-                        ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
-                        ->groupBy('siswa.id')
-                        ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
-                        ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                    ;
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<=' || (($pembandingBayar == '=' || $pembandingBayar == '>=') && $searchdata['jumlahBayar'] == 0)) {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                            ->orHaving("SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    } else {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    }
                 }
             }
         } else {
             // TODO: display error response
         }
 
+        // TODO membagi potongan harga secara merata ke biaya yang dibayar lebih dari satu dalam satu transaksi
+
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
+
         $entities = $querybuilder->getQuery()->getResult();
-        $pendaftarTercari = count($entities);
 
         $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
         $outputdir = self::DOCUMENTS_OUTPUTDIR;

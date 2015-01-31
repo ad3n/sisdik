@@ -231,13 +231,21 @@ form .clearfix {
 
                 {% if biayaTersimpan != '' %}
                     {% set remainInfo %}
-                        {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                        {% if data.penjurusan %}
+                            {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'penjurusan': data.penjurusan.id, 'json': 1}) %}
+                        {% else %}
+                            {% render url('fee_registration_remains', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'usedfee': biayaTersimpan, 'json': 1}) %}
+                        {% endif %}
                     {% endset %}
                     {% set remainInfo = remainInfo|json_decode %}
                     {% set totalBiayaSisa = remainInfo.biaya %}
                 {% else %}
                     {% set remainInfo %}
-                        {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                        {% if data.penjurusan %}
+                            {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'penjurusan': data.penjurusan.id, 'json': 1}) %}
+                        {% else %}
+                            {% render url('fee_registration_totalinfo', {'tahun': data.tahun.id, 'gelombang': data.gelombang.id, 'json': 1}) %}
+                        {% endif %}
                     {% endset %}
                     {% set remainInfo = remainInfo|json_decode %}
                     {% set totalBiayaSisa = remainInfo.biaya %}
@@ -258,9 +266,13 @@ form .clearfix {
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+            {% if data.melaluiProsesPendaftaran == 1 %}
                 <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.lihat.data.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
+            {% else %}
+                ({{ 'label.tanpa.proses.pendaftaran'|trans }})
+            {% endif %}
             </td>
         </tr>
     {% endfor %}
