@@ -104,7 +104,7 @@ class BiayaPendaftaranType extends AbstractType
                 'label' => 'label.placement.study',
                 'multiple' => false,
                 'expanded' => false,
-                'property' => 'nama',
+                'property' => 'optionLabel',
                 'empty_value' => 'label.semua.penjurusan.studi',
                 'required' => false,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
