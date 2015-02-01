@@ -197,6 +197,7 @@ class SiswaPendaftarController extends Controller
             $em = $this->getDoctrine()->getManager();
 
             $entity->setCalonSiswa(true);
+            $entity->setMelaluiProsesPendaftaran(true);
 
             $qbmaxnum = $em->createQueryBuilder()
                 ->select('MAX(siswa.nomorUrutPendaftaran)')
