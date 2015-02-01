@@ -93,10 +93,12 @@ class PembayaranBiayaSekaliController extends Controller
                 $querybuilder
                     ->andWhere(
                         'siswa.namaLengkap LIKE :namalengkap '
+                        .' OR siswa.nomorIndukSistem LIKE :identitas '
                         .' OR siswa.keterangan LIKE :keterangan '
                         .' OR transaksi.nomorTransaksi = :nomortransaksi '
                     )
                     ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
+                    ->setParameter('identitas', "%{$searchdata['searchkey']}%")
                     ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
                     ->setParameter('nomortransaksi', $searchdata['searchkey'])
                 ;
@@ -104,7 +106,7 @@ class PembayaranBiayaSekaliController extends Controller
                 $tampilkanTercari = true;
             }
 
-            if ($searchdata['nopayment'] == true) {
+            if ($searchdata['nopayment'] === true) {
                 $querybuilder
                     ->andWhere("transaksi.nominalPembayaran IS NULL")
                 ;
@@ -112,16 +114,18 @@ class PembayaranBiayaSekaliController extends Controller
                 $tampilkanTercari = true;
             }
 
-            if ($searchdata['notsettled'] == true) {
+            if ($searchdata['nopayment'] === false && $searchdata['notsettled'] === true) {
                 $querybuilder
-                    ->andWhere('siswa.sisaBiayaSekali = -999 OR siswa.sisaBiayaSekali != 0')
+                    ->groupBy('siswa.id')
+                    ->having("SUM(pembayaran.nominalTotalTransaksi) < (SUM(DISTINCT(siswa.sisaBiayaSekali)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) OR SUM(DISTINCT(siswa.sisaBiayaSekali)) < 0")
                 ;
 
                 $tampilkanTercari = true;
             }
         }
 
-        $pendaftarTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);

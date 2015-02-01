@@ -49,6 +49,8 @@
                 <dd class="info-id">{{ siswa.nomorIndukSistem }}</dd>
                 <dt>{{ 'label.year.entry'|trans }}</dt>
                 <dd>{% if siswa.tahun is not null %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+                <dt>{{ 'label.placement.study'|trans }}</dt>
+                <dd>{% if siswa.penjurusan %}{{ siswa.penjurusan.nama }}{% endif %}</dd>
                 <dt>{{ 'label.nomor.induk'|trans }}</dt>
                 <dd>{{ siswa.nomorInduk }}</dd>
                 <dt>{{ 'label.name.full'|trans }}</dt>
