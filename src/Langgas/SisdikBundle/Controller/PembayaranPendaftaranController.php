@@ -113,7 +113,7 @@ class PembayaranPendaftaranController extends Controller
                 $tampilkanTercari = true;
             }
 
-            if ($searchdata['nopayment'] == true) {
+            if ($searchdata['nopayment'] === true) {
                 $querybuilder
                     ->andWhere("transaksi.nominalPembayaran IS NULL")
                     ->andWhere('siswa.gelombang IS NOT NULL')
@@ -122,7 +122,7 @@ class PembayaranPendaftaranController extends Controller
                 $tampilkanTercari = true;
             }
 
-            if ($searchdata['todayinput'] == true) {
+            if ($searchdata['todayinput'] === true) {
                 $currentdate = new \DateTime();
 
                 $querybuilder
@@ -134,7 +134,7 @@ class PembayaranPendaftaranController extends Controller
                 $tampilkanTercari = true;
             }
 
-            if ($searchdata['notsettled'] == true) {
+            if ($searchdata['nopayment'] === false && $searchdata['notsettled'] === true) {
                 $querybuilder
                     ->groupBy('siswa.id')
                     ->having("SUM(pembayaran.nominalTotalTransaksi) < (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
