@@ -346,6 +346,7 @@ class PembayaranPendaftaranController extends Controller
             $totalInfoResponse = $this->forward('LanggasSisdikBundle:BiayaPendaftaran:getFeeInfoTotal', [
                 'tahun' => $siswa->getTahun()->getId(),
                 'gelombang' => $siswa->getGelombang()->getId(),
+                'penjurusan' => $siswa->getPenjurusan() instanceof Penjurusan ? $siswa->getPenjurusan()->getId() : -999,
                 'json' => 1,
             ]);
             $totalFee = json_decode($totalInfoResponse->getContent());

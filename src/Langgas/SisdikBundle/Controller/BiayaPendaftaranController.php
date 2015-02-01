@@ -517,7 +517,7 @@ class BiayaPendaftaranController extends Controller
     }
 
     /**
-     * Finds total payment remains registration fee info
+     * Mencari info jumlah sisa biaya pendaftaran
      *
      * @Route("/remains/{tahun}/{gelombang}/{usedfee}/{penjurusan}/{json}", name="fee_registration_remains")
      */
