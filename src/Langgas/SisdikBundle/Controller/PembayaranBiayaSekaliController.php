@@ -3,24 +3,24 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Langgas\SisdikBundle\Entity\OrangtuaWali;
-use Langgas\SisdikBundle\Entity\LayananSms;
-use Langgas\SisdikBundle\Entity\PilihanLayananSms;
-use Langgas\SisdikBundle\Entity\VendorSekolah;
-use Langgas\SisdikBundle\Entity\Siswa;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\Tahun;
-use Langgas\SisdikBundle\Entity\PembayaranSekali;
-use Langgas\SisdikBundle\Entity\DaftarBiayaSekali;
-use Langgas\SisdikBundle\Entity\TransaksiPembayaranSekali;
 use Langgas\SisdikBundle\Entity\BiayaSekali;
+use Langgas\SisdikBundle\Entity\DaftarBiayaSekali;
+use Langgas\SisdikBundle\Entity\LayananSms;
+use Langgas\SisdikBundle\Entity\OrangtuaWali;
+use Langgas\SisdikBundle\Entity\PembayaranSekali;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Langgas\SisdikBundle\Entity\TransaksiPembayaranSekali;
+use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Util\Messenger;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -93,8 +93,8 @@ class PembayaranBiayaSekaliController extends Controller
                 $querybuilder
                     ->andWhere(
                         'siswa.namaLengkap LIKE :namalengkap '
-                        . ' OR siswa.keterangan LIKE :keterangan '
-                        . ' OR transaksi.nomorTransaksi = :nomortransaksi '
+                        .' OR siswa.keterangan LIKE :keterangan '
+                        .' OR transaksi.nomorTransaksi = :nomortransaksi '
                     )
                     ->setParameter('namalengkap', "%{$searchdata['searchkey']}%")
                     ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
@@ -262,7 +262,7 @@ class PembayaranBiayaSekaliController extends Controller
                     $currentPaymentAmount = $transaksi->getNominalPembayaran();
                     $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
                     $transaksi->setNomorTransaksi(
-                        TransaksiPembayaranSekali::tandakwitansi . $now->format('Y') . $now->format('m') . ($nomormax + 1)
+                        TransaksiPembayaranSekali::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
                     );
                 }
             }
@@ -396,7 +396,7 @@ class PembayaranBiayaSekaliController extends Controller
                         $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                         $tekstemplate = str_replace(
                             "%besar-pembayaran%",
-                            $symbol . ". " . number_format($currentPaymentAmount, 0, ',', '.'),
+                            $symbol.". ".number_format($currentPaymentAmount, 0, ',', '.'),
                             $tekstemplate
                         );
 
@@ -467,7 +467,7 @@ class PembayaranBiayaSekaliController extends Controller
                             $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                             $tekstemplate = str_replace(
                                 "%total-pembayaran%",
-                                $symbol . ". " . number_format($totalPayment, 0, ',', '.'),
+                                $symbol.". ".number_format($totalPayment, 0, ',', '.'),
                                 $tekstemplate
                             );
 
@@ -726,7 +726,7 @@ class PembayaranBiayaSekaliController extends Controller
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
                 $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
                 $transaksi->setNomorTransaksi(
-                    TransaksiPembayaranSekali::tandakwitansi . $now->format('Y') . $now->format('m') . ($nomormax + 1)
+                    TransaksiPembayaranSekali::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
                 );
             }
             $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
@@ -816,7 +816,7 @@ class PembayaranBiayaSekaliController extends Controller
                         $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                         $tekstemplate = str_replace(
                             "%besar-pembayaran%",
-                            $symbol . ". " . number_format($currentPaymentAmount, 0, ',', '.'),
+                            $symbol.". ".number_format($currentPaymentAmount, 0, ',', '.'),
                             $tekstemplate
                         );
 
@@ -887,7 +887,7 @@ class PembayaranBiayaSekaliController extends Controller
                             $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
                             $tekstemplate = str_replace(
                                 "%total-pembayaran%",
-                                $symbol . ". " . number_format($totalPayment, 0, ',', '.'),
+                                $symbol.". ".number_format($totalPayment, 0, ',', '.'),
                                 $tekstemplate
                             );
 
