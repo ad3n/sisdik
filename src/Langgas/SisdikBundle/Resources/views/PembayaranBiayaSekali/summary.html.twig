@@ -86,13 +86,21 @@
 
                 {% if itemBiayaTersimpan|length != 0 %}
                     {% set remainInfo %}
-                        {% render url('fee_once_remains', {'tahun': siswa.tahun.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
+                        {% if siswa.penjurusan %}
+                            {% render url('fee_once_remains', {'tahun': siswa.tahun.id, 'usedfee': itemBiayaTersimpan|join(','), 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
+                        {% else %}
+                            {% render url('fee_once_remains', {'tahun': siswa.tahun.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
+                        {% endif %}
                     {% endset %}
                     {% set remainInfo = remainInfo|json_decode %}
                     {% set totalBiayaSisa = remainInfo.biaya %}
                 {% else %}
                     {% set remainInfo %}
-                        {% render url('fee_once_totalinfo', {'tahun': siswa.tahun.id, 'json': 1}) %}
+                        {% if siswa.penjurusan %}
+                            {% render url('fee_once_totalinfo', {'tahun': siswa.tahun.id, 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
+                        {% else %}
+                            {% render url('fee_once_totalinfo', {'tahun': siswa.tahun.id, 'json': 1}) %}
+                        {% endif %}
                     {% endset %}
                     {% set remainInfo = remainInfo|json_decode %}
                     {% set totalBiayaSisa = remainInfo.biaya %}
@@ -101,9 +109,7 @@
 
                 <dt>{{ 'label.payables.amount.total'|trans }}</dt>
                 <dd>
-                {% if totalPotongan > 0 %}
-                    <span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span>
-                {% endif %}
+                {% if totalPotongan > 0 %}<i class="fa fa-gift"></i>{% endif %}
                 {{ totalBiaya|number_format(0, ',', '.') }}
                 </dd>
                 <dt>{{ 'label.paid.amount.total'|trans }}</dt>
@@ -143,9 +149,7 @@
             {% endif %}
             </td>
             <td data-title="{{ 'label.payables.amount'|trans }}">
-                {% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}
-                    <span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span>
-                {% endif %}
+                {% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}<i class="fa fa-gift"></i>{% endif %}
                 {{ (subTotalItemBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',', '.') }}
             </td>
             <td data-title="{{ 'label.paid.amount'|trans }}">{{ pembayaran.totalNominalTransaksiPembayaranSekali|number_format(0, ',', '.') }}</td>
@@ -181,7 +185,7 @@
 
 <div class="clearfix"></div>
 
-{% if itemBiayaSemua|length > itemBiayaTersimpan|length %}
+{% if itemBiayaTersisa|length > 0 %}
 <form id="pay-form" action="{{ path('pembayaran_biaya_sekali__create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     {{ form_row(form.daftarBiayaSekali) }}
     <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">

@@ -8,6 +8,7 @@ use Langgas\SisdikBundle\Entity\DaftarBiayaSekali;
 use Langgas\SisdikBundle\Entity\LayananSms;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Langgas\SisdikBundle\Entity\PembayaranSekali;
+use Langgas\SisdikBundle\Entity\Penjurusan;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Siswa;
@@ -161,7 +162,7 @@ class PembayaranBiayaSekaliController extends Controller
 
         $itemBiaya = $this->getBiayaProperties($siswa);
 
-        if (count($itemBiaya['semua']) == count($itemBiaya['tersimpan']) && count($itemBiaya['tersimpan']) > 0) {
+        if (count($itemBiaya['semua']) == count($itemBiaya['tersimpan']) && count($itemBiaya['tersimpan']) > 0 && count($itemBiaya['tersisa']) <= 0) {
             return [
                 'entities' => $entities,
                 'siswa' => $siswa,
@@ -310,8 +311,9 @@ class PembayaranBiayaSekaliController extends Controller
 
             $payableAmountDue = $siswa->getTotalNominalBiayaSekali();
             $payableAmountRemain = $this->getPayableFeesRemain(
-                    $siswa->getTahun()->getId(),
-                    array_diff($itemBiaya['tersisa'], $itemBiayaTerproses)
+                $siswa->getTahun(),
+                array_diff($itemBiaya['tersisa'], $itemBiayaTerproses),
+                $siswa->getPenjurusan()
             );
 
             $totalPayment = $siswa->getTotalNominalPembayaranSekali() + $currentPaymentAmount;
@@ -319,6 +321,7 @@ class PembayaranBiayaSekaliController extends Controller
 
             $totalInfoResponse = $this->forward('LanggasSisdikBundle:BiayaSekali:getFeeInfoTotal', [
                 'tahun' => $siswa->getTahun()->getId(),
+                'penjurusan' => $siswa->getPenjurusan() instanceof Penjurusan ? $siswa->getPenjurusan()->getId() : -999,
                 'json' => 1,
             ]);
             $totalFee = json_decode($totalInfoResponse->getContent());
@@ -328,6 +331,7 @@ class PembayaranBiayaSekaliController extends Controller
             }
             $siswa->setSisaBiayaSekali($payableAmountRemain);
 
+            // print("\$totalFee: {$totalFee->biaya}<br />");
             // print("\$totalPayment: $totalPayment<br />");
             // print("\$totalDiscount: $totalDiscount<br />");
             // print("\$payableAmountDue: $payableAmountDue<br />");
@@ -455,17 +459,7 @@ class PembayaranBiayaSekaliController extends Controller
                             $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali, $tekstemplate);
                             $tekstemplate = str_replace("%nama-siswa%", $siswa->getNamaLengkap(), $tekstemplate);
 
-                            $counter = 1;
-                            $daftarBiayaDibayar = [];
-                            foreach ($entity->getDaftarBiayaSekali() as $biaya) {
-                                if ($counter > 3) {
-                                    $daftarBiayaDibayar[] = $this->get('translator')->trans('dll');
-                                    break;
-                                }
-                                $daftarBiayaDibayar[] = $biaya->getNama();
-                                $counter++;
-                            }
-                            $tekstemplate = str_replace("%daftar-biaya%", (implode(", ", $daftarBiayaDibayar)), $tekstemplate);
+                            $tekstemplate = str_replace("%daftar-biaya%", (implode(", ", $this->getDaftarBiayaSiswa($siswa))), $tekstemplate);
 
                             $formatter = new \NumberFormatter($this->container->getParameter('locale'), \NumberFormatter::CURRENCY);
                             $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
@@ -737,8 +731,9 @@ class PembayaranBiayaSekaliController extends Controller
 
             $payableAmountDue = $siswa->getTotalNominalBiayaSekali();
             $payableAmountRemain = $this->getPayableFeesRemain(
-                $siswa->getTahun()->getId(),
-                $itemBiaya['tersisa']
+                $siswa->getTahun(),
+                $itemBiaya['tersisa'],
+                $siswa->getPenjurusan()
             );
 
             $totalPayment = $totalPayment + $currentPaymentAmount;
@@ -875,17 +870,7 @@ class PembayaranBiayaSekaliController extends Controller
                             $tekstemplate = str_replace("%nama-ortuwali%", $namaOrtuWali, $tekstemplate);
                             $tekstemplate = str_replace("%nama-siswa%", $siswa->getNamaLengkap(), $tekstemplate);
 
-                            $counter = 1;
-                            $daftarBiayaDibayar = [];
-                            foreach ($entity->getDaftarBiayaSekali() as $biaya) {
-                                if ($counter > 3) {
-                                    $daftarBiayaDibayar[] = $this->get('translator')->trans('dll');
-                                    break;
-                                }
-                                $daftarBiayaDibayar[] = $biaya->getNama();
-                                $counter++;
-                            }
-                            $tekstemplate = str_replace("%daftar-biaya%", (implode(", ", $daftarBiayaDibayar)), $tekstemplate);
+                            $tekstemplate = str_replace("%daftar-biaya%", (implode(", ", $this->getDaftarBiayaSiswa($siswa))), $tekstemplate);
 
                             $formatter = new \NumberFormatter($this->container->getParameter('locale'), \NumberFormatter::CURRENCY);
                             $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
@@ -949,6 +934,57 @@ class PembayaranBiayaSekaliController extends Controller
     }
 
     /**
+     * @param Siswa   $siswa
+     * @param integer $max
+     *
+     * @return array
+     */
+    private function getDaftarBiayaSiswa(Siswa $siswa, $max = 4)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if ($siswa->getPenjurusan() instanceof Penjurusan) {
+            $biayaSekali = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->orderBy('biaya.urutan', 'ASC')
+                ->setParameter('tahun', $siswa->getTahun())
+                ->setParameter('penjurusan', $siswa->getPenjurusan())
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $biayaSekali = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->orderBy('biaya.urutan', 'ASC')
+                ->setParameter('tahun', $siswa->getTahun())
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+
+        $daftarBiaya = [];
+        $counter = 1;
+        foreach ($biayaSekali as $biaya) {
+            if ($biaya instanceof BiayaSekali) {
+                if ($counter > $max) {
+                    $daftarBiaya[] = $this->get('translator')->trans('dll');
+                    break;
+                }
+                $daftarBiaya[] = $biaya->getJenisbiaya()->getNama();
+            }
+            $counter++;
+        }
+
+        return $daftarBiaya;
+    }
+
+    /**
      * Mengambil identitas biaya sekali bayar seorang siswa
      *
      * @param Siswa $siswa
@@ -961,13 +997,30 @@ class PembayaranBiayaSekaliController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $biayaSekali = $em->getRepository('LanggasSisdikBundle:BiayaSekali')
-            ->findBy([
-                'tahun' => $siswa->getTahun(),
-            ], [
-                'urutan' => 'ASC',
-            ])
-        ;
+        if ($siswa->getPenjurusan() instanceof Penjurusan) {
+            $biayaSekali = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->orderBy('biaya.urutan', 'ASC')
+                ->setParameter('tahun', $siswa->getTahun())
+                ->setParameter('penjurusan', $siswa->getPenjurusan())
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $biayaSekali = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->orderBy('biaya.urutan', 'ASC')
+                ->setParameter('tahun', $siswa->getTahun())
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
         $idBiayaSemua = [];
         foreach ($biayaSekali as $biaya) {
@@ -1004,20 +1057,40 @@ class PembayaranBiayaSekaliController extends Controller
 
     /**
      * Mengambil jumlah biaya sekali bayar yang tersisa
+     *
+     * @param Tahun      $tahun
+     * @param array      $remainfee
+     * @param Penjurusan $penjurusan
+     *
+     * @return integer
      */
-    private function getPayableFeesRemain($tahun, $remainfee)
+    private function getPayableFeesRemain(Tahun $tahun, array $remainfee, Penjurusan $penjurusan = null)
     {
         $em = $this->getDoctrine()->getManager();
 
         if (is_array($remainfee) && count($remainfee) > 0) {
-            $querybuilder = $em->createQueryBuilder()
-                ->select('biaya')
-                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
-                ->where('biaya.tahun = :tahun')
-                ->andWhere('biaya.id IN (?1)')
-                ->setParameter("tahun", $tahun)
-                ->setParameter(1, $remainfee)
-            ;
+            if ($penjurusan instanceof Penjurusan) {
+                $querybuilder = $em->createQueryBuilder()
+                    ->select('biaya')
+                    ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                    ->where('biaya.tahun = :tahun')
+                    ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                    ->andWhere('biaya.id IN (?1)')
+                    ->setParameter('tahun', $tahun)
+                    ->setParameter('penjurusan', $penjurusan)
+                    ->setParameter(1, $remainfee)
+                ;
+            } else {
+                $querybuilder = $em->createQueryBuilder()
+                    ->select('biaya')
+                    ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                    ->where('biaya.tahun = :tahun')
+                    ->andWhere('biaya.penjurusan IS NULL')
+                    ->andWhere('biaya.id IN (?1)')
+                    ->setParameter('tahun', $tahun)
+                    ->setParameter(1, $remainfee)
+                ;
+            }
             $entities = $querybuilder->getQuery()->getResult();
 
             $feeamount = 0;

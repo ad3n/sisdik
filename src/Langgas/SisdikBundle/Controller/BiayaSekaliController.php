@@ -149,7 +149,7 @@ class BiayaSekaliController extends Controller
                 ->update('LanggasSisdikBundle:Siswa', 'siswa')
                 ->leftJoin('siswa.pembayaranSekali', 'pembayaran')
                 ->leftJoin('pembayaran.daftarBiayaSekali', 'daftar')
-                ->set('siswa.sisaBiayaSekali', 'siswa.sisaBiayaSekali + ' . $entity->getNominal())
+                ->set('siswa.sisaBiayaSekali', 'siswa.sisaBiayaSekali + '.$entity->getNominal())
                 ->where('siswa.tahun = :tahun')
                 ->andWhere('siswa.sisaBiayaSekali >= 0')
                 ->setParameter('tahun', $entity->getTahun())
@@ -186,7 +186,6 @@ class BiayaSekaliController extends Controller
             return $this->redirect($this->generateUrl('fee_once_show', [
                 'id' => $entity->getId(),
             ]));
-
         }
 
         return [
@@ -219,7 +218,6 @@ class BiayaSekaliController extends Controller
         if ($request->getMethod() == "POST") {
             $form->submit($request);
             if ($form->isValid()) {
-
                 $sessiondata = $form['sessiondata']->getData();
                 $this->get('session')->set('biayasekali_confirm', $sessiondata);
 
@@ -352,9 +350,9 @@ class BiayaSekaliController extends Controller
                 ;
 
                 if ($entity->getNominalSebelumnya() > $entity->getNominal()) {
-                    $qbsisabiaya->set('siswa.sisaBiayaSekali', 'siswa.sisaBiayaSekali + ' . $entity->getNominal());
+                    $qbsisabiaya->set('siswa.sisaBiayaSekali', 'siswa.sisaBiayaSekali + '.$entity->getNominal());
                 } elseif ($entity->getNominalSebelumnya() < $entity->getNominal()) {
-                    $qbsisabiaya->set('siswa.sisaBiayaSekali', 'siswa.sisaBiayaSekali - ' . $entity->getNominal());
+                    $qbsisabiaya->set('siswa.sisaBiayaSekali', 'siswa.sisaBiayaSekali - '.$entity->getNominal());
                 }
             }
 
@@ -427,7 +425,6 @@ class BiayaSekaliController extends Controller
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
-
         } else {
             $this
                 ->get('session')
@@ -440,16 +437,36 @@ class BiayaSekaliController extends Controller
     }
 
     /**
-     * Finds total payables one time fee info
+     * Mencari info total biaya sekali bayar yang bisa dibayar
      *
-     * @Route("/totalinfo/{tahun}/{json}", name="fee_once_totalinfo", defaults={"json"=0})
+     * @Route("/totalinfo/{tahun}/{penjurusan}/{json}", name="fee_once_totalinfo", defaults={"json"=0})
      */
-    public function getFeeInfoTotalAction($tahun, $json)
+    public function getFeeInfoTotalAction($tahun, $penjurusan = -999, $json = 0)
     {
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('LanggasSisdikBundle:BiayaSekali')->findBy([
-            'tahun' => $tahun,
-        ]);
+
+        if ($penjurusan === -999) {
+            $entities = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->setParameter('tahun', $tahun)
+                ->getQuery()
+                ->getResult()
+            ;
+        } else {
+            $entities = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->setParameter('tahun', $tahun)
+                ->setParameter('penjurusan', $penjurusan)
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
         $total = 0;
         foreach ($entities as $entity) {
@@ -472,23 +489,37 @@ class BiayaSekaliController extends Controller
     }
 
     /**
-     * Finds total once payment remains fee info
+     * Mencari info jumlah sisa biaya sekali bayar
      *
-     * @Route("/remains/{tahun}/{usedfee}/{json}", name="fee_once_remains")
+     * @Route("/remains/{tahun}/{usedfee}/{$penjurusan}/{json}", name="fee_once_remains")
      */
-    public function getFeeInfoRemainAction($tahun, $usedfee, $json = 0)
+    public function getFeeInfoRemainAction($tahun, $usedfee, $penjurusan = -999, $json = 0)
     {
         $em = $this->getDoctrine()->getManager();
         $usedfee = preg_replace('/,$/', '', $usedfee);
 
-        $querybuilder = $em->createQueryBuilder()
-            ->select('biaya')
-            ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
-            ->where('biaya.tahun = :tahun')
-            ->andWhere('biaya.id NOT IN (:usedfee)')
-            ->setParameter("tahun", $tahun)
-            ->setParameter("usedfee", preg_split('/,/', $usedfee))
-        ;
+        if ($penjurusan === -999) {
+            $querybuilder = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL')
+                ->andWhere('biaya.id NOT IN (:usedfee)')
+                ->setParameter("tahun", $tahun)
+                ->setParameter("usedfee", preg_split('/,/', $usedfee))
+            ;
+        } else {
+            $querybuilder = $em->createQueryBuilder()
+                ->select('biaya')
+                ->from('LanggasSisdikBundle:BiayaSekali', 'biaya')
+                ->where('biaya.tahun = :tahun')
+                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                ->andWhere('biaya.id NOT IN (:usedfee)')
+                ->setParameter("tahun", $tahun)
+                ->setParameter('penjurusan', $penjurusan)
+                ->setParameter("usedfee", preg_split('/,/', $usedfee))
+            ;
+        }
         $entities = $querybuilder->getQuery()->getResult();
 
         $feeamount = 0;
@@ -524,7 +555,7 @@ class BiayaSekaliController extends Controller
 
         if ($entity instanceof BiayaSekali) {
             if ($type == 1) {
-                $info = $entity->getJenisbiaya()->getNama() . " (" . number_format($entity->getNominal(), 0, ',', '.') . ")";
+                $info = $entity->getJenisbiaya()->getNama()." (".number_format($entity->getNominal(), 0, ',', '.').")";
             } elseif ($type == 2) {
                 $info = $entity->getJenisbiaya()->getNama();
             } elseif ($type == 3) {
