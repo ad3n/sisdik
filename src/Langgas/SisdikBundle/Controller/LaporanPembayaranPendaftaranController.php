@@ -212,9 +212,6 @@ class LaporanPembayaranPendaftaranController extends Controller
 
                 $tampilkanTercari = true;
             }
-            if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
-                $tampilkanTercari = true;
-            }
         } else {
             $pencarianLanjutan = true;
         }

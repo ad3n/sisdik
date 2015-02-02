@@ -3,16 +3,16 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Langgas\SisdikBundle\Entity\Tahun;
-use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\Tahun;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -49,7 +49,7 @@ class LaporanPembayaranBiayaSekaliController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $siswaTotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
@@ -57,8 +57,9 @@ class LaporanPembayaranBiayaSekaliController extends Controller
             ->andWhere('siswa.sekolah = :sekolah')
             ->setParameter('calon', false)
             ->setParameter('sekolah', $sekolah)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $siswaTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -135,14 +136,13 @@ class LaporanPembayaranBiayaSekaliController extends Controller
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
-                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
-                    $querybuilder
-                        ->groupBy('siswa.id')
-                    ;
+            if (isset($searchdata['jumlahBayar']) && $searchdata['jumlahBayar'] >= 0) {
+                $querybuilder
+                    ->groupBy('siswa.id')
+                ;
 
+                if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                     if ($pembandingBayar == '<' || $pembandingBayar == '<=' || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
-                        // masukkan pencarian untuk yg belum melakukan transaksi
                         $querybuilder
                             ->having("(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
                                 ." (SUM(DISTINCT(siswa.sisaBiayaSekali)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
@@ -157,23 +157,28 @@ class LaporanPembayaranBiayaSekaliController extends Controller
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
                 } else {
-                    $querybuilder
-                        ->groupBy('siswa.id')
-                        ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
-                        ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                    ;
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<=' || (($pembandingBayar == '=' || $pembandingBayar == '>=') && $searchdata['jumlahBayar'] == 0)) {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar OR SUM(DISTINCT(siswa.sisaBiayaSekali)) < 0")
+                            ->orHaving("SUM(DISTINCT(siswa.sisaBiayaSekali)) < 0")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    } else {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    }
                 }
 
-                $tampilkanTercari = true;
-            }
-            if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                 $tampilkanTercari = true;
             }
         } else {
             $pencarianLanjutan = true;
         }
 
-        $siswaTercari = count($querybuilder->getQuery()->getResult());
+        $qbTercari = clone $querybuilder;
+        $siswaTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
@@ -213,7 +218,7 @@ class LaporanPembayaranBiayaSekaliController extends Controller
         $searchform->submit($this->getRequest());
         $searchdata = $searchform->getData();
 
-        $qbtotal = $em->createQueryBuilder()
+        $siswaTotal = $em->createQueryBuilder()
             ->select($qbe->expr()->countDistinct('siswa.id'))
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->leftJoin('siswa.tahun', 'tahun')
@@ -221,8 +226,9 @@ class LaporanPembayaranBiayaSekaliController extends Controller
             ->andWhere('siswa.sekolah = :sekolah')
             ->setParameter('calon', false)
             ->setParameter('sekolah', $sekolah)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
-        $siswaTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswa')
@@ -298,7 +304,11 @@ class LaporanPembayaranBiayaSekaliController extends Controller
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
+            if (isset($searchdata['jumlahBayar']) && $searchdata['jumlahBayar'] >= 0) {
+                $querybuilder
+                    ->groupBy('siswa.id')
+                ;
+
                 $judulLaporan .= ", "
                     .$this->get('translator')->trans('label.paid.amount.total')
                     ." "
@@ -309,10 +319,8 @@ class LaporanPembayaranBiayaSekaliController extends Controller
 
                 if (array_key_exists('persenBayar', $searchdata) && $searchdata['persenBayar'] === true) {
                     $judulLaporan .= "%";
-                    $querybuilder->groupBy('siswa.id');
 
                     if ($pembandingBayar == '<' || $pembandingBayar == '<=' || ($pembandingBayar == '=' && $searchdata['jumlahBayar'] == 0)) {
-                        // masukkan pencarian untuk yg belum melakukan transaksi
                         $querybuilder
                             ->having("(SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar "
                                 ." (SUM(DISTINCT(siswa.sisaBiayaSekali)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) * :jumlahbayar) "
@@ -327,11 +335,18 @@ class LaporanPembayaranBiayaSekaliController extends Controller
 
                     $querybuilder->setParameter('jumlahbayar', $searchdata['jumlahBayar'] / 100);
                 } else {
-                    $querybuilder
-                        ->groupBy('siswa.id')
-                        ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
-                        ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                    ;
+                    if ($pembandingBayar == '<' || $pembandingBayar == '<=' || (($pembandingBayar == '=' || $pembandingBayar == '>=') && $searchdata['jumlahBayar'] == 0)) {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar OR SUM(DISTINCT(siswa.sisaBiayaSekali)) < 0")
+                            ->orHaving("SUM(DISTINCT(siswa.sisaBiayaSekali)) < 0")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    } else {
+                        $querybuilder
+                            ->having("SUM(pembayaran.nominalTotalTransaksi) $pembandingBayar :jumlahbayar")
+                            ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                        ;
+                    }
                 }
             }
         } else {
