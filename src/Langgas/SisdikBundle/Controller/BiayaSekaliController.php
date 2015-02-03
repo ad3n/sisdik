@@ -37,7 +37,7 @@ class BiayaSekaliController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm('sisdik_caribiayasekali');
+        $searchform = $this->createForm('sisdik_caribiaya_sr');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('biayaSekali')

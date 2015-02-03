@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class BiayaSekaliSearchFormType extends AbstractType
+class CariBiayaPendaftaranType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -65,7 +65,30 @@ class BiayaSekaliSearchFormType extends AbstractType
                     return $qb;
                 },
                 'attr' => [
-                    'class' => 'small',
+                    'class' => 'small'
+                ],
+                'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('gelombang', 'entity', [
+                'class' => 'LanggasSisdikBundle:Gelombang',
+                'label' => 'label.admissiongroup.entry',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'empty_value' => 'label.selectadmissiongroup',
+                'required' => false,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('gelombang')
+                        ->where('gelombang.sekolah = :sekolah')
+                        ->orderBy('gelombang.urutan', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
+                'attr' => [
+                    'class' => 'medium'
                 ],
                 'label_render' => false,
                 'horizontal' => false,
@@ -93,6 +116,6 @@ class BiayaSekaliSearchFormType extends AbstractType
 
     public function getName()
     {
-        return 'sisdik_caribiayasekali';
+        return 'sisdik_caribiaya_p';
     }
 }

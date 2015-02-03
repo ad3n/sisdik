@@ -39,7 +39,7 @@ class BiayaPendaftaranController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm('sisdik_caribiaya');
+        $searchform = $this->createForm('sisdik_caribiaya_p');
 
         $querybuilder = $em->createQueryBuilder()
             ->select('biayaPendaftaran')
