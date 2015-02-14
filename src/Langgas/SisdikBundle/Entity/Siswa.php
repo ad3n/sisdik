@@ -320,6 +320,13 @@ class Siswa
     private $keterangan;
 
     /**
+     * @ORM\Column(name="keterangan_pembayaran_rutin", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $keteranganPembayaranRutin;
+
+    /**
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
@@ -1150,6 +1157,22 @@ class Siswa
     public function getKeterangan()
     {
         return $this->keterangan;
+    }
+
+    /**
+     * @param string $keteranganPembayaranRutin
+     */
+    public function setKeteranganPembayaranRutin($keteranganPembayaranRutin)
+    {
+        $this->keteranganPembayaranRutin = $keteranganPembayaranRutin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeteranganPembayaranRutin()
+    {
+        return $this->keteranganPembayaranRutin;
     }
 
     /**
