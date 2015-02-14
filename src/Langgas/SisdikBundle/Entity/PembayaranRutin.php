@@ -23,18 +23,58 @@ class PembayaranRutin
     private $id;
 
     /**
-     * @ORM\Column(name="daftar_biaya_rutin", type="array", nullable=true)
+     * @ORM\Column(name="tanggal", type="date", nullable=false)
      *
-     * @var array
+     * @var \DateTime
      */
-    private $daftarBiayaRutin;
+    private $tanggal;
 
     /**
-     * @ORM\Column(name="nominal_total", type="bigint", nullable=true)
+     * @ORM\Column(name="nominal_biaya", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
-    private $nominalTotal;
+    private $nominalBiaya = 0;
+
+    /**
+     * @ORM\Column(name="ada_potongan", type="boolean", nullable=true, options={"default" = 0})
+     *
+     * @var boolean
+     */
+    private $adaPotongan = false;
+
+    /**
+     * @ORM\Column(name="jenis_potongan", type="string", length=45, nullable=true)
+     *
+     * @var string
+     */
+    private $jenisPotongan;
+
+    /**
+     * @ORM\Column(name="persen_potongan", type="smallint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
+     * @Assert\LessThanOrEqual(value=100)
+     *
+     * @var integer
+     */
+    private $persenPotongan = 0;
+
+    /**
+     * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
+     *
+     * @var integer
+     */
+    private $persenPotonganDinominalkan = 0;
+
+    /**
+     * @ORM\Column(name="nominal_potongan", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
+     *
+     * @var integer
+     */
+    private $nominalPotongan = 0;
 
     /**
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
@@ -70,6 +110,16 @@ class PembayaranRutin
     private $siswa;
 
     /**
+     * @ORM\ManyToOne(targetEntity="BiayaRutin")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="biaya_rutin_id", referencedColumnName="id", nullable=false)
+     * })
+     *
+     * @var BiayaRutin
+     */
+    private $biayaRutin;
+
+    /**
      * @ORM\OneToMany(targetEntity="TransaksiPembayaranRutin", mappedBy="pembayaranRutin", cascade={"persist"})
      * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
@@ -92,35 +142,115 @@ class PembayaranRutin
     }
 
     /**
-     * @param array $daftarBiayaRutin
+     * @param \DateTime $tanggal
      */
-    public function setDaftarBiayaRutin($daftarBiayaRutin)
+    public function setTanggal($tanggal)
     {
-        $this->daftarBiayaRutin = $daftarBiayaRutin;
+        $this->tanggal = $tanggal;
     }
 
     /**
-     * @return array
+     * @return \DateTime
      */
-    public function getDaftarBiayaRutin()
+    public function getTanggal()
     {
-        return $this->daftarBiayaRutin;
+        return $this->tanggal;
     }
 
     /**
-     * @param integer $nominalTotal
+     * @param integer $nominalBiaya
      */
-    public function setNominalTotal($nominalTotal)
+    public function setNominalBiaya($nominalBiaya)
     {
-        $this->nominalTotal = $nominalTotal;
+        $this->nominalBiaya = $nominalBiaya;
     }
 
     /**
      * @return integer
      */
-    public function getNominalTotal()
+    public function getNominalBiaya()
     {
-        return $this->nominalTotal;
+        return $this->nominalBiaya;
+    }
+
+    /**
+     * @param boolean $adaPotongan
+     */
+    public function setAdaPotongan($adaPotongan)
+    {
+        $this->adaPotongan = $adaPotongan;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getAdaPotongan()
+    {
+        return $this->adaPotongan;
+    }
+
+    /**
+     * @param string $jenisPotongan
+     */
+    public function setJenisPotongan($jenisPotongan)
+    {
+        $this->jenisPotongan = $jenisPotongan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJenisPotongan()
+    {
+        return $this->jenisPotongan;
+    }
+
+    /**
+     * @param integer $persenPotongan
+     */
+    public function setPersenPotongan($persenPotongan)
+    {
+        $this->persenPotongan = intval($persenPotongan);
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPersenPotongan()
+    {
+        return $this->persenPotongan;
+    }
+
+    /**
+     * @param integer $persenPotonganDinominalkan
+     */
+    public function setPersenPotonganDinominalkan($persenPotonganDinominalkan)
+    {
+        $this->persenPotonganDinominalkan = $persenPotonganDinominalkan;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getPersenPotonganDinominalkan()
+    {
+        return $this->persenPotonganDinominalkan;
+    }
+
+    /**
+     * @param integer $nominalPotongan
+     */
+    public function setNominalPotongan($nominalPotongan)
+    {
+        $this->nominalPotongan = $nominalPotongan;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNominalPotongan()
+    {
+        return $this->nominalPotongan;
     }
 
     /**
@@ -185,6 +315,22 @@ class PembayaranRutin
     public function getSiswa()
     {
         return $this->siswa;
+    }
+
+    /**
+     * @param BiayaRutin $biayaRutin
+     */
+    public function setBiayaRutin(BiayaRutin $biayaRutin = null)
+    {
+        $this->biayaRutin = $biayaRutin;
+    }
+
+    /**
+     * @return BiayaRutin
+     */
+    public function getBiayaRutin()
+    {
+        return $this->biayaRutin;
     }
 
     /**

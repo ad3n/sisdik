@@ -12,8 +12,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class TransaksiPembayaranRutin
 {
+    const tandakwitansi = 'B';
+
     /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -22,13 +24,27 @@ class TransaksiPembayaranRutin
     private $id;
 
     /**
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=true)
-     * @Assert\Length(min=5)
+     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
-    private $nominalPembayaran;
+    private $nominalPembayaran = 0;
+
+    /**
+     * @ORM\Column(name="nomor_urut_transaksi_perbulan", type="smallint", nullable=true, options={"unsigned"=true})
+     *
+     * @var integer
+     */
+    private $nomorUrutTransaksiPerbulan;
+
+    /**
+     * @ORM\Column(name="nomor_transaksi", type="string", length=45, nullable=true)
+     *
+     * @var string
+     */
+    private $nomorTransaksi;
 
     /**
      * @ORM\Column(name="keterangan", type="string", length=300, nullable=true)
@@ -36,13 +52,6 @@ class TransaksiPembayaranRutin
      * @var string
      */
     private $keterangan;
-
-    /**
-     * @ORM\Column(name="nomor_transaksi", type="string", length=100, nullable=true)
-     *
-     * @var string
-     */
-    private $nomorTransaksi;
 
     /**
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
@@ -53,6 +62,16 @@ class TransaksiPembayaranRutin
     private $waktuSimpan;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Sekolah")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
+     * })
+     *
+     * @var Sekolah
+     */
+    private $sekolah;
+
+    /**
      * @ORM\ManyToOne(targetEntity="PembayaranRutin", inversedBy="transaksiPembayaranRutin")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="pembayaran_rutin_id", referencedColumnName="id", nullable=false)
@@ -61,6 +80,16 @@ class TransaksiPembayaranRutin
      * @var PembayaranRutin
      */
     private $pembayaranRutin;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
+     * })
+     *
+     * @var User
+     */
+    private $dibuatOleh;
 
     /**
      * @return integer
@@ -87,19 +116,19 @@ class TransaksiPembayaranRutin
     }
 
     /**
-     * @param string $keterangan
+     * @param integer $nomorUrutTransaksiPerbulan
      */
-    public function setKeterangan($keterangan)
+    public function setNomorUrutTransaksiPerbulan($nomorUrutTransaksiPerbulan)
     {
-        $this->keterangan = $keterangan;
+        $this->nomorUrutTransaksiPerbulan = $nomorUrutTransaksiPerbulan;
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getKeterangan()
+    public function getNomorUrutTransaksiPerbulan()
     {
-        return $this->keterangan;
+        return $this->nomorUrutTransaksiPerbulan;
     }
 
     /**
@@ -119,6 +148,22 @@ class TransaksiPembayaranRutin
     }
 
     /**
+     * @param string $keterangan
+     */
+    public function setKeterangan($keterangan)
+    {
+        $this->keterangan = $keterangan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKeterangan()
+    {
+        return $this->keterangan;
+    }
+
+    /**
      * @param \DateTime $waktuSimpan
      */
     public function setWaktuSimpan($waktuSimpan)
@@ -135,6 +180,22 @@ class TransaksiPembayaranRutin
     }
 
     /**
+     * @param Sekolah $sekolah
+     */
+    public function setSekolah(Sekolah $sekolah = null)
+    {
+        $this->sekolah = $sekolah;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    public function getSekolah()
+    {
+        return $this->sekolah;
+    }
+
+    /**
      * @param PembayaranRutin $pembayaranRutin
      */
     public function setPembayaranRutin(PembayaranRutin $pembayaranRutin = null)
@@ -148,5 +209,21 @@ class TransaksiPembayaranRutin
     public function getPembayaranRutin()
     {
         return $this->pembayaranRutin;
+    }
+
+    /**
+     * @param User $dibuatOleh
+     */
+    public function setDibuatOleh(User $dibuatOleh = null)
+    {
+        $this->dibuatOleh = $dibuatOleh;
+    }
+
+    /**
+     * @return User
+     */
+    public function getDibuatOleh()
+    {
+        return $this->dibuatOleh;
     }
 }
