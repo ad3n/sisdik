@@ -15,7 +15,7 @@ class TransaksiPembayaranPendaftaran
     const tandakwitansi = 'D';
 
     /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="bigint", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
@@ -30,7 +30,7 @@ class TransaksiPembayaranPendaftaran
      *
      * @var integer
      */
-    private $nominalPembayaran;
+    private $nominalPembayaran = 0;
 
     /**
      * @ORM\Column(name="nomor_urut_transaksi_perbulan", type="smallint", nullable=true, options={"unsigned"=true})

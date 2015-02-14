@@ -27,14 +27,14 @@ class PembayaranSekali
      *
      * @var integer
      */
-    private $nominalTotalTransaksi;
+    private $nominalTotalTransaksi = 0;
 
     /**
      * @ORM\Column(name="nominal_total_biaya", type="bigint", nullable=false, options={"default" = 0})
      *
      * @var integer
      */
-    private $nominalTotalBiaya;
+    private $nominalTotalBiaya = 0;
 
     /**
      * @ORM\Column(name="ada_potongan", type="boolean", nullable=true, options={"default" = 0})
