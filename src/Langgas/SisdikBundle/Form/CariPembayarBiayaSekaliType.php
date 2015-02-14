@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class PembayarBiayaPendaftaranSearchType extends AbstractType
+class CariPembayarBiayaSekaliType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -82,25 +82,17 @@ class PembayarBiayaPendaftaranSearchType extends AbstractType
             ->add('nopayment', 'checkbox', [
                 'required' => false,
                 'attr' => [
-                    'class' => 'belum-bayar'
+                    'class' => 'belum-bayar',
                 ],
                 'label_render' => true,
                 'label' => 'label.search.notpaid',
                 'widget_checkbox_label' => 'widget',
                 'horizontal' => false,
             ])
-            ->add('todayinput', 'checkbox', [
-                'required' => false,
-                'attr' => [],
-                'label_render' => true,
-                'label' => 'label.search.today.applicant',
-                'widget_checkbox_label' => 'widget',
-                'horizontal' => false,
-            ])
             ->add('notsettled', 'checkbox', [
                 'required' => false,
                 'attr' => [
-                    'class' => 'belum-lunas'
+                    'class' => 'belum-lunas',
                 ],
                 'label_render' => true,
                 'label' => 'label.search.paymentnotcomplete',
@@ -121,6 +113,6 @@ class PembayarBiayaPendaftaranSearchType extends AbstractType
 
     public function getName()
     {
-        return 'sisdik_caripembayarbiayapendaftaran';
+        return 'sisdik_caripembayarbiayasekali';
     }
 }
