@@ -24,6 +24,7 @@ class PembayaranSekali
 
     /**
      * @ORM\Column(name="nominal_total_transaksi", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
@@ -31,6 +32,7 @@ class PembayaranSekali
 
     /**
      * @ORM\Column(name="nominal_total_biaya", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
@@ -61,6 +63,7 @@ class PembayaranSekali
 
     /**
      * @ORM\Column(name="persen_potongan_dinominalkan", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
@@ -68,6 +71,7 @@ class PembayaranSekali
 
     /**
      * @ORM\Column(name="nominal_potongan", type="bigint", nullable=false, options={"default" = 0})
+     * @Assert\GreaterThanOrEqual(value=0)
      *
      * @var integer
      */
