@@ -15,14 +15,20 @@
     <dd>{{ entity.tahun.sekolah.nama }}</dd>
     <dt>{{ 'label.year.entry'|trans }}</dt>
     <dd>{{ entity.tahun.tahun }}</dd>
-    <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
-    <dd>{{ entity.gelombang.nama }}</dd>
+    <dt>{{ 'label.placement.study'|trans }}</dt>
+    <dd>{% if entity.penjurusan %}{{ entity.penjurusan.nama }}{% else %}<i>{{ 'label.semua.penjurusan.studi'|trans }}</i>{% endif %}</dd>
     <dt>{{ 'label.fee.type.entry'|trans }}</dt>
     <dd>{{ entity.jenisbiaya.nama }}</dd>
     <dt>{{ 'label.nominal'|trans }}</dt>
     <dd>{{ entity.nominal|number_format(0, ',', '.') }}</dd>
     <dt>{{ 'label.perulangan'|trans }}</dt>
-    <dd>{{ entity.perulangan }}</dd>
+    <dd>{{ daftarPerulangan[entity.perulangan] }}</dd>
+    <dt>{{ 'label.day'|trans }}</dt>
+    <dd>{% if entity.mingguanHariKe %}{{ daftarHari[entity.mingguanHariKe]|trans }}{% else %}&mdash;{% endif %}</dd>
+    <dt>{{ 'label.monthday'|trans }}</dt>
+    <dd>{% if entity.bulananHariKe %}{{ entity.bulananHariKe }}{% else %}&mdash;{% endif %}</dd>
+    <dt>{{ 'label.bulan.awal'|trans }}</dt>
+    <dd>{% if entity.bulanAwal %}{{ daftarBulan[entity.bulanAwal]|trans }}{% else %}&mdash;{% endif %}</dd>
     <dt>{{ 'label.order'|trans }}</dt>
     <dd>{{ entity.urutan }}</dd>
 </dl>
@@ -41,7 +47,7 @@
         <a href="{{ path('fee_recur') }}">{{ 'link.backtolist'|trans }}</a>
     </li>
     <li>
-        <a href="{{ path('fee_recur_edit', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
+        <a href="{{ path('fee_recur_edit_confirm', {'id': entity.id}) }}">{{ 'link.edit'|trans }}</a>
     </li>
 </ul>
 

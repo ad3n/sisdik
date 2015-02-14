@@ -32,16 +32,14 @@
     <thead>
         <tr>
             <th>{{ 'label.year.entry'|trans }}</th>
-            <th>{{ 'label.admissiongroup.entry'|trans }}</th>
+            <th>{{ 'label.placement.study'|trans }}</th>
             <th>{{ 'label.fee.type.entry'|trans }}</th>
-            <th class="{% if pagination.isSorted('t.nominal') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 't.nominal') }}
+            <th class="{% if pagination.isSorted('biayaRutin.nominal') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nominal'|trans, 'biayaRutin.nominal') }}
             </th>
-            <th class="{% if pagination.isSorted('t.perulangan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.perulangan'|trans, 't.perulangan') }}
-            </th>
-            <th class="{% if pagination.isSorted('t.urutan') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 't.urutan') }}
+            <th>{{ 'label.perulangan'|trans }}</th>
+            <th class="{% if pagination.isSorted('biayaRutin.urutan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.order'|trans, 'biayaRutin.urutan') }}
             </th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
@@ -49,15 +47,42 @@
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
-            <td data-title="{{ 'label.admissiongroup.entry'|trans }}">{% if data.gelombang is defined %}{{ data.gelombang.nama }}{% endif %}</td>
-            <td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya is defined %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun %}{{ data.tahun.tahun }}{% endif %}</td>
+            <td data-title="{{ 'label.placement.study'|trans }}">{% if data.penjurusan %}{{ data.penjurusan.nama }}{% else %}<i>{{ 'label.semua.penjurusan.studi'|trans }}</i>{% endif %}</td>
+            <td data-title="{{ 'label.fee.type.entry'|trans }}">{% if data.jenisbiaya %}{{ data.jenisbiaya.nama }} ({{ data.jenisbiaya.kode }}){% endif %}</td>
             <td data-title="{{ 'label.nominal'|trans }}">{{ data.nominal|number_format(0, ',','.') }}</td>
-            <td data-title="{{ 'label.perulangan'|trans }}">{{ data.perulangan }}</td>
+            <td data-title="{{ 'label.perulangan'|trans }}">
+                {{ daftarPerulangan[data.perulangan] }}
+                {% if data.perulangan != 'a-harian' %}
+                    <span class="separator">→</span>
+                {% endif %}
+                {% if data.perulangan == 'b-mingguan' %}
+                    {% if data.mingguanHariKe %}
+                        {{ daftarHari[data.mingguanHariKe]|trans }}
+                    {% else %}
+                        ×
+                    {% endif %}
+                {% elseif data.perulangan == 'c-bulanan' or data.perulangan == 'd-triwulan' or data.perulangan == 'e-caturwulan' or data.perulangan == 'f-semester' or data.perulangan == 'g-tahunan' %}
+                    {% if data.perulangan == 'd-triwulan' or data.perulangan == 'e-caturwulan' or data.perulangan == 'f-semester' or data.perulangan == 'g-tahunan' %}
+                        {% if data.bulanAwal != '' %}
+                            <i class="fa fa-play start-icon"></i> {{ daftarBulan[data.bulanAwal]|trans }}
+                            <span class="separator">→</span>
+                        {% else %}
+                            ×
+                            <span class="separator">→</span>
+                        {% endif %}
+                    {% endif %}
+                    {% if data.bulananHariKe != '' %}
+                        {{ 'tanggal'|trans }} {{ data.bulananHariKe }}
+                    {% else %}
+                        ×
+                    {% endif %}
+                {% endif %}
+            </td>
             <td data-title="{{ 'label.order'|trans }}">{{ data.urutan }}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 <a href="{{ path('fee_recur_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
-                <a href="{{ path('fee_recur_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+                <a href="{{ path('fee_recur_edit_confirm', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
             </td>
         </tr>
     {% endfor %}

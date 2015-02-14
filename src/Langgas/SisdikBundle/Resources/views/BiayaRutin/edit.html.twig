@@ -3,7 +3,7 @@
 {% block page_heading %}{% trans from "headings" %}fee.recur.edit{% endtrans %}{% endblock %}
 
 {% block content %}
-<form action="{{ path('fee_recur_update', {'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('fee_recur_update', {'id': entity.id, 'sessiondata': sessiondata}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {{ form_widget(edit_form) }}
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">

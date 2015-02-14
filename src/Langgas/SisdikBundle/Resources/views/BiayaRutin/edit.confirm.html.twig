@@ -1,0 +1,27 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}biaya.berulang.konfirmasi.ubah{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+#peringatan {
+    color: #ff0000;
+    font-size: 1.1em;
+}
+</style>
+
+<p id="peringatan">
+{{ 'alert.biaya.berulang.peringatan.ubah'|trans|raw }}
+</p>
+
+<form id="generateform" action="{{ path('fee_recur_edit_confirm', {'id': entity.id}) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {{ form_errors(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary" id="submit-button">{{ 'label.continue'|trans }}</button>
+            <button class="btn" type="reset" onclick="window.location.href='{{ path('fee_recur') }}'">{{ 'label.cancel'|trans }}</button>
+        </div>
+    </div>
+</form>
+{% endblock content %}

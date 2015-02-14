@@ -1,86 +1,94 @@
 <?php
 
 namespace Langgas\SisdikBundle\Controller;
+
 use Doctrine\DBAL\DBALException;
-use Langgas\SisdikBundle\Form\BiayaSearchFormType;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\BrowserKit\Request;
+use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\BiayaRutin;
+use Langgas\SisdikBundle\Entity\JadwalKehadiran;
+use Langgas\SisdikBundle\Entity\Jenisbiaya;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\BiayaRutin;
-use Langgas\SisdikBundle\Form\BiayaRutinType;
-use Langgas\SisdikBundle\Entity\Jenisbiaya;
-use Langgas\SisdikBundle\Entity\Tahun;
-use Langgas\SisdikBundle\Entity\Gelombang;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * BiayaRutin controller.
- *
- * @Route("/fee/recur")
- * @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_BENDAHARA')")
+ * @Route("/biaya-berulang")
+ * @PreAuthorize("hasAnyRole('ROLE_BENDAHARA', 'ROLE_USER')")
  */
 class BiayaRutinController extends Controller
 {
     /**
-     * Lists all BiayaRutin entities.
-     *
      * @Route("/", name="fee_recur")
      * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function indexAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function indexAction()
+    {
+        $this->get('session')->remove('biayarutin_confirm');
+
+        $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        $searchform = $this->createForm(new BiayaSearchFormType($this->container));
+        $searchform = $this->createForm('sisdik_caribiaya_sr');
 
-        $querybuilder = $em->createQueryBuilder()->select('t')->from('LanggasSisdikBundle:BiayaRutin', 't')
-                ->leftJoin('t.tahun', 't2')->leftJoin('t.gelombang', 't3')->leftJoin('t.jenisbiaya', 't4')
-                ->where('t2.sekolah = :sekolah')->orderBy('t2.tahun', 'DESC')->addOrderBy('t3.urutan', 'ASC')
-                ->addOrderBy('t.urutan', 'ASC');
-        $querybuilder->setParameter('sekolah', $sekolah->getId());
+        $querybuilder = $em->createQueryBuilder()
+            ->select('biayaRutin')
+            ->from('LanggasSisdikBundle:BiayaRutin', 'biayaRutin')
+            ->leftJoin('biayaRutin.tahun', 'tahun')
+            ->leftJoin('biayaRutin.jenisbiaya', 'jenisbiaya')
+            ->where('tahun.sekolah = :sekolah')
+            ->orderBy('tahun.tahun', 'DESC')
+            ->addOrderBy('biayaRutin.urutan', 'ASC')
+            ->setParameter('sekolah', $sekolah)
+        ;
 
         $searchform->submit($this->getRequest());
         if ($searchform->isValid()) {
             $searchdata = $searchform->getData();
 
-            if ($searchdata['tahun'] != '') {
-                $querybuilder->andWhere('t2.id = :tahun');
-                $querybuilder->setParameter('tahun', $searchdata['tahun']->getId());
+            if ($searchdata['tahun'] instanceof Tahun) {
+                $querybuilder
+                    ->andWhere('biayaRutin.tahun = :tahun')
+                    ->setParameter('tahun', $searchdata['tahun'])
+                ;
             }
-            if ($searchdata['gelombang'] != '') {
-                $querybuilder->andWhere('t3.id = :gelombang');
-                $querybuilder->setParameter('gelombang', $searchdata['gelombang']->getId());
-            }
-            if ($searchdata['jenisbiaya'] != '') {
-                $querybuilder->andWhere("(t4.nama LIKE :jenisbiaya OR t4.kode = :kodejenisbiaya)");
-                $querybuilder->setParameter('jenisbiaya', "%{$searchdata['jenisbiaya']}%");
-                $querybuilder->setParameter('kodejenisbiaya', $searchdata['jenisbiaya']);
+
+            if ($searchdata['jenisbiaya'] instanceof Jenisbiaya) {
+                $querybuilder
+                    ->andWhere("(jenisbiaya.nama LIKE :namajenisbiaya OR jenisbiaya.kode = :kodejenisbiaya)")
+                    ->setParameter('namajenisbiaya', "%{$searchdata['jenisbiaya']}%")
+                    ->setParameter('kodejenisbiaya', $searchdata['jenisbiaya'])
+                ;
             }
         }
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
 
-        return array(
-            'pagination' => $pagination, 'searchform' => $searchform->createView()
-        );
+        return [
+            'pagination' => $pagination,
+            'searchform' => $searchform->createView(),
+            'daftarPerulangan' => BiayaRutin::getDaftarPerulangan(),
+            'daftarBulan' => BiayaRutin::getDaftarNamaBulan(),
+            'daftarHari' => JadwalKehadiran::getNamaHari(),
+        ];
     }
 
     /**
-     * Finds and displays a BiayaRutin entity.
-     *
      * @Route("/{id}/show", name="fee_recur_show")
      * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function showAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function showAction($id)
+    {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -93,83 +101,156 @@ class BiayaRutinController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-            'entity' => $entity, 'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'delete_form' => $deleteForm->createView(),
+            'daftarPerulangan' => BiayaRutin::getDaftarPerulangan(),
+            'daftarBulan' => BiayaRutin::getDaftarNamaBulan(),
+            'daftarHari' => JadwalKehadiran::getNamaHari(),
+        ];
     }
 
     /**
-     * Displays a form to create a new BiayaRutin entity.
-     *
      * @Route("/new", name="fee_recur_new")
      * @Template()
      */
-    public function newAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function newAction()
+    {
         $this->setCurrentMenu();
 
         $entity = new BiayaRutin();
-        $form = $this->createForm(new BiayaRutinType($this->container), $entity);
+        $form = $this->createForm('sisdik_biayarutin', $entity, [
+            'mode' => 'new',
+            'nominal' => null,
+        ]);
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Creates a new BiayaRutin entity.
-     *
      * @Route("/create", name="fee_recur_create")
      * @Method("post")
      * @Template("LanggasSisdikBundle:BiayaRutin:new.html.twig")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function createAction() {
-        $sekolah = $this->isRegisteredToSchool();
+    public function createAction()
+    {
         $this->setCurrentMenu();
 
         $entity = new BiayaRutin();
         $request = $this->getRequest();
-        $form = $this->createForm(new BiayaRutinType($this->container), $entity);
+        $form = $this->createForm('sisdik_biayarutin', $entity);
         $form->submit($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
             try {
+                $biayaRutin = $em->getRepository('LanggasSisdikBundle:BiayaRutin')
+                    ->findOneBy([
+                        'tahun' => $entity->getTahun(),
+                        'penjurusan' => $entity->getPenjurusan(),
+                        'jenisbiaya' => $entity->getJenisbiaya(),
+                        'perulangan' => $entity->getPerulangan(),
+                    ])
+                ;
+
+                if ($biayaRutin instanceof BiayaRutin) {
+                    throw new DBALException();
+                }
+
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success', $this->get('translator')->trans('flash.fee.recur.inserted'));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.fee.recur.inserted'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.recur');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('fee_recur_show',
-                                            array(
-                                                'id' => $entity->getId()
-                                            )));
-
+            return $this->redirect($this->generateUrl('fee_recur_show', [
+                'id' => $entity->getId(),
+            ]));
         }
 
-        return array(
-            'entity' => $entity, 'form' => $form->createView()
-        );
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
-     * Displays a form to edit an existing BiayaRutin entity.
-     *
-     * @Route("/{id}/edit", name="fee_recur_edit")
-     * @Template()
+     * @Route("/{id}/confirm", name="fee_recur_edit_confirm")
+     * @Template("LanggasSisdikBundle:BiayaRutin:edit.confirm.html.twig")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function editAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function editConfirmAction($id)
+    {
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($id);
+        if (!$entity && !($entity instanceof BiayaRutin)) {
+            throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
+        }
+
+        $form = $this->createForm('sisdik_confirm', null, [
+            'sessiondata' => uniqid(),
+        ]);
+
+        $request = $this->getRequest();
+        if ($request->getMethod() == "POST") {
+            $form->submit($request);
+            if ($form->isValid()) {
+                $sessiondata = $form['sessiondata']->getData();
+                $this->get('session')->set('biayarutin_confirm', $sessiondata);
+
+                return $this->redirect($this->generateUrl('fee_recur_edit', [
+                    'id' => $entity->getId(),
+                    'sessiondata' => $sessiondata,
+                ]));
+            } else {
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('error', $this->get('translator')->trans('flash.konfirmasi.edit.gagal'))
+                ;
+            }
+        }
+
+        return [
+            'entity' => $entity,
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/{id}/edit/{sessiondata}", name="fee_recur_edit")
+     * @Template()
+     * @Secure(roles="ROLE_BENDAHARA")
+     */
+    public function editAction($id, $sessiondata)
+    {
+        if ($this->get('session')->get('biayarutin_confirm') != $sessiondata) {
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.konfirmasi.edit.gagal'))
+            ;
+
+            return $this->redirect($this->generateUrl('fee_recur_edit_confirm', [
+                'id' => $id
+            ]));
+        }
+
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -180,24 +261,40 @@ class BiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new BiayaRutinType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_biayarutin', $entity, [
+            'mode' => 'edit',
+            'nominal' => $entity->getNominal(),
+        ]);
         $deleteForm = $this->createDeleteForm($id);
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+            'sessiondata' => $sessiondata,
+        ];
     }
 
     /**
-     * Edits an existing BiayaRutin entity.
-     *
-     * @Route("/{id}/update", name="fee_recur_update")
+     * @Route("/{id}/update/{sessiondata}", name="fee_recur_update")
      * @Method("post")
      * @Template("LanggasSisdikBundle:BiayaRutin:edit.html.twig")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function updateAction($id) {
-        $sekolah = $this->isRegisteredToSchool();
+    public function updateAction($id, $sessiondata)
+    {
+        if ($this->get('session')->get('biayarutin_confirm') != $sessiondata) {
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.konfirmasi.edit.gagal'))
+            ;
+
+            return $this->redirect($this->generateUrl('fee_recur_edit_confirm', [
+                'id' => $id,
+            ]));
+        }
+
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
@@ -208,7 +305,10 @@ class BiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
         }
 
-        $editForm = $this->createForm(new BiayaRutinType($this->container), $entity);
+        $editForm = $this->createForm('sisdik_biayarutin', $entity, [
+            'mode' => 'edit',
+            'nominal' => $entity->getNominal(),
+        ]);
         $deleteForm = $this->createDeleteForm($id);
 
         $request = $this->getRequest();
@@ -216,43 +316,39 @@ class BiayaRutinController extends Controller
         $editForm->submit($request);
 
         if ($editForm->isValid()) {
-
             try {
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success', $this->get('translator')->trans('flash.fee.recur.updated'));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.fee.recur.updated'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.unique.fee.recur');
                 throw new DBALException($message);
             }
 
-            return $this
-                    ->redirect(
-                            $this
-                                    ->generateUrl('fee_recur_edit',
-                                            array(
-                                                'id' => $id, 'page' => $this->getRequest()->get('page')
-                                            )));
+            return $this->redirect($this->generateUrl('fee_recur_show', [
+                'id' => $id,
+            ]));
         }
 
-        return array(
-                'entity' => $entity, 'edit_form' => $editForm->createView(),
-                'delete_form' => $deleteForm->createView(),
-        );
+        return [
+            'entity' => $entity,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ];
     }
 
     /**
-     * Deletes a BiayaRutin entity.
-     *
      * @Route("/{id}/delete", name="fee_recur_delete")
      * @Method("post")
+     * @Secure(roles="ROLE_BENDAHARA")
      */
-    public function deleteAction($id) {
-        $this->isRegisteredToSchool();
-
+    public function deleteAction($id)
+    {
         $form = $this->createDeleteForm($id);
         $request = $this->getRequest();
 
@@ -270,49 +366,49 @@ class BiayaRutinController extends Controller
                 $em->remove($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()
-                        ->add('success', $this->get('translator')->trans('flash.fee.recur.deleted'));
-
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.fee.recur.deleted'))
+                ;
             } catch (DBALException $e) {
                 $message = $this->get('translator')->trans('exception.delete.restrict');
                 throw new DBALException($message);
             }
-
         } else {
-            $this->get('session')->getFlashBag()
-                    ->add('error', $this->get('translator')->trans('flash.fee.recur.fail.delete'));
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $this->get('translator')->trans('flash.fee.recur.fail.delete'))
+            ;
         }
 
-        return $this
-                ->redirect(
-                        $this
-                                ->generateUrl('fee_recur',
-                                        array(
-                                            'page' => $this->getRequest()->get('page')
-                                        )));
+        return $this->redirect($this->generateUrl('fee_recur'));
     }
 
-    private function createDeleteForm($id) {
-        return $this->createFormBuilder(array(
-                    'id' => $id
-                ))->add('id', 'hidden')->getForm();
+    private function createDeleteForm($id)
+    {
+        return $this->createFormBuilder([
+                'id' => $id,
+            ])
+            ->add('id', 'hidden')
+            ->getForm()
+        ;
     }
 
-    private function setCurrentMenu() {
+    private function setCurrentMenu()
+    {
+        $translator = $this->get('translator');
+
         $menu = $this->container->get('langgas_sisdik.menu.main');
-        $menu[$this->get('translator')->trans('headings.fee', array(), 'navigations')][$this->get('translator')->trans('links.fee.recur', array(), 'navigations')]->setCurrent(true);
+        $menu[$translator->trans('headings.fee', [], 'navigations')][$translator->trans('links.fee.recur', [], 'navigations')]->setCurrent(true);
     }
 
-    private function isRegisteredToSchool() {
-        $user = $this->getUser();
-        $sekolah = $user->getSekolah();
-
-        if (is_object($sekolah) && $sekolah instanceof Sekolah) {
-            return $sekolah;
-        } else if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.useadmin'));
-        } else {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.registertoschool'));
-        }
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->getUser()->getSekolah();
     }
 }
