@@ -339,7 +339,7 @@ class BiayaSekaliController extends Controller
             $result = $qbsiswa->getQuery()->getScalarResult();
             $siswaPemakaiBiaya = array_map('current', $result);
 
-            if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0) {
+            if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0 && $entity->getNominalSebelumnya() != $entity->getNominal()) {
                 $qbsisabiaya = $em->createQueryBuilder()
                     ->update('LanggasSisdikBundle:Siswa', 'siswa')
                     ->where('siswa.tahun = :tahun')
@@ -360,7 +360,7 @@ class BiayaSekaliController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0) {
+                if (is_array($siswaPemakaiBiaya) && count($siswaPemakaiBiaya) > 0 && $entity->getNominalSebelumnya() != $entity->getNominal()) {
                     $qbsisabiaya->getQuery()->execute();
                 }
 
