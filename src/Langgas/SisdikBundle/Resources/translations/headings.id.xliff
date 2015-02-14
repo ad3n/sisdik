@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-01-24T13:23:14Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-02-14T10:23:43Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -73,6 +73,11 @@
         <jms:reference-file line="3">views/MesinKehadiran/index.html.twig</jms:reference-file>
         <source>attendancemachine.list</source>
         <target>Daftar Mesin Kehadiran</target>
+      </trans-unit>
+      <trans-unit id="e7edaadb51a03ea983012ca585866de964b2f609" resname="biaya.berulang.konfirmasi.ubah">
+        <jms:reference-file line="3">views/BiayaRutin/edit.confirm.html.twig</jms:reference-file>
+        <source>biaya.berulang.konfirmasi.ubah</source>
+        <target>Konfirmasi Pengubahan Biaya Berulang</target>
       </trans-unit>
       <trans-unit id="040dc3d11e68187139b9b3dfac98579871057acb" resname="biaya.pendaftaran.konfirmasi.ubah">
         <jms:reference-file line="3">views/BiayaPendaftaran/edit.confirm.html.twig</jms:reference-file>
@@ -456,7 +461,7 @@
       </trans-unit>
       <trans-unit id="3f03714b3f416ca5d1f55045d8fd8774a6087302" resname="laporan.pembayaran.biaya.sekali.bayar">
         <jms:reference-file line="3">views/LaporanPembayaranBiayaSekali/index.html.twig</jms:reference-file>
-        <jms:reference-file line="210">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
+        <jms:reference-file line="215">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
         <source>laporan.pembayaran.biaya.sekali.bayar</source>
         <target>Laporan Pembayaran Biaya Sekali Bayar</target>
       </trans-unit>
@@ -471,7 +476,7 @@
         <target>Laporan Pendaftaran</target>
       </trans-unit>
       <trans-unit id="2cd4aed433af5b04d5cb41c56b3ec2eb7381e743" resname="laporan.pendaftaran.siswa">
-        <jms:reference-file line="254">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
+        <jms:reference-file line="279">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>laporan.pendaftaran.siswa</source>
         <target>Laporan Pendaftaran Siswa</target>
       </trans-unit>
