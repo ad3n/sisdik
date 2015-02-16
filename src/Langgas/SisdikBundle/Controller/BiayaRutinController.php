@@ -47,6 +47,7 @@ class BiayaRutinController extends Controller
             ->where('tahun.sekolah = :sekolah')
             ->orderBy('tahun.tahun', 'DESC')
             ->addOrderBy('biayaRutin.urutan', 'ASC')
+            ->addOrderBy('jenisbiaya.nama', 'ASC')
             ->setParameter('sekolah', $sekolah)
         ;
 

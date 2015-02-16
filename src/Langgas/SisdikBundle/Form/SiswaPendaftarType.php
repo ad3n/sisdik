@@ -152,7 +152,7 @@ class SiswaPendaftarType extends AbstractType
                     'label' => 'label.placement.study',
                     'multiple' => false,
                     'expanded' => false,
-                    'property' => 'nama',
+                    'property' => 'optionLabel',
                     'empty_value' => 'label.tanpa.penjurusan.studi',
                     'required' => false,
                     'query_builder' => function (EntityRepository $repository) use ($sekolah) {
@@ -218,7 +218,7 @@ class SiswaPendaftarType extends AbstractType
                     'label' => 'label.placement.study',
                     'multiple' => false,
                     'expanded' => false,
-                    'property' => 'nama',
+                    'property' => 'optionLabel',
                     'empty_value' => 'label.tanpa.penjurusan.studi',
                     'required' => false,
                     'query_builder' => function (EntityRepository $repository) use ($sekolah) {
