@@ -298,6 +298,15 @@ class SiswaTahkikController extends Controller
             $nomorUrutPersekolah = $querynomor->getQuery()->getSingleScalarResult();
             $nomorUrutPersekolah = $nomorUrutPersekolah === null ? 100000 : $nomorUrutPersekolah;
 
+            $tanggalBulan = preg_split("/[\/,\s,\-,\+,_,\*]/", $sekolah->getAwalPembiayaan());
+            if (is_array($tanggalBulan)) {
+                $tanggal = $tanggalBulan[0];
+                $bulan = $tanggalBulan[1];
+            } else {
+                $tanggal = '01';
+                $bulan = '07';
+            }
+
             $entities = $em->getRepository('LanggasSisdikBundle:Siswa')
                 ->findBy([
                     'id' => preg_split('/:/', $idsiswa),
@@ -312,6 +321,7 @@ class SiswaTahkikController extends Controller
                             $entity->setNomorUrutPersekolah($nomorUrutPersekolah);
                             $entity->setNomorIndukSistem($nomorUrutPersekolah.$sekolah->getNomorUrut());
                             $entity->setCalonSiswa(false);
+                            $entity->setPembiayaanSejak(new \DateTime($entity->getTahun()->getTahun().'-'.$bulan.'-'.$tanggal));
 
                             $em->persist($entity);
                         }

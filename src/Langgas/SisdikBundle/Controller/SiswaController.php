@@ -941,6 +941,16 @@ class SiswaController extends Controller
         $entity->setSekolahAsal($sekolahAsal);
         $entity->setDibuatOleh($this->getUser());
 
+        $tanggalBulan = preg_split("/[\/,\s,\-,\+,_,\*]/", $sekolah->getAwalPembiayaan());
+        if (is_array($tanggalBulan)) {
+            $tanggal = $tanggalBulan[0];
+            $bulan = $tanggalBulan[1];
+        } else {
+            $tanggal = '01';
+            $bulan = '07';
+        }
+        $entity->setPembiayaanSejak(new \DateTime($entity->getTahun()->getTahun().'-'.$bulan.'-'.$tanggal));
+
         $em->persist($entity);
 
         $this->imporSiswaJumlah++;
