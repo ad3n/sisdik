@@ -2,12 +2,12 @@
 
 namespace Langgas\SisdikBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Langgas\SisdikBundle\Util\FileSizeFormatter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Doctrine\ORM\Mapping as ORM;
-use Langgas\SisdikBundle\Util\FileSizeFormatter;
 
 /**
  * @ORM\Table(name="sekolah")
@@ -115,6 +115,24 @@ class Sekolah
      * @var string
      */
     private $logoDisk;
+
+    /**
+     * @ORM\Column(name="awal_pembiayaan", type="string", length=5, nullable=false, options={"fixed"=true, "default"="01/07"})
+     * @Assert\NotBlank
+     * @Assert\Length(min=5, max=5)
+     *
+     * @var string
+     */
+    private $awalPembiayaan = '01/07';
+
+    /**
+     * @ORM\Column(name="akhir_pembiayaan", type="string", length=5, nullable=false, options={"fixed"=true, "default"="30/06"})
+     * @Assert\NotBlank
+     * @Assert\Length(min=5, max=5)
+     *
+     * @var string
+     */
+    private $akhirPembiayaan = '30/06';
 
     /**
      * @Assert\File(maxSize="300k")
@@ -316,7 +334,7 @@ class Sekolah
      */
     public function getLogo()
     {
-        return strlen($this->logo) > 20 ? '...' . substr($this->logo, -17) : $this->logo;
+        return strlen($this->logo) > 20 ? '...'.substr($this->logo, -17) : $this->logo;
     }
 
     /**
@@ -333,6 +351,38 @@ class Sekolah
     public function getLogoDisk()
     {
         return $this->logoDisk;
+    }
+
+    /**
+     * @param string $awalPembiayaan
+     */
+    public function setAwalPembiayaan($awalPembiayaan)
+    {
+        $this->awalPembiayaan = $awalPembiayaan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAwalPembiayaan()
+    {
+        return $this->awalPembiayaan;
+    }
+
+    /**
+     * @param string $akhirPembiayaan
+     */
+    public function setAkhirPembiayaan($akhirPembiayaan)
+    {
+        $this->akhirPembiayaan = $akhirPembiayaan;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAkhirPembiayaan()
+    {
+        return $this->akhirPembiayaan;
     }
 
     /**
@@ -372,7 +422,7 @@ class Sekolah
      */
     public function getWebPathLogoDisk()
     {
-        return null === $this->logoDisk ? null : $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->logoDisk;
+        return null === $this->logoDisk ? null : $this->getUploadDir().DIRECTORY_SEPARATOR.$this->logoDisk;
     }
 
     /**
@@ -381,7 +431,7 @@ class Sekolah
     public function getWebPathLogoThumbnailDisk()
     {
         return null === $this->logoDisk ?
-            null : $this->getUploadDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->logoDisk
+            null : $this->getUploadDir().DIRECTORY_SEPARATOR.self::THUMBNAIL_PREFIX.$this->logoDisk
         ;
     }
 
@@ -391,7 +441,7 @@ class Sekolah
     public function getRelativePathLogoDisk()
     {
         return null === $this->logoDisk ?
-            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->logoDisk
+            null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->logoDisk
         ;
     }
 
@@ -401,7 +451,7 @@ class Sekolah
     public function getRelativePathLogoDiskSebelumnya()
     {
         return null === $this->fileDiskSebelumnya ?
-            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->fileDiskSebelumnya
+            null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.$this->fileDiskSebelumnya
         ;
     }
 
@@ -411,7 +461,7 @@ class Sekolah
     public function getRelativePathLogoThumbDiskSebelumnya()
     {
         return null === $this->fileDiskSebelumnya ?
-            null : $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->fileDiskSebelumnya
+            null : $this->getUploadRootDir().DIRECTORY_SEPARATOR.self::THUMBNAIL_PREFIX.$this->fileDiskSebelumnya
         ;
     }
 
@@ -435,7 +485,7 @@ class Sekolah
         if (null !== $this->fileUpload) {
             $this->fileDiskSebelumnya = $this->logoDisk;
 
-            $this->logoDisk = sha1(uniqid(mt_rand(), true)) . '_' . $this->fileUpload->getClientOriginalName();
+            $this->logoDisk = sha1(uniqid(mt_rand(), true)).'_'.$this->fileUpload->getClientOriginalName();
 
             $this->logo = $this->fileUpload->getClientOriginalName();
         }
@@ -453,7 +503,7 @@ class Sekolah
 
         if ($this->fileUpload->move($this->getUploadRootDir(), $this->logoDisk)) {
             $targetfile = $this->getRelativePathLogoDisk();
-            $thumbnailfile = $this->getUploadRootDir() . DIRECTORY_SEPARATOR . self::THUMBNAIL_PREFIX . $this->logoDisk;
+            $thumbnailfile = $this->getUploadRootDir().DIRECTORY_SEPARATOR.self::THUMBNAIL_PREFIX.$this->logoDisk;
 
             list($origWidth, $origHeight, $type, $attr) = @getimagesize($targetfile);
 
@@ -534,7 +584,7 @@ class Sekolah
      */
     protected function getUploadRootDir()
     {
-        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
     }
 
     /**
@@ -543,10 +593,10 @@ class Sekolah
     protected function getUploadDir()
     {
         $fs = new Filesystem();
-        if (!$fs->exists(self::LOGO_DIR . $this->getId())) {
-            $fs->mkdir(self::LOGO_DIR . $this->getId());
+        if (!$fs->exists(self::LOGO_DIR.$this->getId())) {
+            $fs->mkdir(self::LOGO_DIR.$this->getId());
         }
 
-        return self::LOGO_DIR . $this->getId();
+        return self::LOGO_DIR.$this->getId();
     }
 }

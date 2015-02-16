@@ -3,7 +3,35 @@
 {% block page_heading %}{% trans from "headings" %}settings.school.edit{% endtrans %}{% endblock %}
 {% block content %}
 <form action="{{ path('settings_school_edit', {'id': id}) }}" {{ form_enctype(form) }} method="POST" class="form-horizontal">
-    {{ form_widget(form) }}
+    {{ form_row(form.nama) }}
+    {{ form_row(form.kode) }}
+    {{ form_row(form.alamat) }}
+    {{ form_row(form.kodepos) }}
+    {{ form_row(form.telepon) }}
+    {{ form_row(form.fax) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.norekening) }}
+    {{ form_row(form.bank) }}
+    {{ form_row(form.kepsek) }}
+    <div class="form-group">
+        {{ form_label(form.awalPembiayaan) }}
+            <div class="col-sm-3 col-md-2 col-lg-1">
+                {{ form_widget(form.awalPembiayaan) }}
+            </div>
+            <div class="col-sm-offset-4 col-sm-7 col-md-offset-4 col-md-6 col-lg-offset-3 col-lg-7">
+                <p class="help-block">{{ form.awalPembiayaan.vars.help_block|trans }}</p>
+            </div>
+    </div>
+    <div class="form-group">
+        {{ form_label(form.akhirPembiayaan) }}
+            <div class="col-sm-3 col-md-2 col-lg-1">
+                {{ form_widget(form.akhirPembiayaan) }}
+            </div>
+            <div class="col-sm-offset-4 col-sm-7 col-md-offset-4 col-md-6 col-lg-offset-3 col-lg-7">
+                <p class="help-block">{{ form.akhirPembiayaan.vars.help_block|trans }}</p>
+            </div>
+    </div>
+    {{ form_rest(form) }}
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
             <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>

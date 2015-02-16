@@ -79,6 +79,22 @@ class SekolahType extends AbstractType
                     'class' => 'large',
                 ],
             ])
+            ->add('awalPembiayaan', null, [
+                'required' => true,
+                'label' => 'label.awal.pembiayaan',
+                'attr' => [
+                    'maxlength' => 5,
+                ],
+                'help_block' => 'penjelasan.awal.pembiayaan',
+            ])
+            ->add('akhirPembiayaan', null, [
+                'required' => true,
+                'label' => 'label.akhir.pembiayaan',
+                'attr' => [
+                    'maxlength' => 5,
+                ],
+                'help_block' => 'penjelasan.akhir.pembiayaan',
+            ])
             ->add('fileUpload', 'file', [
                 'required' => false,
                 'label_render' => true,
