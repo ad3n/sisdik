@@ -327,6 +327,20 @@ class Siswa
     private $keteranganPembayaranRutin;
 
     /**
+     * @ORM\Column(name="pembiayaan_sejak", type="date", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $pembiayaanSejak;
+
+    /**
+     * @ORM\Column(name="pembiayaan_hingga", type="date", nullable=true)
+     *
+     * @var \DateTime
+     */
+    private $pembiayaanHingga;
+
+    /**
      * @ORM\Column(name="waktu_simpan", type="datetime", nullable=true)
      * @Gedmo\Timestampable(on="create")
      *
@@ -1886,5 +1900,37 @@ class Siswa
         }
 
         return self::PHOTO_DIR.$this->getSekolah()->getId().DIRECTORY_SEPARATOR.$this->getTahun()->getTahun();
+    }
+
+    /**
+     * @param \DateTime $pembiayaanSejak
+     */
+    public function setPembiayaanSejak($pembiayaanSejak)
+    {
+        $this->pembiayaanSejak = $pembiayaanSejak;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPembiayaanSejak()
+    {
+        return $this->pembiayaanSejak;
+    }
+
+    /**
+     * @param \DateTime $pembiayaanHingga
+     */
+    public function setPembiayaanHingga($pembiayaanHingga)
+    {
+        $this->pembiayaanHingga = $pembiayaanHingga;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPembiayaanHingga()
+    {
+        return $this->pembiayaanHingga;
     }
 }
