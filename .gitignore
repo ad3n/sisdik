@@ -14,6 +14,7 @@ app/config/parameters.yml
 app/lock/*
 build/
 vendor
+composer.phar
 phpunit.phar
 .settings
 .buildpath
