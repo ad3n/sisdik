@@ -23,7 +23,7 @@ class BiayaRutin
     /**
      * @ORM\Column(name="nominal", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\NotBlank
-     * @Assert\Length(min=5)
+     * @Assert\Length(min=4)
      *
      * @var integer
      */
