@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "359c771dc9d15fbf572111062863d5a4",
+    "hash": "2976737a8cbdb4db6855e2d4dc37609d",
     "packages": [
         {
             "name": "bcc/extra-tools-bundle",
@@ -955,16 +955,16 @@
         },
         {
             "name": "fortawesome/font-awesome",
-            "version": "v4.2.0",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FortAwesome/Font-Awesome.git",
-                "reference": "a65bd93d81e9e6bd5ebfa41757a4474960b973b4"
+                "reference": "41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/a65bd93d81e9e6bd5ebfa41757a4474960b973b4",
-                "reference": "a65bd93d81e9e6bd5ebfa41757a4474960b973b4",
+                "url": "https://api.github.com/repos/FortAwesome/Font-Awesome/zipball/41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0",
+                "reference": "41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0",
                 "shasum": ""
             },
             "require-dev": {
@@ -999,7 +999,7 @@
                 "font",
                 "icon"
             ],
-            "time": "2014-08-26 16:36:44"
+            "time": "2015-01-22 18:09:42"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -3758,6 +3758,7 @@
         "psliwa/pdf-bundle": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },
