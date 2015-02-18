@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -147,6 +148,38 @@ class BiayaRutinController extends Controller
         $request = $this->getRequest();
         $form = $this->createForm('sisdik_biayarutin', $entity);
         $form->submit($request);
+
+        switch ($form->get('perulangan')->getData()) {
+            case 'b-mingguan':
+                if (!$form->get('mingguanHariKe')->getData()) {
+                    $message = $this->get('translator')->trans('exception.perulangan.mingguan.hari');
+                    $form->get('mingguanHariKe')->addError(new FormError($message));
+                }
+
+                break;
+            case 'c-bulanan':
+                if (!$form->get('bulananHariKe')->getData()) {
+                    $message = $this->get('translator')->trans('exception.perulangan.bulanan.lb.tanggal');
+                    $form->get('bulananHariKe')->addError(new FormError($message));
+                }
+
+                break;
+            case 'd-triwulan':
+            case 'e-caturwulan':
+            case 'f-semester':
+            case 'g-tahunan':
+                if (!$form->get('bulananHariKe')->getData()) {
+                    $message = $this->get('translator')->trans('exception.perulangan.bulanan.lb.tanggal');
+                    $form->get('bulananHariKe')->addError(new FormError($message));
+                }
+
+                if (!$form->get('bulanAwal')->getData()) {
+                    $message = $this->get('translator')->trans('exception.perulangan.triwulan.lb.bulan');
+                    $form->get('bulanAwal')->addError(new FormError($message));
+                }
+
+                break;
+        }
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
