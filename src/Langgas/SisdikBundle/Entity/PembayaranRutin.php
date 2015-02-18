@@ -2,8 +2,8 @@
 
 namespace Langgas\SisdikBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -124,7 +124,7 @@ class PembayaranRutin
      * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
      *
-     * @var TransaksiPembayaranRutin
+     * @var ArrayCollection
      */
     private $transaksiPembayaranRutin;
 
@@ -349,7 +349,7 @@ class PembayaranRutin
     }
 
     /**
-     * @return TransaksiPembayaranRutin
+     * @return ArrayCollection
      */
     public function getTransaksiPembayaranRutin()
     {

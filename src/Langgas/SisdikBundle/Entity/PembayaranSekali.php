@@ -115,7 +115,7 @@ class PembayaranSekali
      * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
      *
-     * @var TransaksiPembayaranSekali
+     * @var ArrayCollection
      */
     private $transaksiPembayaranSekali;
 
@@ -124,7 +124,7 @@ class PembayaranSekali
      * @ORM\OrderBy({"nama" = "ASC"})
      * @Assert\Valid
      *
-     * @var DaftarBiayaSekali
+     * @var ArrayCollection
      */
     private $daftarBiayaSekali;
 

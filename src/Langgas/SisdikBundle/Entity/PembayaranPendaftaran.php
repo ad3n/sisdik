@@ -115,7 +115,7 @@ class PembayaranPendaftaran
      * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
      *
-     * @var TransaksiPembayaranPendaftaran
+     * @var ArrayCollection
      */
     private $transaksiPembayaranPendaftaran;
 
@@ -124,7 +124,7 @@ class PembayaranPendaftaran
      * @ORM\OrderBy({"nama" = "ASC"})
      * @Assert\Valid
      *
-     * @var DaftarBiayaPendaftaran
+     * @var ArrayCollection
      */
     private $daftarBiayaPendaftaran;
 
