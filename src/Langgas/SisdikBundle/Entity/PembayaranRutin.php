@@ -355,4 +355,18 @@ class PembayaranRutin
     {
         return $this->transaksiPembayaranRutin;
     }
+
+    /**
+     * @return int
+     */
+    public function getTotalNominalTransaksiPembayaranRutin()
+    {
+        $jumlah = 0;
+
+        foreach ($this->getTransaksiPembayaranRutin() as $transaksi) {
+            $jumlah += $transaksi->getNominalPembayaran();
+        }
+
+        return $jumlah;
+    }
 }
