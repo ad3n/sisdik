@@ -353,6 +353,7 @@ class PembayaranBiayaSekaliController extends Controller
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'jenisLayanan' => 'za-biaya-sekali-bayar',
+                    'status' => true,
                 ])
             ;
 
@@ -434,6 +435,7 @@ class PembayaranBiayaSekaliController extends Controller
                     ->findOneBy([
                         'sekolah' => $sekolah,
                         'jenisLayanan' => 'zb-biaya-sekali-bayar-lunas',
+                        'status' => true,
                     ])
                 ;
 
@@ -764,6 +766,7 @@ class PembayaranBiayaSekaliController extends Controller
                 ->findOneBy([
                     'sekolah' => $sekolah,
                     'jenisLayanan' => 'za-biaya-sekali-bayar',
+                    'status' => true,
                 ])
             ;
 
@@ -845,6 +848,7 @@ class PembayaranBiayaSekaliController extends Controller
                     ->findOneBy([
                         'sekolah' => $sekolah,
                         'jenisLayanan' => 'zb-biaya-sekali-bayar-lunas',
+                        'status' => true,
                     ])
                 ;
 

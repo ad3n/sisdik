@@ -378,6 +378,7 @@ class PembayaranPendaftaranController extends Controller
                     ->findBy([
                         'sekolah' => $sekolah,
                         'jenisLayanan' => 'b-pendaftaran-bayar-pertama',
+                        'status' => true,
                     ])
                 ;
 
@@ -439,6 +440,7 @@ class PembayaranPendaftaranController extends Controller
                 ->findBy([
                     'sekolah' => $sekolah,
                     'jenisLayanan' => 'c-pendaftaran-bayar',
+                    'status' => true,
                 ])
             ;
 
@@ -527,6 +529,7 @@ class PembayaranPendaftaranController extends Controller
                     ->findBy([
                         'sekolah' => $sekolah,
                         'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
+                        'status' => true,
                     ])
                 ;
 
@@ -864,6 +867,7 @@ class PembayaranPendaftaranController extends Controller
                 ->findBy([
                     'sekolah' => $sekolah,
                     'jenisLayanan' => 'c-pendaftaran-bayar',
+                    'status' => true,
                 ])
             ;
 
@@ -946,6 +950,7 @@ class PembayaranPendaftaranController extends Controller
                     ->findBy([
                         'sekolah' => $sekolah,
                         'jenisLayanan' => 'd-pendaftaran-bayar-lunas',
+                        'status' => true,
                     ])
                 ;
 
