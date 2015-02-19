@@ -121,7 +121,7 @@ class PembayaranRutin
 
     /**
      * @ORM\OneToMany(targetEntity="TransaksiPembayaranRutin", mappedBy="pembayaranRutin", cascade={"persist"})
-     * @ORM\OrderBy({"waktuSimpan" = "ASC"})
+     * @ORM\OrderBy({"waktuSimpan" = "DESC"})
      * @Assert\Valid
      *
      * @var ArrayCollection
@@ -342,7 +342,7 @@ class PembayaranRutin
     public function setTransaksiPembayaranRutin($transaksiPembayaranRutin)
     {
         foreach ($transaksiPembayaranRutin as $transaksi) {
-            $transaksi->setPembayaranSekali($this);
+            $transaksi->setPembayaranRutin($this);
         }
 
         $this->transaksiPembayaranRutin = $transaksiPembayaranRutin;
