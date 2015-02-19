@@ -71,6 +71,13 @@ class BiayaRutin
     private $urutan;
 
     /**
+     * @ORM\Column(name="terpakai", type="boolean", nullable=false, options={"default" = 0})
+     *
+     * @var boolean
+     */
+    private $terpakai = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Tahun")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="tahun_id", referencedColumnName="id", nullable=false)
@@ -261,6 +268,22 @@ class BiayaRutin
     public function getUrutan()
     {
         return $this->urutan;
+    }
+
+    /**
+     * @param boolean $terpakai
+     */
+    public function setTerpakai($terpakai)
+    {
+        $this->terpakai = $terpakai;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTerpakai()
+    {
+        return $this->terpakai;
     }
 
     /**

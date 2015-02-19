@@ -399,6 +399,11 @@ class BiayaRutinController extends Controller
             }
 
             try {
+                if ($entity->isTerpakai() === true) {
+                    $message = $this->get('translator')->trans('exception.delete.restrict.biaya.rutin');
+                    throw new \Exception($message);
+                }
+
                 $em->remove($entity);
                 $em->flush();
 
