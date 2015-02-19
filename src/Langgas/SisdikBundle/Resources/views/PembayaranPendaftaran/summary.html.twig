@@ -37,106 +37,106 @@
 }
 </style>
 
-        <div class="col-lg-4 col-md-4 col-sm-6 pull-right">
-            {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran" style="min-width: 80%;">{{ siswa.keterangan }}</div><div class="clearfix"></div>{% endif %}
-            {% if siswa.webcamPhotoPath != "" %}
-                <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webcamPhotoPath }}" class="img-polaroid" width="180" />
-            {% endif %}
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-6 col-xs-8">
-            <dl>
-                <dt>{{ 'label.year.entry'|trans }}</dt>
-                <dd>{% if siswa.tahun %}{{ siswa.tahun.tahun }}{% endif %}</dd>
-                <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
-                <dd>{% if siswa.gelombang %}{{ siswa.gelombang.nama }}{% endif %}</dd>
-                <dt>{{ 'label.placement.study'|trans }}</dt>
-                <dd>{% if siswa.penjurusan %}{{ siswa.penjurusan.nama }}{% endif %}</dd>
-                <dt>{{ 'label.application.number'|trans }}</dt>
-                <dd>{{ siswa.nomorPendaftaran }}</dd>
-                <dt>{{ 'label.name.full'|trans }}</dt>
-                <dd>{{ siswa.namaLengkap }}</dd>
-                <dt>{{ 'label.sekolah.asal'|trans }}</dt>
-            {% if siswa.sekolahAsal is not null %}
-                <dd>
-                    {{ siswa.sekolahAsal.nama }}
-                    <a href="{{ path('sekolahasal_show', { 'id': siswa.sekolahAsal.id }) }}" target="_blank">
-                        <i class="fa fa-external-link"></i>
-                    </a>
-                </dd>
-            {% else %}
-                <dd>&nbsp;</dd>
-            {% endif %}
-                <dt>{{ 'label.gender'|trans }}</dt>
-                <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
-                <dt>{{ 'label.religion'|trans }}</dt>
-                <dd>{{ siswa.agama|title }}</dd>
-                <dt>{{ 'label.address'|trans }}</dt>
-                <dd>{{ siswa.alamat }}</dd>
-                {% if siswa.orangtuaWali %}
-                    {% for orangtua in siswa.orangtuaWali %}
-                        {% if orangtua %}
-                            {% if orangtua.aktif == 1 %}
-                                <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
-                                <dd>{{ orangtua.nama }}</dd>
-                                <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
-                                <dd>{{ orangtua.ponsel }}</dd>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
+<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+    {% if siswa.keterangan is not null %}<div class="keterangan-pembayaran" style="min-width: 80%;">{{ siswa.keterangan }}</div><div class="clearfix"></div>{% endif %}
+    {% if siswa.webcamPhotoPath != "" %}
+        <img src="{% if proxypass == 1 %}/{{ proxypassname }}{% endif %}/{{ siswa.webcamPhotoPath }}" class="img-polaroid" width="180" />
+    {% endif %}
+</div>
+<div class="col-lg-8 col-md-8 col-sm-6 col-xs-8">
+    <dl>
+        <dt>{{ 'label.year.entry'|trans }}</dt>
+        <dd>{% if siswa.tahun %}{{ siswa.tahun.tahun }}{% endif %}</dd>
+        <dt>{{ 'label.admissiongroup.entry'|trans }}</dt>
+        <dd>{% if siswa.gelombang %}{{ siswa.gelombang.nama }}{% endif %}</dd>
+        <dt>{{ 'label.placement.study'|trans }}</dt>
+        <dd>{% if siswa.penjurusan %}{{ siswa.penjurusan.nama }}{% endif %}</dd>
+        <dt>{{ 'label.application.number'|trans }}</dt>
+        <dd>{{ siswa.nomorPendaftaran }}</dd>
+        <dt>{{ 'label.name.full'|trans }}</dt>
+        <dd>{{ siswa.namaLengkap }}</dd>
+        <dt>{{ 'label.sekolah.asal'|trans }}</dt>
+    {% if siswa.sekolahAsal is not null %}
+        <dd>
+            {{ siswa.sekolahAsal.nama }}
+            <a href="{{ path('sekolahasal_show', { 'id': siswa.sekolahAsal.id }) }}" target="_blank">
+                <i class="fa fa-external-link"></i>
+            </a>
+        </dd>
+    {% else %}
+        <dd>&nbsp;</dd>
+    {% endif %}
+        <dt>{{ 'label.gender'|trans }}</dt>
+        <dd>{% if siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</dd>
+        <dt>{{ 'label.religion'|trans }}</dt>
+        <dd>{{ siswa.agama|title }}</dd>
+        <dt>{{ 'label.address'|trans }}</dt>
+        <dd>{{ siswa.alamat }}</dd>
+        {% if siswa.orangtuaWali %}
+            {% for orangtua in siswa.orangtuaWali %}
+                {% if orangtua %}
+                    {% if orangtua.aktif == 1 %}
+                        <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+                        <dd>{{ orangtua.nama }}</dd>
+                        <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+                        <dd>{{ orangtua.ponsel }}</dd>
+                    {% endif %}
                 {% endif %}
+            {% endfor %}
+        {% endif %}
 
-                {% set totalBayar = 0 %}
-                {% set totalBiayaMasuk = 0 %}
-                {% set totalPotongan = 0 %}
-                {% set totalBiayaSisa = 0 %}
-                {% set totalBiaya = 0 %}
+        {% set totalBayar = 0 %}
+        {% set totalBiayaMasuk = 0 %}
+        {% set totalPotongan = 0 %}
+        {% set totalBiayaSisa = 0 %}
+        {% set totalBiaya = 0 %}
 
-                {% for pembayaran in entities %}
-                    {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
-                    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
-                        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
-                    {% endfor %}
-                    {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
-                        {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
-                    {% endfor %}
-                {% endfor %}
+        {% for pembayaran in entities %}
+            {% set totalPotongan = totalPotongan + pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan %}
+            {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+                {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+            {% endfor %}
+            {% for transaksi in pembayaran.transaksiPembayaranPendaftaran %}
+                {% set totalBayar = totalBayar + transaksi.nominalPembayaran %}
+            {% endfor %}
+        {% endfor %}
 
-                {% if itemBiayaTersimpan|length != 0 %}
-                    {% set remainInfo %}
-                        {% if siswa.penjurusan %}
-                            {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
-                        {% else %}
-                            {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
-                        {% endif %}
-                    {% endset %}
-                    {% set remainInfo = remainInfo|json_decode %}
-                    {% set totalBiayaSisa = remainInfo.biaya %}
+        {% if itemBiayaTersimpan|length != 0 %}
+            {% set remainInfo %}
+                {% if siswa.penjurusan %}
+                    {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
                 {% else %}
-                    {% set remainInfo %}
-                        {% if siswa.penjurusan %}
-                            {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
-                        {% else %}
-                            {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'json': 1}) %}
-                        {% endif %}
-                    {% endset %}
-                    {% set remainInfo = remainInfo|json_decode %}
-                    {% set totalBiayaSisa = remainInfo.biaya %}
+                    {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
                 {% endif %}
-                {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+            {% endset %}
+            {% set remainInfo = remainInfo|json_decode %}
+            {% set totalBiayaSisa = remainInfo.biaya %}
+        {% else %}
+            {% set remainInfo %}
+                {% if siswa.penjurusan %}
+                    {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
+                {% else %}
+                    {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'json': 1}) %}
+                {% endif %}
+            {% endset %}
+            {% set remainInfo = remainInfo|json_decode %}
+            {% set totalBiayaSisa = remainInfo.biaya %}
+        {% endif %}
+        {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
 
-                <dt>{{ 'label.payables.amount.total'|trans }}</dt>
-                <dd>
-                {% if totalPotongan > 0 %}<i class="fa fa-gift"></i>{% endif %}
-                {{ totalBiaya|number_format(0, ',', '.') }}
-                </dd>
-                <dt>{{ 'label.paid.amount.total'|trans }}</dt>
-                <dd>{{ totalBayar|number_format(0, ',', '.') }}</dd>
-                <dt>{{ 'label.payment.remains.total'|trans }}</dt>
-                <dd>
-                    {{ (totalBiayaSisa + (totalBiayaMasuk - totalPotongan - totalBayar))|number_format(0, ',', '.') }}
-                </dd>
-            </dl>
-        </div>
+        <dt>{{ 'label.payables.amount.total'|trans }}</dt>
+        <dd>
+        {% if totalPotongan > 0 %}<i class="fa fa-gift"></i>{% endif %}
+        {{ totalBiaya|number_format(0, ',', '.') }}
+        </dd>
+        <dt>{{ 'label.paid.amount.total'|trans }}</dt>
+        <dd>{{ totalBayar|number_format(0, ',', '.') }}</dd>
+        <dt>{{ 'label.payment.remains.total'|trans }}</dt>
+        <dd>
+            {{ (totalBiayaSisa + (totalBiayaMasuk - totalPotongan - totalBayar))|number_format(0, ',', '.') }}
+        </dd>
+    </dl>
+</div>
 
 <div class="clearfix" style="margin-bottom: 2em;"></div>
 
@@ -206,14 +206,16 @@
 
 {% if itemBiayaTersisa|length > 0 %}
 <form id="pay-form" action="{{ path('payment_registrationfee_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-    {{ form_row(form.daftarBiayaPendaftaran) }}
-    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
-        <div class="form-group">
+    <div style="margin-left: 10px;">
+        {{ form_row(form.daftarBiayaPendaftaran) }}
+    </div>
+    <div class="form-group">
+        <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
             {{ 'label.payables.amount'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount"></span></b>
         </div>
     </div>
-    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
-        <div class="form-group">
+    <div class="form-group">
+        <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
             {{ form_widget(form.adaPotongan) }}
         </div>
     </div>
@@ -222,8 +224,8 @@
         <div id="discount-type">{{ form_row(form.jenisPotongan) }}</div>
         <div id="discount-amount">{{ form_row(form.nominalPotongan) }}</div>
         <div id="discount-percentage">{{ form_row(form.persenPotongan) }}</div>
-        <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
-            <div class="form-group">
+        <div class="form-group">
+            <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
                 {{ 'label.payables.amount.discounted'|trans }} <b>{{ currencySymbol(locale) }}. <span id="fee-amount-discounted"></span></b>
             </div>
         </div>
@@ -232,16 +234,16 @@
     <div class="clearfix" style="margin-top: 10px;"></div>
     {{ form_widget(form.transaksiPembayaranPendaftaran) }}
     {{ form_rest(form) }}
-    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
-        <div class="form-group">
+    <div class="form-group">
+        <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
         <p style="font-style: italic; font-size: 0.9em;">
             {{ 'shortinfo.pay.notbiggerthan.fee'|trans }}<br />
             {{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}
         </p>
         </div>
     </div>
-    <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
-        <div class="form-group">
+    <div class="form-group">
+        <div class="col-sm-8 col-md-7 col-lg-7 col-sm-offset-4 col-md-offset-4 col-lg-offset-3">
             <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
         </div>
     </div>
