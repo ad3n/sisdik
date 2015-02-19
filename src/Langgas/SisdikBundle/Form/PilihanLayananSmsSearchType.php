@@ -92,6 +92,7 @@ class PilihanLayananSmsSearchType extends AbstractType
             PilihanLayananSms::getDaftarLayananKehadiran(),
             PilihanLayananSms::getDaftarLayananKepulangan(),
             PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+            PilihanLayananSms::getDaftarLayananBiayaRutin(),
             PilihanLayananSms::getDaftarLayananLain(),
             PilihanLayananSms::getDaftarLayananPeriodik()
         );

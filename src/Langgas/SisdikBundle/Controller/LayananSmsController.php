@@ -49,7 +49,8 @@ class LayananSmsController extends Controller
             'pagination' => $pagination,
             'daftarJenisLayanan' => array_merge(
                 PilihanLayananSms::getDaftarLayananPendaftaran(),
-                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+                PilihanLayananSms::getDaftarLayananBiayaRutin()
             ),
         ];
     }
@@ -141,7 +142,8 @@ class LayananSmsController extends Controller
             'delete_form' => $deleteForm->createView(),
             'daftarJenisLayanan' => array_merge(
                 PilihanLayananSms::getDaftarLayananPendaftaran(),
-                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+                PilihanLayananSms::getDaftarLayananBiayaRutin()
             ),
         ];
     }

@@ -59,7 +59,8 @@ class LayananSmsType extends AbstractType
             ->add('jenisLayanan', 'choice', [
                 'choices' => array_merge(
                     PilihanLayananSms::getDaftarLayananPendaftaran(),
-                    PilihanLayananSms::getDaftarLayananBiayaSekaliBayar()
+                    PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+                    PilihanLayananSms::getDaftarLayananBiayaRutin()
                 ),
                 'required' => true,
                 'label' => 'label.layanansms.jenis',

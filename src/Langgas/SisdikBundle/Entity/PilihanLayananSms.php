@@ -139,6 +139,18 @@ class PilihanLayananSms
     }
 
     /**
+     * Daftar layanan sms biaya rutin yang mungkin digunakan.
+     *
+     * @return array
+     */
+    public static function getDaftarLayananBiayaRutin()
+    {
+        return [
+            'zda-biaya-rutin-bayar' => 'layanan.sms.bayar.biaya.berulang',
+        ];
+    }
+
+    /**
      * Daftar layanan sms lain-lain yang tak perlu dikategorikan.
      *
      * @return array
