@@ -15,10 +15,6 @@ class PembayaranPendaftaranType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('siswa', 'sisdik_entityhidden', [
-                'required' => true,
-                'class' => 'LanggasSisdikBundle:Siswa',
-            ])
             ->add('daftarBiayaPendaftaran', 'collection', [
                 'type' => 'sisdik_daftarbiayapendaftaran',
                 'required' => true,

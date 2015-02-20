@@ -238,7 +238,7 @@ class PembayaranPendaftaranController extends Controller
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
-            throw $this->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan atau tahap penerimaan tidak valid.');
         }
 
         $entities = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->findBy(['siswa' => $siswa]);
@@ -269,6 +269,8 @@ class PembayaranPendaftaranController extends Controller
         }
 
         if ($form->isValid()) {
+            $entity->setSiswa($siswa);
+
             $now = new \DateTime();
             $qbmaxnum = $em->createQueryBuilder()
                 ->select('MAX(transaksi.nomorUrutTransaksiPerbulan)')
