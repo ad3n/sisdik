@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class SekolahVoter implements VoterInterface
+class TahunVoter implements VoterInterface
 {
     const CREATE = 'create';
     const VIEW = 'view';
@@ -26,29 +26,10 @@ class SekolahVoter implements VoterInterface
     public function supportsClass($class)
     {
         $supportedClasses = [
-            'Langgas\SisdikBundle\Entity\Gelombang',
-            'Langgas\SisdikBundle\Entity\JadwalKehadiran',
-            'Langgas\SisdikBundle\Entity\JadwalKepulangan',
-            'Langgas\SisdikBundle\Entity\JenisDokumenSiswa',
-            'Langgas\SisdikBundle\Entity\JenisImbalan',
-            'Langgas\SisdikBundle\Entity\Jenisbiaya',
-            'Langgas\SisdikBundle\Entity\Kelas',
-            'Langgas\SisdikBundle\Entity\LayananSmsPeriodik',
-            'Langgas\SisdikBundle\Entity\LayananSms',
-            'Langgas\SisdikBundle\Entity\MesinKehadiran',
-            'Langgas\SisdikBundle\Entity\PanitiaPendaftaran',
-            'Langgas\SisdikBundle\Entity\Penjurusan',
-            'Langgas\SisdikBundle\Entity\PilihanCetakKwitansi',
-            'Langgas\SisdikBundle\Entity\Referensi',
-            'Langgas\SisdikBundle\Entity\SekolahAsal',
-            'Langgas\SisdikBundle\Entity\Siswa',
-            'Langgas\SisdikBundle\Entity\TahunAkademik',
-            'Langgas\SisdikBundle\Entity\Tahun',
-            'Langgas\SisdikBundle\Entity\Templatesms',
-            'Langgas\SisdikBundle\Entity\Tingkat',
-            'Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran',
-            'Langgas\SisdikBundle\Entity\TransaksiPembayaranSekali',
-            'Langgas\SisdikBundle\Entity\User',
+            'Langgas\SisdikBundle\Entity\BiayaPendaftaran',
+            'Langgas\SisdikBundle\Entity\BiayaRutin',
+            'Langgas\SisdikBundle\Entity\BiayaSekali',
+            'Langgas\SisdikBundle\Entity\ImbalanPendaftaran',
         ];
 
         return in_array($class, $supportedClasses);
@@ -81,7 +62,7 @@ class SekolahVoter implements VoterInterface
             case self::VIEW:
             case self::EDIT:
             case self::DELETE:
-                if ($user->getSekolah()->getId() === $entity->getSekolah()->getId()) {
+                if ($user->getSekolah()->getId() === $entity->getTahun()->getSekolah()->getId()) {
                     return VoterInterface::ACCESS_GRANTED;
                 }
                 break;
