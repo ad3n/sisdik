@@ -15,10 +15,6 @@ class PembayaranSekaliType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('siswa', 'sisdik_entityhidden', [
-                'required' => true,
-                'class' => 'LanggasSisdikBundle:Siswa',
-            ])
             ->add('daftarBiayaSekali', 'collection', [
                 'type' => 'sisdik_daftarbiayasekali',
                 'required' => true,

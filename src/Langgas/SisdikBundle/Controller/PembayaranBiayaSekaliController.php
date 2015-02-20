@@ -248,6 +248,8 @@ class PembayaranBiayaSekaliController extends Controller
         }
 
         if ($form->isValid()) {
+            $entity->setSiswa($siswa);
+
             $now = new \DateTime();
             $qbmaxnum = $em->createQueryBuilder()
                 ->select('MAX(transaksi.nomorUrutTransaksiPerbulan)')
