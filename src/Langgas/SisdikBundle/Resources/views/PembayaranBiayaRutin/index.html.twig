@@ -85,7 +85,7 @@
             <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
             <td data-title="{{ 'label.name.full'|trans }}">
                 <div>{{ data.namaLengkap }}</div>
-                <div class="green emphasis" title="{{ 'masa.aktif.wajib.membayar'|trans }}"><i class="fa fa-heartbeat"></i> {{ data.pembiayaanSejak|date('d/m/Y') }}</div>
+                <div class="green emphasis" title="{{ 'masa.aktif.wajib.membayar'|trans }}"><i class="fa fa-heartbeat"></i> {{ data.pembiayaanSejak|date('d/m/Y') }}{% if data.pembiayaanHingga %} &mdash; {{ data.pembiayaanHingga|date('d/m/Y') }}{% endif %}</div>
             </td>
             <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
             <td data-title="{{ 'label.biaya.berulang'|trans }}">
