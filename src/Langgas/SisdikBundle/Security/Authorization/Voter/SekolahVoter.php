@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class SekolahVoter implements VoterInterface
 {
+    const CREATE = 'create';
     const VIEW = 'view';
     const EDIT = 'edit';
     const DELETE = 'delete';
@@ -15,6 +16,7 @@ class SekolahVoter implements VoterInterface
     public function supportsAttribute($attribute)
     {
         return in_array($attribute, [
+            self::CREATE,
             self::VIEW,
             self::EDIT,
             self::DELETE,
@@ -75,6 +77,7 @@ class SekolahVoter implements VoterInterface
         }
 
         switch ($attribute) {
+            case self::CREATE:
             case self::VIEW:
             case self::EDIT:
             case self::DELETE:
