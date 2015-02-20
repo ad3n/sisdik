@@ -48,6 +48,27 @@
 .separator {
     padding: 0 5px;
 }
+#no-more-tables {
+    margin-bottom: 10px;
+}
+#pay-form, .info-form {
+    margin-top: 10px;
+}
+#load-more {
+    line-height: 32px;
+    height: 32px;
+}
+#more-loader {
+    margin-left: 5px;
+    min-width: 5em;
+    line-height: 32px;
+    display: inline-block;
+}
+.loading {
+    {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}
+    background: white url('{{ asset_url }}') left center no-repeat;
+    {% endimage %}
+}
 </style>
 
 <div class="col-lg-4 col-md-4 col-sm-6 pull-right">
@@ -122,9 +143,9 @@
         <tr>
             <td data-title="{{ 'label.periode.pembayaran'|trans }}" title="{{ pembayaran.keterangan }}">
                 <span class="pembayaran-ke">{{ 'label.periode.pembayaran.ke'|trans }} {{ periodePembayaran }}</span>
-                <span class="separator" style="padding-left: 10px;">&brvbar;</span>
+                <span class="separator" style="padding: 0 5px 0 10px;">&brvbar;</span>
                 {% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}
-                    <i class="fa fa-gift"></i>
+                    <i class="fa fa-gift fa-fw"></i>
                 {% endif %}
                 {{ (pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',','.') }}
             </td>
@@ -134,7 +155,7 @@
                 <span class="red">{{ 'label.kurang.bayar'|trans }} {{ kurangBayar|number_format(0, ',', '.') }}</span><br>
             {% endif %}
             {% for transaksi in pembayaran.transaksiPembayaranRutin %}
-                {{ transaksi.waktuSimpan|date('d/m/Y') }}
+                {{ transaksi.waktuSimpan|localeDate('long', 'medium') }}
                 <span class="separator">&brvbar;</span>
                 {{ transaksi.nominalPembayaran|number_format(0, ',','.') }}
                 <span class="separator">&brvbar;</span>
@@ -160,6 +181,16 @@
     {% endfor %}
     </tbody>
 </table>
+
+{% if periodePembayaran > 1 %}
+<div class="more-container">
+    <a href="{{ path('pembayaran_biaya_rutin__periode', {'sid': siswa.id, 'bid': biaya.id}) }}" id="load-more">
+        <i class="fa fa-bars fa-fw"></i><span style="margin-left: 5px;">{{ 'lihat.periode.lebih.lama'|trans }}
+    </a>
+    </span><span id="more-loader">&nbsp;</span>
+</div>
+{% endif %}
+
 <div class="clearfix"></div>
 
 {% if jumlahPembayaranBelumLunas[1] <= 0 %}
@@ -205,7 +236,7 @@
     </div>
 </form>
 {% else %}
-<div class="text-center">
+<div class="text-center info-form">
     {{ 'keterangan.munculnya.form.biaya.berulang'|trans }}
 </div>
 {% endif %}
@@ -364,10 +395,12 @@ $(document).ready(function() {
         var withdiscount = ($(".discount-check").is(":checked"));
 
         // debug
+        /*
         console.log("withdiscount: " + withdiscount);
         console.log("feeamount: " + feeamount);
         console.log("feeamountdiscounted: " + feeamountdiscounted);
         console.log("payamount: " + payamount);
+        */
 
         if (withdiscount) {
             if (payamount > feeamountdiscounted) {
@@ -394,6 +427,18 @@ $(document).ready(function() {
         return true;
     });
 
+    $("#load-more").click(function() {
+        var url = $(this).attr("href");
+
+        $("#more-loader").addClass("loading");
+
+        $.get(url, function(dataperiode) {
+            $("#no-more-tables").append(dataperiode);
+            $("#more-loader").removeClass("loading");
+        });
+
+        return false;
+    });
 });
 </script>
 {% endblock javascripts_custom %}

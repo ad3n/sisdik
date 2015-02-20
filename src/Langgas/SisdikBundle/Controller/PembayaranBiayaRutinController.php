@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\TranslationBundle\Annotation\Ignore;
@@ -487,8 +488,12 @@ class PembayaranBiayaRutinController extends Controller
                 'biayaRutin' => $biaya,
             ], [
                 'waktuSimpan' => 'DESC',
-            ])
+            ], 3)
         ;
+
+        /* @var $session Session */
+        $session = $this->get('session');
+        $session->set('biayarutin_periodetampil', 3);
 
         $daftarPerulangan = BiayaRutin::getDaftarPerulangan();
         $daftarBulan = BiayaRutin::getDaftarNamaBulan();
@@ -543,6 +548,8 @@ class PembayaranBiayaRutinController extends Controller
         if (is_null($jumlahPembayaranBelumLunas)) {
             $jumlahPembayaranBelumLunas[1] = 0;
         }
+
+        $session->set('biayarutin_jumlahperiode', $jumlahPembayaran + $jumlahPembayaranBelumLunas[1]);
 
         $jumlahWajibBayar = 0;
 
@@ -1144,6 +1151,45 @@ class PembayaranBiayaRutinController extends Controller
             'siswa' => $siswa,
             'entity' => $entity,
             'edit_form' => $editForm->createView(),
+        ];
+    }
+
+    /**
+     * @Route("/ambil-periode/{sid}/{bid}", name="pembayaran_biaya_rutin__periode")
+     * @Method("GET")
+     * @Template()
+     */
+    public function periodeAction($sid, $bid, $limit = 5)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = $this->get('session');
+
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
+        if (!($siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        $biaya = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($bid);
+        if (!($biaya instanceof BiayaRutin)) {
+            throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
+        }
+
+        $periodePembayaran = $session->get('biayarutin_jumlahperiode') - $session->get('biayarutin_periodetampil');
+
+        $pembayaranRutin = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')
+            ->findBy([
+                'siswa' => $siswa,
+                'biayaRutin' => $biaya,
+            ], [
+                'waktuSimpan' => 'DESC',
+            ], $limit, $session->get('biayarutin_periodetampil'))
+        ;
+
+        $session->set('biayarutin_periodetampil', $session->get('biayarutin_periodetampil') + 5);
+
+        return [
+            'periodePembayaran' => $periodePembayaran,
+            'pembayaranRutin' => $pembayaranRutin,
         ];
     }
 

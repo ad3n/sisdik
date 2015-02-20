@@ -1,0 +1,40 @@
+{% for pembayaran in pembayaranRutin %}
+<tr>
+    <td data-title="{{ 'label.periode.pembayaran'|trans }}" title="{{ pembayaran.keterangan }}">
+        <span class="pembayaran-ke">{{ 'label.periode.pembayaran.ke'|trans }} {{ periodePembayaran }}</span>
+        <span class="separator" style="padding-left: 0 5px 0 10px;">&brvbar;</span>
+        {% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}
+            <i class="fa fa-gift fa-fw"></i>
+        {% endif %}
+        {{ (pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',','.') }}
+    </td>
+    <td data-title="{{ 'label.transaksi'|trans }}">
+    {% set kurangBayar = pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan) - pembayaran.totalNominalTransaksiPembayaranRutin %}
+    {% if kurangBayar > 0 %}
+        <span class="red">{{ 'label.kurang.bayar'|trans }} {{ kurangBayar|number_format(0, ',', '.') }}</span><br>
+    {% endif %}
+    {% for transaksi in pembayaran.transaksiPembayaranRutin %}
+        {{ transaksi.waktuSimpan|localeDate('long', 'medium') }}
+        <span class="separator">&brvbar;</span>
+        {{ transaksi.nominalPembayaran|number_format(0, ',','.') }}
+        <span class="separator">&brvbar;</span>
+        {{ transaksi.nomorTransaksi }}
+        {% if transaksi.keterangan %}
+            <span class="separator">&brvbar;</span>
+            "{{ transaksi.keterangan }}"
+        {% endif %}
+        <span class="separator">&brvbar;</span>
+        <a href="#" onclick="return false" title="{{ 'tip.print.receipt'|trans }}">
+            <i class="fa fa-print fa-fw"></i>
+        </a>
+        <br>
+    {% endfor %}
+    </td>
+    <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+        {% if kurangBayar > 0 %}
+            <a href="{{ path('pembayaran_biaya_rutin__edit', {'id': pembayaran.id}) }}" title="{{ 'tip.bayar.cicilan.pembayaran.berulang'|trans }}"><i class="fa fa-shopping-cart"></i></a>
+        {% endif %}
+    </td>
+</tr>
+    {% set periodePembayaran = periodePembayaran - 1 %}
+{% endfor %}
