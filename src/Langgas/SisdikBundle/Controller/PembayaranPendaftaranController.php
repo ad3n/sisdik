@@ -229,7 +229,7 @@ class PembayaranPendaftaranController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranPendaftaran:index.html.twig")
      */
-    public function createAction(Request $request, $sid)
+    public function createAction($sid)
     {
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
@@ -247,7 +247,7 @@ class PembayaranPendaftaranController extends Controller
 
         $entity = new PembayaranPendaftaran();
         $form = $this->createForm('sisdik_pembayaranpendaftaran', $entity);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         // periksa apakah item pembayaran yang akan dimasukkan telah ada di database
         // ini untuk mencegah input ganda
@@ -754,7 +754,7 @@ class PembayaranPendaftaranController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranPendaftaran:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id)
+    public function updateAction($sid, $id)
     {
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
@@ -815,7 +815,7 @@ class PembayaranPendaftaranController extends Controller
         }
 
         $editForm = $this->createForm('sisdik_pembayaranpendaftarancicilan', $entity);
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             $now = new \DateTime();

@@ -207,7 +207,7 @@ class PembayaranBiayaSekaliController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranSekali:index.html.twig")
      */
-    public function createAction(Request $request, $sid)
+    public function createAction($sid)
     {
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
@@ -226,7 +226,7 @@ class PembayaranBiayaSekaliController extends Controller
 
         $entity = new PembayaranSekali();
         $form = $this->createForm('sisdik_pembayaransekali', $entity);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         // periksa apakah item pembayaran yang akan dimasukkan telah ada di database
         // ini untuk mencegah input ganda
@@ -654,7 +654,7 @@ class PembayaranBiayaSekaliController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranSekali:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id)
+    public function updateAction($sid, $id)
     {
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
@@ -715,7 +715,7 @@ class PembayaranBiayaSekaliController extends Controller
         }
 
         $editForm = $this->createForm('sisdik_pembayaransekalicicilan', $entity);
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             $now = new \DateTime();
