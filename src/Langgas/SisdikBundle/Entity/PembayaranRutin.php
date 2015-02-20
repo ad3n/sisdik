@@ -30,6 +30,13 @@ class PembayaranRutin
     private $tanggal;
 
     /**
+     * @ORM\Column(name="nama_biaya", type="string", length=300, nullable=true)
+     *
+     * @var string
+     */
+    private $namaBiaya;
+
+    /**
      * @ORM\Column(name="nominal_biaya", type="bigint", nullable=false, options={"default" = 0})
      * @Assert\GreaterThanOrEqual(value=0)
      *
@@ -155,6 +162,22 @@ class PembayaranRutin
     public function getTanggal()
     {
         return $this->tanggal;
+    }
+
+    /**
+     * @param string $namaBiaya
+     */
+    public function setNamaBiaya($namaBiaya)
+    {
+        $this->namaBiaya = $namaBiaya;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamaBiaya()
+    {
+        return $this->namaBiaya;
     }
 
     /**
