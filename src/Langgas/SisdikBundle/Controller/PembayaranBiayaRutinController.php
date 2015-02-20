@@ -725,30 +725,30 @@ class PembayaranBiayaRutinController extends Controller
         if ($this->getRequest()->getMethod() == "POST") {
             if ($siswa->getPenjurusan() instanceof Penjurusan) {
                 $biayaBisaDibayar = $em->createQueryBuilder()
-                ->select('biaya')
-                ->from('LanggasSisdikBundle:BiayaRutin', 'biaya')
-                ->where('biaya.id = :id')
-                ->andWhere('biaya.tahun = :tahun')
-                ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
-                ->orderBy('biaya.perulangan', 'ASC')
-                ->setParameter('id', $biaya->getId())
-                ->setParameter('tahun', $siswa->getTahun())
-                ->setParameter('penjurusan', $siswa->getPenjurusan())
-                ->getQuery()
-                ->getOneOrNullResult()
+                    ->select('biaya')
+                    ->from('LanggasSisdikBundle:BiayaRutin', 'biaya')
+                    ->where('biaya.id = :id')
+                    ->andWhere('biaya.tahun = :tahun')
+                    ->andWhere('biaya.penjurusan IS NULL OR biaya.penjurusan = :penjurusan')
+                    ->orderBy('biaya.perulangan', 'ASC')
+                    ->setParameter('id', $biaya->getId())
+                    ->setParameter('tahun', $siswa->getTahun())
+                    ->setParameter('penjurusan', $siswa->getPenjurusan())
+                    ->getQuery()
+                    ->getOneOrNullResult()
                 ;
             } else {
                 $biayaBisaDibayar = $em->createQueryBuilder()
-                ->select('biaya')
-                ->from('LanggasSisdikBundle:BiayaRutin', 'biaya')
-                ->where('biaya.id = :id')
-                ->andWhere('biaya.tahun = :tahun')
-                ->andWhere('biaya.penjurusan IS NULL')
-                ->orderBy('biaya.perulangan', 'ASC')
-                ->setParameter('id', $biaya->getId())
-                ->setParameter('tahun', $siswa->getTahun())
-                ->getQuery()
-                ->getOneOrNullResult()
+                    ->select('biaya')
+                    ->from('LanggasSisdikBundle:BiayaRutin', 'biaya')
+                    ->where('biaya.id = :id')
+                    ->andWhere('biaya.tahun = :tahun')
+                    ->andWhere('biaya.penjurusan IS NULL')
+                    ->orderBy('biaya.perulangan', 'ASC')
+                    ->setParameter('id', $biaya->getId())
+                    ->setParameter('tahun', $siswa->getTahun())
+                    ->getQuery()
+                    ->getOneOrNullResult()
                 ;
             }
 
@@ -768,6 +768,7 @@ class PembayaranBiayaRutinController extends Controller
                 $entity->setSiswa($siswa);
                 $entity->setBiayaRutin($biaya);
                 $entity->setNominalBiaya($biaya->getNominal());
+                $entity->setNamaBiaya($biaya->getJenisbiaya()->getNama());
 
                 $biaya->setTerpakai(true);
 
