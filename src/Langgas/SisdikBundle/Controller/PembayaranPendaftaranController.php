@@ -1146,10 +1146,10 @@ class PembayaranPendaftaranController extends Controller
     /**
      * Mengambil jumlah biaya pendaftaran yang tersisa
      *
-     * @param  Tahun      $tahun
-     * @param  Gelombang  $gelombang
-     * @param  array      $remainfee
-     * @param  Penjurusan $penjurusan
+     * @param Tahun      $tahun
+     * @param Gelombang  $gelombang
+     * @param array      $remainfee
+     * @param Penjurusan $penjurusan
      *
      * @return integer
      */
