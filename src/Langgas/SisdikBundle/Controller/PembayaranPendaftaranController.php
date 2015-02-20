@@ -227,7 +227,7 @@ class PembayaranPendaftaranController extends Controller
     /**
      * @Route("/{sid}", name="payment_registrationfee_create")
      * @Method("POST")
-     * @Template("LanggasSisdikBundle:PembayaranPendaftaran:index.html.twig")
+     * @Template("LanggasSisdikBundle:PembayaranPendaftaran:summary.html.twig")
      */
     public function createAction($sid)
     {
