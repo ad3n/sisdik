@@ -673,3 +673,9 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 .uncheck {
     color: red;
 }
+
+.preload-image {
+    display: none;
+    margin: 0;
+    padding: 0;
+}

@@ -111,6 +111,12 @@
 <div class="footer container container-fluid">
   <div id="copyright">Copyright &copy; 2012 &ndash; {{ "now"|date("Y") }}<br></div>
 </div>
+
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}<img src="{{ asset_url }}" class="preload-image">{% endimage %}
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle.gif' %}<img src="{{ asset_url }}" class="preload-image">{% endimage %}
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}<img src="{{ asset_url }}" class="preload-image">{% endimage %}
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-red.gif' %}<img src="{{ asset_url }}" class="preload-image">{% endimage %}
+
 {% endspaceless %}
 {% endblock body %}
 
