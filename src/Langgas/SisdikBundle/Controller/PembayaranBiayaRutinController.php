@@ -197,6 +197,10 @@ class PembayaranBiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         if ($siswa->getPenjurusan() instanceof Penjurusan) {
             $daftarBiayaRutin = $em->createQueryBuilder()
                 ->select('biaya')
@@ -475,6 +479,10 @@ class PembayaranBiayaRutinController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!($siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $biaya = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($bid);
@@ -858,7 +866,7 @@ class PembayaranBiayaRutinController extends Controller
                             $tekstemplate = str_replace("%nama-siswa%", $siswa->getNamaLengkap(), $tekstemplate);
                             $tekstemplate = str_replace("%nis%", $siswa->getNomorInduk(), $tekstemplate);
                             $tekstemplate = str_replace("%nomor-kwitansi%", $nomorTransaksi, $tekstemplate);
-                            $tekstemplate = str_replace("%nama-biaya%", $biaya->getJenisbiaya()->getNama()." (".$biaya->getJenisbiaya()->getKode().")", $tekstemplate);
+                            $tekstemplate = str_replace("%nama-biaya%", $entity->getNamaBiaya(), $tekstemplate);
 
                             $formatter = new \NumberFormatter($this->container->getParameter('locale'), \NumberFormatter::CURRENCY);
                             $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
@@ -950,16 +958,25 @@ class PembayaranBiayaRutinController extends Controller
     /**
      * Mengelola cicilan pembayaran biaya rutin
      *
-     * @Route("-cicil/{id}", name="pembayaran_biaya_rutin__edit")
+     * @Route("-cicil/{sid}/{pid}", name="pembayaran_biaya_rutin__edit")
      * @Template()
      */
-    public function editAction($id)
+    public function editAction($sid, $pid)
     {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')->find($id);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
+        if (!($siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')->find($pid);
         if (!$entity instanceof PembayaranRutin) {
             throw $this->createNotFoundException('Entity PembayaranRutin tak ditemukan.');
         }
@@ -982,23 +999,30 @@ class PembayaranBiayaRutinController extends Controller
     }
 
     /**
-     * @Route("-cicil-ubah/{id}", name="pembayaran_biaya_rutin__update")
+     * @Route("-cicil-ubah/{sid}/{pid}", name="pembayaran_biaya_rutin__update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranBiayaRutin:edit.html.twig")
      */
-    public function updateAction($id)
+    public function updateAction($sid, $pid)
     {
         $sekolah = $this->getSekolah();
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')->find($id);
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
+        if (!($siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
+        $entity = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')->find($pid);
         if (!(is_object($entity) && $entity instanceof PembayaranRutin)) {
             throw $this->createNotFoundException('Entity PembayaranRutin tak ditemukan.');
         }
-
-        $siswa = $entity->getSiswa();
 
         $totalBiayaHarusDibayar = $entity->getNominalBiaya() - ($entity->getNominalPotongan() + $entity->getPersenPotonganDinominalkan());
         if ($totalBiayaHarusDibayar == $entity->getTotalNominalTransaksiPembayaranRutin()) {
@@ -1099,7 +1123,7 @@ class PembayaranBiayaRutinController extends Controller
                         $tekstemplate = str_replace("%nama-siswa%", $siswa->getNamaLengkap(), $tekstemplate);
                         $tekstemplate = str_replace("%nis%", $siswa->getNomorInduk(), $tekstemplate);
                         $tekstemplate = str_replace("%nomor-kwitansi%", $nomorTransaksi, $tekstemplate);
-                        $tekstemplate = str_replace("%nama-biaya%", $entity->getBiayaRutin()->getJenisbiaya()->getNama()." (".$biaya->getJenisbiaya()->getKode().")", $tekstemplate);
+                        $tekstemplate = str_replace("%nama-biaya%", $entity->getNamaBiaya(), $tekstemplate);
 
                         $formatter = new \NumberFormatter($this->container->getParameter('locale'), \NumberFormatter::CURRENCY);
                         $symbol = $formatter->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
@@ -1168,6 +1192,10 @@ class PembayaranBiayaRutinController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!($siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $biaya = $em->getRepository('LanggasSisdikBundle:BiayaRutin')->find($bid);

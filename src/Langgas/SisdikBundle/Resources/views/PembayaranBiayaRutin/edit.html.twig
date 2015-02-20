@@ -44,7 +44,7 @@
 
 <div class="clearfix" style="margin-bottom: 1em;"></div>
 
-<form id="pay-form" action="{{ path('pembayaran_biaya_rutin__update', {'id': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form id="pay-form" action="{{ path('pembayaran_biaya_rutin__update', {'sid': entity.siswa.id, 'pid': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     <div id="payment-info" style="margin-bottom: 18px;">
     <h4>{{ entity.biayaRutin.jenisbiaya.nama }}</h4>
     {% if entity.adaPotongan == 1 %}

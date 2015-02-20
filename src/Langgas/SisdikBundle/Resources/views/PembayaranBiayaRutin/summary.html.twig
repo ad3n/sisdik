@@ -173,7 +173,7 @@
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 {% if kurangBayar > 0 %}
-                    <a href="{{ path('pembayaran_biaya_rutin__edit', {'id': pembayaran.id}) }}" title="{{ 'tip.bayar.cicilan.pembayaran.berulang'|trans }}"><i class="fa fa-shopping-cart"></i></a>
+                    <a href="{{ path('pembayaran_biaya_rutin__edit', {'sid': siswa.id, 'pid': pembayaran.id}) }}" title="{{ 'tip.bayar.cicilan.pembayaran.berulang'|trans }}"><i class="fa fa-shopping-cart"></i></a>
                 {% endif %}
             </td>
         </tr>
