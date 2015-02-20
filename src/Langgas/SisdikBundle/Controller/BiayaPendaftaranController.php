@@ -8,13 +8,14 @@ use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Entity\Gelombang;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -102,8 +103,12 @@ class BiayaPendaftaranController extends Controller
 
         $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
 
-        if (! $entity) {
+        if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -223,6 +228,10 @@ class BiayaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $form = $this->createForm('sisdik_confirm', null, [
             'sessiondata' => uniqid(),
         ]);
@@ -281,6 +290,10 @@ class BiayaPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_biayapendaftaran', $entity, [
             'mode' => 'edit',
             'nominal' => $entity->getNominal(),
@@ -322,6 +335,10 @@ class BiayaPendaftaranController extends Controller
         $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
         if (! (is_object($entity) && $entity instanceof BiayaPendaftaran)) {
             throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -422,6 +439,10 @@ class BiayaPendaftaranController extends Controller
             $entity = $em->getRepository('LanggasSisdikBundle:BiayaPendaftaran')->find($id);
             if (!$entity) {
                 throw $this->createNotFoundException('Entity BiayaPendaftaran tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

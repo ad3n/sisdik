@@ -4,16 +4,16 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Langgas\SisdikBundle\Entity\Gelombang;
+use Langgas\SisdikBundle\Entity\ImbalanPendaftaran;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\Tahun;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Langgas\SisdikBundle\Entity\ImbalanPendaftaran;
-use Langgas\SisdikBundle\Entity\JenisImbalan;
-use Langgas\SisdikBundle\Entity\Tahun;
-use Langgas\SisdikBundle\Entity\Gelombang;
-use Langgas\SisdikBundle\Entity\Sekolah;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -82,6 +82,10 @@ class ImbalanPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $deleteForm = $this->createDeleteForm($id);
 
         return [
@@ -98,7 +102,7 @@ class ImbalanPendaftaranController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new ImbalanPendaftaran;
+        $entity = new ImbalanPendaftaran();
 
         $form = $this->createForm('sisdik_imbalanpendaftaran', $entity);
 
@@ -117,7 +121,7 @@ class ImbalanPendaftaranController extends Controller
     {
         $this->setCurrentMenu();
 
-        $entity = new ImbalanPendaftaran;
+        $entity = new ImbalanPendaftaran();
 
         $form = $this->createForm('sisdik_imbalanpendaftaran', $entity);
         $form->submit($request);
@@ -166,6 +170,10 @@ class ImbalanPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_imbalanpendaftaran', $entity);
         $deleteForm = $this->createDeleteForm($id);
 
@@ -191,6 +199,10 @@ class ImbalanPendaftaranController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -242,6 +254,10 @@ class ImbalanPendaftaranController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity ImbalanPendaftaran tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             try {

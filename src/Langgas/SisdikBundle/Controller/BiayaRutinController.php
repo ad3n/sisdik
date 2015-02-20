@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
@@ -101,6 +102,10 @@ class BiayaRutinController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -238,6 +243,10 @@ class BiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $form = $this->createForm('sisdik_confirm', null, [
             'sessiondata' => uniqid(),
         ]);
@@ -297,6 +306,10 @@ class BiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $editForm = $this->createForm('sisdik_biayarutin', $entity, [
             'mode' => 'edit',
             'nominal' => $entity->getNominal(),
@@ -339,6 +352,10 @@ class BiayaRutinController extends Controller
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_biayarutin', $entity, [
@@ -398,6 +415,10 @@ class BiayaRutinController extends Controller
                 throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
             }
 
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+            }
+
             try {
                 if ($entity->isTerpakai() === true) {
                     $message = $this->get('translator')->trans('exception.delete.restrict.biaya.rutin');
@@ -412,9 +433,16 @@ class BiayaRutinController extends Controller
                     ->getFlashBag()
                     ->add('success', $this->get('translator')->trans('flash.fee.recur.deleted'))
                 ;
-            } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.delete.restrict');
-                throw new DBALException($message);
+            } catch (\Exception $e) {
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('info', $this->get('translator')->trans('exception.delete.restrict.biaya.rutin'))
+                ;
+
+                return $this->redirect($this->generateUrl('fee_recur_show', [
+                    'id' => $id,
+                ]));
             }
         } else {
             $this
