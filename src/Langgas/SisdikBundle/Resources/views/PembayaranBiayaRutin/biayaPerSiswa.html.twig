@@ -1,0 +1,28 @@
+{% for data in dataBiaya %}
+<div>
+    <span class="nama-biaya">{{ data.biaya.jenisbiaya.nama }} ({{ data.biaya.jenisbiaya.kode }}), {{ data.biaya.nominal|number_format(0, ',', '.') }}</span>
+    <span class="separator">&brvbar;</span>
+    <span class="cursordefault" title="{{ 'tanggal.jatuh.tempo'|trans }}">
+        <i class="fa fa-calendar-o"></i> {{ data.jatuhTempo }}
+    </span>
+    {% if data.pembayaranTerbaru %}
+        <span class="separator">&brvbar;</span>
+        <span class="cursordefault" title="{{ 'tanggal.pembayaran.terakhir'|trans }}">
+            <i class="fa fa-history"></i> {{ data.pembayaranTerbaru.waktuSimpan|date('d/m/Y') }}
+        </span>
+    {% endif %}
+    <span class="separator">&brvbar;</span>
+    <span class="cursordefault" title="{{ 'jumlah.pembayaran.lunas.berbanding.jumlah.wajib.bayar'|trans }}">
+    {% if data.jumlahWajibBayar > 0 %}
+        {% if data.jumlahPembayaran < data.jumlahWajibBayar %}
+            <i class="fa fa-exclamation-triangle red"></i>
+        {% else %}
+            <i class="fa fa-check green"></i>
+        {% endif %}
+    {% endif %}
+    {{ data.jumlahPembayaran }}/{{ data.jumlahWajibBayar }}
+    </span>
+    <span class="separator">&brvbar;</span>
+    <a href="{{ path('pembayaran_biaya_rutin__summary', {'sid': siswa.id, 'bid': data.biaya.id}) }}" title="{{ 'bayar.biaya.berulang'|trans }}"><i class="fa fa-shopping-cart"></i></a>
+</div>
+{% endfor %}

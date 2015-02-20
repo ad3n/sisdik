@@ -1,0 +1,100 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.pembayaran.biaya.berulang{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.form-inline .form-group {
+    display: inline-block;
+    margin-right: 0.8em;
+}
+.form-inline .checkbox input[type="checkbox"] {
+    float: left;
+    margin-right: 3px;
+}
+.form-inline .checkbox-inline {
+    padding: 0;
+}
+.form-inline .input-group-addon .checkbox {
+    width: 2em;
+}
+.green {
+    color: green;
+}
+.red {
+    color: red;
+}
+.blue {
+    color: blue;
+}
+.cursordefault {
+    cursor: default;
+}
+.emphasis {
+    margin: 0;
+    padding: 0;
+    line-height: 25px;
+    height: 25px;
+    cursor: default;
+}
+.separator {
+    padding: 0 5px;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('pembayaran_biaya_rutin__daftar') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('pembayaran_biaya_rutin__daftar') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+    <p class="help-block" style="font-style: italic;">{{ 'bantuan.pencarian.tunggakan'|trans }}</p>
+</div>
+
+<div class="clearfix" style="margin-top: 10px;"></div>
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ siswaTotal }}
+</div>
+
+<div class="pull-right">
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ siswaTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<i class="fa fa-refresh fa-fw"></i></a>
+</div>
+
+<div class="clearfix">&nbsp;</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.identitas.sisdik'|trans }}</th>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th class="{% if pagination.isSorted('siswa.namaLengkap') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.name.full'|trans, 'siswa.namaLengkap') }}
+            </th>
+            <th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
+            </th>
+            <th>{{ 'label.biaya.berulang'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.identitas.sisdik'|trans }}" class="info-id">{{ data.nomorIndukSistem }}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">
+                <div>{{ data.namaLengkap }}</div>
+                <div class="green emphasis" title="{{ 'masa.aktif.wajib.membayar'|trans }}"><i class="fa fa-heartbeat"></i> {{ data.pembiayaanSejak|date('d/m/Y') }}</div>
+            </td>
+            <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
+            <td data-title="{{ 'label.biaya.berulang'|trans }}">
+                {% render url('pembayaran_biaya_rutin__ringkasan_biaya', {'sid': data.id}) %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
