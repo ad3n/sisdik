@@ -65,7 +65,7 @@
             </a>
         </dd>
         <dt>{{ 'label.payment.date'|trans }} #{{ loop.index }}</dt>
-        <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
+        <dd>{{ transaksi.waktuSimpan|date("d/m/Y H:i:s") }}</dd>
         <dt>{{ 'label.pay.amount'|trans }} #{{ loop.index }}</dt>
         <dd>{{ currencySymbol(locale) }}. {{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</dd>
         <dt>{{ 'label.payment.description'|trans }} #{{ loop.index }}</dt>
@@ -82,7 +82,7 @@
             </a>
         </dd>
         <dt>{{ 'label.payment.date'|trans }}</dt>
-        <dd>{{ transaksi.waktuSimpan|localeDate('long', 'medium') }}</dd>
+        <dd>{{ transaksi.waktuSimpan|date("d/m/Y H:i:s") }}</dd>
         <dt>{{ 'label.pay.amount'|trans }}</dt>
         <dd>{{ currencySymbol(locale) }}. {{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</dd>
         <dt>{{ 'label.payment.description'|trans }}</dt>

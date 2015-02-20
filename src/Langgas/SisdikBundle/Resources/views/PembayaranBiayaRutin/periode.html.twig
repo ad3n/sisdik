@@ -14,7 +14,7 @@
         <span class="red">{{ 'label.kurang.bayar'|trans }} {{ kurangBayar|number_format(0, ',', '.') }}</span><br>
     {% endif %}
     {% for transaksi in pembayaran.transaksiPembayaranRutin %}
-        {{ transaksi.waktuSimpan|localeDate('long', 'medium') }}
+        {{ transaksi.waktuSimpan|date("d/m/Y H:i:s") }}
         <span class="separator">&brvbar;</span>
         {{ transaksi.nominalPembayaran|number_format(0, ',','.') }}
         <span class="separator">&brvbar;</span>
