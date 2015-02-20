@@ -674,6 +674,18 @@ class PembayaranBiayaSekaliController extends Controller
             throw $this->createNotFoundException('Entity PembayaranSekali tak ditemukan.');
         }
 
+        $transaksiSebelumnya = [];
+
+        /* @var $transaksi TransaksiPembayaranSekali */
+        foreach ($entity->getTransaksiPembayaranSekali() as $transaksi) {
+            $tmp['sekolah'] = $transaksi->getSekolah();
+            $tmp['dibuatOleh'] = $transaksi->getDibuatOleh();
+            $tmp['nominalPembayaran'] = $transaksi->getNominalPembayaran();
+            $tmp['keterangan'] = $transaksi->getKeterangan();
+
+            $transaksiSebelumnya[] = $tmp;
+        }
+
         $itemBiaya = $this->getBiayaProperties($siswa);
 
         $daftarBiayaSekali = $entity->getDaftarBiayaSekali();
@@ -719,6 +731,17 @@ class PembayaranBiayaSekaliController extends Controller
                 ->setParameter('sekolah', $sekolah)
             ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+
+            foreach ($transaksiSebelumnya as $value) {
+                $transaksi = $entity->getTransaksiPembayaranSekali()->current();
+
+                $transaksi->setSekolah($value['sekolah']);
+                $transaksi->setDibuatOleh($value['dibuatOleh']);
+                $transaksi->setNominalPembayaran($value['nominalPembayaran']);
+                $transaksi->setKeterangan($value['keterangan']);
+
+                $entity->getTransaksiPembayaranSekali()->next();
+            }
 
             $currentPaymentAmount = 0;
             $transaksi = $entity->getTransaksiPembayaranSekali()->last();
