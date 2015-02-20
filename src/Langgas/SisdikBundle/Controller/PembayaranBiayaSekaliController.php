@@ -158,6 +158,10 @@ class PembayaranBiayaSekaliController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entities = $em->getRepository('LanggasSisdikBundle:PembayaranSekali')->findBy(['siswa' => $siswa]);
 
         $itemBiaya = $this->getBiayaProperties($siswa);
@@ -218,6 +222,10 @@ class PembayaranBiayaSekaliController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $entities = $em->getRepository('LanggasSisdikBundle:PembayaranSekali')->findBy(['siswa' => $siswa]);
@@ -537,6 +545,10 @@ class PembayaranBiayaSekaliController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entity = $em->getRepository('LanggasSisdikBundle:PembayaranSekali')->find($id);
         if (!(is_object($entity) && $entity instanceof PembayaranSekali)) {
             throw $this->createNotFoundException('Entity PembayaranSekali tak ditemukan.');
@@ -599,6 +611,10 @@ class PembayaranBiayaSekaliController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $entity = $em->getRepository('LanggasSisdikBundle:PembayaranSekali')->find($id);
@@ -666,6 +682,10 @@ class PembayaranBiayaSekaliController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         // total payment start here because of the unknown behavior during submitting request
