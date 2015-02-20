@@ -78,6 +78,16 @@ class TransaksiPembayaran
     private $pembayaranSekali;
 
     /**
+     * @ORM\ManyToOne(targetEntity="PembayaranRutin")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="pembayaran_rutin_id", referencedColumnName="id")
+     * })
+     *
+     * @var PembayaranRutin
+     */
+    private $pembayaranRutin;
+
+    /**
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="dibuat_oleh_id", referencedColumnName="id", nullable=false)
@@ -153,6 +163,14 @@ class TransaksiPembayaran
     public function getPembayaranSekali()
     {
         return $this->pembayaranSekali;
+    }
+
+    /**
+     * @return PembayaranRutin
+     */
+    public function getPembayaranRutin()
+    {
+        return $this->pembayaranRutin;
     }
 
     /**

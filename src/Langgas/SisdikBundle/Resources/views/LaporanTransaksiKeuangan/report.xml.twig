@@ -109,6 +109,19 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.pembayaranSekali.siswa.nomorIndukSistem }} / {{ entity.pembayaranSekali.siswa.nomorInduk }}</text:p>
                     </table:table-cell>
+                {% elseif entity.pembayaranRutin.id %}
+                    <table:table-cell table:style-name="teks-wrap" office:value-type="string">
+                        <text:p>{{ entity.pembayaranRutin.biayaRutin.jenisbiaya.nama }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ entity.keterangan }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ entity.pembayaranRutin.siswa.namaLengkap }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ entity.pembayaranRutin.siswa.nomorIndukSistem }} / {{ entity.pembayaranRutin.siswa.nomorInduk }}</text:p>
+                    </table:table-cell>
                 {% endif %}
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.dibuatOleh.name }}</text:p>

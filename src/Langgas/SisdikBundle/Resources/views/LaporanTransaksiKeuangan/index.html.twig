@@ -157,6 +157,8 @@ form .clearfix {
                 {% for biaya in data.pembayaranSekali.daftarBiayaSekali %}
                     {{ biaya.nama }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
+            {% elseif data.pembayaranRutin.id %}
+                {{ data.pembayaranRutin.biayaRutin.jenisbiaya.nama }}
             {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
@@ -166,6 +168,10 @@ form .clearfix {
                 </a>
             {% elseif data.pembayaranSekali.id %}
                 <a href="{{ path('pembayaran_biaya_sekali__show', {'sid': data.pembayaranSekali.siswa.id, 'id': data.pembayaranSekali.id}) }}" title="{{ 'tip.lihat.transaksi.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                </a>
+            {% elseif data.pembayaranRutin.id %}
+                <a href="{{ path('pembayaran_biaya_rutin__summary', {'sid': data.pembayaranRutin.siswa.id, 'bid': data.pembayaranRutin.biayaRutin.id}) }}" title="{{ 'tip.lihat.transaksi.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
             {% endif %}
