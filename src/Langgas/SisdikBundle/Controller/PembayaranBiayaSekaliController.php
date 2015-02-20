@@ -205,7 +205,7 @@ class PembayaranBiayaSekaliController extends Controller
     /**
      * @Route("/{sid}", name="pembayaran_biaya_sekali__create")
      * @Method("POST")
-     * @Template("LanggasSisdikBundle:PembayaranSekali:index.html.twig")
+     * @Template("LanggasSisdikBundle:PembayaranSekali:summary.html.twig")
      */
     public function createAction($sid)
     {
