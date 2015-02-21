@@ -66,3 +66,9 @@ services:
         public: false
         tags:
            - { name: security.voter }
+
+    sisdik.akses.keamanan.tahun_akademik_voter:
+        class: Langgas\SisdikBundle\Security\Authorization\Voter\TahunAkademikVoter
+        public: false
+        tags:
+           - { name: security.voter }
