@@ -3,17 +3,18 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\JenisDokumenSiswa;
 use Langgas\SisdikBundle\Util\RuteAsal;
 use Langgas\SisdikBundle\Entity\DokumenSiswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -32,11 +33,16 @@ class DokumenSiswaController extends Controller
     {
         $this->setCurrentMenu();
 
+        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $jenisDokumen = $em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')
@@ -87,10 +93,10 @@ class DokumenSiswaController extends Controller
                 'ruteasal' => RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()),
             ];
         } else {
-            $dokumenCollection = new ArrayCollection;
+            $dokumenCollection = new ArrayCollection();
 
             foreach ($idJenisDokumenForm as $id) {
-                $dokumen = new DokumenSiswa;
+                $dokumen = new DokumenSiswa();
                 $dokumen->setJenisDokumenSiswa($em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')->find($id));
                 $dokumen->setSiswa($siswa);
                 $dokumenCollection->add($dokumen);
@@ -127,7 +133,7 @@ class DokumenSiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:DokumenSiswa:index.html.twig")
      */
-    public function createAction(Request $request, $sid)
+    public function createAction($sid)
     {
         $this->setCurrentMenu();
 
@@ -136,6 +142,10 @@ class DokumenSiswaController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $jenisDokumen = $em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')
@@ -177,9 +187,9 @@ class DokumenSiswaController extends Controller
 
         $idJenisDokumenForm = array_diff($idJenisDokumen, $idDokumenTersimpan);
 
-        $dokumenCollection = new ArrayCollection;
+        $dokumenCollection = new ArrayCollection();
         foreach ($idJenisDokumenForm as $id) {
-            $dokumen = new DokumenSiswa;
+            $dokumen = new DokumenSiswa();
             $dokumen->setJenisDokumenSiswa($em->getRepository('LanggasSisdikBundle:JenisDokumenSiswa')->find($id));
             $dokumen->setSiswa($siswa);
             $dokumenCollection->add($dokumen);
@@ -199,7 +209,7 @@ class DokumenSiswaController extends Controller
             'label_render' => false,
         ]);
 
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             foreach ($dokumenCollection as $dokumen) {
@@ -216,7 +226,7 @@ class DokumenSiswaController extends Controller
                 ]))
             ;
 
-            return $this->redirect($this->generateUrl('dokumen-' . RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()), [
+            return $this->redirect($this->generateUrl('dokumen-'.RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()), [
                 'sid' => $siswa->getId(),
             ]));
         }
@@ -242,6 +252,10 @@ class DokumenSiswaController extends Controller
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
+
+        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
 
@@ -275,6 +289,10 @@ class DokumenSiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
 
         if (!$entity) {
@@ -299,7 +317,7 @@ class DokumenSiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:DokumenSiswa:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id)
+    public function updateAction($sid, $id)
     {
         $this->setCurrentMenu();
 
@@ -308,6 +326,10 @@ class DokumenSiswaController extends Controller
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!(is_object($siswa) && $siswa instanceof Siswa)) {
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
@@ -319,7 +341,7 @@ class DokumenSiswaController extends Controller
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm('sisdik_dokumensiswa', $entity);
 
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             $em->persist($entity);
@@ -334,7 +356,7 @@ class DokumenSiswaController extends Controller
                 ]))
             ;
 
-            return $this->redirect($this->generateUrl('dokumen-' . RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()) . '_show', [
+            return $this->redirect($this->generateUrl('dokumen-'.RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()).'_show', [
                 'sid' => $sid,
                 'id' => $id,
             ]));
@@ -353,14 +375,18 @@ class DokumenSiswaController extends Controller
      * @Route("/siswa/{id}/delete", name="dokumen-siswa_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $sid, $id)
+    public function deleteAction($sid, $id)
     {
         $form = $this->createDeleteForm($id);
 
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+            }
 
             $entity = $em->getRepository('LanggasSisdikBundle:DokumenSiswa')->find($id);
             if (!$entity) {
@@ -394,7 +420,7 @@ class DokumenSiswaController extends Controller
             ;
         }
 
-        return $this->redirect($this->generateUrl('dokumen-' . RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()), [
+        return $this->redirect($this->generateUrl('dokumen-'.RuteAsal::ruteAsalSiswaPendaftar($this->getRequest()->getPathInfo()), [
             'sid' => $sid,
         ]));
     }
@@ -406,7 +432,7 @@ class DokumenSiswaController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder([
-                'id' => $id
+                'id' => $id,
             ])
             ->add('id', 'hidden')
             ->getForm()

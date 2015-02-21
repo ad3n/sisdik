@@ -5,13 +5,12 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
 use Langgas\SisdikBundle\Entity\PendidikanSiswa;
-use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Util\RuteAsal;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -32,6 +31,10 @@ class PendidikanSiswaController extends Controller
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
+
+        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $querybuilder = $em->createQueryBuilder()
             ->select('pendidikanSiswa')
@@ -64,6 +67,10 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        if ($this->get('security.context')->isGranted('create', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entity = new PendidikanSiswa();
         $form = $this->createForm('sisdik_pendidikansiswa', $entity);
 
@@ -81,15 +88,19 @@ class PendidikanSiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PendidikanSiswa:new.html.twig")
      */
-    public function createAction(Request $request, $sid)
+    public function createAction($sid)
     {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
+        if ($this->get('security.context')->isGranted('create', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entity = new PendidikanSiswa();
         $form = $this->createForm('sisdik_pendidikansiswa', $entity);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
@@ -136,6 +147,10 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
         if (!$entity) {
@@ -164,6 +179,10 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        if ($this->get('security.context')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
         $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
         if (!$entity) {
@@ -188,11 +207,15 @@ class PendidikanSiswaController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PendidikanSiswa:edit.html.twig")
      */
-    public function updateAction(Request $request, $sid, $id)
+    public function updateAction($sid, $id)
     {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
+
+        if ($this->get('security.context')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
@@ -202,7 +225,7 @@ class PendidikanSiswaController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm('sisdik_pendidikansiswa', $entity);
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             // force changes
@@ -248,13 +271,18 @@ class PendidikanSiswaController extends Controller
      * @Route("/siswa/{id}/delete", name="pendidikan-sebelumnya-siswa_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $sid, $id)
+    public function deleteAction($sid, $id)
     {
         $form = $this->createDeleteForm($id);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+
+            if ($this->get('security.context')->isGranted('delete', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+            }
+
             $entity = $em->getRepository('LanggasSisdikBundle:PendidikanSiswa')->find($id);
 
             if (!$entity) {
