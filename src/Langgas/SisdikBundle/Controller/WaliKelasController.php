@@ -10,12 +10,12 @@ use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\User;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -91,8 +91,12 @@ class WaliKelasController extends Controller
 
         $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
-        if (!$entity) {
+        if (!$entity instanceof WaliKelas) {
             throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -125,13 +129,13 @@ class WaliKelasController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:WaliKelas:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction()
     {
         $this->setCurrentMenu();
 
         $entity = new WaliKelas();
         $form = $this->createForm('sisdik_walikelas', $entity);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -187,11 +191,14 @@ class WaliKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        /* @var $entity WaliKelas */
         $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
-        if (!$entity) {
+        if (!$entity instanceof WaliKelas) {
             throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $editForm = $this->createForm('sisdik_walikelas', $entity);
@@ -209,7 +216,7 @@ class WaliKelasController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:WaliKelas:edit.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction($id)
     {
         $this->setCurrentMenu();
 
@@ -217,13 +224,17 @@ class WaliKelasController extends Controller
 
         $entity = $em->getRepository('LanggasSisdikBundle:WaliKelas')->find($id);
 
-        if (!$entity) {
+        if (!$entity instanceof WaliKelas) {
             throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm('sisdik_walikelas', $entity);
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             try {
@@ -269,10 +280,10 @@ class WaliKelasController extends Controller
      * @Route("/{id}/delete", name="walikelas_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction($id)
     {
         $form = $this->createDeleteForm($id);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -280,6 +291,10 @@ class WaliKelasController extends Controller
 
             if (!$entity) {
                 throw $this->createNotFoundException('Entity WaliKelas tak ditemukan.');
+            }
+
+            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+                throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 
             $em->remove($entity);
@@ -305,11 +320,10 @@ class WaliKelasController extends Controller
     }
 
     /**
-     * @param Request $request
      * @Route("/ajax/ambiluser", name="walikelas_ambiluser")
      * @Method("GET")
      */
-    public function ajaxGetWaliKelasAction(Request $request)
+    public function ajaxGetWaliKelasAction()
     {
         $sekolah = $this->getSekolah();
 
