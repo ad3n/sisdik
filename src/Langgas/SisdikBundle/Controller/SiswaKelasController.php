@@ -4,13 +4,14 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\SiswaKelas;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -30,6 +31,10 @@ class SiswaKelasController extends Controller
 
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
+
+        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa)) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $querybuilder = $em->createQueryBuilder()
             ->select('siswakelas')
@@ -63,6 +68,13 @@ class SiswaKelasController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $entity = new SiswaKelas();
         $entity->setSiswa($siswa);
@@ -80,17 +92,24 @@ class SiswaKelasController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaKelas:new.html.twig")
      */
-    public function createAction(Request $request, $idsiswa)
+    public function createAction($idsiswa)
     {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $entity = new SiswaKelas();
         $form = $this->createForm('sisdik_siswakelas', $entity);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -148,8 +167,16 @@ class SiswaKelasController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:SiswaKelas')->find($id);
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
+        $entity = $em->getRepository('LanggasSisdikBundle:SiswaKelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SiswaKelas tak ditemukan.');
@@ -171,14 +198,22 @@ class SiswaKelasController extends Controller
      * @Method("POST")
      * @Template("LanggasSisdikBundle:SiswaKelas:edit.html.twig")
      */
-    public function updateAction(Request $request, $idsiswa, $id)
+    public function updateAction($idsiswa, $id)
     {
         $this->setCurrentMenu();
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:SiswaKelas')->find($id);
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
+        $entity = $em->getRepository('LanggasSisdikBundle:SiswaKelas')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity SiswaKelas tak ditemukan.');
@@ -186,7 +221,7 @@ class SiswaKelasController extends Controller
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createForm('sisdik_siswakelas', $entity);
-        $editForm->submit($request);
+        $editForm->submit($this->getRequest());
 
         if ($editForm->isValid()) {
             // hanya boleh ada satu status aktif di tahun akademik yang sama
@@ -238,16 +273,23 @@ class SiswaKelasController extends Controller
      * @Route("/{id}/delete", name="siswa-kelas_delete")
      * @Method("POST")
      */
-    public function deleteAction(Request $request, $idsiswa, $id)
+    public function deleteAction($idsiswa, $id)
     {
         $this->getSekolah();
 
         $em = $this->getDoctrine()->getManager();
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa);
+        if (!(is_object($siswa) && $siswa instanceof Siswa)) {
+            throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('delete', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
 
         $form = $this->createDeleteForm($id);
-        $form->submit($request);
+        $form->submit($this->getRequest());
 
         if ($form->isValid()) {
             $entity = $em->getRepository('LanggasSisdikBundle:SiswaKelas')->find($id);
