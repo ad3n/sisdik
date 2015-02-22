@@ -1,0 +1,43 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{{ 'ubah.keterangan.pembayaran.berulang'|trans({}, 'headings') }}{% endblock %}
+
+{% block content %}
+<dl>
+    <dt>{{ 'label.identitas.sisdik'|trans }}</dt>
+    <dd class="info-id">{{ entity.nomorIndukSistem }}</dd>
+    <dt>{{ 'label.year.entry'|trans }}</dt>
+    <dd>{% if entity.tahun is not null %}{{ entity.tahun.tahun }}{% endif %}</dd>
+    <dt>{{ 'label.placement.study'|trans }}</dt>
+    <dd>{% if entity.penjurusan %}{{ entity.penjurusan.nama }}{% endif %}</dd>
+    <dt>{{ 'label.nomor.induk'|trans }}</dt>
+    <dd>{{ entity.nomorInduk }}</dd>
+    <dt>{{ 'label.name.full'|trans }}</dt>
+    <dd>{{ entity.namaLengkap }}</dd>
+    {% if entity.orangtuaWaliAktif %}
+        <dt>{{ 'label.name.parent.or.guardian'|trans }}</dt>
+        <dd>{{ entity.orangtuaWaliAktif.nama }}</dd>
+        <dt>{{ 'label.mobilephone.parent'|trans }}</dt>
+        <dd>{{ entity.orangtuaWaliAktif.ponsel }}</dd>
+    {% endif %}
+    </dd>
+</dl>
+
+<div class="clearfix" style="margin-bottom: 1em;"></div>
+
+{{ form_start(edit_form) }}
+    {{ form_widget(edit_form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
+    </div>
+    {{ form_rest(edit_form) }}
+{{ form_end(edit_form) }}
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('keterangan_pembayaran_rutin') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}

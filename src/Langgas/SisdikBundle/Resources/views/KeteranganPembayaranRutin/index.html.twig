@@ -1,0 +1,79 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}daftar.siswa.dengan.keterangan.pembayaran.berulang{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.control-group {
+    display: inline-block;
+    margin-right: 0.4em;
+}
+</style>
+
+<div class="filter-section">
+    <form method="GET" action="{{ path('keterangan_pembayaran_rutin') }}" class="form-search form-inline">
+        {{ form_widget(searchform) }}
+        <button type="submit" class="btn primary alternative icon search">{{ 'label.search'|trans }}</button>
+        <button class="btn" type="reset" onclick="window.location.href='{{ path('keterangan_pembayaran_rutin') }}'">{{ 'label.reset'|trans }}</button>
+    </form>
+</div>
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('keterangan_pembayaran_rutin__new') }}"><i class="fa fa-file-text-o fa-lg fa-fw"></i>{{ 'label.tambah.keterangan.biaya.berulang'|trans }}</a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<div class="pull-left info-jumlah">
+    {{ 'label.jumlah.siswa.total'|trans }}: {{ siswaTotal }}<br>
+    {{ 'label.jumlah.siswa.dengan.keterangan'|trans }}: {{ siswaBerketeranganTotal }}
+</div>
+
+{% if tampilkanTercari %}
+<div class="pull-right info-jumlah">
+    {{ 'label.jumlah.siswa.tercari'|trans }}: {{ siswaTercari }}
+</div>
+{% endif %}
+
+<div class="clearfix">&nbsp;</div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th>{{ 'label.identitas.sisdik'|trans }}</th>
+            <th>{{ 'label.year.entry'|trans }}</th>
+            <th>{{ 'label.name.full'|trans }}</th>
+            <th>{{ 'label.idnumber'|trans }}</th>
+            <th>{{ 'label.ortuwali.entri'|trans }}</th>
+            <th>{{ 'label.keterangan.pembayaran.berulang'|trans }}</th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.identitas.sisdik'|trans }}" class="info-id">{{ data.nomorIndukSistem }}</td>
+            <td data-title="{{ 'label.year.entry'|trans }}">{% if data.tahun.tahun is defined %}{{ data.tahun.tahun }}{% endif %}</td>
+            <td data-title="{{ 'label.name.full'|trans }}">{{ data.namaLengkap }}</td>
+            <td data-title="{{ 'label.idnumber'|trans }}">{{ data.nomorInduk }}</td>
+            <td data-title="{{ 'label.ortuwali.entri'|trans }}">
+            {% if data.orangtuaWaliAktif %}
+                {% if data.orangtuaWaliAktif.nama != "" %}{{ data.orangtuaWaliAktif.nama }},{% endif %}
+                {{ data.orangtuaWaliAktif.ponsel }}
+            {% endif %}
+            </td>
+            <td data-title="{{ 'label.keterangan.pembayaran.berulang'|trans }}">
+                {{ data.keteranganPembayaranRutin }}
+            </td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('keterangan_pembayaran_rutin__delete', {'id': data.id}) }}" title="{{ 'tip.hapus.keterangan.pembayaran.berulang'|trans }}"><i class="fa fa-eraser"></i></a>
+                <a href="{{ path('keterangan_pembayaran_rutin__edit', {'id': data.id}) }}" title="{{ 'tip.ubah.keterangan.pembayaran.berulang'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}

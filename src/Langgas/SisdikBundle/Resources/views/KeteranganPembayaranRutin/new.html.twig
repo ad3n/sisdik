@@ -1,0 +1,121 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}membuat.keterangan.pembayaran.berulang{% endtrans %}{% endblock %}
+
+{% block content %}
+<style type="text/css">
+.collection-item {
+/*     display: inline-block; */
+}
+.collection-item .form-group {
+    width: 250px;
+}
+.collection-item .control-group {
+    display: inline-block;
+    margin-bottom: 3px;
+    margin-right: 5px;
+}
+.collection-item .controls {
+    margin-left: 0;
+}
+.ui-widget {
+    font-family: Arial,sans-serif;
+    font-size: 0.9em;
+}
+.ui-autocomplete {
+    max-height: 7.4em;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+}
+/* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+*/
+* html .ui-autocomplete {
+    height: 7.4em;
+}
+.ui-autocomplete-loading {
+{% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader-circle-blue.gif' %}
+    background: white url('{{ asset_url }}') right center no-repeat;
+{% endimage %}
+}
+.form-horizontal .form-group .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+}
+.form-horizontal .form-group .collection-item {
+    margin-bottom: 10px;
+}
+.form-horizontal .form-group .collection-item .form-group {
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
+</style>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.add'|trans }}</button>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{{ form_end(form) }}
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('keterangan_pembayaran_rutin') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}
+
+{% block javascripts_custom %}
+<script language="javascript" type="text/javascript">
+$(document).ready(function() {
+    var options = {
+        minLength: 2,
+        delay: 1000,
+        source: function(request, response) {
+            $.ajax({
+                url: "{{ path("keterangan_pembayaran_rutin__siswa") }}",
+                data: {filter: request.term},
+                success: function(data) {
+                    response( $.map(data, function(item) {
+                        return {
+                            label: item.label,
+                            value: item.value,
+                            id: item.id,
+                            source: item.source,
+                            target: item.target
+                        }
+                    }));
+                }
+            });
+        },
+        search: function(event, ui) {
+        },
+        select: function(event, ui) {
+            if (ui.item.id == -999) {
+                return false;
+            }
+
+            var attrid = $(event.target).attr("id");
+
+            prefix = strstr(attrid, ui.item.source, true);
+            suffix = ui.item.target;
+
+            target = "#" + prefix + suffix;
+            $(target).val(ui.item.id);
+        }
+    };
+
+    $(".nama-personil").live("keydown.autocomplete", function() {
+        $(this).autocomplete(options);
+    });
+});
+</script>
+{% endblock javascripts_custom %}
