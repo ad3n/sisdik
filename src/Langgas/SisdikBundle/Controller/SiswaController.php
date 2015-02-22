@@ -76,7 +76,7 @@ class SiswaController extends Controller
             ->setParameter('sekolah', $sekolah)
             ->setParameter('calon', false)
             ->orderBy('tahun.tahun', 'DESC')
-            ->addOrderBy('siswa.namaLengkap', 'ASC')
+            ->addOrderBy('siswa.nomorIndukSistem', 'DESC')
         ;
 
         $qbJumlahPencarian = $em->createQueryBuilder()
