@@ -15,6 +15,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
+use JMS\TranslationBundle\Annotation\Ignore;
 
 /**
  * @Route("/keterangan-pembayaran-rutin")
@@ -145,7 +146,6 @@ class KeteranganPembayaranRutinController extends Controller
                         if ($personil->getId() !== null) {
                             $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($personil->getId());
                             if ($siswa instanceof Siswa) {
-
                                 if ($this->get('security.context')->isGranted('create', $siswa) === false) {
                                     throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
                                 }
