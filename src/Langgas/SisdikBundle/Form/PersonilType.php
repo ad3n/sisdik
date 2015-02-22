@@ -19,14 +19,14 @@ class PersonilType extends AbstractType
                 'label_render' => false,
                 'required' => false,
                 'attr' => [
-                    'class' => 'id-panitia',
+                    'class' => 'id-user',
                 ],
             ])
             ->add('user', 'text', [
                 'label' => 'label.username',
                 'required' => false,
                 'attr' => [
-                    'class' => 'xlarge committee-username ketik-pilih-tambah',
+                    'class' => 'user-username ketik-pilih-tambah',
                     'placeholder' => 'label.username',
                 ],
                 'label_render' => false,

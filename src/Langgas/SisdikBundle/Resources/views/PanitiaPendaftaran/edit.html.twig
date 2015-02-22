@@ -113,15 +113,15 @@ $(document).ready(function() {
         }
     };
 
-    $(".committee-username").live("keydown.autocomplete", function() {
+    $(".user-username").live("keydown.autocomplete", function() {
         $(this).autocomplete(options);
     });
 
-    $(".committee-username").each(function(){
+    $(".user-username").each(function(){
         $(this).addClass("ui-autocomplete-loading");
     });
 
-    $(".id-panitia").each(function(){
+    $(".id-user").each(function(){
         var idpanitia = $(this);
         var attrid = $(idpanitia).attr("id");
 
