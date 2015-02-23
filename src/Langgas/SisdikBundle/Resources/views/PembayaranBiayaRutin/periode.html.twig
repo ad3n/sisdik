@@ -11,7 +11,8 @@
     <td data-title="{{ 'label.transaksi'|trans }}">
     {% set kurangBayar = pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan) - pembayaran.totalNominalTransaksiPembayaranRutin %}
     {% if kurangBayar > 0 %}
-        <span class="red">{{ 'label.kurang.bayar'|trans }} {{ kurangBayar|number_format(0, ',', '.') }}</span><br>
+        <i class="fa fa-exclamation-triangle red"></i>
+        <span class="red" style="padding-left: 5px;">{{ 'label.kurang.bayar'|trans }} {{ kurangBayar|number_format(0, ',', '.') }}</span><br>
     {% endif %}
     {% for transaksi in pembayaran.transaksiPembayaranRutin %}
         {{ transaksi.waktuSimpan|date("d/m/Y H:i:s") }}

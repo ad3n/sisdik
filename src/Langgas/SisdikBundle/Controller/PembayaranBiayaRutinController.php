@@ -537,8 +537,8 @@ class PembayaranBiayaRutinController extends Controller
             }
         }
 
-        $jumlahPembayaranBelumLunas = $em->createQueryBuilder()
-            ->select('COUNT(DISTINCT pembayaran.id)')
+        $pembayaranBelumLunas = $em->createQueryBuilder()
+            ->select('DISTINCT pembayaran.id')
             ->from('LanggasSisdikBundle:PembayaranRutin', 'pembayaran')
             ->leftJoin('pembayaran.transaksiPembayaranRutin', 'transaksi')
             ->where('pembayaran.siswa = :siswa')
@@ -548,16 +548,12 @@ class PembayaranBiayaRutinController extends Controller
             ->setParameter('biayaRutin', $biaya)
             ->groupBy('pembayaran.id')
             ->having('SUM(transaksi.nominalPembayaran) < (SUM(DISTINCT pembayaran.nominalBiaya) - (SUM(DISTINCT pembayaran.nominalPotongan) + SUM(DISTINCT pembayaran.persenPotonganDinominalkan)))')
-            ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
+        $jumlahPembayaranBelumLunas = count($pembayaranBelumLunas);
 
-        if (is_null($jumlahPembayaranBelumLunas)) {
-            $jumlahPembayaranBelumLunas[1] = 0;
-        }
-
-        $session->set('biayarutin_jumlahperiode', $jumlahPembayaran + $jumlahPembayaranBelumLunas[1]);
+        $session->set('biayarutin_jumlahperiode', $jumlahPembayaran + $jumlahPembayaranBelumLunas);
 
         $jumlahWajibBayar = 0;
 
@@ -764,9 +760,9 @@ class PembayaranBiayaRutinController extends Controller
                 throw $this->createNotFoundException('BiayaRutin yang dipilih tidak bisa dibayar oleh siswa tersebut.');
             }
 
-            if ($jumlahPembayaranBelumLunas[1] != 0) {
-                throw new AccessDeniedException($this->get('translator')->trans('exception.pembayaran.sebelumnya.harus.lunas'));
-            }
+            // if ($jumlahPembayaranBelumLunas != 0) {
+            //     throw new AccessDeniedException($this->get('translator')->trans('exception.pembayaran.sebelumnya.harus.lunas'));
+            // }
 
             $entity = new PembayaranRutin();
             $form = $this->createForm('sisdik_pembayaranrutin', $entity);
@@ -916,43 +912,44 @@ class PembayaranBiayaRutinController extends Controller
             ;
         }
 
-        if ($jumlahPembayaranBelumLunas[1] > 0) {
-            return [
-                'siswa' => $siswa,
-                'biaya' => $biaya,
-                'pembayaranRutin' => $pembayaranRutin,
-                'jumlahWajibBayar' => $jumlahWajibBayar,
-                'jumlahPembayaran' => $jumlahPembayaran,
-                'jumlahPembayaranBelumLunas' => $jumlahPembayaranBelumLunas,
-                'jatuhTempo' => $jatuhTempo,
-                'daftarPerulangan' => $daftarPerulangan,
-                'daftarBulan' => $daftarBulan,
-                'daftarHari' => $daftarHari,
-            ];
-        } else {
-            $entity = new PembayaranRutin();
-            $entity->setJenisPotongan("nominal");
+        // if ($jumlahPembayaranBelumLunas > 0) {
+        //     return [
+        //         'siswa' => $siswa,
+        //         'biaya' => $biaya,
+        //         'pembayaranRutin' => $pembayaranRutin,
+        //         'jumlahWajibBayar' => $jumlahWajibBayar,
+        //         'jumlahPembayaran' => $jumlahPembayaran,
+        //         'jumlahPembayaranBelumLunas' => $jumlahPembayaranBelumLunas,
+        //         'jatuhTempo' => $jatuhTempo,
+        //         'daftarPerulangan' => $daftarPerulangan,
+        //         'daftarBulan' => $daftarBulan,
+        //         'daftarHari' => $daftarHari,
+        //     ];
+        // } else {
+        // }
 
-            $transaksiPembayaranRutin = new TransaksiPembayaranRutin();
-            $entity->getTransaksiPembayaranRutin()->add($transaksiPembayaranRutin);
-            $entity->setSiswa($siswa);
+        $entity = new PembayaranRutin();
+        $entity->setJenisPotongan("nominal");
 
-            $form = $this->createForm('sisdik_pembayaranrutin', $entity);
+        $transaksiPembayaranRutin = new TransaksiPembayaranRutin();
+        $entity->getTransaksiPembayaranRutin()->add($transaksiPembayaranRutin);
+        $entity->setSiswa($siswa);
 
-            return [
-                'siswa' => $siswa,
-                'biaya' => $biaya,
-                'pembayaranRutin' => $pembayaranRutin,
-                'jumlahWajibBayar' => $jumlahWajibBayar,
-                'jumlahPembayaran' => $jumlahPembayaran,
-                'jumlahPembayaranBelumLunas' => $jumlahPembayaranBelumLunas,
-                'jatuhTempo' => $jatuhTempo,
-                'daftarPerulangan' => $daftarPerulangan,
-                'daftarBulan' => $daftarBulan,
-                'daftarHari' => $daftarHari,
-                'form' => $form->createView(),
-            ];
-        }
+        $form = $this->createForm('sisdik_pembayaranrutin', $entity);
+
+        return [
+            'siswa' => $siswa,
+            'biaya' => $biaya,
+            'pembayaranRutin' => $pembayaranRutin,
+            'jumlahWajibBayar' => $jumlahWajibBayar,
+            'jumlahPembayaran' => $jumlahPembayaran,
+            'jumlahPembayaranBelumLunas' => $jumlahPembayaranBelumLunas,
+            'jatuhTempo' => $jatuhTempo,
+            'daftarPerulangan' => $daftarPerulangan,
+            'daftarBulan' => $daftarBulan,
+            'daftarHari' => $daftarHari,
+            'form' => $form->createView(),
+        ];
     }
 
     /**
