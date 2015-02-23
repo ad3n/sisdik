@@ -33,6 +33,9 @@ use JMS\TranslationBundle\Annotation\Ignore;
  */
 class PembayaranBiayaRutinController extends Controller
 {
+    const PERIODE_AWAL = 3;
+    const PERIODE_TAMBAH = 10;
+
     /**
      * @Route("/", name="pembayaran_biaya_rutin__daftar")
      * @Method("GET")
@@ -496,12 +499,8 @@ class PembayaranBiayaRutinController extends Controller
                 'biayaRutin' => $biaya,
             ], [
                 'waktuSimpan' => 'DESC',
-            ], 3)
+            ], self::PERIODE_AWAL)
         ;
-
-        /* @var $session Session */
-        $session = $this->get('session');
-        $session->set('biayarutin_periodetampil', 3);
 
         $daftarPerulangan = BiayaRutin::getDaftarPerulangan();
         $daftarBulan = BiayaRutin::getDaftarNamaBulan();
@@ -552,8 +551,6 @@ class PembayaranBiayaRutinController extends Controller
             ->getResult()
         ;
         $jumlahPembayaranBelumLunas = count($pembayaranBelumLunas);
-
-        $session->set('biayarutin_jumlahperiode', $jumlahPembayaran + $jumlahPembayaranBelumLunas);
 
         $jumlahWajibBayar = 0;
 
@@ -944,11 +941,13 @@ class PembayaranBiayaRutinController extends Controller
             'jumlahWajibBayar' => $jumlahWajibBayar,
             'jumlahPembayaran' => $jumlahPembayaran,
             'jumlahPembayaranBelumLunas' => $jumlahPembayaranBelumLunas,
+            'jumlahPeriode' => $jumlahPembayaran + $jumlahPembayaranBelumLunas,
             'jatuhTempo' => $jatuhTempo,
             'daftarPerulangan' => $daftarPerulangan,
             'daftarBulan' => $daftarBulan,
             'daftarHari' => $daftarHari,
             'form' => $form->createView(),
+            'tambahPeriode' => self::PERIODE_TAMBAH,
         ];
     }
 
@@ -1177,14 +1176,13 @@ class PembayaranBiayaRutinController extends Controller
     }
 
     /**
-     * @Route("/ambil-periode/{sid}/{bid}", name="pembayaran_biaya_rutin__periode")
+     * @Route("/ambil-periode/{sid}/{bid}/{jumlah_periode}/{periode}", name="pembayaran_biaya_rutin__periode")
      * @Method("GET")
      * @Template()
      */
-    public function periodeAction($sid, $bid, $limit = 5)
+    public function periodeAction($sid, $bid, $jumlah_periode, $periode)
     {
         $em = $this->getDoctrine()->getManager();
-        $session = $this->get('session');
 
         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid);
         if (!($siswa instanceof Siswa)) {
@@ -1200,7 +1198,7 @@ class PembayaranBiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
         }
 
-        $periodePembayaran = $session->get('biayarutin_jumlahperiode') - $session->get('biayarutin_periodetampil');
+        $offset = $jumlah_periode - $periode;
 
         $pembayaranRutin = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')
             ->findBy([
@@ -1208,13 +1206,11 @@ class PembayaranBiayaRutinController extends Controller
                 'biayaRutin' => $biaya,
             ], [
                 'waktuSimpan' => 'DESC',
-            ], $limit, $session->get('biayarutin_periodetampil'))
+            ], self::PERIODE_TAMBAH, $offset)
         ;
 
-        $session->set('biayarutin_periodetampil', $session->get('biayarutin_periodetampil') + 5);
-
         return [
-            'periodePembayaran' => $periodePembayaran,
+            'periodePembayaran' => $periode,
             'pembayaranRutin' => $pembayaranRutin,
         ];
     }

@@ -1,5 +1,5 @@
 {% for pembayaran in pembayaranRutin %}
-<tr>
+<tr id="{{ pembayaran.id }}">
     <td data-title="{{ 'label.periode.pembayaran'|trans }}" title="{{ pembayaran.keterangan }}">
         <span class="pembayaran-ke">{{ 'label.periode.pembayaran.ke'|trans }} {{ periodePembayaran }}</span>
         <span class="separator" style="padding-left: 0 5px 0 10px;">&brvbar;</span>
@@ -25,7 +25,7 @@
             "{{ transaksi.keterangan }}"
         {% endif %}
         <span class="separator">&brvbar;</span>
-        <a href="#" onclick="return false" title="{{ 'tip.print.receipt'|trans }}">
+        <a href="{{ path('pembayaran_biaya_rutin__cetaknota', {'sid': pembayaran.siswa.id, 'pid': pembayaran.id, 'tid': transaksi.id}) }}" title="{{ 'tip.print.receipt'|trans }}">
             <i class="fa fa-print fa-fw"></i>
         </a>
         <br>
