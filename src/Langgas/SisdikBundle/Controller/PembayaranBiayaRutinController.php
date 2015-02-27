@@ -943,6 +943,7 @@ class PembayaranBiayaRutinController extends Controller
             'jumlahPembayaranBelumLunas' => $jumlahPembayaranBelumLunas,
             'jumlahPeriode' => $jumlahPembayaran + $jumlahPembayaranBelumLunas,
             'jatuhTempo' => $jatuhTempo,
+            'tanggalAwalBayar' => $tanggalAwalBayar,
             'daftarPerulangan' => $daftarPerulangan,
             'daftarBulan' => $daftarBulan,
             'daftarHari' => $daftarHari,
@@ -1198,6 +1199,56 @@ class PembayaranBiayaRutinController extends Controller
             throw $this->createNotFoundException('Entity BiayaRutin tak ditemukan.');
         }
 
+        $tmpHariKe = ($biaya->getBulananHariKe() && $biaya->getBulananHariKe() <= 28) ? $biaya->getBulananHariKe() : '01';
+        $tanggalAwalBayar = new \DateTime($siswa->getPembiayaanSejak()->format('Y-m-').$tmpHariKe);
+
+        $bedaBulan = abs($biaya->getBulanAwal() - $siswa->getPembiayaanSejak()->format('n'));
+
+        switch ($biaya->getPerulangan()) {
+            case 'a-harian':
+                break;
+            case 'b-mingguan':
+                break;
+            case 'c-bulanan':
+                break;
+            case 'd-triwulan':
+                if ($biaya->getBulanAwal() < $siswa->getPembiayaanSejak()->format('n')) {
+                    $tanggalAwalBayar->modify("+1 year");
+                    $tanggalAwalBayar->modify("-$bedaBulan months");
+                } else {
+                    $tanggalAwalBayar->modify("+$bedaBulan months");
+                }
+
+                break;
+            case 'e-caturwulan':
+                if ($biaya->getBulanAwal() < $siswa->getPembiayaanSejak()->format('n')) {
+                    $tanggalAwalBayar->modify("+1 year");
+                    $tanggalAwalBayar->modify("-$bedaBulan months");
+                } else {
+                    $tanggalAwalBayar->modify("+$bedaBulan months");
+                }
+
+                break;
+            case 'f-semester':
+                if ($biaya->getBulanAwal() < $siswa->getPembiayaanSejak()->format('n')) {
+                    $tanggalAwalBayar->modify("+1 year");
+                    $tanggalAwalBayar->modify("-$bedaBulan months");
+                } else {
+                    $tanggalAwalBayar->modify("+$bedaBulan months");
+                }
+
+                break;
+            case 'g-tahunan':
+                if ($biaya->getBulanAwal() < $siswa->getPembiayaanSejak()->format('n')) {
+                    $tanggalAwalBayar->modify("+1 year");
+                    $tanggalAwalBayar->modify("-$bedaBulan months");
+                } else {
+                    $tanggalAwalBayar->modify("+$bedaBulan months");
+                }
+
+                break;
+        }
+
         $offset = $jumlah_periode - $periode;
 
         $pembayaranRutin = $em->getRepository('LanggasSisdikBundle:PembayaranRutin')
@@ -1210,8 +1261,10 @@ class PembayaranBiayaRutinController extends Controller
         ;
 
         return [
+            'biaya' => $biaya,
             'periodePembayaran' => $periode,
             'pembayaranRutin' => $pembayaranRutin,
+            'tanggalAwalBayar' => $tanggalAwalBayar,
         ];
     }
 

@@ -2,9 +2,35 @@
 <tr id="{{ pembayaran.id }}">
     <td data-title="{{ 'label.periode.pembayaran'|trans }}" title="{{ pembayaran.keterangan }}">
         <span class="pembayaran-ke">{{ 'label.periode.pembayaran.ke'|trans }} {{ periodePembayaran }}</span>
-        <span class="separator" style="padding-left: 0 5px 0 10px;">&brvbar;</span>
+        <span class="separator" style="padding: 0 5px 0 10px;">&brvbar;</span>
+        <span title="{{ 'tanggal.jatuh.tempo'|trans }}" style="cursor: default;">
+        <i class="fa fa-calendar-o fa-fw"></i>
+        {% if biaya.perulangan == 'a-harian' %}
+            {% set tempoPeriode = periodePembayaran - 1 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' days')|date('d/m/Y') }}
+        {% elseif biaya.perulangan == 'b-mingguan' %}
+            {% set tempoPeriode = periodePembayaran - 1 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' weeks')|date('d/m/Y') }}
+        {% elseif biaya.perulangan == 'c-bulanan' %}
+            {% set tempoPeriode = periodePembayaran - 1 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' months')|date('d/m/Y') }}
+        {% elseif biaya.perulangan == 'd-triwulan' %}
+            {% set tempoPeriode = (periodePembayaran - 1) * 3 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' months')|date('d/m/Y') }}
+        {% elseif biaya.perulangan == 'e-caturwulan' %}
+            {% set tempoPeriode = periodePembayaran - 1 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' months')|date('d/m/Y') }}
+        {% elseif biaya.perulangan == 'f-semester' %}
+            {% set tempoPeriode = periodePembayaran - 1 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' months')|date('d/m/Y') }}
+        {% elseif biaya.perulangan == 'g-tahunan' %}
+            {% set tempoPeriode = periodePembayaran - 1 %}
+            {{ tanggalAwalBayar|date_modify('+' ~ tempoPeriode ~ ' years')|date('d/m/Y') }}
+        {% endif %}
+        </span>
+        <span class="separator">&brvbar;</span>
         {% if pembayaran.nominalPotongan > 0 or pembayaran.persenPotonganDinominalkan > 0 %}
-            <i class="fa fa-gift fa-fw"></i>
+            <i class="fa fa-gift fa-fw" title="{{ 'ada.potongan'|trans }}" style="cursor: default;"></i>
         {% endif %}
         {{ (pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',','.') }}
     </td>
