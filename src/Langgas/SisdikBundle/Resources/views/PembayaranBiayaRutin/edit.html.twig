@@ -44,6 +44,7 @@
 
 <div class="clearfix" style="margin-bottom: 1em;"></div>
 
+{% if edit_form is defined %}
 <form id="pay-form" action="{{ path('pembayaran_biaya_rutin__update', {'sid': entity.siswa.id, 'pid': entity.id}) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     <div id="payment-info" style="margin-bottom: 18px;">
     <h4>{{ entity.biayaRutin.jenisbiaya.nama }}</h4>
@@ -54,9 +55,10 @@
             {{ 'label.discount.percentage'|trans }} {{ entity.persenPotongan }}% ({{ entity.persenPotonganDinominalkan|number_format(0, ',', '.') }})<br />
         {% endif %}
     {% endif %}
-        {{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (entity.nominalBiaya - (entity.nominalPotongan - entity.persenPotonganDinominalkan))|number_format(0, ',', '.') }}</span></b><br />
+        {{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (entity.nominalBiaya - (entity.nominalPotongan + entity.persenPotonganDinominalkan))|number_format(0, ',', '.') }}</span></b><br />
         {{ 'label.payment.remains.total'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ (entity.nominalBiaya - (entity.nominalPotongan + entity.persenPotonganDinominalkan) - entity.totalNominalTransaksiPembayaranRutin)|number_format(0, ',', '.') }}</span></b>
     </div>
+    {{ form_errors(edit_form) }}
     {% for transaksi in edit_form.transaksiPembayaranRutin %}
         {% if loop.length > 1 %}
             {% if not loop.last %}
@@ -105,6 +107,21 @@
     </div>
     {{ form_rest(edit_form) }}
 </form>
+{% else %}
+<div id="payment-info" style="margin-bottom: 18px;">
+<h4>{{ entity.biayaRutin.jenisbiaya.nama }}</h4>
+{% if entity.adaPotongan == 1 %}
+    {% if entity.jenisPotongan == 'nominal' %}
+        {{ 'label.discount.amount'|trans }} {{ currencySymbol(locale) }}. {{ entity.nominalPotongan|number_format(0, ',', '.') }}<br />
+    {% elseif entity.jenisPotongan == 'persentase' %}
+        {{ 'label.discount.percentage'|trans }} {{ entity.persenPotongan }}% ({{ entity.persenPotonganDinominalkan|number_format(0, ',', '.') }})<br />
+    {% endif %}
+{% endif %}
+{{ 'shortinfo.total.payables'|trans }} {% if entity.adaPotongan == 1 %}<span class="icon-gift" style="margin: 0;" title="{{ 'label.discounted.fee'|trans }}"></span> {% endif %}<b>{{ currencySymbol(locale) }}. <span id="payable-amount">{{ (entity.nominalBiaya - (entity.nominalPotongan + entity.persenPotonganDinominalkan))|number_format(0, ',', '.') }}</span></b><br>
+{{ 'total.biaya.sudah.dibayar'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ entity.totalNominalTransaksiPembayaranRutin|number_format(0, ',', '.') }}</span></b><br>
+{{ 'label.payment.remains.total'|trans }} <b>{{ currencySymbol(locale) }}. <span id="payable-amount-remains">{{ (entity.nominalBiaya - (entity.nominalPotongan + entity.persenPotonganDinominalkan) - entity.totalNominalTransaksiPembayaranRutin)|number_format(0, ',', '.') }}</span></b>
+</div>
+{% endif %}
 
 <div class="clearfix"></div>
 

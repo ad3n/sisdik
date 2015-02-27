@@ -981,6 +981,7 @@ class PembayaranBiayaRutinController extends Controller
      * Mengelola cicilan pembayaran biaya rutin
      *
      * @Route("-cicil/{sid}/{pid}", name="pembayaran_biaya_rutin__edit")
+     * @Method("GET")
      * @Template()
      */
     public function editAction($sid, $pid)
@@ -1005,23 +1006,26 @@ class PembayaranBiayaRutinController extends Controller
 
         $totalBiayaHarusDibayar = $entity->getNominalBiaya() - ($entity->getNominalPotongan() + $entity->getPersenPotonganDinominalkan());
         if ($totalBiayaHarusDibayar == $entity->getTotalNominalTransaksiPembayaranRutin()) {
-            throw new AccessDeniedException($this->get('translator')->trans('exception.periode.pembayaran.rutin.telah.lunas'));
+            return [
+                'siswa' => $entity->getSiswa(),
+                'entity' => $entity,
+            ];
+        } else {
+            $transaksiPembayaran = new TransaksiPembayaranRutin();
+            $entity->getTransaksiPembayaranRutin()->add($transaksiPembayaran);
+
+            $editForm = $this->createForm('sisdik_pembayaranrutincicilan', $entity);
+
+            return [
+                'siswa' => $entity->getSiswa(),
+                'entity' => $entity,
+                'edit_form' => $editForm->createView(),
+            ];
         }
-
-        $transaksiPembayaran = new TransaksiPembayaranRutin();
-        $entity->getTransaksiPembayaranRutin()->add($transaksiPembayaran);
-
-        $editForm = $this->createForm('sisdik_pembayaranrutincicilan', $entity);
-
-        return [
-            'siswa' => $entity->getSiswa(),
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-        ];
     }
 
     /**
-     * @Route("-cicil-ubah/{sid}/{pid}", name="pembayaran_biaya_rutin__update")
+     * @Route("-cicil/{sid}/{pid}", name="pembayaran_biaya_rutin__update")
      * @Method("POST")
      * @Template("LanggasSisdikBundle:PembayaranBiayaRutin:edit.html.twig")
      */
@@ -1065,6 +1069,18 @@ class PembayaranBiayaRutinController extends Controller
 
         $editForm = $this->createForm('sisdik_pembayaranrutincicilan', $entity);
         $editForm->submit($this->getRequest());
+
+        $totalBayar = 0;
+        $transaksiCollection = $editForm->get('transaksiPembayaranRutin')->getData();
+
+        foreach ($transaksiCollection as $transaksi) {
+            $totalBayar += $transaksi->getNominalPembayaran();
+        }
+
+        if ($totalBiayaHarusDibayar < $totalBayar) {
+            $message = $this->get('translator')->trans('shortinfo.pay.notbiggerthan.fee');
+            $editForm->get('transaksiPembayaranRutin')->addError(new FormError($message));
+        }
 
         if ($editForm->isValid()) {
             $now = new \DateTime();
@@ -1182,17 +1198,11 @@ class PembayaranBiayaRutinController extends Controller
                 ->add('success', $this->get('translator')->trans('flash.pembayaran.cicilan.biaya.berulang.terbarui'))
             ;
 
-            return $this->redirect($this->generateUrl('pembayaran_biaya_rutin__summary', [
+            return $this->redirect($this->generateUrl('pembayaran_biaya_rutin__edit', [
                 'sid' => $siswa->getId(),
-                'bid' => $entity->getBiayaRutin()->getId(),
+                'pid' => $entity->getId(),
             ]));
         }
-
-        $this
-            ->get('session')
-            ->getFlashBag()
-            ->add('error', $this->get('translator')->trans('flash.pembayaran.cicilan.biaya.berulang.gagal.disimpan'))
-        ;
 
         return [
             'siswa' => $siswa,

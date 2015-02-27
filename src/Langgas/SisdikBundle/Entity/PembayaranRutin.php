@@ -128,7 +128,7 @@ class PembayaranRutin
 
     /**
      * @ORM\OneToMany(targetEntity="TransaksiPembayaranRutin", mappedBy="pembayaranRutin", cascade={"persist"})
-     * @ORM\OrderBy({"waktuSimpan" = "DESC"})
+     * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
      *
      * @var ArrayCollection
