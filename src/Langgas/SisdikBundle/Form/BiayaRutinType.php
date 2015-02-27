@@ -133,6 +133,7 @@ class BiayaRutinType extends AbstractType
             ])
             ->add('perulangan', 'choice', [
                 'choices' => BiayaRutin::getDaftarPerulangan(),
+                'preferred_choices' => ['c-bulanan'],
                 'required' => true,
                 'multiple' => false,
                 'expanded' => false,
