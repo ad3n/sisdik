@@ -392,4 +392,23 @@ class PembayaranRutin
 
         return $jumlah;
     }
+
+    /**
+     * Mengambil total nominal transaksi pembayaran rutin hingga transaksi terpilih.
+     *
+     * @param  array $nomorTransaksi
+     * @return int
+     */
+    public function getTotalNominalTransaksiPembayaranRutinHinggaTransaksiTerpilih($nomorTransaksi)
+    {
+        $jumlah = 0;
+
+        foreach ($this->getTransaksiPembayaranRutin() as $transaksi) {
+            if (array_key_exists($transaksi->getNomorTransaksi(), $nomorTransaksi)) {
+                $jumlah += $transaksi->getNominalPembayaran();
+            }
+        }
+
+        return $jumlah;
+    }
 }
