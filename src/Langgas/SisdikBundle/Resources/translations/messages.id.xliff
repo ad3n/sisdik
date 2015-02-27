@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-02-22T21:24:28Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-02-26T17:16:17Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -98,6 +98,7 @@
         <jms:reference-file line="294">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="341">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="445">SisdikBundle/Controller/BiayaPendaftaranController.php</jms:reference-file>
+        <jms:reference-file line="49">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
         <jms:reference-file line="106">SisdikBundle/Controller/TahunAkademikController.php</jms:reference-file>
         <jms:reference-file line="211">SisdikBundle/Controller/TahunAkademikController.php</jms:reference-file>
         <jms:reference-file line="242">SisdikBundle/Controller/TahunAkademikController.php</jms:reference-file>
@@ -145,9 +146,10 @@
         <jms:reference-file line="232">SisdikBundle/Controller/SekolahAsalController.php</jms:reference-file>
         <jms:reference-file line="264">SisdikBundle/Controller/SekolahAsalController.php</jms:reference-file>
         <jms:reference-file line="315">SisdikBundle/Controller/SekolahAsalController.php</jms:reference-file>
-        <jms:reference-file line="214">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
-        <jms:reference-file line="243">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
-        <jms:reference-file line="289">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="150">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="209">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="238">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="284">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <jms:reference-file line="38">SisdikBundle/Controller/PenyakitSiswaController.php</jms:reference-file>
         <jms:reference-file line="71">SisdikBundle/Controller/PenyakitSiswaController.php</jms:reference-file>
         <jms:reference-file line="124">SisdikBundle/Controller/PenyakitSiswaController.php</jms:reference-file>
@@ -175,11 +177,11 @@
         <jms:reference-file line="163">SisdikBundle/Controller/JenisImbalanController.php</jms:reference-file>
         <jms:reference-file line="196">SisdikBundle/Controller/JenisImbalanController.php</jms:reference-file>
         <jms:reference-file line="253">SisdikBundle/Controller/JenisImbalanController.php</jms:reference-file>
-        <jms:reference-file line="201">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="485">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="976">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="1019">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="1198">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="204">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="488">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="974">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="1017">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="1195">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="86">SisdikBundle/Controller/ImbalanPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="174">SisdikBundle/Controller/ImbalanPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="205">SisdikBundle/Controller/ImbalanPendaftaranController.php</jms:reference-file>
@@ -966,6 +968,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Data pembayaran telah dipakai; tidak bisa dihapus.</target>
       </trans-unit>
       <trans-unit id="e0ce577a01266c09728c8c3129492ed23658582c" resname="exception.directprint.file">
+        <jms:reference-file line="738">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
         <jms:reference-file line="749">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="736">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>exception.directprint.file</source>
@@ -985,6 +988,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Orang Tua Wali siswa aktif tidak bisa dihapus</target>
       </trans-unit>
       <trans-unit id="f32bdae8c1ccf713e1916fb726ec11254f97ae1e" resname="exception.open.file.pdf">
+        <jms:reference-file line="785">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
         <jms:reference-file line="802">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="788">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="602">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
@@ -997,8 +1001,8 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Pembayaran biaya berulang sebelumnya harus lunas</target>
       </trans-unit>
       <trans-unit id="9431f9bb7d856ef58eded92dd9e9d77ab3e66ac7" resname="exception.periode.pembayaran.rutin.telah.lunas">
-        <jms:reference-file line="986">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="1029">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="984">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="1027">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>exception.periode.pembayaran.rutin.telah.lunas</source>
         <target>Periode pembayaran rutin ini telah lunas dibayar</target>
       </trans-unit>
@@ -1246,7 +1250,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <jms:reference-file line="563">views/LaporanSiswaPendaftar/index.html.twig</jms:reference-file>
         <jms:reference-file line="34">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="59">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="93">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="95">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="79">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
         <jms:reference-file line="58">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="79">views/SiswaDalamKelas/indexWaliKelas.html.twig</jms:reference-file>
@@ -1610,17 +1614,17 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Pencarian Kepulangan Siswa Tidak Berhasil</target>
       </trans-unit>
       <trans-unit id="0e0ad069a503b6a7c85e5c4ae3b749ae29eef5e0" resname="flash.keterangan.pembayaran.berulang.berhasil.dihapus">
-        <jms:reference-file line="300">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="295">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>flash.keterangan.pembayaran.berulang.berhasil.dihapus</source>
         <target>Keterangan pembayaran berulang "%siswa%" berhasil dihapus</target>
       </trans-unit>
       <trans-unit id="724d43ae5a69b710e50a452da96b02bc68cd734c" resname="flash.keterangan.pembayaran.berulang.terbarui">
-        <jms:reference-file line="258">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="253">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>flash.keterangan.pembayaran.berulang.terbarui</source>
         <target>Keterangan pembayaran berulang "%siswa%" berhasil diperbarui</target>
       </trans-unit>
       <trans-unit id="ffab464b8f463dfbcc480bbbb012b56d259c10a7" resname="flash.keterangan.pembayaran.berulang.tersimpan">
-        <jms:reference-file line="171">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="166">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>flash.keterangan.pembayaran.berulang.tersimpan</source>
         <target>Keterangan pembayaran berulang berhasil disimpan</target>
       </trans-unit>
@@ -1732,12 +1736,12 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Data cicilan Pembayaran Pendaftaran berhasil diperbarui</target>
       </trans-unit>
       <trans-unit id="7699365fb60bff1dfef1dc2636b788ecce4ad2d4" resname="flash.pembayaran.biaya.berulang.gagal.disimpan">
-        <jms:reference-file line="915">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="909">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>flash.pembayaran.biaya.berulang.gagal.disimpan</source>
         <target>Pembayaran biaya berulang gagal disimpan</target>
       </trans-unit>
       <trans-unit id="5b9998eed69b19f8406fc232884b4bfe57c83fef" resname="flash.pembayaran.biaya.berulang.tersimpan">
-        <jms:reference-file line="903">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="897">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>flash.pembayaran.biaya.berulang.tersimpan</source>
         <target>Pembayaran biaya berulang berhasil tersimpan</target>
       </trans-unit>
@@ -1752,12 +1756,12 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Pembayaran biaya sekali bayar berhasil disimpan</target>
       </trans-unit>
       <trans-unit id="94da9e655c822c04dd76bb297737968a0f8aec9b" resname="flash.pembayaran.cicilan.biaya.berulang.gagal.disimpan">
-        <jms:reference-file line="1172">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="1170">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>flash.pembayaran.cicilan.biaya.berulang.gagal.disimpan</source>
         <target>Pembayaran cicilan biaya berulang gagal disimpan</target>
       </trans-unit>
       <trans-unit id="8ce80a7bba37a375b03b49997666814025d11352" resname="flash.pembayaran.cicilan.biaya.berulang.terbarui">
-        <jms:reference-file line="1160">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="1158">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>flash.pembayaran.cicilan.biaya.berulang.terbarui</source>
         <target>Pembayaran cicilan biaya berulang berhasil tersimpan</target>
       </trans-unit>
@@ -2269,7 +2273,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       </trans-unit>
       <trans-unit id="181043bd2f2f2597a1a89a68a91da490530b9f3b" resname="help.captcha.penjelasan.ubah.biaya">
         <jms:reference-file line="165">SisdikBundle/Form/BiayaSekaliType.php</jms:reference-file>
-        <jms:reference-file line="218">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="219">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="193">SisdikBundle/Form/BiayaPendaftaranType.php</jms:reference-file>
         <source>help.captcha.penjelasan.ubah.biaya</source>
         <target>Captcha berguna untuk mencegah pengubahan/penghapusan data biaya tanpa sengaja</target>
@@ -2378,7 +2382,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       </trans-unit>
       <trans-unit id="60f2576eed8a31221e9e0ec1df3062c990b45633" resname="help.type.captcha">
         <jms:reference-file line="160">SisdikBundle/Form/BiayaSekaliType.php</jms:reference-file>
-        <jms:reference-file line="213">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="214">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="127">SisdikBundle/Form/SebarSmsViaAkademikType.php</jms:reference-file>
         <jms:reference-file line="102">SisdikBundle/Form/SiswaGenerateUserType.php</jms:reference-file>
         <jms:reference-file line="188">SisdikBundle/Form/BiayaPendaftaranType.php</jms:reference-file>
@@ -2392,19 +2396,19 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>ketik kode captcha</target>
       </trans-unit>
       <trans-unit id="59f7650be1382e33f0883322155b8358b11585eb" resname="help.untuk.perulangan.bulanan.atau.lebih.lama">
-        <jms:reference-file line="169">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="170">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="100">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <source>help.untuk.perulangan.bulanan.atau.lebih.lama</source>
         <target>Digunakan hanya untuk perulangan bulanan atau yang lebih besar periodenya.</target>
       </trans-unit>
       <trans-unit id="254dac71d68fb2c4e23b8eebb1706fd98856b8cb" resname="help.untuk.perulangan.mingguan">
-        <jms:reference-file line="155">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="156">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="88">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <source>help.untuk.perulangan.mingguan</source>
         <target>Digunakan hanya untuk perulangan mingguan.</target>
       </trans-unit>
       <trans-unit id="6cd0e2d6f2edad91194b5aa24667ca8d3bfa1532" resname="help.untuk.perulangan.triwulan.atau.lebih.lama">
-        <jms:reference-file line="183">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="184">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="112">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <source>help.untuk.perulangan.triwulan.atau.lebih.lama</source>
         <target>Digunakan hanya untuk perulangan triwulan atau yang lebih besar periodenya.</target>
@@ -2500,7 +2504,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="ebe446f31d01404e05b495dfe692a250d8682238" resname="info.singkat.bayar.negatif.tak.dibolehkan">
         <jms:reference-file line="418">views/PembayaranPendaftaran/summary.html.twig</jms:reference-file>
         <jms:reference-file line="399">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="382">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="401">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>info.singkat.bayar.negatif.tak.dibolehkan</source>
         <target>Jumlah bayar tak boleh negatif</target>
       </trans-unit>
@@ -2645,9 +2649,9 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="156">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="64">views/PembayaranBiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="127">views/PembayaranBiayaSekali/index.html.twig</jms:reference-file>
-        <jms:reference-file line="134">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="174">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="33">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
+        <jms:reference-file line="136">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="193">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="34">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <jms:reference-file line="40">views/WaliKelas/index.html.twig</jms:reference-file>
         <jms:reference-file line="68">views/WaliKelas/index.html.twig</jms:reference-file>
         <jms:reference-file line="43">views/BiayaSekali/index.html.twig</jms:reference-file>
@@ -3021,7 +3025,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Daftar Biaya Berulang</target>
       </trans-unit>
       <trans-unit id="a11ffcb936e6dafbf73f231e61b84320534474ef" resname="label.biaya.per.periode">
-        <jms:reference-file line="109">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="111">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.biaya.per.periode</source>
         <target>Biaya per Periode</target>
       </trans-unit>
@@ -3101,7 +3105,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>bukan siswa</target>
       </trans-unit>
       <trans-unit id="2b86a1ba6b1e86a1a15a22dfad4cd2439da7a28a" resname="label.bulan.awal">
-        <jms:reference-file line="174">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="175">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="103">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <jms:reference-file line="30">views/BiayaRutin/show.html.twig</jms:reference-file>
         <jms:reference-file line="24">views/LayananSmsPeriodik/show.html.twig</jms:reference-file>
@@ -3286,12 +3290,12 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Lanjutkan</target>
       </trans-unit>
       <trans-unit id="a6cc89a7dca66c3a36d968700a04bd6c81a4a42c" resname="label.daftar.pembayaran.sebelumnya">
-        <jms:reference-file line="128">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="130">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.daftar.pembayaran.sebelumnya</source>
         <target>Daftar Pembayaran Sebelumnya</target>
       </trans-unit>
       <trans-unit id="d8b47305882ca5dc053db8957a534d68387c6a4e" resname="label.daftar.siswa">
-        <jms:reference-file line="381">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="376">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>label.daftar.siswa</source>
         <target>Daftar Siswa</target>
       </trans-unit>
@@ -3326,7 +3330,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tanggal</target>
       </trans-unit>
       <trans-unit id="83776d9c8813a53b5afb19b30d75b434b66aaac1" resname="label.day">
-        <jms:reference-file line="146">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="147">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="79">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <jms:reference-file line="123">SisdikBundle/Form/JadwalKepulanganType.php</jms:reference-file>
         <jms:reference-file line="122">SisdikBundle/Form/JadwalKehadiranType.php</jms:reference-file>
@@ -3416,7 +3420,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="288">SisdikBundle/Controller/VendorSekolahController.php</jms:reference-file>
         <jms:reference-file line="266">SisdikBundle/Controller/TokenSekolahController.php</jms:reference-file>
         <jms:reference-file line="273">SisdikBundle/Controller/MesinWakilController.php</jms:reference-file>
-        <jms:reference-file line="398">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="393">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>label.delete</source>
         <target>Hapus</target>
       </trans-unit>
@@ -3755,7 +3759,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="55">views/LaporanSiswaPendaftar/report.xml.twig</jms:reference-file>
         <jms:reference-file line="33">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="58">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="92">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="94">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="65">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
         <jms:reference-file line="79">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
         <jms:reference-file line="57">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
@@ -3842,7 +3846,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="70">views/PembayaranBiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="15">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
         <jms:reference-file line="25">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="82">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="84">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="70">views/PembayaranBiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="84">views/PembayaranBiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="56">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
@@ -3889,7 +3893,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tidak aktif</target>
       </trans-unit>
       <trans-unit id="7ffe0288ec306356693b1cfa24b98ae9a06b3434" resname="label.informasi.biaya.berulang">
-        <jms:reference-file line="105">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="107">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.informasi.biaya.berulang</source>
         <target>Informasi Biaya Berulang</target>
       </trans-unit>
@@ -4190,7 +4194,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="16">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="36">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="16">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="36">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="38">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="22">views/WaliKelas/show.html.twig</jms:reference-file>
         <jms:reference-file line="101">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="44">views/OrangtuaWali/show.html.twig</jms:reference-file>
@@ -4216,8 +4220,8 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="c25674d07dd982d6d3e472ba0b4ffe94fa6a633e" resname="label.keterangan.pembayaran.berulang">
         <jms:reference-file line="50">views/KeteranganPembayaranRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="67">views/KeteranganPembayaranRutin/index.html.twig</jms:reference-file>
-        <jms:reference-file line="376">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
-        <jms:reference-file line="426">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="371">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="421">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>label.keterangan.pembayaran.berulang</source>
         <target>Keterangan Pembayaran Berulang</target>
       </trans-unit>
@@ -4351,8 +4355,8 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Kode Pos</target>
       </trans-unit>
       <trans-unit id="f523fbc560ecf8c17048d777bce587f149a8d94b" resname="label.kurang.bayar">
-        <jms:reference-file line="155">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="14">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
+        <jms:reference-file line="174">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="15">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <source>label.kurang.bayar</source>
         <target>Kurang Bayar</target>
       </trans-unit>
@@ -4503,7 +4507,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="42">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="67">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="38">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="97">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="99">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="44">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="20">views/KeteranganPembayaranRutin/edit.html.twig</jms:reference-file>
         <source>label.mobilephone.parent</source>
@@ -4524,7 +4528,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>label.monday</target>
       </trans-unit>
       <trans-unit id="ce8bc13053f2927297a611c046b1595010ec47f6" resname="label.monthday">
-        <jms:reference-file line="160">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="161">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="91">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <jms:reference-file line="134">SisdikBundle/Form/JadwalKepulanganType.php</jms:reference-file>
         <jms:reference-file line="133">SisdikBundle/Form/JadwalKehadiranType.php</jms:reference-file>
@@ -4558,7 +4562,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Nama</target>
       </trans-unit>
       <trans-unit id="41fe3430ef32768177be044367ec21edfb981066" resname="label.nama.biaya">
-        <jms:reference-file line="107">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="109">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.nama.biaya</source>
         <target>Nama Biaya</target>
       </trans-unit>
@@ -4687,7 +4691,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="72">views/PembayaranBiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="21">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
         <jms:reference-file line="33">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="90">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="92">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="73">views/PembayaranBiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="86">views/PembayaranBiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="62">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
@@ -4727,7 +4731,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="40">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="65">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="36">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="95">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="97">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="42">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="18">views/KeteranganPembayaranRutin/edit.html.twig</jms:reference-file>
         <source>label.name.parent.or.guardian</source>
@@ -4814,7 +4818,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="54">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="19">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
         <jms:reference-file line="31">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="88">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="90">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="76">views/SiswaDalamKelas/siswadikelas.xml.twig</jms:reference-file>
         <jms:reference-file line="77">views/KehadiranSiswa/laporan.xml.twig</jms:reference-file>
         <jms:reference-file line="13">views/KeteranganPembayaranRutin/edit.html.twig</jms:reference-file>
@@ -5059,14 +5063,14 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="132">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="151">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="195">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="201">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="220">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.payables.amount</source>
         <target>Jumlah Biaya</target>
       </trans-unit>
       <trans-unit id="2bfadfe66d4b57b22a454ea70acf28307a0c6b9f" resname="label.payables.amount.discounted">
         <jms:reference-file line="229">views/PembayaranPendaftaran/summary.html.twig</jms:reference-file>
         <jms:reference-file line="210">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="216">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="235">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.payables.amount.discounted</source>
         <target>Jumlah Biaya setelah Diskon</target>
       </trans-unit>
@@ -5151,7 +5155,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Pekerjaan</target>
       </trans-unit>
       <trans-unit id="290f4cb34227ad9e881db6fb51920efe7ad673ed" resname="label.pembayaran.banding.wajib.bayar">
-        <jms:reference-file line="113">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="115">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.pembayaran.banding.wajib.bayar</source>
         <target>Jumlah Pembayaran ke/dari</target>
       </trans-unit>
@@ -5196,15 +5200,15 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Filter Siswa</target>
       </trans-unit>
       <trans-unit id="85c58f60e3bbe9a4c0e1f1d756d89748a927d6a0" resname="label.periode.pembayaran">
-        <jms:reference-file line="132">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="144">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="134">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="145">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="3">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <source>label.periode.pembayaran</source>
         <target>Periode Pembayaran</target>
       </trans-unit>
       <trans-unit id="db2645f312095c6fbcebeb67b686d031cc02f2aa" resname="label.periode.pembayaran.ke">
-        <jms:reference-file line="145">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="200">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="146">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="219">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="4">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <source>label.periode.pembayaran.ke</source>
         <target>Periode Ke</target>
@@ -5280,7 +5284,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>~ batas ~</target>
       </trans-unit>
       <trans-unit id="747c6bc4979d718c6e3e26fda61de291233aa34d" resname="label.pilih.bulan">
-        <jms:reference-file line="179">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="180">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="108">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <source>label.pilih.bulan</source>
         <target>~ Pilih Bulan ~</target>
@@ -5347,7 +5351,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="18">views/BiayaRutin/show.html.twig</jms:reference-file>
         <jms:reference-file line="52">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="29">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="86">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="88">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="35">views/BiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="50">views/BiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="18">views/BiayaSekali/show.html.twig</jms:reference-file>
@@ -5637,7 +5641,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="108">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="228">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="103">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="234">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="253">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="122">views/KalenderPendidikan/display.html.twig</jms:reference-file>
         <jms:reference-file line="373">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
         <jms:reference-file line="16">views/PilihanCetakKwitansi/new.html.twig</jms:reference-file>
@@ -5845,7 +5849,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>~ Tahap Pendaftaran ~</target>
       </trans-unit>
       <trans-unit id="f445c2ee723b33755034d282c4ba46f9b834d614" resname="label.selectmonthday">
-        <jms:reference-file line="165">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="166">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="96">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <jms:reference-file line="139">SisdikBundle/Form/JadwalKepulanganType.php</jms:reference-file>
         <jms:reference-file line="118">SisdikBundle/Form/JadwalDuplicateType.php</jms:reference-file>
@@ -5860,7 +5864,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>- Pilih Perulangan -</target>
       </trans-unit>
       <trans-unit id="8b70723b0a52d10ec65c60f96a1d91080f458ed9" resname="label.selectweekday">
-        <jms:reference-file line="151">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
+        <jms:reference-file line="152">SisdikBundle/Form/BiayaRutinType.php</jms:reference-file>
         <jms:reference-file line="84">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <jms:reference-file line="128">SisdikBundle/Form/JadwalKepulanganType.php</jms:reference-file>
         <jms:reference-file line="106">SisdikBundle/Form/JadwalDuplicateType.php</jms:reference-file>
@@ -5943,7 +5947,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>September</target>
       </trans-unit>
       <trans-unit id="ace048827f860f53a8fee07641ca0e2ac1243469" resname="label.siswa.tak.ditemukan">
-        <jms:reference-file line="351">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="346">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>label.siswa.tak.ditemukan</source>
         <target>siswa tak ditemukan</target>
       </trans-unit>
@@ -6252,7 +6256,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tambah Sekolah Asal</target>
       </trans-unit>
       <trans-unit id="eb03733f1f762e5df16d2f73434a7566e77254c2" resname="label.tambah.siswa.penerima">
-        <jms:reference-file line="389">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
+        <jms:reference-file line="384">SisdikBundle/Controller/KeteranganPembayaranRutinController.php</jms:reference-file>
         <source>label.tambah.siswa.penerima</source>
         <target>Tambah Siswa</target>
       </trans-unit>
@@ -6276,7 +6280,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tanggal Ijazah</target>
       </trans-unit>
       <trans-unit id="d77d0cb8e3ea4cef1180868c6fab399177315ea4" resname="label.tanggal.jatuh.tempo">
-        <jms:reference-file line="111">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="113">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>label.tanggal.jatuh.tempo</source>
         <target>Tanggal Jatuh Tempo</target>
       </trans-unit>
@@ -6454,11 +6458,15 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tambah Token</target>
       </trans-unit>
       <trans-unit id="d187708b2c0f480df1c0a3ad76dadd9d32f6dd72" resname="label.transaksi">
-        <jms:reference-file line="133">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="152">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="170">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="11">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <source>label.transaksi</source>
         <target>Transaksi</target>
+      </trans-unit>
+      <trans-unit id="7a89d4d67d25335f5702be21daee5d0a537503c5" resname="label.transaksi.pembayaran">
+        <jms:reference-file line="135">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <source>label.transaksi.pembayaran</source>
+        <target>Transaksi Pembayaran</target>
       </trans-unit>
       <trans-unit id="65e986fd30713eb7f9ccf29a0fe8e48d66e272f9" resname="label.transaksi.pembayaran.berulang">
         <jms:reference-file line="64">SisdikBundle/Form/PembayaranRutinType.php</jms:reference-file>
@@ -6713,7 +6721,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="71">views/PembayaranBiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="17">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
         <jms:reference-file line="27">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="84">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="86">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="71">views/PembayaranBiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="85">views/PembayaranBiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="46">views/WaliKelas/index.html.twig</jms:reference-file>
@@ -6846,7 +6854,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Ketua</target>
       </trans-unit>
       <trans-unit id="b800f5490c046a11931ce9ddad49ff56a063873e" resname="lihat.periode.lebih.lama">
-        <jms:reference-file line="188">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="207">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>lihat.periode.lebih.lama</source>
         <target>Lihat Periode Sebelumnya</target>
       </trans-unit>
@@ -6919,7 +6927,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="44">views/PengaturanSekolah/edit.html.twig</jms:reference-file>
         <jms:reference-file line="44">views/PengaturanSekolah/add.html.twig</jms:reference-file>
         <jms:reference-file line="238">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="248">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="267">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="40">views/WaliKelas/new.html.twig</jms:reference-file>
         <jms:reference-file line="45">views/WaliKelas/edit.html.twig</jms:reference-file>
         <jms:reference-file line="49">views/WaliKelas/show.html.twig</jms:reference-file>
@@ -7157,7 +7165,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="563">views/LaporanSiswaPendaftar/index.html.twig</jms:reference-file>
         <jms:reference-file line="34">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="59">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="93">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="95">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <jms:reference-file line="79">views/SiswaDalamKelas/indexAdmin.html.twig</jms:reference-file>
         <jms:reference-file line="58">views/SiswaDalamKelas/profil.html.twig</jms:reference-file>
         <jms:reference-file line="79">views/SiswaDalamKelas/indexWaliKelas.html.twig</jms:reference-file>
@@ -7204,7 +7212,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Parameter pencarian log sms keluar harus benar</target>
       </trans-unit>
       <trans-unit id="c2e1a2ab4a9e187a9c25d9a49fb1909ba15b1c38" resname="pencarian.tunggakan.biaya.berulang.perlu.batasan">
-        <jms:reference-file line="81">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="84">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>pencarian.tunggakan.biaya.berulang.perlu.batasan</source>
         <target>Pencarian tunggakan harus menentukan jumlah batasan pencarian</target>
       </trans-unit>
@@ -7324,8 +7332,8 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="222">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="436">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="446">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="228">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="411">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="247">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="430">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>shortinfo.pay.lessthan.fee.oneitem</source>
         <target>Mencicil (jumlah bayar lebih kecil dari jumlah biaya) hanya bisa untuk satu item biaya</target>
       </trans-unit>
@@ -7337,15 +7345,15 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="221">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="442">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="149">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="227">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="417">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="246">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="436">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>shortinfo.pay.notbiggerthan.fee</source>
         <target>Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih</target>
       </trans-unit>
       <trans-unit id="e3a187da5f0460cca877eb8b67c8cecee08fe1ff" resname="shortinfo.pay.notbiggerthan.fee.discounted">
         <jms:reference-file line="447">views/PembayaranPendaftaran/summary.html.twig</jms:reference-file>
         <jms:reference-file line="428">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="407">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="426">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>shortinfo.pay.notbiggerthan.fee.discounted</source>
         <target>Jumlah bayar tidak bisa lebih besar dari jumlah biaya yang terpilih dan terdiskon</target>
       </trans-unit>
@@ -7355,7 +7363,7 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="158">views/PembayaranBiayaSekali/edit.html.twig</jms:reference-file>
         <jms:reference-file line="450">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="153">views/PembayaranBiayaRutin/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="421">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="440">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
         <source>shortinfo.pay.nozero</source>
         <target>Tidak bisa membayar 0 rupiah atau minus</target>
       </trans-unit>
@@ -7490,16 +7498,16 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="76">views/BiayaRutin/index.html.twig</jms:reference-file>
         <jms:reference-file line="131">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
         <jms:reference-file line="68">views/LayananSmsPeriodik/index.html.twig</jms:reference-file>
-        <jms:reference-file line="314">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="338">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="377">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="413">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="442">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="595">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="619">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="658">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="694">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
-        <jms:reference-file line="723">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="317">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="341">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="380">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="416">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="445">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="589">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="613">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="652">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="688">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
+        <jms:reference-file line="717">SisdikBundle/Controller/PembayaranBiayaRutinController.php</jms:reference-file>
         <source>tanggal</source>
         <target>Tanggal</target>
       </trans-unit>
@@ -7544,8 +7552,8 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <target>Tidak ada tahun akademik yang aktif. Hubungi admin sekolah.</target>
       </trans-unit>
       <trans-unit id="5fa965ea7dccc38108d91bfbb20509dc541c338e" resname="tip.bayar.cicilan.pembayaran.berulang">
-        <jms:reference-file line="176">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="35">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
+        <jms:reference-file line="195">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="36">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <source>tip.bayar.cicilan.pembayaran.berulang</source>
         <target>Bayar cicilan biaya berulang</target>
       </trans-unit>
@@ -7744,8 +7752,8 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="169">views/PembayaranBiayaSekali/summary.html.twig</jms:reference-file>
         <jms:reference-file line="60">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
         <jms:reference-file line="77">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
-        <jms:reference-file line="168">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
-        <jms:reference-file line="27">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
+        <jms:reference-file line="187">views/PembayaranBiayaRutin/summary.html.twig</jms:reference-file>
+        <jms:reference-file line="28">views/PembayaranBiayaRutin/periode.html.twig</jms:reference-file>
         <source>tip.print.receipt</source>
         <target>Cetak Kwitansi</target>
       </trans-unit>
