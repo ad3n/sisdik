@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pdf SYSTEM "%resources%/dtd/doctype.dtd">
+<pdf Author="{{ app_title }}">
+    <dynamic-page>
+        <placeholders>
+            <header>
+                <div height="85px" width="100%" font-size="12px" line-height="18px">
+                    {{ sekolah.nama }}<br />
+                    {{ sekolah.alamat }}{% if sekolah.kodePos != '' %}, {{ sekolah.kodePos }}{% endif %}<br />
+                    {% if sekolah.telepon != '' %}{{ 'telephone'|trans({}, 'printing') }} {{ sekolah.telepon }}{% endif %}
+                    {% if sekolah.fax != '' %} {{ 'faximile'|trans({}, 'printing') }} {{ sekolah.fax }}{% endif %}
+                    <div height="1px" background-color="#000000" margin="6px 0 0 0"></div>
+                    <div height="1px" background-color="#000000" margin="1px 0 0 0"></div>
+                </div>
+            </header>
+        </placeholders>
+        <table margin-left="30px" font-size="11px" line-height="16px">
+            <tr>
+                <td width="130px" border-type="none">{{ 'identitas.sisdik'|trans({}, 'printing') }} / {{ 'nomor.induk'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td border-type="none">{{ siswa.nomorIndukSistem }} / {{ siswa.nomorInduk }}</td>
+                <td width="110px" border-type="none">{{ 'receiptnum'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td width="130px" border-type="none">{{ transaksi.nomorTransaksi }}</td>
+            </tr>
+            <tr>
+                <td width="130px" border-type="none">{{ 'nama.siswa'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td border-type="none">{{ siswa.namaLengkap }}</td>
+                <td border-type="none">{{ 'date'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none">{{ transaksi.waktuSimpan|localeDate('long') }}</td>
+            </tr>
+        </table>
+
+        <div height="20px">&nbsp;</div>
+
+        <table margin-left="30px" font-size="11px" line-height="16px">
+            <tr>
+                <td width="160px" border-type="none">{{ 'paymentitem'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td border-type="none" colspan="2">{{ pembayaran.namaBiaya }}</td>
+            </tr>
+            <tr>
+                <td width="160px" border-type="none">{{ 'periode.pembayaran.ke'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td border-type="none" colspan="2">{{ periodePembayaran }}</td>
+            </tr>
+            <tr>
+                <td width="160px" border-type="none">{{ 'jatuh.tempo'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td border-type="none" colspan="2">{{ tanggalAwalBayar|localeDate('long') }}</td>
+            </tr>
+            <tr>
+                <td width="160px" border-type="none">{{ 'itemprice'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td width="100px" border-type="none" text-align="right">{{ (pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',', '.') }}</td>
+                <td border-type="none"></td>
+            </tr>
+        {% if pembayaran.adaPotongan %}
+            <tr>
+                <td border-type="none">{{ 'discount'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" text-align="right">{% spaceless %}
+                    {{ (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan)|number_format(0, ',', '.') }}
+                {% endspaceless %}</td>
+                <td border-type="none" padding-left="5px">{% if pembayaran.persenPotongan != '' %}({{ pembayaran.persenPotongan }}%){% endif %}</td>
+            </tr>
+            <tr>
+                <td border-type="none">{{ 'totalprice'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" text-align="right">{% spaceless %}
+                    {{ (nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan))|number_format(0, ',', '.') }}
+                {% endspaceless %}</td>
+                <td border-type="none"></td>
+            </tr>
+        {% endif %}
+        {% if adaCicilan %}
+            <tr>
+                <td border-type="none" margin-top="10px">{{ 'paymentnum'|trans({}, 'printing') }}</td>
+                <td border-type="none" margin-top="10px">:</td>
+                <td border-type="none" margin-top="10px">{{ nomorCicilan }}</td>
+                <td border-type="none" margin-top="10px"></td>
+            </tr>
+        {% endif %}
+            <tr>
+                <td border-type="none">{{ 'paymentamount'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" text-align="right">{{ transaksi.nominalPembayaran|number_format(0, ',', '.') }}</td>
+                <td border-type="none"></td>
+            </tr>
+            <tr>
+                <td border-type="none">{{ 'description'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" colspan="2">{{ transaksi.keterangan }}</td>
+            </tr>
+        {% if adaCicilan %}
+            <tr>
+                <td border-type="none" colspan="4" margin-top="20px">***</td>
+            </tr>
+            <tr>
+                <td width="160px" border-type="none">{{ 'totalpaidamount'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td width="100px" border-type="none" text-align="right">{{ totalPembayaranHinggaTransaksiTerpilih|number_format(0, ',', '.') }}</td>
+                <td border-type="none"></td>
+            </tr>
+            <tr>
+                <td border-type="none">{{ 'unpaidamount'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" text-align="right">{% spaceless %}
+                    {% set sisaPembayaran = pembayaran.nominalBiaya - (pembayaran.nominalPotongan + pembayaran.persenPotonganDinominalkan) - totalPembayaranHinggaTransaksiTerpilih %}
+                    {% if sisaPembayaran == 0 %}
+                        ({{ 'settled'|trans({}, 'printing') }})
+                    {% else %}
+                        {{ sisaPembayaran|number_format(0, ',', '.') }}
+                    {% endif %}
+                {% endspaceless %}</td>
+                <td border-type="none"></td>
+            </tr>
+        {% endif %}
+        </table>
+
+        <div height="50px">&nbsp;</div>
+
+        <table margin-left="30px" font-size="11px" line-height="16px">
+            <tr>
+                <td width="40px" border-type="none"></td>
+                <td width="40%" border-type="none">{{ 'siswa'|trans({}, 'printing') }}</td>
+                <td border-type="none">{{ 'cashier.or.treasurer'|trans({}, 'printing') }}</td>
+            </tr>
+            <tr>
+                <td border-type="none"></td>
+                <td padding="60px 5px 0 0" border-type="none">{{ siswa.namaLengkap }}</td>
+                <td padding="60px 5px 0 0" border-type="none">{{ transaksi.dibuatOleh.name }}</td>
+            </tr>
+        </table>
+
+        <div height="10px">&nbsp;</div>
+
+        <div width="100%" font-size="9px" text-align="right"><page-info format="(hal %s/%s)" margin-right="10px" /></div>
+    </dynamic-page>
+</pdf>
