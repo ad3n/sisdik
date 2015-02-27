@@ -765,6 +765,31 @@ class PembayaranBiayaRutinController extends Controller
             $form = $this->createForm('sisdik_pembayaranrutin', $entity);
             $form->submit($this->getRequest());
 
+            $nominalBayar = 0;
+            $nominalBiaya = $biaya->getNominal();
+            $transaksiCollection = $form->get('transaksiPembayaranRutin')->getData();
+
+            if ($form->get('jenisPotongan')->getData() == 'nominal') {
+                $nominalBiaya = $nominalBiaya - $form->get('nominalPotongan')->getData();
+            } elseif ($form->get('jenisPotongan')->getData() == 'persentase') {
+                $nominalBiaya = $nominalBiaya - ($form->get('persenPotongan')->getData() / 100 * $nominalBiaya);
+            }
+
+            /* @var $transaksi TransaksiPembayaranRutin */
+            foreach ($transaksiCollection as $transaksi) {
+                $nominalBayar += $transaksi->getNominalPembayaran();
+            }
+
+            if ($nominalBayar > $nominalBiaya) {
+                if ($form->get('jenisPotongan')->getData()) {
+                    $message = $this->get('translator')->trans('shortinfo.pay.notbiggerthan.fee.discounted');
+                } else {
+                    $message = $this->get('translator')->trans('shortinfo.pay.notbiggerthan.fee');
+                }
+
+                $form->get('transaksiPembayaranRutin')->addError(new FormError($message));
+            }
+
             if ($form->isValid()) {
                 $entity->setSiswa($siswa);
                 $entity->setBiayaRutin($biaya);
