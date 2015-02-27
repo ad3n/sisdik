@@ -460,10 +460,6 @@ $(document).ready(function() {
                 alert("{{ 'shortinfo.pay.notbiggerthan.fee.discounted'|trans }}");
                 $(this).find(':submit').removeAttr('disabled');
                 return false;
-            } else if (payamount < feeamountdiscounted) {
-                alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
-                $(this).find(':submit').removeAttr('disabled');
-                return false;
             }
         } else {
             if (payamount > feeamount) {
