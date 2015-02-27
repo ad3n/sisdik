@@ -316,6 +316,7 @@ class KeteranganPembayaranRutinController extends Controller
             ->select('siswa')
             ->from('LanggasSisdikBundle:Siswa', 'siswa')
             ->where('siswa.sekolah = :sekolah')
+            ->andWhere('siswa.calonSiswa = :calon')
             ->andWhere(
                 'siswa.namaLengkap LIKE :filter'
                 .' OR siswa.nomorIndukSistem LIKE :filter2'
@@ -323,6 +324,7 @@ class KeteranganPembayaranRutinController extends Controller
             )
             ->orderBy('siswa.namaLengkap', 'ASC')
             ->setParameter('sekolah', $sekolah)
+            ->setParameter('calon', false)
             ->setParameter('filter', "%$filter%")
             ->setParameter('filter2', $filter)
             ->getQuery()
