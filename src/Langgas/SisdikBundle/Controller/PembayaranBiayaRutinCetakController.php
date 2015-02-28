@@ -69,11 +69,6 @@ class PembayaranBiayaRutinCetakController extends Controller
             ])
         ;
 
-        $namaBiaya = $pembayaran->getNamaBiaya();
-        $nominalBiaya = $pembayaran->getNominalBiaya();
-        $nominalPotongan = $pembayaran->getNominalPotongan() + $pembayaran->getPersenPotonganDinominalkan();
-        $hargaItem = $nominalBiaya - $nominalPotongan;
-
         $counterTransaksi = 0;
         $nomorCicilan = 1;
         $nomorTransaksi = [];
@@ -92,6 +87,7 @@ class PembayaranBiayaRutinCetakController extends Controller
 
         $totalPembayaranHinggaTransaksiTerpilih = $pembayaran->getTotalNominalTransaksiPembayaranRutinHinggaTransaksiTerpilih($nomorTransaksi);
 
+        $hargaItem = $pembayaran->getNominalBiaya() - ($pembayaran->getNominalPotongan() + $pembayaran->getPersenPotonganDinominalkan());
         $adaCicilan = false;
         if (count($pembayaran->getTransaksiPembayaranRutin()) > 1) {
             $adaCicilan = true;
@@ -219,6 +215,8 @@ class PembayaranBiayaRutinCetakController extends Controller
             $filetarget = $transaksi->getNomorTransaksi().".sisdik.direct";
             $documenttarget = $schoolReceiptDir.DIRECTORY_SEPARATOR.$tahun.DIRECTORY_SEPARATOR.$bulan.DIRECTORY_SEPARATOR.$filetarget;
 
+            $dateFormatter = $this->get('bcc_extra_tools.date_formatter');
+
             $commands = new EscapeCommand();
             $commands->addLineSpacing_1_6();
             $commands->addPageLength33Lines();
@@ -227,7 +225,7 @@ class PembayaranBiayaRutinCetakController extends Controller
             $commands->addMasterCondensed();
             $commands->addModeDraft();
 
-            // max 137 characters
+            // max 137 characters wide, 28 lines height
             $maxwidth = 137;
             $labelwidth1 = 20;
             $labelwidth2 = 15;
@@ -239,15 +237,9 @@ class PembayaranBiayaRutinCetakController extends Controller
             $commands->addContent($sekolah->getAlamat().", ".$sekolah->getKodepos()."\r\n");
 
             $phonefaxline = $sekolah->getTelepon() != "" ? $translator->trans('telephone', [], 'printing')." ".$sekolah->getTelepon() : "";
-            $phonefaxline .=
-                $sekolah->getFax() != "" ?
-                    (
-                        $phonefaxline != "" ?
-                            ", ".$translator->trans('faximile', [], 'printing')." ".$sekolah->getFax()
-                            : $translator->trans('faximile', [], 'printing')." ".$sekolah->getFax()
-                    )
-                    : ""
-            ;
+            $phonefaxline .= $sekolah->getFax() != "" ? (
+                $phonefaxline != "" ? ", ".$translator->trans('faximile', [], 'printing')." ".$sekolah->getFax() : $translator->trans('faximile', [], 'printing')." ".$sekolah->getFax()
+            ) : "";
 
             $commands->addContent($phonefaxline."\r\n");
 
@@ -264,7 +256,6 @@ class PembayaranBiayaRutinCetakController extends Controller
 
             $tanggal = $translator->trans('date', [], 'printing');
             $spasi = str_repeat(" ", ($labelwidth2 - strlen($tanggal)));
-            $dateFormatter = $this->get('bcc_extra_tools.date_formatter');
             $barisTanggal = $tanggal.$spasi.": ".$dateFormatter->format($transaksi->getWaktuSimpan(), 'long');
 
             $nomorIdentitas = $translator->trans('identitas.sisdik', [], 'printing').' / '.$translator->trans('nomor.induk', [], 'printing');
@@ -275,12 +266,168 @@ class PembayaranBiayaRutinCetakController extends Controller
             $pengisiBaris2 = strlen($barisTanggal);
             $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1 : $pengisiBaris2;
 
-            $sisaBaris1 = $maxwidth2 - strlen($barisNamasiswa) - $pengisiBarisTerbesar;
-            $sisaBaris2 = $maxwidth2 - strlen($barisNomorIdentitas) - $pengisiBarisTerbesar;
+            $sisaBaris1 = $maxwidth2 - strlen($barisNomorIdentitas) - $pengisiBarisTerbesar;
+            $sisaBaris2 = $maxwidth2 - strlen($barisNamasiswa) - $pengisiBarisTerbesar;
 
-            $commands->addContent(str_repeat(" ", $marginBadan).$barisNamasiswa.str_repeat(" ", $sisaBaris1).$barisNomorkwitansi."\r\n");
-            $commands->addContent(str_repeat(" ", $marginBadan).$barisNomorIdentitas.str_repeat(" ", $sisaBaris2).$barisTanggal."\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisNomorIdentitas.str_repeat(" ", $sisaBaris1).$barisNomorkwitansi."\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisNamasiswa.str_repeat(" ", $sisaBaris2).$barisTanggal."\r\n");
             $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+
+            /****** kwitansi format formular ******/
+            $labelwidth3 = 25;
+            $symbolwidth = count($symbol);
+            $pricewidth = 15;
+            $lebarketerangan = 93;
+
+            $labelItemPembayaran = $translator->trans('paymentitem', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelItemPembayaran)));
+            $barisItemPembayaran = $labelItemPembayaran.$spasi.": ".$pembayaran->getNamaBiaya();
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisItemPembayaran."\r\n");
+
+            $labelPeriodePembayaran = $translator->trans('periode.pembayaran.ke', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelPeriodePembayaran)));
+            $barisPeriodePembayaran = $labelPeriodePembayaran.$spasi.": ".$periodePembayaran;
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisPeriodePembayaran."\r\n");
+
+            $labelJatuhTempo = $translator->trans('jatuh.tempo', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelJatuhTempo)));
+            $barisJatuhTempo = $labelJatuhTempo.$spasi.": ".$dateFormatter->format($tanggalAwalBayar, 'long');
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisJatuhTempo."\r\n");
+
+            $labelHargaItemPembayaran = $translator->trans('itemprice', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelHargaItemPembayaran)));
+            $valueHargaItemPembayaran = number_format($pembayaran->getNominalBiaya(), 0, ',', '.');
+            $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueHargaItemPembayaran)));
+            $barisHargaItemPembayaran = $labelHargaItemPembayaran.$spasi.": ".$symbol.$spasi2.$valueHargaItemPembayaran;
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisHargaItemPembayaran."\r\n");
+
+            $nominalPotongan = $pembayaran->getNominalPotongan() + $pembayaran->getPersenPotonganDinominalkan();
+            if ($pembayaran->getAdaPotongan()) {
+                $labelPotongan = $translator->trans('discount', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelPotongan)));
+                $persenPotongan = "";
+                if ($pembayaran->getJenisPotongan() == 'nominal') {
+                    $nominalPotongan = $pembayaran->getNominalPotongan();
+                    $valuePotongan = number_format($pembayaran->getNominalPotongan(), 0, ',', '.');
+                } else {
+                    $nominalPotongan = $pembayaran->getPersenPotonganDinominalkan();
+                    $valuePotongan = number_format($pembayaran->getPersenPotonganDinominalkan(), 0, ',', '.');
+                    $persenPotongan = " (".$pembayaran->getPersenPotongan()."%)";
+                }
+                $spasi2 = str_repeat(" ", $pricewidth - (strlen($valuePotongan)));
+                $barisPotongan = $labelPotongan.$spasi.": ".$symbol.$spasi2.$valuePotongan.$persenPotongan;
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisPotongan."\r\n");
+
+                $labelTotalHarga = $translator->trans('totalprice', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalHarga)));
+                $valueTotalHarga = number_format($hargaItem, 0, ',', '.');
+                $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueTotalHarga)));
+                $barisTotalHarga = $labelTotalHarga.$spasi.": ".$symbol.$spasi2.$valueTotalHarga;
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisTotalHarga."\r\n");
+            }
+
+            if ($adaCicilan) {
+                $commands->addContent("\r\n");
+
+                $labelPembayaranKe = $translator->trans('paymentnum', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelPembayaranKe)));
+                $barisPembayaranKe = $labelPembayaranKe.$spasi.": ".$nomorCicilan;
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisPembayaranKe."\r\n");
+
+            }
+
+            $labelNominalPembayaran = $translator->trans('paymentamount', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelNominalPembayaran)));
+            $valueNominalPembayaran = number_format($transaksi->getNominalPembayaran(), 0, ',', '.');
+            $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueNominalPembayaran)));
+            $barisNominalPembayaran = $labelNominalPembayaran.$spasi.": ".$symbol.$spasi2.$valueNominalPembayaran;
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisNominalPembayaran."\r\n");
+
+            $labelKeteranganPembayaran = $translator->trans('description', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelKeteranganPembayaran)));
+            $valueKeteranganPembayaran = $transaksi->getKeterangan();
+            $valueKeteranganPembayaran = strlen($valueKeteranganPembayaran) > $lebarketerangan ?
+                substr($valueKeteranganPembayaran, 0, ($lebarketerangan - 3))."..." : $valueKeteranganPembayaran
+            ;
+            $barisKeteranganPembayaran = $labelKeteranganPembayaran.$spasi.": ".$valueKeteranganPembayaran;
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisKeteranganPembayaran."\r\n");
+
+            if ($adaCicilan) {
+                $commands->addContent(str_repeat(" ", $marginBadan)."* * *\r\n");
+
+                $labelTotalSudahBayar = $translator->trans('totalpaidamount', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalSudahBayar)));
+                $valueTotalSudahBayar = number_format($totalPembayaranHinggaTransaksiTerpilih, 0, ',', '.');
+                $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueTotalSudahBayar)));
+                $barisTotalSudahBayar = $labelTotalSudahBayar.$spasi.": ".$symbol.$spasi2.$valueTotalSudahBayar;
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisTotalSudahBayar."\r\n");
+
+                $labelSisaPembayaran = $translator->trans('unpaidamount', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelSisaPembayaran)));
+                $nominalSisaPembayaran = $hargaItem - $totalPembayaranHinggaTransaksiTerpilih;
+                if ($nominalSisaPembayaran == 0) {
+                    $valueSisaPembayaran = "(".$translator->trans('settled', [], 'printing').")";
+                    $barisSisaPembayaran = $labelSisaPembayaran.$spasi.": ".$valueSisaPembayaran;
+                } else {
+                    $valueSisaPembayaran = number_format($nominalSisaPembayaran, 0, ',', '.');
+                    $spasi2 = str_repeat(" ", $pricewidth - (strlen($valueSisaPembayaran)));
+                    $barisSisaPembayaran = $labelSisaPembayaran.$spasi.": ".$symbol.$spasi2.$valueSisaPembayaran;
+                }
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisSisaPembayaran."\r\n");
+            }
+
+            if (!$pembayaran->getAdaPotongan() && !$adaCicilan) {
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+            } elseif ($pembayaran->getAdaPotongan() && !$adaCicilan) {
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+            } elseif (!$pembayaran->getAdaPotongan() && $adaCicilan) {
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+            } elseif ($pembayaran->getAdaPotongan() && $adaCicilan) {
+                $commands->addContent("\r\n");
+            }
+            /****** selesai kwitansi format formular ******/
+
+            $marginKiriTtd = 20;
+            $lebarKolom7 = 62;
+            $lebarKolom8 = 59;
+
+            $kolomNama1 = $translator->trans('nama.siswa', [], 'printing');
+            $spasiKolomNama1 = $lebarKolom7 - (strlen($kolomNama1) + $marginKiriTtd);
+            $barisTandatangan1 = str_repeat(" ", $marginKiriTtd).$kolomNama1.str_repeat(" ", $spasiKolomNama1);
+
+            $kolomPenerima1 = $translator->trans('cashier.or.treasurer', [], 'printing');
+            $spasiKolomPenerima1 = $lebarKolom8 - strlen($kolomPenerima1);
+            $barisTandatangan1 .= $kolomPenerima1.str_repeat(" ", $spasiKolomPenerima1);
+
+            $commands->addContent($barisTandatangan1."\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+
+            $kolomNama2 = $siswa->getNamaLengkap();
+            $spasiKolomNama2 = $lebarKolom7 - (strlen($kolomNama2) + $marginKiriTtd);
+            $barisTandatangan2 = str_repeat(" ", $marginKiriTtd).$kolomNama2.str_repeat(" ", $spasiKolomNama2);
+
+            $kolomPenerima2 = $transaksi->getDibuatOleh()->getName();
+            $spasiKolomPenerima2 = $lebarKolom8 - strlen($kolomPenerima2);
+            $barisTandatangan2 .= $kolomPenerima2.str_repeat(" ", $spasiKolomPenerima2);
+
+            $commands->addContent($barisTandatangan2."(".$translator->trans('page', [], 'printing')." 1/1)");
 
             $commands->addFormFeed();
             $commands->addResetCommand();
@@ -308,8 +455,6 @@ class PembayaranBiayaRutinCetakController extends Controller
             $filetarget = $transaksi->getNomorTransaksi().".sisdik.pdf";
             $documenttarget = $schoolReceiptDir.DIRECTORY_SEPARATOR.$tahun.DIRECTORY_SEPARATOR.$bulan.DIRECTORY_SEPARATOR.$filetarget;
 
-            $namaItemPembayaranCicilan = $pembayaran->getNamaBiaya();
-
             /* @var $facade Facade */
             $facade = $this->get('ps_pdf.facade');
             $tmpResponse = new Response();
@@ -320,8 +465,8 @@ class PembayaranBiayaRutinCetakController extends Controller
                     'siswa' => $siswa,
                     'pembayaran' => $pembayaran,
                     'transaksi' => $transaksi,
-                    'namaBiaya' => $namaBiaya,
-                    'nominalBiaya' => $nominalBiaya,
+                    'namaBiaya' => $pembayaran->getNamaBiaya(),
+                    'nominalBiaya' => $pembayaran->getNominalBiaya(),
                     'adaCicilan' => $adaCicilan,
                     'nomorCicilan' => $nomorCicilan,
                     'totalPembayaranHinggaTransaksiTerpilih' => $totalPembayaranHinggaTransaksiTerpilih,
