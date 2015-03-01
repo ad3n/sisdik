@@ -45,6 +45,67 @@
 .help-block {
     margin-bottom: 2px;
 }
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #555;
+    display: inline-block;
+    margin-left: 0.3em;
+    vertical-align: middle;
+}
+#hapus-kehadiran {
+{% if formhapusInvalid is not defined %}
+    display: none;
+{% elseif formhapusInvalid == 1%}
+    display: block;
+{% endif %}
+}
+#hapus-kehadiran .control-group {
+    display: block;
+}
+#anchor-hapus {
+    outline: none;
+    text-decoration: none;
+}
+.anchor-hapus {
+    color: #555;
+    white-space: nowrap;
+}
+.anchor-hapus-sel {
+    color: #999;
+    white-space: nowrap;
+}
+.anchor-hapus, .anchor-hapus-sel {
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+}
+.anchor-hapus:hover {
+    background-color: #F8F8F8;
+    background-image: -moz-linear-gradient(center top, #F8F8F8, #F1F1F1);
+    border: 1px solid #C6C6C6;
+    color: #222222;
+    border-radius: 5px;
+}
+.anchor-hapus-sel {
+    border: 1px solid rgb(215, 215, 215);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1) inset;
+    background: -moz-linear-gradient(center top , rgb(238, 238, 238), rgb(224, 224, 224)) repeat scroll 0% 0% transparent;
+    color: rgb(102, 102, 102);
+    border-radius: 5px;
+}
+.anchor-hapus-sel:hover {
+    color: #222;
+}
+#hapus-kehadiran .control-group {
+    margin-right: 0.4em;
+}
+#peringatan {
+    color: #ff0000;
+    font-size: 1em;
+}
 </style>
 
 <div class="filter-section">
@@ -70,6 +131,32 @@
         <div class="pesan" id="pesan-proses-pembaruan"></div>
     </div>
 </div>
+
+{% if is_expr_granted("hasRole('ROLE_ADMIN')") %}
+<div class="clearfix" style="margin-top: 40px;"></div>
+
+<a href="" id="anchor-hapus" class="anchor-hapus" onclick="return false;">{{ 'hapus.kehadiran.siswa'|trans }}<span class="arrow-down"></span></a>
+<div class="clearfix" style="margin-top: 1em;"></div>
+<div id="hapus-kehadiran">
+    <h4>{{ 'hapus.kehadiran.siswa'|trans({}, 'headings') }}</h4>
+    <p id="peringatan">{{ 'alert.peringatan.hapus.kehadiran.siswa'|trans|raw }}</p>
+    <p class="help-block" style="margin-bottom: 20px">{{ 'bantuan.penghapusan.kehadiran.siswa'|trans }}</p>
+    <form action="{{ path('kehadiran-siswa_hapus') }}" method="post" class="form-horizontal">
+        {{ form_row(formhapus.tanggal) }}
+        {{ form_row(formhapus.tingkat) }}
+        {{ form_row(formhapus.kelas, {'attr': {'class': 'hapus-pilih-kelas'}}) }}
+        {{ form_rest(formhapus) }}
+        <div class="form-group" style="margin-bottom: 20px;">
+            <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+                <button id="tombol-proses-hapus-kehadiran" class="btn danger" type="submit">
+                    <i class="fa fa-trash-o fa-lg"></i> {{ 'hapus.kehadiran.siswa'|trans }}</i>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endif %}
+
 {% endblock content %}
 
 {% block javascripts_custom %}
@@ -155,6 +242,38 @@ $(document).ready(function() {
         $("#tombol-proses-pembaruan-manual").attr('disabled', 'disabled');
 
         prosesPembaruanManual(true, '', 0, '0');
+    });
+
+    var duration = 300;
+    $(".anchor-hapus").click(function(){
+        if ($("#hapus-kehadiran").is(":visible")) {
+            $("#hapus-kehadiran").hide(duration);
+            $(this).removeClass("anchor-hapus-sel");
+            $(this).addClass("anchor-hapus");
+        } else {
+            $("#hapus-kehadiran").show(duration, function() {
+                $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
+            });
+            $(this).addClass("anchor-hapus-sel");
+            $(this).removeClass("anchor-hapus");
+        }
+        return false;
+    });
+
+    $(".hapus-pilih-tingkat").change(function() {
+        var kelasval = $(".hapus-pilih-kelas").val();
+        $(".hapus-pilih-kelas").empty();
+        $(".hapus-pilih-kelas").html('<option>{{ 'alt.loading'|trans }}</option>');
+
+        $.get(url, {tahunAkademik: {{ tahunAkademik.id }}, tingkat: $(this).val(), bolehKosong: 1}, function(data) {
+            var options = '';
+            for (var i = 0; i < data.length; i++) {
+                options += '<option value="' + data[i].optionValue + '"'
+                + (data[i].optionSelected == 'selected' ? 'selected="selected"' : '') + '>'
+                + data[i].optionDisplay + '</option>';
+            }
+            $(".hapus-pilih-kelas").html(options);
+        });
     });
 });
 </script>

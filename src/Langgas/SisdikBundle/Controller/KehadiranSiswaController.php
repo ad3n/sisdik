@@ -42,6 +42,7 @@ class KehadiranSiswaController extends Controller
 
     /**
      * @Route("/", name="kehadiran-siswa")
+     * @Method("GET")
      * @Template()
      */
     public function indexAction()
@@ -53,6 +54,7 @@ class KehadiranSiswaController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $searchform = $this->createForm('sisdik_kehadiransiswasearch');
+        $formhapus = $this->createForm('sisdik_kehadiransiswahapus');
 
         $hariIni = new \DateTime();
         $searchform->get('tanggal')->setData($hariIni);
@@ -76,8 +78,151 @@ class KehadiranSiswaController extends Controller
 
         return [
             'searchform' => $searchform->createView(),
+            'formhapus' => $formhapus->createView(),
             'tahunAkademik' => $tahunAkademik,
             'mesinWakil' => $mesinWakil,
+        ];
+    }
+
+    /**
+     * @Route("/", name="kehadiran-siswa_hapus")
+     * @Method("POST")
+     * @Template("LanggasSisdikBundle:KehadiranSiswa:index.html.twig")
+     * @Secure(roles="ROLE_ADMIN")
+     */
+    public function hapusAction()
+    {
+        $sekolah = $this->getSekolah();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        /* @var $translator Translator */
+        $translator = $this->get('translator');
+
+        $searchform = $this->createForm('sisdik_kehadiransiswasearch');
+        $formhapus = $this->createForm('sisdik_kehadiransiswahapus');
+
+        $hariIni = new \DateTime();
+        $searchform->get('tanggal')->setData($hariIni);
+
+        $tahunAkademik = $em->getRepository('LanggasSisdikBundle:TahunAkademik')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+                'aktif' => true,
+            ])
+        ;
+
+        if (!(is_object($tahunAkademik) && $tahunAkademik instanceof TahunAkademik)) {
+            throw $this->createNotFoundException($this->get('translator')->trans('flash.tahun.akademik.tidak.ada.yang.aktif'));
+        }
+
+        $mesinWakil = $em->getRepository('LanggasSisdikBundle:MesinWakil')
+            ->findOneBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
+
+        $formhapus->submit($this->getRequest());
+
+        $formhapusInvalid = 0;
+        if ($formhapus->isValid()) {
+            $tanggal = $formhapus->get('tanggal')->getData();
+            $qbHapusKehadiran = $em->createQueryBuilder()
+                ->delete('LanggasSisdikBundle:KehadiranSiswa', 'kehadiran')
+                ->where('kehadiran.sekolah = :sekolah')
+                ->andWhere('kehadiran.tahunAkademik = :tahunAkademik')
+                ->andWhere('kehadiran.tanggal = :tanggal')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunAkademik', $tahunAkademik)
+                ->setParameter('tanggal', $tanggal)
+            ;
+
+            $qbHapusProsesKehadiran = $em->createQueryBuilder()
+                ->delete('LanggasSisdikBundle:ProsesKehadiranSiswa', 'proses')
+                ->where('proses.sekolah = :sekolah')
+                ->andWhere('proses.tahunAkademik = :tahunAkademik')
+                ->andWhere('proses.tanggal = :tanggal')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunAkademik', $tahunAkademik)
+                ->setParameter('tanggal', $tanggal)
+            ;
+
+            $qbHapusKepulangan = $em->createQueryBuilder()
+                ->delete('LanggasSisdikBundle:KepulanganSiswa', 'kepulangan')
+                ->where('kepulangan.sekolah = :sekolah')
+                ->andWhere('kepulangan.tahunAkademik = :tahunAkademik')
+                ->andWhere('kepulangan.tanggal = :tanggal')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunAkademik', $tahunAkademik)
+                ->setParameter('tanggal', $tanggal)
+            ;
+
+            $qbHapusProsesKepulangan = $em->createQueryBuilder()
+                ->delete('LanggasSisdikBundle:ProsesKepulanganSiswa', 'proses')
+                ->where('proses.sekolah = :sekolah')
+                ->andWhere('proses.tahunAkademik = :tahunAkademik')
+                ->andWhere('proses.tanggal = :tanggal')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tahunAkademik', $tahunAkademik)
+                ->setParameter('tanggal', $tanggal)
+            ;
+
+            $kelas = $formhapus->get('kelas')->getData();
+            if ($kelas instanceof Kelas) {
+                $qbHapusKehadiran
+                    ->andWhere('kehadiran.kelas = :kelas')
+                    ->setParameter('kelas', $kelas)
+                ;
+
+                $qbHapusProsesKehadiran
+                    ->andWhere('proses.kelas = :kelas')
+                    ->setParameter('kelas', $kelas)
+                ;
+
+                $qbHapusKepulangan
+                    ->andWhere('kepulangan.kelas = :kelas')
+                    ->setParameter('kelas', $kelas)
+                ;
+
+                $qbHapusProsesKepulangan
+                    ->andWhere('proses.kelas = :kelas')
+                    ->setParameter('kelas', $kelas)
+                ;
+            }
+
+            $qbHapusKehadiran->getQuery()->execute();
+            $qbHapusProsesKehadiran->getQuery()->execute();
+
+            $qbHapusKepulangan->getQuery()->execute();
+            $qbHapusProsesKepulangan->getQuery()->execute();
+
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('success', $translator->trans('flash.kehadiran.siswa.berhasil.dihapus', [
+                    '%tanggal%' => $tanggal->format('d/m/Y'),
+                    '%kelas%' => $kelas instanceof Kelas ? $kelas->getNama() : $translator->trans('seluruh.kelas'),
+                ]))
+            ;
+
+            return $this->redirect($this->generateUrl('kehadiran-siswa'));
+        } else {
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('error', $translator->trans('flash.kehadiran.siswa.gagal.dihapus'))
+            ;
+
+            $formhapusInvalid = 1;
+        }
+
+        return [
+            'searchform' => $searchform->createView(),
+            'formhapus' => $formhapus->createView(),
+            'tahunAkademik' => $tahunAkademik,
+            'mesinWakil' => $mesinWakil,
+            'formhapusInvalid' => $formhapusInvalid,
         ];
     }
 
