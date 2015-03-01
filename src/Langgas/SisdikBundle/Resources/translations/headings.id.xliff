@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-02-22T21:09:13Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-03-01T22:25:40Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -390,6 +390,11 @@
         <source>fee.type.list</source>
         <target>Daftar Jenis Biaya</target>
       </trans-unit>
+      <trans-unit id="61c5bcd7e022483c147654e994d27a105dd8b229" resname="hapus.kehadiran.siswa">
+        <jms:reference-file line="77">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <source>hapus.kehadiran.siswa</source>
+        <target>Menghapus Kehadiran Siswa</target>
+      </trans-unit>
       <trans-unit id="fe003554de05d274ac4670afb01df2f0cae200fc" resname="informasi.kehadiran.siswa">
         <jms:reference-file line="112">views/KehadiranSiswa/tabulasi.html.twig</jms:reference-file>
         <jms:reference-file line="117">views/KehadiranSiswa/detail.html.twig</jms:reference-file>
@@ -472,6 +477,7 @@
       <trans-unit id="3f03714b3f416ca5d1f55045d8fd8774a6087302" resname="laporan.pembayaran.biaya.sekali.bayar">
         <jms:reference-file line="3">views/LaporanPembayaranBiayaSekali/index.html.twig</jms:reference-file>
         <jms:reference-file line="215">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
+        <jms:reference-file line="215">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <source>laporan.pembayaran.biaya.sekali.bayar</source>
         <target>Laporan Pembayaran Biaya Sekali Bayar</target>
       </trans-unit>

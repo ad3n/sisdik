@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-02-27T21:12:09Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-03-02T00:44:35Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -303,6 +303,11 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <source>alert.pendaftar.sudah.melakukan.pembayaran</source>
         <target>Pendaftar yang sudah melakukan pembayaran tidak bisa dihapus</target>
       </trans-unit>
+      <trans-unit id="b2245cad70e2f466cddcce7012feaa6810e5ea89" resname="alert.peringatan.hapus.kehadiran.siswa">
+        <jms:reference-file line="143">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <source>alert.peringatan.hapus.kehadiran.siswa</source>
+        <target>PERHATIAN! Menghapus data kehadiran akan membuat perbedaan terhadap laporan kehadiran yang sudah diunduh. Gunakan fitur ini dengan hati-hati.</target>
+      </trans-unit>
       <trans-unit id="7eee06454fbaa1adaf97528e346e186e91d593c3" resname="alert.regcommittee.notempty">
         <jms:reference-file line="192">SisdikBundle/Controller/PanitiaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="328">SisdikBundle/Controller/PanitiaPendaftaranController.php</jms:reference-file>
@@ -421,8 +426,9 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <jms:reference-file line="466">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
         <jms:reference-file line="486">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
         <jms:reference-file line="515">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="86">views/KehadiranSiswa/index.html.twig</jms:reference-file>
-        <jms:reference-file line="100">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="172">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="186">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="265">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="171">views/KehadiranSiswa/laporan.html.twig</jms:reference-file>
         <jms:reference-file line="185">views/KehadiranSiswa/laporan.html.twig</jms:reference-file>
         <jms:reference-file line="45">views/JadwalKepulangan/new.html.twig</jms:reference-file>
@@ -482,7 +488,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>alt.tip</target>
       </trans-unit>
       <trans-unit id="4d413d66b746d71dcae2c7ac92e5abae765c24e9" resname="ambil.dan.kirim.log.mesin.kehadiran">
-        <jms:reference-file line="63">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="124">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>ambil.dan.kirim.log.mesin.kehadiran</source>
         <target>Ambil dan Kirim Log Kehadiran Siswa</target>
       </trans-unit>
@@ -508,7 +514,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>SisDik</target>
       </trans-unit>
       <trans-unit id="4d02ccfb9e4009a84bb90fc506ff2134d74f2b48" resname="bantuan.ambil.dan.kirim.log.mesin.kehadiran">
-        <jms:reference-file line="64">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="125">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>bantuan.ambil.dan.kirim.log.mesin.kehadiran</source>
         <target>Log kehadiran diambil oleh mesin wakil sisdik dari mesin kehadiran yang aktif lalu dikirim ke server</target>
       </trans-unit>
@@ -522,8 +528,13 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <source>bantuan.pencarian.tunggakan</source>
         <target>Pencarian tunggakan hanya bisa dilakukan dengan menentukan jumlah batasan pencarian siswa, dan batasan hanya berguna untuk pencarian tunggakan.</target>
       </trans-unit>
+      <trans-unit id="17d97479e79fe3759403deca6825e6ff90569cd3" resname="bantuan.penghapusan.kehadiran.siswa">
+        <jms:reference-file line="141">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <source>bantuan.penghapusan.kehadiran.siswa</source>
+        <target>Data kehadiran siswa yang tak dikehendaki dapat dihapus menggunakan form ini agar meningkatkan keakuratan laporan kehadiran siswa</target>
+      </trans-unit>
       <trans-unit id="6b6a5c51053ba23162dd4e7eeaa96a595f133b56" resname="bantuan.perbarui.kehadiran.manual">
-        <jms:reference-file line="69">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="130">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>bantuan.perbarui.kehadiran.manual</source>
         <target>Kehadiran siswa diperbarui berdasarkan data log kehadiran yang berhasil dikirim ke server</target>
       </trans-unit>
@@ -771,6 +782,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <jms:reference-file line="336">SisdikBundle/Controller/LaporanPembayaranPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="283">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
         <jms:reference-file line="217">SisdikBundle/Controller/LaporanTransaksiKeuanganController.php</jms:reference-file>
+        <jms:reference-file line="283">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="377">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>dari.tanggal</source>
         <target>Dari Tanggal</target>
@@ -805,13 +817,13 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Tak Ditemukan</target>
       </trans-unit>
       <trans-unit id="d79fd9625869bc76f54cc91b183d059f61ad7268" resname="error.bukan.hari.kbm.aktif">
-        <jms:reference-file line="810">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="955">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.bukan.hari.kbm.aktif</source>
         <target>Hari yang terpilih bukan KBM aktif.</target>
       </trans-unit>
       <trans-unit id="eb778ff2c69f43d01bdffb40d3d0e6095fbc35c7" resname="error.form.tidak.valid">
-        <jms:reference-file line="737">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
-        <jms:reference-file line="952">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="882">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="1097">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.form.tidak.valid</source>
         <target>Form tidak valid.</target>
       </trans-unit>
@@ -822,23 +834,23 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Layanan broadcast SMS tidak aktif</target>
       </trans-unit>
       <trans-unit id="2c1be557fba7773d634842022287f27d2bc4419a" resname="error.layanan.sms.ringkasan.kehadiran.tidak.aktif">
-        <jms:reference-file line="781">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="926">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.layanan.sms.ringkasan.kehadiran.tidak.aktif</source>
         <target>Layanan SMS ringkasan kehadiran tidak aktif atau tidak tersedia.</target>
       </trans-unit>
       <trans-unit id="e88adfc27b0187a27d692c8ae77e1d0e643f6d7b" resname="error.ponsel.wali.kelas.kosong">
-        <jms:reference-file line="833">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="978">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.ponsel.wali.kelas.kosong</source>
         <target>Nomor ponsel wali kelas masih kosong.</target>
       </trans-unit>
       <trans-unit id="8237935eff7fb7eb4a8ddf8fef17cf6c9cb1999d" resname="error.tahun.akademik.tidak.ada.yang.aktif">
         <jms:reference-file line="72">views/SebarSms/index.html.twig</jms:reference-file>
-        <jms:reference-file line="795">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="940">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.tahun.akademik.tidak.ada.yang.aktif</source>
         <target>Tahun akademik tidak ada yang aktif</target>
       </trans-unit>
       <trans-unit id="3cb88f0deeea165e6cbd2c29b4ed890f5c258e4d" resname="error.template.sms.ringkasan.wali.kelas.tidak.tersedia">
-        <jms:reference-file line="826">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="971">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.template.sms.ringkasan.wali.kelas.tidak.tersedia</source>
         <target>Template SMS untuk mengirim ringkasan kehadiran ke wali kelas belum ditentukan.</target>
       </trans-unit>
@@ -850,12 +862,12 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
       <trans-unit id="631d37cbf203d35777008f380f8ef5a28b6f46e2" resname="error.vendor.sekolah.tidak.tersedia">
         <jms:reference-file line="92">SisdikBundle/Controller/SebarSmsController.php</jms:reference-file>
         <jms:reference-file line="247">SisdikBundle/Controller/SebarSmsController.php</jms:reference-file>
-        <jms:reference-file line="766">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="911">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.vendor.sekolah.tidak.tersedia</source>
         <target>Vendor pengirim pesan belum ditentukan.</target>
       </trans-unit>
       <trans-unit id="3d4ac99e933b5b929a846678f821fc319ac9f303" resname="error.wali.kelas.tidak.ada">
-        <jms:reference-file line="819">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="964">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>error.wali.kelas.tidak.ada</source>
         <target>Wali kelas untuk kelas terpilih tidak tersedia.</target>
       </trans-unit>
@@ -974,7 +986,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Data pembayaran telah dipakai; tidak bisa dihapus.</target>
       </trans-unit>
       <trans-unit id="e0ce577a01266c09728c8c3129492ed23658582c" resname="exception.directprint.file">
-        <jms:reference-file line="291">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
+        <jms:reference-file line="438">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
         <jms:reference-file line="749">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="736">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <source>exception.directprint.file</source>
@@ -994,7 +1006,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Orang Tua Wali siswa aktif tidak bisa dihapus</target>
       </trans-unit>
       <trans-unit id="f32bdae8c1ccf713e1916fb726ec11254f97ae1e" resname="exception.open.file.pdf">
-        <jms:reference-file line="339">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
+        <jms:reference-file line="484">SisdikBundle/Controller/PembayaranBiayaRutinCetakController.php</jms:reference-file>
         <jms:reference-file line="802">SisdikBundle/Controller/PembayaranBiayaSekaliCetakController.php</jms:reference-file>
         <jms:reference-file line="788">SisdikBundle/Controller/PembayaranPendaftaranCetakController.php</jms:reference-file>
         <jms:reference-file line="602">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
@@ -1563,13 +1575,13 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
       </trans-unit>
       <trans-unit id="09b3b0bf4938e384e03ebae7b22645343aae787d" resname="flash.inisiasi.berhasil.dijalankan">
         <jms:reference-file line="445">SisdikBundle/Controller/KepulanganSiswaController.php</jms:reference-file>
-        <jms:reference-file line="456">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="601">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.inisiasi.berhasil.dijalankan</source>
         <target>Inisiasi Data Berhasil Dijalankan</target>
       </trans-unit>
       <trans-unit id="b31f2b78bc05c6611b8be6e7816b5f6635d722f1" resname="flash.inisiasi.gagal.dijalankan">
         <jms:reference-file line="451">SisdikBundle/Controller/KepulanganSiswaController.php</jms:reference-file>
-        <jms:reference-file line="462">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="607">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.inisiasi.gagal.dijalankan</source>
         <target>Inisiasi gagal dijalankan</target>
       </trans-unit>
@@ -1598,13 +1610,23 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <source>flash.jenis.dokumen.siswa.tersimpan</source>
         <target>Jenis Dokumen Siswa '%nama%' berhasil dibuat</target>
       </trans-unit>
+      <trans-unit id="4daccc3a84c9694c449d31e6a996c530550c49d6" resname="flash.kehadiran.siswa.berhasil.dihapus">
+        <jms:reference-file line="203">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <source>flash.kehadiran.siswa.berhasil.dihapus</source>
+        <target>Kehadiran siswa %kelas% tanggal %tanggal% berhasil dihapus</target>
+      </trans-unit>
       <trans-unit id="586f33d54ffffed92098508f373268b2f0974ca9" resname="flash.kehadiran.siswa.bukan.hari.kbm.aktif">
-        <jms:reference-file line="129">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="274">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.kehadiran.siswa.bukan.hari.kbm.aktif</source>
         <target>Hari yang dipilih bukanlah hari KBM aktif</target>
       </trans-unit>
+      <trans-unit id="69f770b1fd8b0a8b2b42e682ad07679c9967906c" resname="flash.kehadiran.siswa.gagal.dihapus">
+        <jms:reference-file line="214">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <source>flash.kehadiran.siswa.gagal.dihapus</source>
+        <target>Kehadiran siswa gagal dihapus. Perhatikan benar tidaknya kode captcha dan tanggal.</target>
+      </trans-unit>
       <trans-unit id="c6a8ad5697c56fc68d87f6118dbd7690ce40d4d4" resname="flash.kehadiran.siswa.pencarian.gagal">
-        <jms:reference-file line="247">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="392">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.kehadiran.siswa.pencarian.gagal</source>
         <target>Pencarian Kehadiran Siswa Tidak Berhasil</target>
       </trans-unit>
@@ -1862,7 +1884,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
       </trans-unit>
       <trans-unit id="6a808f42b158760c98fcfed056cf88c0a3e5c664" resname="flash.presence.student.updated">
         <jms:reference-file line="292">SisdikBundle/Controller/KepulanganSiswaController.php</jms:reference-file>
-        <jms:reference-file line="311">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="456">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.presence.student.updated</source>
         <target>Kehadiran siswa yang terpilih berhasil diperbarui</target>
       </trans-unit>
@@ -2104,7 +2126,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Siswa tidak terdaftar aktif di kelas manapun</target>
       </trans-unit>
       <trans-unit id="9fae5b6cd5bb326d4659024bcd2561bc3f4f316f" resname="flash.sms.kehadiran.terkirim">
-        <jms:reference-file line="730">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="875">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.sms.kehadiran.terkirim</source>
         <target>SMS kehadiran berhasil diproses untuk dikirim</target>
       </trans-unit>
@@ -2114,7 +2136,7 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>SMS kepulangan berhasil diproses untuk dikirim</target>
       </trans-unit>
       <trans-unit id="ae78cc637be1a6fcd044a03cb933c0f022e34617" resname="flash.sms.ringkasan.kehadiran.terkirim">
-        <jms:reference-file line="945">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="1090">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.sms.ringkasan.kehadiran.terkirim</source>
         <target>SMS ringkasan kehadiran kelas berhasil dikirim.</target>
       </trans-unit>
@@ -2170,7 +2192,8 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <jms:reference-file line="92">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
         <jms:reference-file line="262">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
         <jms:reference-file line="341">SisdikBundle/Controller/LaporanKehadiranSiswaController.php</jms:reference-file>
-        <jms:reference-file line="68">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="70">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <jms:reference-file line="117">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
         <source>flash.tahun.akademik.tidak.ada.yang.aktif</source>
         <target>Tidak ada tahun akademik yang aktif. Kehadiran siswa bisa dikelola hanya pada tahun akademik aktif.</target>
       </trans-unit>
@@ -2209,6 +2232,12 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <jms:reference-file line="50">views/Exception/error404.html.twig</jms:reference-file>
         <source>halaman.yang.diminta.tak.ditemukan</source>
         <target>Halaman yang anda minta tak ditemukan.</target>
+      </trans-unit>
+      <trans-unit id="61c5bcd7e022483c147654e994d27a105dd8b229" resname="hapus.kehadiran.siswa">
+        <jms:reference-file line="137">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="153">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <source>hapus.kehadiran.siswa</source>
+        <target>Hapus Kehadiran Siswa</target>
       </trans-unit>
       <trans-unit id="2de8df7aee9947944a4cc0f7d4117520a76a6d97" resname="heading.academicinfo">
         <jms:reference-file line="123">views/Siswa/show.html.twig</jms:reference-file>
@@ -2269,6 +2298,11 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target><![CDATA[Berguna untuk menentukan data awal status kepulangan setiap siswa di kelas dan perulangan terpilih.<br>
 Status bisa diperbarui oleh guru piket.<br>
 Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otomatis olehnya.]]></target>
+      </trans-unit>
+      <trans-unit id="e1902d1291fdefd2f48e44aa498d8e4d2357ed25" resname="help.captcha.penjelasan.hapus.kehadiran">
+        <jms:reference-file line="103">SisdikBundle/Form/KehadiranSiswaHapusType.php</jms:reference-file>
+        <source>help.captcha.penjelasan.hapus.kehadiran</source>
+        <target>Captcha mencegah penghapusan kehadiran tanpa sengaja</target>
       </trans-unit>
       <trans-unit id="d7a250b7fc7b7cc7647da64ad6694cbab55cdea7" resname="help.captcha.penjelasan.sebar.sms">
         <jms:reference-file line="132">SisdikBundle/Form/SebarSmsViaAkademikType.php</jms:reference-file>
@@ -2395,6 +2429,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="98">SisdikBundle/Form/PenempatanSiswaKelasType.php</jms:reference-file>
         <jms:reference-file line="75">SisdikBundle/Form/SiswaImportType.php</jms:reference-file>
         <jms:reference-file line="31">SisdikBundle/Form/SiswaGenerateUserConfirmType.php</jms:reference-file>
+        <jms:reference-file line="98">SisdikBundle/Form/KehadiranSiswaHapusType.php</jms:reference-file>
         <jms:reference-file line="98">SisdikBundle/Form/SebarSmsViaTahunMasukType.php</jms:reference-file>
         <jms:reference-file line="23">SisdikBundle/Form/SiswaMergeType.php</jms:reference-file>
         <source>help.type.captcha</source>
@@ -2442,6 +2477,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="294">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
         <jms:reference-file line="232">SisdikBundle/Controller/LaporanTransaksiKeuanganController.php</jms:reference-file>
         <jms:reference-file line="235">SisdikBundle/Controller/LaporanTransaksiKeuanganController.php</jms:reference-file>
+        <jms:reference-file line="294">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="387">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>hingga.tanggal</source>
         <target>Hingga Tanggal</target>
@@ -2536,6 +2572,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="afcb84bb5f2f0b3697bbfc7b59616f292a6c31cd" resname="jenis.kelamin">
         <jms:reference-file line="355">SisdikBundle/Controller/LaporanPembayaranPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="303">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
+        <jms:reference-file line="303">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="396">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>jenis.kelamin</source>
         <target>Jenis Kelamin</target>
@@ -2561,6 +2598,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="326">SisdikBundle/Controller/LaporanPembayaranPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="271">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
         <jms:reference-file line="254">SisdikBundle/Controller/LaporanTransaksiKeuanganController.php</jms:reference-file>
+        <jms:reference-file line="271">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="367">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>kata.pencarian</source>
         <target>Kata Pencarian</target>
@@ -3180,6 +3218,8 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="75">SisdikBundle/Form/SebarSmsViaAkademikType.php</jms:reference-file>
         <jms:reference-file line="82">SisdikBundle/Form/JadwalKepulanganType.php</jms:reference-file>
         <jms:reference-file line="67">SisdikBundle/Form/JadwalDuplicateType.php</jms:reference-file>
+        <jms:reference-file line="85">Form/EventListener/KelasSubscriber.php</jms:reference-file>
+        <jms:reference-file line="137">Form/EventListener/KelasSubscriber.php</jms:reference-file>
         <jms:reference-file line="77">SisdikBundle/Form/KepulanganSiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="103">SisdikBundle/Form/KepulanganSiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="77">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
@@ -3329,6 +3369,8 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="51">SisdikBundle/Form/KepulanganSiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="56">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
         <jms:reference-file line="51">SisdikBundle/Form/KehadiranSiswaSearchType.php</jms:reference-file>
+        <jms:reference-file line="66">SisdikBundle/Form/KehadiranSiswaHapusType.php</jms:reference-file>
+        <jms:reference-file line="61">SisdikBundle/Form/KehadiranSiswaHapusType.php</jms:reference-file>
         <jms:reference-file line="51">SisdikBundle/Form/CariLaporanKehadiranSiswaType.php</jms:reference-file>
         <jms:reference-file line="63">SisdikBundle/Form/CariLaporanKehadiranSiswaType.php</jms:reference-file>
         <source>label.date</source>
@@ -5006,6 +5048,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="58">views/LaporanPembayaranBiayaSekali/report.xml.twig</jms:reference-file>
         <jms:reference-file line="379">SisdikBundle/Controller/LaporanPembayaranPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="313">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
+        <jms:reference-file line="313">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <jms:reference-file line="420">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>label.paid.amount.total</source>
         <target>Jumlah Total Pembayaran</target>
@@ -5547,7 +5590,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="17">views/JenisDokumenSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="42">views/JadwalKehadiran/index.html.twig</jms:reference-file>
         <jms:reference-file line="125">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="54">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="115">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="74">views/KehadiranSiswa/laporan.html.twig</jms:reference-file>
         <jms:reference-file line="17">views/MesinWakil/index.html.twig</jms:reference-file>
         <jms:reference-file line="17">views/ImbalanPendaftaran/index.html.twig</jms:reference-file>
@@ -5897,12 +5940,15 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       </trans-unit>
       <trans-unit id="1965c789b4d1674ad0486ee1816ca402a9d15c99" resname="label.seluruh.kelas">
         <jms:reference-file line="98">SisdikBundle/Form/SebarSmsViaAkademikType.php</jms:reference-file>
+        <jms:reference-file line="91">Form/EventListener/KelasSubscriber.php</jms:reference-file>
+        <jms:reference-file line="143">Form/EventListener/KelasSubscriber.php</jms:reference-file>
         <jms:reference-file line="441">SisdikBundle/Controller/KelasController.php</jms:reference-file>
         <source>label.seluruh.kelas</source>
         <target>~ Seluruh Kelas ~</target>
       </trans-unit>
       <trans-unit id="b8f1272426feff748434f91de389a7348f7aa9fd" resname="label.seluruh.tingkat">
         <jms:reference-file line="71">SisdikBundle/Form/SebarSmsViaAkademikType.php</jms:reference-file>
+        <jms:reference-file line="79">SisdikBundle/Form/KehadiranSiswaHapusType.php</jms:reference-file>
         <source>label.seluruh.tingkat</source>
         <target>~ Seluruh Tingkat ~</target>
       </trans-unit>
@@ -6421,6 +6467,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="146">SisdikBundle/Form/LayananSmsPeriodikType.php</jms:reference-file>
         <jms:reference-file line="52">SisdikBundle/Form/SebarSmsViaAkademikType.php</jms:reference-file>
         <jms:reference-file line="55">SisdikBundle/Form/KelasType.php</jms:reference-file>
+        <jms:reference-file line="74">SisdikBundle/Form/KehadiranSiswaHapusType.php</jms:reference-file>
         <jms:reference-file line="28">views/LayananSmsPeriodik/show.html.twig</jms:reference-file>
         <jms:reference-file line="49">views/Kelas/index.html.twig</jms:reference-file>
         <jms:reference-file line="61">views/Kelas/index.html.twig</jms:reference-file>
@@ -6613,7 +6660,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <jms:reference-file line="15">views/KalenderPendidikan/index.html.twig</jms:reference-file>
         <jms:reference-file line="41">views/JadwalKehadiran/index.html.twig</jms:reference-file>
         <jms:reference-file line="124">views/KehadiranSiswa/edit.html.twig</jms:reference-file>
-        <jms:reference-file line="53">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="114">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <jms:reference-file line="41">views/JadwalKepulangan/index.html.twig</jms:reference-file>
         <source>label.view</source>
         <target>Lihat</target>
@@ -7236,7 +7283,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <target>Tanggal/bulan yang digunakan untuk menentukan awal siswa wajib membayar biaya berulang.</target>
       </trans-unit>
       <trans-unit id="d89a6eb9c8db430e36d6fae98c4a13babcdea95c" resname="perbarui.kehadiran.manual">
-        <jms:reference-file line="68">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="129">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>perbarui.kehadiran.manual</source>
         <target>Perbarui Kehadiran</target>
       </trans-unit>
@@ -7281,6 +7328,11 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="405">SisdikBundle/Controller/LaporanSiswaPendaftarController.php</jms:reference-file>
         <source>sekolah.asal</source>
         <target>Sekolah Asal</target>
+      </trans-unit>
+      <trans-unit id="5f2f68920627b275e25fbe98e35e51d95bb0bcac" resname="seluruh.kelas">
+        <jms:reference-file line="205">SisdikBundle/Controller/KehadiranSiswaController.php</jms:reference-file>
+        <source>seluruh.kelas</source>
+        <target>Seluruh Kelas</target>
       </trans-unit>
       <trans-unit id="3c305a98e9094d47a7a2326f7d238c91feaabd89" resname="shortinfo.capturefirst">
         <jms:reference-file line="91">views/SiswaPendaftar/editregphoto.html.twig</jms:reference-file>
@@ -7497,6 +7549,7 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <jms:reference-file line="3">views/SiswaTahkik/index.html.twig</jms:reference-file>
         <jms:reference-file line="296">SisdikBundle/Controller/LaporanPembayaranPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="254">SisdikBundle/Controller/LaporanPembayaranBiayaSekaliController.php</jms:reference-file>
+        <jms:reference-file line="254">SisdikBundle/Controller/LaporanPembayaranBiayaRutinController.php</jms:reference-file>
         <source>tahun</source>
         <target>tahun</target>
       </trans-unit>
@@ -7778,7 +7831,7 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <target>Lihat Panitia Pendaftaran</target>
       </trans-unit>
       <trans-unit id="311071a5b02520e51c7d0764d0c0d3157b9faddf" resname="tip.reset.hasil.pencarian">
-        <jms:reference-file line="181">Resources/views/layout.html.twig</jms:reference-file>
+        <jms:reference-file line="179">Resources/views/layout.html.twig</jms:reference-file>
         <source>tip.reset.hasil.pencarian</source>
         <target>Bersihkan Hasil Pencarian</target>
       </trans-unit>
@@ -7812,7 +7865,7 @@ Mengimpor data siswa akan MENAMBAH jumlah data siswa, pastikan anda:<br>
         <target>URL untuk memperbarui jadwal dan mesin kehadiran tak tersedia</target>
       </trans-unit>
       <trans-unit id="5152b6dce14626a78399e9ae8c1c0e9a79c1bb57" resname="url.kehadiran.manual.kosong">
-        <jms:reference-file line="117">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="203">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>url.kehadiran.manual.kosong</source>
         <target>URL untuk mengambil log kehadiran secara manual tak tersedia</target>
       </trans-unit>
