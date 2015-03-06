@@ -253,11 +253,11 @@ class OrangtuaWaliController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
-
         if ($this->get('security.context')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
+
+        $entity = $em->getRepository('LanggasSisdikBundle:OrangtuaWali')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Entity OrangtuaWali tak ditemukan.');
