@@ -24,6 +24,10 @@
 .form-inline .input-group-addon .checkbox {
     width: 2em;
 }
+.tertahkik td {
+    color: green;
+    font-style: italic;
+}
 </style>
 
 <div class="filter-section">
@@ -65,7 +69,7 @@
     </thead>
     <tbody>
     {% for data in pagination %}
-        <tr>
+        <tr{% if data.calonSiswa == false %} class="tertahkik" title="{{ 'label.tertahkik'|trans }}"{% endif %}>
             <td data-title="{{ 'label.year.entry'|trans }}, {{ 'label.admissiongroup.entry'|trans }}">{% if data.tahun is not null %}{{ data.tahun.tahun }}{% endif %}, {% if data.gelombang is not null %}{{ data.gelombang.nama }}{% else %}({{ 'label.tanpa.proses.pendaftaran'|trans }}){% endif %}</td>
             <td data-title="{{ 'label.application.number'|trans }}">{{ highlightResult(data.nomorPendaftaran, searchkey)|raw }}</td>
             <td data-title="{{ 'label.name.full'|trans }}">{{ highlightResult(data.namaLengkap, searchkey)|raw }}</td>
@@ -130,6 +134,9 @@
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
             {% if data.melaluiProsesPendaftaran == 1 %}
+                {% if totalBayar > 0 %}
+                <a href="{{ path('pembayaran_biaya_pendaftaran__restitusi', {'sid': data.id}) }}" title="{{ 'tip.restitusi.biaya.pendaftaran'|trans }}"><i class="fa fa-reply"></i></a>
+                {% endif %}
                 <a href="{{ path('payment_registrationfee', {'sid': data.id}) }}" title="{{ 'tip.payment.registrationfee'|trans }}"><i class="fa fa-shopping-cart"></i></a>
             {% else %}
                 ({{ 'label.tanpa.proses.pendaftaran'|trans }})

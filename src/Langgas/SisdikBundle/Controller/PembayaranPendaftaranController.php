@@ -11,18 +11,20 @@ use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
 use Langgas\SisdikBundle\Entity\Penjurusan;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
+use Langgas\SisdikBundle\Entity\RestitusiPendaftaran;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Tahun;
 use Langgas\SisdikBundle\Entity\TransaksiPembayaranPendaftaran;
 use Langgas\SisdikBundle\Entity\VendorSekolah;
 use Langgas\SisdikBundle\Util\Messenger;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
@@ -697,7 +699,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * Mengelola cicilan pembayaran biaya pendaftaran
+     * Mengelola cicilan pembayaran biaya pendaftaran.
      *
      * @Route("/{sid}/{id}/edit", name="payment_registrationfee_edit")
      * @Template()
@@ -1091,9 +1093,137 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * Mengambil identitas biaya pendaftaran seorang siswa
+     * @Route("/restitusi/{sid}", name="pembayaran_biaya_pendaftaran__restitusi")
+     * @Template()
+     */
+    public function restitusiAction($sid)
+    {
+        $sekolah = $this->getSekolah();
+        $this->setCurrentMenu();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->findOneBy([
+            'id' => $sid,
+            'melaluiProsesPendaftaran' => true,
+        ]);
+        if (!(is_object($siswa) && $siswa instanceof Siswa && $siswa->getGelombang() instanceof Gelombang)) {
+            throw $this->createNotFoundException('Entity Siswa yang diminta tak ditemukan.');
+        }
+
+        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+            throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
+        }
+
+        $totalBayar = $em->createQueryBuilder()
+            ->select('SUM(transaksi.nominalPembayaran) AS jumlah')
+            ->from('LanggasSisdikBundle:TransaksiPembayaranPendaftaran', 'transaksi')
+            ->leftJoin('transaksi.pembayaranPendaftaran', 'pembayaran')
+            ->where('transaksi.sekolah = :sekolah')
+            ->andWhere('pembayaran.siswa = :siswa')
+            ->setParameter('sekolah', $sekolah)
+            ->setParameter('siswa', $siswa)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        $totalPotongan = $em->createQueryBuilder()
+            ->select('SUM(pembayaran.persenPotonganDinominalkan + pembayaran.nominalPotongan) AS jumlah')
+            ->from('LanggasSisdikBundle:PembayaranPendaftaran', 'pembayaran')
+            ->where('pembayaran.siswa = :siswa')
+            ->setParameter('siswa', $siswa)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        $restitusiPendaftaran = $em->createQueryBuilder()
+            ->select('restitusi')
+            ->from('LanggasSisdikBundle:RestitusiPendaftaran', 'restitusi')
+            ->where('restitusi.siswa = :siswa')
+            ->andWhere('restitusi.sekolah = :sekolah')
+            ->setParameter('siswa', $siswa)
+            ->setParameter('sekolah', $sekolah)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $totalRestitusi = 0;
+        foreach ($restitusiPendaftaran as $restitusi) {
+            if ($restitusi instanceof RestitusiPendaftaran) {
+                $totalRestitusi += $restitusi->getNominalRestitusi();
+            }
+        }
+
+        $pembayaranPendaftaran = $em->getRepository('LanggasSisdikBundle:PembayaranPendaftaran')->findBy(['siswa' => $siswa]);
+
+        $itemBiaya = $this->getBiayaProperties($siswa);
+
+        $entity = new RestitusiPendaftaran();
+        $entity->setSiswa($siswa);
+
+        $form = $this->createForm('sisdik_restitusipendaftaran', $entity);
+
+        if ($this->getRequest()->getMethod() == 'POST') {
+            $form->submit($this->getRequest());
+
+            if ($form->get('nominalRestitusi')->getData() > ($totalBayar - $totalRestitusi)) {
+                $message = $this->get('translator')->trans("form.error.maximal.restitusi");
+                $form->get('nominalRestitusi')->addError(new FormError($message));
+            }
+
+            if ($form->isValid()) {
+                $entity->setSekolah($sekolah);
+                $entity->setSiswa($siswa);
+                $entity->setDibuatOleh($this->getUser());
+
+                $now = new \DateTime();
+                $qbmaxnum = $em->createQueryBuilder()
+                    ->select('MAX(restitusi.nomorUrutTransaksiPertahun)')
+                    ->from('LanggasSisdikBundle:RestitusiPendaftaran', 'restitusi')
+                    ->where("YEAR(restitusi.waktuSimpan) = :tahunsimpan")
+                    ->andWhere('restitusi.sekolah = :sekolah')
+                    ->setParameter('tahunsimpan', $now->format('Y'))
+                    ->setParameter('sekolah', $sekolah)
+                ;
+                $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+
+                $entity->setNomorUrutTransaksiPertahun($nomormax + 1);
+                $entity->setNomorTransaksi(
+                    RestitusiPendaftaran::tandakwitansi.$now->format('Y').($nomormax + 1)
+                );
+
+                $em->persist($entity);
+                $em->flush();
+
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $this->get('translator')->trans('flash.restitusi.berhasil.disimpan'))
+                ;
+
+                return $this->redirect($this->generateUrl('pembayaran_biaya_pendaftaran__restitusi', [
+                    'sid' => $sid,
+                ]));
+            }
+        }
+
+        return [
+            'siswa' => $siswa,
+            'pembayaranPendaftaran' => $pembayaranPendaftaran,
+            'totalBayar' => $totalBayar,
+            'totalPotongan' => $totalPotongan,
+            'restitusiPendaftaran' => $restitusiPendaftaran,
+            'totalRestitusi' => $totalRestitusi,
+            'itemBiayaTersimpan' => $itemBiaya['tersimpan'],
+            'form' => $form->createView(),
+        ];
+    }
+
+    /**
+     * Mengambil identitas biaya pendaftaran seorang siswa.
      *
      * @param Siswa $siswa
+     *
      * @return
      *                     array['semua'] array id biaya pendaftaran seluruhnya<br>
      *                     array['tersimpan'] array id biaya pendaftaran tersimpan<br>
@@ -1166,7 +1296,7 @@ class PembayaranPendaftaranController extends Controller
     }
 
     /**
-     * Mengambil jumlah biaya pendaftaran yang tersisa
+     * Mengambil jumlah biaya pendaftaran yang tersisa.
      *
      * @param Tahun      $tahun
      * @param Gelombang  $gelombang
