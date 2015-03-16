@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pdf SYSTEM "%resources%/dtd/doctype.dtd">
+<pdf Author="{{ app_title }}">
+    <dynamic-page>
+        <placeholders>
+            <header>
+                <div height="85px" width="100%" font-size="12px" line-height="18px">
+                    {{ sekolah.nama }}<br />
+                    {{ sekolah.alamat }}{% if sekolah.kodePos != '' %}, {{ sekolah.kodePos }}{% endif %}<br />
+                    {% if sekolah.telepon != '' %}{{ 'telephone'|trans({}, 'printing') }} {{ sekolah.telepon }}{% endif %}
+                    {% if sekolah.fax != '' %} {{ 'faximile'|trans({}, 'printing') }} {{ sekolah.fax }}{% endif %}
+                    <div height="1px" background-color="#000000" margin="6px 0 0 0"></div>
+                    <div height="1px" background-color="#000000" margin="1px 0 0 0"></div>
+                </div>
+            </header>
+        </placeholders>
+        <table margin-left="30px" font-size="11px" line-height="16px">
+            <tr>
+                <td width="130px" border-type="none">{{ 'applicantname'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td border-type="none">{{ siswa.namaLengkap }}</td>
+                <td width="110px" border-type="none">{{ 'nomor.restitusi'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td width="130px" border-type="none">{{ restitusi.nomorTransaksi }}</td>
+            </tr>
+            <tr>
+                <td border-type="none">{{ 'applicationnum'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none">{{ siswa.nomorPendaftaran }}</td>
+                <td border-type="none">{{ 'date'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none">{{ restitusi.waktuSimpan|localeDate('long') }}</td>
+            </tr>
+        </table>
+
+        <div height="20px">&nbsp;</div>
+
+{% set totalBiayaMasuk = 0 %}
+{% set totalBiayaSisa = 0 %}
+{% set totalBiaya = 0 %}
+
+{% for pembayaran in pembayaranPendaftaran %}
+    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
+        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
+    {% endfor %}
+{% endfor %}
+
+{% if itemBiayaTersimpan|length != 0 %}
+    {% set remainInfo %}
+        {% if siswa.penjurusan %}
+            {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
+        {% else %}
+            {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
+        {% endif %}
+    {% endset %}
+    {% set remainInfo = remainInfo|json_decode %}
+    {% set totalBiayaSisa = remainInfo.biaya %}
+{% else %}
+    {% set remainInfo %}
+        {% if siswa.penjurusan %}
+            {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
+        {% else %}
+            {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'json': 1}) %}
+        {% endif %}
+    {% endset %}
+    {% set remainInfo = remainInfo|json_decode %}
+    {% set totalBiayaSisa = remainInfo.biaya %}
+{% endif %}
+{% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
+
+        <div height="20px">&nbsp;</div>
+
+        <table margin-left="30px" font-size="11px" line-height="16px">
+            <tr>
+                <td width="160px" border-type="none">{{ 'total.biaya.pendaftaran'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td width="100px" border-type="none" text-align="right">{{ totalBiaya|number_format(0, ',', '.') }}</td>
+                <td border-type="none"></td>
+            </tr>
+            <tr>
+                <td width="160px" border-type="none">{{ 'total.pembayaran'|trans({}, 'printing') }}</td>
+                <td width="10px" border-type="none">:</td>
+                <td width="100px" border-type="none" text-align="right">{{ totalBayar|number_format(0, ',', '.') }}</td>
+                <td border-type="none"></td>
+            </tr>
+        {% if jumlahRestitusi > 1 %}
+            <tr>
+                <td border-type="none" margin-top="10px">{{ 'restitusi.ke'|trans({}, 'printing') }}</td>
+                <td border-type="none" margin-top="10px">:</td>
+                <td border-type="none" margin-top="10px">{{ nomorRestitusi }} / {{ jumlahRestitusi }}</td>
+                <td border-type="none" margin-top="10px"></td>
+            </tr>
+        {% endif %}
+            <tr>
+                <td border-type="none">{{ 'besar.restitusi'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" text-align="right">{{ restitusi.nominalRestitusi|number_format(0, ',', '.') }}</td>
+                <td border-type="none"></td>
+            </tr>
+            <tr>
+                <td border-type="none">{{ 'description'|trans({}, 'printing') }}</td>
+                <td border-type="none">:</td>
+                <td border-type="none" colspan="2">{{ restitusi.keterangan }}</td>
+            </tr>
+        {% if jumlahRestitusi > 1 %}
+            <tr>
+                <td border-type="none" margin-top="10px">{{ 'total.restitusi'|trans({}, 'printing') }}</td>
+                <td border-type="none" margin-top="10px">:</td>
+                <td border-type="none" margin-top="10px" text-align="right">{{ totalRestitusi|number_format(0, ',', '.') }}</td>
+                <td border-type="none" margin-top="10px"></td>
+            </tr>
+        {% endif %}
+        </table>
+
+        <div height="50px">&nbsp;</div>
+
+        <table margin-left="30px" font-size="11px" line-height="16px">
+            <tr>
+                <td width="40px" border-type="none"></td>
+                <td width="40%" border-type="none">{{ 'pendaftar'|trans({}, 'printing') }}</td>
+                <td border-type="none">{{ 'cashier.or.treasurer'|trans({}, 'printing') }}</td>
+            </tr>
+            <tr>
+                <td border-type="none"></td>
+                <td padding="60px 5px 0 0" border-type="none">{{ siswa.namaLengkap }}</td>
+                <td padding="60px 5px 0 0" border-type="none">{{ restitusi.dibuatOleh.name }}</td>
+            </tr>
+        </table>
+
+        <div height="10px">&nbsp;</div>
+
+        <div width="100%" font-size="9px" text-align="right"><page-info format="(hal %s/%s)" margin-right="10px" /></div>
+    </dynamic-page>
+</pdf>
