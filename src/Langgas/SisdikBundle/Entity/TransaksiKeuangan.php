@@ -5,10 +5,10 @@ namespace Langgas\SisdikBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="view_transaksi_pembayaran")
+ * @ORM\Table(name="view_transaksi_keuangan")
  * @ORM\Entity(readOnly=true)
  */
-class TransaksiPembayaran
+class TransaksiKeuangan
 {
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -20,11 +20,11 @@ class TransaksiPembayaran
     private $id;
 
     /**
-     * @ORM\Column(name="nominal_pembayaran", type="bigint", nullable=false, options={"default" = 0})
+     * @ORM\Column(name="nominal_transaksi", type="bigint", nullable=false, options={"default" = 0})
      *
      * @var integer
      */
-    private $nominalPembayaran;
+    private $nominalTransaksi;
 
     /**
      * @ORM\Column(name="nomor_transaksi", type="string", length=45, nullable=true)
@@ -56,6 +56,16 @@ class TransaksiPembayaran
      * @var Sekolah
      */
     private $sekolah;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
+     * })
+     *
+     * @var Siswa
+     */
+    private $siswa;
 
     /**
      * @ORM\ManyToOne(targetEntity="PembayaranPendaftaran")
@@ -108,9 +118,9 @@ class TransaksiPembayaran
     /**
      * @return integer
      */
-    public function getNominalPembayaran()
+    public function getNominalTransaksi()
     {
-        return $this->nominalPembayaran;
+        return $this->nominalTransaksi;
     }
 
     /**
@@ -143,6 +153,14 @@ class TransaksiPembayaran
     public function getSekolah()
     {
         return $this->sekolah;
+    }
+
+    /**
+     * @return Siswa
+     */
+    public function getSiswa()
+    {
+        return $this->siswa;
     }
 
     /**
