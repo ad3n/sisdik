@@ -50,7 +50,7 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()
-            ->select($qbe->expr()->count('transaksi.id'))
+            ->select($qbe->expr()->count('transaksi.uid'))
             ->from('LanggasSisdikBundle:TransaksiKeuangan', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
@@ -109,7 +109,7 @@ class LaporanTransaksiKeuanganController extends Controller
         }
 
         $qbTercari = clone $querybuilder;
-        $transaksiTercari = $qbTercari->select($qbe->expr()->count('transaksi.id'))
+        $transaksiTercari = $qbTercari->select($qbe->expr()->count('transaksi.uid'))
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -152,7 +152,7 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()
-            ->select($qbe->expr()->count('transaksi.id'))
+            ->select($qbe->expr()->count('transaksi.uid'))
             ->from('LanggasSisdikBundle:TransaksiKeuangan', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
@@ -226,7 +226,7 @@ class LaporanTransaksiKeuanganController extends Controller
         }
 
         $qbTercari = clone $querybuilder;
-        $transaksiTercari = $qbTercari->select($qbe->expr()->count('transaksi.id'))
+        $transaksiTercari = $qbTercari->select($qbe->expr()->count('transaksi.uid'))
             ->getQuery()
             ->getSingleScalarResult()
         ;

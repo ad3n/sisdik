@@ -11,9 +11,15 @@ use Doctrine\ORM\Mapping as ORM;
 class TransaksiKeuangan
 {
     /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="uid", type="string", length=36, nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     * @var string
+     */
+    private $uid;
+
+    /**
+     * @ORM\Column(name="id", type="integer", nullable=false)
      *
      * @var integer
      */
@@ -106,6 +112,14 @@ class TransaksiKeuangan
      * @var User
      */
     private $dibuatOleh;
+
+    /**
+     * @return string
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
 
     /**
      * @return integer
