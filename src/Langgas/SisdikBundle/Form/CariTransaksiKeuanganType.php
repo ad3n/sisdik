@@ -13,7 +13,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class TransaksiKeuanganSearchType extends AbstractType
+class CariTransaksiKeuanganType extends AbstractType
 {
     /**
      * @var Translator
@@ -81,12 +81,12 @@ class TransaksiKeuanganSearchType extends AbstractType
                 'label_render' => false,
                 'horizontal' => false,
             ])
-            ->add('jumlahBayar', 'number', [
+            ->add('nominalTransaksi', 'number', [
                 'precision' => 0,
                 'grouping' => 3,
                 'attr' => [
                     'class' => 'small',
-                    'placeholder' => 'label.jumlah.bayar',
+                    'placeholder' => 'label.nominal.transaksi',
                 ],
                 'label_render' => false,
                 'required' => false,
