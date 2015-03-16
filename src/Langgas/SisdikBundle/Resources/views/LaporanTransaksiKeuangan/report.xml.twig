@@ -54,7 +54,7 @@
                         <text:p>{{ 'label.nomor.transaksi'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
-                        <text:p>{{ 'label.nominal.bayar'|trans }}</text:p>
+                        <text:p>{{ 'label.nominal'|trans }}</text:p>
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.item.biaya'|trans }}</text:p>
@@ -80,10 +80,10 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.nomorTransaksi }}</text:p>
                     </table:table-cell>
-                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ entity.nominalPembayaran }}">
-                        <text:p>{{ entity.nominalPembayaran|number_format(0, ',', '.') }}</text:p>
-                    </table:table-cell>
                 {% if entity.pembayaranPendaftaran.id %}
+                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ entity.nominalTransaksi }}">
+                        <text:p>{{ entity.nominalTransaksi|number_format(0, ',', '.') }}</text:p>
+                    </table:table-cell>
                     <table:table-cell table:style-name="teks-wrap" office:value-type="string">
                         <text:p>{% for biaya in entity.pembayaranPendaftaran.daftarBiayaPendaftaran %}{{ biaya.nama }}{% if not loop.last %}, {% endif %}{% endfor %}</text:p>
                     </table:table-cell>
@@ -97,6 +97,9 @@
                         <text:p>#{{ entity.pembayaranPendaftaran.siswa.nomorPendaftaran }}</text:p>
                     </table:table-cell>
                 {% elseif entity.pembayaranSekali.id %}
+                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ entity.nominalTransaksi }}">
+                        <text:p>{{ entity.nominalTransaksi|number_format(0, ',', '.') }}</text:p>
+                    </table:table-cell>
                     <table:table-cell table:style-name="teks-wrap" office:value-type="string">
                         <text:p>{% for biaya in entity.pembayaranSekali.daftarBiayaSekali %}{{ biaya.nama }}{% if not loop.last %}, {% endif %}{% endfor %}</text:p>
                     </table:table-cell>
@@ -110,6 +113,9 @@
                         <text:p>{{ entity.pembayaranSekali.siswa.nomorIndukSistem }} / {{ entity.pembayaranSekali.siswa.nomorInduk }}</text:p>
                     </table:table-cell>
                 {% elseif entity.pembayaranRutin.id %}
+                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ entity.nominalTransaksi }}">
+                        <text:p>{{ entity.nominalTransaksi|number_format(0, ',', '.') }}</text:p>
+                    </table:table-cell>
                     <table:table-cell table:style-name="teks-wrap" office:value-type="string">
                         <text:p>{{ entity.pembayaranRutin.namaBiaya }}</text:p>
                     </table:table-cell>
@@ -121,6 +127,22 @@
                     </table:table-cell>
                     <table:table-cell office:value-type="string">
                         <text:p>{{ entity.pembayaranRutin.siswa.nomorIndukSistem }} / {{ entity.pembayaranRutin.siswa.nomorInduk }}</text:p>
+                    </table:table-cell>
+                {% else %}
+                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="-{{ entity.nominalTransaksi }}">
+                        <text:p>-{{ entity.nominalTransaksi|number_format(0, ',', '.') }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="teks-wrap" office:value-type="string">
+                        <text:p>{{ 'restitusi.pendaftaran'|trans({}, 'printing') }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ entity.keterangan }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ entity.siswa.namaLengkap }}</text:p>
+                    </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>#{{ entity.siswa.nomorPendaftaran }}</text:p>
                     </table:table-cell>
                 {% endif %}
                     <table:table-cell office:value-type="string">

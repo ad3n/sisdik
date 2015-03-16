@@ -4,7 +4,7 @@ namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\TransaksiPembayaran;
+use Langgas\SisdikBundle\Entity\TransaksiKeuangan;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -50,25 +50,18 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()
-            ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
+            ->select($qbe->expr()->count('transaksi.id'))
+            ->from('LanggasSisdikBundle:TransaksiKeuangan', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
         $transaksiTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $qbsearchnum = $em->createQueryBuilder()
-            ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
-            ->andWhere('transaksi.sekolah = :sekolah')
-            ->setParameter('sekolah', $sekolah)
-        ;
-
         $querybuilder = $em->createQueryBuilder()
             ->select('transaksi')
-            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
-            ->andWhere('transaksi.sekolah = :sekolah')
-            ->addOrderBy('transaksi.waktuSimpan', 'DESC')
+            ->from('LanggasSisdikBundle:TransaksiKeuangan', 'transaksi')
+            ->where('transaksi.sekolah = :sekolah')
+            ->orderBy('transaksi.waktuSimpan', 'DESC')
             ->setParameter('sekolah', $sekolah)
         ;
 
@@ -77,12 +70,6 @@ class LaporanTransaksiKeuanganController extends Controller
                 $searchkey = $searchdata['searchkey'];
 
                 $querybuilder
-                    ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
-                    ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
-                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
-                ;
-
-                $qbsearchnum
                     ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
                     ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
                     ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
@@ -99,11 +86,6 @@ class LaporanTransaksiKeuanganController extends Controller
                     ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
                 ;
 
-                $qbsearchnum
-                    ->andWhere('transaksi.waktuSimpan >= :daritanggal')
-                    ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
-                ;
-
                 $tampilkanTercari = true;
             }
             if ($hinggaTanggal instanceof \DateTime) {
@@ -112,31 +94,25 @@ class LaporanTransaksiKeuanganController extends Controller
                     ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
                 ;
 
-                $qbsearchnum
-                    ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
-                    ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
-                ;
-
                 $tampilkanTercari = true;
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
+            if ($searchdata['nominalTransaksi'] != "") {
                 $querybuilder
-                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
-                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                ;
-
-                $qbsearchnum
-                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
-                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                    ->andWhere("transaksi.nominalTransaksi $pembandingBayar :nominalTransaksi")
+                    ->setParameter('nominalTransaksi', $searchdata['nominalTransaksi'])
                 ;
 
                 $tampilkanTercari = true;
             }
         }
 
-        $transaksiTercari = intval($qbsearchnum->getQuery()->getSingleScalarResult());
+        $qbTercari = clone $querybuilder;
+        $transaksiTercari = $qbTercari->select($qbe->expr()->count('transaksi.id'))
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
 
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1));
@@ -176,23 +152,16 @@ class LaporanTransaksiKeuanganController extends Controller
         $searchdata = $searchform->getData();
 
         $qbtotal = $em->createQueryBuilder()
-            ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
+            ->select($qbe->expr()->count('transaksi.id'))
+            ->from('LanggasSisdikBundle:TransaksiKeuangan', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->setParameter('sekolah', $sekolah)
         ;
         $transaksiTotal = $qbtotal->getQuery()->getSingleScalarResult();
 
-        $qbsearchnum = $em->createQueryBuilder()
-            ->select($qbe->expr()->countDistinct('transaksi.id'))
-            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
-            ->andWhere('transaksi.sekolah = :sekolah')
-            ->setParameter('sekolah', $sekolah)
-        ;
-
         $querybuilder = $em->createQueryBuilder()
             ->select('transaksi')
-            ->from('LanggasSisdikBundle:TransaksiPembayaran', 'transaksi')
+            ->from('LanggasSisdikBundle:TransaksiKeuangan', 'transaksi')
             ->andWhere('transaksi.sekolah = :sekolah')
             ->addOrderBy('transaksi.waktuSimpan', 'DESC')
             ->setParameter('sekolah', $sekolah)
@@ -208,22 +177,12 @@ class LaporanTransaksiKeuanganController extends Controller
                     ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
                 ;
 
-                $qbsearchnum
-                    ->andWhere('transaksi.waktuSimpan >= :daritanggal')
-                    ->setParameter('daritanggal', $dariTanggal->format("Y-m-d 00:00:00"))
-                ;
-
                 $tampilkanTercari = true;
                 $judulLaporan .= " ".$this->get('translator')->trans('dari.tanggal')." ".$dariTanggal->format("Y-m-d 00:00:00");
             }
 
             if ($hinggaTanggal instanceof \DateTime) {
                 $querybuilder
-                    ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
-                    ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
-                ;
-
-                $qbsearchnum
                     ->andWhere('transaksi.waktuSimpan <= :hinggatanggal')
                     ->setParameter('hinggatanggal', $hinggaTanggal->format("Y-m-d 24:00:00"))
                 ;
@@ -244,40 +203,33 @@ class LaporanTransaksiKeuanganController extends Controller
                     ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
                 ;
 
-                $qbsearchnum
-                    ->andWhere('transaksi.nomorTransaksi LIKE :nomortransaksi OR transaksi.keterangan LIKE :keterangan')
-                    ->setParameter('nomortransaksi', "%{$searchdata['searchkey']}%")
-                    ->setParameter('keterangan', "%{$searchdata['searchkey']}%")
-                ;
-
                 $tampilkanTercari = true;
                 $judulLaporan .= ", ".$this->get('translator')->trans('kata.pencarian')." ".$searchkey;
             }
 
             $pembandingBayar = $searchdata['pembandingBayar'];
-            if ($searchdata['jumlahBayar'] != "") {
+            if ($searchdata['nominalTransaksi'] != "") {
                 $querybuilder
-                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
-                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
-                ;
-
-                $qbsearchnum
-                    ->andWhere("transaksi.nominalPembayaran $pembandingBayar :jumlahbayar")
-                    ->setParameter('jumlahbayar', $searchdata['jumlahBayar'])
+                    ->andWhere("transaksi.nominalTransaksi $pembandingBayar :nominalTransaksi")
+                    ->setParameter('nominalTransaksi', $searchdata['nominalTransaksi'])
                 ;
 
                 $tampilkanTercari = true;
                 $judulLaporan .= ", "
-                    .$this->get('translator')->trans('jumlah.pembayaran')
+                    .$this->get('translator')->trans('nominal.transaksi')
                     ." $pembandingBayar "
-                    .number_format($searchdata['jumlahBayar'], 0, ',', '.')
+                    .number_format($searchdata['nominalTransaksi'], 0, ',', '.')
                 ;
             }
         } else {
             // TODO error response
         }
 
-        $transaksiTercari = intval($qbsearchnum->getQuery()->getSingleScalarResult());
+        $qbTercari = clone $querybuilder;
+        $transaksiTercari = $qbTercari->select($qbe->expr()->count('transaksi.id'))
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
 
         $documentbase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::BASEFILE;
         $stylebase = $this->get('kernel')->getRootDir().self::DOCUMENTS_BASEDIR.self::STYLEFILE;

@@ -98,7 +98,7 @@ form .clearfix {
             {% spaceless %}
                 <div class="input-group">
                     <div id="custom-dropkick" class="input-group-addon">{{ form_widget(searchform.pembandingBayar) }}</div>
-                        {{ form_widget(searchform.jumlahBayar) }}
+                        {{ form_widget(searchform.nominalTransaksi) }}
                 </div>
             {% endspaceless %}
         </div>
@@ -135,9 +135,7 @@ form .clearfix {
             <th class="{% if pagination.isSorted('transaksi.nomorTransaksi') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.nomor.transaksi'|trans, 'transaksi.nomorTransaksi') }}
             </th>
-            <th class="{% if pagination.isSorted('transaksi.nominalPembayaran') %}sorted{% endif %}">
-                {{ knp_pagination_sortable(pagination, 'label.nominal.bayar'|trans, 'transaksi.nominalPembayaran') }}
-            </th>
+            <th>{{ 'label.nominal'|trans }}</th>
             <th>{{ 'label.item.biaya'|trans }}</th>
             <th>{{ 'label.actions'|trans }}</th>
         </tr>
@@ -147,7 +145,13 @@ form .clearfix {
         <tr>
             <td data-title="{{ 'label.waktu.transaksi'|trans }}">{{ data.waktuSimpan|date("d/m/Y H:i:s") }}</td>
             <td data-title="{{ 'label.nomor.transaksi'|trans }}">{{ highlightResult(data.nomorTransaksi, searchkey)|raw }}</td>
-            <td data-title="{{ 'label.nominal.bayar'|trans }}">{{ data.nominalPembayaran|number_format(0, ',', '.') }}</td>
+            <td data-title="{{ 'label.nominal'|trans }}">
+            {% if data.pembayaranPendaftaran.id or data.pembayaranSekali.id or data.pembayaranRutin.id %}
+                {{ data.nominalTransaksi|number_format(0, ',', '.') }}
+            {% else %}
+                ({{ data.nominalTransaksi|number_format(0, ',', '.') }})
+            {% endif %}
+            </td>
             <td data-title="{{ 'label.item.biaya'|trans }}">
             {% if data.pembayaranPendaftaran.id %}
                 {% for biaya in data.pembayaranPendaftaran.daftarBiayaPendaftaran %}
@@ -159,6 +163,8 @@ form .clearfix {
                 {% endfor %}
             {% elseif data.pembayaranRutin.id %}
                 {{ data.pembayaranRutin.namaBiaya }}
+            {% else %}
+                {{ 'restitusi.pendaftaran'|trans }}
             {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
@@ -172,6 +178,10 @@ form .clearfix {
                 </a>
             {% elseif data.pembayaranRutin.id %}
                 <a href="{{ path('pembayaran_biaya_rutin__summary', {'sid': data.pembayaranRutin.siswa.id, 'bid': data.pembayaranRutin.biayaRutin.id}) }}" title="{{ 'tip.lihat.transaksi.pembayaran'|trans }}" style="margin: 0 8px;" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                </a>
+            {% else %}
+                <a href="{{ path('pembayaran_biaya_pendaftaran__restitusi', {'sid': data.siswa.id}) }}" title="{{ 'tip.lihat.restitusi.pendaftaran'|trans }}" style="margin: 0 8px;" target="_blank">
                     <i class="fa fa-external-link"></i>
                 </a>
             {% endif %}
@@ -224,103 +234,6 @@ $(document).ready(function() {
         });
         return false;
     });
-
-    $("#report-preview").click(function() {
-        var url = "{{ path('laporan-pendaftaran_format') }}";
-        $(".pratinjau-loader").addClass("loading");
-        $.get(url, {
-                dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
-                hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
-                pembandingBayar: "{{ searchdata.pembandingBayar|raw }}",
-                jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
-                transaksiTotal: "{{ transaksiTotal }}",
-                transaksiTercari: "{{ transaksiTercari }}",
-                tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}"
-            }, function(response) {
-                if (response.teksterformat) {
-                    $("#teks-terformat").html(response.teksterformat);
-                    $(".teks-terformat").val(response.teksterformat);
-                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
-                } else {
-                    $("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
-                }
-                $(".pratinjau-loader").removeClass("loading");
-            }
-        );
-        return false;
-    });
-
-    var summaryform = $("#summary-form");
-    summaryform.submit(function() {
-        var url = "{{ path('laporan-pendaftaran_format') }}";
-        $(".pratinjau-loader").addClass("loading");
-        $.get(url, {
-                dariTanggal: "{% if searchdata.dariTanggal is not null %}{{ searchdata.dariTanggal|localeDate('long') }}{% endif %}",
-                hinggaTanggal: "{% if searchdata.hinggaTanggal is not null %}{{ searchdata.hinggaTanggal|localeDate('long') }}{% endif %}",
-                pembandingBayar: "{{ searchdata.pembandingBayar|raw }}",
-                jumlahBayar: "{% if searchdata.jumlahBayar is not null %}{{ searchdata.jumlahBayar }}{% endif %}",
-                transaksiTotal: "{{ transaksiTotal }}",
-                transaksiTercari: "{{ transaksiTercari }}",
-                tanggalSekarang: "{{ tanggalSekarang|localeDate('long') }}"
-            }, function(response) {
-                $(".pratinjau-loader").removeClass("loading");
-                if (response.teksterformat) {
-                    $("#teks-terformat").html(response.teksterformat);
-                    $(".teks-terformat").val(response.teksterformat);
-                    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() }, duration);
-                    summaryform[0].submit();
-                } else {
-                    $("#teks-terformat").html("{{ 'errorinfo.kesalahan.ketika.memformat.teks'|trans }}");
-                }
-            }
-        );
-        return false;
-    });
 });
-
-var templateAktif = 0;
-function gantiTemplate() {
-    var string;
-
-    templateAktif++;
-    if (templateAktif == 0) {
-        string = "";
-    } else if (templateAktif == 1) {
-        string = "Jumlah pendaftar hingga %tanggal-sekarang% adalah %jumlah-total%";
-    } else if (templateAktif == 2) {
-        string = "Jumlah pendaftar adalah %jumlah-tercari% dari %jumlah-total% siswa";
-    } else if (templateAktif == 3) {
-        string = "Jumlah pendaftar dari %sekolah-asal% sebanyak %jumlah-tercari% dari total %jumlah-total%";
-    } else if (templateAktif == 4) {
-        string = "Pendaftar yang telah membayar %jumlah-bayar% persen biaya pendaftaran adalah sebanyak %jumlah-tercari%";
-    } else if (templateAktif == 5) {
-        string = "Jumlah pendaftar yang dirujuk oleh %perujuk% sebanyak %jumlah-tercari% siswa";
-    } else if (templateAktif == 6) {
-        templateAktif = -1;
-        string = "Transaksi dari tanggal %dari-tanggal% hingga %hingga-tanggal% " +
-                    "yang berasal dari %sekolah-asal% dengan jumlah pembayaran %pembanding-bayar% %jumlah-bayar%%persen-bayar% " +
-                    "yang dirujuk oleh %perujuk% berjumlah %jumlah-tercari% orang (total pendaftar %jumlah-total% orang)";
-    }
-
-    return string;
-}
-
-function gantiPenanda() {
-    if (templateAktif == 0) {
-        return "#CCCCCC";
-    } else if (templateAktif == 1) {
-        return "#DD5500";
-    } else if (templateAktif == 2) {
-        return "#289312";
-    } else if (templateAktif == 3) {
-        return "#DAD25A";
-    } else if (templateAktif == 4) {
-        return "#2B50C4";
-    } else if (templateAktif == 5) {
-        return "#43B7B9";
-    } else if (templateAktif == -1) {
-        return "#DD52DF";
-    }
-}
 </script>
 {% endblock javascripts_custom %}
