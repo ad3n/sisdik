@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-03-01T22:25:40Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-03-14T12:30:48Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -391,7 +391,7 @@
         <target>Daftar Jenis Biaya</target>
       </trans-unit>
       <trans-unit id="61c5bcd7e022483c147654e994d27a105dd8b229" resname="hapus.kehadiran.siswa">
-        <jms:reference-file line="77">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="141">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>hapus.kehadiran.siswa</source>
         <target>Menghapus Kehadiran Siswa</target>
       </trans-unit>
@@ -621,7 +621,7 @@
         <target>Penyimpanan Informasi Jadwal dan Mesin Kehadiran</target>
       </trans-unit>
       <trans-unit id="2b125a9ea5d2b8719f07c4fc54153b26c7662688" resname="pembaruan.kehadiran.manual">
-        <jms:reference-file line="61">views/KehadiranSiswa/index.html.twig</jms:reference-file>
+        <jms:reference-file line="122">views/KehadiranSiswa/index.html.twig</jms:reference-file>
         <source>pembaruan.kehadiran.manual</source>
         <target>Pembaruan Kehadiran Manual</target>
       </trans-unit>
@@ -785,6 +785,11 @@
         <source>rekap.kehadiran.siswa</source>
         <target><![CDATA[Rekapitulasi Kehadiran Siswa Kelas %kelas%
 <br>Tanggal %tanggal%]]></target>
+      </trans-unit>
+      <trans-unit id="e7b9fc36426c460fd6236c578c4f585e57666857" resname="restitusi.biaya.pendaftaran">
+        <jms:reference-file line="3">views/PembayaranPendaftaran/restitusi.html.twig</jms:reference-file>
+        <source>restitusi.biaya.pendaftaran</source>
+        <target>Restitusi Pembayaran Pendaftaran</target>
       </trans-unit>
       <trans-unit id="7ace7e6162c357711ada34f14080b2561dd79f1b" resname="reward.amount.creation">
         <jms:reference-file line="3">views/ImbalanPendaftaran/new.html.twig</jms:reference-file>
