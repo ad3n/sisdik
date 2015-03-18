@@ -35,39 +35,6 @@
 
         <div height="20px">&nbsp;</div>
 
-{% set totalBiayaMasuk = 0 %}
-{% set totalBiayaSisa = 0 %}
-{% set totalBiaya = 0 %}
-
-{% for pembayaran in pembayaranPendaftaran %}
-    {% for biaya in pembayaran.daftarBiayaPendaftaran %}
-        {% set totalBiayaMasuk = totalBiayaMasuk + biaya.nominal %}
-    {% endfor %}
-{% endfor %}
-
-{% if itemBiayaTersimpan|length != 0 %}
-    {% set remainInfo %}
-        {% if siswa.penjurusan %}
-            {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
-        {% else %}
-            {% render url('fee_registration_remains', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'usedfee': itemBiayaTersimpan|join(','), 'json': 1}) %}
-        {% endif %}
-    {% endset %}
-    {% set remainInfo = remainInfo|json_decode %}
-    {% set totalBiayaSisa = remainInfo.biaya %}
-{% else %}
-    {% set remainInfo %}
-        {% if siswa.penjurusan %}
-            {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'penjurusan': siswa.penjurusan.id, 'json': 1}) %}
-        {% else %}
-            {% render url('fee_registration_totalinfo', {'tahun': siswa.tahun.id, 'gelombang': siswa.gelombang.id, 'json': 1}) %}
-        {% endif %}
-    {% endset %}
-    {% set remainInfo = remainInfo|json_decode %}
-    {% set totalBiayaSisa = remainInfo.biaya %}
-{% endif %}
-{% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
-
         <div height="20px">&nbsp;</div>
 
         <table margin-left="30px" font-size="11px" line-height="16px">

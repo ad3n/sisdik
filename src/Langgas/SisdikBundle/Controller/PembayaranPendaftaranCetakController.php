@@ -3,8 +3,10 @@
 namespace Langgas\SisdikBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Langgas\SisdikBundle\Entity\BiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\DaftarBiayaPendaftaran;
 use Langgas\SisdikBundle\Entity\PembayaranPendaftaran;
+use Langgas\SisdikBundle\Entity\Penjurusan;
 use Langgas\SisdikBundle\Entity\PilihanCetakKwitansi;
 use Langgas\SisdikBundle\Entity\RestitusiPendaftaran;
 use Langgas\SisdikBundle\Entity\Sekolah;
@@ -701,7 +703,7 @@ class PembayaranPendaftaranCetakController extends Controller
             $lebarKolom7 = 62;
             $lebarKolom8 = 59;
 
-            $kolomPendaftar1 = $translator->trans('applicant.name', [], 'printing');
+            $kolomPendaftar1 = $translator->trans('pendaftar', [], 'printing');
             $spasiKolomPendaftar1 = $lebarKolom7 - (strlen($kolomPendaftar1) + $marginKiriTtd);
             $barisTandatangan1 = str_repeat(" ", $marginKiriTtd).$kolomPendaftar1.str_repeat(" ", $spasiKolomPendaftar1);
 
@@ -903,6 +905,52 @@ class PembayaranPendaftaranCetakController extends Controller
             }
         }
 
+        /* @var $pembayaran PembayaranPendaftaran */
+        /* @var $biaya BiayaPendaftaran */
+        $totalBiayaMasuk = 0;
+        foreach ($pembayaranPendaftaran as $pembayaran) {
+            foreach ($pembayaran->getDaftarBiayaPendaftaran() as $biaya) {
+                $totalBiayaMasuk += $biaya->getNominal();
+            }
+        }
+
+        $totalBiayaSisa = 0;
+        if (count($itemBiayaTersimpan) != 0) {
+            if ($siswa->getPenjurusan() instanceof Penjurusan) {
+                $response = $this->forward('LanggasSisdikBundle:BiayaPendaftaran:getFeeInfoRemain', [
+                    'tahun'  => $siswa->getTahun()->getId(),
+                    'gelombang' => $siswa->getGelombang()->getId(),
+                    'usedfee' => implode(',', $itemBiayaTersimpan),
+                    'penjurusan' => $siswa->getPenjurusan()->getId(),
+                ]);
+            } else {
+                $response = $this->forward('LanggasSisdikBundle:BiayaPendaftaran:getFeeInfoRemain', [
+                    'tahun'  => $siswa->getTahun()->getId(),
+                    'gelombang' => $siswa->getGelombang()->getId(),
+                    'usedfee' => implode(',', $itemBiayaTersimpan),
+                ]);
+            }
+
+            $totalBiayaSisa = $response->getContent();
+        } else {
+            if ($siswa->getPenjurusan() instanceof Penjurusan) {
+                $response = $this->forward('LanggasSisdikBundle:BiayaPendaftaran:getFeeInfoTotal', [
+                    'tahun'  => $siswa->getTahun()->getId(),
+                    'gelombang' => $siswa->getGelombang()->getId(),
+                    'penjurusan' => $siswa->getPenjurusan()->getId(),
+                ]);
+            } else {
+                $response = $this->forward('LanggasSisdikBundle:BiayaPendaftaran:getFeeInfoTotal', [
+                    'tahun'  => $siswa->getTahun()->getId(),
+                    'gelombang' => $siswa->getGelombang()->getId(),
+                ]);
+            }
+
+            $totalBiayaSisa = $response->getContent();
+        }
+
+        $totalBiaya = $totalBiayaSisa + ($totalBiayaMasuk - $totalPotongan);
+
         $tahun = $restitusi->getWaktuSimpan()->format('Y');
         $bulan = $restitusi->getWaktuSimpan()->format('m');
 
@@ -927,7 +975,178 @@ class PembayaranPendaftaranCetakController extends Controller
         }
 
         if ($output == 'esc_p') {
-            // TODO cetak dot matrix
+            $filetarget = $restitusi->getNomorTransaksi().".sisdik.direct";
+            $documenttarget = $dirKwitansiSekolah.DIRECTORY_SEPARATOR.$tahun.DIRECTORY_SEPARATOR.$bulan.DIRECTORY_SEPARATOR.$filetarget;
+
+            $commands = new EscapeCommand();
+            $commands->addLineSpacing_1_6();
+            $commands->addPageLength33Lines();
+            $commands->addMarginBottom5Lines();
+            $commands->addMaster10CPI();
+            $commands->addMasterCondensed();
+            $commands->addModeDraft();
+
+            // max 137 characters
+            $maxwidth = 137;
+            $labelwidth1 = 20;
+            $labelwidth2 = 15;
+            $marginBadan = 7;
+            $maxwidth2 = $maxwidth - $marginBadan;
+            $spasi = "";
+
+            $commands->addContent($sekolah->getNama()."\r\n");
+            $commands->addContent($sekolah->getAlamat().", ".$sekolah->getKodepos()."\r\n");
+
+            $phonefaxline = $sekolah->getTelepon() != "" ? $translator->trans('telephone', [], 'printing')." ".$sekolah->getTelepon() : "";
+            $phonefaxline .= $sekolah->getFax() != "" ? (
+                    $phonefaxline != "" ? ", ".$translator->trans('faximile', [], 'printing')." ".$sekolah->getFax()
+                        : $translator->trans('faximile', [], 'printing')." ".$sekolah->getFax()
+                ) : ""
+            ;
+
+            $commands->addContent($phonefaxline."\r\n");
+
+            $commands->addContent(str_repeat("=", $maxwidth)."\r\n");
+            $commands->addContent("\r\n");
+
+            $nomorkwitansi = $translator->trans('receiptnum', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth2 - strlen($nomorkwitansi)));
+            $barisNomorkwitansi = $nomorkwitansi.$spasi.": ".$restitusi->getNomorTransaksi();
+
+            $namasiswa = $translator->trans('applicantname', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth1 - strlen($namasiswa)));
+            $barisNamasiswa = $namasiswa.$spasi.": ".$siswa->getNamaLengkap();
+
+            $tanggal = $translator->trans('date', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth2 - strlen($tanggal)));
+            $dateFormatter = $this->get('bcc_extra_tools.date_formatter');
+            $barisTanggal = $tanggal.$spasi.": ".$dateFormatter->format($restitusi->getWaktuSimpan(), 'long');
+
+            $nomorpendaftaran = $translator->trans('applicationnum', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth1 - strlen($nomorpendaftaran)));
+            $barisNomorPendaftaran = $nomorpendaftaran.$spasi.": ".$siswa->getNomorPendaftaran();
+
+            $pengisiBaris1 = strlen($barisNomorkwitansi);
+            $pengisiBaris2 = strlen($barisTanggal);
+            $pengisiBarisTerbesar = $pengisiBaris1 > $pengisiBaris2 ? $pengisiBaris1 : $pengisiBaris2;
+
+            $sisaBaris1 = $maxwidth2 - strlen($barisNamasiswa) - $pengisiBarisTerbesar;
+            $sisaBaris2 = $maxwidth2 - strlen($barisNomorPendaftaran) - $pengisiBarisTerbesar;
+
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisNamasiswa.str_repeat(" ", $sisaBaris1).$barisNomorkwitansi."\r\n");
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisNomorPendaftaran.str_repeat(" ", $sisaBaris2).$barisTanggal."\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+
+            /****** kwitansi format formular ******/
+            $labelwidth3 = 25;
+            $symbolwidth = count($symbol);
+            $pricewidth = 15;
+            $lebarketerangan = 93;
+
+            $labelTotalBiaya = $translator->trans('total.biaya.pendaftaran', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalBiaya)));
+            $barisTotalBiaya = $labelTotalBiaya.$spasi.": ".number_format($totalBiaya, 0, ',', '.');
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisTotalBiaya."\r\n");
+
+            $labelTotalPembayaran = $translator->trans('total.pembayaran', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalPembayaran)));
+            $barisTotalPembayaran = $labelTotalPembayaran.$spasi.": ".number_format($totalBayar, 0, ',', '.');
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisTotalPembayaran."\r\n");
+
+            if ($jumlahRestitusi > 1) {
+                $commands->addContent("\r\n");
+
+                $labelRestitusiKe = $translator->trans('restitusi.ke', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelRestitusiKe)));
+                $barisRestitusiKe = $labelRestitusiKe.$spasi.": $nomorRestitusi / $jumlahRestitusi";
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisRestitusiKe."\r\n");
+            } else {
+                $commands->addContent("\r\n");
+            }
+
+            $labelBesarRestitusi = $translator->trans('besar.restitusi', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelBesarRestitusi)));
+            $barisBesarRestitusi = $labelBesarRestitusi.$spasi.": ".number_format($restitusi->getNominalRestitusi(), 0, ',', '.');
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisBesarRestitusi."\r\n");
+
+            $labelKeteranganRestitusi = $translator->trans('description', [], 'printing');
+            $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelKeteranganRestitusi)));
+            $barisKeteranganRestitusi = $labelKeteranganRestitusi.$spasi.": ".$restitusi->getKeterangan();
+            $commands->addContent(str_repeat(" ", $marginBadan).$barisKeteranganRestitusi."\r\n");
+
+            if ($jumlahRestitusi > 1) {
+                $commands->addContent("\r\n");
+
+                $labelTotalRestitusi = $translator->trans('total.restitusi', [], 'printing');
+                $spasi = str_repeat(" ", ($labelwidth3 - strlen($labelTotalRestitusi)));
+                $barisTotalRestitusi = $labelTotalRestitusi.$spasi.": ".number_format($totalRestitusi, 0, ',', '.');
+                $commands->addContent(str_repeat(" ", $marginBadan).$barisTotalRestitusi."\r\n");
+            }
+
+            if ($jumlahRestitusi <= 1) {
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+                $commands->addContent("\r\n");
+            }
+
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            /****** selesai kwitansi format formular ******/
+
+            $marginKiriTtd = 20;
+            $lebarKolom7 = 62;
+            $lebarKolom8 = 59;
+
+            $kolomPendaftar1 = $translator->trans('pendaftar', [], 'printing');
+            $spasiKolomPendaftar1 = $lebarKolom7 - (strlen($kolomPendaftar1) + $marginKiriTtd);
+            $barisTandatangan1 = str_repeat(" ", $marginKiriTtd).$kolomPendaftar1.str_repeat(" ", $spasiKolomPendaftar1);
+
+            $kolomPenerima1 = $translator->trans('cashier.or.treasurer', [], 'printing');
+            $spasiKolomPenerima1 = $lebarKolom8 - strlen($kolomPenerima1);
+            $barisTandatangan1 .= $kolomPenerima1.str_repeat(" ", $spasiKolomPenerima1);
+
+            $commands->addContent($barisTandatangan1."\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+            $commands->addContent("\r\n");
+
+            $kolomPendaftar2 = $siswa->getNamaLengkap();
+            $spasiKolomPendaftar2 = $lebarKolom7 - (strlen($kolomPendaftar2) + $marginKiriTtd);
+            $barisTandatangan2 = str_repeat(" ", $marginKiriTtd).$kolomPendaftar2.str_repeat(" ", $spasiKolomPendaftar2);
+
+            $kolomPenerima2 = $restitusi->getDibuatOleh()->getName();
+            $spasiKolomPenerima2 = $lebarKolom8 - strlen($kolomPenerima2);
+            $barisTandatangan2 .= $kolomPenerima2.str_repeat(" ", $spasiKolomPenerima2);
+
+            $commands->addContent($barisTandatangan2."(".$translator->trans('page', [], 'printing')." 1/1)");
+
+            $commands->addFormFeed();
+            $commands->addResetCommand();
+
+            $fp = fopen($documenttarget, "w");
+
+            if (!$fp) {
+                throw new IOException($translator->trans("exception.directprint.file"));
+            } else {
+                fwrite($fp, $commands->getCommands());
+                fclose($fp);
+            }
+
+            $response = new Response(file_get_contents($documenttarget), 200);
+            $d = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $filetarget);
+            $response->headers->set('Content-Disposition', $d);
+            $response->headers->set('Content-Description', 'Dokumen kwitansi restitusi pendaftaran');
+            $response->headers->set('Content-Type', 'application/vnd.sisdik.directprint');
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Expires', '0');
+            $response->headers->set('Cache-Control', 'must-revalidate');
+            $response->headers->set('Pragma', 'public');
+            $response->headers->set('Content-Length', filesize($documenttarget));
         } else {
             $filetarget = $restitusi->getNomorTransaksi().".sisdik.pdf";
             $documenttarget = $dirKwitansiSekolah.DIRECTORY_SEPARATOR.$tahun.DIRECTORY_SEPARATOR.$bulan.DIRECTORY_SEPARATOR.$filetarget;
@@ -940,10 +1159,9 @@ class PembayaranPendaftaranCetakController extends Controller
                     'sekolah' => $sekolah,
                     'siswa' => $siswa,
                     'pembayaranPendaftaran' => $pembayaranPendaftaran,
-                    'itemBiayaTersimpan' => $itemBiayaTersimpan,
                     'restitusi' => $restitusi,
+                    'totalBiaya' => $totalBiaya,
                     'totalBayar' => $totalBayar,
-                    'totalPotongan' => $totalPotongan,
                     'totalRestitusi' => $totalRestitusi,
                     'jumlahRestitusi' => $jumlahRestitusi,
                     'nomorRestitusi' => $nomorRestitusi,
