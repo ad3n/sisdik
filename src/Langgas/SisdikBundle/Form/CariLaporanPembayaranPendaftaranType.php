@@ -17,7 +17,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 /**
  * @FormType
  */
-class LaporanPembayaranPendaftaranSearchType extends AbstractType
+class CariLaporanPembayaranPendaftaranType extends AbstractType
 {
     /**
      * @var SecurityContext
@@ -180,6 +180,16 @@ class LaporanPembayaranPendaftaranSearchType extends AbstractType
                 ],
                 'required' => false,
                 'label_render' => false,
+                'horizontal' => false,
+            ])
+            ->add('adaRestitusi', 'checkbox', [
+                'required' => false,
+                'attr' => [
+                    'class' => 'ada-restitusi',
+                ],
+                'label_render' => true,
+                'label' => 'label.direstitusi',
+                'widget_checkbox_label' => 'widget',
                 'horizontal' => false,
             ])
         ;
