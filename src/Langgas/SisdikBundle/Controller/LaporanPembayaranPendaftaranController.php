@@ -212,6 +212,16 @@ class LaporanPembayaranPendaftaranController extends Controller
 
                 $tampilkanTercari = true;
             }
+
+            if ($searchdata['adaRestitusi'] === true) {
+                $querybuilder
+                    ->leftJoin('siswa.restitusiPendaftaran', 'restitusi')
+                    ->groupBy('siswa.id')
+                    ->andHaving("SUM(restitusi.nominalRestitusi) > 0")
+                ;
+
+                $tampilkanTercari = true;
+            }
         } else {
             $pencarianLanjutan = true;
         }
@@ -525,7 +535,6 @@ class LaporanPembayaranPendaftaranController extends Controller
      * @param  int    $n This is the number to convert.
      * @return string The converted number.
      * @author Theriault
-     *
      */
     private function num2alpha($n)
     {
