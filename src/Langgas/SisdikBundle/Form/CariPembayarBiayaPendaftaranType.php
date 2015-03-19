@@ -82,7 +82,7 @@ class CariPembayarBiayaPendaftaranType extends AbstractType
             ->add('nopayment', 'checkbox', [
                 'required' => false,
                 'attr' => [
-                    'class' => 'belum-bayar'
+                    'class' => 'belum-bayar',
                 ],
                 'label_render' => true,
                 'label' => 'label.search.notpaid',
@@ -100,10 +100,20 @@ class CariPembayarBiayaPendaftaranType extends AbstractType
             ->add('notsettled', 'checkbox', [
                 'required' => false,
                 'attr' => [
-                    'class' => 'belum-lunas'
+                    'class' => 'belum-lunas',
                 ],
                 'label_render' => true,
                 'label' => 'label.search.paymentnotcomplete',
+                'widget_checkbox_label' => 'widget',
+                'horizontal' => false,
+            ])
+            ->add('adaRestitusi', 'checkbox', [
+                'required' => false,
+                'attr' => [
+                    'class' => 'ada-restitusi',
+                ],
+                'label_render' => true,
+                'label' => 'label.direstitusi',
                 'widget_checkbox_label' => 'widget',
                 'horizontal' => false,
             ])

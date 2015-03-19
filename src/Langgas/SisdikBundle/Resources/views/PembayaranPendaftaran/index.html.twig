@@ -45,7 +45,7 @@
 </div>
 
 <div class="pull-right">
-    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.siswa.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
+    {% if tampilkanTercari %}<span class="info-jumlah">{{ 'label.jumlah.pendaftar.tercari'|trans }}: {{ pendaftarTercari }}</span>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;{% endif %}
     <a href="{{ path(app.request.attributes.get('_route'), app.request.query.all) }}" title="{{ 'label.refresh.searchresult'|trans }}">{{ 'label.refresh'|trans }}<i class="fa fa-refresh fa-fw"></i></a>
 </div>
 
@@ -80,6 +80,13 @@
                 {% set totalBiayaSisa = 0 %}
                 {% set totalBiaya = 0 %}
                 {% set biayaTersimpan = '' %}
+
+                {% set totalRestitusi = 0 %}
+                {% set totalRestitusiSiswa %}
+                    {% render url('total_restitusi_siswa', {'siswa': data.id, 'json': 1}) %}
+                {% endset %}
+                {% set totalRestitusiSiswa = totalRestitusiSiswa|json_decode %}
+                {% set totalRestitusi = totalRestitusiSiswa.nominal %}
 
             {% if data.gelombang is not null %}
 
@@ -117,7 +124,13 @@
                 {% endif %}
                 {% set totalBiaya = totalBiayaSisa + (totalBiayaMasuk - totalPotongan) %}
 
-                {{ totalBayar|number_format(0, ',', '.') }} &rarr;
+                {% if totalRestitusi > 0 %}
+                    <span style="text-decoration: line-through;">{{ totalBayar|number_format(0, ',', '.') }}</span>
+                    {{ (totalBayar - totalRestitusi)|number_format(0, ',', '.') }}
+                {% else %}
+                    {{ (totalBayar - totalRestitusi)|number_format(0, ',', '.') }}
+                {% endif %}
+                &rarr;
                 {% if totalPotongan > 0 %}
                 <i class="fa fa-gift"></i>
                 {% endif %}
@@ -126,10 +139,10 @@
             {% endif %}
             </td>
             <td data-title="{{ 'label.payment.remains'|trans }}">
-                {% if (totalBiaya - totalBayar) == 0 %}
+                {% if (totalBiaya - (totalBayar - totalRestitusi)) == 0 %}
                     ({{ 'paidoff'|trans }})
                 {% else %}
-                    {{ (totalBiaya - totalBayar)|number_format(0, ',', '.') }}
+                    {{ (totalBiaya - (totalBayar - totalRestitusi))|number_format(0, ',', '.') }}
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

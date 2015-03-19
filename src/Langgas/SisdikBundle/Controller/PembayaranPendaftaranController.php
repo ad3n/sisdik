@@ -24,6 +24,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
@@ -83,6 +84,7 @@ class PembayaranPendaftaranController extends Controller
             $querybuilder
                 ->leftJoin('siswa.pembayaranPendaftaran', 'pembayaran')
                 ->leftJoin('pembayaran.transaksiPembayaranPendaftaran', 'transaksi')
+                ->leftJoin('siswa.restitusiPendaftaran', 'restitusi')
             ;
 
             if ($searchdata['tahun'] instanceof Tahun) {
@@ -140,6 +142,15 @@ class PembayaranPendaftaranController extends Controller
                 $querybuilder
                     ->groupBy('siswa.id')
                     ->having("SUM(pembayaran.nominalTotalTransaksi) < (SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) + SUM(pembayaran.nominalTotalBiaya) - (SUM(pembayaran.nominalPotongan) + SUM(pembayaran.persenPotonganDinominalkan))) OR SUM(DISTINCT(siswa.sisaBiayaPendaftaran)) < 0")
+                ;
+
+                $tampilkanTercari = true;
+            }
+
+            if ($searchdata['adaRestitusi'] === true) {
+                $querybuilder
+                    ->groupBy('siswa.id')
+                    ->having("SUM(restitusi.nominalRestitusi) > 0")
                 ;
 
                 $tampilkanTercari = true;
@@ -1217,6 +1228,39 @@ class PembayaranPendaftaranController extends Controller
             'itemBiayaTersimpan' => $itemBiaya['tersimpan'],
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * @Route("/total-restitusi/{siswa}/{json}", name="total_restitusi_siswa")
+     */
+    public function totalRestitusiAction($siswa, $json = 0)
+    {
+        $sekolah = $this->getSekolah();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $totalRestitusi = $em->createQueryBuilder()
+            ->select('SUM(restitusi.nominalRestitusi)')
+            ->from('LanggasSisdikBundle:RestitusiPendaftaran', 'restitusi')
+            ->where('restitusi.siswa = :siswa')
+            ->andWhere('restitusi.sekolah = :sekolah')
+            ->setParameter('siswa', $siswa)
+            ->setParameter('sekolah', $sekolah)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+
+        if ($json == 1) {
+            $string = json_encode([
+                "nominal" => $totalRestitusi,
+            ]);
+
+            return new Response($string, 200, [
+                'Content-Type' => 'application/json',
+            ]);
+        } else {
+            return new Response($totalRestitusi);
+        }
     }
 
     /**

@@ -72,7 +72,7 @@ class RestitusiPendaftaran
     private $sekolah;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Siswa")
+     * @ORM\ManyToOne(targetEntity="Siswa", inversedBy="restitusiPendaftaran")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="siswa_id", referencedColumnName="id", nullable=false)
      * })

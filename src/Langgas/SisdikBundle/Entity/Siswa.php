@@ -516,6 +516,13 @@ class Siswa
      */
     private $siswaKelas;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RestitusiPendaftaran", mappedBy="siswa")
+     *
+     * @var ArrayCollection
+     */
+    private $restitusiPendaftaran;
+
     public function __construct()
     {
         $this->orangtuaWali = new ArrayCollection();
@@ -523,6 +530,7 @@ class Siswa
         $this->pembayaranSekali = new ArrayCollection();
         $this->pembayaranRutin = new ArrayCollection();
         $this->siswaKelas = new ArrayCollection();
+        $this->restitusiPendaftaran = new ArrayCollection();
     }
 
     /**
@@ -1635,6 +1643,14 @@ class Siswa
         }
 
         return $jumlah;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRestitusiPendaftaran()
+    {
+        return $this->restitusiPendaftaran;
     }
 
     /**
