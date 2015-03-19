@@ -428,6 +428,16 @@ class LaporanPembayaranPendaftaranController extends Controller
                     }
                 }
             }
+
+            if ($searchdata['adaRestitusi'] === true) {
+                $judulLaporan .= ", ".$this->get('translator')->trans('label.direstitusi');
+
+                $querybuilder
+                    ->leftJoin('siswa.restitusiPendaftaran', 'restitusi')
+                    ->groupBy('siswa.id')
+                    ->andHaving("SUM(restitusi.nominalRestitusi) > 0")
+                ;
+            }
         } else {
             // TODO: display error response
         }

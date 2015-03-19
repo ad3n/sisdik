@@ -60,6 +60,9 @@
                     <table:table-cell office:value-type="string">
                         <text:p>{{ 'label.paid.amount.total'|trans }}</text:p>
                     </table:table-cell>
+                    <table:table-cell office:value-type="string">
+                        <text:p>{{ 'label.total.restitusi'|trans }}</text:p>
+                    </table:table-cell>
                 </table:table-row>
             {% set baris = 3 %}
             {% for entity in entities %}
@@ -136,6 +139,16 @@
                             </table:table-cell>
                         {% endif %}
                 {% endfor %}
+
+                    {% set totalRestitusi = 0 %}
+                    {% set totalRestitusiSiswa %}
+                        {% render url('total_restitusi_siswa', {'siswa': entity.id, 'json': 1}) %}
+                    {% endset %}
+                    {% set totalRestitusiSiswa = totalRestitusiSiswa|json_decode %}
+                    {% set totalRestitusi = totalRestitusiSiswa.nominal %}
+                    <table:table-cell table:style-name="ribuan" office:value-type="float" office:value="{{ totalRestitusi }}">
+                        <text:p>{{ totalRestitusi }}</text:p>
+                    </table:table-cell>
                 </table:table-row>
             {% endfor %}
                 <table:table-row table:style-name="ro1">
