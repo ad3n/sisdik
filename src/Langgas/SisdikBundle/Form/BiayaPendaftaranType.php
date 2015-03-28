@@ -7,7 +7,7 @@ use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -18,20 +18,20 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class BiayaPendaftaranType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context")
+     *     "tokenStorage" = @Inject("security.token_storage")
      * })
      *
-     * @param SecurityContext $securityContext
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -39,7 +39,7 @@ class BiayaPendaftaranType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     /**
@@ -57,7 +57,7 @@ class BiayaPendaftaranType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'tahun',
-                'empty_value' => false,
+                'placeholder' => false,
                 'required' => true,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('tahun')
@@ -81,7 +81,7 @@ class BiayaPendaftaranType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
-                'empty_value' => false,
+                'placeholder' => false,
                 'required' => true,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('gelombang')
@@ -105,7 +105,7 @@ class BiayaPendaftaranType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'optionLabel',
-                'empty_value' => 'label.semua.penjurusan.studi',
+                'placeholder' => 'label.semua.penjurusan.studi',
                 'required' => false,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('penjurusan')
@@ -141,7 +141,7 @@ class BiayaPendaftaranType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
-                'empty_value' => false,
+                'placeholder' => false,
                 'required' => true,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('jenisbiaya')

@@ -8,7 +8,7 @@ use Langgas\SisdikBundle\Entity\KepulanganSiswa;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -19,9 +19,9 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class KepulanganSiswaType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var EntityManager
@@ -30,16 +30,16 @@ class KepulanganSiswaType extends AbstractType
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
+     *     "tokenStorage" = @Inject("security.token_storage"),
      *     "entityManager" = @Inject("doctrine.orm.entity_manager")
      * })
      *
-     * @param SecurityContext $securityContext
+     * @param TokenStorageInterface $tokenStorage
      * @param EntityManager   $entityManager
      */
-    public function __construct(SecurityContext $securityContext, EntityManager $entityManager)
+    public function __construct(TokenStorageInterface $tokenStorage, EntityManager $entityManager)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->entityManager = $entityManager;
     }
 
@@ -48,7 +48,7 @@ class KepulanganSiswaType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

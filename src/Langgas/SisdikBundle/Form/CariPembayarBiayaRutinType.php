@@ -7,7 +7,7 @@ use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -18,20 +18,20 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class CariPembayarBiayaRutinType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context")
+     *     "tokenStorage" = @Inject("security.token_storage")
      * })
      *
-     * @param SecurityContext $securityContext
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -39,7 +39,7 @@ class CariPembayarBiayaRutinType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -53,7 +53,7 @@ class CariPembayarBiayaRutinType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'tahun',
-                'empty_value' => 'label.selectyear',
+                'placeholder' => 'label.selectyear',
                 'required' => false,
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('tahun')
@@ -92,7 +92,7 @@ class CariPembayarBiayaRutinType extends AbstractType
             ->add('batasanPencarianTunggakan', 'choice', [
                 'multiple' => false,
                 'expanded' => false,
-                'empty_value' => 'label.pilih.batasan.pencarian.tunggakan',
+                'placeholder' => 'label.pilih.batasan.pencarian.tunggakan',
                 'required' => false,
                 'label_render' => false,
                 'horizontal' => false,

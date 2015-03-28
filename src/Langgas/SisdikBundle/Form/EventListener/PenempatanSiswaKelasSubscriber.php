@@ -4,7 +4,7 @@ namespace Langgas\SisdikBundle\Form\EventListener;
 
 use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormEvents;
 class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -25,10 +25,10 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
     private $sekolah;
 
     /**
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      * @param Sekolah    $sekolah
      */
-    public function __construct(Translator $translator, Sekolah $sekolah)
+    public function __construct(TranslatorInterface $translator, Sekolah $sekolah)
     {
         $this->translator = $translator;
         $this->sekolah = $sekolah;

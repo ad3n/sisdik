@@ -103,7 +103,7 @@ class JadwalDuplicateType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'required' => false,
-                'empty_value' => 'label.selectweekday',
+                'placeholder' => 'label.selectweekday',
                 'attr' => array(
                     'class' => 'medium',
                 ),
@@ -115,7 +115,7 @@ class JadwalDuplicateType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'required' => false,
-                'empty_value' => 'label.selectmonthday',
+                'placeholder' => 'label.selectmonthday',
                 'attr' => [
                     'class' => 'medium',
                 ],

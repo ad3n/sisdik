@@ -8,7 +8,7 @@ use Langgas\SisdikBundle\Form\EventListener\JadwalSearchSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -19,9 +19,9 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class JadwalSearchType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var JadwalSearchSubscriber
@@ -30,15 +30,15 @@ class JadwalSearchType extends AbstractType
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
+     *     "tokenStorage" = @Inject("security.token_storage"),
      *     "jadwalSearchSubscriber" = @Inject("langgas.sisdik_bundle.form.event_listener.jadwal_search_subscriber")
      * })
      *
-     * @param SecurityContext $securityContext
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(SecurityContext $securityContext, JadwalSearchSubscriber $jadwalSearchSubscriber)
+    public function __construct(TokenStorageInterface $tokenStorage, JadwalSearchSubscriber $jadwalSearchSubscriber)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->jadwalSearchSubscriber = $jadwalSearchSubscriber;
     }
 
@@ -47,7 +47,7 @@ class JadwalSearchType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

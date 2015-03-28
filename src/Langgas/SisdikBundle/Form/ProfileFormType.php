@@ -6,7 +6,7 @@ use FOS\UserBundle\Form\Type\ProfileFormType as BaseType;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
 
 class ProfileFormType extends BaseType
@@ -17,9 +17,9 @@ class ProfileFormType extends BaseType
     private $container;
 
     /**
-     * @var SecurityContext
+     * @var AuthorizationChecker
      */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
      * @var array
@@ -32,7 +32,7 @@ class ProfileFormType extends BaseType
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->securityContext = $this->container->get('security.context');
+        $this->authorizationChecker = $this->container->get('security.authorization_checker');
         $this->definedRoles = $this->container->getParameter('security.role_hierarchy.roles');
     }
 
@@ -47,7 +47,7 @@ class ProfileFormType extends BaseType
         }
         $otherthanstudents = preg_replace('/, $/', '', $otherthanstudents);
 
-        if ($this->securityContext->isGranted([new Expression("hasAnyRole($otherthanstudents)")])) {
+        if ($this->authorizationChecker->isGranted([new Expression("hasAnyRole($otherthanstudents)")])) {
             $builder
                 ->add('username', null, [
                     'required' => true,
@@ -69,7 +69,7 @@ class ProfileFormType extends BaseType
             ])
         ;
 
-        if ($this->securityContext->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN')) {
             foreach ($this->definedRoles as $keys => $values) {
                 $string = str_replace('ROLE_', ' ', $keys);
                 $roles[$keys] = str_replace('_', ' ', $string);
@@ -83,7 +83,7 @@ class ProfileFormType extends BaseType
                     'expanded' => true,
                 ])
             ;
-        } elseif ($this->securityContext->isGranted('ROLE_ADMIN')) {
+        } elseif ($this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             foreach ($this->definedRoles as $keys => $values) {
                 if (
                     $keys == 'ROLE_SUPER_ADMIN'

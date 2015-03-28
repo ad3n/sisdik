@@ -27,7 +27,7 @@ class KepulanganSiswaSmsType extends AbstractType
                 'attr' => [
                     'class' => 'medium',
                 ],
-                'empty_value' => 'label.pilih.status.kepulangan',
+                'placeholder' => 'label.pilih.status.kepulangan',
             ])
             ->add('kelas', 'sisdik_entityhidden', [
                 'required' => true,
@@ -67,7 +67,7 @@ class KepulanganSiswaSmsType extends AbstractType
                     'attr' => [
                         'class' => 'xlarge',
                     ],
-                    'empty_value' => 'label.pilih.siswa',
+                    'placeholder' => 'label.pilih.siswa',
                 ])
             ;
         }

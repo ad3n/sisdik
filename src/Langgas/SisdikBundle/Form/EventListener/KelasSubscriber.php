@@ -96,7 +96,7 @@ class KelasSubscriber implements EventSubscriberInterface
         ];
 
         if ($this->bolehKosong) {
-            $options['empty_value'] = 'label.seluruh.kelas';
+            $options['placeholder'] = 'label.seluruh.kelas';
         }
 
         $form->add('kelas', 'entity', $options);
@@ -148,7 +148,7 @@ class KelasSubscriber implements EventSubscriberInterface
         ];
 
         if ($this->bolehKosong) {
-            $options['empty_value'] = 'label.seluruh.kelas';
+            $options['placeholder'] = 'label.seluruh.kelas';
         }
 
         $form->add('kelas', 'entity', $options);

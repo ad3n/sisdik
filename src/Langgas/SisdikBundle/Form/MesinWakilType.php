@@ -42,7 +42,7 @@ class MesinWakilType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
-                'empty_value' => false,
+                'placeholder' => false,
                 'required' => true,
                 'query_builder' => function (EntityRepository $repository) {
                     $qb = $repository->createQueryBuilder('sekolah')

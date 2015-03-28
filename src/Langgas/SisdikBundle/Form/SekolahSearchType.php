@@ -7,7 +7,7 @@ use Langgas\SisdikBundle\Entity\Sekolah;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,7 +23,7 @@ class SekolahSearchType extends AbstractType
     private $entityManager;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -34,9 +34,9 @@ class SekolahSearchType extends AbstractType
      * })
      *
      * @param EntityManager $entityManager
-     * @param Translator    $translator
+     * @param TranslatorInterface    $translator
      */
-    public function __construct(EntityManager $entityManager, Translator $translator)
+    public function __construct(EntityManager $entityManager, TranslatorInterface $translator)
     {
         $this->entityManager = $entityManager;
         $this->translator = $translator;

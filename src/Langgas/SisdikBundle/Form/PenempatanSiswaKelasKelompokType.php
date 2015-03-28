@@ -4,10 +4,10 @@ namespace Langgas\SisdikBundle\Form;
 
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Form\EventListener\PenempatanSiswaKelasSubscriber;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -18,27 +18,27 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class PenempatanSiswaKelasKelompokType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
+     *     "tokenStorage" = @Inject("security.token_storage"),
      *     "translator" = @Inject("translator")
      * })
      *
-     * @param SecurityContext $securityContext
-     * @param Translator      $translator
+     * @param TokenStorageInterface $tokenStorage
+     * @param TranslatorInterface      $translator
      */
-    public function __construct(SecurityContext $securityContext, Translator $translator)
+    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
 
@@ -47,7 +47,7 @@ class PenempatanSiswaKelasKelompokType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -2,7 +2,7 @@
 
 namespace Langgas\SisdikBundle\Form;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -16,7 +16,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class CariTransaksiKeuanganType extends AbstractType
 {
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -25,9 +25,9 @@ class CariTransaksiKeuanganType extends AbstractType
      *     "translator" = @Inject("translator")
      * })
      *
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(Translator $translator)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }

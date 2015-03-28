@@ -9,7 +9,8 @@ use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -20,20 +21,28 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class SiswaPendaftarType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var AuthorizationChecker
      */
-    private $securityContext;
+    private $authorizationChecker;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context")
+     *     "authorizationChecker" = @Inject("security.authorization_checker"),
+     *     "tokenStorage" = @Inject("security.token_storage")
      * })
      *
-     * @param SecurityContext $securityContext
+     * @param AuthorizationChecker  $authorizationChecker
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(AuthorizationChecker $authorizationChecker, TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -41,7 +50,7 @@ class SiswaPendaftarType extends AbstractType
      */
     private function getUser()
     {
-        return $this->securityContext->getToken()->getUser();
+        return $this->tokenStorage->getToken()->getUser();
     }
 
     /**
@@ -49,7 +58,7 @@ class SiswaPendaftarType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -77,7 +86,7 @@ class SiswaPendaftarType extends AbstractType
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'nama',
-                    'empty_value' => false,
+                    'placeholder' => false,
                     'required' => true,
                     'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                         $qb = $repository->createQueryBuilder('gelombang')
@@ -153,7 +162,7 @@ class SiswaPendaftarType extends AbstractType
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'optionLabel',
-                    'empty_value' => 'label.tanpa.penjurusan.studi',
+                    'placeholder' => 'label.tanpa.penjurusan.studi',
                     'required' => false,
                     'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                         $qb = $repository->createQueryBuilder('penjurusan')
@@ -186,7 +195,7 @@ class SiswaPendaftarType extends AbstractType
                 ])
             ;
         } else {
-            if ($this->securityContext->isGranted('ROLE_KETUA_PANITIA_PSB')) {
+            if ($this->authorizationChecker->isGranted('ROLE_KETUA_PANITIA_PSB')) {
                 $builder
                     ->add('gelombang', 'entity', [
                         'class' => 'LanggasSisdikBundle:Gelombang',
@@ -194,7 +203,7 @@ class SiswaPendaftarType extends AbstractType
                         'multiple' => false,
                         'expanded' => false,
                         'property' => 'nama',
-                        'empty_value' => false,
+                        'placeholder' => false,
                         'required' => true,
                         'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                             $qb = $repository->createQueryBuilder('gelombang')
@@ -219,7 +228,7 @@ class SiswaPendaftarType extends AbstractType
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'optionLabel',
-                    'empty_value' => 'label.tanpa.penjurusan.studi',
+                    'placeholder' => 'label.tanpa.penjurusan.studi',
                     'required' => false,
                     'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                         $qb = $repository->createQueryBuilder('penjurusan')

@@ -7,7 +7,8 @@ use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -18,20 +19,28 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class UserRegisterFormType extends BaseType
 {
     /**
-     * @var SecurityContext
+     * @var AuthorizationChecker
      */
-    private $securityContext;
+    private $authorizationChecker;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context")
+     *     "authorizationChecker" = @Inject("security.authorization_checker"),
+     *     "tokenStorage" = @Inject("security.token_storage")
      * })
      *
-     * @param SecurityContext $securityContext
+     * @param AuthorizationChecker  $authorizationChecker
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(AuthorizationChecker $authorizationChecker, TokenStorageInterface $tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -39,7 +48,7 @@ class UserRegisterFormType extends BaseType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -119,7 +128,7 @@ class UserRegisterFormType extends BaseType
         ;
 
         if ($options['mode'] != 1) {
-            if (($this->securityContext->isGranted('ROLE_SUPER_ADMIN'))) {
+            if (($this->authorizationChecker->isGranted('ROLE_SUPER_ADMIN'))) {
                 $builder
                     ->add('sekolah', 'entity', [
                         'class' => 'LanggasSisdikBundle:Sekolah',

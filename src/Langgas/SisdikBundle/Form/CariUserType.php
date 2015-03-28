@@ -4,11 +4,10 @@ namespace Langgas\SisdikBundle\Form;
 
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -19,34 +18,26 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class CariUserType extends AbstractType
 {
     /**
-     * @var SecurityContext
-     */
-    private $securityContext;
-
-    /**
      * @var EntityManager
      */
     private $entityManager;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
      *     "entityManager" = @Inject("doctrine.orm.entity_manager"),
      *     "translator" = @Inject("translator")
      * })
      *
-     * @param SecurityContext $securityContext
-     * @param EntityManager   $entityManager
-     * @param Translator      $translator
+     * @param EntityManager       $entityManager
+     * @param TranslatorInterface $translator
      */
-    public function __construct(SecurityContext $securityContext, EntityManager $entityManager, Translator $translator)
+    public function __construct(EntityManager $entityManager, TranslatorInterface $translator)
     {
-        $this->securityContext = $securityContext;
         $this->entityManager = $entityManager;
         $this->translator = $translator;
     }

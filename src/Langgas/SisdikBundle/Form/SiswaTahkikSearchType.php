@@ -5,11 +5,11 @@ namespace Langgas\SisdikBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Form\EventListener\JumlahBayarSubscriber;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -20,27 +20,27 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 class SiswaTahkikSearchType extends AbstractType
 {
     /**
-     * @var SecurityContext
+     * @var TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
     /**
      * @InjectParams({
-     *     "securityContext" = @Inject("security.context"),
+     *     "tokenStorage" = @Inject("security.token_storage"),
      *     "translator" = @Inject("translator")
      * })
      *
-     * @param SecurityContext $securityContext
-     * @param Translator      $translator
+     * @param TokenStorageInterface $tokenStorage
+     * @param TranslatorInterface      $translator
      */
-    public function __construct(SecurityContext $securityContext, Translator $translator)
+    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterfaceInterface $translator)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
 
@@ -49,7 +49,7 @@ class SiswaTahkikSearchType extends AbstractType
      */
     private function getSekolah()
     {
-        return $this->securityContext->getToken()->getUser()->getSekolah();
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -62,7 +62,7 @@ class SiswaTahkikSearchType extends AbstractType
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',
-                'empty_value' => 'label.selectadmissiongroup',
+                'placeholder' => 'label.selectadmissiongroup',
                 'query_builder' => function (EntityRepository $repository) use ($sekolah) {
                     $qb = $repository->createQueryBuilder('gelombang')
                         ->where('gelombang.sekolah = :sekolah')
@@ -120,7 +120,7 @@ class SiswaTahkikSearchType extends AbstractType
                     'class' => 'medium',
                 ],
                 'label_render' => false,
-                'empty_value' => 'label.gender.empty.select',
+                'placeholder' => 'label.gender.empty.select',
                 'horizontal' => false,
             ])
             ->add('sekolahAsal', 'sisdik_entityhidden', [

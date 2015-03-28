@@ -5,7 +5,7 @@ namespace Langgas\SisdikBundle\Form\EventListener;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Range;
 
 /**
@@ -14,14 +14,14 @@ use Symfony\Component\Validator\Constraints\Range;
 class JumlahBayarSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param Translator $translator
+     * @param TranslatorInterface $translator
      */
-    public function __construct(Translator $translator)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }

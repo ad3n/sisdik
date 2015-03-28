@@ -27,7 +27,7 @@ class KehadiranSiswaSmsType extends AbstractType
                 'attr' => [
                     'class' => 'medium',
                 ],
-                'empty_value' => 'label.pilih.status.kehadiran',
+                'placeholder' => 'label.pilih.status.kehadiran',
             ])
             ->add('kelas', 'sisdik_entityhidden', [
                 'required' => true,
@@ -67,7 +67,7 @@ class KehadiranSiswaSmsType extends AbstractType
                     'attr' => [
                         'class' => 'xlarge',
                     ],
-                    'empty_value' => 'label.pilih.siswa',
+                    'placeholder' => 'label.pilih.siswa',
                 ])
             ;
         }
