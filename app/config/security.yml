@@ -43,11 +43,9 @@ security:
             anonymous: true
             logout: true
             switch_user: true
-
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
 
     access_control:
         - { path: ^/(_(profiler|wdt|trans)|css|images|js), roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -58,9 +56,3 @@ security:
         - { path: ^/_local, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 192.168.1.11 }
         - { path: ^/_api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
-        #- { path: ^/, roles: ROLE_ADMIN }
-        #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }
-
-
-
-
