@@ -59,7 +59,7 @@ class ReferensiType extends AbstractType
                 'attr' => [
                     'class' => 'large',
                 ],
-                'label' => 'label.name.full'
+                'label' => 'label.name.full',
             ])
             ->add('ponsel', null, [
                 'required' => false,

@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 /**
- * Membentuk label bidang form penempatan siswa di suatu kelas
+ * Membentuk label bidang form penempatan siswa di suatu kelas.
  */
 class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 {
@@ -26,7 +26,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
 
     /**
      * @param TranslatorInterface $translator
-     * @param Sekolah    $sekolah
+     * @param Sekolah             $sekolah
      */
     public function __construct(TranslatorInterface $translator, Sekolah $sekolah)
     {
@@ -67,7 +67,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $form
                 ->add('tahunAkademik', 'entity', [
                     'class' => 'LanggasSisdikBundle:TahunAkademik',
-                    'label' =>/** @Ignore */ $label,
+                    'label' => /** @Ignore */ $label,
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'nama',
@@ -140,7 +140,7 @@ class PenempatanSiswaKelasSubscriber implements EventSubscriberInterface
             $form
                 ->add('tahunAkademik', 'entity', [
                     'class' => 'LanggasSisdikBundle:TahunAkademik',
-                    'label' =>/** @Ignore */ $label,
+                    'label' => /** @Ignore */ $label,
                     'multiple' => false,
                     'expanded' => false,
                     'property' => 'nama',

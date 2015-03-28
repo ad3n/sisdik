@@ -65,7 +65,7 @@ class CariBiayaPendaftaranType extends AbstractType
                     return $qb;
                 },
                 'attr' => [
-                    'class' => 'small'
+                    'class' => 'small',
                 ],
                 'label_render' => false,
                 'horizontal' => false,
@@ -88,7 +88,7 @@ class CariBiayaPendaftaranType extends AbstractType
                     return $qb;
                 },
                 'attr' => [
-                    'class' => 'medium'
+                    'class' => 'medium',
                 ],
                 'label_render' => false,
                 'horizontal' => false,

@@ -36,7 +36,7 @@ class LaporanSiswaPendaftarSearchType extends AbstractType
      * })
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param TranslatorInterface      $translator
+     * @param TranslatorInterface   $translator
      */
     public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {

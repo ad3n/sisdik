@@ -160,7 +160,7 @@ class SiswaType extends AbstractType
                 'attr' => [
                     'class' => 'medium',
                 ],
-                'label' => 'label.gender'
+                'label' => 'label.gender',
             ])
             ->add('file', 'file', [
                 'required' => false,

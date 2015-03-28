@@ -12,7 +12,8 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class OrangtuaWaliInitType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('nama', null, [
                 'label_render' => true,
@@ -30,7 +31,8 @@ class OrangtuaWaliInitType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\OrangtuaWali',
@@ -38,7 +40,8 @@ class OrangtuaWaliInitType extends AbstractType
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'langgas_sisdikbundle_orangtuawaliinittype';
     }
 }

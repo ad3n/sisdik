@@ -66,7 +66,7 @@ class KelasSearchType extends AbstractType
                     return $qb;
                 },
                 'attr' => [
-                    'class' => 'medium'
+                    'class' => 'medium',
                 ],
                 'label_render' => false,
                 'horizontal' => false,

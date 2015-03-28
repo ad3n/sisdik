@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormEvent;
 use JMS\DiExtraBundle\Annotation\FormType;
 
 /**
- * Membentuk pilihan pencarian perulangan jadwal kehadiran dan kepulangan
+ * Membentuk pilihan pencarian perulangan jadwal kehadiran dan kepulangan.
  *
  * @FormType
  */

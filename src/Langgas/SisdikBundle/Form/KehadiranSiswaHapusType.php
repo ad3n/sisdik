@@ -35,7 +35,7 @@ class KehadiranSiswaHapusType extends AbstractType
      * })
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param EntityManager   $entityManager
+     * @param EntityManager         $entityManager
      */
     public function __construct(TokenStorageInterface $tokenStorage, EntityManager $entityManager)
     {

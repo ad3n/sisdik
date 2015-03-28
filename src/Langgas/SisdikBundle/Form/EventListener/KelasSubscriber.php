@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Menentukan pilihan kelas siswa berdasarkan tingkat kelas
+ * Menentukan pilihan kelas siswa berdasarkan tingkat kelas.
  */
 class KelasSubscriber implements EventSubscriberInterface
 {

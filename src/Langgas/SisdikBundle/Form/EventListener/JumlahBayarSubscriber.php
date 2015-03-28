@@ -9,7 +9,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Range;
 
 /**
- * Membentuk label bidang-bidang form jumlah bayar
+ * Membentuk label bidang-bidang form jumlah bayar.
  */
 class JumlahBayarSubscriber implements EventSubscriberInterface
 {
@@ -54,7 +54,7 @@ class JumlahBayarSubscriber implements EventSubscriberInterface
                             'max' => 100,
                             'minMessage' => $translator->trans('pencarian.persen.minimal', [], 'validators'),
                             'maxMessage' => $translator->trans('pencarian.persen.maksimal', [], 'validators'),
-                        ])
+                        ]),
                     ],
                     'attr' => [
                         'placeholder' => 'label.jumlah.bayar',

@@ -33,8 +33,8 @@ class SekolahSearchType extends AbstractType
      *     "translator" = @Inject("translator")
      * })
      *
-     * @param EntityManager $entityManager
-     * @param TranslatorInterface    $translator
+     * @param EntityManager       $entityManager
+     * @param TranslatorInterface $translator
      */
     public function __construct(EntityManager $entityManager, TranslatorInterface $translator)
     {
@@ -68,7 +68,7 @@ class SekolahSearchType extends AbstractType
 
         $entities = $em->getRepository('LanggasSisdikBundle:Sekolah')
             ->findBy([], [
-                'nama' => 'ASC'
+                'nama' => 'ASC',
             ])
         ;
 

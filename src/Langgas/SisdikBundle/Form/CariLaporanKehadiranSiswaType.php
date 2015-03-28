@@ -139,7 +139,7 @@ class CariLaporanKehadiranSiswaType extends AbstractType
                 'required' => false,
                 'label_render' => false,
                 'attr' => [
-                    'class' => 'medium'
+                    'class' => 'medium',
                 ],
                 'placeholder' => 'label.presencestatus',
                 'horizontal' => false,

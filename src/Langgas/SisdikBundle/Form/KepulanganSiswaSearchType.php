@@ -133,10 +133,10 @@ class KepulanganSiswaSearchType extends AbstractType
                 'required' => false,
                 'label_render' => false,
                 'attr' => [
-                    'class' => 'medium'
+                    'class' => 'medium',
                 ],
                 'preferred_choices' => [
-                    'c-alpa'
+                    'c-alpa',
                 ],
                 'placeholder' => 'label.status.kepulangan',
                 'horizontal' => false,

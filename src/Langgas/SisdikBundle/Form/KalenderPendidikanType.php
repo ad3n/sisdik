@@ -25,14 +25,16 @@ class KalenderPendidikanType extends AbstractType
 
         foreach ($options['calendar']['cal'] as $rows) {
             foreach ($rows as $field) {
-                if ($field['num'] == '')
+                if ($field['num'] == '') {
                     continue;
-                if ($field['off'] == 1)
+                }
+                if ($field['off'] == 1) {
                     continue;
+                }
 
                 if (array_key_exists($field['num'], $options['activedates'])) {
                     $builder
-                        ->add('kbm_' . $field['num'], 'checkbox', [
+                        ->add('kbm_'.$field['num'], 'checkbox', [
                             'required' => false,
                             'attr' => [
                                 'checked' => 'checked',
@@ -42,7 +44,7 @@ class KalenderPendidikanType extends AbstractType
                     ;
                 } else {
                     $builder
-                        ->add('kbm_' . $field['num'], 'checkbox', [
+                        ->add('kbm_'.$field['num'], 'checkbox', [
                             'required' => false,
                             'label_render' => false,
                         ])

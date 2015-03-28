@@ -30,7 +30,7 @@ class ReportSummaryType extends AbstractType
                 ],
                 'help_block' => 'help.tag.standar.laporan.psb',
                 'label_attr' => [
-                    'class' => 'label-ringkasan-teks'
+                    'class' => 'label-ringkasan-teks',
                 ],
                 'required' => true,
                 'label_render' => true,

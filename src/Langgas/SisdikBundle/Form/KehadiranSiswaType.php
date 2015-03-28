@@ -35,7 +35,7 @@ class KehadiranSiswaType extends AbstractType
      * })
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param EntityManager   $entityManager
+     * @param EntityManager         $entityManager
      */
     public function __construct(TokenStorageInterface $tokenStorage, EntityManager $entityManager)
     {
@@ -73,7 +73,7 @@ class KehadiranSiswaType extends AbstractType
         }
         if ($options['buildparam']['searchkey'] != '') {
             $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem = :searchkey2");
-            $querybuilder->setParameter('searchkey', '%' . $options['buildparam']['searchkey'] . '%');
+            $querybuilder->setParameter('searchkey', '%'.$options['buildparam']['searchkey'].'%');
             $querybuilder->setParameter('searchkey2', $options['buildparam']['searchkey']);
         }
         if ($options['buildparam']['tingkat'] != '') {
@@ -93,7 +93,7 @@ class KehadiranSiswaType extends AbstractType
         foreach ($entities as $entity) {
             if (is_object($entity) && $entity instanceof KehadiranSiswa) {
                 $builder
-                    ->add('kehadiran_' . $entity->getId(), 'choice', [
+                    ->add('kehadiran_'.$entity->getId(), 'choice', [
                         'required' => true,
                         'expanded' => true,
                         'multiple' => false,
@@ -103,11 +103,11 @@ class KehadiranSiswaType extends AbstractType
                         ],
                         'data' => $entity->getStatusKehadiran(),
                     ])
-                    ->add('kehadiran_keterangan_' . $entity->getId(), 'text', [
+                    ->add('kehadiran_keterangan_'.$entity->getId(), 'text', [
                         'required' => false,
                         'attr' => [
                             'placeholder' => 'label.keterangan.kehadiran',
-                            'class' => 'keterangan-kehadiran'
+                            'class' => 'keterangan-kehadiran',
                         ],
                         'data' => $entity->getKeteranganStatus(),
                     ])

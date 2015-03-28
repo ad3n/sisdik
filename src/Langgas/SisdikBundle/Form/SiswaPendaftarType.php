@@ -5,7 +5,6 @@ namespace Langgas\SisdikBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Langgas\SisdikBundle\Entity\User;
-use Langgas\SisdikBundle\Form\EventListener\SekolahSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;

@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Memastikan bahwa entity sekolah yang terpakai
- * sesuai dengan user yang sedang menggunakan form
+ * sesuai dengan user yang sedang menggunakan form.
  */
 class SekolahSubscriber implements EventSubscriberInterface
 {

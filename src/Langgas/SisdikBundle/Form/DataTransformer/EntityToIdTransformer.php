@@ -7,7 +7,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Mengubah entity menjadi id ketika ditampilkan di form, dan sebaliknya ketika akan disimpan ke database
+ * Mengubah entity menjadi id ketika ditampilkan di form, dan sebaliknya ketika akan disimpan ke database.
  */
 class EntityToIdTransformer implements DataTransformerInterface
 {
@@ -53,7 +53,7 @@ class EntityToIdTransformer implements DataTransformerInterface
     public function reverseTransform($id)
     {
         if (!$id) {
-            return null;
+            return;
         }
 
         $entity = $this->objectManager->getRepository($this->class)->find($id);

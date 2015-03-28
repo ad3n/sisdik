@@ -66,7 +66,7 @@ class PilihanLayananSmsSearchType extends AbstractType
     {
         $entities = $this->entityManager->getRepository('LanggasSisdikBundle:Sekolah')
             ->findBy([], [
-                'nama' => 'ASC'
+                'nama' => 'ASC',
             ])
         ;
 

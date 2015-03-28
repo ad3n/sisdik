@@ -12,7 +12,8 @@ use JMS\DiExtraBundle\Annotation\FormType;
  */
 class OrangtuaWaliType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
             ->add('siswa', 'sisdik_entityhidden', [
                 'required' => true,
@@ -43,7 +44,7 @@ class OrangtuaWaliType extends AbstractType
                 'attr' => [
                     'class' => 'date small',
                 ],
-                'required' => false
+                'required' => false,
             ])
             ->add('kewarganegaraan', null, [
                 'label' => 'label.nationality',
@@ -109,7 +110,8 @@ class OrangtuaWaliType extends AbstractType
         ;
     }
 
-    private function buildEducationList() {
+    private function buildEducationList()
+    {
         return [
             'SD' => 'SD',
             'SLTP' => 'SLTP',
@@ -121,7 +123,8 @@ class OrangtuaWaliType extends AbstractType
         ];
     }
 
-    private function buildRelationsToStudent() {
+    private function buildRelationsToStudent()
+    {
         return [
             'Ayah' => 'Ayah',
             'Ibu' => 'Ibu',
@@ -134,7 +137,8 @@ class OrangtuaWaliType extends AbstractType
         ];
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
         $resolver
             ->setDefaults([
                 'data_class' => 'Langgas\SisdikBundle\Entity\OrangtuaWali',
@@ -142,7 +146,8 @@ class OrangtuaWaliType extends AbstractType
         ;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'sisdik_orangtuawali';
     }
 }

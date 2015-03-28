@@ -68,7 +68,7 @@ class JenisbiayaType extends AbstractType
             ->add('keterangan', null, [
                 'attr' => [
                     'class' => 'xlarge',
-                ]
+                ],
             ])
         ;
     }

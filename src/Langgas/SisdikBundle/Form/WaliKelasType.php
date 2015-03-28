@@ -166,9 +166,9 @@ class WaliKelasType extends AbstractType
     private function buatPilihanMenit()
     {
         return array_combine([
-            -60, -30, -20, -15, -10, -5, 0, 5, 10, 15, 20, 30, 60
+            -60, -30, -20, -15, -10, -5, 0, 5, 10, 15, 20, 30, 60,
         ], [
-            -60, -30, -20, -15, -10, -5, 0, 5, 10, 15, 20, 30, 60
+            -60, -30, -20, -15, -10, -5, 0, 5, 10, 15, 20, 30, 60,
         ]);
     }
 

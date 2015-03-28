@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Membentuk label bidang form DokumenSiswa
+ * Membentuk label bidang form DokumenSiswa.
  */
 class DokumenFieldSubscriber implements EventSubscriberInterface
 {
@@ -58,7 +58,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
                 ->add('lengkap', 'choice', [
                     'choices' => [
                         1 => 'label.lengkap',
-                        0 => 'label.tidak.lengkap'
+                        0 => 'label.tidak.lengkap',
                     ],
                     'expanded' => true,
                     'multiple' => false,
@@ -95,7 +95,7 @@ class DokumenFieldSubscriber implements EventSubscriberInterface
                 ->add('lengkap', 'choice', [
                     'choices' => [
                         1 => 'label.lengkap',
-                        0 => 'label.tidak.lengkap'
+                        0 => 'label.tidak.lengkap',
                     ],
                     'expanded' => true,
                     'multiple' => false,

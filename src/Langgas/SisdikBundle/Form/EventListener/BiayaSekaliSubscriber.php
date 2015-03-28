@@ -10,7 +10,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
 /**
- * Membentuk label form BiayaSekali
+ * Membentuk label form BiayaSekali.
  */
 class BiayaSekaliSubscriber implements EventSubscriberInterface
 {
@@ -48,14 +48,14 @@ class BiayaSekaliSubscriber implements EventSubscriberInterface
 
         if ($data instanceof DaftarBiayaSekali) {
             $label = $data->getBiayaSekali()->getJenisbiaya()->getNama()
-                . ', '
-                . number_format($data->getBiayaSekali()->getNominal(), 0, ',', '.')
+                .', '
+                .number_format($data->getBiayaSekali()->getNominal(), 0, ',', '.')
             ;
 
             $form
                 ->add('terpilih', 'checkbox', [
                     'attr' => [
-                        'class' => 'fee-item'
+                        'class' => 'fee-item',
                     ],
                     'label_render' => true,
                     'label' => /** @Ignore */ $label,
@@ -81,15 +81,15 @@ class BiayaSekaliSubscriber implements EventSubscriberInterface
 
         if ($biayaSekali instanceof BiayaSekali) {
             $label = $biayaSekali->getJenisbiaya()->getNama()
-                . ', '
-                . number_format($biayaSekali->getNominal(), 0, ',', '.')
+                .', '
+                .number_format($biayaSekali->getNominal(), 0, ',', '.')
             ;
 
             $form = $event->getForm();
             $form
                 ->add('terpilih', 'checkbox', [
                     'attr' => [
-                        'class' => 'fee-item'
+                        'class' => 'fee-item',
                     ],
                     'label_render' => true,
                     'label' => /** @Ignore */ $label,

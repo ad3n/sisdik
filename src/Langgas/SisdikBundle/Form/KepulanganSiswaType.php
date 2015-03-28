@@ -35,7 +35,7 @@ class KepulanganSiswaType extends AbstractType
      * })
      *
      * @param TokenStorageInterface $tokenStorage
-     * @param EntityManager   $entityManager
+     * @param EntityManager         $entityManager
      */
     public function __construct(TokenStorageInterface $tokenStorage, EntityManager $entityManager)
     {
@@ -73,7 +73,7 @@ class KepulanganSiswaType extends AbstractType
         }
         if ($options['buildparam']['searchkey'] != '') {
             $querybuilder->andWhere("siswa.namaLengkap LIKE :searchkey OR siswa.nomorInduk LIKE :searchkey OR siswa.nomorIndukSistem = :searchkey2");
-            $querybuilder->setParameter('searchkey', '%' . $options['buildparam']['searchkey'] . '%');
+            $querybuilder->setParameter('searchkey', '%'.$options['buildparam']['searchkey'].'%');
             $querybuilder->setParameter('searchkey2', $options['buildparam']['searchkey']);
         }
         if ($options['buildparam']['tingkat'] != '') {
@@ -93,7 +93,7 @@ class KepulanganSiswaType extends AbstractType
         foreach ($entities as $entity) {
             if (is_object($entity) && $entity instanceof KepulanganSiswa) {
                 $builder
-                    ->add('kepulangan_' . $entity->getId(), 'choice', [
+                    ->add('kepulangan_'.$entity->getId(), 'choice', [
                         'required' => true,
                         'expanded' => true,
                         'multiple' => false,
@@ -103,11 +103,11 @@ class KepulanganSiswaType extends AbstractType
                         ],
                         'data' => $entity->getStatusKepulangan(),
                     ])
-                    ->add('kepulangan_keterangan_' . $entity->getId(), 'text', [
+                    ->add('kepulangan_keterangan_'.$entity->getId(), 'text', [
                         'required' => false,
                         'attr' => [
                             'placeholder' => 'label.keterangan.kepulangan',
-                            'class' => 'keterangan-kepulangan'
+                            'class' => 'keterangan-kepulangan',
                         ],
                         'data' => $entity->getKeteranganStatus(),
                     ])
