@@ -49,7 +49,7 @@ class PembayaranPendaftaranCetakController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -823,7 +823,7 @@ class PembayaranPendaftaranCetakController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 

@@ -146,7 +146,7 @@ class KeteranganPembayaranRutinController extends Controller
                         if ($personil->getId() !== null) {
                             $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')->find($personil->getId());
                             if ($siswa instanceof Siswa) {
-                                if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+                                if ($this->get('security.authorization_checker')->isGranted('create', $siswa) === false) {
                                     throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
                                 }
 
@@ -205,7 +205,7 @@ class KeteranganPembayaranRutinController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -234,7 +234,7 @@ class KeteranganPembayaranRutinController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -280,7 +280,7 @@ class KeteranganPembayaranRutinController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('delete', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 

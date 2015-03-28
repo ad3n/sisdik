@@ -32,7 +32,7 @@ class PendidikanSiswaController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -67,7 +67,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('create', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('create', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -94,7 +94,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('create', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('create', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -147,7 +147,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -179,7 +179,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -213,7 +213,7 @@ class PendidikanSiswaController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -279,7 +279,7 @@ class PendidikanSiswaController extends Controller
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
 
-            if ($this->get('security.context')->isGranted('delete', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
+            if ($this->get('security.authorization_checker')->isGranted('delete', $em->getRepository('LanggasSisdikBundle:Siswa')->find($sid)) === false) {
                 throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 

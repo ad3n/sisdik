@@ -152,7 +152,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('view', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -264,7 +264,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -296,7 +296,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -358,7 +358,7 @@ class SiswaController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('delete', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -391,7 +391,7 @@ class SiswaController extends Controller
                 throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
             }
 
-            if ($this->get('security.context')->isGranted('delete', $entity) === false) {
+            if ($this->get('security.authorization_checker')->isGranted('delete', $entity) === false) {
                 throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 

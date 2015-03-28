@@ -232,7 +232,7 @@ class PengaturanUserController extends Controller
      */
     public function registerWithSchoolAction(Request $request)
     {
-        if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $this->setCurrentMenu(1);
         } else {
             $this->setCurrentMenu(2);
@@ -307,7 +307,7 @@ class PengaturanUserController extends Controller
                     ]))
                 ;
 
-                if ($this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+                if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
                     return $this->redirect($this->generateUrl('settings_user'));
                 } else {
                     return $this->redirect($this->generateUrl('settings_user_inschool_list'));
@@ -405,7 +405,7 @@ class PengaturanUserController extends Controller
             $querybuilder->andWhere('user.siswa IS NULL');
         }
 
-        if ($this->container->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $this
                 ->get('session')
                 ->getFlashBag()
@@ -462,7 +462,7 @@ class PengaturanUserController extends Controller
             }
         }
 
-        if ($this->get('security.context')->isGranted('edit', $user) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $user) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -583,7 +583,7 @@ class PengaturanUserController extends Controller
 
         if ($confirmed == 1) {
 
-            if ($this->get('security.context')->isGranted('delete', $user) === false) {
+            if ($this->get('security.authorization_checker')->isGranted('delete', $user) === false) {
                 throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
             }
 

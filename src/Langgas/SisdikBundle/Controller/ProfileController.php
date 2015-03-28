@@ -14,7 +14,7 @@ class ProfileController extends FOSProfileController
     public function showAction()
     {
         $user = $this->container
-            ->get('security.context')
+            ->get('security.token_storage')
             ->getToken()
             ->getUser()
         ;
@@ -42,7 +42,7 @@ class ProfileController extends FOSProfileController
     public function editAction()
     {
         $user = $this->container
-            ->get('security.context')
+            ->get('security.token_storage')
             ->getToken()
             ->getUser()
         ;

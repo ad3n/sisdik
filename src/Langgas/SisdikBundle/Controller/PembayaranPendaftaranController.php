@@ -193,7 +193,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity Siswa yang diminta tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -258,7 +258,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan atau tahap penerimaan tidak valid.');
         }
 
-        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('create', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -658,7 +658,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -726,7 +726,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -797,7 +797,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan atau gelombang tidak berisi nilai.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -1122,7 +1122,7 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity Siswa yang diminta tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('view', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 

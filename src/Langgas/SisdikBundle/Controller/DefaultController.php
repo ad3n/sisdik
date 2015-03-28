@@ -28,11 +28,11 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $securityContext = $this->container->get('security.context');
+        $authorizationChecker = $this->container->get('security.authorization_checker');
 
-        if ($securityContext->isGranted([new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')])) {
+        if ($authorizationChecker->isGranted([new Expression('hasRole("ROLE_SISWA") and not hasAnyRole("ROLE_SUPER_ADMIN", "ROLE_WALI_KELAS")')])) {
             return $this->redirect($this->generateUrl('siswa__kehadiran'));
-        } elseif ($securityContext->isGranted([new Expression('hasRole("ROLE_SUPER_ADMIN")')])) {
+        } elseif ($authorizationChecker->isGranted([new Expression('hasRole("ROLE_SUPER_ADMIN")')])) {
             $response = $this->forward('LanggasSisdikBundle:Default:super');
         } else {
             $response = $this->forward('LanggasSisdikBundle:Default:pengelola');

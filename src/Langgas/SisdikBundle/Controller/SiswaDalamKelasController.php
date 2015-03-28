@@ -20,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use JMS\SecurityExtraBundle\Security\Authorization\Expression\Expression;
@@ -41,10 +41,10 @@ class SiswaDalamKelasController extends Controller
      */
     public function indexAction()
     {
-        /* @var $securityContext SecurityContext */
-        $securityContext = $this->container->get('security.context');
+        /* @var $authorizationChecker AuthorizationCheckerInterface */
+        $authorizationChecker = $this->container->get('security.authorization_checker');
 
-        if ($securityContext->isGranted([
+        if ($authorizationChecker->isGranted([
             new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')"),
         ])) {
             return $this->redirect($this->generateUrl('siswa_dalam_kelas__admin'));
@@ -269,14 +269,14 @@ class SiswaDalamKelasController extends Controller
         /* @var $user User */
         $user = $this->getUser();
 
-        $securityContext = $this->container->get('security.context');
+        $authorizationChecker = $this->container->get('security.authorization_checker');
 
         $isWaliKelas = false;
-        if ($securityContext->isGranted([
+        if ($authorizationChecker->isGranted([
             new Expression("hasAnyRole('ROLE_ADMIN', 'ROLE_KEPALA_SEKOLAH', 'ROLE_WAKIL_KEPALA_SEKOLAH')"),
         ])) {
             $isWaliKelas = false;
-        } elseif ($securityContext->isGranted([
+        } elseif ($authorizationChecker->isGranted([
             new Expression("hasRole('ROLE_WALI_KELAS')"),
         ])) {
             $isWaliKelas = true;

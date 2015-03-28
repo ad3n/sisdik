@@ -119,7 +119,7 @@ class PilihanCetakKwitansiController extends Controller
             throw $this->createNotFoundException('Entity PilihanCetakKwitansi tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -148,7 +148,7 @@ class PilihanCetakKwitansiController extends Controller
             throw $this->createNotFoundException('Entity PilihanCetakKwitansi tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $entity) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $entity) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 

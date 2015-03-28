@@ -32,7 +32,7 @@ class SiswaKelasController extends Controller
         /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
 
-        if ($this->get('security.context')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa)) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('view', $em->getRepository('LanggasSisdikBundle:Siswa')->find($idsiswa)) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -72,7 +72,7 @@ class SiswaKelasController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('create', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -103,7 +103,7 @@ class SiswaKelasController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('create', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('create', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -172,7 +172,7 @@ class SiswaKelasController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -209,7 +209,7 @@ class SiswaKelasController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('edit', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('edit', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
@@ -284,7 +284,7 @@ class SiswaKelasController extends Controller
             throw $this->createNotFoundException('Entity Siswa tak ditemukan.');
         }
 
-        if ($this->get('security.context')->isGranted('delete', $siswa) === false) {
+        if ($this->get('security.authorization_checker')->isGranted('delete', $siswa) === false) {
             throw new AccessDeniedException($this->get('translator')->trans('akses.ditolak'));
         }
 
