@@ -27,15 +27,17 @@ class AppKernel extends Kernel
                 new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
                 new Langgas\SisdikBundle\LanggasSisdikBundle($this),
                 new Ps\PdfBundle\PsPdfBundle(),
-                new WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle(),
                 new JMS\SerializerBundle\JMSSerializerBundle(),
                 new FOS\RestBundle\FOSRestBundle(),
                 new JMS\TranslationBundle\JMSTranslationBundle(),
+                new Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle(),
+                new Mmoreram\GearmanBundle\GearmanBundle(),
         );
 
         if (in_array($this->getEnvironment(), array(
             'dev', 'test'
         ))) {
+            $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
