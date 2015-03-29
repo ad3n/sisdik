@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    server_name assets.sisdik.local;
+
+    root "/vagrant/web";
+
+    location / {
+        if ($request_method = 'GET') {
+            add_header Access-Control-Allow-Origin *;
+        }
+    }
+}
+
+server {
+    listen 80;
+    server_name sisdik.local;
+
+    root "/vagrant/web";
+
+    location / {
+        try_files $uri /app.php?$args;
+    }
+
+    location ~ ^.+\.php {
+        include fastcgi_params;
+        fastcgi_split_path_info ^(.+\.php)(/?.+)$;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
+}

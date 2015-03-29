@@ -1,0 +1,142 @@
+---
+- hosts: all
+  tasks:
+    - include_vars: vsftpd/vars.yml
+
+    - name: update locale
+      shell: update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+
+    - name: add ppa:chris-lea/node.js
+      apt_repository: repo='ppa:chris-lea/node.js'
+
+    - name: add ppa:ondrej/php5
+      apt_repository: repo='ppa:ondrej/php5'
+
+    - name: update repository packages
+      apt: upgrade=safe update_cache=yes
+
+    - name: install repository packages
+      apt: pkg={{item}}
+      with_items:
+        - nginx
+        - vsftpd
+        - mysql-server
+        - php5-fpm
+        - php5-json
+        - php5-cli
+        - php5-intl
+        - php5-mysql
+        - php5-curl
+        - php5-gd
+        - php-apc
+        - nodejs
+        - git
+        - htop
+        - acl
+        - ntp
+        - apache2-utils
+        - libpam-pwdfile
+        - gearman-job-server
+        - php5-gearman
+        - gearman-tools
+        - supervisor
+        - python-mysqldb
+
+    - name: install npm packages
+      npm: name={{item}} global=yes
+      with_items:
+        - less@1.7.5
+        - uglify-js
+        - uglifycss
+
+    - name: set php timezone
+      lineinfile: dest={{item}} regexp=^;?date.timezone line='date.timezone = Asia/Jakarta'
+      with_items:
+        - /etc/php5/fpm/php.ini
+        - /etc/php5/cli/php.ini
+      notify:
+        - restart nginx
+        - restart php5-fpm
+
+    - name: create vagrant mysql user
+      mysql_user: user=vagrant password=vagrant
+
+    - name: create mysql database
+      mysql_db: name=sisdik state=present
+
+    - name: install sisdik vhost
+      copy: src=nginx/sisdik dest=/etc/nginx/sites-enabled/sisdik
+      notify:
+        - restart nginx
+
+    - name: remove default vhost
+      file: path=/etc/nginx/sites-enabled/default state=absent
+      notify:
+        - restart nginx
+
+    - name: add the app domain to hosts
+      lineinfile: dest=/etc/hosts line='127.0.0.1 sisdik.local assets.sisdik.local' state=present
+
+    - name: get composer
+      shell: cd /vagrant && curl -sS https://getcomposer.org/installer | php
+      args:
+        chdir: /vagrant
+        creates: composer.phar
+
+    - name: install composer deps
+      shell: cd /vagrant && php composer.phar install --prefer-dist -q -n
+
+    - name: copy vsftpd.conf
+      copy: src=vsftpd/vsftpd.conf dest=/etc/vsftpd.conf
+      notify:
+        - restart vsftpd
+
+    - name: copy pam.d/vsftpd
+      copy: src=vsftpd/pam.d/vsftpd dest=/etc/pam.d/vsftpd
+      notify:
+        - restart vsftpd
+
+    - name: copy chroot_list
+      copy: src=vsftpd/chroot_list dest=/etc/vsftpd.chroot_list force=no
+      notify:
+        - restart vsftpd
+
+    - name: create vsftpd user
+      user: name=vsftpd shell=/bin/false home=/home/vsftpd groups=nogroup append=yes
+      notify:
+        - restart vsftpd
+
+    - name: create vsftpd configuration directory
+      file: path=/etc/vsftpd state=directory
+
+    - name: set vsftpd admin password
+      shell: "htpasswd -bcsd /etc/vsftpd/ftpd.passwd 0 {{ftp_root_pass}}"
+      args:
+        chdir: /etc/vsftpd
+        creates: ftpd.passwd
+
+    - name: create vsftpd admin directory
+      file: path=/var/virtual/0 state=directory
+      notify:
+        - restart vsftpd
+
+    - name: set attendance cron
+      cron: name=1 minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:inisiasi --env=prod' user='www-data'
+      cron: name=2 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pembaruan --env=prod' user='www-data'
+      cron: name=3 minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pesan --env=prod' user='www-data'
+      cron: name=4 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pesanringkasan --env=prod' user='www-data'
+      cron: name=5 minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:inisiasi --env=prod' user='www-data'
+      cron: name=6 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:pembaruan --env=prod' user='www-data'
+      cron: name=7 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:pesan --env=prod' user='www-data'
+      cron: name=8 minute=1 job='/usr/bin/php /vagrant/app/console sisdik:layanansms:periodik --env=prod' user='www-data'
+
+    - name: configure gearman worker
+      copy: src=supervisor/sisdik.conf dest=/etc/supervisor/conf.d/sisdik.conf
+
+  handlers:
+    - name: restart nginx
+      service: name=nginx state=restarted
+    - name: restart php5-fpm
+      service: name=php5-fpm state=restarted
+    - name: restart vsftpd
+      service: name=vsftpd state=restarted

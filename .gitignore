@@ -21,3 +21,5 @@ phpunit.phar
 .project
 app/config/deploy.rb
 Capfile
+Vagrantparams.yml
+.vagrant/
