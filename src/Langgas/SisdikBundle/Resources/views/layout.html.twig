@@ -109,7 +109,10 @@
 </div>
 
 <div class="footer container container-fluid">
-  <div id="copyright">Copyright &copy; 2012 &ndash; {{ "now"|date("Y") }}<br></div>
+    <span style="padding: 10px 0;">&copy; {{ "now"|date("Y") }}</span><span style="padding: 10px;">&bull;</span>
+    {%- image '@LanggasSisdikBundle/Resources/public/images/logo/wpmini-blue.png' -%}
+    <a href="http://blog.sisdik.com" target="_blank" title="Blog"><img src="{{ asset_url }}" style="vertical-align: middle;"></a>
+    {%- endimage -%}
 </div>
 
 {% image '@LanggasSisdikBundle/Resources/public/images/ajax-loader.gif' %}<img src="{{ asset_url }}" class="preload-image">{% endimage %}

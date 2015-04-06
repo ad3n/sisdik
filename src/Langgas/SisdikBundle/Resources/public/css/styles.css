@@ -307,13 +307,14 @@ div.knowledgebase {
     padding-right: 14px;
 }
 
-#copyright {
+.footer {
     border-top: 1px solid #BBBBBB;
     color: #555555;
     font-size: 0.9em;
     line-height: 1.5em;
     margin-top: 10px;
     padding: 5px 0;
+    margin-bottom: 20px;
 }
 
 .pagination-centered {
