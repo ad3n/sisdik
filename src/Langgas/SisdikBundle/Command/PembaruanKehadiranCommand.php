@@ -38,7 +38,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
         $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
-        $jam = $waktuSekarang->format('H:i') . ':00';
+        $jam = $waktuSekarang->format('H:i').':00';
         $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
@@ -64,7 +64,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
             }
 
             if ($input->getOption('paksa')) {
-                print "[paksa]: " . $sekolah->getNama() . "\n";
+                print "[paksa]: ".$sekolah->getNama()."\n";
             }
 
             $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
@@ -130,28 +130,28 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                             $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
                         }
 
-                        $waktuJadwal = strtotime(date('Y-m-d') . " $hinggaJam");
+                        $waktuJadwal = strtotime(date('Y-m-d')." $hinggaJam");
                         $bedaWaktu = $waktuSekarang->getTimestamp() - $waktuJadwal;
 
                         if ($input->getOption('paksa')) {
-                            print "[paksa]: param status hingga jam = " . $jadwal->getParamstatusHinggaJam() . "\n";
-                            print "[paksa]: waktu jadwal menjadi = " . date("Y-m-d H:i:s", $waktuJadwal) . "\n";
-                            print "[paksa]: waktu sekarang menjadi = " . $waktuSekarang->format("Y-m-d H:i:s") . "\n";
-                            print "[paksa]: beda waktu = " . $bedaWaktu . "\n";
+                            print "[paksa]: param status hingga jam = ".$jadwal->getParamstatusHinggaJam()."\n";
+                            print "[paksa]: waktu jadwal menjadi = ".date("Y-m-d H:i:s", $waktuJadwal)."\n";
+                            print "[paksa]: waktu sekarang menjadi = ".$waktuSekarang->format("Y-m-d H:i:s")."\n";
+                            print "[paksa]: beda waktu = ".$bedaWaktu."\n";
                         }
 
                         if ($bedaWaktu >= 0 && $bedaWaktu <= self::BEDA_WAKTU_MAKS) {
                             $logDirectory = $this->getContainer()->get('kernel')->getRootDir()
-                                . DIRECTORY_SEPARATOR
-                                . "fingerprintlogs"
-                                . DIRECTORY_SEPARATOR
-                                . $sekolah->getId()
-                                . DIRECTORY_SEPARATOR
-                                . 'log'
-                                . DIRECTORY_SEPARATOR
-                                . $jadwal->getPerulangan()
-                                . DIRECTORY_SEPARATOR
-                                . $tanggalSekarang
+                                .DIRECTORY_SEPARATOR
+                                ."fingerprintlogs"
+                                .DIRECTORY_SEPARATOR
+                                .$sekolah->getId()
+                                .DIRECTORY_SEPARATOR
+                                .'log'
+                                .DIRECTORY_SEPARATOR
+                                .$jadwal->getPerulangan()
+                                .DIRECTORY_SEPARATOR
+                                .$tanggalSekarang
                             ;
                             if (!is_dir($logDirectory)) {
                                 continue;
@@ -173,13 +173,13 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                 }
 
                                 $logFile = system("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
-                                $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
+                                $sourceFile = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
                                 $targetFile = self::TMP_DIR
-                                    . DIRECTORY_SEPARATOR
-                                    . $sekolah->getId()
-                                    . '-sisdik-'
-                                    . uniqid(mt_rand(), true)
-                                    . $logFile
+                                    .DIRECTORY_SEPARATOR
+                                    .$sekolah->getId()
+                                    .'-sisdik-'
+                                    .uniqid(mt_rand(), true)
+                                    .$logFile
                                 ;
 
                                 if (!@copy($sourceFile, $targetFile)) {
@@ -199,7 +199,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
                                         if ($input->getOption('paksa')) {
                                             $logTanggal = $waktuSekarang;
-                                            print "[paksa]: log tanggal = " . $logTanggal->format('Y-m-d') . "\n";
+                                            print "[paksa]: log tanggal = ".$logTanggal->format('Y-m-d')."\n";
                                         }
 
                                         // +60 detik perbedaan
@@ -224,7 +224,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                                     'nomorIndukSistem' => '1000186',
                                                 ])
                                             ;
-                                            print "[paksa]: siswa = " . $siswa->getNomorIndukSistem() . "," . $siswa->getNamaLengkap() . "\n";
+                                            print "[paksa]: siswa = ".$siswa->getNomorIndukSistem().",".$siswa->getNamaLengkap()."\n";
                                         }
 
                                         if (is_object($siswa) && $siswa instanceof Siswa) {
@@ -277,7 +277,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
                                     $buffer = file_get_contents($extractedFile);
                                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                                    $xmlstring = "<?xml version='1.0'?>\n" . $buffer;
+                                    $xmlstring = "<?xml version='1.0'?>\n".$buffer;
 
                                     $xmlobject = simplexml_load_string($xmlstring);
 
@@ -287,7 +287,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
                                             if ($input->getOption('paksa')) {
                                                 $logTanggal = $waktuSekarang;
-                                                print "[paksa]: log tanggal = " . $logTanggal->format('Y-m-d') . "\n";
+                                                print "[paksa]: log tanggal = ".$logTanggal->format('Y-m-d')."\n";
                                             }
 
                                             // +60 detik perbedaan
@@ -312,7 +312,7 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                                                         'nomorIndukSistem' => '1000186',
                                                     ])
                                                 ;
-                                                print "[paksa]: siswa = " . $siswa->getNomorIndukSistem() . "," . $siswa->getNamaLengkap() . "\n";
+                                                print "[paksa]: siswa = ".$siswa->getNomorIndukSistem().",".$siswa->getNamaLengkap()."\n";
                                             }
 
                                             if (is_object($siswa) && $siswa instanceof Siswa) {
@@ -375,14 +375,14 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
                     $output->writeln($text);
                 }
             } else {
-                print "proses pembaruan kehadiran sekolah " . $sekolah->getNama() . " telah dan sedang berjalan\n";
+                print "proses pembaruan kehadiran sekolah ".$sekolah->getNama()." telah dan sedang berjalan\n";
             }
         }
     }
 
     /**
      * Memeriksa apakah proses sebelumnya sedang berjalan
-     * yang ditandai dengan kuncian file lock
+     * yang ditandai dengan kuncian file lock.
      *
      * @param  int     $nomorUrutSekolah
      * @return boolean
@@ -390,12 +390,12 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
     private function isLocked($nomorUrutSekolah)
     {
         $lockfile = $this->getContainer()->get('kernel')->getRootDir()
-            . DIRECTORY_SEPARATOR
-            . self::LOCK_DIR
-            . DIRECTORY_SEPARATOR
-            . $nomorUrutSekolah
-            . '.'
-            . self::LOCK_FILE
+            .DIRECTORY_SEPARATOR
+            .self::LOCK_DIR
+            .DIRECTORY_SEPARATOR
+            .$nomorUrutSekolah
+            .'.'
+            .self::LOCK_FILE
         ;
 
         if (file_exists($lockfile)) {
@@ -403,14 +403,15 @@ class PembaruanKehadiranCommand extends ContainerAwareCommand
 
             $pids = explode("\n", trim(`ps -e | awk '{print $1}'`));
 
-            if (in_array($lockingPID, $pids))
+            if (in_array($lockingPID, $pids)) {
                 return true;
+            }
 
-            print "Removing stale $nomorUrutSekolah." . self::LOCK_FILE . " file.\n";
+            print "Removing stale $nomorUrutSekolah.".self::LOCK_FILE." file.\n";
             unlink($lockfile);
         }
 
-        file_put_contents($lockfile, getmypid() . "\n");
+        file_put_contents($lockfile, getmypid()."\n");
 
         return false;
     }

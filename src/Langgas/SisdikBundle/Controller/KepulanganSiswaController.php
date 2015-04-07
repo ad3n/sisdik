@@ -5,7 +5,6 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\TahunAkademik;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
-use Langgas\SisdikBundle\Entity\SiswaKelas;
 use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\OrangtuaWali;
 use Langgas\SisdikBundle\Entity\Kelas;
@@ -115,7 +114,7 @@ class KepulanganSiswaController extends Controller
                 ->findOneBy([
                     'kbm' => true,
                     'sekolah' => $sekolah,
-                    'tanggal' => $searchdata['tanggal']
+                    'tanggal' => $searchdata['tanggal'],
                 ])
             ;
 
@@ -233,7 +232,7 @@ class KepulanganSiswaController extends Controller
     }
 
     /**
-     * Memperbarui kepulangan siswa
+     * Memperbarui kepulangan siswa.
      *
      * @Route("/update", name="kepulangan-siswa_update")
      * @Method("POST")
@@ -246,14 +245,14 @@ class KepulanganSiswaController extends Controller
         $data = $request->request->get('sisdik_kepulangansiswa');
 
         foreach ($data as $keys => $values) {
-            if (preg_match('/kepulangan_(\d+)$/', $keys, $matches) !== FALSE) {
+            if (preg_match('/kepulangan_(\d+)$/', $keys, $matches) !== false) {
                 if (array_key_exists(1, $matches)) {
                     $kepulangan = $em->getRepository('LanggasSisdikBundle:KepulanganSiswa')->find($matches[1]);
                     if (is_object($kepulangan) && $kepulangan instanceof KepulanganSiswa) {
                         $kepulangan->setStatusKepulangan($values);
                         $kepulangan->setPermulaan(false);
                         $kepulangan->setTervalidasi(true);
-                        $kepulangan->setKeteranganStatus($data['kepulangan_keterangan_' . $matches[1]]);
+                        $kepulangan->setKeteranganStatus($data['kepulangan_keterangan_'.$matches[1]]);
                         $em->persist($kepulangan);
                     }
                 }
@@ -299,7 +298,7 @@ class KepulanganSiswaController extends Controller
     }
 
     /**
-     * Menginisiasi kepulangan siswa
+     * Menginisiasi kepulangan siswa.
      *
      * @Route("/inisiasi/{kelas_id}/{tanggal}", name="kepulangan-siswa_inisiasi")
      * @Method("POST")
@@ -354,7 +353,7 @@ class KepulanganSiswaController extends Controller
                         $kepulangan->setTervalidasi(false);
                         $kepulangan->setSmsDlr(null);
                         $kepulangan->setSmsDlrtime(null);
-                        $kepulangan->setJam($jam->format('H:i') . ':00');
+                        $kepulangan->setJam($jam->format('H:i').':00');
                         $kepulangan->setSmsTerproses(false);
                         $kepulangan->setStatusKepulangan($statusKepulangan);
 
@@ -409,7 +408,7 @@ class KepulanganSiswaController extends Controller
                     $kepulangan->setPermulaan(true);
                     $kepulangan->setTervalidasi(false);
                     $kepulangan->setTanggal(new \DateTime($tanggal));
-                    $kepulangan->setJam($jam->format('H:i') . ':00');
+                    $kepulangan->setJam($jam->format('H:i').':00');
                     $kepulangan->setSmsTerproses(false);
                     $kepulangan->setKehadiranSiswa($kehadiran);
 
@@ -459,7 +458,7 @@ class KepulanganSiswaController extends Controller
     }
 
     /**
-     * Mengirim SMS kepulangan
+     * Mengirim SMS kepulangan.
      *
      * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="kepulangan-siswa_kirimsms")
      * @Method("POST")
@@ -722,7 +721,7 @@ class KepulanganSiswaController extends Controller
     }
 
     /**
-     * Memperbarui kepulangan siswa berdasarkan data yang diambil secara manual
+     * Memperbarui kepulangan siswa berdasarkan data yang diambil secara manual.
      *
      * @Route("/pembaruan-manual/{urutan}/{daftarJadwal}", name="kepulangan-siswa_manual")
      * @Secure(roles="ROLE_GURU_PIKET")
@@ -743,7 +742,7 @@ class KepulanganSiswaController extends Controller
         $perulangan = JadwalKehadiran::getDaftarPerulangan();
         $waktuSekarang = new \DateTime();
         $tanggalSekarang = $waktuSekarang->format('Y-m-d');
-        $jam = $waktuSekarang->format('H:i') . ':00';
+        $jam = $waktuSekarang->format('H:i').':00';
         $mingguanHariKe = $waktuSekarang->format('N');
         $bulananHariKe = $waktuSekarang->format('j');
 
@@ -834,37 +833,37 @@ class KepulanganSiswaController extends Controller
             $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
 
             $logDirectory = $this->container->get('kernel')->getRootDir()
-                . DIRECTORY_SEPARATOR
-                . "fingerprintlogs"
-                . DIRECTORY_SEPARATOR
-                . $sekolah->getId()
-                . DIRECTORY_SEPARATOR
-                . 'log'
-                . DIRECTORY_SEPARATOR
-                . 'manual'
-                . DIRECTORY_SEPARATOR
-                . $tanggalSekarang
-                . DIRECTORY_SEPARATOR
-                . 'pulang'
+                .DIRECTORY_SEPARATOR
+                ."fingerprintlogs"
+                .DIRECTORY_SEPARATOR
+                .$sekolah->getId()
+                .DIRECTORY_SEPARATOR
+                .'log'
+                .DIRECTORY_SEPARATOR
+                .'manual'
+                .DIRECTORY_SEPARATOR
+                .$tanggalSekarang
+                .DIRECTORY_SEPARATOR
+                .'pulang'
             ;
             if (!is_dir($logDirectory)) {
                 continue;
             }
 
             $retval['pesan'][] = "Memproses kepulangan siswa untuk jadwal "
-                . $jadwal->getTahunAkademik()->getNama()
-                . ", "
-                . $jadwal->getKelas()->getNama()
-                . ", "
-                . $perulangan[$jadwal->getPerulangan()]
-                . ", "
-                . /** @Ignore */ $this->get('translator')->trans($daftarStatusKepulangan[$jadwal->getStatusKepulangan()])
-                . ", "
-                . $jadwal->getParamstatusDariJam(false)
-                . " - "
-                . $jadwal->getParamstatusHinggaJam(false)
+                .$jadwal->getTahunAkademik()->getNama()
+                .", "
+                .$jadwal->getKelas()->getNama()
+                .", "
+                .$perulangan[$jadwal->getPerulangan()]
+                .", "
+                ./** @Ignore */ $this->get('translator')->trans($daftarStatusKepulangan[$jadwal->getStatusKepulangan()])
+                .", "
+                .$jadwal->getParamstatusDariJam(false)
+                ." - "
+                .$jadwal->getParamstatusHinggaJam(false)
             ;
-            $retval['daftarJadwal'] = $daftarJadwal == '' ? $jadwal->getId() : $daftarJadwal . ',' . $jadwal->getId();
+            $retval['daftarJadwal'] = $daftarJadwal == '' ? $jadwal->getId() : $daftarJadwal.','.$jadwal->getId();
             $retval['urutan'] = ++$urutan;
 
             $mesinFingerprint = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')
@@ -885,13 +884,13 @@ class KepulanganSiswaController extends Controller
                 }
 
                 $logFile = exec("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
-                $sourceFile = $logDirectory . DIRECTORY_SEPARATOR . $logFile;
+                $sourceFile = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
                 $targetFile = self::TMP_DIR
-                    . DIRECTORY_SEPARATOR
-                    . $sekolah->getId()
-                    . '-sisdik-'
-                    . uniqid(mt_rand(), true)
-                    . $logFile
+                    .DIRECTORY_SEPARATOR
+                    .$sekolah->getId()
+                    .'-sisdik-'
+                    .uniqid(mt_rand(), true)
+                    .$logFile
                 ;
 
                 if (!@copy($sourceFile, $targetFile)) {
@@ -974,7 +973,7 @@ class KepulanganSiswaController extends Controller
 
                     $buffer = file_get_contents($extractedFile);
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                    $xmlstring = "<?xml version='1.0'?>\n" . $buffer;
+                    $xmlstring = "<?xml version='1.0'?>\n".$buffer;
 
                     $xmlobject = simplexml_load_string($xmlstring);
 

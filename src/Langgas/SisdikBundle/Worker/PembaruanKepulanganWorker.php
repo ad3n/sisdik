@@ -255,7 +255,7 @@ class PembaruanKepulanganWorker
 
                     $buffer = file_get_contents($extractedFile);
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                    $xmlstring = "<?xml version='1.0'?>\n" . $buffer;
+                    $xmlstring = "<?xml version='1.0'?>\n".$buffer;
 
                     $xmlobject = simplexml_load_string($xmlstring);
 

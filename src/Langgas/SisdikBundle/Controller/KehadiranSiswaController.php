@@ -397,7 +397,7 @@ class KehadiranSiswaController extends Controller
     }
 
     /**
-     * Memperbarui kehadiran siswa
+     * Memperbarui kehadiran siswa.
      *
      * @Route("/update", name="kehadiran-siswa_update")
      * @Method("POST")
@@ -463,7 +463,7 @@ class KehadiranSiswaController extends Controller
     }
 
     /**
-     * Menginisiasi kehadiran siswa
+     * Menginisiasi kehadiran siswa.
      *
      * @Route("/inisiasi/{kelas_id}/{tanggal}", name="kehadiran-siswa_inisiasi")
      * @Method("POST")
@@ -615,7 +615,7 @@ class KehadiranSiswaController extends Controller
     }
 
     /**
-     * Mengirim SMS kehadiran
+     * Mengirim SMS kehadiran.
      *
      * @Route("/kirim-sms/{kelas_id}/{tanggal}", name="kehadiran-siswa_kirimsms")
      * @Method("POST")
@@ -759,7 +759,7 @@ class KehadiranSiswaController extends Controller
                         $tekstemplate = $jadwalKehadiran->getTemplatesms()->getTeks();
                         $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
                         $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
-                        $tekstemplate = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                        $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
                         $tekstemplate = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $tekstemplate);
                         $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
                         $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
@@ -821,7 +821,7 @@ class KehadiranSiswaController extends Controller
                                 $tekstemplate = $jadwalKehadiran->getTemplatesms()->getTeks();
                                 $tekstemplate = str_replace("%nama%", $kehadiran->getSiswa()->getNamaLengkap(), $tekstemplate);
                                 $tekstemplate = str_replace("%nis%", $kehadiran->getSiswa()->getNomorInduk(), $tekstemplate);
-                                $tekstemplate = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
+                                $tekstemplate = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$mingguanHariKe]), $tekstemplate);
                                 $tekstemplate = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $tekstemplate);
                                 $tekstemplate = str_replace("%jam%", $kehadiran->getJam(), $tekstemplate);
                                 $tekstemplate = str_replace("%keterangan%", $kehadiran->getKeteranganStatus(), $tekstemplate);
@@ -1041,7 +1041,7 @@ class KehadiranSiswaController extends Controller
             $teksRingkasan = str_replace("%kelas%", $waliKelas->getKelas()->getNama(), $teksRingkasan);
 
             $indeksHari = $tanggalTerpilih->format('N');
-            $teksRingkasan = str_replace("%hari%",/** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $teksRingkasan);
+            $teksRingkasan = str_replace("%hari%", /** @Ignore */ $translator->trans($namaNamaHari[$indeksHari]), $teksRingkasan);
 
             $teksRingkasan = str_replace("%tanggal%", $tanggalTerpilih->format('d/m/Y'), $teksRingkasan);
             $teksRingkasan = str_replace("%jumlah-tepat%", $jumlahTepat, $teksRingkasan);
@@ -1102,7 +1102,7 @@ class KehadiranSiswaController extends Controller
     }
 
     /**
-     * Memperbarui kehadiran siswa berdasarkan data yang diambil secara manual
+     * Memperbarui kehadiran siswa berdasarkan data yang diambil secara manual.
      *
      * @Route("/pembaruan-manual/{urutan}/{daftarJadwal}", name="kehadiran-siswa_manual")
      * @Secure(roles="ROLE_GURU_PIKET")
@@ -1352,7 +1352,7 @@ class KehadiranSiswaController extends Controller
 
                     $buffer = file_get_contents($extractedFile);
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                    $xmlstring = "<?xml version='1.0'?>\n" . $buffer;
+                    $xmlstring = "<?xml version='1.0'?>\n".$buffer;
 
                     $xmlobject = simplexml_load_string($xmlstring);
 
