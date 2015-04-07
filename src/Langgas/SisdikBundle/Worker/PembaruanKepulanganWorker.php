@@ -251,11 +251,11 @@ class PembaruanKepulanganWorker
                         exec("sed -i -E '/$nomorTerproses/d' $extractedFile");
                     }
 
-                    $buffer = file_get_contents($extractedFile);
+                    exec("sed -i -n '/<.*>/,\$p' $extractedFile");
 
+                    $buffer = file_get_contents($extractedFile);
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                    preg_match_all("/<([\w]+)[^>]*>.*?<\/\\1>/", $buffer, $matches, PREG_SET_ORDER);
-                    $xmlstring = "<?xml version='1.0'?>\n".$matches[0][0];
+                    $xmlstring = "<?xml version='1.0'?>\n" . $buffer;
 
                     $xmlobject = simplexml_load_string($xmlstring);
 

@@ -900,10 +900,11 @@ class KepulanganSiswaController extends Controller
 
                 $output = [];
                 exec("gunzip --force $targetFile", $output);
-
-                $buffer = file_get_contents(substr($targetFile, 0, -3));
+                $extractedFile = substr($targetFile, 0, -3);
 
                 if (strstr($targetFile, 'json') !== false) {
+                    $buffer = file_get_contents($extractedFile);
+
                     $logKepulangan = json_decode($buffer, true);
 
                     foreach ($logKepulangan as $item) {
@@ -969,9 +970,11 @@ class KepulanganSiswaController extends Controller
                         $em->persist($prosesKepulanganSiswa);
                     }
                 } else {
+                    exec("sed -i -n '/<.*>/,\$p' $extractedFile");
+
+                    $buffer = file_get_contents($extractedFile);
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                    preg_match_all("/<([\w]+)[^>]*>.*?<\/\\1>/", $buffer, $matches, PREG_SET_ORDER);
-                    $xmlstring = "<?xml version='1.0'?>\n" . $matches[0][0];
+                    $xmlstring = "<?xml version='1.0'?>\n" . $buffer;
 
                     $xmlobject = simplexml_load_string($xmlstring);
 
@@ -1041,7 +1044,7 @@ class KepulanganSiswaController extends Controller
                     }
                 }
 
-                @unlink(substr($targetFile, 0, -3));
+                @unlink($extractedFile);
             }
 
             $em->flush();
