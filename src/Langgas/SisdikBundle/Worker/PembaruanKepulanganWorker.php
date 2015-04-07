@@ -164,11 +164,32 @@ class PembaruanKepulanganWorker
                     continue;
                 }
 
-                exec("gunzip --force $targetFile");
+                $siswaTerbarui = $em->createQueryBuilder()
+                    ->select('siswa.nomorIndukSistem')
+                    ->from('LanggasSisdikBundle:KepulanganSiswa', 'kepulangan')
+                    ->leftJoin('kepulangan.siswa', 'siswa')
+                    ->where('kepulangan.sekolah = :sekolah')
+                    ->andWhere('kepulangan.tanggal = :tanggal')
+                    ->andWhere('kepulangan.permulaan = :permulaan OR kepulangan.tervalidasi = :tervalidasi')
+                    ->setParameter('sekolah', $sekolah)
+                    ->setParameter('tanggal', $waktuSekarang->format('Y-m-d'))
+                    ->setParameter('permulaan', false)
+                    ->setParameter('tervalidasi', true)
+                    ->getQuery()
+                    ->getArrayResult()
+                ;
+                $nomorTerproses = '';
+                foreach ($siswaTerbarui as $val) {
+                    $nomorTerproses .= $val['nomorIndukSistem'].'|';
+                }
+                $nomorTerproses = preg_replace('/\|$/', '', $nomorTerproses);
 
-                $buffer = file_get_contents(substr($targetFile, 0, -3));
+                exec("gunzip --force $targetFile");
+                $extractedFile = substr($targetFile, 0, -3);
 
                 if (strstr($targetFile, 'json') !== false) {
+                    $buffer = file_get_contents($extractedFile);
+
                     $logKepulangan = json_decode($buffer, true);
 
                     foreach ($logKepulangan as $item) {
@@ -226,6 +247,12 @@ class PembaruanKepulanganWorker
                         $em->persist($prosesKepulanganSiswa);
                     }
                 } else {
+                    if ($nomorTerproses != '') {
+                        exec("sed -i -E '/$nomorTerproses/d' $extractedFile");
+                    }
+
+                    $buffer = file_get_contents($extractedFile);
+
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
                     preg_match_all("/<([\w]+)[^>]*>.*?<\/\\1>/", $buffer, $matches, PREG_SET_ORDER);
                     $xmlstring = "<?xml version='1.0'?>\n".$matches[0][0];
@@ -289,7 +316,7 @@ class PembaruanKepulanganWorker
                     }
                 }
 
-                @unlink(substr($targetFile, 0, -3));
+                @unlink($extractedFile);
 
                 $prosesLog->setStatusAntrian('c-selesai');
                 $prosesLog->setAkhirProses(new \DateTime());
