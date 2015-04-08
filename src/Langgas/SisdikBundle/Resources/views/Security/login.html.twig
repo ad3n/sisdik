@@ -14,6 +14,9 @@ body {
     margin: 0 auto 20px;
     text-align: center;
 }
+.network-logo {
+    margin: 0 5px;
+}
 .form-signin {
     max-width: 350px;
     padding: 19px 29px 29px;
@@ -78,7 +81,10 @@ body {
         </form>
         <div class="network">
             {%- image '@LanggasSisdikBundle/Resources/public/images/logo/wordpress-logo-32-blue.png' -%}
-            <a href="http://blog.sisdik.com" target="_blank" title="Blog"><img src="{{ asset_url }}"></a>
+            <a class="network-logo" href="http://blog.sisdik.com" target="_blank" title="Blog"><img src="{{ asset_url }}"></a>
+            {%- endimage -%}
+            {%- image '@LanggasSisdikBundle/Resources/public/images/logo/uservoice-32.png' -%}
+            <a class="network-logo" href="https://sisdik.uservoice.com" target="_blank" title="User Voice"><img src="{{ asset_url }}"></a>
             {%- endimage -%}
         </div>
     </div>
