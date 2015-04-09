@@ -29,14 +29,14 @@ class ProsesLogKepulangan
     /**
      * @ORM\Column(name="prioritas", type="string", length=50, nullable=true)
      *
-     * @var integer
+     * @var string
      */
     private $prioritas;
 
     /**
      * @ORM\Column(name="status_antrian", type="string", length=50, nullable=true)
      *
-     * @var integer
+     * @var string
      */
     private $statusAntrian;
 
@@ -53,6 +53,13 @@ class ProsesLogKepulangan
      * @var \DateTime
      */
     private $akhirProses;
+
+    /**
+     * @ORM\Column(name="jumlah_log_diproses", type="integer", nullable=true)
+     *
+     * @var integer
+     */
+    private $jumlahLogDiproses;
 
     /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
@@ -150,6 +157,22 @@ class ProsesLogKepulangan
     public function getAkhirProses()
     {
         return $this->akhirProses;
+    }
+
+    /**
+     * @param integer $jumlahLogDiproses
+     */
+    public function setJumlahLogDiproses($jumlahLogDiproses)
+    {
+        $this->jumlahLogDiproses = $jumlahLogDiproses;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getJumlahLogDiproses()
+    {
+        return $this->jumlahLogDiproses;
     }
 
     /**
