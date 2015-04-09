@@ -124,6 +124,8 @@ class PembaruanKepulanganWorker
 
         $jadwalKepulangan = $querybuilder->getQuery()->getResult();
 
+        $jumlahLogDiproses = 0;
+
         foreach ($jadwalKepulangan as $jadwal) {
             if (!(is_object($jadwal) && $jadwal instanceof JadwalKepulangan)) {
                 continue;
@@ -228,6 +230,8 @@ class PembaruanKepulanganWorker
 
                                 $em->persist($kepulanganSiswa);
                                 $em->flush();
+
+                                $jumlahLogDiproses++;
                             }
                         }
                     }
@@ -296,6 +300,8 @@ class PembaruanKepulanganWorker
 
                                     $em->persist($kepulanganSiswa);
                                     $em->flush();
+
+                                    $jumlahLogDiproses++;
                                 }
                             }
                         }
@@ -317,14 +323,15 @@ class PembaruanKepulanganWorker
                 }
 
                 @unlink($extractedFile);
-
-                $prosesLog->setStatusAntrian('c-selesai');
-                $prosesLog->setAkhirProses(new \DateTime());
-                $em->persist($prosesLog);
-
-                $em->flush();
             }
         }
+
+        $prosesLog->setStatusAntrian('c-selesai');
+        $prosesLog->setAkhirProses(new \DateTime());
+        $prosesLog->setJumlahLogDiproses($jumlahLogDiproses);
+
+        $em->persist($prosesLog);
+        $em->flush();
 
         return true;
     }
