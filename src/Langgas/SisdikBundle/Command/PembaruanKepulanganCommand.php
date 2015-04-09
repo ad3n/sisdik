@@ -95,62 +95,67 @@ class PembaruanKepulanganCommand extends ContainerAwareCommand
                         continue;
                     }
 
-                    $logFile = system("cd $logDirectory && ls -1t {$mesin->getAlamatIp()}* | head -n1");
-                    if ($logFile == '') {
-                        continue;
-                    }
+                    $logFiles = [];
+                    exec("cd $logDirectory && ls -1t {$mesin->getAlamatIp()}*", $logFiles);
 
-                    if (!$input->getOption('paksa')) {
-                        $prosesLog = $em->createQueryBuilder()
-                            ->select('COUNT(prosesLog.id)')
-                            ->from('LanggasSisdikBundle:ProsesLogKepulangan', 'prosesLog')
-                            ->where('prosesLog.sekolah = :sekolah')
-                            ->andWhere('prosesLog.namaFile = :namaFile')
-                            ->setParameter('sekolah', $sekolah)
-                            ->setParameter('namaFile', $logFile)
-                            ->getQuery()
-                            ->getSingleScalarResult()
-                        ;
-                        if ($prosesLog > 0) {
+                    $logFile = '';
+                    foreach ($logFiles as $logFile) {
+                        if ($logFile == '') {
                             continue;
                         }
-                    }
 
-                    $workload['log_file'] = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
+                        if (!$input->getOption('paksa')) {
+                            $prosesLog = $em->createQueryBuilder()
+                                ->select('COUNT(prosesLog.id)')
+                                ->from('LanggasSisdikBundle:ProsesLogKepulangan', 'prosesLog')
+                                ->where('prosesLog.sekolah = :sekolah')
+                                ->andWhere('prosesLog.namaFile = :namaFile')
+                                ->setParameter('sekolah', $sekolah)
+                                ->setParameter('namaFile', $logFile)
+                                ->getQuery()
+                                ->getSingleScalarResult()
+                            ;
+                            if ($prosesLog > 0) {
+                                continue;
+                            }
+                        }
 
-                    /* @var $logger Logger */
-                    $logger = $this->getContainer()->get('monolog.logger.attendance');
+                        $workload['log_file'] = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
 
-                    $gearman = new \GearmanClient();
-                    $gearman->addServer();
+                        /* @var $logger Logger */
+                        $logger = $this->getContainer()->get('monolog.logger.attendance');
 
-                    $jobFunction = "LanggasSisdikBundleWorkerPembaruanKepulanganWorker~pembaruan";
+                        $gearman = new \GearmanClient();
+                        $gearman->addServer();
 
-                    $proses = new ProsesLogKepulangan();
-                    $proses->setAwalProses($waktuSekarang);
-                    $proses->setNamaFile($logFile);
-                    $proses->setSekolah($sekolah);
-                    $proses->setStatusAntrian('a-masuk-antrian');
-                    $proses->setPrioritas($input->getOption('prioritas'));
+                        $jobFunction = "LanggasSisdikBundleWorkerPembaruanKepulanganWorker~pembaruan";
 
-                    $em->persist($proses);
-                    $em->flush();
+                        $proses = new ProsesLogKepulangan();
+                        $proses->setAwalProses($waktuSekarang);
+                        $proses->setNamaFile($logFile);
+                        $proses->setSekolah($sekolah);
+                        $proses->setStatusAntrian('a-masuk-antrian');
+                        $proses->setPrioritas($input->getOption('prioritas'));
 
-                    $workload['proses_log'] = $proses->getId();
+                        $em->persist($proses);
+                        $em->flush();
 
-                    switch ($input->getOption('prioritas')) {
-                        case "tinggi":
-                            $gearman->doHighBackground($jobFunction, serialize($workload));
-                            $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kepulangan | prioritas-tinggi | '.$workload['log_file']);
-                            break;
-                        case "normal":
-                            $gearman->doBackground($jobFunction, serialize($workload));
-                            $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kepulangan | prioritas-normal | '.$workload['log_file']);
-                            break;
-                        case "rendah":
-                            $gearman->doLowBackground($jobFunction, serialize($workload));
-                            $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kepulangan | prioritas-rendah | '.$workload['log_file']);
-                            break;
+                        $workload['proses_log'] = $proses->getId();
+
+                        switch ($input->getOption('prioritas')) {
+                            case "tinggi":
+                                $gearman->doHighBackground($jobFunction, serialize($workload));
+                                $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kepulangan | prioritas-tinggi | '.$workload['log_file']);
+                                break;
+                            case "normal":
+                                $gearman->doBackground($jobFunction, serialize($workload));
+                                $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kepulangan | prioritas-normal | '.$workload['log_file']);
+                                break;
+                            case "rendah":
+                                $gearman->doLowBackground($jobFunction, serialize($workload));
+                                $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kepulangan | prioritas-rendah | '.$workload['log_file']);
+                                break;
+                        }
                     }
                 }
             }
