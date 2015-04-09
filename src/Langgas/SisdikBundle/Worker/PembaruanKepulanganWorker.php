@@ -92,6 +92,8 @@ class PembaruanKepulanganWorker
         $em->persist($prosesLog);
         $em->flush();
 
+        $jumlahLogDiproses = 0;
+
         $querybuilder = $em->createQueryBuilder()
             ->select('jadwal')
             ->from('LanggasSisdikBundle:JadwalKepulangan', 'jadwal')
@@ -124,8 +126,6 @@ class PembaruanKepulanganWorker
         }
 
         $jadwalKepulangan = $querybuilder->getQuery()->getResult();
-
-        $jumlahLogDiproses = 0;
 
         foreach ($jadwalKepulangan as $jadwal) {
             if (!(is_object($jadwal) && $jadwal instanceof JadwalKepulangan)) {
@@ -250,6 +250,7 @@ class PembaruanKepulanganWorker
                     if (is_object($prosesKepulanganSiswa) && $prosesKepulanganSiswa instanceof ProsesKepulanganSiswa) {
                         $prosesKepulanganSiswa->setBerhasilDiperbaruiMesin(true);
                         $em->persist($prosesKepulanganSiswa);
+                        $em->flush();
                     }
                 } else {
                     if ($nomorTerproses != '') {
@@ -319,6 +320,7 @@ class PembaruanKepulanganWorker
                         if (is_object($prosesKepulanganSiswa) && $prosesKepulanganSiswa instanceof ProsesKepulanganSiswa) {
                             $prosesKepulanganSiswa->setBerhasilDiperbaruiMesin(true);
                             $em->persist($prosesKepulanganSiswa);
+                            $em->flush();
                         }
                     }
                 }
