@@ -38,7 +38,7 @@ class SiswaTahkikSearchType extends AbstractType
      * @param TokenStorageInterface $tokenStorage
      * @param TranslatorInterface   $translator
      */
-    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterfaceInterface $translator)
+    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
