@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * @Gearman\Work(
+ *     iterations = 1,
  *     description = "Worker pembaruan kepulangan siswa.",
  *     defaultMethod = "doBackground",
  *     service = "pembaruan.kepulangan",
