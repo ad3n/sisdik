@@ -1354,7 +1354,7 @@ class KehadiranSiswaController extends Controller
                     $buffer = preg_replace("/\s+/", ' ', trim($buffer));
                     $xmlstring = "<?xml version='1.0'?>\n".$buffer;
 
-                    $xmlobject = simplexml_load_string($xmlstring);
+                    $xmlobject = @simplexml_load_string($xmlstring);
 
                     if ($xmlobject) {
                         foreach ($xmlobject->xpath('Row') as $item) {
