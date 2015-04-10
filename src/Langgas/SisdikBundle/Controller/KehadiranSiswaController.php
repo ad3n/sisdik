@@ -191,11 +191,11 @@ class KehadiranSiswaController extends Controller
                 ;
             }
 
-            $qbHapusKehadiran->getQuery()->execute();
-            $qbHapusProsesKehadiran->getQuery()->execute();
-
             $qbHapusKepulangan->getQuery()->execute();
             $qbHapusProsesKepulangan->getQuery()->execute();
+
+            $qbHapusKehadiran->getQuery()->execute();
+            $qbHapusProsesKehadiran->getQuery()->execute();
 
             $this
                 ->get('session')
