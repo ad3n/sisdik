@@ -26,7 +26,6 @@ use JMS\DiExtraBundle\Annotation\Service;
  */
 class PembaruanKepulanganWorker
 {
-    const BEDA_WAKTU_MAKS = 1810;
     const TMP_DIR = "/tmp";
 
     /**
@@ -154,49 +153,119 @@ class PembaruanKepulanganWorker
                 $bedaWaktu = 0;
             }
 
-            if ($bedaWaktu >= 0 && $bedaWaktu <= self::BEDA_WAKTU_MAKS) {
-                $targetFile = self::TMP_DIR
-                    .DIRECTORY_SEPARATOR
-                    .$sekolah->getId()
-                    .'-sisdik-'
-                    .uniqid(mt_rand(), true)
-                    .'.gz'
-                ;
+            $targetFile = self::TMP_DIR
+                .DIRECTORY_SEPARATOR
+                .$sekolah->getId()
+                .'-sisdik-'
+                .uniqid(mt_rand(), true)
+                .'.gz'
+            ;
 
-                if (!@copy($logFile, $targetFile)) {
-                    continue;
+            if (!@copy($logFile, $targetFile)) {
+                continue;
+            }
+
+            $siswaTerbarui = $em->createQueryBuilder()
+                ->select('siswa.nomorIndukSistem')
+                ->from('LanggasSisdikBundle:KepulanganSiswa', 'kepulangan')
+                ->leftJoin('kepulangan.siswa', 'siswa')
+                ->where('kepulangan.sekolah = :sekolah')
+                ->andWhere('kepulangan.tanggal = :tanggal')
+                ->andWhere('kepulangan.permulaan = :permulaan OR kepulangan.tervalidasi = :tervalidasi')
+                ->setParameter('sekolah', $sekolah)
+                ->setParameter('tanggal', $waktuSekarang->format('Y-m-d'))
+                ->setParameter('permulaan', false)
+                ->setParameter('tervalidasi', true)
+                ->getQuery()
+                ->getArrayResult()
+            ;
+            $nomorTerproses = '';
+            foreach ($siswaTerbarui as $val) {
+                $nomorTerproses .= $val['nomorIndukSistem'].'|';
+            }
+            $nomorTerproses = preg_replace('/\|$/', '', $nomorTerproses);
+
+            exec("gunzip --force $targetFile");
+            $extractedFile = substr($targetFile, 0, -3);
+
+            if (strstr($targetFile, 'json') !== false) {
+                $buffer = file_get_contents($extractedFile);
+
+                $logKepulangan = json_decode($buffer, true);
+
+                foreach ($logKepulangan as $item) {
+                    $logTanggal = new \DateTime($item['datetime']);
+
+                    // +60 detik perbedaan
+                    if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp() + 60)) {
+                        continue;
+                    }
+
+                    if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
+                        continue;
+                    }
+
+                    $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
+                        ->findOneBy([
+                            'nomorIndukSistem' => $item['id'],
+                        ])
+                    ;
+
+                    if (is_object($siswa) && $siswa instanceof Siswa) {
+                        $kepulanganSiswa = $em->getRepository('LanggasSisdikBundle:KepulanganSiswa')
+                            ->findOneBy([
+                                'sekolah' => $sekolah,
+                                'tahunAkademik' => $jadwal->getTahunAkademik(),
+                                'kelas' => $jadwal->getKelas(),
+                                'siswa' => $siswa,
+                                'tanggal' => $waktuSekarang,
+                                'permulaan' => true,
+                            ])
+                        ;
+                        if (is_object($kepulanganSiswa) && $kepulanganSiswa instanceof KepulanganSiswa) {
+                            $kepulanganSiswa->setPermulaan(false);
+                            $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
+                            $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
+
+                            $em->persist($kepulanganSiswa);
+                            $em->flush();
+
+                            $jumlahLogDiproses++;
+                        }
+                    }
                 }
 
-                $siswaTerbarui = $em->createQueryBuilder()
-                    ->select('siswa.nomorIndukSistem')
-                    ->from('LanggasSisdikBundle:KepulanganSiswa', 'kepulangan')
-                    ->leftJoin('kepulangan.siswa', 'siswa')
-                    ->where('kepulangan.sekolah = :sekolah')
-                    ->andWhere('kepulangan.tanggal = :tanggal')
-                    ->andWhere('kepulangan.permulaan = :permulaan OR kepulangan.tervalidasi = :tervalidasi')
-                    ->setParameter('sekolah', $sekolah)
-                    ->setParameter('tanggal', $waktuSekarang->format('Y-m-d'))
-                    ->setParameter('permulaan', false)
-                    ->setParameter('tervalidasi', true)
-                    ->getQuery()
-                    ->getArrayResult()
+                $prosesKepulanganSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKepulanganSiswa')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'tahunAkademik' => $jadwal->getTahunAkademik(),
+                        'kelas' => $jadwal->getKelas(),
+                        'tanggal' => $waktuSekarang,
+                        'berhasilDiperbaruiMesin' => false,
+                    ])
                 ;
-                $nomorTerproses = '';
-                foreach ($siswaTerbarui as $val) {
-                    $nomorTerproses .= $val['nomorIndukSistem'].'|';
+
+                if (is_object($prosesKepulanganSiswa) && $prosesKepulanganSiswa instanceof ProsesKepulanganSiswa) {
+                    $prosesKepulanganSiswa->setBerhasilDiperbaruiMesin(true);
+                    $em->persist($prosesKepulanganSiswa);
+                    $em->flush();
                 }
-                $nomorTerproses = preg_replace('/\|$/', '', $nomorTerproses);
+            } else {
+                if ($nomorTerproses != '') {
+                    exec("sed -i -E '/$nomorTerproses/d' $extractedFile");
+                }
 
-                exec("gunzip --force $targetFile");
-                $extractedFile = substr($targetFile, 0, -3);
+                exec("sed -i -n '/<.*>/,\$p' $extractedFile");
 
-                if (strstr($targetFile, 'json') !== false) {
-                    $buffer = file_get_contents($extractedFile);
+                $buffer = file_get_contents($extractedFile);
+                $buffer = preg_replace("/\s+/", ' ', trim($buffer));
+                $xmlstring = "<?xml version='1.0'?>\n".$buffer;
 
-                    $logKepulangan = json_decode($buffer, true);
+                $xmlobject = @simplexml_load_string($xmlstring);
 
-                    foreach ($logKepulangan as $item) {
-                        $logTanggal = new \DateTime($item['datetime']);
+                if ($xmlobject) {
+                    foreach ($xmlobject->xpath('Row') as $item) {
+                        $logTanggal = new \DateTime($item->DateTime);
 
                         // +60 detik perbedaan
                         if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp() + 60)) {
@@ -209,7 +278,7 @@ class PembaruanKepulanganWorker
 
                         $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
                             ->findOneBy([
-                                'nomorIndukSistem' => $item['id'],
+                                'nomorIndukSistem' => $item->PIN,
                             ])
                         ;
 
@@ -246,87 +315,15 @@ class PembaruanKepulanganWorker
                             'berhasilDiperbaruiMesin' => false,
                         ])
                     ;
-
                     if (is_object($prosesKepulanganSiswa) && $prosesKepulanganSiswa instanceof ProsesKepulanganSiswa) {
                         $prosesKepulanganSiswa->setBerhasilDiperbaruiMesin(true);
                         $em->persist($prosesKepulanganSiswa);
                         $em->flush();
                     }
-                } else {
-                    if ($nomorTerproses != '') {
-                        exec("sed -i -E '/$nomorTerproses/d' $extractedFile");
-                    }
-
-                    exec("sed -i -n '/<.*>/,\$p' $extractedFile");
-
-                    $buffer = file_get_contents($extractedFile);
-                    $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                    $xmlstring = "<?xml version='1.0'?>\n".$buffer;
-
-                    $xmlobject = @simplexml_load_string($xmlstring);
-
-                    if ($xmlobject) {
-                        foreach ($xmlobject->xpath('Row') as $item) {
-                            $logTanggal = new \DateTime($item->DateTime);
-
-                            // +60 detik perbedaan
-                            if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp() + 60)) {
-                                continue;
-                            }
-
-                            if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
-                                continue;
-                            }
-
-                            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
-                                ->findOneBy([
-                                    'nomorIndukSistem' => $item->PIN,
-                                ])
-                            ;
-
-                            if (is_object($siswa) && $siswa instanceof Siswa) {
-                                $kepulanganSiswa = $em->getRepository('LanggasSisdikBundle:KepulanganSiswa')
-                                    ->findOneBy([
-                                        'sekolah' => $sekolah,
-                                        'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                        'kelas' => $jadwal->getKelas(),
-                                        'siswa' => $siswa,
-                                        'tanggal' => $waktuSekarang,
-                                        'permulaan' => true,
-                                    ])
-                                ;
-                                if (is_object($kepulanganSiswa) && $kepulanganSiswa instanceof KepulanganSiswa) {
-                                    $kepulanganSiswa->setPermulaan(false);
-                                    $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
-                                    $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
-
-                                    $em->persist($kepulanganSiswa);
-                                    $em->flush();
-
-                                    $jumlahLogDiproses++;
-                                }
-                            }
-                        }
-
-                        $prosesKepulanganSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKepulanganSiswa')
-                            ->findOneBy([
-                                'sekolah' => $sekolah,
-                                'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                'kelas' => $jadwal->getKelas(),
-                                'tanggal' => $waktuSekarang,
-                                'berhasilDiperbaruiMesin' => false,
-                            ])
-                        ;
-                        if (is_object($prosesKepulanganSiswa) && $prosesKepulanganSiswa instanceof ProsesKepulanganSiswa) {
-                            $prosesKepulanganSiswa->setBerhasilDiperbaruiMesin(true);
-                            $em->persist($prosesKepulanganSiswa);
-                            $em->flush();
-                        }
-                    }
                 }
-
-                @unlink($extractedFile);
             }
+
+            @unlink($extractedFile);
         }
 
         $prosesLog->setStatusAntrian('c-selesai');
