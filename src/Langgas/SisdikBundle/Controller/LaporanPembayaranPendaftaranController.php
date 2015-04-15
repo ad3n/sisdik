@@ -230,7 +230,7 @@ class LaporanPembayaranPendaftaranController extends Controller
         $pendaftarTercari = count($qbTercari->select('DISTINCT(siswa.id)')->getQuery()->getResult());
 
         $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5);
+        $pagination = $paginator->paginate($querybuilder, $this->getRequest()->query->get('page', 1), 5, ['wrap-queries' => true]);
 
         $summaryform = $this->createForm('sisdik_ringkasanlaporan');
 
