@@ -130,7 +130,8 @@ class PembayaranBiayaRutinController extends Controller
 
                 $qbTmp = clone $querybuilder;
                 $hasilTmp = $qbTmp
-                    ->select('siswa.id')
+                    ->select('DISTINCT siswa.id')
+                    ->groupBy('siswa.id')
                     ->getQuery()
                     ->getArrayResult()
                 ;
@@ -1348,8 +1349,8 @@ class PembayaranBiayaRutinController extends Controller
         foreach ($daftarBiayaRutin as $biaya) {
             $jumlahWajibBayar = 0;
 
-            $jumlahPembayaran = $em->createQueryBuilder()
-                ->select('COUNT(DISTINCT pembayaran.id)')
+            $pembayaranLunas = $em->createQueryBuilder()
+                ->select('COUNT(DISTINCT pembayaran.id) AS jumlah')
                 ->from('LanggasSisdikBundle:PembayaranRutin', 'pembayaran')
                 ->leftJoin('pembayaran.transaksiPembayaranRutin', 'transaksi')
                 ->where('pembayaran.siswa = :siswa')
@@ -1359,11 +1360,18 @@ class PembayaranBiayaRutinController extends Controller
                 ->groupBy('pembayaran.id')
                 ->having('SUM(transaksi.nominalPembayaran) >= (SUM(DISTINCT pembayaran.nominalBiaya) - (SUM(DISTINCT pembayaran.nominalPotongan) + SUM(DISTINCT pembayaran.persenPotonganDinominalkan)))')
                 ->getQuery()
-                ->getOneOrNullResult()
+                ->getResult()
             ;
 
-            if (is_null($jumlahPembayaran)) {
-                $jumlahPembayaran[1] = 0;
+            if (count($pembayaranLunas) == 0) {
+                $pembayaranLunas[0]['jumlah'] = 0;
+            }
+
+            $jumlahPembayaran = 0;
+            if (is_array($pembayaranLunas)) {
+                foreach ($pembayaranLunas as $pembayaran) {
+                    $jumlahPembayaran += $pembayaran['jumlah'];
+                }
             }
 
             $tmpHariKe = ($biaya->getBulananHariKe() && $biaya->getBulananHariKe() <= 28) ? $biaya->getBulananHariKe() : '01';
@@ -1375,7 +1383,7 @@ class PembayaranBiayaRutinController extends Controller
                 case 'a-harian':
                     $jumlahWajibBayar = $bedaWaktu->format("%a");
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
@@ -1383,7 +1391,7 @@ class PembayaranBiayaRutinController extends Controller
                 case 'b-mingguan':
                     $jumlahWajibBayar = floor($bedaWaktu->format("%a") / 7);
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
@@ -1395,7 +1403,7 @@ class PembayaranBiayaRutinController extends Controller
                         $jumlahWajibBayar++;
                     }
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
@@ -1418,7 +1426,7 @@ class PembayaranBiayaRutinController extends Controller
                         }
                     }
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
@@ -1441,7 +1449,7 @@ class PembayaranBiayaRutinController extends Controller
                         }
                     }
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
@@ -1464,7 +1472,7 @@ class PembayaranBiayaRutinController extends Controller
                         }
                     }
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
@@ -1483,7 +1491,7 @@ class PembayaranBiayaRutinController extends Controller
                         $jumlahWajibBayar++;
                     }
 
-                    if ($jumlahPembayaran[1] < $jumlahWajibBayar) {
+                    if ($jumlahPembayaran < $jumlahWajibBayar) {
                         return true;
                     }
 
