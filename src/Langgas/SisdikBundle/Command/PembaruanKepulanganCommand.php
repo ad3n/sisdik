@@ -7,7 +7,6 @@ use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\MesinKehadiran;
 use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\Siswa;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
