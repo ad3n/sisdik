@@ -131,28 +131,6 @@ class PembaruanKepulanganWorker
                 continue;
             }
 
-            $dariJam = $jadwal->getParamstatusDariJam();
-            $hinggaJam = $jadwal->getParamstatusHinggaJam();
-
-            if ($paksa === true) {
-                $dariJam = "00:00:00";
-                $hinggaJam = $jam;
-                $this->logger->addDebug("dari jam dipaksa menjadi ".$dariJam);
-                $this->logger->addDebug("hingga jam dipaksa menjadi ".$hinggaJam);
-            }
-
-            $tanggalJadwalDari = new \DateTime($waktuSekarang->format('Y-m-d')." $dariJam");
-            $tanggalJadwalHingga = new \DateTime($waktuSekarang->format('Y-m-d')." $hinggaJam");
-
-            $waktuJadwal = strtotime($waktuSekarang->format('Y-m-d')." $hinggaJam");
-            $bedaWaktu = $waktuSekarang->getTimestamp() - $waktuJadwal;
-
-            if ($paksa === true) {
-                $this->logger->addDebug($waktuSekarang->format('Y-m-d H:i:s').' - '.$tanggalJadwalHingga->format('Y-m-d H:i:s'));
-                $this->logger->addDebug("beda waktu dipaksa menjadi 0");
-                $bedaWaktu = 0;
-            }
-
             $targetFile = self::TMP_DIR
                 .DIRECTORY_SEPARATOR
                 .$sekolah->getId()
