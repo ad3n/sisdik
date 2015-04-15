@@ -126,7 +126,6 @@
 
                 {% if totalRestitusi > 0 %}
                     <span style="text-decoration: line-through;">{{ totalBayar|number_format(0, ',', '.') }}</span>
-                    <i class="fa fa-paper-plane-o"></i>
                     {{ (totalBayar - totalRestitusi)|number_format(0, ',', '.') }}
                 {% else %}
                     {{ (totalBayar - totalRestitusi)|number_format(0, ',', '.') }}
