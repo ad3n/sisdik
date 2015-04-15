@@ -3,6 +3,9 @@
 namespace Langgas\SisdikBundle\Worker;
 
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Service;
 use Langgas\SisdikBundle\Entity\JadwalKepulangan;
 use Langgas\SisdikBundle\Entity\KepulanganSiswa;
 use Langgas\SisdikBundle\Entity\ProsesKepulanganSiswa;
@@ -11,9 +14,6 @@ use Langgas\SisdikBundle\Entity\Siswa;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Mmoreram\GearmanBundle\Driver\Gearman;
 use Symfony\Bridge\Monolog\Logger;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * @Gearman\Work(
@@ -222,7 +222,6 @@ class PembaruanKepulanganWorker
                         'berhasilDiperbaruiMesin' => false,
                     ])
                 ;
-
                 if (is_object($prosesKepulanganSiswa) && $prosesKepulanganSiswa instanceof ProsesKepulanganSiswa) {
                     $prosesKepulanganSiswa->setBerhasilDiperbaruiMesin(true);
                     $em->persist($prosesKepulanganSiswa);
