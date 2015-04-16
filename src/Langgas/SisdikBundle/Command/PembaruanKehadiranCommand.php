@@ -2,417 +2,160 @@
 
 namespace Langgas\SisdikBundle\Command;
 
-use Langgas\SisdikBundle\Entity\KalenderPendidikan;
-use Langgas\SisdikBundle\Entity\ProsesKehadiranSiswa;
-use Langgas\SisdikBundle\Entity\Sekolah;
-use Langgas\SisdikBundle\Entity\KehadiranSiswa;
+use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
-use Langgas\SisdikBundle\Entity\Siswa;
+use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\MesinKehadiran;
+use Langgas\SisdikBundle\Entity\ProsesLogKehadiran;
+use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class PembaruanKehadiranCommand extends ContainerAwareCommand
 {
-    const LOCK_FILE = "pembaruan-kehadiran.lock";
-    const LOCK_DIR = "lock";
-    const BEDA_WAKTU_MAKS = 1810;
-    const TMP_DIR = "/tmp";
-
     protected function configure()
     {
         $this
             ->setName('sisdik:kehadiran:pembaruan')
             ->setDescription('Memperbarui kehadiran siswa.')
+            ->addOption('prioritas', null, InputOption::VALUE_REQUIRED, "Prioritas [tinggi|normal|rendah]. Default normal.", "normal")
             ->addOption('paksa', null, InputOption::VALUE_NONE, 'Memaksa pembaruan data kehadiran hari ini')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /* @var $em EntityManager */
         $em = $this->getContainer()->get('doctrine')->getManager();
 
-        $text = '';
-        $perulangan = JadwalKehadiran::getDaftarPerulangan();
         $waktuSekarang = new \DateTime();
-        $tanggalSekarang = $waktuSekarang->format('Y-m-d');
-        $jam = $waktuSekarang->format('H:i').':00';
-        $mingguanHariKe = $waktuSekarang->format('N');
-        $bulananHariKe = $waktuSekarang->format('j');
+        $perulangan = JadwalKehadiran::getDaftarPerulangan();
 
-        if ($input->getOption('paksa')) {
-            $jamDari = '17:50:00';
-            $jam = '16:00:00';
-            $waktuSekarang = new \DateTime(date("Y-m-d $jam"));
-            $mingguanHariKe = 5; // 1 = senin
-            $bulananHariKe = 1;
+        $workload['waktu_sekarang'] = $waktuSekarang;
+        $workload['paksa'] = $input->getOption('paksa');
 
-            print "[paksa]: periksa jadwal jam:$jam, mingguanHariKe:$mingguanHariKe, bulananHariKe:$bulananHariKe\n";
-        }
-
-        $qbSekolah = $em->createQueryBuilder()
-            ->select('sekolah')
-            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
-        ;
-        $semuaSekolah = $qbSekolah->getQuery()->getResult();
+        $semuaSekolah = $em->getRepository('LanggasSisdikBundle:Sekolah')->findAll();
 
         foreach ($semuaSekolah as $sekolah) {
             if (!(is_object($sekolah) && $sekolah instanceof Sekolah)) {
                 continue;
             }
+            $workload['sekolah'] = $sekolah->getId();
 
-            if ($input->getOption('paksa')) {
-                print "[paksa]: ".$sekolah->getNama()."\n";
+            if (!$input->getOption('paksa')) {
+                $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
+                    ->findOneBy([
+                        'sekolah' => $sekolah,
+                        'tanggal' => $waktuSekarang,
+                        'kbm' => true,
+                    ])
+                ;
+                if (!(is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan)) {
+                    continue;
+                }
             }
 
-            $kalenderPendidikan = $em->getRepository('LanggasSisdikBundle:KalenderPendidikan')
-                ->findOneBy([
+            $mesinKehadiran = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')
+                ->findBy([
                     'sekolah' => $sekolah,
-                    'tanggal' => $waktuSekarang,
-                    'kbm' => true,
+                    'aktif' => true,
                 ])
             ;
-            if (!(is_object($kalenderPendidikan) && $kalenderPendidikan instanceof KalenderPendidikan)) {
-                continue;
-            }
 
-            if (!$this->isLocked($sekolah->getNomorUrut())) {
-                foreach ($perulangan as $key => $value) {
-                    $querybuilder = $em->createQueryBuilder()
-                        ->select('jadwal')
-                        ->from('LanggasSisdikBundle:JadwalKehadiran', 'jadwal')
-                        ->leftJoin('jadwal.tahunAkademik', 'tahunAkademik')
-                        ->andWhere('jadwal.sekolah = :sekolah')
-                        ->andWhere('jadwal.paramstatusHinggaJam <= :jam')
-                        ->andWhere('jadwal.perulangan = :perulangan')
-                        ->andWhere('jadwal.permulaan = :permulaan')
-                        ->andWhere('jadwal.otomatisTerhubungMesin = :terhubung')
-                        ->andWhere('tahunAkademik.aktif = :aktif')
-                        ->setParameter('sekolah', $sekolah)
-                        ->setParameter('jam', $jam)
-                        ->setParameter('perulangan', $key)
-                        ->setParameter('permulaan', false)
-                        ->setParameter('aktif', true)
-                        ->setParameter('terhubung', true)
-                        ->orderBy('jadwal.paramstatusHinggaJam', 'ASC')
-                    ;
+            foreach ($perulangan as $key => $value) {
+                $workload['perulangan'] = $key;
 
-                    if ($key == 'b-mingguan') {
-                        $querybuilder
-                            ->andWhere('jadwal.mingguanHariKe = :harike')
-                            ->setParameter('harike', $mingguanHariKe)
-                        ;
-                    } elseif ($key == 'c-bulanan') {
-                        $querybuilder
-                            ->andWhere('jadwal.bulananHariKe = :tanggalke')
-                            ->setParameter('tanggalke', $bulananHariKe)
-                        ;
+                $logDirectory = $this->getContainer()->get('kernel')->getRootDir()
+                    .DIRECTORY_SEPARATOR
+                    .'fingerprintlogs'
+                    .DIRECTORY_SEPARATOR
+                    .$sekolah->getId()
+                    .DIRECTORY_SEPARATOR
+                    .'log'
+                    .DIRECTORY_SEPARATOR
+                    .$key
+                    .DIRECTORY_SEPARATOR
+                    .$waktuSekarang->format('Y-m-d')
+                ;
+                if (!is_dir($logDirectory)) {
+                    continue;
+                }
+
+                foreach ($mesinKehadiran as $mesin) {
+                    if (!(is_object($mesin) && $mesin instanceof MesinKehadiran)) {
+                        continue;
+                    }
+                    if ($mesin->getAlamatIp() == '') {
+                        continue;
                     }
 
-                    $jadwalKehadiran = $querybuilder->getQuery()->getResult();
+                    $logFiles = [];
+                    exec("cd $logDirectory && ls -1t {$mesin->getAlamatIp()}*", $logFiles);
 
-                    foreach ($jadwalKehadiran as $jadwal) {
-                        if (!(is_object($jadwal) && $jadwal instanceof JadwalKehadiran)) {
+                    $logFile = '';
+                    foreach ($logFiles as $logFile) {
+                        if ($logFile == '') {
                             continue;
                         }
 
-                        $dariJam = $jadwal->getParamstatusDariJam();
-                        $hinggaJam = $jadwal->getParamstatusHinggaJam();
-                        $tanggalJadwalDari = new \DateTime(date("Y-m-d $dariJam"));
-                        $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
-
-                        if ($input->getOption('paksa')) {
-                            $dariJam = $jamDari;
-                            $hinggaJam = $jam;
-                            $tanggalJadwalDari = new \DateTime(date("Y-m-d $dariJam"));
-                            $tanggalJadwalHingga = new \DateTime(date("Y-m-d $hinggaJam"));
-                        }
-
-                        $waktuJadwal = strtotime(date('Y-m-d')." $hinggaJam");
-                        $bedaWaktu = $waktuSekarang->getTimestamp() - $waktuJadwal;
-
-                        if ($input->getOption('paksa')) {
-                            print "[paksa]: param status hingga jam = ".$jadwal->getParamstatusHinggaJam()."\n";
-                            print "[paksa]: waktu jadwal menjadi = ".date("Y-m-d H:i:s", $waktuJadwal)."\n";
-                            print "[paksa]: waktu sekarang menjadi = ".$waktuSekarang->format("Y-m-d H:i:s")."\n";
-                            print "[paksa]: beda waktu = ".$bedaWaktu."\n";
-                        }
-
-                        if ($bedaWaktu >= 0 && $bedaWaktu <= self::BEDA_WAKTU_MAKS) {
-                            $logDirectory = $this->getContainer()->get('kernel')->getRootDir()
-                                .DIRECTORY_SEPARATOR
-                                ."fingerprintlogs"
-                                .DIRECTORY_SEPARATOR
-                                .$sekolah->getId()
-                                .DIRECTORY_SEPARATOR
-                                .'log'
-                                .DIRECTORY_SEPARATOR
-                                .$jadwal->getPerulangan()
-                                .DIRECTORY_SEPARATOR
-                                .$tanggalSekarang
+                        if (!$input->getOption('paksa')) {
+                            $prosesLog = $em->createQueryBuilder()
+                                ->select('COUNT(prosesLog.id)')
+                                ->from('LanggasSisdikBundle:ProsesLogKehadiran', 'prosesLog')
+                                ->where('prosesLog.sekolah = :sekolah')
+                                ->andWhere('prosesLog.namaFile = :namaFile')
+                                ->setParameter('sekolah', $sekolah)
+                                ->setParameter('namaFile', $logFile)
+                                ->getQuery()
+                                ->getSingleScalarResult()
                             ;
-                            if (!is_dir($logDirectory)) {
+                            if ($prosesLog > 0) {
                                 continue;
                             }
+                        }
 
-                            $mesinFingerprint = $em->getRepository('LanggasSisdikBundle:MesinKehadiran')
-                                ->findBy([
-                                    'sekolah' => $sekolah,
-                                    'aktif' => true,
-                                ])
-                            ;
+                        $workload['log_file'] = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
 
-                            foreach ($mesinFingerprint as $mesin) {
-                                if (!(is_object($mesin) && $mesin instanceof MesinKehadiran)) {
-                                    continue;
-                                }
-                                if ($mesin->getAlamatIp() == '') {
-                                    continue;
-                                }
+                        /* @var $logger Logger */
+                        $logger = $this->getContainer()->get('monolog.logger.attendance');
 
-                                $logFile = system("cd $logDirectory && ls -1 {$mesin->getAlamatIp()}* | tail -1");
-                                $sourceFile = $logDirectory.DIRECTORY_SEPARATOR.$logFile;
-                                $targetFile = self::TMP_DIR
-                                    .DIRECTORY_SEPARATOR
-                                    .$sekolah->getId()
-                                    .'-sisdik-'
-                                    .uniqid(mt_rand(), true)
-                                    .$logFile
-                                ;
+                        $gearman = new \GearmanClient();
+                        $gearman->addServer();
 
-                                if (!@copy($sourceFile, $targetFile)) {
-                                    continue;
-                                }
+                        $jobFunction = "LanggasSisdikBundleWorkerPembaruanKehadiranWorker~pembaruan";
 
-                                exec("gunzip --force $targetFile");
-                                $extractedFile = substr($targetFile, 0, -3);
+                        $proses = new ProsesLogKehadiran();
+                        $proses->setAwalProses($waktuSekarang);
+                        $proses->setNamaFile($logFile);
+                        $proses->setSekolah($sekolah);
+                        $proses->setStatusAntrian('a-masuk-antrian');
+                        $proses->setPrioritas($input->getOption('prioritas'));
 
-                                if (strstr($targetFile, 'json') !== false) {
-                                    $buffer = file_get_contents($extractedFile);
+                        $em->persist($proses);
+                        $em->flush();
 
-                                    $logKehadiran = json_decode($buffer, true);
+                        $workload['proses_log'] = $proses->getId();
 
-                                    foreach ($logKehadiran as $item) {
-                                        $logTanggal = new \DateTime($item['datetime']);
-
-                                        if ($input->getOption('paksa')) {
-                                            $logTanggal = $waktuSekarang;
-                                            print "[paksa]: log tanggal = ".$logTanggal->format('Y-m-d')."\n";
-                                        }
-
-                                        // +60 detik perbedaan
-                                        if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp() + 60)) {
-                                            continue;
-                                        }
-
-                                        if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
-                                            continue;
-                                        }
-
-                                        $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
-                                            ->findOneBy([
-                                                'nomorIndukSistem' => $item['id'],
-                                            ])
-                                        ;
-
-                                        if ($input->getOption('paksa')) {
-                                            /* @var $siswa Siswa */
-                                            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
-                                                ->findOneBy([
-                                                    'nomorIndukSistem' => '1000186',
-                                                ])
-                                            ;
-                                            print "[paksa]: siswa = ".$siswa->getNomorIndukSistem().",".$siswa->getNamaLengkap()."\n";
-                                        }
-
-                                        if (is_object($siswa) && $siswa instanceof Siswa) {
-                                            $kehadiranSiswa = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')
-                                                ->findOneBy([
-                                                    'sekolah' => $sekolah,
-                                                    'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                                    'kelas' => $jadwal->getKelas(),
-                                                    'siswa' => $siswa,
-                                                    'tanggal' => $waktuSekarang,
-                                                    'permulaan' => true,
-                                                ])
-                                            ;
-                                            if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
-                                                $kehadiranSiswa->setPermulaan(false);
-                                                $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
-                                                $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
-
-                                                if ($input->getOption('paksa')) {
-                                                    $kehadiranSiswa->setStatusKehadiran('b-hadir-telat');
-                                                    print "[paksa]: memaksa menjadi hadir telat\n";
-                                                }
-
-                                                $em->persist($kehadiranSiswa);
-                                                $em->flush();
-                                            } else {
-                                                if ($input->getOption('paksa')) {
-                                                    print "[paksa]: tidak mengubah data yang telah diperbarui sebelumnya\n";
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
-                                        ->findOneBy([
-                                            'sekolah' => $sekolah,
-                                            'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                            'kelas' => $jadwal->getKelas(),
-                                            'tanggal' => $waktuSekarang,
-                                            'berhasilDiperbaruiMesin' => false,
-                                        ])
-                                    ;
-
-                                    if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
-                                        $prosesKehadiranSiswa->setBerhasilDiperbaruiMesin(true);
-                                        $em->persist($prosesKehadiranSiswa);
-                                    }
-                                } else {
-                                    exec("sed -i -n '/<.*>/,\$p' $extractedFile");
-
-                                    $buffer = file_get_contents($extractedFile);
-                                    $buffer = preg_replace("/\s+/", ' ', trim($buffer));
-                                    $xmlstring = "<?xml version='1.0'?>\n".$buffer;
-
-                                    $xmlobject = @simplexml_load_string($xmlstring);
-
-                                    if ($xmlobject) {
-                                        foreach ($xmlobject->xpath('Row') as $item) {
-                                            $logTanggal = new \DateTime($item->DateTime);
-
-                                            if ($input->getOption('paksa')) {
-                                                $logTanggal = $waktuSekarang;
-                                                print "[paksa]: log tanggal = ".$logTanggal->format('Y-m-d')."\n";
-                                            }
-
-                                            // +60 detik perbedaan
-                                            if (!($logTanggal->getTimestamp() >= $tanggalJadwalDari->getTimestamp() && $logTanggal->getTimestamp() <= $tanggalJadwalHingga->getTimestamp() + 60)) {
-                                                continue;
-                                            }
-
-                                            if ($logTanggal->format('Ymd') != $waktuSekarang->format('Ymd')) {
-                                                continue;
-                                            }
-
-                                            $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
-                                                ->findOneBy([
-                                                    'nomorIndukSistem' => $item->PIN,
-                                                ])
-                                            ;
-
-                                            if ($input->getOption('paksa')) {
-                                                /* @var $siswa Siswa */
-                                                $siswa = $em->getRepository('LanggasSisdikBundle:Siswa')
-                                                    ->findOneBy([
-                                                        'nomorIndukSistem' => '1000186',
-                                                    ])
-                                                ;
-                                                print "[paksa]: siswa = ".$siswa->getNomorIndukSistem().",".$siswa->getNamaLengkap()."\n";
-                                            }
-
-                                            if (is_object($siswa) && $siswa instanceof Siswa) {
-                                                $kehadiranSiswa = $em->getRepository('LanggasSisdikBundle:KehadiranSiswa')
-                                                    ->findOneBy([
-                                                        'sekolah' => $sekolah,
-                                                        'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                                        'kelas' => $jadwal->getKelas(),
-                                                        'siswa' => $siswa,
-                                                        'tanggal' => $waktuSekarang,
-                                                        'permulaan' => true,
-                                                    ])
-                                                ;
-                                                if (is_object($kehadiranSiswa) && $kehadiranSiswa instanceof KehadiranSiswa) {
-                                                    $kehadiranSiswa->setPermulaan(false);
-                                                    $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
-                                                    $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
-
-                                                    if ($input->getOption('paksa')) {
-                                                        $kehadiranSiswa->setStatusKehadiran('b-hadir-telat');
-                                                        print "[paksa]: memaksa menjadi hadir telat\n";
-                                                    }
-
-                                                    $em->persist($kehadiranSiswa);
-                                                    $em->flush();
-                                                } else {
-                                                    if ($input->getOption('paksa')) {
-                                                        print "[paksa]: tidak mengubah data yang telah diperbarui sebelumnya\n";
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        $prosesKehadiranSiswa = $em->getRepository('LanggasSisdikBundle:ProsesKehadiranSiswa')
-                                            ->findOneBy([
-                                                'sekolah' => $sekolah,
-                                                'tahunAkademik' => $jadwal->getTahunAkademik(),
-                                                'kelas' => $jadwal->getKelas(),
-                                                'tanggal' => $waktuSekarang,
-                                                'berhasilDiperbaruiMesin' => false,
-                                            ])
-                                        ;
-
-                                        if (is_object($prosesKehadiranSiswa) && $prosesKehadiranSiswa instanceof ProsesKehadiranSiswa) {
-                                            $prosesKehadiranSiswa->setBerhasilDiperbaruiMesin(true);
-                                            $em->persist($prosesKehadiranSiswa);
-                                        }
-                                    }
-                                }
-
-                                @unlink($extractedFile);
-                            }
-
-                            $em->flush();
+                        switch ($input->getOption('prioritas')) {
+                            case "tinggi":
+                                $gearman->doHighBackground($jobFunction, serialize($workload));
+                                $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kehadiran | prioritas-tinggi | '.$workload['log_file']);
+                                break;
+                            case "normal":
+                                $gearman->doBackground($jobFunction, serialize($workload));
+                                $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kehadiran | prioritas-normal | '.$workload['log_file']);
+                                break;
+                            case "rendah":
+                                $gearman->doLowBackground($jobFunction, serialize($workload));
+                                $logger->addInfo($sekolah->getId().' | '.$sekolah->getNama().' | kehadiran | prioritas-rendah | '.$workload['log_file']);
+                                break;
                         }
                     }
                 }
-
-                if ($text != '') {
-                    $output->writeln($text);
-                }
-            } else {
-                print "proses pembaruan kehadiran sekolah ".$sekolah->getNama()." telah dan sedang berjalan\n";
             }
         }
-    }
-
-    /**
-     * Memeriksa apakah proses sebelumnya sedang berjalan
-     * yang ditandai dengan kuncian file lock.
-     *
-     * @param  int     $nomorUrutSekolah
-     * @return boolean
-     */
-    private function isLocked($nomorUrutSekolah)
-    {
-        $lockfile = $this->getContainer()->get('kernel')->getRootDir()
-            .DIRECTORY_SEPARATOR
-            .self::LOCK_DIR
-            .DIRECTORY_SEPARATOR
-            .$nomorUrutSekolah
-            .'.'
-            .self::LOCK_FILE
-        ;
-
-        if (file_exists($lockfile)) {
-            $lockingPID = trim(file_get_contents($lockfile));
-
-            $pids = explode("\n", trim(`ps -e | awk '{print $1}'`));
-
-            if (in_array($lockingPID, $pids)) {
-                return true;
-            }
-
-            print "Removing stale $nomorUrutSekolah.".self::LOCK_FILE." file.\n";
-            unlink($lockfile);
-        }
-
-        file_put_contents($lockfile, getmypid()."\n");
-
-        return false;
     }
 }

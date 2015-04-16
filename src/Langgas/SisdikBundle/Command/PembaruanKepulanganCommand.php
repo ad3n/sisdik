@@ -6,13 +6,13 @@ use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
 use Langgas\SisdikBundle\Entity\MesinKehadiran;
+use Langgas\SisdikBundle\Entity\ProsesLogKepulangan;
 use Langgas\SisdikBundle\Entity\Sekolah;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Langgas\SisdikBundle\Entity\ProsesLogKepulangan;
 
 class PembaruanKepulanganCommand extends ContainerAwareCommand
 {
