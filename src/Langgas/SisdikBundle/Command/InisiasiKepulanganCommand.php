@@ -189,7 +189,6 @@ class InisiasiKepulanganCommand extends ContainerAwareCommand
                                 $kepulangan->setPermulaan($jadwal->isPermulaan());
                                 $kepulangan->setTervalidasi(false);
                                 $kepulangan->setTanggal($waktuSekarang);
-                                $kepulangan->setJam($jadwal->getParamstatusDariJam());
                                 $kepulangan->setSmsTerproses(false);
                                 $kepulangan->setKehadiranSiswa($kehadiran);
 
