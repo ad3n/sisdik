@@ -131,6 +131,9 @@ class PembaruanKepulanganWorker
                 continue;
             }
 
+            $dariJam = $jadwal->getParamstatusDariJam();
+            $hinggaJam = $jadwal->getParamstatusHinggaJam();
+
             $tanggalJadwalDari = new \DateTime($waktuSekarang->format('Y-m-d')." $dariJam");
             $tanggalJadwalHingga = new \DateTime($waktuSekarang->format('Y-m-d')." $hinggaJam");
 
