@@ -131,6 +131,9 @@ class PembaruanKepulanganWorker
                 continue;
             }
 
+            $tanggalJadwalDari = new \DateTime($waktuSekarang->format('Y-m-d')." $dariJam");
+            $tanggalJadwalHingga = new \DateTime($waktuSekarang->format('Y-m-d')." $hinggaJam");
+
             $targetFile = self::TMP_DIR
                 .DIRECTORY_SEPARATOR
                 .$sekolah->getId()
