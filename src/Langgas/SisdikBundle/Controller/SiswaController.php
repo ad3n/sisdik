@@ -479,10 +479,11 @@ class SiswaController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
-                            $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
-                            // baris yang tak perlu dibaca
+                        $fieldCocok = [];
+                        if (preg_match("/^(\d+:)(.*)/", $cell['data'], $fieldCocok)) {
+                            $fieldnames[] = $fieldCocok[2];
+                        } elseif (preg_match("/^\[.*\]$/", $cell['data'])) {
+                            // baris header perlu diabaikan
                         } else {
                             $cellContent[] = $cell['data'];
                         }
@@ -491,11 +492,6 @@ class SiswaController extends Controller
                         $content[] = $cellContent;
                     }
                 }
-
-                array_walk($fieldnames, [
-                    &$this,
-                    "formatNamaField",
-                ]);
 
                 foreach ($content as $value) {
                     $this->imporSiswaBaru($value, $fieldnames, $sekolah, $tahun);
@@ -589,10 +585,11 @@ class SiswaController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
-                            $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
-                            // baris yang tak perlu dibaca
+                        $fieldCocok = [];
+                        if (preg_match("/^(\d+:)(.*)/", $cell['data'], $fieldCocok)) {
+                            $fieldnames[] = $fieldCocok[2];
+                        } elseif (preg_match("/^\[.*\]$/", $cell['data'])) {
+                            // baris header perlu diabaikan
                         } else {
                             $cellContent[] = $cell['data'];
                         }
@@ -601,11 +598,6 @@ class SiswaController extends Controller
                         $content[] = $cellContent;
                     }
                 }
-
-                array_walk($fieldnames, [
-                    &$this,
-                    "formatNamaField",
-                ]);
 
                 foreach ($content as $value) {
                     $this->gabungSiswa($value, $fieldnames, $sekolah);
@@ -820,12 +812,6 @@ class SiswaController extends Controller
         $response->headers->set('Content-Length', filesize($documenttarget));
 
         return $response;
-    }
-
-    private function formatNamaField(&$item, $key)
-    {
-        preg_match("/(\d+:)(.+)/", $item, $matches);
-        $item = $matches[2];
     }
 
     /**
