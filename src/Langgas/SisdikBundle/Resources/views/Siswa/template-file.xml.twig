@@ -14,6 +14,9 @@
             <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
         </style:style>
         <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
+            <style:table-column-properties fo:break-before="auto" style:column-width="1.5in"/>
+        </style:style>
+        <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
             <style:table-column-properties fo:break-before="auto" style:column-width="2in"/>
         </style:style>
         <style:style style:name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" style:family="table-column">
@@ -133,10 +136,14 @@
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
+                <table:table-column table:style-name="co{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}" table:default-cell-style-name="Default"/>
                 <table:table-row table:style-name="ro1">
                     {% set fieldnum = 0 %}
                     <table:table-cell table:style-name="nama-kolom" office:value-type="string">
                         <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:nomorInduk</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom" office:value-type="string">
+                        <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:nisn</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom" office:value-type="string">
                         <text:p>{% set fieldnum = fieldnum + 1 %}{{ fieldnum }}:namaLengkap</text:p>
@@ -222,88 +229,91 @@
                 </table:table-row>
                 <table:table-row table:style-name="ro1">
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.nomor.induk'|trans }}</text:p>
+                        <text:p>[{{ 'label.nomor.induk'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.nama.lengkap'|trans }}</text:p>
+                        <text:p>[{{ 'label.nisn'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.nama.ortuwali'|trans }}</text:p>
+                        <text:p>[{{ 'label.nama.lengkap'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.mobilephone.parent'|trans }}</text:p>
+                        <text:p>[{{ 'label.nama.ortuwali'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.sekolah.asal'|trans }}</text:p>
+                        <text:p>[{{ 'label.mobilephone.parent'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.gender'|trans }}</text:p>
+                        <text:p>[{{ 'label.sekolah.asal'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.agama'|trans }}</text:p>
+                        <text:p>[{{ 'label.gender'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.alamat'|trans }}</text:p>
+                        <text:p>[{{ 'label.agama'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.keterangan'|trans }}</text:p>
+                        <text:p>[{{ 'label.alamat'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.tempat.lahir'|trans }}</text:p>
+                        <text:p>[{{ 'label.keterangan'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.tanggal.lahir'|trans }}</text:p>
+                        <text:p>[{{ 'label.tempat.lahir'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.email'|trans }}</text:p>
+                        <text:p>[{{ 'label.tanggal.lahir'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.nama.panggilan'|trans }}</text:p>
+                        <text:p>[{{ 'label.email'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.kewarganegaraan'|trans }}</text:p>
+                        <text:p>[{{ 'label.nama.panggilan'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.anak.ke'|trans }}</text:p>
+                        <text:p>[{{ 'label.kewarganegaraan'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.jumlah.saudara.kandung'|trans }}</text:p>
+                        <text:p>[{{ 'label.anak.ke'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.jumlah.saudara.tiri'|trans }}</text:p>
+                        <text:p>[{{ 'label.jumlah.saudara.kandung'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.status.yatimpiatu'|trans }}</text:p>
+                        <text:p>[{{ 'label.jumlah.saudara.tiri'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.bahasa.seharihari'|trans }}</text:p>
+                        <text:p>[{{ 'label.status.yatimpiatu'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.kodepos'|trans }}</text:p>
+                        <text:p>[{{ 'label.bahasa.seharihari'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.telepon'|trans }}</text:p>
+                        <text:p>[{{ 'label.kodepos'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.nomor.ponsel.siswa'|trans }}</text:p>
+                        <text:p>[{{ 'label.telepon'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.sekolah.tinggal.di'|trans }}</text:p>
+                        <text:p>[{{ 'label.nomor.ponsel.siswa'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.jarak.ke.sekolah'|trans }}</text:p>
+                        <text:p>[{{ 'label.sekolah.tinggal.di'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.ke.sekolah.menggunakan'|trans }}</text:p>
+                        <text:p>[{{ 'label.jarak.ke.sekolah'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.berat.badan'|trans }}</text:p>
+                        <text:p>[{{ 'label.ke.sekolah.menggunakan'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.tinggi.badan'|trans }}</text:p>
+                        <text:p>[{{ 'label.berat.badan'|trans }}]</text:p>
                     </table:table-cell>
                     <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
-                        <text:p>{{ 'label.golongan.darah'|trans }}</text:p>
+                        <text:p>[{{ 'label.tinggi.badan'|trans }}]</text:p>
+                    </table:table-cell>
+                    <table:table-cell table:style-name="nama-kolom-deskriptif" office:value-type="string">
+                        <text:p>[{{ 'label.golongan.darah'|trans }}]</text:p>
                     </table:table-cell>
                 </table:table-row>
             </table:table>

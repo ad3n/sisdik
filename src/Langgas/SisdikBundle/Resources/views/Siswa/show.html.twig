@@ -32,6 +32,8 @@
         <dd>{{ entity.namaLengkap }}</dd>
         <dt>{{ 'label.idnumber'|trans }}</dt>
         <dd>{{ entity.nomorInduk }}</dd>
+        <dt>{{ 'label.nisn'|trans }}</dt>
+        <dd>{{ entity.nisn }}</dd>
         <dt>{{ 'label.kelas.aktif'|trans }}</dt>
         <dd>{% if entity.siswaKelasAktif %}{{ entity.siswaKelasAktif.kelas.nama }}{% endif %}</dd>
     {% if entity.orangtuaWali %}

@@ -111,11 +111,14 @@ class SiswaType extends AbstractType
                 ],
                 'label' => 'label.name.full',
             ])
-            ->add('nomorInduk', null, [
+            ->add('nomorInduk', 'text', [
                 'label' => 'label.nomor.induk',
                 'attr' => [
                     'class' => 'medium',
                 ],
+            ])
+            ->add('nisn', 'text', [
+                'label' => 'label.nisn',
             ])
             ->add('referensi', 'sisdik_entityhidden', [
                 'class' => 'LanggasSisdikBundle:Referensi',

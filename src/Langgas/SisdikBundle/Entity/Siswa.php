@@ -83,6 +83,13 @@ class Siswa
     private $nomorInduk;
 
     /**
+     * @ORM\Column(name="nisn", type="string", length=100, nullable=true)
+     *
+     * @var string
+     */
+    private $nisn;
+
+    /**
      * @ORM\Column(name="nama_lengkap", type="string", length=300, nullable=true)
      * @Assert\NotBlank
      *
@@ -635,6 +642,22 @@ class Siswa
     public function getNomorInduk()
     {
         return $this->nomorInduk;
+    }
+
+    /**
+     * @param string $nisn
+     */
+    public function setNisn($nisn)
+    {
+        $this->nisn = $nisn;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNisn()
+    {
+        return $this->nisn;
     }
 
     /**
