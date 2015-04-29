@@ -210,6 +210,7 @@ class PembaruanKehadiranWorker
                             $kehadiranSiswa->setPermulaan(false);
                             $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
                             $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
+                            $kehadiranSiswa->setTerprosesOtomatis(true);
 
                             $em->persist($kehadiranSiswa);
                             $em->flush();

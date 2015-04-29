@@ -1326,6 +1326,7 @@ class KehadiranSiswaController extends Controller
                                 $kehadiranSiswa->setPermulaan(false);
                                 $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
                                 $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
+                                $kehadiranSiswa->setTerprosesManual(true);
 
                                 $em->persist($kehadiranSiswa);
                                 $em->flush();
@@ -1398,6 +1399,7 @@ class KehadiranSiswaController extends Controller
                                     $kehadiranSiswa->setPermulaan(false);
                                     $kehadiranSiswa->setStatusKehadiran($jadwal->getStatusKehadiran());
                                     $kehadiranSiswa->setJam($logTanggal->format('H:i:s'));
+                                    $kehadiranSiswa->setTerprosesManual(true);
 
                                     $em->persist($kehadiranSiswa);
                                     $em->flush();

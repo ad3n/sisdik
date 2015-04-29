@@ -44,6 +44,20 @@ class KepulanganSiswa
     private $tervalidasi = false;
 
     /**
+     * @ORM\Column(name="terproses_otomatis", type="boolean", nullable=true)
+     *
+     * @var boolean
+     */
+    private $terprosesOtomatis;
+
+    /**
+     * @ORM\Column(name="terproses_manual", type="boolean", nullable=true)
+     *
+     * @var boolean
+     */
+    private $terprosesManual;
+
+    /**
      * @ORM\Column(name="tanggal", type="date", nullable=true)
      *
      * @var \DateTime
@@ -189,6 +203,38 @@ class KepulanganSiswa
     public function isTervalidasi()
     {
         return $this->tervalidasi;
+    }
+
+    /**
+     * @param boolean $terprosesOtomatis
+     */
+    public function setTerprosesOtomatis($terprosesOtomatis)
+    {
+        $this->terprosesOtomatis = $terprosesOtomatis;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTerprosesOtomatis()
+    {
+        return $this->terprosesOtomatis;
+    }
+
+    /**
+     * @param boolean $terprosesManual
+     */
+    public function setTerprosesManual($terprosesManual)
+    {
+        $this->terprosesManual = $terprosesManual;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTerprosesManual()
+    {
+        return $this->terprosesManual;
     }
 
     /**

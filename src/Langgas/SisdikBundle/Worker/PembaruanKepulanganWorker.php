@@ -280,6 +280,7 @@ class PembaruanKepulanganWorker
                                 $kepulanganSiswa->setPermulaan(false);
                                 $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
                                 $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
+                                $kepulanganSiswa->setTerprosesOtomatis(true);
 
                                 $em->persist($kepulanganSiswa);
                                 $em->flush();

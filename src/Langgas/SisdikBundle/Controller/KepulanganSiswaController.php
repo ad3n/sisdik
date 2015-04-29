@@ -947,6 +947,7 @@ class KepulanganSiswaController extends Controller
                                 $kepulanganSiswa->setPermulaan(false);
                                 $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
                                 $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
+                                $kepulanganSiswa->setTerprosesManual(true);
 
                                 $em->persist($kepulanganSiswa);
                                 $em->flush();
@@ -1019,6 +1020,7 @@ class KepulanganSiswaController extends Controller
                                     $kepulanganSiswa->setPermulaan(false);
                                     $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
                                     $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
+                                    $kepulanganSiswa->setTerprosesManual(true);
 
                                     $em->persist($kepulanganSiswa);
                                     $em->flush();
