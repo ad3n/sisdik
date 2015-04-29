@@ -32,6 +32,9 @@
 .help-block {
     margin-bottom: 2px;
 }
+.langsung {
+    color: #FF6900;
+}
 </style>
 
 
@@ -102,7 +105,11 @@
                 {% endif %}
                 <span class="separator">|</span>
                 {% if data.smsJam is empty %}
-                    &mdash;
+                    {% if data.langsungKirimSms == 1 %}
+                        <i class="fa fa-flash fa-lg fa-fw langsung"></i>
+                    {% else %}
+                        &mdash;
+                    {% endif %}
                 {% else %}
                     {{ data.smsJam(false) }}
                 {% endif %}

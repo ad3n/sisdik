@@ -6,10 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
+use Langgas\SisdikBundle\Validator\Constraints as LanggasAssert;
 
 /**
  * @ORM\Table(name="jadwal_kepulangan")
  * @ORM\Entity
+ * @LanggasAssert\SMSLangsungAtauTakLangsung
  * @ExclusionPolicy("all")
  */
 class JadwalKepulangan
@@ -79,6 +81,13 @@ class JadwalKepulangan
      * @var boolean
      */
     private $kirimSms = false;
+
+    /**
+     * @ORM\Column(name="langsung_kirim_sms", type="boolean", nullable=false, options={"default"=0})
+     *
+     * @var boolean
+     */
+    private $langsungKirimSms = false;
 
     /**
      * @ORM\Column(name="sms_jam", type="string", length=50, nullable=true)
@@ -262,6 +271,22 @@ class JadwalKepulangan
     public function isKirimSms()
     {
         return $this->kirimSms;
+    }
+
+    /**
+     * @param boolean $langsungKirimSms
+     */
+    public function setLangsungKirimSms($langsungKirimSms)
+    {
+        $this->langsungKirimSms = $langsungKirimSms;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isLangsungKirimSms()
+    {
+        return $this->langsungKirimSms;
     }
 
     /**

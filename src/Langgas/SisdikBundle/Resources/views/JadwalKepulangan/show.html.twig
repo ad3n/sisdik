@@ -37,6 +37,14 @@
             <i class="fa fa-check fa-lg fa-fw check"></i>
         {% endif %}
     </dd>
+    <dt>{{ 'label.langsung.kirim.sms'|trans }}</dt>
+    <dd>
+        {% if entity.langsungKirimSms is empty %}
+            <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+        {% else %}
+            <i class="fa fa-check fa-lg fa-fw check"></i>
+        {% endif %}
+    </dd>
     <dt>{{ 'label.kirim.sms.jam'|trans }}</dt>
     <dd>{% if entity.smsJam is empty %}&mdash;{% else %}{{ entity.smsJam(false) }}{% endif %}</dd>
     <dt>{{ 'label.sms.template.entry'|trans }}</dt>
