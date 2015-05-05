@@ -545,12 +545,17 @@ class SiswaPendaftarController extends Controller
         }
 
         $filename = date('YmdHis').'.jpg';
-        $targetfile = Siswa::WEBCAMPHOTO_DIR.$sekolah->getId().'/'.$tahun.'/'.$filename;
+        $targetdir = Siswa::WEBCAMPHOTO_DIR.$sekolah->getId().'/'.$tahun;
 
         $output = $filename;
+        $file = null;
 
-        $result = file_put_contents($targetfile, file_get_contents('php://input'));
-        if (!$result) {
+        /* @var $uploadedFile \Symfony\Component\HttpFoundation\File\UploadedFile */
+        foreach ($request->files as $uploadedFile) {
+            $file = $uploadedFile->move($targetdir, $filename);
+        }
+
+        if (!$file) {
             $output = $this->get('translator')->trans('errorinfo.cannot.writefile', [
                 'filename' => $filename,
             ]);

@@ -39,33 +39,43 @@
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 <script language="javascript" type="text/javascript">
-webcam.set_api_url("{{ path('applicant_webcam_uploadhandler', {'tahun': entity.tahun.tahun}) }}");
-webcam.set_hook('onComplete', 'webcamUploadCompleteHandler');
-webcam.set_quality(100);
-{% image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.mp3' %}
-webcam.set_shutter_sound(true, "{{ asset_url }}");
-{% endimage %}
-{% image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.swf' %}
-webcam.set_swf_url("{{ asset_url }}");
-{% endimage %}
+var shutter = new Audio();
+shutter.autoplay = false;
+shutter.src = navigator.userAgent.match(/Firefox/) ?
+{%- image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.ogg' -%}
+'{{- asset_url -}}'
+{%- endimage -%}
+{%- image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.mp3' -%}
+: '{{- asset_url -}}';
+{%- endimage %}
 
-var isfreezed = false;
-
-function webcamUploadCompleteHandler(data) {
+Webcam.set({
+    width: 320,
+    height: 240,
+    image_format: 'jpeg',
+    jpeg_quality: 100
+});
+Webcam.attach("#webcam");
+Webcam.on('uploadComplete', function(code, data) {
     if (data.substr(data.length - 4) == ".jpg") {
         $(".foto-pendaftaran").val(data);
         $("#edit-form").submit();
     } else {
         alert(data);
     }
-}
+});
+
+{% image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.swf' %}
+//Webcam.setSWFLocation('{{ asset_url }}');
+{% endimage %}
+
+var isfreezed = false;
 
 $(document).ready(function() {
-    $("#webcam").html(webcam.get_html(320, 240));
-
     $("#webcam-freeze").click(function() {
         if (isfreezed === false) {
-            webcam.freeze();
+            shutter.play();
+            Webcam.freeze();
             isfreezed = true;
         }
         return false;
@@ -73,7 +83,7 @@ $(document).ready(function() {
 
     $("#webcam-reset").click(function() {
         if (isfreezed === true) {
-            webcam.reset();
+            Webcam.unfreeze();
             isfreezed = false;
         }
         return false;
@@ -86,7 +96,14 @@ $(document).ready(function() {
             $('#output').html('<img src="{{ asset_url }}" />');
             {% endimage %}
 
-            webcam.upload();
+            var imageUri = null;
+            Webcam.snap(function(dataUri){
+                imageUri = dataUri;
+            });
+
+            var uploadPath = "{{ path('applicant_webcam_uploadhandler', {'tahun': entity.tahun.tahun}) }}";
+
+            Webcam.upload(imageUri, uploadPath);
         } else {
             alert("{{ 'shortinfo.capturefirst'|trans }}");
         }
