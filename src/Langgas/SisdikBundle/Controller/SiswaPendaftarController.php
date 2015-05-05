@@ -521,7 +521,7 @@ class SiswaPendaftarController extends Controller
     }
 
     /**
-     * Handling HTTP RAW DATA sent from jpegcam library
+     * Handling uploaded file from webcamjs
      *
      * @Route("/webcamupload/{tahun}", name="applicant_webcam_uploadhandler")
      * @Method("POST")

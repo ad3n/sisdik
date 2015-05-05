@@ -35,17 +35,17 @@
 {% endblock content %}
 
 {% block javascripts_custom %}
-{% javascripts '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.min.js' %}
+{% javascripts '@LanggasSisdikBundle/Resources/public/js/libraries/webcamjs/webcam.min.js' %}
 <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 <script language="javascript" type="text/javascript">
 var shutter = new Audio();
 shutter.autoplay = false;
 shutter.src = navigator.userAgent.match(/Firefox/) ?
-{%- image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.ogg' -%}
+{%- image '@LanggasSisdikBundle/Resources/public/js/libraries/webcamjs/shutter.ogg' -%}
 '{{- asset_url -}}'
 {%- endimage -%}
-{%- image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/shutter.mp3' -%}
+{%- image '@LanggasSisdikBundle/Resources/public/js/libraries/webcamjs/shutter.mp3' -%}
 : '{{- asset_url -}}';
 {%- endimage %}
 
@@ -65,7 +65,7 @@ Webcam.on('uploadComplete', function(code, data) {
     }
 });
 
-{% image '@LanggasSisdikBundle/Resources/public/js/libraries/jpegcam/webcam.swf' %}
+{% image '@LanggasSisdikBundle/Resources/public/js/libraries/webcamjs/webcam.swf' %}
 //Webcam.setSWFLocation('{{ asset_url }}');
 {% endimage %}
 
