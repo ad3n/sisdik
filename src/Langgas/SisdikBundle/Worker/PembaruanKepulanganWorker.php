@@ -2,7 +2,9 @@
 
 namespace Langgas\SisdikBundle\Worker;
 
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -207,15 +209,21 @@ class PembaruanKepulanganWorker
                             ])
                         ;
                         if (is_object($kepulanganSiswa) && $kepulanganSiswa instanceof KepulanganSiswa) {
-                            $kepulanganSiswa->setPermulaan(false);
-                            $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
-                            $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
-                            $kepulanganSiswa->setTerprosesOtomatis(true);
+                            try {
+                                $em->lock($kepulanganSiswa, LockMode::OPTIMISTIC, $kepulanganSiswa->getVersi());
 
-                            $em->persist($kepulanganSiswa);
-                            $em->flush();
+                                $kepulanganSiswa->setPermulaan(false);
+                                $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
+                                $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
+                                $kepulanganSiswa->setTerprosesOtomatis(true);
 
-                            $jumlahLogDiproses++;
+                                $em->persist($kepulanganSiswa);
+                                $em->flush();
+
+                                $jumlahLogDiproses++;
+                            } catch (OptimisticLockException $e) {
+                                $this->logger->addNotice($e);
+                            }
                         }
                     }
                 }
@@ -278,15 +286,21 @@ class PembaruanKepulanganWorker
                                 ])
                             ;
                             if (is_object($kepulanganSiswa) && $kepulanganSiswa instanceof KepulanganSiswa) {
-                                $kepulanganSiswa->setPermulaan(false);
-                                $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
-                                $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
-                                $kepulanganSiswa->setTerprosesOtomatis(true);
+                                try {
+                                    $em->lock($kepulanganSiswa, LockMode::OPTIMISTIC, $kepulanganSiswa->getVersi());
 
-                                $em->persist($kepulanganSiswa);
-                                $em->flush();
+                                    $kepulanganSiswa->setPermulaan(false);
+                                    $kepulanganSiswa->setStatusKepulangan($jadwal->getStatusKepulangan());
+                                    $kepulanganSiswa->setJam($logTanggal->format('H:i:s'));
+                                    $kepulanganSiswa->setTerprosesOtomatis(true);
 
-                                $jumlahLogDiproses++;
+                                    $em->persist($kepulanganSiswa);
+                                    $em->flush();
+
+                                    $jumlahLogDiproses++;
+                                } catch (OptimisticLockException $e) {
+                                    $this->logger->addNotice($e);
+                                }
                             }
                         }
                     }

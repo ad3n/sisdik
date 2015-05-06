@@ -100,6 +100,14 @@ class KepulanganSiswa
     private $keteranganStatus;
 
     /**
+     * @ORM\Column(name="versi", type="integer", nullable=true, options={"default"=1})
+     * @ORM\Version
+     *
+     * @var integer
+     */
+    private $versi = 1;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
@@ -332,6 +340,14 @@ class KepulanganSiswa
     public function getKeteranganStatus()
     {
         return $this->keteranganStatus;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getVersi()
+    {
+        return $this->versi;
     }
 
     /**
