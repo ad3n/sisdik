@@ -47,7 +47,7 @@
     {% for data in pagination %}
         <tr>
             <td data-title="{{ 'label.nama'|trans }}">{{ data.nama }}</td>
-            <td data-title="{{ 'label.kode'|trans }}">{{ data.kode }}</td>
+            <td data-title="{{ 'label.kode.sekolah'|trans }}">{{ data.kode }}</td>
             <td data-title="{{ 'label.nama.penghubung'|trans }}">{{ data.penghubung }}</td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
                 <a href="{{ path('sekolahasal_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
