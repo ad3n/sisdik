@@ -247,9 +247,6 @@ class SiswaPendaftarType extends AbstractType
                     ],
                     'label' => 'label.name.full',
                 ])
-                ->add('nomorInduk', 'text', [
-                    'label' => 'label.nomor.induk',
-                ])
                 ->add('nisn', 'text', [
                     'label' => 'label.nisn',
                 ])
