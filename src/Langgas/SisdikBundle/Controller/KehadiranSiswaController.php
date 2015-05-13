@@ -168,43 +168,92 @@ class KehadiranSiswaController extends Controller
                 ->setParameter('tanggal', $tanggal)
             ;
 
+            $jalankanPenghapusan = true;
+
+            $tingkat = $formhapus->get('tingkat')->getData();
             $kelas = $formhapus->get('kelas')->getData();
-            if ($kelas instanceof Kelas) {
-                $qbHapusKehadiran
-                    ->andWhere('kehadiran.kelas = :kelas')
-                    ->setParameter('kelas', $kelas)
-                ;
 
-                $qbHapusProsesKehadiran
-                    ->andWhere('proses.kelas = :kelas')
-                    ->setParameter('kelas', $kelas)
+            if ($tingkat instanceof Tingkat) {
+                $result = $em->createQueryBuilder()
+                    ->select('DISTINCT(kelas.id)')
+                    ->from('LanggasSisdikBundle:Kelas', 'kelas')
+                    ->where('kelas.tingkat = :tingkat')
+                    ->setParameter('tingkat', $tingkat)
+                    ->getQuery()
+                    ->getScalarResult()
                 ;
+                $daftarKelas = array_map('current', $result);
 
-                $qbHapusKepulangan
-                    ->andWhere('kepulangan.kelas = :kelas')
-                    ->setParameter('kelas', $kelas)
-                ;
+                if (count($daftarKelas) >= 1) {
+                    $qbHapusKehadiran
+                        ->andWhere('kehadiran.kelas IN (:daftarKelas)')
+                        ->setParameter('daftarKelas', $daftarKelas)
+                    ;
 
-                $qbHapusProsesKepulangan
-                    ->andWhere('proses.kelas = :kelas')
-                    ->setParameter('kelas', $kelas)
+                    $qbHapusKepulangan
+                        ->andWhere('kepulangan.kelas IN (:daftarKelas)')
+                        ->setParameter('daftarKelas', $daftarKelas)
+                    ;
+
+                    if ($kelas instanceof Kelas) {
+                        $qbHapusKehadiran
+                            ->andWhere('kehadiran.kelas = :kelas')
+                            ->setParameter('kelas', $kelas)
+                        ;
+
+                        $qbHapusProsesKehadiran
+                            ->andWhere('proses.kelas = :kelas')
+                            ->setParameter('kelas', $kelas)
+                        ;
+
+                        $qbHapusKepulangan
+                            ->andWhere('kepulangan.kelas = :kelas')
+                            ->setParameter('kelas', $kelas)
+                        ;
+
+                        $qbHapusProsesKepulangan
+                            ->andWhere('proses.kelas = :kelas')
+                            ->setParameter('kelas', $kelas)
+                        ;
+                    }
+
+                    $this
+                        ->get('session')
+                        ->getFlashBag()
+                        ->add('success', $translator->trans('flash.kehadiran.siswa.berhasil.dihapus', [
+                            '%tanggal%' => $tanggal->format('d/m/Y'),
+                            '%kelas%' => $kelas instanceof Kelas ? $kelas->getNama() : $translator->trans('seluruh.kelas'),
+                            '%tingkat%' => $tingkat->getNama(),
+                        ]))
+                    ;
+                } else {
+                    $jalankanPenghapusan = false;
+
+                    $this
+                        ->get('session')
+                        ->getFlashBag()
+                        ->add('error', $translator->trans('flash.kehadiran.siswa.tak.terhapus.satupun'))
+                    ;
+                }
+            } else {
+                $this
+                    ->get('session')
+                    ->getFlashBag()
+                    ->add('success', $translator->trans('flash.kehadiran.siswa.berhasil.dihapus', [
+                        '%tanggal%' => $tanggal->format('d/m/Y'),
+                        '%kelas%' => $kelas instanceof Kelas ? $kelas->getNama() : $translator->trans('seluruh.kelas'),
+                        '%tingkat%' => $translator->trans('seluruh.tingkat'),
+                    ]))
                 ;
             }
 
-            $qbHapusKepulangan->getQuery()->execute();
-            $qbHapusProsesKepulangan->getQuery()->execute();
+            if ($jalankanPenghapusan === true) {
+                $qbHapusKepulangan->getQuery()->execute();
+                $qbHapusProsesKepulangan->getQuery()->execute();
 
-            $qbHapusKehadiran->getQuery()->execute();
-            $qbHapusProsesKehadiran->getQuery()->execute();
-
-            $this
-                ->get('session')
-                ->getFlashBag()
-                ->add('success', $translator->trans('flash.kehadiran.siswa.berhasil.dihapus', [
-                    '%tanggal%' => $tanggal->format('d/m/Y'),
-                    '%kelas%' => $kelas instanceof Kelas ? $kelas->getNama() : $translator->trans('seluruh.kelas'),
-                ]))
-            ;
+                $qbHapusKehadiran->getQuery()->execute();
+                $qbHapusProsesKehadiran->getQuery()->execute();
+            }
 
             return $this->redirect($this->generateUrl('kehadiran-siswa'));
         } else {
