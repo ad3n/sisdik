@@ -288,7 +288,6 @@ function getTotalFeeDiscounted() {
         type = $("#discount-type input[type='radio']:checked").val();
         if (type == 'nominal') {
             totaldiscounted = total - $.trim($(".nominal-discount").val().split('.').join('')).match(/\d+$/);
-            totaldiscounted = totaldiscounted <= 0 ? 0 : totaldiscounted;
         } else if (type == 'persentase') {
             discountpercent = $.trim($(".percentage-discount").val().split('.').join('')).match(/\d+$/);
             totaldiscounted = total - (total * (discountpercent / 100));
@@ -461,7 +460,7 @@ $(document).ready(function() {
                 alert("{{ 'shortinfo.pay.notbiggerthan.fee'|trans }}");
                 $(this).find(':submit').removeAttr('disabled');
                 return false;
-            } else if (payamount < feeamount && $("form .fee-item:checked").size() > 1) {
+            } else if (payamount < feeamount && $("form .fee-item:checked").length > 1) {
                 alert("{{ 'shortinfo.pay.lessthan.fee.oneitem'|trans }}");
                 $(this).find(':submit').removeAttr('disabled');
                 return false;
