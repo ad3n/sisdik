@@ -205,6 +205,7 @@
 <div class="clearfix"></div>
 
 {% if itemBiayaTersisa|length > 0 %}
+{{ form_errors(form) }}
 <form id="pay-form" action="{{ path('payment_registrationfee_create', { 'sid': siswa.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
     <div style="margin-left: 10px;">
         {{ form_row(form.daftarBiayaPendaftaran) }}
@@ -376,7 +377,7 @@ $(document).ready(function() {
     // find and display discounted fee
     getTotalFeeDiscounted();
     amountdiscounted = totaldiscounted.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-    $("#fee-amount-discounted").text(amountdiscounted == "0" ? "" : amountdiscounted);
+    $("#fee-amount-discounted").text(amountdiscounted);
 
     $(".nominal-discount").keyup(function() {
         discountnominal = $.trim($(this).val().split('.').join('')).match(/\d+$/);
