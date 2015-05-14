@@ -4,12 +4,14 @@ namespace Langgas\SisdikBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Langgas\SisdikBundle\Validator\Constraints as LanggasAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="pembayaran_pendaftaran")
  * @ORM\Entity
+ * @LanggasAssert\PembayaranPendaftaran
  */
 class PembayaranPendaftaran
 {
@@ -362,6 +364,39 @@ class PembayaranPendaftaran
     public function getDaftarBiayaPendaftaran()
     {
         return $this->daftarBiayaPendaftaran;
+    }
+
+    /**
+     * Menertibkan biaya pembayaran
+     */
+    public function tertibBiayaPembayaran()
+    {
+        $jumlah = 0;
+
+        foreach ($this->getDaftarBiayaPendaftaran() as $biaya) {
+            if (!$biaya->isTerpilih()) {
+                $this->getDaftarBiayaPendaftaran()->removeElement($biaya);
+                continue;
+            }
+            $jumlah += $biaya->getNominal();
+        }
+
+        $this->setNominalTotalBiaya($jumlah);
+
+        if ($this->getAdaPotongan() === false) {
+            $this->setJenisPotongan(null);
+            $this->setNominalPotongan(0);
+            $this->setPersenPotongan(0);
+            $this->setPersenPotonganDinominalkan(0);
+        }
+
+        if ($this->getAdaPotongan() && $this->getPersenPotongan() != 0) {
+            $this->setPersenPotonganDinominalkan($jumlah * ($this->getPersenPotongan() / 100));
+            $this->setNominalPotongan(0);
+        } else {
+            $this->setPersenPotongan(0);
+            $this->setPersenPotonganDinominalkan(0);
+        }
     }
 
     /**
