@@ -398,6 +398,7 @@ class KeteranganPembayaranRutinController extends Controller
                         ],
                         'icon' => 'trash',
                         'wrapper_div' => false,
+                        'horizontal_wrapper_div' => false,
                     ],
                 ],
             ])

@@ -125,6 +125,7 @@ class PanitiaPendaftaranType extends AbstractType
                         ],
                         'icon' => 'trash',
                         'wrapper_div' => false,
+                        'horizontal_wrapper_div' => false,
                     ],
                 ],
             ])
