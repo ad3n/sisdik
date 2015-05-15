@@ -113,6 +113,16 @@ class PembayaranPendaftaran
     private $siswa;
 
     /**
+     * @ORM\ManyToOne(targetEntity="KategoriPotongan")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="kategori_potongan_id", referencedColumnName="id", nullable=true)
+     * })
+     *
+     * @var KategoriPotongan
+     */
+    private $kategoriPotongan;
+
+    /**
      * @ORM\OneToMany(targetEntity="TransaksiPembayaranPendaftaran", mappedBy="pembayaranPendaftaran", cascade={"persist"})
      * @ORM\OrderBy({"waktuSimpan" = "ASC"})
      * @Assert\Valid
@@ -321,6 +331,22 @@ class PembayaranPendaftaran
     }
 
     /**
+     * @param Siswa $kategoriPotongan
+     */
+    public function setKategoriPotongan(KategoriPotongan $kategoriPotongan = null)
+    {
+        $this->kategoriPotongan = $kategoriPotongan;
+    }
+
+    /**
+     * @return KategoriPotongan
+     */
+    public function getKategoriPotongan()
+    {
+        return $this->kategoriPotongan;
+    }
+
+    /**
      * Menentukan transaksi pembayaran pendaftaran.
      * Type hinting ArrayCollection dihapus agar bisa melakukan pengubahan.
      *
@@ -367,7 +393,7 @@ class PembayaranPendaftaran
     }
 
     /**
-     * Menertibkan biaya pembayaran
+     * Menertibkan biaya pembayaran.
      */
     public function tertibBiayaPembayaran()
     {
