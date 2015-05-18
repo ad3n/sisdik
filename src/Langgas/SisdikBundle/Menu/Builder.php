@@ -110,6 +110,7 @@ class Builder extends ContainerAware
             $fees->addChild($translator->trans('links.fee.registration', [], 'navigations'), ['route' => 'fee_registration']);
             $fees->addChild($translator->trans('links.fee.once', [], 'navigations'), ['route' => 'fee_once']);
             $fees->addChild($translator->trans('links.fee.recur', [], 'navigations'), ['route' => 'fee_recur']);
+            $fees->addChild($translator->trans('links.kategori.potongan', [], 'navigations'), ['route' => 'kategori-potongan']);
             $fees->addChild($translator->trans('links.keterangan.pembayaran.berulang', [], 'navigations'), ['route' => 'keterangan_pembayaran_rutin']);
             $fees->addChild($translator->trans('links.reward.type', [], 'navigations'), ['route' => 'rewardtype']);
             $fees->addChild($translator->trans('links.reward.amount', [], 'navigations'), ['route' => 'rewardamount']);

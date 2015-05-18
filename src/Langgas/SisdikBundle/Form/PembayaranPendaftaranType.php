@@ -2,18 +2,50 @@
 
 namespace Langgas\SisdikBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Langgas\SisdikBundle\Entity\Sekolah;
+use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use JMS\DiExtraBundle\Annotation\FormType;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @FormType
  */
 class PembayaranPendaftaranType extends AbstractType
 {
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
+
+    /**
+     * @InjectParams({
+     *     "tokenStorage" = @Inject("security.token_storage")
+     * })
+     *
+     * @param TokenStorageInterface $tokenStorage
+     */
+    public function __construct(TokenStorageInterface $tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
+     * @return Sekolah
+     */
+    private function getSekolah()
+    {
+        return $this->tokenStorage->getToken()->getUser()->getSekolah();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $sekolah = $this->getSekolah();
+
         $builder
             ->add('daftarBiayaPendaftaran', 'collection', [
                 'type' => 'sisdik_daftarbiayapendaftaran',
@@ -67,6 +99,24 @@ class PembayaranPendaftaranType extends AbstractType
                     'autocomplete' => 'off',
                 ],
                 'label' => 'label.discount.amount',
+            ])
+            ->add('kategoriPotongan', 'entity', [
+                'class' => 'LanggasSisdikBundle:KategoriPotongan',
+                'label' => 'label.kategori.potongan',
+                'multiple' => false,
+                'expanded' => false,
+                'property' => 'nama',
+                'placeholder' => 'label.tanpa.kategori.potongan',
+                'required' => false,
+                'query_builder' => function (EntityRepository $repository) use ($sekolah) {
+                    $qb = $repository->createQueryBuilder('kategoriPotongan')
+                        ->where('kategoriPotongan.sekolah = :sekolah')
+                        ->orderBy('kategoriPotongan.nama', 'ASC')
+                        ->setParameter('sekolah', $sekolah)
+                    ;
+
+                    return $qb;
+                },
             ])
             ->add('transaksiPembayaranPendaftaran', 'collection', [
                 'type' => 'sisdik_transaksipembayaranpendaftaran',

@@ -1,0 +1,48 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}kategori.potongan{% endtrans %}{% endblock %}
+
+{% block content %}
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('kategori-potongan_new') }}" class="add-link-a">
+            <i class="fa fa-plus-square fa-lg fa-fw"></i>{{ 'label.tambah.kategori.potongan'|trans }}
+        </a>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
+
+<table class="table zebra-striped bordered-table" id="no-more-tables">
+    <thead>
+        <tr>
+            <th class="{% if pagination.isSorted('t.nama') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.nama.kategori.potongan'|trans, 't.nama') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.kode') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.code'|trans, 't.kode') }}
+            </th>
+            <th class="{% if pagination.isSorted('t.keterangan') %}sorted{% endif %}">
+                {{ knp_pagination_sortable(pagination, 'label.description'|trans, 't.keterangan') }}
+            </th>
+            <th>{{ 'label.actions'|trans }}</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for data in pagination %}
+        <tr>
+            <td data-title="{{ 'label.nama.kategori.potongan'|trans }}">{{ data.nama }}</td>
+            <td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
+            <td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
+            <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
+                <a href="{{ path('kategori-potongan_show', {'id': data.id}) }}" title="{{ 'tip.detail'|trans }}"><i class="fa fa-arrow-right"></i></a>
+                <a href="{{ path('kategori-potongan_edit', {'id': data.id}) }}" title="{{ 'tip.edit'|trans }}"><i class="fa fa-pencil"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{{ knp_pagination_render(pagination) }}
+{% endblock content %}
+
+

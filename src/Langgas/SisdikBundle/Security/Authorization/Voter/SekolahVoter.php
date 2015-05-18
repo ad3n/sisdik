@@ -32,6 +32,7 @@ class SekolahVoter implements VoterInterface
             'Langgas\SisdikBundle\Entity\JenisDokumenSiswa',
             'Langgas\SisdikBundle\Entity\JenisImbalan',
             'Langgas\SisdikBundle\Entity\Jenisbiaya',
+            'Langgas\SisdikBundle\Entity\KategoriPotongan',
             'Langgas\SisdikBundle\Entity\Kelas',
             'Langgas\SisdikBundle\Entity\LayananSmsPeriodik',
             'Langgas\SisdikBundle\Entity\LayananSms',

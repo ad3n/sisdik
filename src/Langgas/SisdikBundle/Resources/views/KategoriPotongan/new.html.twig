@@ -1,0 +1,21 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}tambah.kategori.potongan{% endtrans %}{% endblock %}
+
+{% block content %}
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.save'|trans }}</button>
+        </div>
+    </div>
+    {{ form_rest(form) }}
+{{ form_end(form) }}
+
+<ul class="nav nav-pills">
+    <li>
+        <a href="{{ path('kategori-potongan') }}">{{ 'link.backtolist'|trans }}</a>
+    </li>
+</ul>
+{% endblock content %}
