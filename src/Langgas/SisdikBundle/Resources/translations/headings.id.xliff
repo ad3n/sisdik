@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2015-03-14T12:30:48Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2015-05-18T19:41:46Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -264,6 +264,11 @@
         <source>data.studentclass.list</source>
         <target>Riwayat Kelas</target>
       </trans-unit>
+      <trans-unit id="fe370f4b8499b4dbfb62d8890ca770dfe17c7e43" resname="detail.kategori.potongan">
+        <jms:reference-file line="3">views/KategoriPotongan/show.html.twig</jms:reference-file>
+        <source>detail.kategori.potongan</source>
+        <target>Detail Kategori Potongan</target>
+      </trans-unit>
       <trans-unit id="ed39411f6683548787262b32bcb39c1df514bb37" resname="detail.kehadiran.siswa">
         <jms:reference-file line="3">views/KehadiranSiswa/detail.html.twig</jms:reference-file>
         <source>detail.kehadiran.siswa</source>
@@ -469,6 +474,11 @@
         <source>jenis.dokumen.siswa.pembuatan</source>
         <target>Menambah Jenis Dokumen Siswa</target>
       </trans-unit>
+      <trans-unit id="39ff03df280a80eecc957665bba9234b125b87ce" resname="kategori.potongan">
+        <jms:reference-file line="3">views/KategoriPotongan/index.html.twig</jms:reference-file>
+        <source>kategori.potongan</source>
+        <target>Daftar Kategori Potongan</target>
+      </trans-unit>
       <trans-unit id="d5f1d4df57e63e45e06e1a25e72ff742180d3ad6" resname="kehadiran.siswa.laporan">
         <jms:reference-file line="4">views/KehadiranSiswa/laporan.html.twig</jms:reference-file>
         <source>kehadiran.siswa.laporan</source>
@@ -616,7 +626,7 @@
       <trans-unit id="d8e88ee6a5b07df4f63dc0a8bd674d7d06bc3bf5" resname="pembaruan.jadwal.mesin.kehadiran">
         <jms:reference-file line="89">views/MesinKehadiran/index.html.twig</jms:reference-file>
         <jms:reference-file line="150">views/JadwalKehadiran/index.html.twig</jms:reference-file>
-        <jms:reference-file line="150">views/JadwalKepulangan/index.html.twig</jms:reference-file>
+        <jms:reference-file line="157">views/JadwalKepulangan/index.html.twig</jms:reference-file>
         <source>pembaruan.jadwal.mesin.kehadiran</source>
         <target>Penyimpanan Informasi Jadwal dan Mesin Kehadiran</target>
       </trans-unit>
@@ -1053,6 +1063,11 @@
         <source>smspendaftaran.pembuatan</source>
         <target>Menentukan SMS Pendaftaran</target>
       </trans-unit>
+      <trans-unit id="697deb1820560dfafef7b71e9a85c1f3e0ce300c" resname="tambah.kategori.potongan">
+        <jms:reference-file line="3">views/KategoriPotongan/new.html.twig</jms:reference-file>
+        <source>tambah.kategori.potongan</source>
+        <target>Menambah Kategori Potongan</target>
+      </trans-unit>
       <trans-unit id="aae634921eb9cbeda303e19b59d99a839c5aafd5" resname="tingkat.kelas.daftar">
         <jms:reference-file line="3">views/Tingkat/index.html.twig</jms:reference-file>
         <source>tingkat.kelas.daftar</source>
@@ -1097,6 +1112,11 @@
         <jms:reference-file line="3">views/PembayaranBiayaSekali/show.html.twig</jms:reference-file>
         <source>transaksi.pembayaran.biaya.sekali.bayar</source>
         <target>Transaksi Pembayaran Biaya Sekali Bayar</target>
+      </trans-unit>
+      <trans-unit id="6c5e4b7b243a64901a4e14b272284da94138efbc" resname="ubah.kategori.potongan">
+        <jms:reference-file line="3">views/KategoriPotongan/edit.html.twig</jms:reference-file>
+        <source>ubah.kategori.potongan</source>
+        <target>Mengubah Kategori Potongan</target>
       </trans-unit>
       <trans-unit id="3245557307fb4c8b5df3d321a8d9d192590ff35a" resname="ubah.keterangan.pembayaran.berulang">
         <jms:reference-file line="3">views/KeteranganPembayaranRutin/edit.html.twig</jms:reference-file>
