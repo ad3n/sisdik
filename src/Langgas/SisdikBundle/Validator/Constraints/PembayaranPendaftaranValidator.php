@@ -46,9 +46,7 @@ class PembayaranPendaftaranValidator extends ConstraintValidator
         $totalTransaksi = $object->getTotalNominalTransaksiPembayaranPendaftaran();
         $jumlahBiaya = $object->getNominalTotalBiaya() - ($object->getNominalPotongan() + $object->getPersenPotonganDinominalkan());
 
-        if ($object->getDaftarBiayaPendaftaran()->count() > 1) {
-            $object->tertibBiayaPembayaran();
-        }
+        $object->tertibBiayaPembayaran();
 
         /*
         $context
@@ -64,6 +62,13 @@ class PembayaranPendaftaranValidator extends ConstraintValidator
             ->addViolation()
         ;
         */
+
+        if ($object->getAdaPotongan() && ($object->getNominalPotongan() + $object->getPersenPotonganDinominalkan() <= 0)) {
+            $context
+                ->buildViolation($this->translator->trans('jumlah.potongan.tak.boleh.nol.atau.negatif', [], 'validators'))
+                ->addViolation()
+            ;
+        }
 
         if ($totalTransaksi > $object->getNominalTotalBiaya() - ($object->getNominalPotongan() + $object->getPersenPotonganDinominalkan())) {
             $context
