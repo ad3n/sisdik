@@ -46,12 +46,15 @@ class PembayaranPendaftaranValidator extends ConstraintValidator
         $totalTransaksi = $object->getTotalNominalTransaksiPembayaranPendaftaran();
         $jumlahBiaya = $object->getNominalTotalBiaya() - ($object->getNominalPotongan() + $object->getPersenPotonganDinominalkan());
 
-        $object->tertibBiayaPembayaran();
+        if ($object->getTransaksiPembayaranPendaftaran()->count() == 1) {
+            $object->tertibBiayaPembayaran();
+        }
 
         /*
         $context
             ->buildViolation(
                 $object->getDaftarBiayaPendaftaran()->count().'; '
+                .$object->getTransaksiPembayaranPendaftaran()->count().'; '
                 .$totalTransaksi.'; '
                 .$jumlahBiaya.'; '
                 .$object->getNominalTotalBiaya().' - ('

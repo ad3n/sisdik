@@ -809,9 +809,8 @@ class PembayaranPendaftaranController extends Controller
             throw $this->createNotFoundException('Entity PembayaranPendaftaran tak ditemukan.');
         }
 
+        /*
         $transaksiSebelumnya = [];
-
-        /* @var $transaksi TransaksiPembayaranPendaftaran */
         foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
             $tmp['sekolah'] = $transaksi->getSekolah();
             $tmp['dibuatOleh'] = $transaksi->getDibuatOleh();
@@ -820,6 +819,7 @@ class PembayaranPendaftaranController extends Controller
 
             $transaksiSebelumnya[] = $tmp;
         }
+        */
 
         $itemBiaya = $this->getBiayaProperties($siswa);
 
@@ -867,6 +867,7 @@ class PembayaranPendaftaranController extends Controller
             ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
 
+            /*
             foreach ($transaksiSebelumnya as $value) {
                 $transaksi = $entity->getTransaksiPembayaranPendaftaran()->current();
 
@@ -877,6 +878,7 @@ class PembayaranPendaftaranController extends Controller
 
                 $entity->getTransaksiPembayaranPendaftaran()->next();
             }
+            */
 
             $currentPaymentAmount = 0;
             $transaksi = $entity->getTransaksiPembayaranPendaftaran()->last();
