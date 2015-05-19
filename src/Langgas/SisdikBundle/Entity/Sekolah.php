@@ -154,6 +154,34 @@ class Sekolah
     private $nomorUrut;
 
     /**
+     * @ORM\Column(name="atr_no_daftar", type="string", length=200, nullable=true)
+     *
+     * @var integer
+     */
+    private $atributNomorDaftar;
+
+    /**
+     * @ORM\Column(name="atr_no_trans_biaya_daftar", type="string", length=200, nullable=true)
+     *
+     * @var integer
+     */
+    private $atributNomorTransaksiBiayaDaftar;
+
+    /**
+     * @ORM\Column(name="atr_no_trans_biaya_sekali", type="string", length=200, nullable=true)
+     *
+     * @var integer
+     */
+    private $atributNomorTransaksiBiayaSekali;
+
+    /**
+     * @ORM\Column(name="atr_no_trans_biaya_berulang", type="string", length=200, nullable=true)
+     *
+     * @var integer
+     */
+    private $atributNomorTransaksiBiayaBerulang;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -598,5 +626,69 @@ class Sekolah
         }
 
         return self::LOGO_DIR.$this->getId();
+    }
+
+    /**
+     * @param string $atributNomorDaftar
+     */
+    public function setAtributNomorDaftar($atributNomorDaftar)
+    {
+        $this->atributNomorDaftar = $atributNomorDaftar;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtributNomorDaftar()
+    {
+        return $this->atributNomorDaftar;
+    }
+
+    /**
+     * @param string $atributNomorTransaksiBiayaDaftar
+     */
+    public function setAtributNomorTransaksiBiayaDaftar($atributNomorTransaksiBiayaDaftar)
+    {
+        $this->atributNomorTransaksiBiayaDaftar = $atributNomorTransaksiBiayaDaftar;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtributNomorTransaksiBiayaDaftar()
+    {
+        return $this->atributNomorTransaksiBiayaDaftar;
+    }
+
+    /**
+     * @param string $atributNomorTransaksiBiayaSekali
+     */
+    public function setAtributNomorTransaksiBiayaSekali($atributNomorTransaksiBiayaSekali)
+    {
+        $this->atributNomorTransaksiBiayaSekali = $atributNomorTransaksiBiayaSekali;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtributNomorTransaksiBiayaSekali()
+    {
+        return $this->atributNomorTransaksiBiayaSekali;
+    }
+
+    /**
+     * @param string $atributNomorTransaksiBiayaBerulang
+     */
+    public function setAtributNomorTransaksiBiayaBerulang($atributNomorTransaksiBiayaBerulang)
+    {
+        $this->atributNomorTransaksiBiayaBerulang = $atributNomorTransaksiBiayaBerulang;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtributNomorTransaksiBiayaBerulang()
+    {
+        return $this->atributNomorTransaksiBiayaBerulang;
     }
 }
