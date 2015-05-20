@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class TransaksiPembayaranSekali
 {
-    const tandakwitansi = 'S';
+    const tandakwitansi = 'C';
 
     /**
      * @ORM\Column(name="id", type="bigint", nullable=false)
