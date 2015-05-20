@@ -270,17 +270,46 @@ class PembayaranBiayaSekaliController extends Controller
                 ->setParameter('sekolah', $sekolah)
             ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+            $nomormax++;
 
             $currentPaymentAmount = 0;
-            foreach ($entity->getTransaksiPembayaranSekali() as $transaksi) {
-                if ($transaksi instanceof TransaksiPembayaranSekali) {
-                    $currentPaymentAmount = $transaksi->getNominalPembayaran();
-                    $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
-                    $transaksi->setNomorTransaksi(
-                        TransaksiPembayaranSekali::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
-                    );
+            $transaksi = $entity->getTransaksiPembayaranSekali()->first();
+            if ($transaksi instanceof TransaksiPembayaranSekali) {
+                $currentPaymentAmount = $transaksi->getNominalPembayaran();
+                $transaksi->setNomorUrutTransaksiPerbulan($nomormax);
+
+                if ($sekolah->getAtributNomorTransaksiBiayaSekali() !== null) {
+                    $nomorTransaksiSekali = $sekolah->getAtributNomorTransaksiBiayaSekali();
+
+                    $nomorTransaksiSekali = str_replace("%tahun%", $now->format('Y'), $nomorTransaksiSekali);
+                    $nomorTransaksiSekali = str_replace("%bulan%", $now->format('m'), $nomorTransaksiSekali);
+                    $nomorTransaksiSekali = str_replace("%tanggal%", $now->format('d'), $nomorTransaksiSekali);
+
+                    $tmpNomorTransaksi = $nomormax;
+
+                    $matches = [];
+                    $penambah = preg_match('/{\+(\d+)}/', $nomorTransaksiSekali, $matches);
+                    if ($penambah === 1) {
+                        $tmpNomorTransaksi = $tmpNomorTransaksi + $matches[1];
+                    }
+                    $nomorTransaksiSekali = preg_replace('/{\+\d+}/', '', $nomorTransaksiSekali);
+
+                    if (preg_match('/#+%nomor-urut-perbulan%/', $nomorTransaksiSekali) === 1) {
+                        $placeholder = preg_match_all('/#/', $nomorTransaksiSekali);
+                        if ($placeholder >= 1 && strlen($tmpNomorTransaksi) <= $placeholder) {
+                            $tmpNomorTransaksi = str_repeat('0', $placeholder - strlen($tmpNomorTransaksi) + 1).$tmpNomorTransaksi;
+                        }
+                    }
+                    $nomorTransaksiSekali = str_replace('#', '', $nomorTransaksiSekali);
+
+                    $nomorTransaksiSekali = str_replace("%nomor-urut-perbulan%", $tmpNomorTransaksi, $nomorTransaksiSekali);
+
+                    $transaksi->setNomorTransaksi($nomorTransaksiSekali);
+                } else {
+                    $transaksi->setNomorTransaksi(TransaksiPembayaranSekali::tandakwitansi.$now->format('Y').$now->format('m').$nomormax);
                 }
             }
+
             $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
 
             $nominalBiaya = 0;
@@ -753,6 +782,7 @@ class PembayaranBiayaSekaliController extends Controller
                 ->setParameter('sekolah', $sekolah)
             ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+            $nomormax++;
 
             foreach ($transaksiSebelumnya as $value) {
                 $transaksi = $entity->getTransaksiPembayaranSekali()->current();
@@ -769,11 +799,40 @@ class PembayaranBiayaSekaliController extends Controller
             $transaksi = $entity->getTransaksiPembayaranSekali()->last();
             if ($transaksi instanceof TransaksiPembayaranSekali) {
                 $currentPaymentAmount = $transaksi->getNominalPembayaran();
-                $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
-                $transaksi->setNomorTransaksi(
-                    TransaksiPembayaranSekali::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
-                );
+                $transaksi->setNomorUrutTransaksiPerbulan($nomormax);
+
+                if ($sekolah->getAtributNomorTransaksiBiayaSekali() !== null) {
+                    $nomorTransaksiSekali = $sekolah->getAtributNomorTransaksiBiayaSekali();
+
+                    $nomorTransaksiSekali = str_replace("%tahun%", $now->format('Y'), $nomorTransaksiSekali);
+                    $nomorTransaksiSekali = str_replace("%bulan%", $now->format('m'), $nomorTransaksiSekali);
+                    $nomorTransaksiSekali = str_replace("%tanggal%", $now->format('d'), $nomorTransaksiSekali);
+
+                    $tmpNomorTransaksi = $nomormax;
+
+                    $matches = [];
+                    $penambah = preg_match('/{\+(\d+)}/', $nomorTransaksiSekali, $matches);
+                    if ($penambah === 1) {
+                        $tmpNomorTransaksi = $tmpNomorTransaksi + $matches[1];
+                    }
+                    $nomorTransaksiSekali = preg_replace('/{\+\d+}/', '', $nomorTransaksiSekali);
+
+                    if (preg_match('/#+%nomor-urut-perbulan%/', $nomorTransaksiSekali) === 1) {
+                        $placeholder = preg_match_all('/#/', $nomorTransaksiSekali);
+                        if ($placeholder >= 1 && strlen($tmpNomorTransaksi) <= $placeholder) {
+                            $tmpNomorTransaksi = str_repeat('0', $placeholder - strlen($tmpNomorTransaksi) + 1).$tmpNomorTransaksi;
+                        }
+                    }
+                    $nomorTransaksiSekali = str_replace('#', '', $nomorTransaksiSekali);
+
+                    $nomorTransaksiSekali = str_replace("%nomor-urut-perbulan%", $tmpNomorTransaksi, $nomorTransaksiSekali);
+
+                    $transaksi->setNomorTransaksi($nomorTransaksiSekali);
+                } else {
+                    $transaksi->setNomorTransaksi(TransaksiPembayaranSekali::tandakwitansi.$now->format('Y').$now->format('m').$nomormax);
+                }
             }
+
             $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
 
             $payableAmountDue = $siswa->getTotalNominalBiayaSekali();
