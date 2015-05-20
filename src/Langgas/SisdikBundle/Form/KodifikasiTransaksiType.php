@@ -40,6 +40,14 @@ class KodifikasiTransaksiType extends AbstractType
                     'placeholder' => 'contoh.atribut.nomor.transaksi.biaya.sekali',
                 ],
             ])
+            ->add('atributNomorTransaksiRestitusi', 'text', [
+                'required' => false,
+                'label' => 'label.atribut.nomor.transaksi.restitusi',
+                'help_block' => 'penjelasan.atribut.nomor.transaksi.restitusi',
+                'attr' => [
+                    'placeholder' => 'contoh.atribut.nomor.transaksi.restitusi',
+                ],
+            ])
         ;
     }
 

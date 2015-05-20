@@ -1260,11 +1260,40 @@ class PembayaranPendaftaranController extends Controller
                     ->setParameter('sekolah', $sekolah)
                 ;
                 $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+                $nomormax++;
 
-                $entity->setNomorUrutTransaksiPertahun($nomormax + 1);
-                $entity->setNomorTransaksi(
-                    RestitusiPendaftaran::tandakwitansi.$now->format('Y').($nomormax + 1)
-                );
+                $entity->setNomorUrutTransaksiPertahun($nomormax);
+
+                if ($sekolah->getAtributNomorTransaksiRestitusi() !== null) {
+                    $nomorTransaksiRestitusi = $sekolah->getAtributNomorTransaksiRestitusi();
+
+                    $nomorTransaksiRestitusi = str_replace("%tahun%", $now->format('Y'), $nomorTransaksiRestitusi);
+                    $nomorTransaksiRestitusi = str_replace("%bulan%", $now->format('m'), $nomorTransaksiRestitusi);
+                    $nomorTransaksiRestitusi = str_replace("%tanggal%", $now->format('d'), $nomorTransaksiRestitusi);
+
+                    $tmpNomorTransaksi = $nomormax;
+
+                    $matches = [];
+                    $penambah = preg_match('/{\+(\d+)}/', $nomorTransaksiRestitusi, $matches);
+                    if ($penambah === 1) {
+                        $tmpNomorTransaksi = $tmpNomorTransaksi + $matches[1];
+                    }
+                    $nomorTransaksiRestitusi = preg_replace('/{\+\d+}/', '', $nomorTransaksiRestitusi);
+
+                    if (preg_match('/#+%nomor-urut-pertahun%/', $nomorTransaksiRestitusi) === 1) {
+                        $placeholder = preg_match_all('/#/', $nomorTransaksiRestitusi);
+                        if ($placeholder >= 1 && strlen($tmpNomorTransaksi) <= $placeholder) {
+                            $tmpNomorTransaksi = str_repeat('0', $placeholder - strlen($tmpNomorTransaksi) + 1).$tmpNomorTransaksi;
+                        }
+                    }
+                    $nomorTransaksiRestitusi = str_replace('#', '', $nomorTransaksiRestitusi);
+
+                    $nomorTransaksiRestitusi = str_replace("%nomor-urut-pertahun%", $tmpNomorTransaksi, $nomorTransaksiRestitusi);
+
+                    $entity->setNomorTransaksi($nomorTransaksiRestitusi);
+                } else {
+                    $entity->setNomorTransaksi(RestitusiPendaftaran::tandakwitansi.$now->format('Y').$nomormax);
+                }
 
                 $em->persist($entity);
                 $em->flush();

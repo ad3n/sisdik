@@ -182,6 +182,13 @@ class Sekolah
     private $atributNomorTransaksiBiayaBerulang;
 
     /**
+     * @ORM\Column(name="atr_no_trans_restitusi", type="string", length=200, nullable=true)
+     *
+     * @var integer
+     */
+    private $atributNomorTransaksiRestitusi;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -690,5 +697,21 @@ class Sekolah
     public function getAtributNomorTransaksiBiayaBerulang()
     {
         return $this->atributNomorTransaksiBiayaBerulang;
+    }
+
+    /**
+     * @param string $atributNomorTransaksiRestitusi
+     */
+    public function setAtributNomorTransaksiRestitusi($atributNomorTransaksiRestitusi)
+    {
+        $this->atributNomorTransaksiRestitusi = $atributNomorTransaksiRestitusi;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAtributNomorTransaksiRestitusi()
+    {
+        return $this->atributNomorTransaksiRestitusi;
     }
 }

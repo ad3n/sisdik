@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class RestitusiPendaftaran
 {
-    const tandakwitansi = 'R';
+    const tandakwitansi = 'D';
 
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
