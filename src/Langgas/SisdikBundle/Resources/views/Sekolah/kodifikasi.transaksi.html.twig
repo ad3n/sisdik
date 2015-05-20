@@ -1,0 +1,15 @@
+{% extends 'LanggasSisdikBundle::layout.html.twig' %}
+
+{% block page_heading %}{% trans from "headings" %}kodifikasi.transaksi{% endtrans %}{% endblock %}
+
+{% block content %}
+{{ form_start(edit_form) }}
+    {{ form_widget(edit_form) }}
+    <div class="form-group">
+        <div class="col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9">
+            <button type="submit" class="btn primary">{{ 'label.submit.update'|trans }}</button>
+        </div>
+    </div>
+    {{ form_rest(edit_form) }}
+{{ form_end(edit_form) }}
+{% endblock content %}

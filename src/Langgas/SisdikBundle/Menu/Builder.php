@@ -102,18 +102,19 @@ class Builder extends ContainerAware
         if ($securityContext->isGranted([
             new Expression('hasAnyRole("ROLE_BENDAHARA")'),
         ])) {
-            $fees = $menu->addChild($translator->trans('headings.fee', [], 'navigations'), [
+            $biaya = $menu->addChild($translator->trans('headings.fee', [], 'navigations'), [
                 'dropdown' => true,
             ]);
 
-            $fees->addChild($translator->trans('links.fee.type', [], 'navigations'), ['route' => 'fee_type']);
-            $fees->addChild($translator->trans('links.fee.registration', [], 'navigations'), ['route' => 'fee_registration']);
-            $fees->addChild($translator->trans('links.fee.once', [], 'navigations'), ['route' => 'fee_once']);
-            $fees->addChild($translator->trans('links.fee.recur', [], 'navigations'), ['route' => 'fee_recur']);
-            $fees->addChild($translator->trans('links.kategori.potongan', [], 'navigations'), ['route' => 'kategori-potongan']);
-            $fees->addChild($translator->trans('links.keterangan.pembayaran.berulang', [], 'navigations'), ['route' => 'keterangan_pembayaran_rutin']);
-            $fees->addChild($translator->trans('links.reward.type', [], 'navigations'), ['route' => 'rewardtype']);
-            $fees->addChild($translator->trans('links.reward.amount', [], 'navigations'), ['route' => 'rewardamount']);
+            $biaya->addChild($translator->trans('links.fee.type', [], 'navigations'), ['route' => 'fee_type']);
+            $biaya->addChild($translator->trans('links.fee.registration', [], 'navigations'), ['route' => 'fee_registration']);
+            $biaya->addChild($translator->trans('links.fee.once', [], 'navigations'), ['route' => 'fee_once']);
+            $biaya->addChild($translator->trans('links.fee.recur', [], 'navigations'), ['route' => 'fee_recur']);
+            $biaya->addChild($translator->trans('links.kategori.potongan', [], 'navigations'), ['route' => 'kategori-potongan']);
+            $biaya->addChild($translator->trans('links.kodifikasi.transaksi', [], 'navigations'), ['route' => 'kodifikasi_transaksi']);
+            $biaya->addChild($translator->trans('links.keterangan.pembayaran.berulang', [], 'navigations'), ['route' => 'keterangan_pembayaran_rutin']);
+            $biaya->addChild($translator->trans('links.reward.type', [], 'navigations'), ['route' => 'rewardtype']);
+            $biaya->addChild($translator->trans('links.reward.amount', [], 'navigations'), ['route' => 'rewardamount']);
         }
 
         $rolependaftaran = 'hasAnyRole("ROLE_ADMIN", "ROLE_KEPALA_SEKOLAH", "ROLE_WAKIL_KEPALA_SEKOLAH", "ROLE_PANITIA_PSB", "ROLE_KETUA_PANITIA_PSB")';
