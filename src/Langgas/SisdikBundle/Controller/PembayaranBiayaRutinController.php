@@ -813,18 +813,47 @@ class PembayaranBiayaRutinController extends Controller
                     ->setParameter('sekolah', $sekolah)
                 ;
                 $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+                $nomormax++;
 
                 $totalPayment = 0;
                 $nomorTransaksi = "";
-                foreach ($entity->getTransaksiPembayaranRutin() as $transaksi) {
-                    if ($transaksi instanceof TransaksiPembayaranRutin) {
-                        $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
-                        $transaksi->setNomorTransaksi(
-                            TransaksiPembayaranRutin::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
-                        );
-                        $totalPayment += $transaksi->getNominalPembayaran();
-                        $nomorTransaksi = $transaksi->getNomorTransaksi();
+                $transaksi = $entity->getTransaksiPembayaranRutin()->first();
+                if ($transaksi instanceof TransaksiPembayaranRutin) {
+                    $transaksi->setNomorUrutTransaksiPerbulan($nomormax);
+
+                    if ($sekolah->getAtributNomorTransaksiBiayaBerulang() !== null) {
+                        $nomorTransaksiRutin = $sekolah->getAtributNomorTransaksiBiayaBerulang();
+
+                        $nomorTransaksiRutin = str_replace("%tahun%", $now->format('Y'), $nomorTransaksiRutin);
+                        $nomorTransaksiRutin = str_replace("%bulan%", $now->format('m'), $nomorTransaksiRutin);
+                        $nomorTransaksiRutin = str_replace("%tanggal%", $now->format('d'), $nomorTransaksiRutin);
+
+                        $tmpNomorTransaksi = $nomormax;
+
+                        $matches = [];
+                        $penambah = preg_match('/{\+(\d+)}/', $nomorTransaksiRutin, $matches);
+                        if ($penambah === 1) {
+                            $tmpNomorTransaksi = $tmpNomorTransaksi + $matches[1];
+                        }
+                        $nomorTransaksiRutin = preg_replace('/{\+\d+}/', '', $nomorTransaksiRutin);
+
+                        if (preg_match('/#+%nomor-urut-perbulan%/', $nomorTransaksiRutin) === 1) {
+                            $placeholder = preg_match_all('/#/', $nomorTransaksiRutin);
+                            if ($placeholder >= 1 && strlen($tmpNomorTransaksi) <= $placeholder) {
+                                $tmpNomorTransaksi = str_repeat('0', $placeholder - strlen($tmpNomorTransaksi) + 1).$tmpNomorTransaksi;
+                            }
+                        }
+                        $nomorTransaksiRutin = str_replace('#', '', $nomorTransaksiRutin);
+
+                        $nomorTransaksiRutin = str_replace("%nomor-urut-perbulan%", $tmpNomorTransaksi, $nomorTransaksiRutin);
+
+                        $transaksi->setNomorTransaksi($nomorTransaksiRutin);
+                    } else {
+                        $transaksi->setNomorTransaksi(TransaksiPembayaranRutin::tandakwitansi.$now->format('Y').$now->format('m').$nomormax);
                     }
+
+                    $totalPayment = $transaksi->getNominalPembayaran();
+                    $nomorTransaksi = $transaksi->getNomorTransaksi();
                 }
 
                 if ($entity->getAdaPotongan() === false) {
@@ -1097,6 +1126,7 @@ class PembayaranBiayaRutinController extends Controller
                 ->setParameter('sekolah', $sekolah)
             ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+            $nomormax++;
 
             foreach ($transaksiSebelumnya as $value) {
                 $transaksi = $entity->getTransaksiPembayaranRutin()->current();
@@ -1113,11 +1143,40 @@ class PembayaranBiayaRutinController extends Controller
             $nomorTransaksi = "";
             $transaksi = $entity->getTransaksiPembayaranRutin()->last();
             if ($transaksi instanceof TransaksiPembayaranRutin) {
-                $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
-                $transaksi->setNomorTransaksi(
-                    TransaksiPembayaranRutin::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
-                );
-                $totalPayment += $transaksi->getNominalPembayaran();
+                $transaksi->setNomorUrutTransaksiPerbulan($nomormax);
+
+                if ($sekolah->getAtributNomorTransaksiBiayaBerulang() !== null) {
+                    $nomorTransaksiRutin = $sekolah->getAtributNomorTransaksiBiayaBerulang();
+
+                    $nomorTransaksiRutin = str_replace("%tahun%", $now->format('Y'), $nomorTransaksiRutin);
+                    $nomorTransaksiRutin = str_replace("%bulan%", $now->format('m'), $nomorTransaksiRutin);
+                    $nomorTransaksiRutin = str_replace("%tanggal%", $now->format('d'), $nomorTransaksiRutin);
+
+                    $tmpNomorTransaksi = $nomormax;
+
+                    $matches = [];
+                    $penambah = preg_match('/{\+(\d+)}/', $nomorTransaksiRutin, $matches);
+                    if ($penambah === 1) {
+                        $tmpNomorTransaksi = $tmpNomorTransaksi + $matches[1];
+                    }
+                    $nomorTransaksiRutin = preg_replace('/{\+\d+}/', '', $nomorTransaksiRutin);
+
+                    if (preg_match('/#+%nomor-urut-perbulan%/', $nomorTransaksiRutin) === 1) {
+                        $placeholder = preg_match_all('/#/', $nomorTransaksiRutin);
+                        if ($placeholder >= 1 && strlen($tmpNomorTransaksi) <= $placeholder) {
+                            $tmpNomorTransaksi = str_repeat('0', $placeholder - strlen($tmpNomorTransaksi) + 1).$tmpNomorTransaksi;
+                        }
+                    }
+                    $nomorTransaksiRutin = str_replace('#', '', $nomorTransaksiRutin);
+
+                    $nomorTransaksiRutin = str_replace("%nomor-urut-perbulan%", $tmpNomorTransaksi, $nomorTransaksiRutin);
+
+                    $transaksi->setNomorTransaksi($nomorTransaksiRutin);
+                } else {
+                    $transaksi->setNomorTransaksi(TransaksiPembayaranRutin::tandakwitansi.$now->format('Y').$now->format('m').$nomormax);
+                }
+
+                $totalPayment = $transaksi->getNominalPembayaran();
                 $nomorTransaksi = $transaksi->getNomorTransaksi();
             }
 
