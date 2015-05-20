@@ -79,6 +79,12 @@ class SekolahType extends AbstractType
                     'class' => 'large',
                 ],
             ])
+            ->add('fileUpload', 'file', [
+                'required' => false,
+                'label_render' => true,
+                'label' => 'label.logo.sekolah',
+                'help_block' => 'help.logo.sekolah',
+            ])
             ->add('awalPembiayaan', null, [
                 'required' => true,
                 'label' => 'label.awal.pembiayaan',
@@ -95,11 +101,13 @@ class SekolahType extends AbstractType
                 ],
                 'help_block' => 'penjelasan.akhir.pembiayaan',
             ])
-            ->add('fileUpload', 'file', [
+            ->add('atributNomorDaftar', null, [
                 'required' => false,
-                'label_render' => true,
-                'label' => 'label.logo.sekolah',
-                'help_block' => 'help.logo.sekolah',
+                'label' => 'label.atribut.nomor.pendaftaran',
+                'help_block' => 'penjelasan.atribut.nomor.pendaftaran',
+                'attr' => [
+                    'placeholder' => 'contoh.atribut.nomor.pendaftaran',
+                ],
             ])
         ;
     }

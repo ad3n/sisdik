@@ -211,7 +211,38 @@ class SiswaPendaftarController extends Controller
             $nomormax++;
 
             $entity->setNomorUrutPendaftaran($nomormax);
-            $entity->setNomorPendaftaran($entity->getTahun()->getTahun().$nomormax);
+
+            if ($sekolah->getAtributNomorDaftar() !== null) {
+                $nomorPendaftaran = $sekolah->getAtributNomorDaftar();
+                $tanggal = new \DateTime();
+
+                $nomorPendaftaran = str_replace("%tahun%", $entity->getTahun()->getTahun(), $nomorPendaftaran);
+                $nomorPendaftaran = str_replace("%bulan%", $tanggal->format('m'), $nomorPendaftaran);
+                $nomorPendaftaran = str_replace("%tanggal%", $tanggal->format('d'), $nomorPendaftaran);
+
+                $nomorDaftar = $nomormax;
+
+                $matches = [];
+                $penambah = preg_match('/{\+(\d+)}/', $nomorPendaftaran, $matches);
+                if ($penambah === 1) {
+                    $nomorDaftar = $nomorDaftar + $matches[1];
+                }
+                $nomorPendaftaran = preg_replace('/{\+\d+}/', '', $nomorPendaftaran);
+
+                if (preg_match('/#+%nomor-urut-pertahun%/', $nomorPendaftaran) === 1) {
+                    $placeholder = preg_match_all('/#/', $nomorPendaftaran);
+                    if ($placeholder >= 1 && strlen($nomorDaftar) <= $placeholder) {
+                        $nomorDaftar = str_repeat('0', $placeholder - strlen($nomorDaftar) + 1).$nomorDaftar;
+                    }
+                }
+                $nomorPendaftaran = str_replace('#', '', $nomorPendaftaran);
+
+                $nomorPendaftaran = str_replace("%nomor-urut-pertahun%", $nomorDaftar, $nomorPendaftaran);
+
+                $entity->setNomorPendaftaran($nomorPendaftaran);
+            } else {
+                $entity->setNomorPendaftaran($entity->getTahun()->getTahun().$nomormax);
+            }
 
             if ($form['adaReferensi']->getData() === true && $form['referensi']->getData() === null && $form['namaReferensi']->getData() != "") {
                 $referensi = new Referensi();
