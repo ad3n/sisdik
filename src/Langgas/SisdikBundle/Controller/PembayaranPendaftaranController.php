@@ -304,17 +304,47 @@ class PembayaranPendaftaranController extends Controller
                 ->setParameter('sekolah', $sekolah)
             ;
             $nomormax = intval($qbmaxnum->getQuery()->getSingleScalarResult());
+            $nomormax++;
 
             $currentPaymentAmount = 0;
-            foreach ($entity->getTransaksiPembayaranPendaftaran() as $transaksi) {
-                if ($transaksi instanceof TransaksiPembayaranPendaftaran) {
-                    $currentPaymentAmount = $transaksi->getNominalPembayaran();
-                    $transaksi->setNomorUrutTransaksiPerbulan($nomormax + 1);
-                    $transaksi->setNomorTransaksi(
-                        TransaksiPembayaranPendaftaran::tandakwitansi.$now->format('Y').$now->format('m').($nomormax + 1)
-                    );
+            $transaksi = $entity->getTransaksiPembayaranPendaftaran()->first();
+            if ($transaksi instanceof TransaksiPembayaranPendaftaran) {
+                $currentPaymentAmount = $transaksi->getNominalPembayaran();
+
+                $transaksi->setNomorUrutTransaksiPerbulan($nomormax);
+
+                if ($sekolah->getAtributNomorTransaksiBiayaDaftar() !== null) {
+                    $nomorTransaksiDaftar = $sekolah->getAtributNomorTransaksiBiayaDaftar();
+
+                    $nomorTransaksiDaftar = str_replace("%tahun%", $now->format('Y'), $nomorTransaksiDaftar);
+                    $nomorTransaksiDaftar = str_replace("%bulan%", $now->format('m'), $nomorTransaksiDaftar);
+                    $nomorTransaksiDaftar = str_replace("%tanggal%", $now->format('d'), $nomorTransaksiDaftar);
+
+                    $tmpNomorTransaksi = $nomormax;
+
+                    $matches = [];
+                    $penambah = preg_match('/{\+(\d+)}/', $nomorTransaksiDaftar, $matches);
+                    if ($penambah === 1) {
+                        $tmpNomorTransaksi = $tmpNomorTransaksi + $matches[1];
+                    }
+                    $nomorTransaksiDaftar = preg_replace('/{\+\d+}/', '', $nomorTransaksiDaftar);
+
+                    if (preg_match('/#+%nomor-urut-perbulan%/', $nomorTransaksiDaftar) === 1) {
+                        $placeholder = preg_match_all('/#/', $nomorTransaksiDaftar);
+                        if ($placeholder >= 1 && strlen($tmpNomorTransaksi) <= $placeholder) {
+                            $tmpNomorTransaksi = str_repeat('0', $placeholder - strlen($tmpNomorTransaksi) + 1).$tmpNomorTransaksi;
+                        }
+                    }
+                    $nomorTransaksiDaftar = str_replace('#', '', $nomorTransaksiDaftar);
+
+                    $nomorTransaksiDaftar = str_replace("%nomor-urut-perbulan%", $tmpNomorTransaksi, $nomorTransaksiDaftar);
+
+                    $transaksi->setNomorTransaksi($nomorTransaksiDaftar);
+                } else {
+                    $transaksi->setNomorTransaksi(TransaksiPembayaranPendaftaran::tandakwitansi.$now->format('Y').$now->format('m').$nomormax);
                 }
             }
+
             $entity->setNominalTotalTransaksi($entity->getNominalTotalTransaksi() + $currentPaymentAmount);
 
             $nominalBiaya = 0;
