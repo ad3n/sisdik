@@ -212,7 +212,11 @@ $(document).ready(function() {
     });
 
     $("#tombol-proses-pembaruan-jadwal").click(function() {
-        var jadwalKehadiran = {{ render(controller('LanggasSisdikBundle:JadwalKehadiran:unduhJadwalKehadiran', {'token': tokenSekolah.mesinProxy, '_format': 'json'})) }};
+    {% if tokenSekolah %}
+        var jadwalKehadiran = {{ render(controller('LanggasSisdikBundle:JadwalKehadiran:unduhJadwalKehadiran', {'token': tokenSekolah.mesinProxy, '_format': 'json'})) }} || {};
+    {% else %}
+        var jadwalKehadiran = {};
+    {% endif %}
         var proxyUrl = $(this).attr("sisdik-url");
 
         if (proxyUrl == "") {
