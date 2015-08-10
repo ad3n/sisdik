@@ -67,6 +67,10 @@ assetic:
             inputs:
                 - "%kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff"
             output: fonts/fontawesome-webfont.woff
+        fontawesome_woff2:
+            inputs:
+                - "%kernel.root_dir%/../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff2"
+            output: fonts/fontawesome-webfont.woff2
         glyphicons_eot:
             inputs:
                 - "%kernel.root_dir%/../vendor/twbs/bootstrap/fonts/glyphicons-halflings-regular.eot"
