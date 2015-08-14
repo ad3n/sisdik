@@ -221,6 +221,16 @@ class SiswaController extends Controller
             $entity->setCalonSiswa(false);
             $entity->setGelombang(null);
 
+            $tanggalBulan = preg_split("/[\/,\s,\-,\+,_,\*]/", $sekolah->getAwalPembiayaan());
+            if (is_array($tanggalBulan)) {
+                $tanggal = $tanggalBulan[0];
+                $bulan = $tanggalBulan[1];
+            } else {
+                $tanggal = '01';
+                $bulan = '07';
+            }
+            $entity->setPembiayaanSejak(new \DateTime($entity->getTahun()->getTahun().'-'.$bulan.'-'.$tanggal));
+
             try {
                 $em->persist($entity);
                 $em->flush();
