@@ -23,6 +23,16 @@
     <dd>{{ entity.webPassword }}</dd>
     <dt>{{ 'label.waktu.tertib.harian'|trans }}</dt>
     <dd>{{ entity.waktuTertibHarian(false) }}</dd>
+    <dt>{{ 'label.kirim.sms.peringatan'|trans }}</dt>
+    <dd>
+        {% if entity.kirimSmsPeringatan == 1 %}
+            <i class="fa fa-check fa-lg check"></i>
+        {% else %}
+            <i class="fa fa-times fa-lg uncheck"></i>
+        {% endif %}
+    </dd>
+    <dt>{{ 'label.maksimum.sms.harian'|trans }}</dt>
+    <dd>{{ entity.maksimumSmsHarian }}</dd>
     <dt>{{ 'label.active'|trans }}</dt>
     <dd>
         {% if entity.aktif == 1 %}

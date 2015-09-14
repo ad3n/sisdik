@@ -77,6 +77,24 @@ class MesinKehadiran
     private $waktuTertibHarian = "05:00:00";
 
     /**
+     * @ORM\Column(name="kirim_sms_peringatan", type="boolean", nullable=false, options={"default"=1})
+     * @Expose
+     * @SerializedName("kirim_sms_peringatan")
+     *
+     * @var boolean
+     */
+    private $kirimSmsPeringatan = true;
+
+    /**
+     * @ORM\Column(name="maks_sms_harian", type="integer", nullable=false, options={"default"=3})
+     * @Expose
+     * @SerializedName("maks_sms_harian")
+     *
+     * @var integer
+     */
+    private $maksimumSmsHarian = 3;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Sekolah")
      * @ORM\JoinColumns({
      *     @ORM\JoinColumn(name="sekolah_id", referencedColumnName="id", nullable=false)
@@ -205,5 +223,37 @@ class MesinKehadiran
     public function getWebPassword()
     {
         return $this->webPassword;
+    }
+
+    /**
+     * @param boolean $kirimSmsPeringatan
+     */
+    public function setKirimSmsPeringatan($kirimSmsPeringatan)
+    {
+        $this->kirimSmsPeringatan = $kirimSmsPeringatan;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isKirimSmsPeringatan()
+    {
+        return $this->kirimSmsPeringatan;
+    }
+
+    /**
+     * @param integer $maksimumSmsHarian
+     */
+    public function setMaksimumSmsHarian($maksimumSmsHarian)
+    {
+        $this->maksimumSmsHarian = $maksimumSmsHarian;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getMaksimumSmsHarian()
+    {
+        return $this->maksimumSmsHarian;
     }
 }

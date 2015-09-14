@@ -51,6 +51,7 @@
             <th class="{% if pagination.isSorted('mesinKehadiran.waktuTertibHarian') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.waktu.tertib.harian'|trans, 'mesinKehadiran.waktuTertibHarian') }}
             </th>
+            <th>{{ 'label.sms.peringatan.harian'|trans }}</th>
             <th class="{% if pagination.isSorted('mesinKehadiran.active') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.active'|trans, 'mesinKehadiran.aktif') }}
             </th>
@@ -65,6 +66,14 @@
             <td data-title="{{ 'label.web.username'|trans }}">{{ data.webUsername }}</td>
             <td data-title="{{ 'label.web.password'|trans }}">{{ data.webPassword }}</td>
             <td data-title="{{ 'label.waktu.tertib.harian'|trans }}">{{ data.waktuTertibHarian(false) }}</td>
+            <td data-title="{{ 'label.sms.peringatan.harian'|trans }}">
+                {% if data.kirimSmsPeringatan == 1 %}
+                    <i class="fa fa-check fa-lg fa-fw check"></i>
+                {% else %}
+                    <i class="fa fa-times fa-lg fa-fw uncheck"></i>
+                {% endif %}
+                &sum; {{ data.maksimumSmsHarian }}
+            </td>
             <td data-title="{{ 'label.active'|trans }}">
                 {% if data.aktif == 1 %}
                     <i class="fa fa-check fa-lg fa-fw check"></i>

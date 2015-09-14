@@ -82,6 +82,17 @@ class MesinKehadiranType extends AbstractType
                 'with_seconds' => false,
                 'help_block' => 'help.waktu.tertib.harian',
             ])
+            ->add('kirimSmsPeringatan', null, [
+                'label' => 'label.kirim.sms.peringatan',
+                'required' => false,
+                'widget_checkbox_label' => 'widget',
+                'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
+                'help_block' => 'help.kirim.sms.peringatan',
+            ])
+            ->add('maksimumSmsHarian', null, [
+                'label' => 'label.maksimum.sms.harian',
+                'required' => true,
+            ])
             ->add('aktif', null, [
                 'label' => 'label.active',
                 'required' => false,
