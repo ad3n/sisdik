@@ -2,4 +2,4 @@ hostname: ubuntubox-sisdik-dev
 memory: 1024
 cpu: 1
 nfs: false
-ip: 192.168.50.20
+ip: 10.0.0.2
