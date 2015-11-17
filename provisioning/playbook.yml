@@ -1,6 +1,8 @@
 ---
 - hosts: all
+
   tasks:
+    - include_vars: files/vars.yml
     - include_vars: vsftpd/vars.yml
 
     - name: update locale
@@ -58,11 +60,17 @@
         - restart nginx
         - restart php5-fpm
 
-    - name: create vagrant mysql user
-      mysql_user: user=vagrant password=vagrant
+    - name: ensure mysql is running and starts on boot
+      service: name=mysql state=started enabled=true
+
+    - name: set mysql root password
+      command: mysqladmin -uroot password {{mysql_root_pass}}
+
+    - name: copy my.cnf file with root password credentials
+      template: src=files/my.cnf dest=/root/.my.cnf owner=root mode=0600
 
     - name: create mysql database
-      mysql_db: name=sisdik state=present
+      mysql_db: name={{mysql_db_name}} login_user={{mysql_root_user}} login_password={{mysql_root_pass}} login_host=localhost state=present
 
     - name: install sisdik vhost
       copy: src=nginx/sisdik dest=/etc/nginx/sites-enabled/sisdik
