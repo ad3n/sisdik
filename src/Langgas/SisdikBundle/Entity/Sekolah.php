@@ -567,7 +567,7 @@ class Sekolah
                         break;
                     case IMAGETYPE_PNG:
                         if (imagetypes() & IMG_PNG) {
-                            $resultImage = imagecreate($resultWidth, $resultHeight);
+                            $resultImage = imagecreatetruecolor($resultWidth, $resultHeight);
 
                             $srcImage = imagecreatefrompng($targetfile);
                             imagecopyresampled($resultImage, $srcImage, 0, 0, 0, 0, $resultWidth, $resultHeight, $origWidth, $origHeight);
