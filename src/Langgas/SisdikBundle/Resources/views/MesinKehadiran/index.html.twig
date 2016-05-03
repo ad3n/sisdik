@@ -108,7 +108,11 @@
 <script language="javascript" type="text/javascript">
 $(document).ready(function() {
     $("#tombol-proses-pembaruan-jadwal").click(function() {
+    {% if tokenSekolah %}
         var jadwalKehadiran = {{ render(controller('LanggasSisdikBundle:JadwalKehadiran:unduhJadwalKehadiran', {'token': tokenSekolah.mesinProxy, '_format': 'json'})) }};
+    {% else %}
+        var jadwalKehadiran = '';
+    {% endif %}
         var proxyUrl = $(this).attr("sisdik-url");
 
         if (proxyUrl == "") {

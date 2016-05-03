@@ -5,6 +5,7 @@ namespace Langgas\SisdikBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Langgas\SisdikBundle\Entity\MesinKehadiran;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Langgas\SisdikBundle\Entity\TokenSekolah;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -49,6 +50,14 @@ class MesinKehadiranController extends Controller
                 'sekolah' => $sekolah,
             ])
         ;
+
+        if (!($tokenSekolah instanceof TokenSekolah)) {
+            $this
+                ->get('session')
+                ->getFlashBag()
+                ->add('warning', $this->get('translator')->trans('flash.token.sekolah.belum.ditentukan'))
+            ;
+        }
 
         $mesinWakil = $em->getRepository('LanggasSisdikBundle:MesinWakil')
             ->findOneBy([
