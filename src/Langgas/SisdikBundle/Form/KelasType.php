@@ -72,7 +72,7 @@ class KelasType extends AbstractType
             ])
             ->add('tahunAkademik', 'entity', [
                 'class' => 'LanggasSisdikBundle:TahunAkademik',
-                'label' => 'label.year.entry',
+                'label' => 'label.tahun.akademik',
                 'multiple' => false,
                 'expanded' => false,
                 'property' => 'nama',

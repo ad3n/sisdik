@@ -33,7 +33,7 @@
 <table class="table zebra-striped bordered-table" id="no-more-tables">
     <thead>
         <tr>
-            <th>{{ 'label.year.entry'|trans }}</th>
+            <th>{{ 'label.tahun.akademik'|trans }}</th>
             <th class="{% if pagination.isSorted('kelas.nama') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.class.name'|trans, 'kelas.nama') }}
             </th>
@@ -53,7 +53,7 @@
     <tbody>
     {% for data in pagination %}
         <tr>
-            <td data-title="{{ 'label.year'|trans }}">{% if data.tahunAkademik is not null %}{{ data.tahunAkademik.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.tahun.akademik'|trans }}">{% if data.tahunAkademik is not null %}{{ data.tahunAkademik.nama }}{% endif %}</td>
             <td data-title="{{ 'label.class.name'|trans }}">{{ data.nama }}</td>
             <td data-title="{{ 'label.code'|trans }}">{{ data.kode }}</td>
             <td data-title="{{ 'label.description'|trans }}">{{ data.keterangan }}</td>
