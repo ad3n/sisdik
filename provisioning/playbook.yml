@@ -128,15 +128,37 @@
       notify:
         - restart vsftpd
 
-    - name: set attendance cron
-      cron: name=1 minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:inisiasi --env=prod' user='www-data'
-      cron: name=2 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pembaruan --env=prod' user='www-data'
-      cron: name=3 minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pesan --env=prod' user='www-data'
-      cron: name=4 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pesanringkasan --env=prod' user='www-data'
-      cron: name=5 minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:inisiasi --env=prod' user='www-data'
-      cron: name=6 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:pembaruan --env=prod' user='www-data'
-      cron: name=7 minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:pesan --env=prod' user='www-data'
-      cron: name=8 minute=1 job='/usr/bin/php /vagrant/app/console sisdik:layanansms:periodik --env=prod' user='www-data'
+    - name: cron inisiasi kehadiran
+      cron: name="inisiasi kehadiran" minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:inisiasi --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron pembaruan kehadiran
+      cron: name="pembaruan kehadiran" minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pembaruan --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron pesan kehadiran
+      cron: name="pesan kehadiran" minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pesan --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron pesan ringkasan kehadiran
+      cron: name="pesan ringkasan kehadiran" minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kehadiran:pesanringkasan --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron inisiasi kepulangan
+      cron: name="inisiasi kepulangan" minute=*/10 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:inisiasi --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron pembaruan kepulangan
+      cron: name="pembaruan kepulangan" minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:pembaruan --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron pesan kepulangan
+      cron: name="pesan kepulangan" minute=*/5 job='/usr/bin/php /vagrant/app/console sisdik:kepulangan:pesan --env=prod' user='www-data'
+      tags: cron
+
+    - name: cron sms periodik
+      cron: name="sms periodik" minute=1 job='/usr/bin/php /vagrant/app/console sisdik:layanansms:periodik --env=prod' user='www-data'
+      tags: cron
 
     - name: configure gearman worker
       copy: src=supervisor/sisdik.conf dest=/etc/supervisor/conf.d/sisdik.conf
