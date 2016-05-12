@@ -54,7 +54,7 @@
     <thead>
         <tr>
             <th>{{ 'label.identitas.sisdik'|trans }}</th>
-            <th>{{ 'label.academicyear.entry'|trans }}</th>
+            <th>{{ 'label.tahun.akademik'|trans }}</th>
             <th class="{% if pagination.isSorted('siswa.nomorInduk') %}sorted{% endif %}">
                 {{ knp_pagination_sortable(pagination, 'label.idnumber'|trans, 'siswa.nomorInduk') }}
             </th>
@@ -73,7 +73,7 @@
     {% for data in pagination %}
         <tr>
             <td data-title="{{ 'label.identitas.sisdik'|trans }}" class="info-id">{{ data.siswa.nomorIndukSistem }}</td>
-            <td data-title="{{ 'label.academicyear.entry'|trans }}">{% if data.tahunAkademik is defined %}{{ data.tahunAkademik.nama }}{% endif %}</td>
+            <td data-title="{{ 'label.tahun.akademik'|trans }}">{% if data.tahunAkademik is defined %}{{ data.tahunAkademik.nama }}{% endif %}</td>
             <td data-title="{{ 'label.idnumber'|trans }}">{{ data.siswa.nomorInduk }}</td>
             <td data-title="{{ 'label.name.full'|trans }}">{{ data.siswa.namaLengkap }}</td>
             <td data-title="{{ 'label.gender'|trans }}">{% if data.siswa.jenisKelamin == 'L' %}{{ 'male'|trans }}{% elseif data.siswa.jenisKelamin == 'P' %}{{ 'female'|trans }}{% endif %}</td>
