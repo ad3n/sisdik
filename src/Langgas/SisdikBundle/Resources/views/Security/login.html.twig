@@ -68,7 +68,7 @@ body {
             <div class="news">
                 <span class="news-info">Sistem Informasi Pendidikan,<br>mempermudah administrasi sekolah.</span>
             </div>
-            <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}">
+            <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}" placeholder="{{ 'security.login.username'|trans({}, 'FOSUserBundle') }}" autofocus>
             <input type="password" id="password" name="_password" class="form-control" placeholder="{{ 'security.login.password'|trans({}, 'FOSUserBundle') }}">
             <button class="btn large primary" type="submit">{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}</button>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
