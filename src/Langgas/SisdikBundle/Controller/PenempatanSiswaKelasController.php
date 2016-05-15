@@ -98,10 +98,11 @@ class PenempatanSiswaKelasController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
-                            $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && ($cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif' || $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif-bahaya')) {
-                            // baris yang tak perlu dibaca
+                        $fieldCocok = [];
+                        if (preg_match("/^(\d+:)(.*)/", $cell['data'], $fieldCocok)) {
+                            $fieldnames[] = $fieldCocok[2];
+                        } elseif (preg_match("/^\[.*\]$/", $cell['data'])) {
+                            // baris header perlu diabaikan
                         } else {
                             $cellContent[] = $cell['data'];
                         }
@@ -110,10 +111,6 @@ class PenempatanSiswaKelasController extends Controller
                         $content[] = $cellContent;
                     }
                 }
-
-                array_walk($fieldnames, [
-                    &$this, "formatNamaField",
-                ]);
 
                 foreach ($content as $value) {
                     $this->menempatkanSiswa($value, $fieldnames, $sekolah, $tahunAkademik, $kelas);
@@ -240,10 +237,11 @@ class PenempatanSiswaKelasController extends Controller
                 foreach ($reader as $row) {
                     $cellContent = [];
                     foreach ($row as $cell) {
-                        if (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom') {
-                            $fieldnames[] = $cell['data'];
-                        } elseif (array_key_exists('table:style-name', $cell['attributes']) && $cell['attributes']['table:style-name'] == 'nama-kolom-deskriptif') {
-                            // baris yang tak perlu dibaca
+                        $fieldCocok = [];
+                        if (preg_match("/^(\d+:)(.*)/", $cell['data'], $fieldCocok)) {
+                            $fieldnames[] = $fieldCocok[2];
+                        } elseif (preg_match("/^\[.*\]$/", $cell['data'])) {
+                            // baris header perlu diabaikan
                         } else {
                             $cellContent[] = $cell['data'];
                         }
@@ -252,10 +250,6 @@ class PenempatanSiswaKelasController extends Controller
                         $content[] = $cellContent;
                     }
                 }
-
-                array_walk($fieldnames, [
-                    &$this, "formatNamaField",
-                ]);
 
                 foreach ($content as $value) {
                     $this->menempatkanSiswa($value, $fieldnames, $sekolah, $data['tahunAkademik'], $data['kelas']);
@@ -611,8 +605,10 @@ class PenempatanSiswaKelasController extends Controller
             }
 
             $keyHapus = array_search('hapus', $fieldnames);
-            if (is_int($keyHapus) && $content[$keyHapus] == 1) {
-                $em->remove($siswaKelas);
+            if (is_int($keyHapus) && isset($content[$keyHapus])) {
+                if ($content[$keyHapus] == 1) {
+                    $em->remove($siswaKelas);
+                }
             } else {
                 $em->persist($siswaKelas);
             }
