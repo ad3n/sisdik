@@ -529,12 +529,6 @@ class PenempatanSiswaKelasController extends Controller
         return $response;
     }
 
-    private function formatNamaField(&$item, $key)
-    {
-        preg_match("/(\d+:)(.+)/", $item, $matches);
-        $item = $matches[2];
-    }
-
     /**
      * @param  array         $content
      * @param  array         $fieldnames
