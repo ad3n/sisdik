@@ -22,6 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\PreAuthorize;
 
 /**
  * @Route("/arsip-laporan-kehadiran-siswa")
+ * @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
  */
 class ArsipLaporanKehadiranSiswaController extends Controller
 {
