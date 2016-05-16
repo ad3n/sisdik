@@ -156,6 +156,17 @@ h3 {
     </p>
 {% endif %}
 
+{% if layananSmsAktif %}
+    <div>
+        <h3 style="text-align: inherit;">{{ 'label.aktif.layanansms'|trans }}</h3>
+        {% for layananSmsAktif in layananSmsAktif %}
+            <ul>
+                <li>{{ daftarJenisLayanan[layananSmsAktif.jenisLayanan]|trans }}</li>
+            </ul>
+        {% endfor %}
+    </div>
+{% endif %}
+
 <div style="display: none;">
     <form id="form-kehadiran" method="get" action="{{ path('kehadiran-siswa_edit') }}" {{ form_enctype(searchform) }} class="form-search form-inline" target="_blank">
         {{ form_widget(searchform) }}
