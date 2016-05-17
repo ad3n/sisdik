@@ -209,6 +209,12 @@ class Builder extends ContainerAware
             ])) {
                 $kehadiran->addChild($translator->trans('links.laporan.kehadiran.siswa', [], 'navigations'), ['route' => 'laporan-kehadiran-siswa']);
             }
+
+            if ($securityContext->isGranted([
+                new Expression('hasAnyRole("ROLE_ADMIN")'),
+            ])) {
+                $kehadiran->addChild($translator->trans('links.arsip.laporan.kehadiran.siswa', [], 'navigations'), ['route' => 'arsip-laporan-kehadiran-siswa']);
+            }
         }
 
         if ($securityContext->isGranted([
