@@ -13,6 +13,7 @@ use Langgas\SisdikBundle\Entity\JadwalKehadiran;
 use Langgas\SisdikBundle\Entity\JadwalKepulangan;
 use Langgas\SisdikBundle\Entity\Kelas;
 use Langgas\SisdikBundle\Entity\KalenderPendidikan;
+use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -248,7 +249,15 @@ class DefaultController extends Controller
         $searchform = $this->createForm('sisdik_kehadiransiswasearch');
         $searchform->setData(['tanggal' => $tanggalTampil]);
 
+        $layananSmsAktif = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
+            ->findBy([
+                'sekolah' => $sekolah,
+                'status' => true,
+            ])
+        ;
+
         return [
+            'layananSmsAktif' => $layananSmsAktif,
             'tahunAkademikAktif' => $tahunAkademikAktif,
             'panitiaPendaftaranAktif' => $panitiaPendaftaranAktif,
             'personilPanitiaPendaftaranAktif' => $personilPanitiaPendaftaranAktif,
@@ -264,6 +273,16 @@ class DefaultController extends Controller
             'kehadiranSiswaPerKelas' => $kehadiranSiswaPerKelas,
             'kepulanganSiswaPerKelas' => $kepulanganSiswaPerKelas,
             'searchform' => $searchform->createView(),
+            'daftarJenisLayanan' => array_merge(
+                PilihanLayananSms::getDaftarLayananPendaftaran(),
+                PilihanLayananSms::getDaftarLayananLaporan(),
+                PilihanLayananSms::getDaftarLayananKehadiran(),
+                PilihanLayananSms::getDaftarLayananKepulangan(),
+                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+                PilihanLayananSms::getDaftarLayananBiayaRutin(),
+                PilihanLayananSms::getDaftarLayananLain(),
+                PilihanLayananSms::getDaftarLayananPeriodik()
+            ),
         ];
     }
 

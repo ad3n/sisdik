@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2016-05-16T11:10:02Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
+  <file date="2016-05-17T11:52:51Z" source-language="en" target-language="id" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
@@ -1044,8 +1044,8 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Gagal menyimpan informasi kodifikasi transaksi</target>
       </trans-unit>
       <trans-unit id="76c8de0bed41dad7456d7abf6f0717e5fe82adce" resname="exception.import.error">
-        <jms:reference-file line="128">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
-        <jms:reference-file line="270">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="125">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="264">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
         <jms:reference-file line="516">SisdikBundle/Controller/SiswaController.php</jms:reference-file>
         <jms:reference-file line="622">SisdikBundle/Controller/SiswaController.php</jms:reference-file>
         <source>exception.import.error</source>
@@ -1123,8 +1123,8 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Item pendaftaran sudah lunas</target>
       </trans-unit>
       <trans-unit id="486d002fbe09546c2580077254c5a905c944f8f8" resname="exception.studentclass.unique">
-        <jms:reference-file line="125">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
-        <jms:reference-file line="267">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="122">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="261">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
         <source>exception.studentclass.unique</source>
         <target>Kombinasi siswa, tahun akademik, dan kelas harus unik. Ada duplikat pada data yang diimpor.</target>
       </trans-unit>
@@ -1502,12 +1502,12 @@ Mengubah biaya berulang akan berdampak terhadap siswa yang belum membayar biaya 
         <target>Riwayat Kelas Siswa '%student%' gagal dihapus</target>
       </trans-unit>
       <trans-unit id="4ce6503d29838c7473872b02c5a8a78eda0a6f31" resname="flash.data.studentclass.imported">
-        <jms:reference-file line="135">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="132">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
         <source>flash.data.studentclass.imported</source>
         <target>Berhasil menempatkan %count% siswa-kelas untuk tahun akademik %year% ke kelas %class%</target>
       </trans-unit>
       <trans-unit id="67ae88d50460535666b1f37529f7585f9d77e9ab" resname="flash.data.studentclass.imported.group">
-        <jms:reference-file line="278">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
+        <jms:reference-file line="272">SisdikBundle/Controller/PenempatanSiswaKelasController.php</jms:reference-file>
         <source>flash.data.studentclass.imported.group</source>
         <target>Berhasil menempatkan %count% siswa</target>
       </trans-unit>
@@ -4602,6 +4602,11 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
         <source>label.langsung.kirim.sms</source>
         <target>Langsung Kirim SMS</target>
       </trans-unit>
+      <trans-unit id="60f41a50ddda6a4c6717e1a61f4f20c7bf811269" resname="label.layanan.sms.aktif">
+        <jms:reference-file line="161">views/Default/pengelola.html.twig</jms:reference-file>
+        <source>label.layanan.sms.aktif</source>
+        <target>Daftar Layanan SMS yang aktif</target>
+      </trans-unit>
       <trans-unit id="c4ca8ffcd1bd62ead8fb6dc91775b007868edfa5" resname="label.layanansms.entri">
         <jms:reference-file line="35">views/PilihanLayananSms/index.html.twig</jms:reference-file>
         <jms:reference-file line="44">views/PilihanLayananSms/index.html.twig</jms:reference-file>
@@ -6903,7 +6908,7 @@ Jika jadwal berikutnya otomatis terhubung mesin, pembaruan akan diperbarui otoma
       <trans-unit id="a6315fcc781d48f4d216268f41b2102e42e9a356" resname="label.username.undefined">
         <jms:reference-file line="452">SisdikBundle/Controller/PanitiaPendaftaranController.php</jms:reference-file>
         <jms:reference-file line="507">SisdikBundle/Controller/PanitiaPendaftaranController.php</jms:reference-file>
-        <jms:reference-file line="87">SisdikBundle/Controller/DefaultController.php</jms:reference-file>
+        <jms:reference-file line="88">SisdikBundle/Controller/DefaultController.php</jms:reference-file>
         <jms:reference-file line="145">views/PanitiaPendaftaran/edit.html.twig</jms:reference-file>
         <jms:reference-file line="21">views/WaliKelas/show.html.twig</jms:reference-file>
         <jms:reference-file line="48">views/WaliKelas/index.html.twig</jms:reference-file>
