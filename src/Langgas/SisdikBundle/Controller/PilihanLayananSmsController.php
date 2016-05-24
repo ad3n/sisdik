@@ -6,7 +6,9 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\DBALException;
 use Langgas\SisdikBundle\Entity\PilihanLayananSms;
 use Langgas\SisdikBundle\Entity\Sekolah;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -27,18 +29,13 @@ class PilihanLayananSmsController extends Controller
     public function indexAction()
     {
         $this->setCurrentMenu();
-
-        /* @var $em EntityManager */
         $em = $this->getDoctrine()->getManager();
-
         $searchform = $this->createForm('sisdik_carilayanansms');
 
         $querybuilder = $em->createQueryBuilder()
-            ->select('pilihanLayananSms')
-            ->from('LanggasSisdikBundle:PilihanLayananSms', 'pilihanLayananSms')
-            ->leftJoin('pilihanLayananSms.sekolah', 'sekolah')
+            ->select('sekolah')
+            ->from('LanggasSisdikBundle:Sekolah', 'sekolah')
             ->orderBy('sekolah.nama', 'ASC')
-            ->addOrderBy('pilihanLayananSms.jenisLayanan', 'ASC')
         ;
 
         $searchform->submit($this->getRequest());
@@ -47,15 +44,8 @@ class PilihanLayananSmsController extends Controller
 
             if ($searchdata['sekolah'] != '') {
                 $querybuilder
-                    ->where('pilihanLayananSms.sekolah = :sekolah')
+                    ->where('sekolah.id = :sekolah')
                     ->setParameter("sekolah", $searchdata['sekolah'])
-                ;
-            }
-
-            if ($searchdata['jenisLayanan'] != '') {
-                $querybuilder
-                    ->andWhere('pilihanLayananSms.jenisLayanan = :jenis')
-                    ->setParameter("jenis", $searchdata['jenisLayanan'])
                 ;
             }
         }
@@ -66,77 +56,6 @@ class PilihanLayananSmsController extends Controller
         return [
             'pagination' => $pagination,
             'searchform' => $searchform->createView(),
-            'daftarJenisLayanan' => array_merge(
-                PilihanLayananSms::getDaftarLayananPendaftaran(),
-                PilihanLayananSms::getDaftarLayananLaporan(),
-                PilihanLayananSms::getDaftarLayananKehadiran(),
-                PilihanLayananSms::getDaftarLayananKepulangan(),
-                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
-                PilihanLayananSms::getDaftarLayananBiayaRutin(),
-                PilihanLayananSms::getDaftarLayananLain(),
-                PilihanLayananSms::getDaftarLayananPeriodik()
-            ),
-        ];
-    }
-
-    /**
-     * @Route("/new", name="layanansms_new")
-     * @Method("GET")
-     * @Template()
-     */
-    public function newAction()
-    {
-        $this->setCurrentMenu();
-
-        $entity = new PilihanLayananSms();
-        $form = $this->createForm('sisdik_pilihanlayanansms', $entity);
-
-        return [
-            'entity' => $entity,
-            'form' => $form->createView(),
-        ];
-    }
-
-    /**
-     * @Route("/create", name="layanansms_create")
-     * @Method("POST")
-     * @Template("LanggasSisdikBundle:PilihanLayananSms:new.html.twig")
-     */
-    public function createAction(Request $request)
-    {
-        $this->setCurrentMenu();
-
-        $entity = new PilihanLayananSms();
-        $form = $this->createForm('sisdik_pilihanlayanansms', $entity);
-        $form->submit($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-
-            try {
-                $em->persist($entity);
-                $em->flush();
-
-                $this
-                    ->get('session')
-                    ->getFlashBag()
-                    ->add('success', $this->get('translator')->trans('flash.layanansms.tersimpan', [
-                        '%sekolah%' => $entity->getSekolah()->getNama(),
-                    ]))
-                ;
-            } catch (DBALException $e) {
-                $message = $this->get('translator')->trans('exception.unik.layanansms');
-                throw new DBALException($message);
-            }
-
-            return $this->redirect($this->generateUrl('layanansms_show', [
-                'id' => $entity->getId(),
-            ]));
-        }
-
-        return [
-            'entity' => $entity,
-            'form' => $form->createView(),
         ];
     }
 
@@ -305,6 +224,38 @@ class PilihanLayananSmsController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+
+    /**
+     * Mencari layanan sms yang aktif di sekolah tertentu
+     *
+     * @Route("layanan-aktif/{id}/", name="layanansms_aktif")
+     */
+    public function getInfoLayananSms($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->createQueryBuilder()
+            ->select('pilihanLayananSms')
+            ->from('LanggasSisdikBundle:PilihanLayananSms', 'pilihanLayananSms')
+            ->where('pilihanLayananSms.sekolah = :sekolah')
+            ->andWhere('pilihanLayananSms.status = :status')
+            ->setParameter('sekolah', $id)
+            ->setParameter('status', true)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $daftarLayanan = PilihanLayananSms::getDaftarLayananSMS();
+
+        $layananAktif = [];
+        foreach ($entities as $entity) {
+            if ($entity instanceof PilihanLayananSms) {
+                $layananAktif[] = $daftarLayanan[$entity->getJenisLayanan()];
+            }
+        }
+
+        return new JsonResponse($layananAktif);
     }
 
     private function setCurrentMenu()
