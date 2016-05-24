@@ -48,17 +48,6 @@ class PilihanLayananSmsSearchType extends AbstractType
                 'label_render' => false,
                 'horizontal' => false,
             ])
-            ->add('jenisLayanan', 'choice', [
-                'choices' => $this->buildServiceChoices(),
-                'multiple' => false,
-                'expanded' => false,
-                'required' => false,
-                'attr' => [
-                    'class' => 'large',
-                ],
-                'label_render' => false,
-                'horizontal' => false,
-            ])
         ;
     }
 
@@ -79,23 +68,6 @@ class PilihanLayananSmsSearchType extends AbstractType
                 $choices[$entity->getId()] = $entity->getNama();
             }
         }
-
-        return $choices;
-    }
-
-    private function buildServiceChoices()
-    {
-        $choices = array_merge(
-            ['' => 'label.semua.layanan'],
-            PilihanLayananSms::getDaftarLayananPendaftaran(),
-            PilihanLayananSms::getDaftarLayananLaporan(),
-            PilihanLayananSms::getDaftarLayananKehadiran(),
-            PilihanLayananSms::getDaftarLayananKepulangan(),
-            PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
-            PilihanLayananSms::getDaftarLayananBiayaRutin(),
-            PilihanLayananSms::getDaftarLayananLain(),
-            PilihanLayananSms::getDaftarLayananPeriodik()
-        );
 
         return $choices;
     }
