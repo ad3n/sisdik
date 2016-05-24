@@ -67,30 +67,22 @@ class PilihanLayananSmsController extends Controller
     public function showAction($id)
     {
         $this->setCurrentMenu();
-
         $em = $this->getDoctrine()->getManager();
+        $daftarLayanan = PilihanLayananSms::getDaftarLayananSMS();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')->find($id);
+        $entity = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
+            ->findBy([
+                'sekolah' => $id,
+                'status' => true,
+            ])
+        ;
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity PilihanLayananSms tak ditemukan.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
+        $sekolah = $em->getRepository('LanggasSisdikBundle:Sekolah')->find($id);
 
         return [
+            'sekolah' => $sekolah,
             'entity' => $entity,
-            'delete_form' => $deleteForm->createView(),
-            'daftarJenisLayanan' => array_merge(
-                PilihanLayananSms::getDaftarLayananPendaftaran(),
-                PilihanLayananSms::getDaftarLayananLaporan(),
-                PilihanLayananSms::getDaftarLayananKehadiran(),
-                PilihanLayananSms::getDaftarLayananKepulangan(),
-                PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
-                PilihanLayananSms::getDaftarLayananBiayaRutin(),
-                PilihanLayananSms::getDaftarLayananLain(),
-                PilihanLayananSms::getDaftarLayananPeriodik()
-            ),
+            'daftarJenisLayanan' => $daftarLayanan,
         ];
     }
 
@@ -105,11 +97,11 @@ class PilihanLayananSmsController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Entity PilihanLayananSms tak ditemukan.');
-        }
+        $entity = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
+            ->findBy([
+                'sekolah' => $sekolah,
+            ])
+        ;
 
         $editForm = $this->createForm('sisdik_pilihanlayanansms', $entity);
         $deleteForm = $this->createDeleteForm($id);
