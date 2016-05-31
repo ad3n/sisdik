@@ -8,8 +8,8 @@
     <dd>{{ sekolah.nama }}</dd>
     <dt>{{ 'label.layanansms.jenis'|trans }}</dt>
     <dd>
-    {% if entity|length > 0 %}
-        {% for layanan in entity %}
+    {% if entities|length > 0 %}
+        {% for layanan in entities %}
             <ul><li>{{ daftarJenisLayanan[layanan.jenisLayanan]|trans }}</li></ul>
         {% endfor %}
     {% else %}

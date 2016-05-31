@@ -70,10 +70,12 @@ class PilihanLayananSmsController extends Controller
         $em = $this->getDoctrine()->getManager();
         $daftarLayanan = PilihanLayananSms::getDaftarLayananSMS();
 
-        $entity = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
+        $entities = $em->getRepository('LanggasSisdikBundle:PilihanLayananSms')
             ->findBy([
                 'sekolah' => $id,
                 'status' => true,
+            ], [
+                'jenisLayanan' => 'ASC',
             ])
         ;
 
@@ -81,7 +83,7 @@ class PilihanLayananSmsController extends Controller
 
         return [
             'sekolah' => $sekolah,
-            'entity' => $entity,
+            'entities' => $entities,
             'daftarJenisLayanan' => $daftarLayanan,
         ];
     }
@@ -235,6 +237,7 @@ class PilihanLayananSmsController extends Controller
             ->andWhere('pilihanLayananSms.status = :status')
             ->setParameter('sekolah', $id)
             ->setParameter('status', true)
+            ->orderBy('pilihanLayananSms.jenisLayanan', 'ASC')
             ->getQuery()
             ->getResult()
         ;
