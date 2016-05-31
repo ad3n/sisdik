@@ -210,4 +210,25 @@ class PilihanLayananSms
     {
         return $this->sekolah;
     }
+
+    /**
+     * Daftar semua layanan sms yang tersedia.
+     *
+     * @return array
+     */
+    public static function getDaftarLayananSMS()
+    {
+        $daftarLayanan = array_merge(
+            PilihanLayananSms::getDaftarLayananPendaftaran(),
+            PilihanLayananSms::getDaftarLayananLaporan(),
+            PilihanLayananSms::getDaftarLayananKehadiran(),
+            PilihanLayananSms::getDaftarLayananKepulangan(),
+            PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
+            PilihanLayananSms::getDaftarLayananBiayaRutin(),
+            PilihanLayananSms::getDaftarLayananLain(),
+            PilihanLayananSms::getDaftarLayananPeriodik()
+        );
+
+        return $daftarLayanan;
+    }
 }

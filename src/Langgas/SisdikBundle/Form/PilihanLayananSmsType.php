@@ -17,51 +17,39 @@ class PilihanLayananSmsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('sekolah', 'entity', [
-                'class' => 'LanggasSisdikBundle:Sekolah',
-                'label' => 'label.school',
-                'multiple' => false,
-                'expanded' => false,
-                'property' => 'nama',
-                'placeholder' => false,
-                'required' => true,
-                'query_builder' => function (EntityRepository $repository) {
-                    $qb = $repository->createQueryBuilder('sekolah')
-                        ->orderBy('sekolah.nama', 'ASC')
-                    ;
+        foreach ($options['daftarLayanan'] as $key => $value) {
+            if(array_key_exists($key, $options['layananSmsAktif'])) {
+                $builder
+                    ->add('jenislayanan_' . $key, 'checkbox', [
+                        'label' => /** @Ignore */ $value,
+                        'required' => false,
+                        'attr' => [
+                            'checked' => 'checked',
+                        ],
+                        'widget_checkbox_label' => 'widget',
+                        'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
+                    ])
+                ;
+            } else {
+                $builder
+                    ->add('jenislayanan_' . $key, 'checkbox', [
+                        'label' => /** @Ignore */ $value,
+                        'required' => false,
+                        'widget_checkbox_label' => 'widget',
+                        'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
+                    ])
+                ;
+            }
 
-                    return $qb;
-                },
-            ])
-            ->add('jenisLayanan', 'choice', [
-                'choices' => array_merge(
-                    PilihanLayananSms::getDaftarLayananPendaftaran(),
-                    PilihanLayananSms::getDaftarLayananLaporan(),
-                    PilihanLayananSms::getDaftarLayananKehadiran(),
-                    PilihanLayananSms::getDaftarLayananKepulangan(),
-                    PilihanLayananSms::getDaftarLayananBiayaSekaliBayar(),
-                    PilihanLayananSms::getDaftarLayananBiayaRutin(),
-                    PilihanLayananSms::getDaftarLayananLain(),
-                    PilihanLayananSms::getDaftarLayananPeriodik()
-                ),
-                'required' => true,
-                'label' => 'label.layanansms.jenis',
-            ])
-            ->add('status', 'checkbox', [
-                'required' => false,
-                'label' => 'label.aktif',
-                'widget_checkbox_label' => 'widget',
-                'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
-            ])
-        ;
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver
             ->setDefaults([
-                'data_class' => 'Langgas\SisdikBundle\Entity\PilihanLayananSms',
+                'daftarLayanan' => [],
+                'layananSmsAktif' => [],
             ])
         ;
     }
