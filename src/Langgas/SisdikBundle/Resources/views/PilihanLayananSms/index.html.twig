@@ -46,7 +46,7 @@
                         {{ layanan|trans }}{% if not loop.last %},{% endif %}
                     {% endfor %}
                 {% else %}
-                    <p>Tidak ada layanan sms yang aktif</p>
+                    {{ 'info.tidak.ada.layanan.sms.aktif'|trans }}
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">

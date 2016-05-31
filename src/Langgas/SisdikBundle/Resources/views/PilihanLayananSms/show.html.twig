@@ -13,7 +13,7 @@
             <ul><li>{{ daftarJenisLayanan[layanan.jenisLayanan]|trans }}</li></ul>
         {% endfor %}
     {% else %}
-        <p>Tidak ada layanan sms yang aktif</p>
+        {{ 'info.tidak.ada.layanan.sms.aktif'|trans }}
     {% endif %}
     </dd>
 </dl>

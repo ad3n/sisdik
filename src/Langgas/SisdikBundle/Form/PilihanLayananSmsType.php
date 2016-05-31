@@ -21,7 +21,7 @@ class PilihanLayananSmsType extends AbstractType
             if(array_key_exists($key, $options['layananSmsAktif'])) {
                 $builder
                     ->add('jenislayanan_' . $key, 'checkbox', [
-                        'label' => $value,
+                        'label' => /** @Ignore */ $value,
                         'required' => false,
                         'attr' => [
                             'checked' => 'checked',
@@ -33,7 +33,7 @@ class PilihanLayananSmsType extends AbstractType
             } else {
                 $builder
                     ->add('jenislayanan_' . $key, 'checkbox', [
-                        'label' => $value,
+                        'label' => /** @Ignore */ $value,
                         'required' => false,
                         'widget_checkbox_label' => 'widget',
                         'horizontal_input_wrapper_class' => 'col-sm-offset-4 col-sm-8 col-md-offset-4 col-md-7 col-lg-offset-3 col-lg-9',
