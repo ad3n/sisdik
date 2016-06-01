@@ -11,6 +11,10 @@
 .clearfix {
     margin-top: 1.5em;
 }
+.nihil {
+    font-style: italic;
+    color: darkred;
+}
 </style>
 
 <div class="filter-section">
@@ -46,7 +50,7 @@
                         {{ layanan|trans }}{% if not loop.last %},{% endif %}
                     {% endfor %}
                 {% else %}
-                    {{ 'info.tidak.ada.layanan.sms.aktif'|trans }}
+                    <i class="nihil">{{ 'info.tidak.ada.layanan.sms.aktif'|trans }}</i>
                 {% endif %}
             </td>
             <td data-title="{{ 'label.actions'|trans }}" class="row-actions">
