@@ -14,7 +14,7 @@ framework:
     templating:      { engines: ['twig'] }
     default_locale:  "%locale%"
     session:
-        save_path:   null
+        save_path:   "%kernel.root_dir%/sessions/"
 
 twig:
     debug:             "%kernel.debug%"
